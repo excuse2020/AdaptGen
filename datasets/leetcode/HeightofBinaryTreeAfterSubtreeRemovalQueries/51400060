@@ -1,0 +1,44 @@
+class Solution {
+	Map<Integer, TreeSet<Integer>> maxHeightNodesAtDepth = new HashMap<>();
+	Map<Integer, Integer> nodeDepth = new HashMap<>();
+	Map<Integer, Integer> nodeHeight = new HashMap<>();
+	int traverse(TreeNode node, int depth) {
+		if (node == null) {
+			return 0;
+		}
+		int curNodeVal = node.val;
+		nodeDepth.put(curNodeVal,depth);
+		int leftHeight = traverse(node.left,depth + 1);
+		int rightHeight = traverse(node.right,depth + 1);
+		int curHeight = Math.max(leftHeight,rightHeight);
+		nodeHeight.put(curNodeVal,curHeight);
+		maxHeightNodesAtDepth.putIfAbsent(depth,new TreeSet<>(new Comparator<Integer>()));
+		maxHeightNodesAtDepth.get(depth).add(curNodeVal);
+		if (maxHeightNodesAtDepth.get(depth).size() > 2) {
+			maxHeightNodesAtDepth.get(depth).pollLast();
+		}
+		return curHeight + 1;
+	}
+	int[] treeQueries(TreeNode root, int[] queries) {
+		traverse(root,0);
+		int[] res = new int[queries.length];
+		int index = 0;
+		for (int query: queries) {	
+			int node = query;
+			int depth = nodeDepth.get(node);
+			int height = nodeHeight.get(node);
+			int ans = depth - 1;
+			TreeSet<Integer> set = maxHeightNodesAtDepth.get(depth);
+			Iterator<Integer> iterator = set.iterator();
+			while (iterator.hasNext()) {
+				Integer curNode = iterator.next();
+				if (curNode != node) {
+					ans += nodeHeight.get(curNode) + 1;
+					break;
+				}
+			}
+			res[index++] = ans;
+		}
+		return res;
+	}
+}

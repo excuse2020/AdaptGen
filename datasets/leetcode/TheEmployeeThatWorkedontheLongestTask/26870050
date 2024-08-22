@@ -1,0 +1,27 @@
+class Solution {
+	int hardestWorker(int n, int[][] logs) {
+		Map<Integer, Integer> map = new HashMap<>();
+		int max = Integer.MIN_VALUE;
+		map.put(logs[0][0],logs[0][1]);
+		for (int i = 1; i < logs.length; i++) {
+			if (map.containsKey(logs[i][0])) {
+				max = Math.max(map.get(logs[i][0]),Math.abs(logs[i][1] - logs[i - 1][1]));
+				map.put(logs[i][0],max);
+			} 
+			else {
+				map.put(logs[i][0],Math.abs(logs[i - 1][1] - logs[i][1]));
+			}
+		}
+		int res = Integer.MIN_VALUE, ans = 0;
+		for (int i: map.keySet()) {	
+			if (map.get(i) > res) {
+				res = map.get(i);
+				ans = i;
+			} 
+			else if (map.get(i) == res) {
+				ans = Math.min(ans,i);
+			}
+		}
+		return ans;
+	}
+}

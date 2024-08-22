@@ -1,0 +1,29 @@
+class Solution {
+	long dividePlayers(int[] skills) {
+		if (skills.length == 2) {
+			return (long) skills[0] * skills[1];
+		}
+		int sum = IntStream.of(skills).sum();
+		int n = skills.length;
+		int teams = n / 2;
+		int teamTotal = sum / teams;
+		long chemistry = 0;
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int skill: skills) {	
+			if (map.containsKey(skill)) {
+				int occurence = map.get(skill);
+				if (occurence == 1) {
+					map.remove(skill);
+				} 
+				else {
+					map.put(skill,occurence - 1);
+				}
+				chemistry += skill * (teamTotal - skill);
+			} 
+			else {
+				map.put(teamTotal - skill,map.getOrDefault(teamTotal - skill,0) + 1);
+			}
+		}
+		return map.isEmpty() ? chemistry : -1;
+	}
+}

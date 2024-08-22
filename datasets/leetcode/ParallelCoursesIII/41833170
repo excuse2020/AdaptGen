@@ -1,0 +1,31 @@
+class Solution {
+	int GetMinTime(ArrayList<Integer>[] Graph, int[] time, int node, Integer[] dp) {
+		ArrayList<Integer> precursor = Graph[node];
+		if (precursor.size() == 0) {
+			return time[node - 1];
+		}
+		int precursorTime = 0;
+		if (dp[node] != null) {
+			return dp[node];
+		}
+		for (int i = 0; i < precursor.size(); i++) {
+			precursorTime = Math.max(precursorTime,GetMinTime(Graph,time,precursor.get(i),dp));
+		}
+		return dp[node] = precursorTime + time[node - 1];
+	}
+	int minimumTime(int n, int[][] relations, int[] time) {
+		ArrayList<Integer>[] Graph = new ArrayList[n + 1];
+		for (int i = 0; i < Graph.length; i++) {
+			Graph[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < relations.length; i++) {
+			Graph[relations[i][1]].add(relations[i][0]);
+		}
+		int ans = 0;
+		Integer[] dp = new Integer[n + 1];
+		for (int i = 1; i <= n; i++) {
+			ans = Math.max(ans,GetMinTime(Graph,time,i,dp));
+		}
+		return ans;
+	}
+}

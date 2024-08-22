@@ -1,0 +1,58 @@
+class Solution {
+	String constructLine(List<String> lineWords, int maxWidth, boolean isLastLine) {
+		int requiredSpace = 0;
+		for (String word: lineWords) {	
+			requiredSpace += word.length() + 1;
+		}
+		requiredSpace -= 1;
+		int extraSpaces = maxWidth - requiredSpace;
+		if (isLastLine || lineWords.size() == 1) {
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < extraSpaces; i++) {
+				sb.append(" ");
+			}
+			return String.join(" ",lineWords) + sb.toString();
+		}
+		int wordsThatRequireSpace = lineWords.size() - 1;
+		int spacePerWord = extraSpaces / wordsThatRequireSpace;
+		int extraLeftOverSpace = extraSpaces % wordsThatRequireSpace;
+		for (int i = 0; i < extraLeftOverSpace; i++) {
+			lineWords.set(i,lineWords.get(i) + " ");
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int j = 0; j < spacePerWord; j++) {
+			sb.append(" ");
+		}
+		for (int i = 0; i < lineWords.size() - 1; i++) {
+			lineWords.set(i,lineWords.get(i) + sb.toString());
+		}
+		return String.join(" ",lineWords);
+	}
+	List<String> constructLineWords(String[] words, int index, int maxWidth) {
+		List<String> lineWords = new ArrayList<>();
+		while (index < words.length && maxWidth >= words[index].length()) {
+			maxWidth -= words[index].length();
+			lineWords.add(words[index]);
+			if (maxWidth > 0) {
+				maxWidth -= 1;
+			}
+			index += 1;
+		}
+		return lineWords;
+	}
+	List<String> fullJustify(String[] words, int maxWidth) {
+		int index = 0;
+		boolean isLastLine = false;
+		List<String> ans = new ArrayList<>();
+		while (index < words.length) {
+			List<String> lineWords = constructLineWords(words,index,maxWidth);
+			index += lineWords.size();
+			if (index == words.length) {
+				isLastLine = true;
+			}
+			String constructedLine = constructLine(lineWords,maxWidth,isLastLine);
+			ans.add(constructedLine);
+		}
+		return ans;
+	}
+}

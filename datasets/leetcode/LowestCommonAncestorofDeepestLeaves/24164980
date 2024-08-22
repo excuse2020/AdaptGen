@@ -1,0 +1,36 @@
+class Solution {
+	int max_depth = 0;
+	Map<TreeNode, Integer> mp;
+	void helper(TreeNode root, int depth) {
+		if (root == null) {
+			return;
+		}
+		mp.put(root,depth);
+		max_depth = Math.max(depth,max_depth);
+		helper(root.left,depth + 1);
+		helper(root.right,depth + 1);
+	}
+	TreeNode lcaDeepestLeaves(TreeNode root) {
+		mp = new HashMap<>();
+		int depth = 0;
+		helper(root,depth);
+		return lcs(root);
+	}
+	TreeNode lcs(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		if (mp.get(root) == max_depth) {
+			return root;
+		}
+		TreeNode left = lcs(root.left);
+		TreeNode right = lcs(root.right);
+		if (right == null) {
+			return left;
+		}
+		if (left == null) {
+			return right;
+		}
+		return root;
+	}
+}

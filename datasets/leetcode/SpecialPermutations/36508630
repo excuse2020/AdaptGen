@@ -1,0 +1,40 @@
+class Solution {
+	Map<Integer, Long>[] dp;
+	long mod = (long) 1e9 + 7;
+	long solve(int vis, int prev, int[] nums) {
+		if (vis == ((1 << nums.length) - 1)) {
+			return 1;
+		}
+		if (dp[vis].containsKey(prev)) {
+			return dp[vis].get(prev);
+		}
+		long ans = 0;
+		for (int i = 0; i < nums.length; i++) {
+			if ((vis & (1 << i)) != 0) {
+				continue;
+			}
+			if (prev % nums[i] == 0 || nums[i] % prev == 0) {
+				vis = (vis | (1 << i));
+				ans = (ans + solve(vis,nums[i],nums)) % mod;
+				vis = (vis & (~(1 << i)));
+			}
+		}
+		dp[vis].put(prev,ans);
+		return ans;
+	}
+	int specialPerm(int[] nums) {
+		int n = nums.length;
+		dp = new Map[(1 << n)];
+		for (int j = 0; j < (1 << n); j++) {
+			dp[j] = new HashMap<>();
+		}
+		long ans = 0;
+		int vis = 0;
+		for (int i = 0; i < n; i++) {
+			vis = (vis | (1 << i));
+			ans = (ans + solve(vis,nums[i],nums)) % mod;
+			vis = (vis & (~(1 << i)));
+		}
+		return (int) ans;
+	}
+}

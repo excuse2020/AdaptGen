@@ -1,0 +1,47 @@
+class Solution {
+	int dfs(int[] stone, Set<int[]> visited, Map<Integer, List<int[]>> rmap, Map<Integer, List<int[]>> cmap) {
+		if (visited.contains(stone)) {
+			return 0;
+		}
+		int count = 1;
+		visited.add(stone);
+		if (rmap.containsKey(stone[0])) {
+			for (int[] n: rmap.get(stone[0])) {	
+				if (!visited.contains(n)) {
+					count += dfs(n,visited,rmap,cmap);
+				}
+			}
+		}
+		if (cmap.containsKey(stone[1])) {
+			for (int[] n: cmap.get(stone[1])) {	
+				if (!visited.contains(n)) {
+					count += dfs(n,visited,rmap,cmap);
+				}
+			}
+		}
+		return count;
+	}
+	int removeStones(int[][] stones) {
+		Map<Integer, List<int[]>> rmap = new HashMap<>();
+		Map<Integer, List<int[]>> cmap = new HashMap<>();
+		for (int[] stone: stones) {	
+			if (!rmap.containsKey(stone[0])) {
+				rmap.put(stone[0],new ArrayList<>());
+			}
+			if (!cmap.containsKey(stone[1])) {
+				cmap.put(stone[1],new ArrayList<>());
+			}
+			rmap.get(stone[0]).add(stone);
+			cmap.get(stone[1]).add(stone);
+		}
+		int max = 0;
+		Set<int[]> visited = new HashSet<>();
+		for (int[] stone: stones) {	
+			int res = dfs(stone,visited,rmap,cmap);
+			if (res > 1) {
+				max += res - 1;
+			}
+		}
+		return max;
+	}
+}

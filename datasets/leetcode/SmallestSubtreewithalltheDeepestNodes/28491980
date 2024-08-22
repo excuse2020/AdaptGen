@@ -1,0 +1,51 @@
+class Solution {
+	TreeNode LCA(TreeNode root, TreeNode p, TreeNode q) {
+		if (root == null) {
+			return null;
+		}
+		if (root == p || root == q) {
+			return root;
+		}
+		TreeNode left = LCA(root.left,p,q);
+		TreeNode right = LCA(root.right,p,q);
+		if (left != null && right != null) {
+			return root;
+		}
+		if (left != null) {
+			return left;
+		}
+		if (right != null) {
+			return right;
+		}
+		return null;
+	}
+	int getDepth(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		int lDepth = getDepth(root.left);
+		int rDepth = getDepth(root.right);
+		return Math.max(lDepth,rDepth) + 1;
+	}
+	void getNodesAtDepth(TreeNode root, int cd, int d, ArrayList<TreeNode> list) {
+		if (root == null) {
+			return;
+		}
+		if (cd == d) {
+			list.add(root);
+		}
+		getNodesAtDepth(root.left,cd + 1,d,list);
+		getNodesAtDepth(root.right,cd + 1,d,list);
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		int depth = getDepth(root);
+		ArrayList<TreeNode> list = new ArrayList<>();
+		getNodesAtDepth(root,1,depth,list);
+		if (list.size() > 1) {
+			return LCA(root,list.get(0),list.get(list.size() - 1));
+		} 
+		else {
+			return list.get(0);
+		}
+	}
+}

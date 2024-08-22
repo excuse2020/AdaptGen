@@ -1,0 +1,46 @@
+class Solution {
+	String oddString(String[] words) {
+		int n = words.length;
+		int m = words[0].length();
+		int res1 = new int[m - 1];
+		int res2 = new int[m - 1];
+		int res3 = new int[m - 1];
+		for (int j = 1; j < m; j++) {
+			res1[j - 1] = words[0].charAt(j) - words[0].charAt(j - 1);
+			res2[j - 1] = words[1].charAt(j) - words[1].charAt(j - 1);
+			res3[j - 1] = words[2].charAt(j) - words[2].charAt(j - 1);
+		}
+		String ans = "";
+		int res = res1;
+		for (int i = 0; i < m - 1; i++) {
+			if (res1[i] != res2[i] && res2[i] == res3[i]) {
+				res = res1;
+				ans = words[0];
+			}
+			if (res2[i] != res3[i] && res1[i] == res3[i]) {
+				res = res2;
+				ans = words[1];
+			}
+			if (res3[i] != res1[i] && res1[i] == res2[i]) {
+				res = res3;
+				ans = words[2];
+			}
+		}
+		if (ans.length() > 1) {
+			return ans;
+		}
+		res = res1;
+		for (int i = 3; i < n; i++) {
+			String word = words[i];
+			for (int j = 1; j < m; j++) {
+				char ch1 = word.charAt(j - 1);
+				char ch2 = word.charAt(j);
+				if (ch1 + res[j - 1] != ch2) {
+					ans = word;
+					return ans;
+				}
+			}
+		}
+		return ans;
+	}
+}

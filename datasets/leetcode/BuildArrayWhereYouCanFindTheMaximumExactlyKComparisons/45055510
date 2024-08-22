@@ -1,0 +1,27 @@
+class Solution {
+	int numOfArrays(int n, int m, int k) {
+		int MOD = (int) 1e9 + 7;
+		long[][] dp = new long[m + 1][k + 1];
+		for (int max = 1; max <= m; max++) {
+			dp[max][1] = 1;
+		}
+		for (int i = 2; i <= n; i++) {
+			long[][] cache = new long[m + 1][k + 1];
+			for (int cost = 1; cost <= k && cost <= i; cost++) {
+				long sum = 0;
+				for (int max = cost; max <= m; max++) {
+					sum += dp[max - 1][cost - 1];
+					cache[max][cost] = dp[max][cost] * max + sum;
+					cache[max][cost] %= MOD;
+				}
+			}
+			dp = cache;
+		}
+		int res = 0;
+		for (int max = 1; max <= m; max++) {
+			res += dp[max][k];
+			res %= MOD;
+		}
+		return res;
+	}
+}

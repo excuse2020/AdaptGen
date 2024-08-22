@@ -1,0 +1,40 @@
+class Solution {
+	int numBusesToDestination(int[][] routes, int source, int target) {
+		if (source == target) {
+			return 0;
+		}
+		int max = 0;
+		for (int i = 0; i < routes.length; i++) {
+			for (int j = 0; j < routes[i].length; j++) {
+				max = Math.max(max,routes[i][j]);
+			}
+		}
+		if (max < source || max < target) {
+			return -1;
+		}
+		int minBusesToReach = new int[max + 1];
+		for (int i = 0; i < max + 1; i++) {
+			minBusesToReach[i] = max + 1;
+		}
+		minBusesToReach[source] = 0;
+		boolean flag = true;
+		int min = max + 1;
+		while (flag) {
+			flag = false;
+			for (int i = 0; i < routes.length; i++) {
+				min = max + 1;
+				for (int j = 0; j < routes[i].length; j++) {
+					min = Math.min(minBusesToReach[routes[i][j]],min);
+				}
+				min++;
+				for (int j = 0; j < routes[i].length; j++) {
+					if (min < minBusesToReach[routes[i][j]]) {
+						minBusesToReach[routes[i][j]] = min;
+						flag = true;
+					}
+				}
+			}
+		}
+		return minBusesToReach[target] == max + 1 ? -1 : minBusesToReach[target];
+	}
+}

@@ -1,0 +1,50 @@
+class Solution {
+	HashMap<String, Integer> memo = new HashMap<>();
+	int maxProfit(int[] prices) {
+		int n = prices.length;
+		int k = 2;
+		int[][][] dp = new int[n + 1][2][k + 1];
+		for (int i = n - 1; i >= 0; i--) {
+			for (int buy = 0; buy <= 1; buy++) {
+				for (int cap = 1; cap <= 2; cap++) {
+					if (buy == 1) {
+						int take = -prices[i] + dp[i + 1][0][cap];
+						int notTake = dp[i + 1][1][cap];
+						dp[i][buy][cap] = Math.max(take,notTake);
+					} 
+					else {
+						int take = prices[i] + dp[i + 1][1][cap - 1];
+						int notTake = dp[i + 1][0][cap];
+						dp[i][buy][cap] = Math.max(take,notTake);
+					}
+				}
+			}
+		}
+		return dp[0][1][k];
+	}
+	int recr(int[] prices, int i, int canBuy, int cap) {
+		String key = canBuy + ", ";
+		if (memo.containsKey(key)) {
+			return memo.get(key);
+		}
+		if (i == prices.length) {
+			return 0;
+		}
+		if (cap == 0) {
+			return 0;
+		}
+		int val = 0;
+		if (canBuy == 1) {
+			int buy = -prices[i] + recr(prices,i + 1,0,cap);
+			int notBuy = recr(prices,i + 1,1,cap);
+			val = Math.max(buy,notBuy);
+		} 
+		else {
+			int sell = prices[i] + recr(prices,i + 1,1,cap - 1);
+			int notSell = recr(prices,i + 1,0,cap);
+			val = Math.max(sell,notSell);
+		}
+		memo.put(key,val);
+		return val;
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	int threeSumMulti(int[] arr, int target) {
+		long t = new long[101];
+		Arrays.fill(t,0);
+		for (int x: arr) {	
+			t[x]++;
+		}
+		long ans = 0;
+		if (target % 3 == 0 && t[target / 3] > 2) {
+			ans += t[target / 3] * (t[target / 3] - 1) / 6;
+		}
+		int lim_i = Math.min(101,target);
+		int lim_j = Math.min(101,target << 1);
+		int lim_k = Math.min(101,target * 3);
+		for (int i = 0; i < lim_i; i++) {
+			if (t[i] != 0) {
+				for (int j = i + 1; j < lim_j; j++) {
+					if (t[j] != 0) {
+						if (i + i == target && t[i] > 1) {
+							ans += (t[i] * (t[i] - 1)) >> 1;
+						}
+						if (i + j == target && t[j] > 1) {
+							ans += (t[j] * (t[j] - 1)) >> 1;
+						}
+						for (int k = j + 1; k < lim_k; k++) {
+							if (i + j > target) {
+								break;
+							} 
+							else if (t[k] != 0 && i + j == target) {
+								ans += t[i] * t[j];
+							}
+						}
+					}
+				}
+			}
+		}
+		return (int) (ans % 1000000007);
+	}
+}

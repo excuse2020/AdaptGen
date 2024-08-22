@@ -1,0 +1,57 @@
+class Solution {
+	boolean isPossible(int n, List<List<Integer>> edges) {
+		HashMap<Integer, HashSet<Integer>> map = new HashMap<>();
+		for (List<Integer> list: edges) {	
+			if (!map.containsKey(list.get(0))) {
+				map.put(list.get(0),new HashSet<>());
+			}
+			if (!map.containsKey(list.get(1))) {
+				map.put(list.get(1),new HashSet<>());
+			}
+			map.get(list.get(0)).add(list.get(1));
+			map.get(list.get(1)).add(list.get(0));
+		}
+		List<Integer> list = new ArrayList<>();
+		for (int key: map.keySet()) {	
+			if (map.get(key).size() % 2 != 0) {
+				list.add(key);
+			}
+		}
+		if (list.size() == 0) {
+			return true;
+		}
+		if (list.size() == 4) {
+			int a = list.get(0);
+			int b = list.get(1);
+			int c = list.get(2);
+			int d = list.get(3);
+			if (!map.get(a).contains(b) && !map.get(c).contains(d)) {
+				return true;
+			}
+			if (!map.get(a).contains(c) && !map.get(b).contains(d)) {
+				return true;
+			}
+			if (!map.get(a).contains(d) && !map.get(b).contains(c)) {
+				return true;
+			}
+			return false;
+		}
+		if (list.size() == 2) {
+			int a = list.get(0);
+			int b = list.get(1);
+			if (!map.get(a).contains(b)) {
+				return true;
+			}
+			for (int i = 1; i <= n; i++) {
+				if (!map.containsKey(i)) {
+					return true;
+				}
+				if (!map.get(i).contains(a) && !map.get(i).contains(b)) {
+					return true;
+				}
+			}
+			return false;
+		}
+		return false;
+	}
+}

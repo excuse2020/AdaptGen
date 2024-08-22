@@ -1,0 +1,67 @@
+class Solution {
+	int max;
+	int min;
+	void getMinAndMax(int[] nums) {
+		int n = nums.length;
+		max = nums[0];
+		min = nums[0];
+		for (int i = 1; i < n; i += 2) {
+			if (nums[i] >= nums[i - 1]) {
+				if (nums[i] > max) {
+					max = nums[i];
+				}
+				if (nums[i - 1] < min) {
+					min = nums[i - 1];
+				}
+			} 
+			else {
+				if (nums[i] < min) {
+					min = nums[i];
+				}
+				if (nums[i - 1] > max) {
+					max = nums[i - 1];
+				}
+			}
+		}
+		if ((n % 2) == 1) {
+			if (nums[n - 1] > max) {
+				max = nums[n - 1];
+			} 
+			else if (nums[n - 1] < min) {
+				min = nums[n - 1];
+			}
+		}
+	}
+	long maximumSubarraySum(int[] nums, int k) {
+		int n = nums.length;
+		long maxSum = 0;
+		getMinAndMax(nums);
+		if (k == 1) {
+			return max;
+		}
+		if (max == min) {
+			return 0;
+		}
+		int numsRange = max - min + 1;
+		int[] numFreq = new int[numsRange];
+		long subArrSum = 0;
+		int numOfDups = 0;
+		int windowSize = k - 1;
+		for (int i = 0; i < n; i++) {
+			subArrSum += nums[i];
+			if ((numFreq[nums[i] - min]++) == 1) {
+				numOfDups++;
+			}
+			if (i >= windowSize) {
+				if ((numOfDups == 0) && (subArrSum > maxSum)) {
+					maxSum = subArrSum;
+				}
+				subArrSum -= nums[i - windowSize];
+				if ((--numFreq[nums[i - windowSize] - min]) == 1) {
+					numOfDups--;
+				}
+			}
+		}
+		return maxSum;
+	}
+}

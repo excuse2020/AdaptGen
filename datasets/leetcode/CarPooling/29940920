@@ -1,0 +1,23 @@
+class Solution {
+	boolean carPooling(int[][] trips, int capacity) {
+		PriorityQueue<int[]> minHeapForPickup = new PriorityQueue<>((a, b) -> {a[1] - b[1]});
+		PriorityQueue<int[]> minHeapForDropoff = new PriorityQueue<>((a, b) -> {a[1] - b[1]});
+		for (int[] trip: trips) {	
+			minHeapForDropoff.offer(new int{trip[0], trip[2]});
+			minHeapForPickup.offer(new int{trip[0], trip[1]});
+		}
+		int currSize = 0;
+		while (!minHeapForPickup.isEmpty()) {
+			if (minHeapForDropoff.peek()[1] <= minHeapForPickup.peek()[1]) {
+				currSize -= minHeapForDropoff.poll()[0];
+			} 
+			else {
+				currSize += minHeapForPickup.poll()[0];
+				if (currSize > capacity) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

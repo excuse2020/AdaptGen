@@ -1,0 +1,60 @@
+class Solution {
+	long countPairs(int n, int[][] edges) {
+		HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+		for (int arr: edges) {	
+			if (!map.containsKey(arr[0])) {
+				map.put(arr[0],new ArrayList<>());
+				map.get(arr[0]).add(arr[1]);
+			} 
+			else {
+				map.get(arr[0]).add(arr[1]);
+			}
+			if (!map.containsKey(arr[1])) {
+				map.put(arr[1],new ArrayList<>());
+				map.get(arr[1]).add(arr[0]);
+			} 
+			else {
+				map.get(arr[1]).add(arr[0]);
+			}
+		}
+		long tsum = 0;
+		long size = 0;
+		boolean visited = new boolean[n];
+		Queue<Integer> q = new LinkedList<>();
+		ArrayList<Long> lst = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			if (visited[i]) {
+				continue;
+			} 
+			else if (!map.containsKey(i)) {
+				lst.add(1L);
+				tsum += 1;
+			} 
+			else {
+				q.offer(i);
+				size = 0;
+				visited[i] = true;
+				while (!q.isEmpty()) {
+					int u = q.poll();
+					size += 1;
+					for (int j: map.get(u)) {	
+						if (!visited[j]) {
+							visited[j] = true;
+							q.offer(j);
+						}
+					}
+				}
+				if (size != 0) {
+					lst.add(size);
+					tsum += size;
+				}
+			}
+		}
+		long sum = 0;
+		for (int i = 0; i < lst.size() - 1; i++) {
+			sum = sum + lst.get(i) * (tsum - lst.get(i));
+			tsum -= lst.get(i);
+		}
+		return sum;
+	}
+}

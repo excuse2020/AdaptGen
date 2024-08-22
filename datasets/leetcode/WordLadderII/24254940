@@ -1,0 +1,59 @@
+class Solution {
+	List<List<String>> ans;
+	int bfs(String src, String des, Map<String, List<String>> graph, Set<String> visited, Map<String, Integer> distFromStarting) {
+		List<List<String>> ans = new ArrayList<>();
+		Queue<String> queue = new LinkedList<>();
+		queue.add(src);
+		visited.add(src);
+		int level = 0;
+		distFromStarting.put(src,0);
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				String cur = queue.remove();
+				if (cur.equals(des)) {
+					return level;
+				}
+				for (String n: graph.get(cur)) {	
+					if (!visited.contains(n)) {
+						visited.add(n);
+						queue.add(n);
+						distFromStarting.put(n,distFromStarting.get(cur) + 1);
+					}
+				}
+			}
+			level++;
+		}
+		return 0;
+	}
+	List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+		ans = new ArrayList<>();
+		Map<String, List<String>> graph = new HashMap<>();
+		for (String s: wordList) {	
+			graph.put(s,new ArrayList<>());
+		}
+		if (!graph.containsKey(beginWord)) {
+			wordList.add(beginWord);
+			graph.put(beginWord,new ArrayList<>());
+		}
+		int i = 0;
+		char ch;
+	}
+	void reverseDFS(String src, String des, List<String> path, Map<String, List<String>> graph, Map<String, Integer> distFromStarting) {
+		if (src.equals(des)) {
+			path.add(des);
+			List<String> list = new ArrayList<>(path);
+			Collections.reverse(list);
+			ans.add(list);
+			path.remove(path.size() - 1);
+			return;
+		}
+		path.add(src);
+		for (String next: graph.get(src)) {	
+			if (distFromStarting.containsKey(next) && distFromStarting.get(next) + 1 == distFromStarting.get(src)) {
+				reverseDFS(next,des,path,graph,distFromStarting);
+			}
+		}
+		path.remove(path.size() - 1);
+	}
+}

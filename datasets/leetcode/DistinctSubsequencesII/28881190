@@ -1,0 +1,27 @@
+class Solution {
+	int MOD = 1_000_000_007;
+	int distinctSubseqII(String s) {
+		char[] arr = s.toCharArray();
+		int n = arr.length;
+		Long[] dp = new Long[n];
+		return (int) (helper(arr,0,dp) % MOD);
+	}
+	long helper(char[] arr, int i, Long[] dp) {
+		if (i >= arr.length) {
+			return 0;
+		}
+		if (dp[i] != null) {
+			return dp[i];
+		}
+		Set<Character> set = new HashSet<>();
+		long ans = 0;
+		for (int j = i; j < arr.length; j++) {
+			if (set.contains(arr[j])) {
+				continue;
+			}
+			set.add(arr[j]);
+			ans = (ans % MOD + 1 + helper(arr,j + 1,dp) % MOD) % MOD;
+		}
+		return dp[i] = ans;
+	}
+}

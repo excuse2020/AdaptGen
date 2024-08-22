@@ -1,0 +1,40 @@
+class Solution {
+	void dfs(String s, int i, int cnt, ArrayList<String> list) {
+		if (cnt == 0) {
+			String[] strs = s.split("\\.");
+			if (strs.length < 4) {
+				return;
+			}
+			for (String str: strs) {	
+				if (str.length() > 1 && str.charAt(0) == '0') {
+					return;
+				}
+				if (Integer.parseInt(str) < 0 || Integer.parseInt(str) > 255) {
+					return;
+				}
+			}
+			list.add(s);
+		} 
+		else {
+			if (i >= s.length()) {
+				return;
+			}
+			int n = s.length();
+			dfs(s.substring(0,i + 1) + ".",i + 2,cnt - 1,list);
+			if (i + 2 < n) {
+				dfs(s.substring(0,i + 2) + ".",i + 3,cnt - 1,list);
+			}
+			if (i + 3 < n) {
+				dfs(s.substring(0,i + 3) + ".",i + 4,cnt - 1,list);
+			}
+		}
+	}
+	ArrayList<String> restoreIpAddresses(String s) {
+		ArrayList<String> list = new ArrayList<>();
+		if (s.length() <= 0 || s.length() > 12) {
+			return list;
+		}
+		dfs(s,0,3,list);
+		return list;
+	}
+}

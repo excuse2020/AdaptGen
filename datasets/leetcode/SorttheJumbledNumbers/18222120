@@ -1,0 +1,30 @@
+class Solution {
+	int[] sortJumbled(int[] mapping, int[] nums) {
+		if (nums.length == 0) {
+			return nums;
+		}
+		TreeMap<Integer, List<Integer>> map = new TreeMap<>();
+		int[] result = new int[nums.length];
+		for (int i = 0; i < nums.length; i++) {
+			String s = String.valueOf(nums[i]);
+			StringBuilder sb = new StringBuilder();
+			for (int j = 0; j < s.length(); j++) {
+				sb.append(mapping[Character.getNumericValue(s.charAt(j))]);
+			}
+			int val = Integer.valueOf(sb.toString());
+			if (map.containsKey(val)) {
+				map.get(val).add(i);
+			} 
+			else {
+				map.put(val,new ArrayList<>(Arrays.asList(i)));
+			}
+		}
+		int index = 0;
+		for (List<Integer> list: map.values()) {	
+			for (int k: list) {	
+				result[index++] = nums[k];
+			}
+		}
+		return result;
+	}
+}

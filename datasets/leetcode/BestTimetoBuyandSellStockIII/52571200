@@ -1,0 +1,36 @@
+class Solution {
+	int helper(int arr, int i, int k, int buysell, int dp) {
+		if (i >= arr.length || k == 0) {
+			return 0;
+		}
+		if (dp[i][k][buysell] != -1) {
+			return dp[i][k][buysell];
+		}
+		int x = 0;
+		if (buysell == 0) {
+			int buy = helper(arr,i + 1,k,1,dp) - arr[i];
+			int nobuy = helper(arr,i + 1,k,0,dp);
+			x = Math.max(buy,nobuy);
+			dp[i][k][buysell] = x;
+		} 
+		else {
+			int sell = helper(arr,i + 1,k - 1,0,dp) + arr[i];
+			int nosell = helper(arr,i + 1,k,1,dp);
+			x = Math.max(sell,nosell);
+			dp[i][k][buysell] = x;
+		}
+		return dp[i][k][buysell];
+	}
+	int maxProfit(int[] prices) {
+		int m = prices.length;
+		int dp = new int[m][3][2];
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < 3; j++) {
+				for (int k = 0; k < 2; k++) {
+					dp[i][j][k] = -1;
+				}
+			}
+		}
+		return helper(prices,0,2,0,dp);
+	}
+}

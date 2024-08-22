@@ -1,0 +1,37 @@
+class Solution {
+	int func(int[][] grid, int r, int c, int[][] dp) {
+		if (dp[r][c] != -1) {
+			return dp[r][c];
+		}
+		int c1 = 0, c2 = 0, c3 = 0;
+		if (valid(grid,r - 1,c + 1) && grid[r - 1][c + 1] > grid[r][c]) {
+			c1 = 1 + func(grid,r - 1,c + 1,dp);
+		}
+		if (valid(grid,r,c + 1) && grid[r][c + 1] > grid[r][c]) {
+			c2 = 1 + func(grid,r,c + 1,dp);
+		}
+		if (valid(grid,r + 1,c + 1) && grid[r + 1][c + 1] > grid[r][c]) {
+			c3 = 1 + func(grid,r + 1,c + 1,dp);
+		}
+		dp[r][c] = Math.max(c1,(Math.max(c2,c3)));
+		return dp[r][c];
+	}
+	int maxMoves(int[][] grid) {
+		int m = grid.length, n = grid[0].length;
+		int[][] dp = new int[m][n];
+		for (int[] row: dp) {	
+			Arrays.fill(row,-1);
+		}
+		int ans = 0;
+		for (int i = 0; i < m; i++) {
+			ans = Math.max(ans,func(grid,i,0,dp));
+			if (ans == grid[0].length - 1) {
+				return ans;
+			}
+		}
+		return ans;
+	}
+	boolean valid(int[][] grid, int r, int c) {
+		return !(r < 0 || r >= grid.length || c < 0 || c >= grid[0].length);
+	}
+}

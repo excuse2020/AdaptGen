@@ -1,0 +1,55 @@
+class Solution {
+	int findInMountainArray(int target, MountainArray mountainArr) {
+		int n = mountainArr.length() - 1;
+		int index = peakI(mountainArr);
+		int mini = findM(target,mountainArr,0,index);
+		if (mini == -1) {
+			return findMD(target,mountainArr,index + 1,n);
+		}
+		return mini;
+	}
+	int findM(int target, MountainArray mountainArr, int start, int end) {
+		while (start <= end) {
+			int midl = start + (end - start) / 2;
+			if (mountainArr.get(midl) > target) {
+				end = midl - 1;
+			} 
+			else if (mountainArr.get(midl) < target) {
+				start = midl + 1;
+			} 
+			else {
+				return midl;
+			}
+		}
+		return -1;
+	}
+	int findMD(int target, MountainArray mountainArr, int start, int end) {
+		while (start <= end) {
+			int midl = start + (end - start) / 2;
+			if (mountainArr.get(midl) < target) {
+				end = midl - 1;
+			} 
+			else if (mountainArr.get(midl) > target) {
+				start = midl + 1;
+			} 
+			else {
+				return midl;
+			}
+		}
+		return -1;
+	}
+	int peakI(MountainArray mountainArr) {
+		int start = 0;
+		int end = mountainArr.length() - 1;
+		while (start < end) {
+			int midl = start + (end - start) / 2;
+			if (mountainArr.get(midl) > mountainArr.get(midl + 1)) {
+				end = midl;
+			} 
+			else if (mountainArr.get(midl) < mountainArr.get(midl + 1)) {
+				start = midl + 1;
+			}
+		}
+		return start;
+	}
+}

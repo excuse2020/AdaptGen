@@ -1,0 +1,65 @@
+class Solution {
+	boolean isAlienSorted(String[] words, String order) {
+		int min = words[0].length();
+		int max = words[0].length();
+		for (int i = 1; i < words.length; i++) {
+			if (words[i].length() > max) {
+				max = words[i].length();
+			}
+			if (words[i].length() < min) {
+				min = words[i].length();
+			}
+		}
+		for (int i = 0; i < min; i++) {
+			boolean sorted = true;
+			int prev = order.indexOf(words[0].charAt(i));
+			for (int j = 0; j < words.length - 1; j++) {
+				int curr = order.indexOf(words[j + 1].charAt(i));
+				if (prev > curr) {
+					return false;
+				} 
+				else if (prev == curr) {
+					sorted = false;
+				}
+				prev = curr;
+			}
+			if (sorted) {
+				return true;
+			}
+		}
+		for (int i = min; i < max; i++) {
+			List<Integer> empty = new ArrayList<>();
+			List<Integer> full = new ArrayList<>();
+			for (int j = 0; j < words.length; j++) {
+				if (words[j].length() > i) {
+					full.add(j);
+				} 
+				else {
+					empty.add(j);
+				}
+			}
+			if (empty.get(empty.size() - 1) > full.get(0)) {
+				return false;
+			}
+			if (full.size() == 1) {
+				return true;
+			}
+			boolean sorted = true;
+			int prev = order.indexOf(words[full.get(0)].charAt(i));
+			for (int k = 0; k < full.size() - 1; k++) {
+				int curr = order.indexOf(words[full.get(k + 1)].charAt(i));
+				if (prev > curr) {
+					return false;
+				} 
+				else if (prev == curr) {
+					sorted = false;
+				}
+				prev = curr;
+			}
+			if (sorted) {
+				return true;
+			}
+		}
+		return true;
+	}
+}

@@ -1,0 +1,35 @@
+class Solution {
+	HashMap<String, Integer> addWords(HashMap<String, Integer> map, String[] sentence) {
+		for (int i = 0; i < sentence.length; i++) {
+			String s = sentence[i];
+			if (!map.containsKey(s)) {
+				map.put(s,0);
+			}
+			map.put(s,map.get(s) + 1);
+		}
+		return map;
+	}
+	String[] findUniqueWords(HashMap<String, Integer> map1, HashMap<String, Integer> map2) {
+		ArrayList<String> list = new ArrayList<>();
+		for (Map.Entry<String, Integer> entry: map1.entrySet()) {	
+			if (entry.getValue() == 1 && !map2.containsKey(entry.getKey())) {
+				list.add(entry.getKey());
+			}
+		}
+		for (Map.Entry<String, Integer> entry: map2.entrySet()) {	
+			if (entry.getValue() == 1 && !map1.containsKey(entry.getKey())) {
+				list.add(entry.getKey());
+			}
+		}
+		return list.toArray(new String[0]);
+	}
+	String[] uncommonFromSentences(String s1, String s2) {
+		HashMap<String, Integer> map1 = new HashMap<>();
+		HashMap<String, Integer> map2 = new HashMap<>();
+		var sentence1 = s1.split(" ");
+		var sentence2 = s2.split(" ");
+		addWords(map1,sentence1);
+		addWords(map2,sentence2);
+		return findUniqueWords(map1,map2);
+	}
+}

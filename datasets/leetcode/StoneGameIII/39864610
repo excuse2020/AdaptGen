@@ -1,0 +1,30 @@
+class Solution {
+	int getScore(int i, int[] stoneValue, int[] dp) {
+		int n = stoneValue.length;
+		if (i == n) {
+			return 0;
+		}
+		if (dp[i] != -1) {
+			return dp[i];
+		}
+		int stone1 = Integer.MIN_VALUE;
+		int stone2 = Integer.MIN_VALUE;
+		int stone3 = Integer.MIN_VALUE;
+		if (i + 1 <= n) {
+			stone1 = stoneValue[i] - getScore(i + 1,stoneValue,dp);
+		}
+		if (i + 2 <= n) {
+			stone2 = stoneValue[i] + stoneValue[i + 1] - getScore(i + 2,stoneValue,dp);
+		}
+		if (i + 3 <= n) {
+			stone3 = stoneValue[i] + stoneValue[i + 1] - getScore(i + 3,stoneValue,dp);
+		}
+		return dp[i] = Math.max(stone1,Math.max(stone2,stone3));
+	}
+	String stoneGameIII(int[] stoneValue) {
+		int[] dp = new int[stoneValue.length];
+		Arrays.fill(dp,-1);
+		int outcome = getScore(0,stoneValue,dp);
+		return outcome == 0 ? "Tie" : (outcome > 0 ? "Alice" : "Bob");
+	}
+}

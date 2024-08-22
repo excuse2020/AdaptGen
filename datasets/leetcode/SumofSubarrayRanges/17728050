@@ -1,0 +1,27 @@
+class Solution {
+	long subArrayRanges(int[] nums) {
+		int n = nums.length;
+		long ans = 0;
+		Stack<Integer> st = new Stack<>();
+		for (int i = 0; i <= n; i++) {
+			while (!st.isEmpty() && (i == n || nums[st.peek()] < nums[i])) {
+				int top = st.pop();
+				int l = top - (st.isEmpty() ? -1 : st.peek());
+				int r = i - top;
+				ans += (long) nums[top] * l;
+			}
+			st.push(i);
+		}
+		st.clear();
+		for (int i = 0; i <= n; i++) {
+			while (!st.isEmpty() && (i == n || nums[st.peek()] > nums[i])) {
+				int top = st.pop();
+				int l = top - (st.isEmpty() ? -1 : st.peek());
+				int r = i - top;
+				ans -= (long) nums[top] * l;
+			}
+			st.push(i);
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,29 @@
+class Solution {
+	Map<String, Integer> tracker = null;
+	int maxValue(List<List<Integer>> piles, int k, int index) {
+		if (k <= 0 || piles.size() <= index) {
+			return 0;
+		}
+		String cKey = (index + "_");
+		if (tracker.containsKey(cKey)) {
+			return tracker.get(cKey);
+		}
+		int max = maxValue(piles,k,index + 1);
+		List<Integer> pile = piles.get(index);
+		int sum = 0;
+		for (Integer pVal: pile) {	
+			if (k == 0) {
+				break;
+			}
+			k--;
+			sum = sum + pVal;
+			max = Math.max(max,maxValue(piles,k,index + 1) + sum);
+		}
+		tracker.put(cKey,max);
+		return max;
+	}
+	int maxValueOfCoins(List<List<Integer>> piles, int k) {
+		tracker = new HashMap<>();
+		return maxValue(piles,k,0);
+	}
+}

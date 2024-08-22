@@ -1,0 +1,33 @@
+class Solution {
+	int countPaths(int[][] matrix) {
+		int[][] dir = {{0, 1}, {1, 0}, {-1, 0}, {0, -1}};
+		int m = matrix.length;
+		int a = 1000000007;
+		int n = matrix[0].length;
+		long[][] mem = new long[matrix.length][matrix[0].length];
+		long sum = 0;
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix[0].length; j++) {
+				long path = dfs(matrix,m,n,i,j,mem,dir);
+				sum = (sum + path) % a;
+			}
+		}
+		return (int) (sum % a);
+	}
+	long dfs(int[][] matrix, int m, int n, int i, int j, long[][] mem, int[][] dir) {
+		if (mem[i][j] > 0) {
+			return mem[i][j];
+		}
+		long max = 0;
+		int a = 1000000007;
+		for (int z = 0; z < dir.length; z++) {
+			int x = i + dir[z][0];
+			int y = dir[z][1] + j;
+			if (x >= 0 && y >= 0 && x < m && y < n && matrix[x][y] > matrix[i][j]) {
+				max = (max + dfs(matrix,m,n,x,y,mem,dir)) % a;
+			}
+		}
+		mem[i][j] = (max + 1) % a;
+		return mem[i][j];
+	}
+}

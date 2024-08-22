@@ -1,0 +1,40 @@
+class Solution {
+	List<Boolean> checkIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
+		List<List<Integer>> kidsList = new ArrayList<>();
+		for (int i = 0; i < numCourses; i++) {
+			kidsList.add(new ArrayList<>());
+		}
+		int[] parentCount = new int[numCourses];
+		for (int[] prereq: prerequisites) {	
+			kidsList.get(prereq[0]).add(prereq[1]);
+			parentCount[prereq[1]]++;
+		}
+		Deque<Integer> q = new LinkedList<>();
+		for (int i = 0; i < numCourses; i++) {
+			if (parentCount[i] == 0) {
+				q.push(i);
+			}
+		}
+		boolean[][] dp = new boolean[numCourses][numCourses];
+		while (!q.isEmpty()) {
+			int curr = q.pop();
+			for (int kid: kidsList.get(curr)) {	
+				dp[curr][kid] = true;
+				for (int i = 0; i < numCourses; i++) {
+					if (dp[i][curr]) {
+						dp[i][kid] = true;
+					}
+				}
+				parentCount[kid]--;
+				if (parentCount[kid] == 0) {
+					q.push(kid);
+				}
+			}
+		}
+		List<Boolean> res = new ArrayList<>();
+		for (int[] query: queries) {	
+			res.add(dp[query[0]][query[1]]);
+		}
+		return res;
+	}
+}

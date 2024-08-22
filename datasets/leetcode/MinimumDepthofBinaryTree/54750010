@@ -1,0 +1,37 @@
+class Solution {
+	void applyDFS(TreeNode root, AtomicInteger minPath, int currentPath) {
+		if (root == null) {
+			return;
+		}
+		System.out.println("root " + root.val);
+		if (isLeafNode(root)) {
+			if (currentPath < minPath.get()) {
+				minPath.set(currentPath);
+				System.out.println("update minPath " + minPath.get());
+			}
+			currentPath = 0;
+			return;
+		}
+		currentPath++;
+		applyDFS(root.left,minPath,currentPath);
+		applyDFS(root.right,minPath,currentPath);
+	}
+	boolean isLeafNode(TreeNode root) {
+		if (root != null && (root.left == null && root.right == null)) {
+			return true;
+		}
+		return false;
+	}
+	int minDepth(TreeNode root) {
+		AtomicInteger minPath = new AtomicInteger(Integer.MAX_VALUE);
+		int currentPath = 0;
+		if (isLeafNode(root)) {
+			return 1;
+		}
+		if (root == null) {
+			return 0;
+		}
+		applyDFS(root,minPath,currentPath);
+		return minPath.get() + 1;
+	}
+}

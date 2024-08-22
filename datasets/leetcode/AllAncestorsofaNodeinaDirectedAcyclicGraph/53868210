@@ -1,0 +1,41 @@
+class Solution {
+	void dfs(int node, int totalNode, List<Integer>[] nodeToParents, List<List<Integer>> nodeToSupers) {
+		boolean[] nodeToIsSuper = new boolean[totalNode];
+		for (int parent: nodeToParents[node]) {	
+			if (nodeToSupers.get(parent) == null) {
+				dfs(parent,totalNode,nodeToParents,nodeToSupers);
+			}
+			nodeToIsSuper[parent] = true;
+			for (int superNode: nodeToSupers.get(parent)) {	
+				nodeToIsSuper[superNode] = true;
+			}
+		}
+		List<Integer> supers = new ArrayList<>();
+		for (int i = 0; i < totalNode; i += 1) {
+			if (nodeToIsSuper[i]) {
+				supers.add(i);
+			}
+		}
+		nodeToSupers.set(node,supers);
+	}
+	List<List<Integer>> getAncestors(int totalNode, int[][] nodeToChildArr) {
+		List<Integer>[] nodeToParents = new List[totalNode];
+		for (int i = 0; i < nodeToParents.length; i += 1) {
+			nodeToParents[i] = new ArrayList<>();
+		}
+		for (int[] nodeToChild: nodeToChildArr) {	
+			nodeToParents[nodeToChild[1]].add(nodeToChild[0]);
+		}
+		List<List<Integer>> nodeToSupers = new ArrayList<>(totalNode);
+		for (int i = 0; i < totalNode; i += 1) {
+			nodeToSupers.add(null);
+		}
+		for (int i = 0; i < totalNode; i += 1) {
+			if (nodeToSupers.get(i) != null) {
+				continue;
+			}
+			dfs(i,totalNode,nodeToParents,nodeToSupers);
+		}
+		return nodeToSupers;
+	}
+}

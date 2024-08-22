@@ -1,0 +1,32 @@
+class Solution {
+	long distinctNames(String[] ideas) {
+		HashMap<Character, Set<String>> map = new HashMap<>();
+		for (String idea: ideas) {	
+			Set<String> temp = map.getOrDefault(idea.charAt(0),new HashSet<>());
+			temp.add(idea.substring(1));
+			map.put(idea.charAt(0),temp);
+		}
+		long ans = 0;
+		for (char key: map.keySet()) {	
+			Set<String> ls = map.get(key);
+			for (char key1: map.keySet()) {	
+				if (key == key1) {
+					continue;
+				}
+				Set<String> ls1 = map.get(key1);
+				Set<String> inter = getIn(ls,ls1);
+				ans += ((long) (ls1.size() - inter.size()) * (ls.size() - inter.size()));
+			}
+		}
+		return ans;
+	}
+	Set<String> getIn(Set<String> s1, Set<String> s2) {
+		Set<String> s = new HashSet<>();
+		for (String c: s2) {	
+			if (s1.contains(c)) {
+				s.add(c);
+			}
+		}
+		return s;
+	}
+}

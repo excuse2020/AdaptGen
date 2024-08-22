@@ -1,0 +1,31 @@
+class Solution {
+	boolean isPalindrome(ListNode head) {
+		if (head.next == null) {
+			return true;
+		}
+		ListNode fast = head;
+		ListNode slow = head;
+		long slowHash = 0;
+		int pos = 0;
+		int xorHash = 0;
+		while (fast != null && fast.next != null) {
+			pos++;
+			xorHash ^= slow.val + pos;
+			slowHash += pos * slow.val;
+			fast = fast.next.next;
+			slow = slow.next;
+		}
+		if (fast != null) {
+			pos++;
+			xorHash ^= slow.val + pos;
+			slowHash += pos * slow.val;
+		}
+		while (slow != null) {
+			xorHash ^= slow.val + pos;
+			slowHash -= pos * slow.val;
+			slow = slow.next;
+			pos--;
+		}
+		return slowHash == 0 && xorHash == 0;
+	}
+}

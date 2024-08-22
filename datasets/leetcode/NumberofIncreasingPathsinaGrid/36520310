@@ -1,0 +1,36 @@
+class Solution {
+	int modval = 1000000007;
+	int countPaths(int[][] grid) {
+		int[][] npaths = new int[grid.length][grid[0].length];
+		Queue<int[]> pq = new PriorityQueue<>((a, b) -> {a[0] - b[0]});
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				pq.add(new int{grid[i][j], i, j});
+			}
+		}
+		int[] cur;
+		while (!pq.isEmpty()) {
+			cur = pq.poll();
+			npaths[cur[1]][cur[2]] = 1;
+			if (cur[1] + 1 < grid.length && cur[0] > grid[cur[1] + 1][cur[2]]) {
+				npaths[cur[1]][cur[2]] = (npaths[cur[1]][cur[2]] + npaths[cur[1] + 1][cur[2]]) % modval;
+			}
+			if (cur[1] - 1 >= 0 && cur[0] > grid[cur[1] - 1][cur[2]]) {
+				npaths[cur[1]][cur[2]] = (npaths[cur[1]][cur[2]] + npaths[cur[1] - 1][cur[2]]) % modval;
+			}
+			if (cur[2] + 1 < grid[0].length && cur[0] > grid[cur[1]][cur[2] + 1]) {
+				npaths[cur[1]][cur[2]] = (npaths[cur[1]][cur[2]] + npaths[cur[1]][cur[2] + 1]) % modval;
+			}
+			if (cur[2] - 1 >= 0 && cur[0] > grid[cur[1]][cur[2] - 1]) {
+				npaths[cur[1]][cur[2]] = (npaths[cur[1]][cur[2]] + npaths[cur[1]][cur[2] - 1]) % modval;
+			}
+		}
+		int totpath = 0;
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				totpath = (totpath + npaths[i][j]) % modval;
+			}
+		}
+		return totpath;
+	}
+}

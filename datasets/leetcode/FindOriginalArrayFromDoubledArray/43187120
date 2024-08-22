@@ -1,0 +1,48 @@
+class Solution {
+	int[] findOriginalArray(int[] changed) {
+		int len = changed.length;
+		List<Integer> result = new ArrayList<>();
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int i = 0; i < len; i++) {
+			if (!map.containsKey(changed[i])) {
+				map.put(changed[i],new ArrayList<>());
+			}
+			map.get(changed[i]).add(i);
+		}
+		Arrays.sort(changed);
+		for (int i = 0; i < len; i++) {
+			if (changed[i] == 0 && !result.contains(0)) {
+				List<Integer> zeroList = map.get(changed[i]);
+				if (zeroList.size() % 2 == 0) {
+					for (int j = 0; j < zeroList.size() / 2; j++) {
+						result.add(0);
+					}
+				} 
+				else {
+					return new int[0];
+				}
+			} 
+			else {
+				if (changed[i] != 0 && map.containsKey(changed[i])) {
+					if (!map.containsKey(changed[i] * 2)) {
+						return new int[0];
+					} 
+					else {
+						List<Integer> doubleValueList = map.get(changed[i] * 2);
+						doubleValueList.remove(doubleValueList.size() - 1);
+						if (doubleValueList.size() == 0) {
+							map.remove(changed[i] * 2);
+						}
+						List<Integer> originalValueList = map.get(changed[i]);
+						originalValueList.remove(originalValueList.size() - 1);
+						if (originalValueList.size() == 0) {
+							map.remove(changed[i]);
+						}
+						result.add(changed[i]);
+					}
+				}
+			}
+		}
+		return result.stream().mapToInt((x) -> {x}).toArray();
+	}
+}

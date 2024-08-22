@@ -1,0 +1,52 @@
+class Solution {
+	int count = 0;
+	int[] parent;
+	Random random = new Random();
+	Set<Integer> set = new HashSet<>();
+	int find(int a) {
+		if (parent[a] != a) {
+			parent[a] = find(parent[a]);
+		}
+		return parent[a];
+	}
+	boolean isConnected(int a, int representative) {
+		return find(a) == representative;
+	}
+	void makeSet(int n) {
+		for (int i = 0; i < n; i++) {
+			parent[i] = i;
+		}
+	}
+	int reachableNodes(int n, int[][] edges, int[] restricted) {
+		parent = new int[n];
+		for (int node: restricted) {	
+			set.add(node);
+		}
+		makeSet(n);
+		for (int[] edge: edges) {	
+			union(edge[0],edge[1]);
+		}
+		int rep = find(0);
+		for (int i = 0; i < n; i++) {
+			if (!set.contains(i)) {
+				if (isConnected(i,rep)) {
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+	void union(int a, int b) {
+		if (set.contains(a) || set.contains(b)) {
+			return;
+		}
+		int rootA = find(a);
+		int rootB = find(b);
+		if (random.nextBoolean()) {
+			parent[rootA] = rootB;
+		} 
+		else {
+			parent[rootB] = rootA;
+		}
+	}
+}

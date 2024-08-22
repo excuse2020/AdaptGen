@@ -1,0 +1,33 @@
+class Solution {
+	int maxDistance(int[][] grid) {
+		int n = grid.length, i0 = 0, i1 = 0;
+		int[][] arr = new int[2][1000000];
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (grid[i][j] == 0) {
+					arr[0][i0] = i;
+					arr[0][i0 + 1] = j;
+					i0 += 2;
+				} 
+				else {
+					arr[1][i1] = i;
+					arr[1][i1 + 1] = j;
+					i1 += 2;
+				}
+			}
+		}
+		if (i1 == 0 || i0 == 0) {
+			return -1;
+		}
+		int ans = 0, l = 9999999;
+		for (int i = 0; i < i0; i += 2) {
+			l = 9999999;
+			for (int j = 0; j < i1; j += 2) {
+				int v = Math.abs(arr[0][i] - arr[1][j]) + Math.abs(arr[0][i + 1] - arr[1][j + 1]);
+				l = v < l ? v : l;
+			}
+			ans = l > ans ? l : ans;
+		}
+		return ans;
+	}
+}

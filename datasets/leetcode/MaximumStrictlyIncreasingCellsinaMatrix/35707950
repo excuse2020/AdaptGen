@@ -1,0 +1,70 @@
+class Solution {
+	int helper(int i, int j, int[][] ngeh, int[][] ngev, int[][] dp, int[][] mat) {
+		if (dp[i][j] > 0) {
+			return dp[i][j];
+		}
+		int res = 0;
+		int next = ngeh[i][j];
+		while (next != -1 && mat[i][next] == mat[i][j]) {
+			next = ngeh[i][next];
+		}
+		if (next != -1) {
+			int larger = mat[i][next];
+			while (next != -1 && mat[i][next] == larger) {
+				res = Math.max(res,helper(i,next,ngeh,ngev,dp,mat));
+				next = ngeh[i][next];
+			}
+		}
+		next = ngev[i][j];
+		while (next != -1 && mat[next][j] == mat[i][j]) {
+			next = ngev[next][j];
+		}
+		if (next != -1) {
+			int larger = mat[next][j];
+			while (next != -1 && mat[next][j] == larger) {
+				res = Math.max(res,helper(next,j,ngeh,ngev,dp,mat));
+				next = ngev[next][j];
+			}
+		}
+		dp[i][j] = 1 + res;
+		return 1 + res;
+	}
+	int maxIncreasingCells(int[][] mat) {
+		int m = mat.length, n = mat[0].length, res = 0;
+		int[][] ngeh = new int[m][n];
+		int[][] ngev = new int[m][n];
+		int[][] dp = new int[m][n];
+		for (int i = 0; i < m; i++) {
+			Integer[] tmp = new Integer[n];
+			for (int j = 0; j < n; j++) {
+				tmp[j] = j;
+			}
+			int fi = i;
+			Arrays.sort(tmp,(a, b) -> {mat[fi][a] - mat[fi][b]});
+			for (int j = 0; j < n - 1; j++) {
+				ngeh[i][tmp[j]] = tmp[j + 1];
+			}
+			ngeh[i][tmp[n - 1]] = -1;
+		}
+		for (int j = 0; j < n; i++) {
+			Integer[] tmp = new Integer[m];
+			for (int i = 0; i < m; i++) {
+				tmp[i] = i;
+			}
+			int fj = j;
+			Arrays.sort(tmp,(a, b) -> {mat[a][fj] - mat[b][fj]});
+			for (int i = 0; i < m - 1; i++) {
+				ngev[tmp[i]][j] = tmp[i + 1];
+			}
+			ngev[tmp[m - 1]][j] = -1;
+		}
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				if (dp[i][j] == 0) {
+					res = Math.max(res,helper(i,j,ngeh,ngev,dp,mat));
+				}
+			}
+		}
+		return res;
+	}
+}

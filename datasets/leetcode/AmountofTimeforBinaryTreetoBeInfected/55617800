@@ -1,0 +1,68 @@
+class Solution {
+	int amountOfTime(TreeNode root, int start) {
+		int time = 0;
+		if (root == null) {
+			return time;
+		}
+		Queue<TreeNode> queue = new LinkedList<>();
+		Map<Integer, TreeNode> parent = new HashMap<>();
+		queue.offer(root);
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				TreeNode node = queue.poll();
+				if (node.left != null) {
+					queue.offer(node.left);
+					parent.put(node.left.val,node);
+				}
+				if (node.right != null) {
+					queue.offer(node.right);
+					parent.put(node.right.val,node);
+				}
+			}
+		}
+		Set<Integer> visited = new HashSet<>();
+		TreeNode target = getNode(root,start);
+		visited.add(target.val);
+		queue.offer(target);
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			boolean burned = false;
+			for (int i = 0; i < size; i++) {
+				TreeNode node = queue.poll();
+				if (node.left != null && !visited.contains(node.left.val)) {
+					queue.offer(node.left);
+					visited.add(node.left.val);
+					burned = true;
+				}
+				if (node.right != null && !visited.contains(node.right.val)) {
+					queue.offer(node.right);
+					visited.add(node.right.val);
+					burned = true;
+				}
+				if (parent.containsKey(node.val) && !visited.contains(parent.get(node.val).val)) {
+					queue.offer(parent.get(node.val));
+					visited.add(parent.get(node.val).val);
+					burned = true;
+				}
+			}
+			if (burned) {
+				time++;
+			}
+		}
+		return time;
+	}
+	TreeNode getNode(TreeNode root, int target) {
+		if (root == null) {
+			return null;
+		}
+		if (root.val == target) {
+			return root;
+		}
+		TreeNode left = getNode(root.left,target);
+		if (left != null) {
+			return left;
+		}
+		return getNode(root.right,target);
+	}
+}

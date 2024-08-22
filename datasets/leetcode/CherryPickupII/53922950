@@ -1,0 +1,40 @@
+class Solution {
+	int cherryPickup(int[][] grid) {
+		int n = grid.length;
+		int m = grid[0].length;
+		HashMap<String, Integer> map = new HashMap<>();
+		return pick(grid,0,0,m - 1,map);
+	}
+	int pick(int[][] grid, int r, int c1, int c2, HashMap<String, Integer> map) {
+		if (c1 < 0 || c1 >= grid[0].length || c2 < 0 || c2 >= grid[0].length) {
+			return Integer.MIN_VALUE;
+		}
+		if (r == grid.length - 1) {
+			if (c1 == c2) {
+				return grid[r][c1];
+			} 
+			else {
+				return grid[r][c1] + grid[r][c2];
+			}
+		}
+		String key = r + "-";
+		if (map.containsKey(key)) {
+			return map.get(key);
+		}
+		int max = Integer.MIN_VALUE;
+		for (int i = -1; i < 2; i++) {
+			for (int j = -1; j < 2; j++) {
+				int val;
+				if (c1 == c2) {
+					val = grid[r][c1] + pick(grid,r + 1,c1 + i,c2 + j,map);
+				} 
+				else {
+					val = grid[r][c1] + grid[r][c2];
+				}
+				max = Math.max(max,val);
+			}
+		}
+		map.put(key,max);
+		return max;
+	}
+}

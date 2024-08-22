@@ -1,0 +1,20 @@
+class Solution {
+	TreeNode reConstructBinaryTree(int[] pre, int[] in) {
+		return reConstructBinaryTreeRec(pre,0,pre.length - 1,in,0,in.length - 1);
+	}
+	TreeNode reConstructBinaryTreeRec(int[] pre, int preStart, int preEnd, int[] in, int inStart, int inEnd) {
+		if (preStart > preEnd || inStart > inEnd) {
+			return null;
+		}
+		int rootPosition = inStart - 1;
+		while (++rootPosition <= inEnd) {
+			if (pre[preStart] == in[rootPosition]) {
+				break;
+			}
+		}
+		TreeNode root = new TreeNode(pre[preStart]);
+		root.left = reConstructBinaryTreeRec(pre,preStart + 1,preStart + rootPosition - inStart,in,inStart,rootPosition - 1);
+		root.right = reConstructBinaryTreeRec(pre,preStart + rootPosition - inStart + 1,preEnd,in,rootPosition + 1,inEnd);
+		return root;
+	}
+}

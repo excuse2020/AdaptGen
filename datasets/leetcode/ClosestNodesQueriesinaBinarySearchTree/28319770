@@ -1,0 +1,55 @@
+class Solution {
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> q) {
+		List<List<Integer>> nm = new ArrayList<>();
+		List<Integer> kk = new ArrayList<>();
+		task(root,kk);
+		Collections.sort(kk);
+		for (int i = 0; i < q.size(); i++) {
+			int ele = q.get(i), s = -1, p = -1;
+			int l = 0, h = kk.size() - 1;
+			while (l <= h) {
+				int mid = (l + h) / 2;
+				if (kk.get(mid) == ele) {
+					s = ele;
+					break;
+				} 
+				else if (kk.get(mid) < ele) {
+					s = kk.get(mid);
+					l = mid + 1;
+				} 
+				else {
+					h = mid - 1;
+				}
+			}
+			l = 0;
+			h = kk.size() - 1;
+			while (l <= h) {
+				int mid = (l + h) / 2;
+				if (kk.get(mid) == ele) {
+					p = ele;
+					break;
+				} 
+				else if (kk.get(mid) > ele) {
+					p = kk.get(mid);
+					h = mid - 1;
+				} 
+				else {
+					l = mid + 1;
+				}
+			}
+			List<Integer> f = new ArrayList<>();
+			f.add(s);
+			f.add(p);
+			nm.add(new ArrayList<>(f));
+		}
+		return nm;
+	}
+	void task(TreeNode root, List<Integer> nm) {
+		if (root == null) {
+			return;
+		}
+		task(root.left,nm);
+		nm.add(root.val);
+		task(root.right,nm);
+	}
+}

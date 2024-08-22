@@ -1,0 +1,45 @@
+class Solution {
+	int[] sz, root;
+	void connect(int i, int j) {
+		int ri = root(i);
+		int rj = root(j);
+		if (ri == rj) {
+			return;
+		}
+		if (sz[ri] <= sz[rj]) {
+			sz[rj] += sz[ri];
+			sz[ri] = 0;
+			root[ri] = rj;
+		} 
+		else {
+			sz[ri] += sz[rj];
+			sz[rj] = 0;
+			root[rj] = ri;
+		}
+	}
+	long countPairs(int n, int[][] edges) {
+		sz = new int[n];
+		root = new int[n];
+		Arrays.fill(sz,1);
+		for (int i = 0; i < n; i++) {
+			root[i] = i;
+		}
+		long sum = 0;
+		long total = 0;
+		for (int[] ed: edges) {	
+			connect(ed[0],ed[1]);
+		}
+		for (int i = n - 1; i > -1; i--) {
+			total += sz[i] * sum;
+			sum += sz[i];
+		}
+		return total;
+	}
+	int root(int i) {
+		while (i != root[i]) {
+			root[i] = root[root[i]];
+			i = root[i];
+		}
+		return i;
+	}
+}

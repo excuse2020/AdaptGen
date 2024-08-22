@@ -1,0 +1,29 @@
+class Solution {
+	int rob(int[] nums) {
+		int n = nums.length;
+		if (n == 1) {
+			return nums[0];
+		}
+		int[] dp1 = new int[n];
+		int[] dp2 = new int[n];
+		Arrays.fill(dp1,-1);
+		Arrays.fill(dp2,-1);
+		int res1 = solve(nums,0,n - 2,dp1);
+		int res2 = solve(nums,1,n - 1,dp2);
+		return Math.max(res1,res2);
+	}
+	int solve(int[] nums, int startidx, int idx, int[] dp) {
+		if (idx == startidx) {
+			return nums[idx];
+		}
+		if (dp[idx] != -1) {
+			return dp[idx];
+		}
+		int pick = nums[idx];
+		if (idx - startidx >= 2) {
+			pick += solve(nums,startidx,idx - 2,dp);
+		}
+		int npick = solve(nums,startidx,idx - 1,dp);
+		return dp[idx] = Math.max(pick,npick);
+	}
+}

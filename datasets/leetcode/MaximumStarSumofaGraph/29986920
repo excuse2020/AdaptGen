@@ -1,0 +1,34 @@
+class Solution {
+	int maxStarSum(int[] vals, int[][] edges, int k) {
+		int l = vals.length;
+		HashSet<Integer>[] arr = new HashSet[l];
+		for (int i = 0; i < arr.length; i++) {
+			arr[i] = new HashSet<>();
+		}
+		for (int[] edge: edges) {	
+			int from = edge[0], to = edge[1];
+			arr[from].add(to);
+			arr[to].add(from);
+		}
+		int max = Integer.MIN_VALUE;
+		int u = 0;
+		for (HashSet<Integer> set: arr) {	
+			int[] val = new int[set.size()];
+			int i = 0;
+			for (int a: set) {	
+				val[i] = vals[a];
+				i++;
+			}
+			Arrays.sort(val);
+			int count = vals[u];
+			for (int j = 0; j < k && j < set.size(); j++) {
+				if (val[val.length - 1 - j] > 0) {
+					count += val[val.length - 1 - j];
+				}
+			}
+			max = Math.max(count,max);
+			u++;
+		}
+		return max;
+	}
+}

@@ -1,0 +1,44 @@
+class Solution {
+	long maximumSumOfHeights(List<Integer> maxHeights) {
+		Stack<Integer> stack = new Stack<>();
+		int len = maxHeights.size();
+		int[] leftI = new int[len], rightI = new int[len];
+		long[] resL = new long[len], resR = new long[len];
+		for (int index = 0; index < len; index++) {
+			int curr = maxHeights.get(index);
+			while (!stack.isEmpty() && maxHeights.get(stack.peek()) >= curr) {
+				stack.pop();
+			}
+			if (stack.isEmpty()) {
+				leftI[index] = -1;
+			} 
+			else {
+				leftI[index] = stack.peek();
+			}
+			long a = curr, b = index - leftI[index], c = leftI[index] >= 0 ? resL[leftI[index]] : 0;
+			resL[index] += a * b + c;
+			stack.push(index);
+		}
+		stack.clear();
+		long finalRes = 0;
+		for (int index = len - 1; index >= 0; index--) {
+			int curr = maxHeights.get(index);
+			while (!stack.isEmpty() && maxHeights.get(stack.peek()) >= curr) {
+				stack.pop();
+			}
+			if (stack.isEmpty()) {
+				rightI[index] = len;
+			} 
+			else {
+				rightI[index] = stack.peek();
+			}
+			long a = curr, b = rightI[index] - index, c = rightI[index] < len ? resR[rightI[index]] : 0;
+			resR[index] += a * b + c;
+			stack.push(index);
+		}
+		for (int index = 0; index < len; index++) {
+			finalRes = (long) Math.max(finalRes,resR[index] + resL[index] - maxHeights.get(index));
+		}
+		return finalRes;
+	}
+}

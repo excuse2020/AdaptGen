@@ -1,0 +1,29 @@
+class Solution {
+	int divide(int a, int b) {
+		if (a == b) {
+			return 1;
+		}
+		boolean sign = true;
+		if ((a >= 0 && b < 0) || (a <= 0 && b > 0)) {
+			sign = false;
+		}
+		long p = Math.abs((long) a);
+		long q = Math.abs((long) b);
+		long ans = 0;
+		while (p >= q) {
+			int cnt = 0;
+			while (p >= (q << (cnt + 1))) {
+				cnt += 1;
+			}
+			ans += 1 << cnt;
+			p -= (q << cnt);
+		}
+		if (ans == (1 << 31) && sign) {
+			return Integer.MAX_VALUE;
+		}
+		if (ans == (1 << 31) && !(sign)) {
+			return Integer.MIN_VALUE;
+		}
+		return sign ? (int) ans : (int) -ans;
+	}
+}

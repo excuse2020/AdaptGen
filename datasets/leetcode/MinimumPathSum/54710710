@@ -1,0 +1,35 @@
+class Solution {
+	int dp;
+	int mini = Integer.MAX_VALUE;
+	int minPathSum(int[][] grid) {
+		int i = 0, j = 0, c = 0;
+		dp = new int[grid.length][grid[0].length];
+		for (int[] row: dp) {	
+			Arrays.fill(row,Integer.MAX_VALUE);
+		}
+		minimum(grid,i,j);
+		return dp[0][0];
+	}
+	int minimum(int[][] a, int i, int j) {
+		if (i > a.length - 1 || j > a[0].length - 1) {
+			return -1;
+		}
+		if (i == a.length - 1 && j == a[0].length - 1) {
+			return dp[i][j] = a[i][j];
+		}
+		if (dp[i][j] != Integer.MAX_VALUE) {
+			return dp[i][j];
+		} 
+		else {
+			int cnt = minimum(a,i,j + 1);
+			if (cnt != -1) {
+				dp[i][j] = Math.min(a[i][j] + cnt,dp[i][j]);
+			}
+			cnt = minimum(a,i + 1,j);
+			if (cnt != -1) {
+				dp[i][j] = Math.min(a[i][j] + cnt,dp[i][j]);
+			}
+			return dp[i][j];
+		}
+	}
+}

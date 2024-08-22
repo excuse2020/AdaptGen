@@ -1,0 +1,45 @@
+class Solution {
+	long N = 102233l;
+	long getPoint(int[] p) {
+		return (long) p[0] * N + p[1];
+	}
+	int minimumCost(int[] start, int[] target, int[][] specialRoads) {
+		HashSet<Long> h = new HashSet<>();
+		h.add(getPoint(start));
+		h.add(getPoint(target));
+		for (int[] road: specialRoads) {	
+			h.add(getPoint(new int{road[0], road[1]}));
+			h.add(getPoint(new int{road[2], road[3]}));
+		}
+		HashMap<Long, Integer> map = new HashMap<>();
+		int index = 0;
+		for (var val: h) {	
+			map.put(val,index++);
+		}
+		int[][] cost = new int[index][index];
+		for (int i = 0; i < index; i++) {
+			Arrays.fill(cost[i],Integer.MAX_VALUE);
+		}
+		for (var u: h) {	
+			long x1 = u / N, y1 = u % N;
+			for (var v: h) {	
+				long x2 = v / N, y2 = v % N;
+				cost[map.get(u)][map.get(v)] = (int) (Math.abs(x1 - x2) + Math.abs(y1 - y2));
+			}
+		}
+		for (int[] road: specialRoads) {	
+			long num1 = getPoint(new int{road[0], road[1]});
+			long num2 = getPoint(new int{road[2], road[3]});
+			int u = map.get(num1), v = map.get(num2);
+			cost[u][v] = Math.min(cost[u][v],road[4]);
+		}
+		for (int k = 0; k < index; k++) {
+			for (int i = 0; i < index; i++) {
+				for (int j = 0; j < index; j++) {
+					cost[i][j] = Math.min(cost[i][j],cost[i][k] + cost[k][j]);
+				}
+			}
+		}
+		return cost[map.get(getPoint(start))][map.get(getPoint(target))];
+	}
+}

@@ -1,0 +1,53 @@
+class Solution {
+	boolean stoneGame(int[] piles) {
+		Boolean[][] dp = new Boolean[piles.length][piles.length];
+		boolean res = stoneGameUtilityDP(piles,0,piles.length - 1,0,0,true,dp);
+		return res;
+	}
+	boolean stoneGameUtility(int[] piles, int start, int end, int alice, int bob, boolean aliceChance) {
+		if (end < start || start == piles.length || end == -1) {
+			if (alice > bob) {
+				return true;
+			} 
+			else {
+				return false;
+			}
+		}
+		if (aliceChance) {
+			return (stoneGameUtility(piles,start + 1,end,alice + piles[start],bob,!aliceChance) || stoneGameUtility(piles,start,end - 1,alice + piles[end],bob,!aliceChance));
+		}
+		boolean a = false;
+		boolean b = false;
+		if (piles[start] < piles[end]) {
+			return stoneGameUtility(piles,start + 1,end,alice,bob + piles[start],!aliceChance);
+		} 
+		else {
+			return stoneGameUtility(piles,start,end - 1,alice,bob + piles[end],!aliceChance);
+		}
+	}
+	boolean stoneGameUtilityDP(int[] piles, int start, int end, int alice, int bob, boolean aliceChance, Boolean[][] dp) {
+		if (end < start || start == piles.length || end == -1) {
+			if (alice > bob) {
+				return true;
+			} 
+			else {
+				return false;
+			}
+		}
+		if (aliceChance) {
+			if (dp[start][end] != null) {
+				return dp[start][end];
+			}
+			dp[start][end] = (stoneGameUtilityDP(piles,start + 1,end,alice + piles[start],bob,!aliceChance,dp) || stoneGameUtilityDP(piles,start,end - 1,alice + piles[end],bob,!aliceChance,dp));
+			return dp[start][end];
+		}
+		boolean a = false;
+		boolean b = false;
+		if (piles[start] < piles[end]) {
+			return stoneGameUtilityDP(piles,start + 1,end,alice,bob + piles[start],!aliceChance,dp);
+		} 
+		else {
+			return stoneGameUtilityDP(piles,start,end - 1,alice,bob + piles[end],!aliceChance,dp);
+		}
+	}
+}

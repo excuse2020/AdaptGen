@@ -1,0 +1,33 @@
+class Solution {
+	String removeDuplicates(String s, int k) {
+		if (s.length() == 0) {
+			return null;
+		}
+		Stack<Character> alphas = new Stack<>();
+		Stack<Integer> count = new Stack<>();
+		for (int i = 0; i < s.length(); i++) {
+			char alpha = s.charAt(i);
+			if (!alphas.isEmpty() && alpha == alphas.peek()) {
+				int temp = count.peek();
+				alphas.push(alpha);
+				count.push(temp + 1);
+			} 
+			else {
+				alphas.push(alpha);
+				count.push(1);
+			}
+			if (!count.isEmpty() && count.peek() == k) {
+				char temp = alphas.peek();
+				while (!alphas.isEmpty() && alphas.peek() == temp) {
+					alphas.pop();
+					count.pop();
+				}
+			}
+		}
+		StringBuilder sb = new StringBuilder();
+		while (!alphas.isEmpty()) {
+			sb.insert(0,alphas.pop());
+		}
+		return new String(sb);
+	}
+}

@@ -1,0 +1,45 @@
+class Solution {
+	int maxScore(List<List<Integer>> grid) {
+		int res = 0;
+		int n = grid.size();
+		int m = grid.get(0).size();
+		int[][] A = new int[n][m];
+		for (int i = 0; i < n; i++) {
+			List<Integer> arr = grid.get(i);
+			for (int j = 0; j < m; j++) {
+				A[i][j] = arr.get(j);
+			}
+		}
+		int[][] dp = new int[n][m];
+		int result = Integer.MIN_VALUE;
+		for (int j = 1; j < m; j++) {
+			dp[0][j] = Math.max(0,dp[0][j - 1]);
+			dp[0][j] -= A[0][j - 1];
+			dp[0][j] += A[0][j];
+			if (result < dp[0][j]) {
+				result = dp[0][j];
+			}
+		}
+		for (int i = 1; i < n; i++) {
+			dp[i][0] = Math.max(0,dp[i - 1][0]);
+			dp[i][0] -= A[i - 1][0];
+			dp[i][0] += A[i][0];
+			if (result < dp[i][0]) {
+				result = dp[i][0];
+			}
+		}
+		for (int i = 1; i < n; i++) {
+			for (int j = 1; j < m; j++) {
+				int num1 = Math.max(0,dp[i][j - 1]);
+				num1 -= A[i][j - 1];
+				int num2 = Math.max(0,dp[i - 1][j]);
+				num2 -= A[i - 1][j];
+				dp[i][j] = Math.max(num1,num2) + A[i][j];
+				if (result < dp[i][j]) {
+					result = dp[i][j];
+				}
+			}
+		}
+		return result;
+	}
+}

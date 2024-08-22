@@ -1,0 +1,64 @@
+class Solution {
+	int maxPointsInsideSquare(int[][] points, String s) {
+		Map<Character, Integer> memo = new HashMap<>();
+		int x = -1;
+		for (int i = 0; i < points.length; i++) {
+			if (Math.abs(points[i][0]) > Math.abs(points[i][1])) {
+				if (!memo.containsKey(s.charAt(i))) {
+					memo.put(s.charAt(i),Math.abs(points[i][0]));
+				} 
+				else if (memo.get(s.charAt(i)) > Math.abs(points[i][0])) {
+					int m = memo.get(s.charAt(i));
+					memo.put(s.charAt(i),Math.abs(points[i][0]));
+					if (x == -1) {
+						x = m;
+					} 
+					else {
+						x = Math.min(x,m);
+					}
+				} 
+				else {
+					if (x == -1) {
+						x = Math.abs(points[i][0]);
+					} 
+					else {
+						x = Math.min(x,Math.abs(points[i][0]));
+					}
+				}
+			} 
+			else {
+				if (!memo.containsKey(s.charAt(i))) {
+					memo.put(s.charAt(i),Math.abs(points[i][1]));
+				} 
+				else if (memo.get(s.charAt(i)) > Math.abs(points[i][1])) {
+					int m = memo.get(s.charAt(i));
+					memo.put(s.charAt(i),Math.abs(points[i][1]));
+					if (x == -1) {
+						x = m;
+					} 
+					else {
+						x = Math.min(x,m);
+					}
+				} 
+				else {
+					if (x == -1) {
+						x = Math.abs(points[i][1]);
+					} 
+					else {
+						x = Math.min(x,Math.abs(points[i][1]));
+					}
+				}
+			}
+		}
+		int count = 0;
+		for (int i = 0; i < s.length(); i++) {
+			if (memo.containsKey(s.charAt(i))) {
+				if (x == -1 || memo.get(s.charAt(i)) < x) {
+					count++;
+					memo.remove(s.charAt(i));
+				}
+			}
+		}
+		return count;
+	}
+}

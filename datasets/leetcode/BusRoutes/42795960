@@ -1,0 +1,44 @@
+class Solution {
+	int numBusesToDestination(int[][] routes, int source, int target) {
+		if (source == target) {
+			return 0;
+		}
+		Deque<Set<Integer>> q = new ArrayDeque<>();
+		searchRoutesContainsSource(routes,source,q);
+		int busesCounter = 0;
+		int qSize = q.size();
+		while (!q.isEmpty()) {
+			Set<Integer> currentBusStops = q.poll();
+			qSize--;
+			if (qSize == 0) {
+				busesCounter++;
+			}
+			if (currentBusStops.contains(target)) {
+				return qSize == 0 ? busesCounter : busesCounter + 1;
+			}
+			for (Integer busStop: currentBusStops) {	
+				searchRoutesContainsSource(routes,busStop,q);
+			}
+			if (qSize == 0) {
+				qSize = q.size();
+			}
+		}
+		return -1;
+	}
+	void searchRoutesContainsSource(int[][] routes, int source, Deque<Set<Integer>> q) {
+		Set<Integer> set = new HashSet<>();
+		for (int i = 0; i < routes.length; i++) {
+			if (routes[i].length == 0) {
+				continue;
+			}
+			if (Arrays.binarySearch(routes[i],source) > -1) {
+				Set<Integer> curr = Arrays.stream(routes[i]).boxed().collect(Collectors.toSet());
+				set.addAll(curr);
+				routes[i] = new int[0];
+			}
+		}
+		if (!set.isEmpty()) {
+			q.offer(set);
+		}
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	int getI(int i, int[] P, long suc) {
+		int l = 0;
+		int r = P.length - 1;
+		while (l < r) {
+			int mid = l + (r - l) / 2;
+			if ((long) i * P[mid] >= suc) {
+				r = mid;
+			} 
+			else {
+				l = mid + 1;
+			}
+		}
+		return l;
+	}
+	int[] successfulPairs(int[] S, int[] P, long suc) {
+		int ans = 0;
+		List<Integer> ls = new ArrayList<>();
+		Arrays.sort(P);
+		int n = P.length;
+		int maxpos = P[P.length - 1];
+		for (int i: S) {	
+			long minpos = (long) Math.ceil((1.0 * suc) / i);
+			if (minpos > maxpos) {
+				ls.add(0);
+			} 
+			else {
+				int get = getI(i,P,suc);
+				get = n - get;
+				ls.add(get);
+			}
+		}
+		int[] res = new int[ls.size()];
+		for (int i = 0; i < ls.size(); i++) {
+			res[i] = ls.get(i);
+		}
+		return res;
+	}
+}

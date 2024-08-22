@@ -1,0 +1,33 @@
+class Solution {
+	int lengthOfLongestSubstring(String s) {
+		int lens = s.length();
+		if (lens < 1) {
+			return 0;
+		}
+		int[] dp = new int[lens];
+		HashMap<Character, Integer> hashmap = new HashMap<>();
+		dp[0] = 1;
+		hashmap.put(s.charAt(0),0);
+		for (int i = 1; i < lens; i++) {
+			if (!hashmap.containsKey(s.charAt(i))) {
+				hashmap.put(s.charAt(i),i);
+				dp[i] = dp[i - 1] + 1;
+			} 
+			else {
+				int pos = hashmap.get(s.charAt(i));
+				dp[i] = i - pos;
+				hashmap.clear();
+				for (int j = pos + 1; j <= i; j++) {
+					hashmap.put(s.charAt(j),j);
+				}
+			}
+		}
+		int result = Integer.MIN_VALUE;
+		for (int i = 0; i < lens; i++) {
+			if (dp[i] > result) {
+				result = dp[i];
+			}
+		}
+		return result;
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	int minFallingPathSum(int[][] matrix) {
+		int r = 0;
+		int c = 0;
+		int min = Integer.MAX_VALUE;
+		HashMap<String, Integer> memo = new HashMap<String, Integer>();
+		for (int j = 0; j < matrix[0].length; j++) {
+			int curr = minPathSum(matrix,0,j,matrix.length,matrix[0].length,memo);
+			if (curr < min) {
+				min = curr;
+			}
+		}
+		return min;
+	}
+	int minPathSum(int grid, int r, int c, int m, int n, HashMap<String, Integer> memo) {
+		if (c < 0 || c >= n) {
+			return 100001;
+		}
+		if (r == m - 1) {
+			return grid[r][c];
+		}
+		String currentKey = r + "-";
+		if (memo.containsKey(currentKey)) {
+			return memo.get(currentKey);
+		}
+		int move1 = grid[r][c] + minPathSum(grid,r + 1,c - 1,m,n,memo);
+		int move2 = grid[r][c] + minPathSum(grid,r + 1,c,m,n,memo);
+		int move3 = grid[r][c] + minPathSum(grid,r + 1,c + 1,m,n,memo);
+		memo.put(currentKey,Math.min(move1,Math.min(move2,move3)));
+		return memo.get(currentKey);
+	}
+}

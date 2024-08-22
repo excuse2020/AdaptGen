@@ -1,0 +1,27 @@
+class Solution {
+	List<Integer> availables = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,8,9));
+	int[] factorial;
+	String getPermutation(int n, int k) {
+		init(n);
+		List<Integer> indexs = new ArrayList<>();
+		for (int i = n - 1; i >= 0; i--) {
+			int index = k / factorial[i] - (k >= factorial[i] && k % factorial[i] == 0 ? 1 : 0);
+			indexs.add(index);
+			k -= index * factorial[i];
+		}
+		String res = "";
+		for (int index: indexs) {	
+			res += availables.get(index);
+			availables.remove(index);
+		}
+		return res;
+	}
+	void init(int n) {
+		factorial = new int[n + 1];
+		factorial[0] = 1;
+		factorial[1] = 1;
+		for (int i = 2; i <= n; i++) {
+			factorial[i] = factorial[i - 1] * i;
+		}
+	}
+}

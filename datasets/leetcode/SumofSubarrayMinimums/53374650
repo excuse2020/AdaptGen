@@ -1,0 +1,57 @@
+class Solution {
+	int[] findLeftSmaler(int a) {
+		Stack<Integer> st1 = new Stack<>();
+		int tmp1 = new int[a.length];
+		for (int i = 0; i < a.length; ++i) {
+			while (!st1.isEmpty()) {
+				if (a[st1.peek()] >= a[i]) {
+					st1.pop();
+				} 
+				else {
+					break;
+				}
+			}
+			if (st1.isEmpty()) {
+				tmp1[i] = -1;
+			} 
+			else {
+				tmp1[i] = st1.peek();
+			}
+			st1.push(i);
+		}
+		return tmp1;
+	}
+	int[] findRightSmaller(int a) {
+		Stack<Integer> st = new Stack<>();
+		int tmp = new int[a.length];
+		for (int i = a.length - 1; i >= 0; --i) {
+			while (!st.isEmpty()) {
+				if (a[st.peek()] > a[i]) {
+					st.pop();
+				} 
+				else {
+					break;
+				}
+			}
+			if (st.isEmpty()) {
+				tmp[i] = a.length;
+			} 
+			else {
+				tmp[i] = st.peek();
+			}
+			st.push(i);
+		}
+		return tmp;
+	}
+	int sumSubarrayMins(int[] arr) {
+		int left = findLeftSmaler(arr);
+		int right = findRightSmaller(arr);
+		int mod = 1000000007;
+		long result = 0;
+		for (int i = 0; i < arr.length; ++i) {
+			long contribution = ((long) arr[i] * (i - left[i])) % mod;
+			result = (result + contribution) % mod;
+		}
+		return (int) result;
+	}
+}

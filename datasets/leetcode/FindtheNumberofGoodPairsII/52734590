@@ -1,0 +1,30 @@
+class Solution {
+	long numberOfPairs(int[] nums1, int[] nums2, int k) {
+		HashMap<Integer, Integer> map = new HashMap<>();
+		long ans = 0;
+		for (int el: nums2) {	
+			map.put(el,map.getOrDefault(el,0) + 1);
+		}
+		for (int el: nums1) {	
+			if (el % k != 0) {
+				continue;
+			}
+			el /= k;
+			Set<Integer> set = new HashSet<>();
+			int step = el % 2 == 0 ? 1 : 2;
+			for (int i = 1; i <= Math.sqrt(el); i += step) {
+				if (el % i == 0) {
+					if (map.containsKey(i) && !set.contains(i)) {
+						ans += map.get(i);
+						set.add(i);
+					}
+					if (map.containsKey(el / i) && !set.contains(el / i)) {
+						ans += map.get(el / i);
+						set.add(el / i);
+					}
+				}
+			}
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,42 @@
+class Solution {
+	HashMap<Integer, int[]> treeMap = new HashMap<>();
+	TreeNode createBinaryTree(int[][] descriptions) {
+		HashMap<Integer, Integer> headMap = new HashMap<>();
+		int n = descriptions.length;
+		for (int i = 0; i < n; i++) {
+			headMap.put(descriptions[i][1],descriptions[i][0]);
+		}
+		int head = 0;
+		for (int i = 0; i < n; i++) {
+			if (!headMap.containsKey(descriptions[i][0])) {
+				head = descriptions[i][0];
+				break;
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			int parent = descriptions[i][0];
+			int child = descriptions[i][1];
+			int isLeft = descriptions[i][2];
+			treeMap.putIfAbsent(parent,new int{-1, -1});
+			if (isLeft == 1) {
+				treeMap.get(parent)[0] = child;
+			} 
+			else {
+				treeMap.get(parent)[1] = child;
+			}
+			treeMap.putIfAbsent(child,new int{-1, -1});
+		}
+		return solve(head);
+	}
+	TreeNode solve(int value) {
+		if (value == -1) {
+			return null;
+		}
+		TreeNode root = new TreeNode(value);
+		int leftVal = treeMap.get(value)[0];
+		int rightVal = treeMap.get(value)[1];
+		root.left = solve(leftVal);
+		root.right = solve(rightVal);
+		return root;
+	}
+}

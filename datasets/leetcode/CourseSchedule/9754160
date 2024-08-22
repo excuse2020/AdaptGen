@@ -1,0 +1,44 @@
+class Solution {
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		ArrayList<Integer> adj = new ArrayList[numCourses];
+		int[] indegree = new int[numCourses];
+		for (int i = 0; i < numCourses; i++) {
+			adj[i] = new ArrayList<Integer>();
+		}
+		for (int edge: prerequisites) {	
+			adj[edge[1]].add(edge[0]);
+			indegree[edge[0]]++;
+		}
+		return canFinishUtil(numCourses,adj,indegree);
+	}
+	boolean canFinishUtil(int numCourses, ArrayList<Integer> adj, int[] indegree) {
+		boolean is0 = false;
+		boolean areAllNegative = true;
+		for (int i = 0; i < numCourses; i++) {
+			if (indegree[i] == 0) {
+				is0 = true;
+			}
+			if (indegree[i] >= 0) {
+				areAllNegative = false;
+			}
+		}
+		if (areAllNegative) {
+			return true;
+		}
+		if (!is0) {
+			return false;
+		}
+		for (int i = 0; i < numCourses; i++) {
+			if (indegree[i] < 0) {
+				continue;
+			}
+			if (indegree[i] == 0) {
+				indegree[i] = -1;
+				for (int neighbor: adj[i]) {	
+					indegree[neighbor]--;
+				}
+			}
+		}
+		return canFinishUtil(numCourses,adj,indegree);
+	}
+}

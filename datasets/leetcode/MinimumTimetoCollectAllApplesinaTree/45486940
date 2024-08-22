@@ -1,0 +1,29 @@
+class Solution {
+	int dfs(int node, Map<Integer, List<Integer>> map, boolean[] visited, int cost, List<Boolean> hasApple) {
+		if (visited[node]) {
+			return 0;
+		}
+		visited[node] = true;
+		int childCost = 0;
+		for (int child: map.getOrDefault(node,Collections.emptyList())) {	
+			childCost += dfs(child,map,visited,2,hasApple);
+		}
+		if (childCost == 0 && !hasApple.get(node)) {
+			return 0;
+		}
+		return cost + childCost;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int[] edge: edges) {	
+			int start = edge[0];
+			int end = edge[1];
+			map.putIfAbsent(start,new ArrayList<>());
+			map.putIfAbsent(end,new ArrayList<>());
+			map.get(start).add(end);
+			map.get(end).add(start);
+		}
+		boolean[] visited = new boolean[n];
+		return dfs(0,map,visited,0,hasApple);
+	}
+}

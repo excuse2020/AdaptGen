@@ -1,0 +1,45 @@
+class Solution {
+	int[] countServers(int n, int[][] logs, int x, int[] queries) {
+		Arrays.sort(logs,(a, b) -> {a[1] - b[1]});
+		int[][] qIdx = new int[queries.length][2];
+		for (int i = 0; i < qIdx.length; i++) {
+			qIdx[i][0] = i;
+			qIdx[i][1] = queries[i];
+		}
+		Arrays.sort(qIdx,(a, b) -> {a[1] - b[1]});
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int r = 0, i = 0, j = 0; r < qIdx.length; r++) {
+			int end = qIdx[r][1], start = end - x;
+			while (i < logs.length && logs[i][1] <= end) {
+				map.merge(logs[i++][0],1,);
+			}
+			while (j < logs.length && logs[j][1] <= start) {
+				if (map.merge(logs[j][0],-1,) == 0) {
+					map.remove(logs[j][0]);
+				}
+				j++;
+			}
+			queries[qIdx[r][0]] = n - map.size();
+		}
+		return queries;
+	}
+	int[] countServers_TLE(int n, int[][] logs, int x, int[] queries) {
+		TreeMap<Integer, Set<Integer>> tmap = new TreeMap<>(Map.of(Integer.MIN_VALUE,new HashSet<>(),Integer.MAX_VALUE,new HashSet<>()));
+		for (int q: queries) {	
+			tmap.put(q,new HashSet<>());
+		}
+		for (int[] log: logs) {	
+			int start = tmap.ceilingKey(log[1]);
+			int end = tmap.floorKey(log[1] + x);
+			if (start <= end) {
+				for (Set<Integer> set: tmap.subMap(start,true,end,true).values()) {	
+					set.add(log[0]);
+				}
+			}
+		}
+		for (int i = 0; i < queries.length; i++) {
+			queries[i] = n - tmap.get(queries[i]).size();
+		}
+		return queries;
+	}
+}

@@ -1,0 +1,31 @@
+class Solution {
+	Boolean calculateTree(TreeNode item, List<Integer> leafNumbers, List<Integer> comparerLeafNumbers) {
+		if (item.right == null && item.left == null) {
+			leafNumbers.add(item.val);
+			if (comparerLeafNumbers == null) {
+				return null;
+			}
+			return comparerLeafNumbers.size() >= leafNumbers.size() && comparerLeafNumbers.get(leafNumbers.size() - 1) == item.val;
+		}
+		Boolean result = null;
+		if (item.right != null) {
+			result = calculateTree(item.right,leafNumbers,comparerLeafNumbers);
+			if (Boolean.FALSE.equals(result)) {
+				return false;
+			}
+		}
+		if (item.left != null) {
+			result = calculateTree(item.left,leafNumbers,comparerLeafNumbers);
+			if (Boolean.FALSE.equals(result)) {
+				return false;
+			}
+		}
+		return result;
+	}
+	boolean leafSimilar(TreeNode root1, TreeNode root2) {
+		List<Integer> leafNumbers1 = new ArrayList();
+		calculateTree(root1,leafNumbers1,null);
+		List<Integer> leafNumbers2 = new ArrayList();
+		return calculateTree(root2,leafNumbers2,leafNumbers1) && leafNumbers1.size() == leafNumbers2.size();
+	}
+}

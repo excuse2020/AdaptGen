@@ -1,0 +1,32 @@
+class Solution {
+	boolean isValid(int x, int y, int m, int n) {
+		return x < m && y < n && x >= 0 && y >= 0;
+	}
+	int maxMoves(int[][] grid) {
+		int m = grid.length;
+		int n = grid[0].length;
+		int[][] dp = new int[m][n];
+		int max = 0;
+		for (int i = 0; i < m; i++) {
+			dp[i][n - 1] = 0;
+		}
+		for (int i = n - 1; i > 0; i--) {
+			for (int j = m - 1; j >= 0; j--) {
+				int curr = grid[j][i];
+				if (isValid(j + 1,i - 1,m,n) && grid[j + 1][i - 1] < grid[j][i]) {
+					dp[j + 1][i - 1] = Math.max(dp[j + 1][i - 1],dp[j][i] + 1);
+				}
+				if (isValid(j,i - 1,m,n) && grid[j][i - 1] < grid[j][i]) {
+					dp[j][i - 1] = Math.max(dp[j][i - 1],dp[j][i] + 1);
+				}
+				if (isValid(j - 1,i - 1,m,n) && grid[j - 1][i - 1] < grid[j][i]) {
+					dp[j - 1][i - 1] = Math.max(dp[j - 1][i - 1],dp[j][i] + 1);
+				}
+			}
+		}
+		for (int i = 0; i < m; i++) {
+			max = Math.max(max,dp[i][0]);
+		}
+		return max;
+	}
+}

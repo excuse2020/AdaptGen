@@ -1,0 +1,38 @@
+class Solution {
+	List<String> findWords(char[][] board, String[] words) {
+		int n = board.length;
+		int m = board[0].length;
+		boolean vis = new boolean[n][m];
+		HashSet<String> hs = new HashSet<>();
+		int max = 0;
+		for (int i = 0; i < words.length; i++) {
+			hs.add(words[i]);
+			max = Math.max(max,words[i].length());
+		}
+		HashSet<String> ans = new HashSet<>();
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				rec(board,hs,i,j,vis,new StringBuilder(""),ans,0,max,n,m);
+			}
+		}
+		List<String> l = new ArrayList<>();
+		l.addAll(ans);
+		return l;
+	}
+	void rec(char board, HashSet<String> hs, int row, int col, boolean vis, StringBuilder sb, HashSet<String> ans, int len, int max, int n, int m) {
+		if (row < 0 || row >= n || col < 0 || col >= m || len >= max || vis[row][col]) {
+			return;
+		}
+		vis[row][col] = true;
+		sb.append(board[row][col]);
+		if (hs.contains(sb.toString())) {
+			ans.add(sb.toString());
+		}
+		rec(board,hs,row + 1,col,vis,sb,ans,len + 1,max,n,m);
+		rec(board,hs,row - 1,col,vis,sb,ans,len + 1,max,n,m);
+		rec(board,hs,row,col + 1,vis,sb,ans,len + 1,max,n,m);
+		rec(board,hs,row,col - 1,vis,sb,ans,len + 1,max,n,m);
+		vis[row][col] = false;
+		sb.deleteCharAt(sb.length() - 1);
+	}
+}

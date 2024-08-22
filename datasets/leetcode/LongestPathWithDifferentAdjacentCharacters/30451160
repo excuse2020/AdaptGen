@@ -1,0 +1,38 @@
+class Solution {
+	int ans;
+	int dfs(List<List<Integer>> adj, String s, boolean[] vis, int vertex, int parent) {
+		vis[vertex] = true;
+		int longest = 0, secondLongest = 0;
+		for (int neigh: adj.get(vertex)) {	
+			if (!vis[neigh]) {
+				int prevLength = dfs(adj,s,vis,neigh,vertex);
+				if (prevLength > longest) {
+					secondLongest = longest;
+					longest = prevLength;
+				} 
+				else {
+					secondLongest = Math.max(secondLongest,prevLength);
+				}
+			}
+		}
+		ans = Math.max(ans,longest + secondLongest);
+		if (parent != -1 && s.charAt(vertex) == s.charAt(parent)) {
+			return 0;
+		}
+		return longest + 1;
+	}
+	int longestPath(int[] parent, String s) {
+		int n = parent.length;
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 1; i < n; i++) {
+			adj.get(i).add(parent[i]);
+			adj.get(parent[i]).add(i);
+		}
+		ans = 0;
+		dfs(adj,s,new boolean[n],0,-1);
+		return ans;
+	}
+}

@@ -1,0 +1,49 @@
+class Solution {
+	int dfs(ArrayList<ArrayList<Integer>> adj, int[] amount, int root, int parent) {
+		int max = Integer.MIN_VALUE;
+		for (int child: adj.get(root)) {	
+			if (child == parent) {
+				continue;
+			}
+			max = Math.max(max,dfs(adj,amount,child,root));
+		}
+		return amount[root] + (max == Integer.MIN_VALUE ? 0 : max);
+	}
+	double helper(ArrayList<ArrayList<Integer>> adj, int[] amount, int target, int root, int parent, double dist) {
+		if (target == root) {
+			amount[root] = 0;
+			return dist;
+		}
+		for (int child: adj.get(root)) {	
+			if (child == parent) {
+				continue;
+			}
+			double ans = helper(adj,amount,target,child,root,dist + 1);
+			if (ans > 0) {
+				if (dist > ans / 2) {
+					amount[root] = 0;
+				} 
+				else if (dist == ans / 2) {
+					amount[root] /= 2;
+				}
+				return ans;
+			}
+		}
+		return -1;
+	}
+	int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList();
+		int n = amount.length;
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList());
+		}
+		for (int[] edge: edges) {	
+			int a = edge[0];
+			int b = edge[1];
+			adj.get(a).add(b);
+			adj.get(b).add(a);
+		}
+		helper(adj,amount,bob,0,-1,0);
+		return dfs(adj,amount,0,-1);
+	}
+}

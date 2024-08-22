@@ -1,0 +1,32 @@
+class Solution {
+	int result = -1;
+	void getCycle(int node, int graph, int[] discover, int time, int[] vis) {
+		vis[node] = 1;
+		if (graph[node] != -1 && discover[graph[node]] != 0) {
+			int prev = discover[graph[node]];
+			int diff = time - prev + 1;
+			if (diff > result) {
+				result = diff;
+			}
+		} 
+		else {
+			if (graph[node] != -1 && vis[graph[node]] == 0) {
+				discover[node] = time;
+				getCycle(graph[node],graph,discover,time + 1,vis);
+				discover[node] = 0;
+			}
+		}
+	}
+	int longestCycle(int[] edges) {
+		int len = edges.length;
+		int[] vis = new int[len];
+		int disc = new int[len];
+		result = -1;
+		for (int i = 0; i < len; i++) {
+			if (vis[i] == 0) {
+				getCycle(i,edges,disc,1,vis);
+			}
+		}
+		return result;
+	}
+}

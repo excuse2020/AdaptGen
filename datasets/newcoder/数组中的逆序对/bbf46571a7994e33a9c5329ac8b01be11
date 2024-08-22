@@ -1,0 +1,47 @@
+class Solution {
+	int InversePairs(int[] array) {
+		int mod = 1000000007;
+		int count = merge_sort(array,0,array.length - 1,mod);
+		return count;
+	}
+	int merge(int[] array, int left, int mid, int right) {
+		int swap_count = 0;
+		int[] copyArr = new int[right - left + 1];
+		for (int i = 0; i <= right - left; i++) {
+			copyArr[i] = array[left + i];
+		}
+		int p = left;
+		int q = mid + 1;
+		int i = left;
+		while (p <= mid && q <= right) {
+			if (copyArr[p - left] > copyArr[q - left]) {
+				array[i++] = copyArr[q - left];
+				swap_count += (mid - p + 1);
+				q++;
+			} 
+			else if (copyArr[p - left] < copyArr[q - left]) {
+				array[i++] = copyArr[p - left];
+				p++;
+			}
+		}
+		while (p <= mid) {
+			array[i++] = copyArr[p - left];
+			p++;
+		}
+		while (q <= right) {
+			array[i++] = copyArr[q - left];
+			q++;
+		}
+		return swap_count;
+	}
+	int merge_sort(int[] array, int left, int right, int mod) {
+		int mid = (left + right) / 2;
+		if (left == right) {
+			return 0;
+		}
+		int num1 = merge_sort(array,left,mid,mod) % mod;
+		int num2 = merge_sort(array,mid + 1,right,mod) % mod;
+		int num3 = merge(array,left,mid,right) % mod;
+		return ((num1 + num2) % mod + num3) % mod;
+	}
+}

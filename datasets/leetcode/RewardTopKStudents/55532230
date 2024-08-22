@@ -1,0 +1,61 @@
+class Solution {
+	List<Integer> topStudents(String[] positive_feedback, String[] negative_feedback, String[] report, int[] student_id, int k) {
+		HashMap<Integer, Integer> score = new HashMap<>();
+		HashMap<String, Integer> pf = new HashMap<>();
+		HashMap<String, Integer> nf = new HashMap<>();
+		int studentStrength = student_id.length, t = 0, temp;
+		int finalArr = new int[studentStrength][2];
+		List<Integer> result = new ArrayList<>();
+		for (int i = 0; i < studentStrength; i++) {
+			score.put(student_id[i],0);
+		}
+		for (String p: positive_feedback) {	
+			pf.put(p,1);
+		}
+		for (String n: negative_feedback) {	
+			nf.put(n,1);
+		}
+		for (int i = 0; i < studentStrength; i++) {
+			String[] studentReport = report[i].split(" ");
+			for (int j = 0; j < studentReport.length; j++) {
+				if (pf.get(studentReport[j]) != null) {
+					score.put(student_id[i],score.get(student_id[i]) + 3);
+				}
+				if (nf.get(studentReport[j]) != null) {
+					score.put(student_id[i],score.get(student_id[i]) - 1);
+				}
+			}
+		}
+		for (Map.Entry<Integer, Integer> entry: score.entrySet()) {	
+			finalArr[t][0] = entry.getKey();
+			finalArr[t][1] = entry.getValue();
+			t++;
+		}
+		for (int i = 0; i < studentStrength - 1; i++) {
+			for (int j = 0; j < studentStrength - i; j++) {
+				if (finalArr[j][1] < finalArr[j + 1][1]) {
+					temp = finalArr[j][1];
+					finalArr[j][1] = finalArr[j + 1][1];
+					finalArr[j + 1][1] = temp;
+					temp = finalArr[j][0];
+					finalArr[j][0] = finalArr[j + 1][0];
+					finalArr[j + 1][0] = temp;
+				} 
+				else if (finalArr[j][1] == finalArr[j + 1][1]) {
+					if (finalArr[j][0] > finalArr[j + 1][0]) {
+						temp = finalArr[j][1];
+						finalArr[j][1] = finalArr[j + 1][1];
+						finalArr[j + 1][1] = temp;
+						temp = finalArr[j][0];
+						finalArr[j][0] = finalArr[j + 1][0];
+						finalArr[j + 1][0] = temp;
+					}
+				}
+			}
+		}
+		for (int i = 0; i < k; i++) {
+			result.add(finalArr[i][0]);
+		}
+		return result;
+	}
+}

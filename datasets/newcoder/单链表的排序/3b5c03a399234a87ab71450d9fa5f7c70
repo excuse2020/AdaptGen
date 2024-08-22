@@ -1,0 +1,33 @@
+class Solution {
+	ListNode getTail(ListNode head) {
+		while (head.next != null) {
+			head = head.next;
+		}
+		return head;
+	}
+	ListNode sortInList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode left = new ListNode(-1), mid = new ListNode(-1), right = new ListNode(-1);
+		ListNode lt = left, mt = mid, rt = right;
+		int v = head.val;
+		for (ListNode cur = head; cur != null; cur = cur.next) {
+			if (cur.val < v) {
+				lt = lt.next = cur;
+			} 
+			else if (cur.val == v) {
+				mt = mt.next = cur;
+			} 
+			else {
+				rt = rt.next = cur;
+			}
+		}
+		rt.next = mt.next = lt.next = null;
+		left.next = sortInList(left.next);
+		right.next = sortInList(right.next);
+		getTail(left).next = mid.next;
+		getTail(left).next = right.next;
+		return left.next;
+	}
+}

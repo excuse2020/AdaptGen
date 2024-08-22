@@ -1,0 +1,32 @@
+class Solution {
+	int N;
+	boolean dfs(int grid, int row, int col, boolean visited, int time) {
+		if (row < 0 || row >= N || col < 0 || col >= N || visited[row][col] || grid[row][col] > time) {
+			return false;
+		}
+		visited[row][col] = true;
+		if (row == N - 1 && col == N - 1) {
+			return true;
+		}
+		if (dfs(grid,row + 1,col,visited,time) || dfs(grid,row - 1,col,visited,time)) {
+			return true;
+		}
+		return false;
+	}
+	int swimInWater(int[][] grid) {
+		this.N = grid.length;
+		int left = grid[0][0];
+		int right = N * N - 1;
+		while (left < right) {
+			int mid = (left + right) / 2;
+			boolean visited = new boolean[N][N];
+			if (dfs(grid,0,0,visited,mid)) {
+				right = mid;
+			} 
+			else {
+				left = mid + 1;
+			}
+		}
+		return left;
+	}
+}

@@ -1,0 +1,24 @@
+class Solution {
+	int helper(int value, List<Integer> list, Set<Integer> set, Map<Integer, Integer> cache) {
+		if (cache.containsKey(value)) {
+			return cache.get(value);
+		}
+		if (set.contains(value) || value <= 0) {
+			return value;
+		}
+		int end = Math.abs(Collections.binarySearch(list,value)) - 1;
+		int max = 0;
+		for (var i = 0; i < end; i++) {
+			max = Math.max(max,list.get(i) + helper(Math.min(list.get(i) - 1,value - list.get(i)),list,set,cache));
+		}
+		return max;
+	}
+	int maxTotalReward(int[] rewardValues) {
+		Set<Integer> set = new TreeSet<Integer>();
+		for (var num: rewardValues) {	
+			set.add(num);
+		}
+		List<Integer> list = new ArrayList<>(set);
+		return list.get(list.size() - 1) + helper(list.get(list.size() - 1) - 1,list,set,new HashMap<>());
+	}
+}

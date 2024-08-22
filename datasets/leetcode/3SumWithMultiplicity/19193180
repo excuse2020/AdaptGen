@@ -1,0 +1,47 @@
+class Solution {
+	int threeSumMulti(int[] arr, int target) {
+		Arrays.sort(arr);
+		HashMap<Integer, Integer> map = new HashMap<>();
+		int mod = 1000000007;
+		for (int ar: arr) {	
+			if (map.containsKey(ar)) {
+				map.put(ar,map.get(ar) + 1);
+			} 
+			else {
+				map.put(ar,1);
+			}
+		}
+		int n = arr.length;
+		int count = 0;
+		for (int i = 0; i < n - 2; i++) {
+			int l = i + 1;
+			int r = n - 1;
+			if (map.get(arr[i]) > 0) {
+				map.put(arr[i],map.get(arr[i]) - 1);
+			}
+			count %= mod;
+			while (l < r) {
+				count %= mod;
+				if (arr[i] + arr[l] == target) {
+					if (arr[l] == arr[r]) {
+						int temp = (((map.get(arr[l]) - 1) * map.get(arr[r])) / 2) % mod;
+						count += temp;
+						break;
+					} 
+					else {
+						count += (map.get(arr[l]) % mod * map.get(arr[r]) % mod);
+					}
+					l += map.get(arr[l]);
+					r -= map.get(arr[r]);
+				} 
+				else if (arr[i] + arr[l] > target) {
+					r--;
+				} 
+				else if (arr[i] + arr[l] < target) {
+					l++;
+				}
+			}
+		}
+		return count % mod;
+	}
+}

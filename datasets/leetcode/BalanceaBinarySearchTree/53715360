@@ -1,0 +1,26 @@
+class Solution {
+	List<Integer> list;
+	TreeNode balanceBST(TreeNode root) {
+		list = new ArrayList<>();
+		inOrder(root);
+		return reconstructBST(0,list.size() - 1);
+	}
+	void inOrder(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		inOrder(root.left);
+		list.add(root.val);
+		inOrder(root.right);
+	}
+	TreeNode reconstructBST(int left, int right) {
+		if (left > right) {
+			return null;
+		}
+		int mid = (left + right) / 2;
+		TreeNode newNode = new TreeNode(list.get(mid));
+		newNode.left = reconstructBST(left,mid - 1);
+		newNode.right = reconstructBST(mid + 1,right);
+		return newNode;
+	}
+}

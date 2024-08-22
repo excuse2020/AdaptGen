@@ -1,0 +1,89 @@
+class Solution {
+	List<List<Integer>> getSkyline(int[][] buildings) {
+		PriorityQueue<int[]> pq = new PriorityQueue(new Comparator<int[]>());
+		for (int[] bu: buildings) {	
+			pq.add(bu);
+		}
+		List<List<Integer>> output = new ArrayList<>();
+		List<Integer> out = new ArrayList<Integer>();
+		int[] out1 = pq.poll();
+		out.add(out1[0]);
+		out.add(out1[2]);
+		output.add(out);
+		int prevLength = out1[1];
+		while (!pq.isEmpty()) {
+			int popped = pq.poll();
+			if (popped[0] > prevLength) {
+				out = new ArrayList<Integer>();
+				out.add(prevLength);
+				out.add(0);
+				output.add(out);
+				out = new ArrayList<Integer>();
+				out.add(popped[0]);
+				out.add(popped[2]);
+				output.add(out);
+				prevLength = popped[1];
+			} 
+			else if (popped[0] == prevLength) {
+				out = new ArrayList<Integer>();
+				out.add(popped[0]);
+				out.add(popped[2]);
+				output.add(out);
+				prevLength = popped[1];
+			} 
+			else {
+				if (popped[1] < prevLength) {
+					if (popped[2] <= output.get(output.size() - 1).get(1)) {
+						continue;
+					} 
+					else {
+						pq.add(new int{popped[1], prevLength, output.get(output.size() - 1).get(1)});
+						out = new ArrayList<Integer>();
+						out.add(popped[0]);
+						out.add(popped[2]);
+						output.add(out);
+						prevLength = popped[1];
+					}
+				} 
+				else if (popped[1] == prevLength) {
+					if (popped[2] <= output.get(output.size() - 1).get(1)) {
+						continue;
+					} 
+					else {
+						out = new ArrayList<Integer>();
+						out.add(popped[0]);
+						out.add(popped[2]);
+						output.add(out);
+						prevLength = popped[1];
+					}
+				} 
+				else {
+					if (popped[2] <= output.get(output.size() - 1).get(1)) {
+						pq.add(new int{prevLength, popped[1], popped[2]});
+					} 
+					else {
+						out = new ArrayList<Integer>();
+						out.add(popped[0]);
+						out.add(popped[2]);
+						output.add(out);
+						prevLength = popped[1];
+					}
+				}
+			}
+		}
+		out = new ArrayList<Integer>();
+		out.add(prevLength);
+		out.add(0);
+		output.add(out);
+		List<List<Integer>> finalOutput = new ArrayList<>();
+		finalOutput.add(output.get(0));
+		int prevHeight = output.get(0).get(1);
+		for (int i = 1; i < output.size(); i++) {
+			if (output.get(i).get(1) != prevHeight) {
+				finalOutput.add(output.get(i));
+				prevHeight = output.get(i).get(1);
+			}
+		}
+		return finalOutput;
+	}
+}

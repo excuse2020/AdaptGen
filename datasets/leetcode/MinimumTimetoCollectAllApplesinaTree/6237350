@@ -1,0 +1,26 @@
+class Solution {
+	int ans = 0;
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		for (int[] edge: edges) {	
+			graph.putIfAbsent(edge[0],new ArrayList<>());
+			graph.putIfAbsent(edge[1],new ArrayList<>());
+			graph.get(edge[0]).add(edge[1]);
+			graph.get(edge[1]).add(edge[0]);
+		}
+		needToGo(graph,0,-1,hasApple);
+		return ans;
+	}
+	boolean needToGo(Map<Integer, List<Integer>> graph, int curNode, int prevNode, List<Boolean> hasApple) {
+		boolean res = hasApple.get(curNode);
+		for (int nxtNode: graph.getOrDefault(curNode,new ArrayList<>())) {	
+			if (nxtNode != prevNode) {
+				if (needToGo(graph,nxtNode,curNode,hasApple)) {
+					res = true;
+					ans += 2;
+				}
+			}
+		}
+		return res;
+	}
+}

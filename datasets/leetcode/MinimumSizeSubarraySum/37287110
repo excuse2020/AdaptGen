@@ -1,0 +1,35 @@
+class Solution {
+	int minSubArrayLen(int target, int[] nums) {
+		long presum = new long[nums.length];
+		int min = Integer.MAX_VALUE;
+		presum[0] = nums[0];
+		for (int i = 1; i < nums.length; i++) {
+			presum[i] = presum[i - 1] + nums[i];
+		}
+		if (presum[nums.length - 1] < target) {
+			return 0;
+		}
+		int c = 0, j = 0;
+		for (int i = nums.length - 1; i >= 0; i--) {
+			c = i + 1;
+			j = 0;
+			if (presum[i] < target) {
+				break;
+			}
+			if (min > c) {
+				min = c;
+			}
+			while (j < i) {
+				if (presum[i] - presum[j] < target) {
+					break;
+				}
+				c = i - j;
+				if (min > c) {
+					min = c;
+				}
+				j++;
+			}
+		}
+		return min;
+	}
+}

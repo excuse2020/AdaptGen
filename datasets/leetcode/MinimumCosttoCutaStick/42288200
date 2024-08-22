@@ -1,0 +1,29 @@
+class Solution {
+	int minCost(int n, int[] cuts) {
+		int len = cuts.length;
+		Map<String, Integer> dp = new HashMap<>();
+		int[] visited = new int[len];
+		return recur(dp,visited,0,n,cuts);
+	}
+	int recur(Map<String, Integer> dp, int[] visited, int st, int en, int[] cuts) {
+		String key = st + "->";
+		if (dp.containsKey(key)) {
+			return dp.get(key);
+		}
+		int mn = (int) Math.pow(10,9);
+		for (int i = 0; i < cuts.length; i++) {
+			if (visited[i] == 0 && cuts[i] > st && cuts[i] < en) {
+				visited[i] = 1;
+				mn = Math.min(mn,en - st + recur(dp,visited,st,cuts[i],cuts) + recur(dp,visited,cuts[i],en,cuts));
+				visited[i] = 0;
+			}
+		}
+		if (mn == (int) Math.pow(10,9)) {
+			dp.put(key,0);
+		} 
+		else {
+			dp.put(key,mn);
+		}
+		return dp.get(key);
+	}
+}

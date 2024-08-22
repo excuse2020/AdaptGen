@@ -1,0 +1,31 @@
+class Solution {
+	int numberOfPaths(int[][] grid, int k) {
+		int y = grid.length, x = grid[0].length;
+		int table = new int[y][x][k];
+		table[0][0][grid[0][0] % k] = 1;
+		for (int j = 1; j != x; j++) {
+			int sh = grid[0][j] % k;
+			for (int a = 0, id; a != k; a++) {
+				id = (a + sh < k) ? a + sh : a + sh - k;
+				table[0][j][id] += table[0][j - 1][a];
+			}
+		}
+		for (int i = 1; i != y; i++) {
+			int sh = grid[i][0] % k;
+			for (int a = 0, id; a != k; a++) {
+				id = (a + sh < k) ? a + sh : a + sh - k;
+				table[i][0][id] += table[i - 1][0][a];
+			}
+		}
+		for (int i = 1; i != y; i++) {
+			for (int j = 1; j != x; j++) {
+				int sh = grid[i][j] % k;
+				for (int a = 0, id; a != k; a++) {
+					id = (a + sh < k) ? a + sh : a + sh - k;
+					table[i][j][id] = (table[i - 1][j][a] + table[i][j - 1][a]) % 1000000007;
+				}
+			}
+		}
+		return table[y - 1][x - 1][0];
+	}
+}

@@ -1,0 +1,48 @@
+class Solution {
+	Map<Integer, List<Integer>> map = new HashMap<>();
+	int memo;
+	boolean visited;
+	int dfs(int point, int[][] edges) {
+		int ans = 0;
+		for (int edge: map.get(point)) {	
+			if (visited[edge]) {
+				continue;
+			}
+			int nPoint = edges[edge][1], midx = 0;
+			if (point == nPoint) {
+				nPoint = edges[edge][0];
+				ans++;
+				midx = 1;
+			}
+			if (memo[midx][edge] >= 0) {
+				ans += memo[midx][edge];
+			} 
+			else {
+				visited[edge] = true;
+				ans += memo[midx][edge] = dfs(nPoint,edges);
+				visited[edge] = false;
+			}
+		}
+		return ans;
+	}
+	int[] minEdgeReversals(int n, int[][] edges) {
+		visited = new boolean[n - 1];
+		memo = new int[2][n - 1];
+		int ans = new int[n];
+		Arrays.fill(memo[0],-1);
+		Arrays.fill(memo[1],-1);
+		for (int i = 0; i < n - 1; i++) {
+			for (int p: edges[i]) {	
+				List<Integer> li = map.getOrDefault(p,new ArrayList<>());
+				li.add(i);
+				if (li.size() == 1) {
+					map.put(p,li);
+				}
+			}
+		}
+		for (int point: map.keySet()) {	
+			ans[point] = dfs(point,edges);
+		}
+		return ans;
+	}
+}

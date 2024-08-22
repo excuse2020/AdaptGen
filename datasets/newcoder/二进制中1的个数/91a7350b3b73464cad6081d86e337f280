@@ -1,0 +1,60 @@
+class Solution {
+	int NumberOf1(int n) {
+		if (n == 0) {
+			return 0;
+		}
+		int shifu = 0;
+		if (n < 0) {
+			shifu = 1;
+		}
+		int[] we = new int[32];
+		int w = 31;
+		int num = 0;
+		while (n != 1 && n != -1) {
+			we[w] = Math.abs(n % 2);
+			n = n / 2;
+			if (we[w] == 1) {
+				num++;
+			}
+			w--;
+		}
+		we[w] = 1;
+		w--;
+		num++;
+		for (; w >= 0; w--) {
+			we[w] = 0;
+		}
+		System.out.print(we);
+		if (shifu == 0) {
+			return num;
+		} 
+		else {
+			num = 0;
+			for (int i = 31; i > 0; i--) {
+				if (we[i] == 1) {
+					we[i] = 0;
+				} 
+				else {
+					we[i] = 1;
+				}
+			}
+			we[31]++;
+			for (int i = 31; i > 0; i--) {
+				if (we[i] == 2) {
+					we[i] = 0;
+					we[i - 1]++;
+				} 
+				else {
+					break;
+				}
+			}
+			we[0] = 1;
+			for (int i = 0; i < 32; i++) {
+				if (we[i] == 1) {
+					num++;
+				}
+			}
+			return num;
+		}
+	}
+}

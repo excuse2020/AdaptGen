@@ -1,0 +1,40 @@
+class Solution {
+	int minSumOfLengths(int[] arr, int target) {
+		int right = 0;
+		int left = 0;
+		int sum = 0;
+		ArrayList<int[]> list = new ArrayList<>();
+		while (right < arr.length) {
+			sum += arr[right];
+			while (sum >= target) {
+				if (sum == target) {
+					list.add(new int{right - left + 1, left});
+				}
+				sum -= arr[left];
+				left++;
+			}
+			right++;
+		}
+		Collections.sort(list,(o1, o2) -> {o1[0] - o2[0]});
+		int ans = Integer.MAX_VALUE;
+		for (int i = 0; i < list.size(); i++) {
+			int[] temp = list.get(i);
+			if (temp[0] * 2 >= ans) {
+				break;
+			}
+			for (int j = i + 1; j < list.size(); j++) {
+				int arr1 = list.get(i);
+				int arr2 = list.get(j);
+				if (arr1[1] < arr2[1] && arr1[1] + arr1[0] > arr2[1]) {
+					continue;
+				}
+				if (arr2[1] < arr1[1] && arr2[1] + arr2[0] > arr1[1]) {
+					continue;
+				}
+				ans = Math.min(ans,arr1[0] + arr2[0]);
+				break;
+			}
+		}
+		return ans == Integer.MAX_VALUE ? -1 : ans;
+	}
+}

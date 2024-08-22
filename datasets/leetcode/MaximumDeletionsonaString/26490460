@@ -1,0 +1,38 @@
+class Solution {
+	int[] dp;
+	int deleteString(String s) {
+		dp = new int[s.length()];
+		Arrays.fill(dp,-1);
+		return util(s,0);
+	}
+	int util(String s, int i) {
+		if (i == s.length()) {
+			return 0;
+		}
+		if (i + 1 == s.length()) {
+			return 1;
+		}
+		if (dp[i] != -1) {
+			return dp[i];
+		}
+		char ch = s.charAt(i);
+		int j = i + 1;
+		for (; j < s.length(); j++) {
+			if (s.charAt(j) != ch) {
+				break;
+			}
+		}
+		if (j == s.length()) {
+			return s.length() - i;
+		}
+		dp[i] = 1;
+		for (int offset = 1; i + offset <= s.length(); offset++) {
+			String s1 = s.substring(i,i + offset);
+			String s2 = s.substring(i + offset,i + offset);
+			if (s1.equals(s2)) {
+				dp[i] = Math.max(dp[i],1 + util(s,i + offset));
+			}
+		}
+		return dp[i];
+	}
+}

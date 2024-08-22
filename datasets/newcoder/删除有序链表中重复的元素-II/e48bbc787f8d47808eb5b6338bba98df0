@@ -1,0 +1,47 @@
+class Solution {
+	ListNode deleteDuplicates(ListNode head) {
+		if (head == null) {
+			return null;
+		}
+		LinkedList<ListNode> queue = new LinkedList<ListNode>();
+		ListNode curNode = head;
+		int count = 1;
+		while (curNode != null) {
+			if (queue.isEmpty()) {
+				queue.add(curNode);
+				curNode = curNode.next;
+				continue;
+			}
+			ListNode node = queue.peekLast();
+			if (node.val == curNode.val) {
+				count++;
+				curNode = curNode.next;
+			} 
+			else {
+				if (count > 1) {
+					queue.pollLast();
+					count = 1;
+				}
+				queue.add(curNode);
+				curNode = curNode.next;
+			}
+		}
+		if (count > 1) {
+			queue.pollLast();
+		}
+		if (queue.isEmpty()) {
+			return null;
+		}
+		queue.peekLast().next = null;
+		ListNode res = queue.poll();
+		if (queue.isEmpty()) {
+			res.next = null;
+		}
+		ListNode node = res;
+		while (!queue.isEmpty()) {
+			node.next = queue.poll();
+			node = node.next;
+		}
+		return res;
+	}
+}

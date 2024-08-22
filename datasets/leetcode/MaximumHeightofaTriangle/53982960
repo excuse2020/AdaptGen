@@ -1,0 +1,33 @@
+class Solution {
+	int getLevelsWhenOnTop(int top, int bottom, int maxPossibleLevels) {
+		int levelsSatisfied = 0;
+		int oddBalls = top;
+		int evenBalls = bottom;
+		for (int i = 1; i <= maxPossibleLevels; i++) {
+			int ballsNeeded = i;
+			if (i % 2 == 0) {
+				evenBalls -= ballsNeeded;
+			} 
+			else {
+				oddBalls -= ballsNeeded;
+			}
+			if (oddBalls < 0 || evenBalls < 0) {
+				return levelsSatisfied;
+			}
+			levelsSatisfied++;
+		}
+		return -1;
+	}
+	int maxHeightOfTriangle(int red, int blue) {
+		int sumOfBalls = red + blue;
+		int nSum = 0;
+		int maxPossibleLevels = 1;
+		while (nSum < sumOfBalls) {
+			nSum = (maxPossibleLevels * (maxPossibleLevels + 1)) / 2;
+			maxPossibleLevels++;
+		}
+		int redLevelsSatisfied = getLevelsWhenOnTop(red,blue,maxPossibleLevels);
+		int blueLevelsSatisfied = getLevelsWhenOnTop(blue,red,maxPossibleLevels);
+		return Math.max(blueLevelsSatisfied,redLevelsSatisfied);
+	}
+}

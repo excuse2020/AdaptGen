@@ -1,0 +1,37 @@
+class Solution {
+	int getLowerBound(int element, int[][] events) {
+		int n = events.length;
+		int low = 0, high = n - 1;
+		int answer = n;
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			int start = events[mid][0];
+			if (element < start) {
+				answer = mid;
+				high = mid - 1;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		return answer;
+	}
+	int maxTwoEvents(int[][] events) {
+		int n = events.length;
+		Arrays.sort(events,(a, b) -> {Integer.compare(a[0],b[0])});
+		int[] maxes = new int[n];
+		maxes[n - 1] = events[n - 1][2];
+		for (int i = n - 2; i >= 0; --i) {
+			maxes[i] = Math.max(events[i][2],maxes[i + 1]);
+		}
+		int answer = 0;
+		for (int i = 0; i < n; ++i) {
+			answer = Math.max(answer,events[i][2]);
+			int lowerBound = getLowerBound(events[i][1],events);
+			if (lowerBound < n) {
+				answer = Math.max(answer,events[i][2] + maxes[lowerBound]);
+			}
+		}
+		return answer;
+	}
+}

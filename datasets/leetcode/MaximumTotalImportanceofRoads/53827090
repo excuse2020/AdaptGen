@@ -1,0 +1,20 @@
+class Solution {
+	long maximumImportance(int n, int[][] roads) {
+		Map<Integer, Integer> connectionCount = new HashMap<>();
+		for (int[] road: roads) {	
+			connectionCount.put(road[0],connectionCount.getOrDefault(road[0],0) + 1);
+			connectionCount.put(road[1],connectionCount.getOrDefault(road[1],0) + 1);
+		}
+		List<Integer> cities = new ArrayList<>(connectionCount.keySet());
+		cities.sort((a, b) -> {connectionCount.get(b) - connectionCount.get(a)});
+		Map<Integer, Integer> importanceMap = new HashMap<>();
+		for (int i = 0; i < cities.size(); i++) {
+			importanceMap.put(cities.get(i),n - i);
+		}
+		long totalImportance = 0;
+		for (int[] road: roads) {	
+			totalImportance += importanceMap.get(road[0]) + importanceMap.get(road[1]);
+		}
+		return totalImportance;
+	}
+}

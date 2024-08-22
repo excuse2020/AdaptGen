@@ -1,0 +1,43 @@
+class Solution {
+	void add(int[] bits, int num) {
+		for (int i = 0; i < 32; i++) {
+			if (((num >> i) & 1) == 0) {
+				bits[31 - i] += 1;
+			}
+		}
+	}
+	int minimumDifference(int[] nums, int k) {
+		int n = nums.length;
+		int[] bits = new int[32];
+		int i = 0, j = 0, diff = Integer.MAX_VALUE, range = 0;
+		while (j < n) {
+			add(bits,nums[j]);
+			range = window(bits);
+			diff = Math.min(diff,Math.abs(range - k));
+			while (range < k && i < j) {
+				rem(bits,nums[i]);
+				range = window(bits);
+				diff = Math.min(diff,Math.abs(range - k));
+				i++;
+			}
+			j++;
+		}
+		return diff;
+	}
+	void rem(int[] bits, int num) {
+		for (int i = 0; i < 32; i++) {
+			if (((num >> i) & 1) == 0) {
+				bits[31 - i] -= 1;
+			}
+		}
+	}
+	int window(int[] bits) {
+		int ans = 0;
+		for (int i = 0; i < 32; i++) {
+			if (bits[31 - i] == 0) {
+				ans += (1 << i);
+			}
+		}
+		return ans;
+	}
+}

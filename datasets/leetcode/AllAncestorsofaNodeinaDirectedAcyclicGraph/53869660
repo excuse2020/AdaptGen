@@ -1,0 +1,29 @@
+class Solution {
+	List<List<Integer>> getAncestors(int n, int[][] edges) {
+		List<List<Integer>> ans = new ArrayList();
+		ArrayList<ArrayList<Integer>> adj = new ArrayList();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			adj.get(edges[i][0]).add(edges[i][1]);
+		}
+		for (int i = 0; i < n; i++) {
+			ans.add(new ArrayList<>());
+		}
+		for (int v = 0; v < n; v++) {
+			int[] vis = new int[n];
+			isNeighborOf(v,v,ans,vis,adj);
+		}
+		return ans;
+	}
+	void isNeighborOf(int ancester, int v, List<List<Integer>> ans, int[] vis, ArrayList<ArrayList<Integer>> adj) {
+		vis[v] = 1;
+		for (Integer nbr: adj.get(v)) {	
+			if (vis[nbr] == 0) {
+				ans.get(nbr).add(ancester);
+				isNeighborOf(ancester,nbr,ans,vis,adj);
+			}
+		}
+	}
+}

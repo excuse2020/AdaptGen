@@ -1,0 +1,32 @@
+class Solution {
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		Stack<Integer> stack = new Stack<>();
+		ArrayList<Integer> arrayList = new ArrayList<>();
+		HashMap<Integer, Integer> hashMap = new HashMap<>();
+		for (int tmp: postorder) {	
+			stack.push(tmp);
+		}
+		for (int i = 0; i < inorder.length; i++) {
+			arrayList.add(inorder[i]);
+			hashMap.put(inorder[i],i);
+		}
+		TreeNode root = process(stack,arrayList,hashMap,0,postorder.length - 1);
+		return root;
+	}
+	TreeNode process(Stack<Integer> postorder, ArrayList<Integer> inorder, HashMap<Integer, Integer> nodeIndexs, int start, int end) {
+		if (start > end || postorder.isEmpty()) {
+			return null;
+		}
+		if (start == end) {
+			return new TreeNode(postorder.pop());
+		}
+		int val = postorder.pop();
+		TreeNode root = new TreeNode(val);
+		int index = nodeIndexs.get(val);
+		TreeNode right = process(postorder,inorder,nodeIndexs,index + 1,end);
+		TreeNode left = process(postorder,inorder,nodeIndexs,start,index - 1);
+		root.left = left;
+		root.right = right;
+		return root;
+	}
+}

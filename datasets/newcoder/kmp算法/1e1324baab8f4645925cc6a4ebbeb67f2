@@ -1,0 +1,31 @@
+class Solution {
+	int kmp(String S, String T) {
+		int[] next = new int[S.length()];
+		int pre = 0;
+		next[0] = 0;
+		for (int sufix = 1; sufix < S.length(); sufix++) {
+			while (pre > 0 && S.charAt(pre) != S.charAt(sufix)) {
+				pre = next[sufix - 1];
+			}
+			if (S.charAt(pre) == S.charAt(sufix)) {
+				pre++;
+			}
+			next[sufix] = pre;
+		}
+		pre = 0;
+		int num = 0;
+		for (int sufix = 0; sufix < T.length(); sufix++) {
+			while (pre > 0 && T.charAt(sufix) != S.charAt(pre)) {
+				pre = next[pre - 1];
+			}
+			if (T.charAt(sufix) == S.charAt(pre)) {
+				pre++;
+			}
+			if (pre == S.length()) {
+				num++;
+				pre = next[pre - 1];
+			}
+		}
+		return num;
+	}
+}

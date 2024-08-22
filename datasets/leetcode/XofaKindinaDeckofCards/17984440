@@ -1,0 +1,45 @@
+class Solution {
+	boolean hasGroupsSizeX(int[] deck) {
+		int min = 2;
+		int prev = 0;
+		Arrays.sort(deck);
+		ArrayList<Integer> list = new ArrayList<>();
+		HashSet<Integer> set = new HashSet<>();
+		for (int i = 0; i < deck.length; i++) {
+			if (deck[prev] != deck[i]) {
+				if (i - prev < 2) {
+					return false;
+				}
+				list.add(i - prev);
+				prev = i;
+			}
+			if (i == deck.length - 1) {
+				if (1 + i - prev < 2) {
+					return false;
+				}
+				list.add(1 + i - prev);
+			}
+		}
+		min = Collections.min(list).intValue();
+		int half = min / 2;
+		ArrayList<Integer> listA = new ArrayList<>();
+		listA.add(min);
+		for (int i = 2; i <= half; i++) {
+			if (min % i == 0) {
+				listA.add(i);
+			}
+		}
+		for (int i = 0; i < listA.size(); i++) {
+			half = listA.get(i);
+			for (int j = 0; j < list.size(); j++) {
+				if (list.get(j) % half != 0) {
+					break;
+				}
+				if (j == list.size() - 1) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+}

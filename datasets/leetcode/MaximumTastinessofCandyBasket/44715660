@@ -1,0 +1,35 @@
+class Solution {
+	boolean isPossible(int k, int diff, int[] prices) {
+		int count = 1;
+		int n = prices.length;
+		int curr = prices[0];
+		for (int i = 1; i < n; i++) {
+			if ((prices[i] - curr) >= diff) {
+				curr = prices[i];
+				count++;
+				if (count >= k) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	int maximumTastiness(int[] price, int k) {
+		Arrays.sort(price);
+		int low = 0;
+		int ans = -1;
+		int n = price.length;
+		int high = price[n - 1] - price[0];
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			if (isPossible(k,mid,price)) {
+				ans = mid;
+				low = mid + 1;
+			} 
+			else {
+				high = mid - 1;
+			}
+		}
+		return ans;
+	}
+}

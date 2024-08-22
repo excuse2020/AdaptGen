@@ -1,0 +1,42 @@
+class Solution {
+	ListNode removeZeroSumSublists(ListNode head) {
+		while (head != null && head.val == 0) {
+			head = head.next;
+		}
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode temp = head;
+		ListNode[] stack = new ListNode[1000];
+		stack[0] = temp;
+		temp = temp.next;
+		int i = 0;
+		while (temp != null) {
+			stack[++i] = temp;
+			temp = temp.next;
+			for (int x = 0; x <= i; x++) {
+				int count = 0;
+				for (int y = x; y <= i; y++) {
+					count = count + stack[y].val;
+				}
+				if (count == 0) {
+					i = x - 1;
+					break;
+				}
+			}
+		}
+		if (i == -1) {
+			return null;
+		}
+		ListNode head2 = new ListNode();
+		head2.val = stack[0].val;
+		ListNode temp2 = head2;
+		if (i > 0) {
+			for (int j = 1; j <= i; j++) {
+				temp2.next = new ListNode(stack[j].val);
+				temp2 = temp2.next;
+			}
+		}
+		return head2;
+	}
+}

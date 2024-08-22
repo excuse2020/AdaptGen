@@ -1,0 +1,52 @@
+class Solution {
+	int dfs(int k, Map<Integer, List<Integer>> map, int[] visit) {
+		if (visit[k] == 1) {
+			return 0;
+		}
+		int count = 1;
+		visit[k] = 1;
+		if (map.containsKey(k)) {
+			for (Integer next: map.get(k)) {	
+				count += dfs(next,map,visit);
+			}
+		}
+		return count;
+	}
+	int maximumDetonation(int[][] bombs) {
+		if (bombs == null || bombs.length == 0) {
+			return 0;
+		}
+		if (bombs.length == 1) {
+			return 1;
+		}
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int i = 0; i < bombs.length; i++) {
+			for (int j = i + 1; j < bombs.length; j++) {
+				long x1 = (long) bombs[i][0];
+				long y1 = (long) bombs[i][1];
+				long x2 = (long) bombs[j][0];
+				long y2 = (long) bombs[j][1];
+				long dis = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
+				long r1 = (long) bombs[i][2];
+				long r2 = (long) bombs[j][2];
+				if (r1 * r1 >= dis) {
+					List<Integer> list = map.getOrDefault(i,new ArrayList<>());
+					list.add(j);
+					map.put(i,list);
+				}
+				if (r2 * r2 >= dis) {
+					List<Integer> list = map.getOrDefault(j,new ArrayList<>());
+					list.add(i);
+					map.put(j,list);
+				}
+			}
+		}
+		int res = 0;
+		for (int k = 0; k < bombs.length; k++) {
+			int[] visit = new int[bombs.length];
+			int cur = dfs(k,map,visit);
+			res = Math.max(cur,res);
+		}
+		return res;
+	}
+}

@@ -1,0 +1,46 @@
+class Solution {
+	String getDirections(TreeNode root, int startValue, int destValue) {
+		TreeNode lca = lowestCommonAncestor(root,startValue,destValue);
+		List<String> sourcePath = new ArrayList<>();
+		pathFromRootToNode(lca,startValue,sourcePath);
+		List<String> destPath = new ArrayList<>();
+		pathFromRootToNode(lca,destValue,destPath);
+		StringBuilder ans = new StringBuilder();
+		int i = 0;
+	}
+	TreeNode lowestCommonAncestor(TreeNode root, int p, int q) {
+		if (root == null || root.val == p || root.val == q) {
+			return root;
+		}
+		TreeNode left = lowestCommonAncestor(root.left,p,q);
+		TreeNode right = lowestCommonAncestor(root.right,p,q);
+		if (left == null) {
+			return right;
+		} 
+		else if (right == null) {
+			return left;
+		} 
+		else {
+			return root;
+		}
+	}
+	boolean pathFromRootToNode(TreeNode lca, int destValue, List<String> st) {
+		if (lca == null) {
+			return false;
+		}
+		if (lca.val == destValue) {
+			return true;
+		}
+		st.add("L");
+		if (pathFromRootToNode(lca.left,destValue,st)) {
+			return true;
+		}
+		st.remove(st.size() - 1);
+		st.add("R");
+		if (pathFromRootToNode(lca.right,destValue,st)) {
+			return true;
+		}
+		st.remove(st.size() - 1);
+		return false;
+	}
+}

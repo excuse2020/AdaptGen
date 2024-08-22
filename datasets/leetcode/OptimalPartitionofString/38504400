@@ -1,0 +1,28 @@
+class Solution {
+	int get(String s, int i, int[] dp) {
+		if (i == s.length()) {
+			return 0;
+		}
+		if (dp[i] != Integer.MAX_VALUE) {
+			return dp[i];
+		}
+		HashSet<Character> hs = new HashSet<>();
+		int j = i;
+		int res = Integer.MAX_VALUE;
+		while (j < s.length() && !hs.contains(s.charAt(j))) {
+			hs.add(s.charAt(j));
+			j++;
+			res = Math.min(res,1 + get(s,j,dp));
+		}
+		if (j != s.length()) {
+			res = Math.min(res,1 + get(s,j,dp));
+		}
+		dp[i] = res;
+		return res;
+	}
+	int partitionString(String s) {
+		int dp = new int[s.length()];
+		Arrays.fill(dp,Integer.MAX_VALUE);
+		return get(s,0,dp);
+	}
+}

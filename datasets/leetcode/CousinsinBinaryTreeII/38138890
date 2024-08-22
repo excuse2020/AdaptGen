@@ -1,0 +1,55 @@
+class Solution {
+	TreeNode replaceValueInTree(TreeNode root) {
+		if (root == null) {
+			return root;
+		}
+		HashMap<Integer, Integer> map = new HashMap<>();
+		int lvl = 0;
+		Queue<TreeNode> q = new ArrayDeque<>();
+		if (root != null) {
+			q.offer(root);
+		}
+		while (!q.isEmpty()) {
+			int s = q.size();
+			int max = 0;
+			for (int i = 0; i < s; i++) {
+				TreeNode curr = q.remove();
+				max += curr.val;
+				if (curr.left != null) {
+					q.offer(curr.left);
+				}
+				if (curr.right != null) {
+					q.offer(curr.right);
+				}
+			}
+			map.put(lvl,max);
+			lvl++;
+		}
+		lvl = 0;
+		root.val = 0;
+		q.offer(root);
+		while (!q.isEmpty()) {
+			int s = q.size();
+			for (int i = 0; i < s; i++) {
+				TreeNode curr = q.remove();
+				int sum = 0;
+				if (curr.left != null) {
+					sum += curr.left.val;
+				}
+				if (curr.right != null) {
+					sum += curr.right.val;
+				}
+				if (curr.left != null) {
+					curr.left.val = map.get(lvl + 1) - sum;
+					q.offer(curr.left);
+				}
+				if (curr.right != null) {
+					curr.right.val = map.get(lvl + 1) - sum;
+					q.offer(curr.right);
+				}
+			}
+			lvl++;
+		}
+		return root;
+	}
+}

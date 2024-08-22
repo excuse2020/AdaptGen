@@ -1,0 +1,34 @@
+class Solution {
+	long continuousSubarrays(int[] nums) {
+		long count = 0;
+		int left = 0;
+		Deque<Integer> maxQ = new LinkedList<>();
+		Deque<Integer> minQ = new LinkedList<>();
+		for (int right = 0; right < nums.length; right++) {
+			while (!minQ.isEmpty() && nums[minQ.peekLast()] >= nums[right]) {
+				minQ.pollLast();
+			}
+			minQ.offerLast(right);
+			while (!maxQ.isEmpty() && nums[maxQ.peekLast()] <= nums[right]) {
+				maxQ.pollLast();
+			}
+			maxQ.offerLast(right);
+			while (left < right && !isValid(maxQ,minQ,nums)) {
+				if (left >= minQ.peekFirst()) {
+					minQ.pollFirst();
+				}
+				if (left >= maxQ.peekFirst()) {
+					maxQ.pollFirst();
+				}
+				left++;
+			}
+			count += right - left + 1;
+		}
+		return count;
+	}
+	boolean isValid(Deque<Integer> maxQ, Deque<Integer> minQ, int[] nums) {
+		int min = nums[minQ.peekFirst()];
+		int max = nums[maxQ.peekFirst()];
+		return max - min <= 2;
+	}
+}

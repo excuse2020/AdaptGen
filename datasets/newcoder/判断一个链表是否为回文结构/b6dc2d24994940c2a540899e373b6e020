@@ -1,0 +1,39 @@
+class Solution {
+	ListNode copy(ListNode head) {
+		if (head == null) {
+			return null;
+		}
+		ListNode newHead = new ListNode(head.val);
+		ListNode current = newHead;
+		ListNode originalCurrent = head.next;
+		while (originalCurrent != null) {
+			current.next = new ListNode(originalCurrent.val);
+			current = current.next;
+			originalCurrent = originalCurrent.next;
+		}
+		return newHead;
+	}
+	boolean isPail(ListNode head) {
+		if (head == null || head.next == null) {
+			return true;
+		}
+		ListNode head1 = copy(head);
+		ListNode pre = null;
+		ListNode cur = head;
+		ListNode res = cur;
+		while (cur != null) {
+			ListNode temp = cur.next;
+			cur.next = pre;
+			pre = cur;
+			cur = temp;
+		}
+		while (pre != null && head1 != null) {
+			if (pre.val != head1.val) {
+				return false;
+			}
+			head1 = head1.next;
+			pre = pre.next;
+		}
+		return pre == null && head1 == null;
+	}
+}

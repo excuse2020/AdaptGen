@@ -1,0 +1,76 @@
+class Solution {
+	int solve(String s) {
+		int[] vStack = new int[s.length()];
+		char[] opStack = new char[s.length()];
+		int pv = -1;
+		int pp = -1;
+		char[] input = s.toCharArray();
+		for (int index = 0; index < input.length; index++) {
+			char c = input[index];
+			if (c >= '0' && c <= '9') {
+				int v = c - '0';
+				while ((index + 1) < s.length()) {
+					char tmp = input[index + 1];
+					if (tmp >= '0' && tmp <= '9') {
+						v = v * 10 + (tmp - '0');
+						index++;
+						continue;
+					}
+					break;
+				}
+				Character next = (index + 1) < s.length() ? input[index + 1] : null;
+				vStack[++pv] = v;
+				if (next == null || next == ')' || next == '+' || next == '-') {
+					while (pp >= 0) {
+						char op = opStack[pp--];
+						if (op == '+') {
+							vStack[pv - 1] = vStack[pv - 1] + vStack[pv];
+							pv--;
+						} 
+						else if (op == '-') {
+							vStack[pv - 1] = vStack[pv - 1] - vStack[pv];
+							pv--;
+						} 
+						else if (op == '*') {
+							vStack[pv - 1] = vStack[pv - 1] * vStack[pv];
+							pv--;
+						} 
+						else {
+							opStack[++pp] = op;
+							break;
+						}
+					}
+				}
+			} 
+			else {
+				Character next = (index + 1) < s.length() ? input[(index + 1)] : null;
+				opStack[++pp] = c;
+				if (c == ')') {
+					pp -= 2;
+					if (next == null || next == ')' || next == '+' || next == '-') {
+						while (pp >= 0) {
+							char op = opStack[pp--];
+							if (op == '+') {
+								vStack[pv - 1] = vStack[pv - 1] + vStack[pv];
+								pv--;
+							} 
+							else if (op == '-') {
+								vStack[pv - 1] = vStack[pv - 1] - vStack[pv];
+								pv--;
+							} 
+							else if (op == '*') {
+								vStack[pv - 1] = vStack[pv - 1] * vStack[pv];
+								pv--;
+							} 
+							else {
+								opStack[++pp] = op;
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		return vStack[pv];
+	}
+}

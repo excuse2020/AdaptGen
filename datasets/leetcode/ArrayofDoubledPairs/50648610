@@ -1,0 +1,42 @@
+class Solution {
+	boolean canReorderDoubled(int[] arr) {
+		int[] plus = new int[100011];
+		int[] minus = new int[100011];
+		for (int i: arr) {	
+			if (i >= 0) {
+				plus[i]++;
+			} 
+			else {
+				minus[-i]++;
+			}
+		}
+		if (plus[0] % 2 != 0) {
+			return false;
+		}
+		int res = arr.length - plus[0];
+		for (int i = 1; i < plus.length / 2; i++) {
+			if (plus[i] > 0) {
+				plus[2 * i] -= plus[i];
+				res -= plus[i] * 2;
+				if (plus[2 * i] < 0) {
+					return false;
+				}
+				plus[i] = 0;
+			}
+		}
+		for (int i = 1; i < minus.length / 2; i++) {
+			if (minus[i] > 0) {
+				minus[2 * i] -= minus[i];
+				res -= minus[i] * 2;
+				if (minus[2 * i] < 0) {
+					return false;
+				}
+				minus[i] = 0;
+			}
+		}
+		if (res != 0) {
+			return false;
+		}
+		return true;
+	}
+}

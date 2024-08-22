@@ -1,0 +1,35 @@
+class Solution {
+	int max = 0;
+	Map<Integer, List<int[]>> buildGraph(int[][] edges) {
+		Map<Integer, List<int[]>> adjList = new HashMap<>();
+		for (int[] edge: edges) {	
+			adjList.computeIfAbsent(edge[0],(key) -> {new ArrayList<>()}).add(new int{edge[1], edge[2]});
+			adjList.computeIfAbsent(edge[1],(key) -> {new ArrayList<>()}).add(new int{edge[0], edge[2]});
+		}
+		return adjList;
+	}
+	void dfs(int source, int dest, Map<Integer, List<int[]>> adjList, int time, int maxTime, int[] values, int quality, Map<Integer, Integer> visited) {
+		if (time > maxTime) {
+			return;
+		}
+		if (!visited.containsKey(source)) {
+			quality = quality + values[source];
+		}
+		visited.put(source,visited.getOrDefault(source,0) + 1);
+		if (source == dest) {
+			max = Math.max(max,quality);
+		}
+		for (int[] n: adjList.getOrDefault(source,Collections.emptyList())) {	
+			dfs(n[0],dest,adjList,time + n[1],maxTime,values,quality,visited);
+		}
+		visited.put(source,visited.get(source) - 1);
+		if (visited.get(source) == 0) {
+			visited.remove(source);
+		}
+	}
+	int maximalPathQuality(int[] values, int[][] edges, int maxTime) {
+		Map<Integer, List<int[]>> adjList = buildGraph(edges);
+		dfs(0,0,adjList,0,maxTime,values,0,new HashMap<>());
+		return max;
+	}
+}

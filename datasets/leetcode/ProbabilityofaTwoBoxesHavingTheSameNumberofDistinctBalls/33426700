@@ -1,0 +1,52 @@
+class Solution {
+	int choose(int n, int r) {
+		int res = 1;
+		for (int i = 0; i < r; ++i) {
+			res *= n - i;
+			res /= i + 1;
+		}
+		return res;
+	}
+	double getProbability(int[] balls) {
+		int n = balls.length;
+		int sum = 0;
+		for (int ball: balls) {	
+			sum += ball;
+		}
+		double[][][][][] dp = new double[n + 1][sum / 2 + 1][sum / 2 + 1][n + 1][n + 1];
+		dp[0][0][0][0][0] = 1.0;
+		for (int ballIndex = 0; ballIndex < n; ++ballIndex) {
+			int ball = balls[ballIndex];
+			for (int i = 0; i < sum / 2 + 1; ++i) {
+				for (int j = 0; j < sum / 2 + 1; ++j) {
+					for (int k = 0; k <= n; ++k) {
+						for (int l = 0; l <= n; ++l) {
+							if (i >= ball && k >= 1) {
+								dp[ballIndex + 1][i][j][k][l] += dp[ballIndex][i - ball][j][k - 1][l] * Math.pow(0.5,ball);
+							}
+							if (j >= ball && l >= 1) {
+								dp[ballIndex + 1][i][j][k][l] += dp[ballIndex][i][j - ball][k][l - 1] * Math.pow(0.5,ball);
+							}
+							for (int amt = 1; amt < ball; ++amt) {
+								if (i >= amt && j >= ball - amt && k >= 1 && l >= 1) {
+									dp[ballIndex + 1][i][j][k][l] += dp[ballIndex][i - amt][j - (ball - amt)][k - 1][l - 1] * choose(ball,amt);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		double num = 0;
+		for (int i = 0; i <= n; ++i) {
+			num += dp[n][sum / 2][sum / 2][i][i];
+		}
+		double den = 0;
+		for (int i = 0; i <= n; ++i) {
+			for (int j = 0; j <= n; ++j) {
+				den += dp[n][sum / 2][sum / 2][i][j];
+			}
+		}
+		return num / den;
+	}
+}

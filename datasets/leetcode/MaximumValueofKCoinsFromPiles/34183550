@@ -1,0 +1,21 @@
+class Solution {
+	int maxValueOfCoins(List<List<Integer>> piles, int k) {
+		int[] dp = new int[k + 1];
+		Arrays.fill(dp,-1);
+		dp[0] = 0;
+		for (List<Integer> pile: piles) {	
+			int sum = 0;
+			int count = 0;
+			int[] cur = Arrays.copyOf(dp,k + 1);
+			for (int x: pile) {	
+				sum += x;
+				count++;
+				for (int i = count; dp[i - count] != -1 && i <= k; i++) {
+					cur[i] = Math.max(cur[i],dp[i - count] + sum);
+				}
+			}
+			dp = cur;
+		}
+		return dp[k];
+	}
+}

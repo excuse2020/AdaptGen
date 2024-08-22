@@ -1,0 +1,47 @@
+class Solution {
+	List<TreeNode> list;
+	String getDirections(TreeNode root, int startValue, int destValue) {
+		helper(root,startValue,new ArrayList<TreeNode>());
+		List<TreeNode> startList = new ArrayList<>(list);
+		helper(root,destValue,new ArrayList<TreeNode>());
+		List<TreeNode> destList = new ArrayList<>(list);
+		int i = 0;
+		int j = 0;
+		while (i < startList.size() && j < destList.size() && startList.get(i).val == destList.get(j).val) {
+			i++;
+			j++;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int k = i; k < startList.size(); k++) {
+			sb.append("U");
+		}
+		for (int k = j; k < destList.size(); k++) {
+			TreeNode prev = destList.get(k - 1);
+			if (prev.left != null && prev.left.val == destList.get(k).val) {
+				sb.append("L");
+			} 
+			else {
+				sb.append("R");
+			}
+		}
+		return sb.toString();
+	}
+	void helper(TreeNode root, int value, List<TreeNode> track) {
+		if (root == null) {
+			return;
+		}
+		track.add(root);
+		if (root.val == value) {
+			list = new ArrayList<TreeNode>(track);
+		} 
+		else {
+			if (root.left != null) {
+				helper(root.left,value,track);
+			}
+			if (root.right != null) {
+				helper(root.right,value,track);
+			}
+		}
+		track.remove(track.size() - 1);
+	}
+}

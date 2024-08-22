@@ -1,0 +1,27 @@
+class Solution {
+	int distinctSubSequence(String s, String t, int index1, int index2, int[][] dp) {
+		if (index1 < 0 && index2 < 0) {
+			return 1;
+		}
+		if (index1 < 0) {
+			return 0;
+		}
+		if (index2 < 0) {
+			return 1;
+		}
+		if (dp[index1][index2] != -1) {
+			return dp[index1][index2];
+		}
+		int count = distinctSubSequence(s,t,index1 - 1,index2,dp);
+		if (s.charAt(index1) == t.charAt(index2)) {
+			count += distinctSubSequence(s,t,index1 - 1,index2 - 1,dp);
+		}
+		dp[index1][index2] = count;
+		return count;
+	}
+	int numDistinct(String s, String t) {
+		int[][] dp = new int[s.length() + 1][t.length() + 1];
+		Arrays.stream(dp).forEach((arr) -> {Arrays.fill(arr,-1)});
+		return distinctSubSequence(s,t,s.length() - 1,t.length() - 1,dp);
+	}
+}

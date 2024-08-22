@@ -1,0 +1,53 @@
+class Solution {
+	int maxProfit = Integer.MIN_VALUE;
+	void dfs(int node, int par, Map<Integer, Integer> parent, List<List<Integer>> adjList, int[] time, int depth) {
+		parent.put(node,par);
+		time[node] = depth;
+		for (int neighbor: adjList.get(node)) {	
+			if (neighbor != par) {
+				dfs(neighbor,node,parent,adjList,time,depth + 1);
+			}
+		}
+	}
+	void dfs2(int node, int parent, int[] amount, int currentProfit, List<List<Integer>> adjList) {
+		currentProfit += amount[node];
+		boolean isLeaf = true;
+		for (int neighbor: adjList.get(node)) {	
+			if (neighbor != parent) {
+				isLeaf = false;
+				dfs2(neighbor,node,amount,currentProfit,adjList);
+			}
+		}
+		if (isLeaf) {
+			maxProfit = Math.max(maxProfit,currentProfit);
+		}
+	}
+	int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+		int n = amount.length;
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n - 1; i++) {
+			adj.get(edges[i][0]).add(edges[i][1]);
+			adj.get(edges[i][1]).add(edges[i][0]);
+		}
+		Map<Integer, Integer> parent = new HashMap<>();
+		int[] time = new int[n];
+		dfs(0,-1,parent,adj,time,0);
+		int curr = bob;
+		int bobsTime = 0;
+		while (curr != -1) {
+			if (bobsTime < time[curr]) {
+				amount[curr] = 0;
+			}
+			if (time[curr] == bobsTime) {
+				amount[curr] /= 2;
+			}
+			curr = parent.get(curr);
+			bobsTime++;
+		}
+		dfs2(0,-1,amount,0,adj);
+		return maxProfit;
+	}
+}

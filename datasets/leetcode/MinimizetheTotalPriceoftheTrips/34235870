@@ -1,0 +1,62 @@
+class Solution {
+	int con;
+	int dp;
+	boolean dfs(int s, int d, ArrayList<Integer> al, int par) {
+		if (s == d) {
+			return true;
+		}
+		for (int v: al[s]) {	
+			if (v != par) {
+				if (dfs(v,d,al,s)) {
+					con[v]++;
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
+		ArrayList<Integer> al = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			al[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < edges.length; i++) {
+			al[edges[i][0]].add(edges[i][1]);
+			al[edges[i][1]].add(edges[i][0]);
+		}
+		con = new int[n];
+		for (int i = 0; i < trips.length; i++) {
+			int aa = trips[i][0];
+			int bb = trips[i][1];
+			ArrayList<Integer> all = new ArrayList<>();
+			con[aa]++;
+			dfs(aa,bb,al,-1);
+		}
+		dp = new int[n][2];
+		for (int i = 0; i < n; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		return solve(0,-1,0,al,price);
+	}
+	int solve(int node, int par, int use, ArrayList<Integer> al, int pr) {
+		int u = con[node] * pr[node] / 2;
+		int uu = con[node] * pr[node];
+		if (dp[node][use] != -1) {
+			return dp[node][use];
+		}
+		for (int v: al[node]) {	
+			if (v != par) {
+				uu += solve(v,node,0,al,pr);
+			}
+		}
+		if (use == 1) {
+			return dp[node][use] = uu;
+		}
+		for (int v: al[node]) {	
+			if (v != par) {
+				u += solve(v,node,1,al,pr);
+			}
+		}
+		return dp[node][use] = Math.min(u,uu);
+	}
+}

@@ -1,0 +1,44 @@
+class Solution {
+	int countSubarrays(int[] nums, int k) {
+		int kIndex = 0;
+		for (int i = 0; i < nums.length; i++) {
+			if (nums[i] == k) {
+				kIndex = i;
+				break;
+			}
+		}
+		int suffixSum = 0;
+		HashMap<Integer, Integer> suffixSumCounter = new HashMap<>();
+		for (int i = kIndex; i < nums.length; i++) {
+			if (nums[i] > k) {
+				suffixSum += 1;
+			} 
+			else if (nums[i] == k) {
+				suffixSum += 0;
+			} 
+			else {
+				suffixSum += -1;
+			}
+			suffixSumCounter.put(suffixSum,suffixSumCounter.getOrDefault(suffixSum,0) + 1);
+		}
+		int ans = 0;
+		ans += suffixSumCounter.getOrDefault(0,0);
+		ans += suffixSumCounter.getOrDefault(1,0);
+		int prefixSum = 0;
+		for (int i = kIndex - 1; i >= 0; i--) {
+			if (nums[i] > k) {
+				prefixSum += 1;
+			} 
+			else {
+				prefixSum += -1;
+			}
+			if (suffixSumCounter.containsKey(0 - prefixSum)) {
+				ans += suffixSumCounter.get(0 - prefixSum);
+			}
+			if (suffixSumCounter.containsKey(1 - prefixSum)) {
+				ans += suffixSumCounter.get(1 - prefixSum);
+			}
+		}
+		return ans;
+	}
+}

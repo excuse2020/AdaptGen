@@ -1,0 +1,61 @@
+class Solution {
+	List<String> fullJustify(String[] words, int maxWidth) {
+		List<String> l = new ArrayList<>();
+		for (int i = 0; i < words.length; ) {
+			List<String> l1 = new ArrayList<>();
+			int prev = 0, curr = 0, f = 0;
+			for (int j = i; j < words.length; j++) {
+				curr = words[j].length();
+				if (prev + curr <= maxWidth) {
+					l1.add(words[j]);
+					prev += curr;
+					if (j == words.length - 1) {
+						f = 1;
+						break;
+					}
+				} 
+				else {
+					i = j;
+					break;
+				}
+			}
+			int rs = maxWidth - prev;
+			StringBuilder sb = new StringBuilder();
+			if (l1.size() == 1) {
+				sb.append(l1.get(0)).append(" ".repeat(rs));
+			} 
+			else {
+				int g = rs / (l1.size() - 1);
+				int rs1 = rs % (l1.size() - 1);
+				if (f == 1) {
+					for (int j = 0; j < l1.size(); j++) {
+						sb.append(l1.get(j));
+						if (rs > 0) {
+							sb.append(" ");
+						}
+						rs--;
+					}
+					if (rs > 0) {
+						sb.append(" ".repeat(rs));
+					}
+				} 
+				else {
+					int j = 0;
+					for (; j < l1.size() - 1; j++) {
+						sb.append(l1.get(j)).append(" ".repeat(g));
+						if (rs1 > 0) {
+							sb.append(" ");
+							rs1--;
+						}
+					}
+					sb.append(l1.get(j));
+				}
+			}
+			l.add(sb.toString());
+			if (f == 1) {
+				break;
+			}
+		}
+		return l;
+	}
+}

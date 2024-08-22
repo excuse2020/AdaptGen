@@ -1,0 +1,30 @@
+class Solution {
+	int[] parent;
+	int[] rank;
+	int find(int v) {
+		return parent[v] == v ? v : find(parent[v]);
+	}
+	void union(int v1, int v2) {
+		int p1 = find(v1);
+		int p2 = find(v2);
+		if (rank[p1] >= rank[p2]) {
+			parent[p2] = p1;
+			rank[p1]++;
+		} 
+		else {
+			parent[p1] = p2;
+			rank[p2]++;
+		}
+	}
+	boolean validPath(int n, int[][] edges, int source, int destination) {
+		parent = new int[n];
+		rank = new int[n];
+		for (int i = 0; i < n; ++i) {
+			parent[i] = i;
+		}
+		for (int[] edge: edges) {	
+			union(edge[0],edge[1]);
+		}
+		return find(source) == find(destination);
+	}
+}

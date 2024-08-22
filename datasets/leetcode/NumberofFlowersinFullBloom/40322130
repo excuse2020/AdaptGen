@@ -1,0 +1,25 @@
+class Solution {
+	int[] fullBloomFlowers(int[][] flowers, int[] people) {
+		TreeMap<Integer, Integer> map = new TreeMap<>();
+		for (int[] flower: flowers) {	
+			map.put(flower[0],map.getOrDefault(flower[0],0) + 1);
+			map.put(flower[1] + 1,map.getOrDefault(flower[1] + 1,0) - 1);
+		}
+		int sum = 0;
+		TreeMap<Integer, Integer> blossomed = new TreeMap<>();
+		for (int time: map.keySet()) {	
+			sum += map.get(time);
+			blossomed.put(time,sum);
+		}
+		int n = people.length;
+		int[] res = new int[n];
+		for (int index = 0; index < n; index++) {
+			Integer time = blossomed.floorKey(people[index]);
+			if (time == null) {
+				continue;
+			}
+			res[index] = blossomed.get(time);
+		}
+		return res;
+	}
+}

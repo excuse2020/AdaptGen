@@ -1,0 +1,27 @@
+class Solution {
+	int rec(int[][] costs, int curr, int a, int b, Integer[][] dp) {
+		if (a == 0 && b == 0) {
+			return 0;
+		}
+		if (a < 0 || b < 0) {
+			return Integer.MAX_VALUE;
+		}
+		if (dp[a][b] != null) {
+			return dp[a][b];
+		}
+		int v1 = rec(costs,curr - 1,a - 1,b,dp);
+		if (v1 != Integer.MAX_VALUE) {
+			v1 += costs[curr][0];
+		}
+		int v2 = rec(costs,curr - 1,a,b - 1,dp);
+		if (v2 != Integer.MAX_VALUE) {
+			v2 += costs[curr][1];
+		}
+		return dp[a][b] = Math.min(v1,v2);
+	}
+	int twoCitySchedCost(int[][] costs) {
+		int n = costs.length / 2;
+		Integer[][] dp = new Integer[n + 1][n + 1];
+		return rec(costs,costs.length - 1,n,n,dp);
+	}
+}

@@ -1,0 +1,26 @@
+class Solution {
+	int minCost = Integer.MAX_VALUE;
+	int minDiff = Integer.MAX_VALUE;
+	void backtrack(int[] toppings, int i, int curr, int cost) {
+		if (i >= toppings.length) {
+			int diff = Math.abs(curr - cost);
+			if (diff < minDiff) {
+				minDiff = diff;
+				minCost = curr;
+			} 
+			else if (diff == minDiff) {
+				minCost = Math.min(minCost,curr);
+			}
+			return;
+		}
+		for (int j = 0; j <= 2; j++) {
+			backtrack(toppings,i + 1,curr + (toppings[i] * j),cost);
+		}
+	}
+	int closestCost(int[] baseCosts, int[] toppingCosts, int target) {
+		for (int cost: baseCosts) {	
+			backtrack(toppingCosts,0,cost,target);
+		}
+		return minCost;
+	}
+}

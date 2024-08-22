@@ -1,0 +1,51 @@
+class Solution {
+	void findMax(int[][] nums, PriorityQueue<Integer> pq) {
+		int numRows = nums.length;
+		int numCols = nums[0].length;
+		int maxR = -1;
+		int maxC = -1;
+		for (int row = 0; row < numRows; row++) {
+			int maxNum = Integer.MIN_VALUE;
+			for (int col = 0; col < numCols; col++) {
+				if (nums[row][col] > maxNum) {
+					maxR = row;
+					maxC = col;
+					maxNum = nums[row][col];
+				}
+			}
+			if (maxR != -1) {
+				nums[maxR][maxC] = Integer.MIN_VALUE;
+				pq.offer(maxNum);
+			}
+		}
+	}
+	int matrixSum(int[][] nums) {
+		int score = 0;
+		int numRows = nums.length;
+		int numCols = nums[0].length;
+		PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> {b - a});
+		int maxR = -1;
+		int maxC = -1;
+		for (int row = 0; row < numRows; row++) {
+			int maxNum = Integer.MIN_VALUE;
+			for (int col = 0; col < numCols; col++) {
+				if (nums[row][col] > maxNum) {
+					maxR = row;
+					maxC = col;
+					maxNum = nums[row][col];
+				}
+			}
+			if (maxR != -1) {
+				nums[maxR][maxC] = Integer.MIN_VALUE;
+				pq.offer(maxNum);
+			}
+		}
+		while (!pq.isEmpty()) {
+			int max = pq.poll();
+			score += max;
+			pq.clear();
+			findMax(nums,pq);
+		}
+		return score;
+	}
+}

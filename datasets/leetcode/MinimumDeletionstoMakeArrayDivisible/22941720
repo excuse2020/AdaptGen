@@ -1,0 +1,36 @@
+class Solution {
+	int NOD(int a, int b) {
+		while (a != 0 && b != 0) {
+			if (a > b) {
+				a %= b;
+			} 
+			else {
+				b %= a;
+			}
+		}
+		return a + b;
+	}
+	int minOperations(int[] nums, int[] numsDivide) {
+		int gcd = numsDivide[0];
+		for (int i = 1; gcd != 1 && i != numsDivide.length; i++) {
+			gcd = NOD(gcd,numsDivide[i]);
+		}
+		Arrays.sort(nums);
+		for (int i = 0; i != nums.length; ) {
+			if (gcd % nums[i] == 0) {
+				return i;
+			} 
+			else if (nums[i] > gcd) {
+				return -1;
+			} 
+			else {
+				for (++i; i != nums.length; i++) {
+					if (nums[i] != nums[i - 1]) {
+						break;
+					}
+				}
+			}
+		}
+		return -1;
+	}
+}

@@ -1,0 +1,49 @@
+class Solution {
+	int max = (int) 1e5 + 1;
+	int numBusesToDestination(int[][] a, int src, int end) {
+		if (src == end) {
+			return 0;
+		}
+		int n = a.length;
+		boolean vis = new boolean[n];
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < a[i].length; j++) {
+				if (!map.containsKey(a[i][j])) {
+					map.put(a[i][j],new ArrayList<>());
+				}
+				map.get(a[i][j]).add(i);
+			}
+		}
+		Queue<Integer> q = new LinkedList<>();
+		if (!map.containsKey(src) || !map.containsKey(end)) {
+			return -1;
+		}
+		int cnt = 0;
+		for (int it: map.get(src)) {	
+			q.add(it);
+			vis[it] = true;
+		}
+		while (q.size() > 0) {
+			cnt++;
+			int size = q.size();
+			while (size-- > 0) {
+				int top = q.poll();
+				vis[top] = true;
+				for (int it: a[top]) {	
+					if (it == end) {
+						return cnt;
+					}
+					for (int x: map.get(it)) {	
+						if (vis[x]) {
+							continue;
+						}
+						vis[x] = true;
+						q.add(x);
+					}
+				}
+			}
+		}
+		return -1;
+	}
+}

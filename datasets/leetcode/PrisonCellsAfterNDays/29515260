@@ -1,0 +1,41 @@
+class Solution {
+	int[] prisonAfterNDays(int[] cells, int n) {
+		List<List<Integer>> states = new ArrayList<>();
+		List<Integer> copy = new ArrayList<>();
+		for (int num: cells) {	
+			copy.add(num);
+		}
+		List<Integer> firstState = simulate(copy);
+		states.add(firstState);
+		List<Integer> state = firstState;
+		--n;
+		while (n > 0) {
+			--n;
+			state = simulate(state);
+			if (Objects.equals(state,firstState)) {
+				n = n % states.size();
+				state = states.get(n);
+				break;
+			}
+			states.add(state);
+		}
+		int[] res = new int[8];
+		for (int i = 0; i < 8; i++) {
+			res[i] = state.get(i);
+		}
+		return res;
+	}
+	List<Integer> simulate(List<Integer> from) {
+		List<Integer> res = new ArrayList<>();
+		res.add(0);
+		for (int i = 1; i < 7; i++) {
+			if (from.get(i - 1) == from.get(i + 1)) {
+				res.add(1);
+				continue;
+			}
+			res.add(0);
+		}
+		res.add(0);
+		return res;
+	}
+}

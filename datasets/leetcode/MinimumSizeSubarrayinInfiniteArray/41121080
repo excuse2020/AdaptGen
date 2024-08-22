@@ -1,0 +1,53 @@
+class Solution {
+	int countSlider(int[] nums, int target) {
+		int[] newNums = new int[2 * nums.length];
+		for (int i = 0; i < 2 * nums.length; i++) {
+			int j = i % nums.length;
+			newNums[i] = nums[j];
+		}
+		int n = newNums.length;
+		int count = Integer.MAX_VALUE;
+		int tempSum = 0;
+		int i = 0;
+		int j = 0;
+		while (j < n) {
+			tempSum += newNums[j];
+			if (tempSum > target && j > i) {
+				tempSum -= newNums[i++];
+				tempSum -= newNums[j];
+				continue;
+			}
+			if (tempSum > target && j == i) {
+				tempSum = 0;
+				i++;
+				j++;
+				continue;
+			}
+			if (tempSum == target) {
+				count = Math.min(count,j - i + 1);
+			}
+			j++;
+		}
+		if (count == Integer.MAX_VALUE) {
+			return -1;
+		}
+		return count;
+	}
+	int minSizeSubarray(int[] nums, int target) {
+		long sum = 0;
+		for (int num: nums) {	
+			sum += num;
+		}
+		int n = nums.length;
+		int k = target / (int) sum;
+		int r = target % (int) sum;
+		if (r == 0) {
+			return n * k;
+		}
+		int count = countSlider(nums,r);
+		if (count == -1) {
+			return -1;
+		}
+		return n * k + count;
+	}
+}

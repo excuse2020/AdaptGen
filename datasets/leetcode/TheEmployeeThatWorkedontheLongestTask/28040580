@@ -1,0 +1,26 @@
+class Solution {
+	int hardestWorker(int n, int[][] logs) {
+		int prevTime = 0;
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int[] log: logs) {	
+			int totalTime = log[1] - prevTime;
+			if (map.containsKey(log[0])) {
+				if (map.get(log[0]) < totalTime) {
+					map.put(log[0],totalTime);
+				}
+			} 
+			else {
+				map.put(log[0],totalTime);
+			}
+			prevTime = log[1];
+		}
+		int maxVal = map.entrySet().stream().sorted(Map.Entry.comparingByValue().reversed()).findFirst().get().getValue();
+		Set<Integer> s = new TreeSet<>();
+		for (Map.Entry<Integer, Integer> m: map.entrySet()) {	
+			if (m.getValue() == maxVal) {
+				s.add(m.getKey());
+			}
+		}
+		return s.stream().findFirst().get();
+	}
+}

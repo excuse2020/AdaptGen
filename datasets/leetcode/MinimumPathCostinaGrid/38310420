@@ -1,0 +1,29 @@
+class Solution {
+	int backtrack(int grid, int cost, int m, int n, int dp) {
+		int min = Integer.MAX_VALUE;
+		if (m == 1) {
+			for (int i = 0; i < grid[0].length; i++) {
+				min = Math.min(min,grid[m - 1][i] + cost[grid[m - 1][i]][n]);
+			}
+			return dp[m][n] = min;
+		}
+		if (dp[m][n] != -1) {
+			return dp[m][n];
+		}
+		for (int i = 0; i < grid[0].length; i++) {
+			min = Math.min(min,grid[m - 1][i] + cost[grid[m - 1][i]][n]);
+		}
+		return dp[m][n] = min;
+	}
+	int minPathCost(int[][] grid, int[][] moveCost) {
+		int min = Integer.MAX_VALUE;
+		int dp = new int[grid.length][grid[0].length];
+		for (int i: dp) {	
+			Arrays.fill(i,-1);
+		}
+		for (int i = 0; i < grid[0].length; i++) {
+			min = Math.min(min,grid[grid.length - 1][i] + backtrack(grid,moveCost,grid.length - 1,i,dp));
+		}
+		return min;
+	}
+}

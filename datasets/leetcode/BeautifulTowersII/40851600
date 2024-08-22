@@ -1,0 +1,70 @@
+class Solution {
+	int[] nsel;
+	int[] nser;
+	long Solve(long[] dp1, int i, List<Integer> maxHeights) {
+		if (dp1[i] != -1) {
+			return dp1[i];
+		}
+		long ans = 0L;
+		long val = maxHeights.get(i);
+		int idx = nsel[i];
+		if (idx == -1) {
+			return dp1[i] = (long) val * (i + 1);
+		}
+		long fre = i - idx;
+		return dp1[i] = (long) val * fre + Solve(dp1,idx,maxHeights);
+	}
+	long Solve2(long[] dp2, int i, List<Integer> maxHeights) {
+		if (dp2[i] != -1) {
+			return dp2[i];
+		}
+		long val = maxHeights.get(i);
+		int idx = nser[i];
+		if (idx == maxHeights.size()) {
+			return dp2[i] = (long) val * (maxHeights.size() - i);
+		}
+		long ans = 0L;
+		long fre = (idx - i);
+		return dp2[i] = (long) val * fre + Solve2(dp2,idx,maxHeights);
+	}
+	long maximumSumOfHeights(List<Integer> maxHeights) {
+		nsel = new int[maxHeights.size()];
+		nser = new int[maxHeights.size()];
+		Arrays.fill(nser,nser.length);
+		Stack<Integer> stackLeft = new Stack<>();
+		for (int i = 0; i < maxHeights.size(); i++) {
+			while (!stackLeft.isEmpty() && maxHeights.get(stackLeft.peek()) >= maxHeights.get(i)) {
+				stackLeft.pop();
+			}
+			nsel[i] = stackLeft.isEmpty() ? -1 : stackLeft.peek();
+			stackLeft.push(i);
+		}
+		Stack<Integer> stackRight = new Stack<>();
+		for (int i = maxHeights.size() - 1; i >= 0; i--) {
+			while (!stackRight.isEmpty() && maxHeights.get(stackRight.peek()) >= maxHeights.get(i)) {
+				stackRight.pop();
+			}
+			nser[i] = stackRight.isEmpty() ? maxHeights.size() : stackRight.peek();
+			stackRight.push(i);
+		}
+		long[] dp1 = new long[maxHeights.size()];
+		long[] dp2 = new long[maxHeights.size()];
+		Arrays.fill(dp1,-1);
+		Arrays.fill(dp2,-1);
+		for (int i = dp1.length - 1; i >= 0; i--) {
+			Solve(dp1,i,maxHeights);
+		}
+		for (int i = 0; i < dp2.length; i++) {
+			long x = Solve2(dp2,i,maxHeights);
+		}
+		long max = 0L;
+		for (int i = 0; i < dp1.length; i++) {
+			long res = dp1[i] + dp2[i] - maxHeights.get(i);
+			if (res < 0) {
+				System.out.println(res);
+			}
+			max = Math.max((res),max);
+		}
+		return max;
+	}
+}

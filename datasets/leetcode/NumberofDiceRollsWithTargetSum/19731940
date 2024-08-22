@@ -1,0 +1,41 @@
+class Solution {
+	int MOD = 1000000000 + 7;
+	int bottomup(int n, int k, int target) {
+		int[][] dp = new int[31][1001];
+		dp[0][0] = 1;
+		for (int i = 1; i <= n; i++) {
+			for (int t = 0; t <= target; t++) {
+				for (int j = 1; j <= k; j++) {
+					if (t >= j) {
+						dp[i][t] = (dp[i][t] + dp[i - 1][t - j] % MOD) % MOD;
+					}
+				}
+			}
+		}
+		return dp[n][target];
+	}
+	int numRollsToTarget(int n, int k, int target) {
+		return bottomup(n,k,target);
+	}
+	int topdown(int index, int k, int target, int n, int[][] dp) {
+		if (index == 0) {
+			if (target == 0) {
+				return 1;
+			} 
+			else {
+				return 0;
+			}
+		}
+		if (target < 0) {
+			return 0;
+		}
+		if (dp[index][target] != -1) {
+			return dp[index][target];
+		}
+		int result = 0;
+		for (int i = 1; i <= k; i++) {
+			result = (result + topdown(index - 1,k,target - i,n,dp) % MOD) % MOD;
+		}
+		return dp[index][target] = result;
+	}
+}

@@ -1,0 +1,24 @@
+class Solution {
+	int f(List<List<Integer>> piles, int n, int i, int k, Integer dp) {
+		if (n == -1 || i >= piles.get(n).size() || k <= 0) {
+			return 0;
+		}
+		if (dp[n][i][k] != null) {
+			return dp[n][i][k];
+		}
+		int take = 0;
+		if (i < piles.get(n).size()) {
+			take = piles.get(n).get(i) + Math.max(f(piles,n,i + 1,k - 1,dp),f(piles,n - 1,0,k - 1,dp));
+		}
+		int notTake = f(piles,n - 1,0,k,dp);
+		return dp[n][i][k] = Math.max(take,notTake);
+	}
+	int maxValueOfCoins(List<List<Integer>> piles, int k) {
+		int max = 0;
+		for (List<Integer> curr: piles) {	
+			max = Math.max(max,curr.size());
+		}
+		Integer dp = new Integer[piles.size()][max][k + 1];
+		return f(piles,piles.size() - 1,0,k,dp);
+	}
+}

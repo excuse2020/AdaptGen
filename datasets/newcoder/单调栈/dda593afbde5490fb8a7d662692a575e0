@@ -1,0 +1,32 @@
+class Solution {
+	int[][] foundMonotoneStack(int[] nums) {
+		int length = nums.length;
+		int[][] result = new int[length][2];
+		Stack<Integer> stackLeft = new Stack<>();
+		Stack<Integer> stackRight = new Stack<>();
+		for (int i = 0, j = length - 1; i < length; i++) {
+			while (!stackLeft.isEmpty() && nums[stackLeft.peek()] >= nums[i]) {
+				stackLeft.pop();
+			}
+			if (stackLeft.isEmpty()) {
+				result[i][0] = -1;
+			} 
+			else {
+				result[i][0] = stackLeft.peek();
+			}
+			stackLeft.push(i);
+			while (!stackRight.isEmpty() && nums[stackRight.peek()] >= nums[j]) {
+				stackRight.pop();
+			}
+			if (stackRight.isEmpty()) {
+				result[j][1] = -1;
+			} 
+			else {
+				result[j][1] = stackRight.peek();
+			}
+			stackRight.push(j);
+			j--;
+		}
+		return result;
+	}
+}

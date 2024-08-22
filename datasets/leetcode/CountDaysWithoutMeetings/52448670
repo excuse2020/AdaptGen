@@ -1,0 +1,25 @@
+class Solution {
+	int countDays(int days, int[][] meetings) {
+		PriorityQueue<int[]> intervals = new PriorityQueue<>((a, b) -> {a[0] - b[0]});
+		int i = 0;
+		while (i < meetings.length) {
+			intervals.offer(new int{meetings[i][0], meetings[i][1]});
+			i++;
+		}
+		int res = intervals.peek()[0] - 1;
+		int[] prev = intervals.poll();
+		while (intervals.size() > 0) {
+			int[] curr = intervals.poll();
+			if (curr[0] > prev[1]) {
+				res += curr[0] - prev[1];
+				prev = curr;
+			} 
+			else {
+				prev[0] = curr[0];
+				prev[1] = Math.max(prev[1],curr[1]);
+			}
+		}
+		res += days - prev[1];
+		return res;
+	}
+}

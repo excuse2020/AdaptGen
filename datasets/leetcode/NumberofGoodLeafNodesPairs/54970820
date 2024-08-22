@@ -1,0 +1,48 @@
+class Solution {
+	int count = 0;
+	int countPairs(TreeNode root, int distance) {
+		fun(root,distance);
+		return count;
+	}
+	List<Integer> fun(TreeNode root, int dis) {
+		if (root == null) {
+			List<Integer> l = new ArrayList<>();
+			l.add(-1);
+			return l;
+		}
+		if (root.right == null && root.left == null) {
+			List<Integer> l = new ArrayList<>();
+			l.add(1);
+			return l;
+		}
+		List<Integer> left = fun(root.left,dis);
+		List<Integer> right = fun(root.right,dis);
+		for (int i = 0; i < left.size(); i++) {
+			if (left.get(i) == -1) {
+				continue;
+			}
+			int a = left.get(i);
+			for (int j = 0; j < right.size(); j++) {
+				if (right.get(j) == -1) {
+					continue;
+				}
+				int b = right.get(j);
+				if (a + b <= dis) {
+					count++;
+				}
+			}
+		}
+		for (int i = 0; i < left.size(); i++) {
+			if (left.get(i) != -1) {
+				left.set(i,left.get(i) + 1);
+			}
+		}
+		for (int i = 0; i < right.size(); i++) {
+			if (right.get(i) != -1) {
+				right.set(i,right.get(i) + 1);
+			}
+		}
+		left.addAll(right);
+		return left;
+	}
+}

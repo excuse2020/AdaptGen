@@ -1,0 +1,36 @@
+class Solution {
+	int findParentNode(int node, int[] parent) {
+		if (node == parent[node]) {
+			return node;
+		}
+		return findParentNode(parent[node],parent);
+	}
+	int[] findRedundantConnection(int[][] edges) {
+		int[] result = new int[1];
+		int edgesLength = edges.length;
+		int[] parent = IntStream.range(0,edgesLength + 1).toArray();
+		int[] size = new int[edgesLength + 1];
+		Arrays.fill(size,1);
+		for (int i = 0; i < edgesLength; i++) {
+			int node1 = edges[i][0];
+			int node2 = edges[i][1];
+			int node1Parent = findParentNode(node1,parent);
+			int node2Parent = findParentNode(node2,parent);
+			if (node1Parent == node2Parent || node1 == node2Parent || node2 == node1Parent) {
+				result = edges[i];
+				continue;
+			}
+			int node1Size = size[node1Parent];
+			int node2Size = size[node2Parent];
+			if (node1Size > node2Size) {
+				size[node1Parent] += size[node2Parent];
+				parent[node2Parent] = node1Parent;
+			} 
+			else {
+				size[node2Parent] += size[node1Parent];
+				parent[node1Parent] = node2Parent;
+			}
+		}
+		return result;
+	}
+}

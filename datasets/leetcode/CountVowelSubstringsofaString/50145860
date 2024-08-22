@@ -1,0 +1,31 @@
+class Solution {
+	int countVowelSubstrings(String word) {
+		return countVowelSubstringsUtil(word,5) - countVowelSubstringsUtil(word,4);
+	}
+	int countVowelSubstringsUtil(String word, int k) {
+		int left = 0;
+		int count = 0;
+		Map<Character, Integer> vowelMap = new HashMap<>();
+		for (int right = 0; right < word.length(); ++right) {
+			char c = word.charAt(right);
+			if (!isVowel(c)) {
+				vowelMap.clear();
+				left = right + 1;
+				continue;
+			}
+			vowelMap.put(c,vowelMap.getOrDefault(c,0) + 1);
+			while (vowelMap.size() > k) {
+				c = word.charAt(left);
+				vowelMap.put(c,vowelMap.get(c) - 1);
+				if (vowelMap.get(c) == 0) {
+					vowelMap.remove(c);
+				}
+				++left;
+			}
+			count += right - left + 1;
+		}
+		return count;
+	}
+	boolean isVowel(char c) {
+	}
+}

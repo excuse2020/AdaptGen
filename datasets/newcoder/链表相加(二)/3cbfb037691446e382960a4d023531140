@@ -1,0 +1,76 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		if (head1 == null) {
+			return head2;
+		}
+		if (head2 == null) {
+			return head1;
+		}
+		int length1 = 0;
+		List num1 = new ArrayList();
+		int length2 = 0;
+		List num2 = new ArrayList();
+		ListNode temp1 = head1;
+		ListNode temp2 = head2;
+		while (temp1 != null) {
+			length1++;
+			num1.add(temp1);
+			temp1 = temp1.next;
+		}
+		while (temp2 != null) {
+			length2++;
+			num2.add(temp2);
+			temp2 = temp2.next;
+		}
+		List dataTemp;
+		List otherTemp;
+		int sub;
+		ListNode result = null;
+		ListNode resultNext;
+		List resultData = new ArrayList();
+		int tempNum = 0;
+		if (length1 > length2) {
+			dataTemp = num1;
+			otherTemp = num2;
+			sub = length1 - length2;
+		} 
+		else {
+			dataTemp = num2;
+			otherTemp = num1;
+			sub = length2 - length1;
+		}
+		for (int i = dataTemp.size() - 1; i >= 0; i--) {
+			int j = i - sub;
+			int minData = 0;
+			if (j <= otherTemp.size() && j >= 0) {
+				ListNode aaa = (ListNode) otherTemp.get(j);
+				minData = aaa.val;
+			}
+			ListNode xxx = (ListNode) dataTemp.get(i);
+			int countNum = minData + xxx.val;
+			if (countNum > 9) {
+				tempNum = 1;
+			} 
+			else {
+				tempNum = 0;
+			}
+			resultData.add(countNum % 10);
+		}
+		if (tempNum > 0) {
+			resultData.add(tempNum);
+		}
+		ListNode tempData = null;
+		for (int i = resultData.size() - 1; i >= 0; i--) {
+			if (i == resultData.size() - 1) {
+				result = new ListNode((Integer) resultData.get(i));
+				tempData = result;
+			} 
+			else {
+				ListNode temp = new ListNode((Integer) resultData.get(i));
+				tempData.next = temp;
+				tempData = temp;
+			}
+		}
+		return result;
+	}
+}

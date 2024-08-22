@@ -1,0 +1,58 @@
+class Solution {
+	boolean isPossible(int n, List<List<Integer>> edges) {
+		List<Set<Integer>> adj = new ArrayList<Set<Integer>>();
+		for (int i = 0; i <= n; i++) {
+			adj.add(new HashSet<>());
+		}
+		int[] degree = new int[n + 1];
+		for (List<Integer> e: edges) {	
+			degree[e.get(0)]++;
+			degree[e.get(1)]++;
+			adj.get(e.get(0)).add(e.get(1));
+			adj.get(e.get(1)).add(e.get(0));
+		}
+		int count = 0;
+		int[] odd = new int[4];
+		int j = 0;
+		for (int i = 1; i <= n; i++) {
+			if (degree[i] % 2 != 0) {
+				count++;
+				if (count > 4) {
+					return false;
+				}
+				odd[j++] = i;
+			}
+		}
+		if (count == 0) {
+			return true;
+		}
+		if (count > 4 || count % 2 == 1) {
+			return false;
+		}
+		System.out.println(count);
+		if (count == 2) {
+			int a = odd[0];
+			int b = odd[1];
+			if (!adj.get(a).contains(b)) {
+				return true;
+			}
+			return adj.get(a).size() < n - 1 && adj.get(b).size() < n - 1;
+		}
+		if (count == 4) {
+			int a = odd[0];
+			int b = odd[1];
+			int c = odd[2];
+			int d = odd[3];
+			if (!adj.get(a).contains(b) && !adj.get(c).contains(d)) {
+				return true;
+			}
+			if (!adj.get(a).contains(c) && !adj.get(b).contains(d)) {
+				return true;
+			}
+			if (!adj.get(a).contains(d) && !adj.get(b).contains(c)) {
+				return true;
+			}
+		}
+		return false;
+	}
+}

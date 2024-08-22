@@ -1,0 +1,32 @@
+class Solution {
+	int minSteps(int n) {
+		if (n == 1) {
+			return 0;
+		}
+		int[] dp = new int[n + 1];
+		dp[2] = 2;
+		for (int i = 3; i <= n; i++) {
+			int primefactor = primefactor(i);
+			if (primefactor == i) {
+				dp[i] = primefactor;
+			} 
+			else {
+				dp[i] = dp[primefactor] + dp[i / primefactor];
+			}
+		}
+		return dp[n];
+	}
+	int primefactor(int n) {
+		int res = 2;
+		for (int i = 2; i * i <= n; i++) {
+			while (n % i == 0) {
+				res = i;
+				n = n / i;
+			}
+		}
+		if (n > 1) {
+			res = Math.max(res,n);
+		}
+		return res;
+	}
+}

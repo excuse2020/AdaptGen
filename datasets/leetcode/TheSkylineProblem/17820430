@@ -1,0 +1,49 @@
+class Solution {
+	List<List<Integer>> getSkyline(int[][] buildings) {
+		BuildingPoint[] build = new BuildingPoint[buildings.length * 2];
+		int index = 0;
+		for (int[] building: buildings) {	
+			build[index] = new BuildingPoint();
+			build[index].x = building[0];
+			build[index].isStart = true;
+			build[index].h = building[2];
+			build[index + 1] = new BuildingPoint();
+			build[index + 1].x = building[1];
+			build[index + 1].isStart = false;
+			build[index + 1].h = building[2];
+			index += 2;
+		}
+		Arrays.sort(build);
+		PriorityQueue<Integer> q = new PriorityQueue<>(Collections.reverseOrder());
+		q.add(0);
+		int prev = 0;
+		List<List<Integer>> result = new ArrayList<>();
+		for (BuildingPoint bp: build) {	
+			if (bp.isStart) {
+				q.add(bp.h);
+			} 
+			else {
+				q.remove(bp.h);
+			}
+			int curr = q.peek();
+			if (prev != curr) {
+				result.add(List.of(bp.x,curr));
+				prev = curr;
+			}
+		}
+		return result;
+	}
+	class BuildingPoint {
+		int h;
+		boolean isStart;
+		int x;
+		int compareTo(BuildingPoint a) {
+			if (this.x != a.x) {
+				return this.x - a.x;
+			} 
+			else {
+				return (this.isStart ? -this.h : this.h) - (a.isStart ? -a.h : a.h);
+			}
+		}
+	}
+}

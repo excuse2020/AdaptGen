@@ -1,0 +1,37 @@
+class Solution {
+	int minimumTime(int n, int[][] relations, int[] time) {
+		int[] startTime = new int[n];
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		int[] depend = new int[n];
+		for (int[] relation: relations) {	
+			int a = relation[0] - 1;
+			int b = relation[1] - 1;
+			graph.get(a).add(b);
+			depend[b]++;
+		}
+		LinkedList<int[]> ls = new LinkedList<>();
+		for (int i = 0; i < depend.length; i++) {
+			if (depend[i] == 0) {
+				ls.addLast(new int{i, time[i]});
+			}
+		}
+		int ans = 0;
+		while (ls.size() > 0) {
+			int[] rem = ls.removeFirst();
+			int vtx = rem[0];
+			int wt = rem[1];
+			ans = Math.max(ans,wt);
+			for (int nbr: graph.get(vtx)) {	
+				depend[nbr]--;
+				startTime[nbr] = Math.max(startTime[nbr],wt + time[nbr]);
+				if (depend[nbr] == 0) {
+					ls.addLast(new int{nbr, startTime[nbr]});
+				}
+			}
+		}
+		return ans;
+	}
+}

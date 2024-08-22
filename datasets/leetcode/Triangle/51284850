@@ -1,0 +1,19 @@
+class Solution {
+	int minimumTotal(List<List<Integer>> triangle) {
+		Map<List<Integer>, Integer> memo = new HashMap<>();
+		return minimumTotalHelper(triangle,triangle.size(),0,0,memo);
+	}
+	int minimumTotalHelper(List<List<Integer>> triangle, int n, int index, int index2, Map<List<Integer>, Integer> memo) {
+		if (index == n - 1) {
+			return triangle.get(n - 1).get(index2);
+		}
+		List<Integer> li = Arrays.asList(index,index2);
+		if (memo.containsKey(li)) {
+			return memo.get(li);
+		}
+		int d = triangle.get(index).get(index2) + minimumTotalHelper(triangle,n,index + 1,index2,memo);
+		int dg = triangle.get(index).get(index2) + minimumTotalHelper(triangle,n,index + 1,index2 + 1,memo);
+		memo.put(li,Math.min(d,dg));
+		return Math.min(d,dg);
+	}
+}

@@ -1,0 +1,65 @@
+class Solution {
+	int minSideJumps(int[] obstacles) {
+		int[][] path = new int[obstacles.length][4];
+		for (int i = 0; i < obstacles.length; i++) {
+			for (int j = 0; j < 4; j++) {
+				if (obstacles[i] != 0) {
+					path[i][obstacles[i]] = 1;
+				}
+			}
+		}
+		int[][] dp = new int[obstacles.length][4];
+		for (int i = 0; i < dp.length; i++) {
+			for (int j = 0; j < 4; j++) {
+				dp[i][j] = -1;
+			}
+		}
+		return solve(path,0,obstacles.length - 1,2,dp);
+	}
+	int solve(int[][] path, int start, int end, int lane, int[][] dp) {
+		if (start == end) {
+			return 0;
+		}
+		if (path[start + 1][lane] == 0) {
+			return solve(path,start + 1,end,lane,dp);
+		}
+		if (dp[start][lane] != -1) {
+			return dp[start][lane];
+		} 
+		else {
+			if (lane == 1) {
+				if (path[start][lane + 1] == 0 && path[start][lane + 2] == 0) {
+					return dp[start][lane] = Math.min(1 + solve(path,start,end,lane + 1,dp),1 + solve(path,start,end,lane + 2,dp));
+				} 
+				else if (path[start][lane + 1] == 0) {
+					return dp[start][lane] = 1 + solve(path,start,end,lane + 1,dp);
+				} 
+				else {
+					return dp[start][lane] = 1 + solve(path,start,end,lane + 2,dp);
+				}
+			} 
+			else if (lane == 2) {
+				if (path[start][lane - 1] == 0 && path[start][lane + 1] == 0) {
+					return dp[start][lane] = Math.min(1 + solve(path,start,end,lane - 1,dp),1 + solve(path,start,end,lane + 1,dp));
+				} 
+				else if (path[start][lane - 1] == 0) {
+					return dp[start][lane] = 1 + solve(path,start,end,lane - 1,dp);
+				} 
+				else {
+					return dp[start][lane] = 1 + solve(path,start,end,lane + 1,dp);
+				}
+			} 
+			else {
+				if (path[start][lane - 1] == 0 && path[start][lane - 2] == 0) {
+					return dp[start][lane] = Math.min(1 + solve(path,start,end,lane - 1,dp),1 + solve(path,start,end,lane - 2,dp));
+				} 
+				else if (path[start][lane - 1] == 0) {
+					return dp[start][lane] = 1 + solve(path,start,end,lane - 1,dp);
+				} 
+				else {
+					return dp[start][lane] = 1 + solve(path,start,end,lane - 2,dp);
+				}
+			}
+		}
+	}
+}

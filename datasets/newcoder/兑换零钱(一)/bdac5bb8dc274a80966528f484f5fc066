@@ -1,0 +1,30 @@
+class Solution {
+	int min(int a, int b) {
+		return a < b ? a : b;
+	}
+	int minMoney(int[] arr, int aim) {
+		int[][] dp = new int[arr.length][aim + 1];
+		for (int i = 1; i < aim + 1; ++i) {
+			if (i % arr[0] == 0) {
+				dp[0][i] = i / arr[0];
+			}
+		}
+		for (int m = 1; m < arr.length; ++m) {
+			for (int n = 1; n < aim + 1; ++n) {
+				if (arr[m] > n) {
+					dp[m][n] = dp[m - 1][n];
+				} 
+				else if (arr[m] == n) {
+					dp[m][n] = 1;
+				} 
+				else if (dp[m][n - arr[m]] != 0 && dp[m - 1][n] != 0) {
+					dp[m][n] = min(dp[m][n - arr[m]] + 1,dp[m - 1][n]);
+				} 
+				else {
+					dp[m][n] = dp[m][n - arr[m]] != 0 ? dp[m][n - arr[m]] + 1 : dp[m - 1][n];
+				}
+			}
+		}
+		return dp[arr.length - 1][aim] == 0 ? -1 : dp[arr.length - 1][aim];
+	}
+}

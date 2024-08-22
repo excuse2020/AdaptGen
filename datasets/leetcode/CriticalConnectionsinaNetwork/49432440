@@ -1,0 +1,41 @@
+class Solution {
+	int time = 0;
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		List<List<Integer>> list = new ArrayList();
+		for (int i = 0; i < n; i++) {
+			list.add(new ArrayList());
+		}
+		for (List<Integer> arr: connections) {	
+			list.get(arr.get(0)).add(arr.get(1));
+			list.get(arr.get(1)).add(arr.get(0));
+		}
+		int[] visittime = new int[n];
+		int[] lowtime = new int[n];
+		int[] visited = new int[n];
+		List<List<Integer>> ans = new ArrayList();
+		dfs(-1,list,0,visited,visittime,lowtime,ans);
+		return ans;
+	}
+	void dfs(int parent, List<List<Integer>> list, int index, int[] visited, int[] visittime, int[] lowtime, List<List<Integer>> ans) {
+		visited[index] = 1;
+		visittime[index] = ++time;
+		lowtime[index] = visittime[index];
+		for (int num: list.get(index)) {	
+			if (num == parent) {
+				continue;
+			}
+			if (visited[num] == 0) {
+				dfs(index,list,num,visited,visittime,lowtime,ans);
+			}
+			lowtime[index] = Math.min(lowtime[index],lowtime[num]);
+		}
+		if (parent != -1) {
+			if (lowtime[index] > visittime[parent]) {
+				ArrayList<Integer> ans1 = new ArrayList();
+				ans1.add(parent);
+				ans1.add(index);
+				ans.add(ans1);
+			}
+		}
+	}
+}

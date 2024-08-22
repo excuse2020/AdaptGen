@@ -1,0 +1,47 @@
+class Solution {
+	int expressiveWords(String s, String[] words) {
+		int res = 0;
+		for (String word: words) {	
+			if (isOK(s,word)) {
+				res++;
+			}
+		}
+		return res;
+	}
+	boolean isOK(String s, String w) {
+		if (s.length() < w.length()) {
+			return false;
+		}
+		int i = 0, j = 0;
+		while (i < s.length() && j < w.length()) {
+			if (s.charAt(i) != w.charAt(j)) {
+				return false;
+			}
+			int end1 = travel(s,i), end2 = travel(w,j);
+			if (end1 - i < end2 - j) {
+				return false;
+			}
+			if (end1 - i != end2 - j && end1 - i < 3) {
+				return false;
+			}
+			i = end1;
+			j = end2;
+		}
+		if (i != s.length() || j != w.length()) {
+			return false;
+		}
+		return true;
+	}
+	int travel(String s, int start) {
+		int n = s.length();
+		char ch = s.charAt(start);
+		int i = start;
+		while (i < n) {
+			if (s.charAt(i) != ch) {
+				break;
+			}
+			i++;
+		}
+		return i;
+	}
+}

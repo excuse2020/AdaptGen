@@ -1,0 +1,41 @@
+class Solution {
+	int findSmallestChunkLength(int[] arr, int startIndex) {
+		int max = arr[startIndex];
+		int i = startIndex;
+		while (max > i) {
+			++i;
+			if (arr[i] > max) {
+				max = arr[i];
+			}
+		}
+		return (1 + i - startIndex);
+	}
+	int maxChunksToSorted(int[] arr) {
+		double fraction = (1d / ((double) arr.length));
+		double[] darr = new double[arr.length];
+		int i = 0;
+		Map<Integer, Double> fractionMap = new HashMap<>();
+		for (int a: arr) {	
+			double f = fractionMap.getOrDefault(a,0d);
+			darr[i++] = f + ((double) a);
+			fractionMap.put(a,f + fraction);
+		}
+		double[] sorted = Arrays.copyOf(darr,darr.length);
+		Arrays.sort(sorted);
+		int[] transformed = new int[arr.length];
+		i = 0;
+		for (double d: darr) {	
+			transformed[i++] = Arrays.binarySearch(sorted,d);
+		}
+		return maxChunksToSorted769(transformed);
+	}
+	int maxChunksToSorted769(int[] arr) {
+		int consumed = 0;
+		int chunks = 0;
+		while (consumed < arr.length) {
+			consumed += findSmallestChunkLength(arr,consumed);
+			chunks++;
+		}
+		return chunks;
+	}
+}

@@ -1,0 +1,60 @@
+class Solution {
+	List<List<Integer>> adj;
+	int[][] dp;
+	int[] freq;
+	boolean dfs(int start, int end, int parent) {
+		if (start == end) {
+			return true;
+		}
+		for (int i: adj.get(start)) {	
+			if (i != parent) {
+				if (dfs(i,end,start)) {
+					freq[i]++;
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	int finder(int start, int parent, int isHalf, int[] price) {
+		if (dp[start][isHalf] != -1) {
+			return dp[start][isHalf];
+		}
+		int full = freq[start] * price[start];
+		int half = freq[start] * price[start] / 2;
+		for (int i: adj.get(start)) {	
+			if (i != parent) {
+				full += finder(i,start,0,price);
+			}
+		}
+		if (isHalf == 1) {
+			return dp[start][isHalf] = full;
+		}
+		for (int i: adj.get(start)) {	
+			if (i != parent) {
+				half += finder(i,start,1,price);
+			}
+		}
+		return dp[start][isHalf] = Math.min(half,full);
+	}
+	int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
+		adj = new ArrayList<>();
+		dp = new int[n + 1][2];
+		for (int[] mem: dp) {	
+			Arrays.fill(mem,-1);
+		}
+		freq = new int[n];
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int[] i: edges) {	
+			adj.get(i[0]).add(i[1]);
+			adj.get(i[1]).add(i[0]);
+		}
+		for (int[] i: trips) {	
+			freq[i[0]]++;
+			dfs(i[0],i[1],-1);
+		}
+		return finder(0,-1,0,price);
+	}
+}

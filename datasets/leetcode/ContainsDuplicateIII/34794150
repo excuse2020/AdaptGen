@@ -1,0 +1,35 @@
+class Solution {
+	boolean addNumberAndCheckForCondition(TreeMap<Integer, Integer> window, int num, int diff) {
+		Integer lower = window.ceilingKey(num - diff);
+		if (lower != null && Math.abs(lower - num) <= diff) {
+			return true;
+		}
+		Integer higher = window.floorKey(num + diff);
+		if (higher != null && Math.abs(higher - num) <= diff) {
+			return true;
+		}
+		window.merge(num,1,);
+		return false;
+	}
+	boolean containsNearbyAlmostDuplicate(int[] nums, int indexDiff, int valueDiff) {
+		TreeMap<Integer, Integer> window = new TreeMap<>();
+		for (int i = 0; i <= Math.min(nums.length - 1,indexDiff); i++) {
+			if (addNumberAndCheckForCondition(window,nums[i],valueDiff)) {
+				return true;
+			}
+		}
+		for (int i = 0, j = indexDiff + 1; j < nums.length; i++, j++) {
+			removePrevElement(window,nums[i]);
+			if (addNumberAndCheckForCondition(window,nums[j],valueDiff)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	void removePrevElement(TreeMap<Integer, Integer> window, int num) {
+		int currentCount = window.merge(num,-1,);
+		if (currentCount == 0) {
+			window.remove(num);
+		}
+	}
+}

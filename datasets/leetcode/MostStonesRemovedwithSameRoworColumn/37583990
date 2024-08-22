@@ -1,0 +1,58 @@
+class Solution {
+	void addParent(HashMap<Integer, int[]> map, int index, int parentIndex) {
+		if (map.containsKey(index)) {
+			map.get(index)[0] = parentIndex;
+		} 
+		else {
+			map.put(index,new int{parentIndex, 1});
+		}
+		if (map.containsKey(parentIndex)) {
+			map.get(parentIndex)[1] += map.get(index)[1];
+		} 
+		else {
+			map.put(parentIndex,new int{parentIndex, 1 + map.get(index)[1]});
+		}
+	}
+	int getParent(HashMap<Integer, int[]> map, int index) {
+		if (map.get(index)[0] != index) {
+			map.get(index)[0] = getParent(map,map.get(index)[0]);
+			return map.get(index)[0];
+		} 
+		else {
+			return index;
+		}
+	}
+	int removeStones(int[][] stones) {
+		HashMap<Integer, int[]> map = new HashMap<>();
+		for (int i = 0; i < stones.length; i++) {
+			int row = stones[i][0] + 1;
+			int col = -(stones[i][1] + 1);
+			if (map.containsKey(row) && map.containsKey(col)) {
+				int rowP = getParent(map,row);
+				int colP = getParent(map,col);
+				if (map.get(rowP)[1] > map.get(colP)[1]) {
+					addParent(map,colP,rowP);
+				} 
+				else {
+					addParent(map,rowP,colP);
+				}
+			} 
+			else if (map.containsKey(row)) {
+				int rowP = getParent(map,row);
+				addParent(map,col,rowP);
+			} 
+			else if (map.containsKey(col)) {
+				int colP = getParent(map,col);
+				addParent(map,row,colP);
+			} 
+			else {
+				addParent(map,row,col);
+			}
+		}
+		HashSet<Integer> out = new HashSet<>();
+		for (Map.Entry<Integer, int[]> m: map.entrySet()) {	
+			out.add(getParent(map,m.getKey()));
+		}
+		return stones.length - out.size();
+	}
+}

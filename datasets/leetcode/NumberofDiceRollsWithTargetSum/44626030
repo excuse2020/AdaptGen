@@ -1,0 +1,28 @@
+class Solution {
+	int find(int n, int k, int tar, int[][] dp) {
+		if (tar == 0 && n == 0) {
+			return 1;
+		}
+		if (n == 0) {
+			return 0;
+		}
+		if (dp[n][tar] != -1) {
+			return dp[n][tar];
+		}
+		long res = 0;
+		for (int i = 1; i <= k; i++) {
+			if (tar < i) {
+				break;
+			}
+			res = (res + find(n - 1,k,tar - i,dp)) % 1_000_000_007;
+		}
+		return dp[n][tar] = (int) res;
+	}
+	int numRollsToTarget(int n, int k, int target) {
+		int[][] dp = new int[n + 1][target + 1];
+		for (int[] a: dp) {	
+			Arrays.fill(a,-1);
+		}
+		return find(n,k,target,dp);
+	}
+}

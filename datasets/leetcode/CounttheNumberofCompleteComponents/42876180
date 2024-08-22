@@ -1,0 +1,46 @@
+class Solution {
+	int countCompleteComponents(int n, int[][] edges) {
+		int[] parent = new int[n];
+		int[] nodeSize = new int[n];
+		int[] edgeSize = new int[n];
+		for (int i = 0; i < n; i++) {
+			parent[i] = i;
+			nodeSize[i] = 1;
+		}
+		for (int[] e: edges) {	
+			int p1 = find(e[0],parent);
+			int p2 = find(e[1],parent);
+			if (p1 == p2) {
+				edgeSize[p1]++;
+			}
+			if (p1 != p2) {
+				parent[p1] = p2;
+				edgeSize[p2]++;
+				edgeSize[p2] += edgeSize[p1];
+				nodeSize[p2] += nodeSize[p1];
+			}
+		}
+		int res = 0;
+		Set<Integer> visited = new HashSet<>();
+		for (int i = 0; i < n; i++) {
+			int p = find(i,parent);
+			if (visited.contains(p)) {
+				continue;
+			}
+			visited.add(p);
+			int nodeCnt = nodeSize[p];
+			int edgeCnt = edgeSize[p];
+			if (edgeCnt == nodeCnt * (nodeCnt - 1) / 2) {
+				res++;
+			}
+		}
+		return res;
+	}
+	int find(int node, int[] parent) {
+		while (parent[node] != node) {
+			parent[node] = parent[parent[node]];
+			node = parent[node];
+		}
+		return node;
+	}
+}

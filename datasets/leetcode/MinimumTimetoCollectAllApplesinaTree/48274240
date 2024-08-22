@@ -1,0 +1,43 @@
+class Solution {
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		LinkedList<Integer>[] adjList = new LinkedList[n];
+		int[] indegree = new int[n];
+		for (int i = 0; i < n; i++) {
+			adjList[i] = new LinkedList();
+		}
+		for (int[] edge: edges) {	
+			adjList[edge[0]].add(edge[1]);
+			adjList[edge[1]].add(edge[0]);
+			indegree[edge[0]]++;
+			indegree[edge[1]]++;
+		}
+		Queue<Integer> q = new LinkedList();
+		for (int i = 0; i < n; i++) {
+			if (indegree[i] == 1 && !hasApple.get(i) && i != 0) {
+				q.add(i);
+			}
+		}
+		HashSet<Integer> set = new HashSet();
+		while (!q.isEmpty()) {
+			int temp = q.poll();
+			set.add(temp);
+			for (int neighbor: adjList[temp]) {	
+				indegree[neighbor]--;
+				if (indegree[neighbor] == 1 && !hasApple.get(neighbor) && neighbor != 0) {
+					q.add(neighbor);
+				}
+			}
+		}
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			if (!set.contains(i)) {
+				for (int neigh: adjList[i]) {	
+					if (!set.contains(neigh)) {
+						ans = ans + 1;
+					}
+				}
+			}
+		}
+		return ans;
+	}
+}

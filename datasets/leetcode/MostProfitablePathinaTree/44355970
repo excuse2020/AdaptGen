@@ -1,0 +1,73 @@
+class Solution {
+	Node[] buildTree(Map<Integer, Set<Integer>> edges, int bob) {
+		Queue<Node> nodes = new LinkedList<>();
+		Node root = new Node();
+		root.value = 0;
+		nodes.add(root);
+		Node[] res = new Node[2];
+		res[0] = root;
+		while (!nodes.isEmpty()) {
+			Node n = nodes.poll();
+			n.children = new ArrayList<Node>();
+			for (Integer i: edges.get(n.value)) {	
+				if (n.parent == null || i != n.parent.value) {
+					Node child = new Node();
+					child.value = i;
+					child.parent = n;
+					child.level = n.level + 1;
+					nodes.add(child);
+					n.children.add(child);
+				}
+			}
+			if (n.value == bob) {
+				res[1] = n;
+			}
+		}
+		return res;
+	}
+	int dfsMaxProfit(Node root, int[] amount, Map<Integer, Double> factors) {
+		int profSelf = (int) (amount[root.value] * (factors.containsKey(root.value) ? factors.get(root.value) : 1));
+		if (root.children == null || root.children.isEmpty()) {
+			return profSelf;
+		}
+		int profChild = Integer.MIN_VALUE;
+		for (Node child: root.children) {	
+			profChild = Math.max(profChild,this.dfsMaxProfit(child,amount,factors));
+		}
+		return profSelf + profChild;
+	}
+	int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+		Map<Integer, Set<Integer>> adjMat = new HashMap<>();
+		for (int[] edge: edges) {	
+			Set<Integer> vert1 = adjMat.containsKey(edge[0]) ? adjMat.get(edge[0]) : new HashSet<Integer>();
+			Set<Integer> vert2 = adjMat.containsKey(edge[1]) ? adjMat.get(edge[1]) : new HashSet<Integer>();
+			vert1.add(edge[1]);
+			vert2.add(edge[0]);
+			adjMat.put(edge[0],vert1);
+			adjMat.put(edge[1],vert2);
+		}
+		Node[] nodeList = this.buildTree(adjMat,bob);
+		Map<Integer, Double> mf = new HashMap<>();
+		int lim = (nodeList[1].level + 1) / 2 + (((nodeList[1].level + 1) & 1) == 1 ? 1 : 0);
+		int j = 1;
+		Node temp = nodeList[1];
+		while (j <= lim) {
+			if (j == lim && ((nodeList[1].level + 1) & 1) == 1) {
+				mf.put(temp.value,0.5);
+				temp = temp.parent;
+				j++;
+				continue;
+			}
+			mf.put(temp.value,0.0);
+			temp = temp.parent;
+			j++;
+		}
+		return this.dfsMaxProfit(nodeList[0],amount,mf);
+	}
+	class Node {
+		List<Node> children;
+		int level;
+		Node parent;
+		int value;
+	}
+}

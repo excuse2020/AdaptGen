@@ -1,0 +1,31 @@
+class Solution {
+	int result = 0;
+	int countPairs(TreeNode root, int distance) {
+		if (root == null) {
+			return 0;
+		}
+		helper(root,distance);
+		return result;
+	}
+	int[] helper(TreeNode node, int distance) {
+		int[] dist = new int[distance + 1];
+		if (node == null) {
+			return dist;
+		}
+		if (node.left == null && node.right == null) {
+			dist[1] = 1;
+			return dist;
+		}
+		int[] left = helper(node.left,distance);
+		int[] right = helper(node.right,distance);
+		for (int i = 1; i <= distance; i++) {
+			for (int j = 1; j + i <= distance; j++) {
+				result += left[i] * right[j];
+			}
+		}
+		for (int i = distance; i > 0; i--) {
+			dist[i] = left[i - 1] + right[i - 1];
+		}
+		return dist;
+	}
+}

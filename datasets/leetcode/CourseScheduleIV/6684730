@@ -1,0 +1,32 @@
+class Solution {
+	Map<Integer, List<Integer>> graph = new HashMap<>();
+	boolean[][] reachable;
+	List<Boolean> checkIfPrerequisite(int n, int[][] prerequisites, int[][] queries) {
+		reachable = new boolean[n][n];
+		populate(n,prerequisites);
+		for (int i = 0; i < n; i++) {
+			dfs(i,i);
+		}
+		List<Boolean> res = new ArrayList<>();
+		for (int[] q: queries) {	
+			res.add(reachable[q[0]][q[1]]);
+		}
+		return res;
+	}
+	void dfs(int src, int target) {
+		reachable[src][target] = true;
+		for (int nei: graph.get(target)) {	
+			if (!reachable[src][nei]) {
+				dfs(src,nei);
+			}
+		}
+	}
+	void populate(int n, int[][] edges) {
+		for (int i = 0; i < n; i++) {
+			graph.put(i,new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			graph.get(edge[0]).add(edge[1]);
+		}
+	}
+}

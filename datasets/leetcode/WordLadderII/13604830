@@ -1,0 +1,45 @@
+class Solution {
+	List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+		Queue<List<String>> chains = new ArrayDeque<>();
+		chains.add(new ArrayList<>(Arrays.asList(beginWord)));
+		boolean found = false;
+		Set<String> words = new HashSet<>(wordList);
+		Set<String> usedWords = new HashSet<>(Arrays.asList(beginWord));
+		while (!found && !chains.isEmpty()) {
+			words.removeAll(usedWords);
+			int size = chains.size();
+			for (int i = 0; i < size; i++) {
+				List<String> chain = chains.remove();
+				String current = chain.get(chain.size() - 1);
+				for (String word: words) {	
+					if (isSingleDiff(current,word)) {
+						List<String> newChain = new ArrayList<>(chain);
+						newChain.add(word);
+						chains.add(newChain);
+						usedWords.add(word);
+						if (word.equals(endWord)) {
+							found = true;
+							break;
+						}
+					}
+				}
+			}
+		}
+		List<List<String>> shortest = new ArrayList<>();
+		for (List<String> chain: chains) {	
+			if (chain.get(chain.size() - 1).equals(endWord)) {
+				shortest.add(chain);
+			}
+		}
+		return shortest;
+	}
+	boolean isSingleDiff(String a, String b) {
+		int diff = 0;
+		for (int i = 0; i < a.length() && diff < 2; i++) {
+			if (a.charAt(i) != b.charAt(i)) {
+				diff++;
+			}
+		}
+		return diff == 1;
+	}
+}

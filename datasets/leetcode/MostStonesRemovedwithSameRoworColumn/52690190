@@ -1,0 +1,56 @@
+class Solution {
+	int count = 0;
+	int[] parent;
+	int[] size;
+	int find(int node) {
+		if (node == parent[node]) {
+			return node;
+		}
+		return parent[node] = find(parent[node]);
+	}
+	int removeStones(int[][] stones) {
+		Arrays.sort(stones,(a, b) -> {a[0] - b[0]});
+		int r = stones[stones.length - 1][0];
+		int max = 0;
+		for (int i = 0; i < stones.length; i++) {
+			max = Math.max(max,stones[i][1]);
+		}
+		int c = r + max;
+		int n = c + 1;
+		parent = new int[n];
+		size = new int[n];
+		for (int i = 0; i < n; i++) {
+			parent[i] = i;
+			size[i] = 1;
+		}
+		for (int[] arr: stones) {	
+			union(arr[0],r + 1);
+		}
+		System.out.println(count);
+		return stones.length - count;
+	}
+	void union(int xx, int yy) {
+		int x = find(xx);
+		int y = find(yy);
+		if (x == y) {
+			return;
+		}
+		if (size[x] == 1 && size[y] == 1) {
+			count++;
+		} 
+		else if (size[x] == 1 || size[y] == 1) {
+			count = count;
+		} 
+		else {
+			count--;
+		}
+		if (size[x] > size[y]) {
+			parent[y] = x;
+			size[x] += size[y];
+		} 
+		else {
+			parent[x] = y;
+			size[y] += size[x];
+		}
+	}
+}

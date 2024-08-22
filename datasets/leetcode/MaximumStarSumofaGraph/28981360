@@ -1,0 +1,37 @@
+class Solution {
+	void buildGraph(List<Integer>[] g, int[] vals, int[][] edges) {
+		int n = vals.length;
+		for (int i = 0; i < n; i++) {
+			g[i] = new ArrayList<>();
+		}
+		for (int[] e: edges) {	
+			int u = e[0], v = e[1];
+			g[u].add(v);
+			g[v].add(u);
+		}
+	}
+	int maxStarSum(int[] vals, int[][] edges, int k) {
+		int n = vals.length;
+		List<Integer>[] g = new ArrayList[n];
+		buildGraph(g,vals,edges);
+		int max = Integer.MIN_VALUE;
+		for (int i = 0; i < n; i++) {
+			PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+			for (int neighs: g[i]) {	
+				if (vals[neighs] < 0) {
+					continue;
+				}
+				minHeap.offer(vals[neighs]);
+				if (minHeap.size() > k) {
+					minHeap.poll();
+				}
+			}
+			int sum = vals[i];
+			while (!minHeap.isEmpty()) {
+				sum += minHeap.poll();
+			}
+			max = Math.max(max,sum);
+		}
+		return max;
+	}
+}

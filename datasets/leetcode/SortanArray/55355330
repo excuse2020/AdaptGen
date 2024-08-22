@@ -1,0 +1,67 @@
+class Solution {
+	int run = 4;
+	void insertionsort(int array, int beg, int end) {
+		int i, temp, j;
+		for (i = beg + 1; i <= end; i++) {
+			temp = array[i];
+			j = i - 1;
+			while (j >= beg && temp < array[j]) {
+				array[j + 1] = array[j];
+				j--;
+			}
+			array[j + 1] = temp;
+		}
+	}
+	void merge(int array, int beg, int mid, int end) {
+		int n1 = mid - beg + 1;
+		int n2 = end - mid;
+		int larr = new int[n1];
+		int rarr = new int[n2];
+		for (int i = 0; i < n1; i++) {
+			larr[i] = array[beg + i];
+		}
+		for (int j = 0; j < n2; j++) {
+			rarr[j] = array[mid + j + 1];
+		}
+		int i = 0;
+		int j = 0;
+		int k = beg;
+		while (i < n1 && j < n2) {
+			if (larr[i] <= rarr[j]) {
+				array[k] = larr[i];
+				i++;
+			} 
+			else {
+				array[k] = rarr[j];
+				j++;
+			}
+			k++;
+		}
+		while (i < n1) {
+			array[k] = larr[i];
+			i++;
+			k++;
+		}
+		while (j < n2) {
+			array[k] = rarr[j];
+			j++;
+			k++;
+		}
+	}
+	int[] sortArray(int[] nums) {
+		int n = nums.length;
+		for (int i = 0; i < n; i += run) {
+			insertionsort(nums,i,Math.min(i + run - 1,n - 1));
+		}
+		for (int size = run; size < n; size *= 2) {
+			for (int beg = 0; beg < n; beg += 2 * size) {
+				int mid = beg + size - 1;
+				int end = Math.min(beg + 2 * size - 1,n - 1);
+				if (mid < end) {
+					merge(nums,beg,mid,end);
+				}
+			}
+		}
+		return nums;
+	}
+}

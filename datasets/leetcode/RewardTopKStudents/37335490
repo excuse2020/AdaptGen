@@ -1,0 +1,53 @@
+class Solution {
+	List<Integer> topStudents(String[] positive_feedback, String[] negative_feedback, String[] report, int[] student_id, int k) {
+		int[] ans = new int[student_id.length];
+		int[] id = new int[student_id.length];
+		HashMap<String, Integer> hm1 = new HashMap<>();
+		for (int i = 0; i < positive_feedback.length; i++) {
+			hm1.put(positive_feedback[i],0);
+		}
+		HashMap<String, Integer> hm2 = new HashMap<>();
+		for (int i = 0; i < negative_feedback.length; i++) {
+			hm2.put(negative_feedback[i],0);
+		}
+		for (int i = 0; i < student_id.length; i++) {
+			int count = 0;
+			String r = report[i];
+			String[] r1 = r.split(" ");
+			for (int j = 0; j < r1.length; j++) {
+				if (hm1.containsKey(r1[j])) {
+					count = count + 3;
+				} 
+				else if (hm2.containsKey(r1[j])) {
+					count = count - 1;
+				}
+			}
+			ans[i] = count;
+			id[i] = student_id[i];
+		}
+		for (int i = 0; i < ans.length - 1; i++) {
+			int min = i;
+			for (int j = i + 1; j < ans.length; j++) {
+				if (ans[j] > ans[min]) {
+					min = j;
+				} 
+				else if (ans[j] == ans[min]) {
+					if (id[j] < id[min]) {
+						min = j;
+					}
+				}
+			}
+			int temp = ans[i];
+			ans[i] = ans[min];
+			ans[min] = temp;
+			int temp2 = id[i];
+			id[i] = id[min];
+			id[min] = temp2;
+		}
+		ArrayList<Integer> al = new ArrayList<>();
+		for (int i = 0; i < k; i++) {
+			al.add(id[i]);
+		}
+		return al;
+	}
+}

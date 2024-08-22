@@ -1,0 +1,52 @@
+class Solution {
+	StringBuilder path1 = new StringBuilder();
+	String getDirections(TreeNode root, int startValue, int destValue) {
+		TreeNode lcs = getLowestCommonAncestor(root,new TreeNode(startValue),new TreeNode(destValue));
+		if (lcs.val == startValue) {
+			TreeNode head = lcs;
+			getpath(head,new StringBuilder(),destValue);
+			return path1.toString();
+		} 
+		else if (lcs.val == destValue) {
+			TreeNode head = lcs;
+			getpath(head,new StringBuilder(),startValue);
+			return "U".repeat(path1.length());
+		}
+		getpath(lcs,new StringBuilder(),startValue);
+		StringBuilder res = new StringBuilder("U".repeat(path1.length()));
+		path1 = new StringBuilder();
+		getpath(lcs,new StringBuilder(),destValue);
+		res.append(path1.toString());
+		return res.toString();
+	}
+	TreeNode getLowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+		if (root == null || p.val == root.val || q.val == root.val) {
+			return root;
+		}
+		TreeNode leftAns = getLowestCommonAncestor(root.left,p,q);
+		TreeNode rightAns = getLowestCommonAncestor(root.right,p,q);
+		if (leftAns == null) {
+			return rightAns;
+		}
+		if (rightAns == null) {
+			return leftAns;
+		}
+		return root;
+	}
+	TreeNode getpath(TreeNode root, StringBuilder res, int destValue) {
+		if (root == null) {
+			return null;
+		}
+		if (root.val == destValue) {
+			path1 = new StringBuilder(res.toString());
+			return root;
+		}
+		res.append("L");
+		getpath(root.left,res,destValue);
+		res.deleteCharAt(res.length() - 1);
+		res.append("R");
+		getpath(root.right,res,destValue);
+		res.deleteCharAt(res.length() - 1);
+		return root;
+	}
+}

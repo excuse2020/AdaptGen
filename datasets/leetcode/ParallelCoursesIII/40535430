@@ -1,0 +1,42 @@
+class Solution {
+	int minimumTime(int n, int[][] relations, int[] time) {
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		for (int i = 1; i <= n; i++) {
+			graph.put(i,new ArrayList<>());
+		}
+		int[] indegree = new int[n + 1];
+		for (int[] relation: relations) {	
+			int current = relation[0];
+			int next = relation[1];
+			graph.get(current).add(next);
+			indegree[next]++;
+		}
+		int month = 0;
+		Queue<Integer> queue = new ArrayDeque<>();
+		int[] currentTime = new int[n + 1];
+		for (int i = 1; i <= n; i++) {
+			if (indegree[i] == 0) {
+				queue.offer(i);
+				currentTime[i] = time[i - 1];
+			}
+		}
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				int current = queue.poll();
+				month = Math.max(month,currentTime[current]);
+				List<Integer> neighbors = graph.get(current);
+				if (neighbors != null && neighbors.size() != 0) {
+					for (Integer nei: neighbors) {	
+						currentTime[nei] = Math.max(currentTime[nei],currentTime[current] + time[nei - 1]);
+						indegree[nei]--;
+						if (indegree[nei] == 0) {
+							queue.offer(nei);
+						}
+					}
+				}
+			}
+		}
+		return month;
+	}
+}

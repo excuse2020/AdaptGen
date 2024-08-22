@@ -1,0 +1,29 @@
+class Solution {
+	long maximumTotalDamage(int[] power) {
+		Map<Integer, Long> frequency = new HashMap<>();
+		for (int p: power) {	
+			frequency.put(p,frequency.getOrDefault(p,0L) + 1);
+		}
+		List<Integer> keys = new ArrayList<>(frequency.keySet());
+		Collections.sort(keys);
+		int N = keys.size();
+		long[] dp = new long[N];
+		for (int i = 0; i < N; i++) {
+			int currentKey = keys.get(i);
+			dp[i] = currentKey * frequency.get(currentKey);
+			for (int j = 1; j < 4; j++) {
+				if (i - j >= 0 && currentKey - keys.get(i - j) > 2) {
+					dp[i] = Math.max(dp[i],dp[i - j] + currentKey * frequency.get(currentKey));
+				}
+			}
+			if (i > 0) {
+				dp[i] = Math.max(dp[i],dp[i - 1]);
+			}
+		}
+		long maxDamage = 0;
+		for (long damage: dp) {	
+			maxDamage = Math.max(maxDamage,damage);
+		}
+		return maxDamage;
+	}
+}

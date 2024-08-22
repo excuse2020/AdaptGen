@@ -1,0 +1,21 @@
+class Solution {
+	int dfs(List<List<Integer>> piles, int i, int coins, int[][] memo) {
+		if (i == piles.size()) {
+			return 0;
+		}
+		if (memo[i][coins] != 0) {
+			return memo[i][coins];
+		}
+		memo[i][coins] = dfs(piles,i + 1,coins,memo);
+		int currPile = 0;
+		for (int j = 0; j < Math.min(piles.get(i).size(),coins); j++) {
+			currPile += piles.get(i).get(j);
+			memo[i][coins] = Math.max(memo[i][coins],currPile + dfs(piles,i + 1,coins - j,memo));
+		}
+		return memo[i][coins];
+	}
+	int maxValueOfCoins(List<List<Integer>> piles, int k) {
+		int[][] memo = new int[piles.size()][k + 1];
+		return dfs(piles,0,k,memo);
+	}
+}

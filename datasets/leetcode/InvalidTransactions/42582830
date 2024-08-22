@@ -1,0 +1,33 @@
+class Solution {
+	List<String> invalidTransactions(String[] transactions) {
+		Map<String, List<String[]>> map = new HashMap<>();
+		List<String> answer = new ArrayList<>();
+		for (String t: transactions) {	
+			String[] currentTransaction = t.split(",");
+			String name = currentTransaction[0];
+			map.putIfAbsent(name,new ArrayList<>());
+			map.get(name).add(currentTransaction);
+		}
+		for (String t: transactions) {	
+			String[] currentTransaction = t.split(",");
+			String name = currentTransaction[0];
+			int time = Integer.parseInt(currentTransaction[1]);
+			int amount = Integer.parseInt(currentTransaction[2]);
+			String city = currentTransaction[3];
+			if (amount > 1000) {
+				answer.add(t);
+				continue;
+			}
+			for (String[] allTransaction: map.get(name)) {	
+				int thisTime = Integer.parseInt(allTransaction[1]);
+				String thisCity = allTransaction[3];
+				int timeDifference = Math.abs(thisTime - time);
+				if (timeDifference <= 60 && !thisCity.equals(city)) {
+					answer.add(t);
+					break;
+				}
+			}
+		}
+		return answer;
+	}
+}

@@ -1,0 +1,28 @@
+class Solution {
+	String LCS(String s1, String s2) {
+		int[][] count = new int[s1.length() + 1][s2.length() + 1];
+		StringBuilder maxString = new StringBuilder();
+		for (int i = 0; i < s1.length(); i++) {
+			for (int j = 0; j < s2.length(); j++) {
+				if (s1.charAt(i) == s2.charAt(j)) {
+					count[i + 1][j + 1] = count[i][j] + 1;
+				} 
+				else {
+					count[i + 1][j + 1] = Math.max(count[i + 1][j],count[i][j + 1]);
+				}
+			}
+		}
+		int index = 1, indexRow = 1, indexCol = 1;
+		for (int i = 1; i <= s1.length(); i++) {
+			for (int j = 1; j <= s2.length(); j++) {
+				if (index == count[i][j] && indexCol < i && indexRow < j) {
+					maxString.append(s2.charAt(j - 1));
+					indexRow = j;
+					indexCol = i;
+					index++;
+				}
+			}
+		}
+		return maxString.toString();
+	}
+}

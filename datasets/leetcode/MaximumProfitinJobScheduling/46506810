@@ -1,0 +1,46 @@
+class Solution {
+	Integer[] memo;
+	int n;
+	int[] nextIndices;
+	int getNextJob(int[][] job, int i) {
+		int left = i + 1, right = job.length - 1;
+		int endTime = job[i][1];
+		while (left <= right) {
+			int mid = left + (right - left) / 2;
+			if (job[mid][0] < endTime) {
+				left = mid + 1;
+			} 
+			else {
+				right = mid - 1;
+			}
+		}
+		return left;
+	}
+	int helper(int[][] job, int index) {
+		if (index == n) {
+			return 0;
+		}
+		if (memo[index] != null) {
+			return memo[index];
+		}
+		int nextIndex = nextIndices[index];
+		int ans = Math.max(helper(job,index + 1),helper(job,nextIndex) + job[index][2]);
+		return memo[index] = ans;
+	}
+	int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
+		n = startTime.length;
+		int[][] job = new int[n][3];
+		for (int i = 0; i < n; i++) {
+			job[i][0] = startTime[i];
+			job[i][1] = endTime[i];
+			job[i][2] = profit[i];
+		}
+		Arrays.sort(job,(a, b) -> {a[0] - b[0]});
+		nextIndices = new int[n];
+		for (int i = 0; i < n; i++) {
+			nextIndices[i] = getNextJob(job,i);
+		}
+		memo = new Integer[n + 1];
+		return helper(job,0);
+	}
+}

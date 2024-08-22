@@ -1,0 +1,31 @@
+class Solution {
+	int findminimum(int st, int en, int arr, int dp) {
+		if (dp[st][en] != -1) {
+			return dp[st][en];
+		}
+		int ans = Integer.MAX_VALUE;
+		for (int i = st + 1; i < en; i++) {
+			ans = Math.min(findminimum(st,i,arr,dp) + findminimum(i,en,arr,dp) - arr[st],ans);
+		}
+		if (ans == Integer.MAX_VALUE) {
+			return dp[st][en] = 0;
+		}
+		return dp[st][en] = ans;
+	}
+	int minCost(int n, int[] cuts) {
+		int len = cuts.length + 2;
+		int arr = new int[cuts.length + 2];
+		Arrays.sort(cuts);
+		arr[0] = 0;
+		int ind = 1;
+		for (int i = 0; i < cuts.length; i++) {
+			arr[i + 1] = cuts[i];
+		}
+		arr[cuts.length + 1] = n;
+		int dp = new int[len][len];
+		for (int p: dp) {	
+			Arrays.fill(p,-1);
+		}
+		return findminimum(0,len - 1,arr,dp);
+	}
+}

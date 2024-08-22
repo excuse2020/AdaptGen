@@ -1,0 +1,32 @@
+class Solution {
+	boolean validPartition(int[] nums) {
+		int[] memo = new int[nums.length];
+		return validate(nums,0,memo);
+	}
+	boolean validate(int[] nums, int start, int[] memo) {
+		if (start == nums.length) {
+			return true;
+		}
+		if (start > nums.length) {
+			return false;
+		}
+		if (memo[start] != 0) {
+			return memo[start] == 1;
+		}
+		boolean result = false;
+		int first = start;
+		int second = (start + 1);
+		int third = (start + 2);
+		if (second <= (nums.length - 1) && nums[first] == nums[second]) {
+			result = result || validate(nums,(start + 2),memo);
+			if (third <= (nums.length - 1) && nums[first] == nums[third]) {
+				result = result || validate(nums,(start + 3),memo);
+			}
+		}
+		if (second <= (nums.length - 1) && third <= (nums.length - 1) && nums[first] == (nums[second] - 1) && nums[first] == (nums[third] - 2)) {
+			result = result || validate(nums,(start + 3),memo);
+		}
+		memo[start] = result ? 1 : -1;
+		return result;
+	}
+}

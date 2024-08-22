@@ -1,0 +1,45 @@
+class Solution {
+	int decreasing(int rating, int n, int i, Integer dp, int count, int prevind) {
+		if (count == 3) {
+			return 1;
+		}
+		if (i >= n) {
+			return 0;
+		}
+		if (dp[prevind + 1][i][count] != null) {
+			return dp[prevind + 1][i][count];
+		}
+		int take = 0, notTake = 0;
+		if (prevind == -1 || rating[i] < rating[prevind]) {
+			take = decreasing(rating,n,i + 1,dp,count + 1,i);
+		}
+		notTake = decreasing(rating,n,i + 1,dp,count,prevind);
+		return dp[prevind + 1][i][count] = take + notTake;
+	}
+	int increasing(int rating, int n, int i, Integer dp, int count, int prevind) {
+		if (count == 3) {
+			return 1;
+		}
+		if (i >= n) {
+			return 0;
+		}
+		if (dp[prevind + 1][i][count] != null) {
+			return dp[prevind + 1][i][count];
+		}
+		int take = 0, notTake = 0;
+		if (prevind == -1 || rating[i] > rating[prevind]) {
+			take = increasing(rating,n,i + 1,dp,count + 1,i);
+		}
+		notTake = increasing(rating,n,i + 1,dp,count,prevind);
+		return dp[prevind + 1][i][count] = take + notTake;
+	}
+	int numTeams(int[] rating) {
+		int res = 0;
+		int n = rating.length;
+		Integer dp = new Integer[n + 1][n + 1][4];
+		res += increasing(rating,n,0,dp,0,-1);
+		dp = new Integer[n + 1][n + 1][4];
+		res += decreasing(rating,n,0,dp,0,-1);
+		return res;
+	}
+}

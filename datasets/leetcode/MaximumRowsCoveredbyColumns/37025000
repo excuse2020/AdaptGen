@@ -1,0 +1,41 @@
+class Solution {
+	int n, m;
+	List<Integer> getK1bitsFromNbits(int k, int n) {
+		List<Integer> list = new ArrayList<>();
+		int state = (1 << k) - 1;
+		while (state < (1 << n)) {
+			list.add(state);
+			int c = state & -state;
+			int r = state + c;
+			state = (((r ^ state) >> 2) / c) | r;
+		}
+		return list;
+	}
+	int maximumRows(int[][] matrix, int numSelect) {
+		this.n = matrix.length;
+		this.m = matrix[0].length;
+		int[] statesByRow = new int[n];
+		List<Integer> s_states = getK1bitsFromNbits(numSelect,m);
+		for (int i = 0; i < n; i++) {
+			int state = 0;
+			for (int j = 0; j < m; j++) {
+				if (matrix[i][j] == 1) {
+					state |= (1 << j);
+				}
+			}
+			statesByRow[i] = state;
+		}
+		int res = 0;
+		for (int i = 0; i < s_states.size(); i++) {
+			Integer state = s_states.get(i);
+			int count = 0;
+			for (int j = 0; j < this.n; j++) {
+				if ((statesByRow[j] & state) == statesByRow[j]) {
+					count++;
+				}
+			}
+			res = Math.max(res,count);
+		}
+		return res;
+	}
+}

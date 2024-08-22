@@ -1,0 +1,52 @@
+class Solution {
+	int completedLevels(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		return 1 + completedLevels(root.right);
+	}
+	boolean isCompleteTree(TreeNode root) {
+		int levels = completedLevels(root);
+		if (levels == 0) {
+			return true;
+		}
+		Queue<TreeNode> q1 = new LinkedList<>();
+		Queue<TreeNode> q2 = new LinkedList<>();
+		q1.add(root);
+		for (int level = 1; level < levels; level++) {
+			while (!q1.isEmpty()) {
+				TreeNode cur = q1.poll();
+				if (cur.left == null) {
+					return false;
+				} 
+				else {
+					q2.add(cur.left);
+				}
+				if (cur.right == null) {
+					return false;
+				} 
+				else {
+					q2.add(cur.right);
+				}
+			}
+			q1 = q2;
+			q2 = new LinkedList<>();
+		}
+		boolean foundHole = false;
+		for (TreeNode cur: q1) {	
+			if (cur.left == null) {
+				foundHole = true;
+			} 
+			else if (foundHole || cur.left.left != null || cur.left.right != null) {
+				return false;
+			}
+			if (cur.right == null) {
+				foundHole = true;
+			} 
+			else if (foundHole || cur.right.left != null || cur.right.right != null) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

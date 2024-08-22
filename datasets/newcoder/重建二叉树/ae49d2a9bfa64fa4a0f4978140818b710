@@ -1,0 +1,21 @@
+class Solution {
+	HashMap<Integer, Integer> dic = new HashMap<>();
+	int[] preorder;
+	TreeNode reConstructBinaryTree(int[] pre, int[] vin) {
+		this.preorder = pre;
+		for (int i = 0; i < pre.length; i++) {
+			dic.put(vin[i],i);
+		}
+		return recur(0,0,vin.length - 1);
+	}
+	TreeNode recur(int root, int left, int right) {
+		if (left > right) {
+			return null;
+		}
+		TreeNode node = new TreeNode(preorder[root]);
+		int i = dic.get(preorder[root]);
+		node.left = recur(root + 1,left,i - 1);
+		node.right = recur(root + 1 - left + i,i + 1,right);
+		return node;
+	}
+}

@@ -1,0 +1,27 @@
+class Solution {
+	TreeNode createBinaryTree(int[][] descriptions) {
+		HashSet<Integer> child = new HashSet<>();
+		HashMap<Integer, TreeNode> hp = new HashMap<>();
+		for (var a: descriptions) {	
+			int p = a[0];
+			int c = a[1];
+			child.add(c);
+			TreeNode x = hp.getOrDefault(p,new TreeNode(p));
+			if (a[2] == 1) {
+				x.left = hp.getOrDefault(c,new TreeNode(c));
+				hp.put(c,x.left);
+			} 
+			else {
+				x.right = hp.getOrDefault(c,new TreeNode(c));
+				hp.put(c,x.right);
+			}
+			hp.put(p,x);
+		}
+		for (var a: descriptions) {	
+			if (!child.contains(a[0])) {
+				return hp.get(a[0]);
+			}
+		}
+		return null;
+	}
+}

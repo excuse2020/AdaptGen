@@ -1,0 +1,72 @@
+class Solution {
+	Map<Integer, Integer> ask;
+	Map<Integer, Integer> map;
+	int[] LFU(int[][] operators, int k) {
+		map = new HashMap<Integer, Integer>(k);
+		ask = new LinkedHashMap();
+		List<Integer> result = new ArrayList();
+		int m = operators.length;
+		int i = 0;
+		while (i < m) {
+			int[] arr = operators[i];
+			int opr = arr[0];
+			if (opr == 1) {
+				int key = arr[1];
+				int value = arr[2];
+				if (map.size() < k) {
+					if (map.get(key) == null) {
+						map.put(key,value);
+						ask.put(key,1);
+					} 
+					else {
+						map.put(key,value);
+						Integer cc = ask.get(key);
+						ask.remove(key);
+						ask.put(key,cc + 1);
+					}
+				} 
+				else {
+					if (map.get(key) != null) {
+						map.put(key,value);
+						Integer cc = ask.get(key);
+						ask.remove(key);
+						ask.put(key,cc + 1);
+					} 
+					else {
+						int max = Integer.MAX_VALUE;
+						int delete = 0;
+						for (Map.Entry<Integer, Integer> entry: ask.entrySet()) {	
+							Integer count = entry.getValue();
+							if (count < max) {
+								max = count;
+								delete = entry.getKey();
+							}
+						}
+						ask.remove(delete);
+						map.remove(delete);
+						map.put(key,value);
+						ask.put(key,1);
+					}
+				}
+			} 
+			else {
+				if (map.get(arr[1]) == null) {
+					result.add(-1);
+				} 
+				else {
+					Integer cc = ask.get(arr[1]);
+					ask.remove(arr[1]);
+					ask.put(arr[1],cc + 1);
+					result.add(map.get(arr[1]));
+				}
+			}
+			i++;
+		}
+		int[] reslut = new int[result.size()];
+		int x = result.size();
+		for (int j = 0; j < x; j++) {
+			reslut[j] = result.get(j);
+		}
+		return reslut;
+	}
+}

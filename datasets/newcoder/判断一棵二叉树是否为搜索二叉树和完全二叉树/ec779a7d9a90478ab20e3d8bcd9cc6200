@@ -1,0 +1,52 @@
+class Solution {
+	boolean flag = false;
+	TreeNode max = null;
+	boolean binaryPerfect(TreeNode root) {
+		Queue<TreeNode> queue = new LinkedList<>();
+		if (root == null) {
+			return true;
+		}
+		queue.offer(root);
+		while (!queue.isEmpty()) {
+			TreeNode node = queue.poll();
+			if (flag && (node.left != null || node.right != null)) {
+				return false;
+			}
+			if (node.left == null || node.right == null) {
+				flag = true;
+			}
+			if (node.left == null && node.right != null) {
+				return false;
+			}
+			if (node.left != null) {
+				queue.offer(node.left);
+			}
+			if (node.right != null) {
+				queue.offer(node.right);
+			}
+		}
+		return true;
+	}
+	boolean binarySearch(TreeNode root) {
+		if (root == null) {
+			return true;
+		}
+		boolean left = binarySearch(root.left);
+		if (!left) {
+			return false;
+		}
+		if (max != null && max.val > root.val) {
+			return false;
+		}
+		max = root;
+		return binarySearch(root.right);
+	}
+	boolean[] judgeIt(TreeNode root) {
+		boolean[] result = new boolean[2];
+		result[0] = binarySearch(root);
+		result[1] = binaryPerfect(root);
+		System.out.println(result[0]);
+		System.out.println(result[1]);
+		return result;
+	}
+}

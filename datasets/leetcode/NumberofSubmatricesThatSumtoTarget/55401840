@@ -1,0 +1,36 @@
+class Solution {
+	int numSubmatrixSumTarget(int[][] matrix, int target) {
+		int rows = matrix.length;
+		int cols = matrix[0].length;
+		int[][] rowPrefixSumMatrix = new int[rows][cols];
+		for (int i = 0; i < rows; i++) {
+			int rowPrefixSum = 0;
+			for (int j = 0; j < cols; j++) {
+				rowPrefixSum += matrix[i][j];
+				rowPrefixSumMatrix[i][j] = rowPrefixSum;
+			}
+		}
+		HashMap<Integer, Integer> subMatrixSum = new HashMap<Integer, Integer>();
+		int ans = 0;
+		for (int startCol = 0; startCol < cols; startCol++) {
+			for (int col = startCol; col < cols; col++) {
+				subMatrixSum.clear();
+				int subMatrixPrefixSum = 0;
+				subMatrixSum.put(subMatrixPrefixSum,1);
+				for (int row = 0; row < rows; row++) {
+					if (startCol > 0) {
+						subMatrixPrefixSum += rowPrefixSumMatrix[row][col] - rowPrefixSumMatrix[row][startCol - 1];
+					} 
+					else {
+						subMatrixPrefixSum += rowPrefixSumMatrix[row][col];
+					}
+					if (subMatrixSum.containsKey(subMatrixPrefixSum - target)) {
+						ans += subMatrixSum.get(subMatrixPrefixSum - target);
+					}
+					subMatrixSum.put(subMatrixPrefixSum,subMatrixSum.getOrDefault(subMatrixPrefixSum,0) + 1);
+				}
+			}
+		}
+		return ans;
+	}
+}

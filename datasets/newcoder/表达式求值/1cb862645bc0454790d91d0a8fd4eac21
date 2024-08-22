@@ -1,0 +1,55 @@
+class Solution {
+	boolean isNumber(char c) {
+		return Character.isDigit(c);
+	}
+	int solve(String s) {
+		s = s.trim();
+		Deque<Integer> stack = new ArrayDeque<>();
+		char[] charArr = s.toCharArray();
+		int num = 0;
+		char op = '+';
+		int n = charArr.length;
+		for (int i = 0; i < n; i++) {
+			char c = charArr[i];
+			if (isNumber(c)) {
+				num = num * 10 + c - '0';
+			}
+			if (c == '(') {
+				int j = i + 1;
+				int brackets = 1;
+				while (brackets > 0) {
+					if (charArr[j] == '(') {
+						brackets++;
+					}
+					if (charArr[j] == ')') {
+						brackets--;
+					}
+					j++;
+				}
+				num = solve(s.substring(i + 1,j - 1));
+				i = j - 1;
+			}
+			if (!isNumber(c) || i == n - 1) {
+				if (op == '+') {
+					stack.push(num);
+				} 
+				else if (op == '-') {
+					stack.push(-1 * num);
+				} 
+				else if (op == '*') {
+					stack.push(stack.pop() * num);
+				} 
+				else if (op == '/') {
+					stack.push(stack.pop() / num);
+				}
+				num = 0;
+				op = c;
+			}
+		}
+		int res = 0;
+		while (!stack.isEmpty()) {
+			res += stack.pop();
+		}
+		return res;
+	}
+}

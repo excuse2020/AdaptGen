@@ -1,0 +1,31 @@
+class Solution {
+	int[] getAverages(int[] nums, int k) {
+		if (nums.length <= 2 * k) {
+			int[] ans = new int[nums.length];
+			for (int i = 0; i < ans.length; i++) {
+				ans[i] = -1;
+			}
+			return ans;
+		} 
+		else if (k == 0) {
+			return nums;
+		}
+		int[] ans = new int[nums.length];
+		int smallest = nums[0];
+		long avg = 0;
+		for (int i = 0; i < k; i++) {
+			ans[i] = -1;
+			ans[nums.length - 1 - i] = -1;
+			avg += nums[i];
+		}
+		for (int i = k; i <= 2 * k; i++) {
+			avg += nums[i];
+		}
+		ans[k] = (int) (avg / (2 * k + 1));
+		for (int i = 2 * k + 1; i < nums.length; i++) {
+			avg += nums[i] - nums[i - (2 * k + 1)];
+			ans[i - k] = (int) (avg / (2 * k + 1));
+		}
+		return ans;
+	}
+}

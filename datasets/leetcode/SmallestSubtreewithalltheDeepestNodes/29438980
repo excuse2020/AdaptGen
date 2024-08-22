@@ -1,0 +1,59 @@
+class Solution {
+	void BFSforDeepestNode(TreeNode root, int height, List<TreeNode> allDeepestNodes) {
+		Queue<TreeNode> queue = new ArrayDeque<>();
+		queue.offer(root);
+		int level = 1;
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				TreeNode current = queue.poll();
+				if (level == height) {
+					allDeepestNodes.add(current);
+				}
+				if (current.left != null) {
+					queue.offer(current.left);
+				}
+				if (current.right != null) {
+					queue.offer(current.right);
+				}
+			}
+			level++;
+		}
+	}
+	TreeNode findLCA(TreeNode root, List<TreeNode> allDeepestNodes) {
+		if (root == null || allDeepestNodes == null || allDeepestNodes.size() == 0) {
+			return null;
+		}
+		Set<TreeNode> nodes = new HashSet<>(allDeepestNodes);
+		TreeNode ans = helper(root,nodes);
+		return ans;
+	}
+	int getHeight(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		int left = getHeight(root.left);
+		int right = getHeight(root.right);
+		return Math.max(left,right) + 1;
+	}
+	TreeNode helper(TreeNode root, Set<TreeNode> nodes) {
+		if (root == null || nodes.contains(root)) {
+			return root;
+		}
+		TreeNode leftChild = helper(root.left,nodes);
+		TreeNode rightChild = helper(root.right,nodes);
+		if (leftChild != null && rightChild != null) {
+			return root;
+		}
+		return leftChild == null ? rightChild : leftChild;
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		List<TreeNode> allDeepestNodes = new ArrayList<>();
+		int height = getHeight(root);
+		BFSforDeepestNode(root,height,allDeepestNodes);
+		return findLCA(root,allDeepestNodes);
+	}
+}

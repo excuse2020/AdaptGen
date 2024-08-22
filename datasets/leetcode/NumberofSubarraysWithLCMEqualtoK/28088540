@@ -1,0 +1,36 @@
+class Solution {
+	int gcd(int a, int b) {
+		return b == 0 ? a : gcd(b,a % b);
+	}
+	int lcmOfArray(int[] arr, int idx, int len, HashMap<String, Integer> map) {
+		String s = idx + "->";
+		if (map.containsKey(s)) {
+			return map.get(s);
+		}
+		if (idx == len - 1) {
+			map.put(s,arr[idx]);
+			return map.get(s);
+		}
+		int a = arr[idx];
+		int b = lcmOfArray(arr,idx + 1,len,map);
+		int lcm = (int) (a * b / gcd(a,b));
+		map.put(s,lcm);
+		return map.get(s);
+	}
+	int subarrayLCM(int[] nums, int k) {
+		int count = 0;
+		HashMap<String, Integer> map = new HashMap<String, Integer>();
+		for (int i = 0; i < nums.length; i++) {
+			for (int j = i; j < nums.length; j++) {
+				int lcm = lcmOfArray(nums,i,j + 1,map);
+				if (lcm == k) {
+					count++;
+				} 
+				else if (lcm > k) {
+					break;
+				}
+			}
+		}
+		return count;
+	}
+}

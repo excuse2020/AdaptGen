@@ -1,0 +1,48 @@
+class Solution {
+	int findKth(int[] a, int n, int K) {
+		if (a == null || a.length < 1) {
+			return -1;
+		}
+		int left = 0;
+		int right = a.length - 1;
+		return part(a,left,right,K - 1);
+	}
+	int part(int[] data, int left, int right, int K) {
+		int index = new Random().nextInt(right - left + 1);
+		int value = data[index + left];
+		data[index + left] = data[left];
+		data[left] = value;
+		int lt = left;
+		int gt = right + 1;
+		int i = left + 1;
+		while (i < gt) {
+			if (data[i] > value) {
+				int temp = data[lt + 1];
+				data[lt + 1] = data[i];
+				data[i] = temp;
+				lt++;
+				i++;
+			} 
+			else if (data[i] < value) {
+				int temp = data[gt - 1];
+				data[gt - 1] = data[i];
+				data[i] = temp;
+				gt--;
+			} 
+			else {
+				i++;
+			}
+		}
+		data[left] = data[lt];
+		data[lt] = value;
+		if (lt <= K && K < gt) {
+			return data[K];
+		}
+		if (K < lt) {
+			return part(data,left,lt - 1,K);
+		} 
+		else {
+			return part(data,gt,right,K);
+		}
+	}
+}

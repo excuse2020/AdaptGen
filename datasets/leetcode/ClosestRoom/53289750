@@ -1,0 +1,39 @@
+class Solution {
+	int[] closestRoom(int[][] rooms, int[][] queries) {
+		Arrays.sort(rooms,new Comparator<int[]>());
+		int[] ans = new int[queries.length];
+		int ptr = 0;
+		for (int[] q: queries) {	
+			int prefId = q[0];
+			int minSize = q[1];
+			int left = 0, right = rooms.length - 1;
+			while (left <= right) {
+				int mid = left + (right - left) / 2;
+				if (rooms[mid][1] >= minSize) {
+					right = mid - 1;
+				} 
+				else {
+					left = mid + 1;
+				}
+			}
+			if (left == rooms.length) {
+				ans[ptr++] = -1;
+				continue;
+			}
+			int nearestId = Integer.MAX_VALUE;
+			int minDiff = Integer.MAX_VALUE;
+			while (left < rooms.length) {
+				if (Math.abs(rooms[left][0] - prefId) < minDiff) {
+					minDiff = Math.abs(rooms[left][0] - prefId);
+					nearestId = rooms[left][0];
+				} 
+				else if (Math.abs(rooms[left][0] - prefId) == minDiff) {
+					nearestId = Math.min(nearestId,rooms[left][0]);
+				}
+				left++;
+			}
+			ans[ptr++] = nearestId;
+		}
+		return ans;
+	}
+}

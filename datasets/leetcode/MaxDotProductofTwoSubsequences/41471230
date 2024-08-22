@@ -1,0 +1,39 @@
+class Solution {
+	int bottomUpDP(int[] nums1, int[] nums2) {
+		int[][] dp = new int[nums1.length + 1][nums2.length + 1];
+		for (int i = 0; i <= nums1.length; i++) {
+			dp[i][nums2.length] = 0;
+		}
+		for (int j = 0; j <= nums2.length; j++) {
+			dp[nums1.length][j] = 0;
+		}
+		for (int i = nums1.length - 1; i >= 0; i--) {
+			for (int j = nums2.length - 1; j >= 0; j--) {
+				dp[i][j] = nums1[i] * nums2[j] + dp[i + 1][j + 1];
+				dp[i][j] = Math.max(dp[i][j],Math.max(dp[i + 1][j],dp[i][j + 1]));
+			}
+		}
+		return dp[0][0];
+	}
+	int maxDotProduct(int[] nums1, int[] nums2) {
+		int nums1Max = Integer.MIN_VALUE;
+		int nums1Min = Integer.MAX_VALUE;
+		int nums2Max = Integer.MIN_VALUE;
+		int nums2Min = Integer.MAX_VALUE;
+		for (int num: nums1) {	
+			nums1Max = Math.max(nums1Max,num);
+			nums1Min = Math.min(nums1Min,num);
+		}
+		for (int num: nums2) {	
+			nums2Max = Math.max(nums2Max,num);
+			nums2Min = Math.min(nums2Min,num);
+		}
+		if (nums1Max < 0 && nums2Min > 0) {
+			return nums1Max * nums2Min;
+		}
+		if (nums2Max < 0 && nums1Min > 0) {
+			return nums2Max * nums1Min;
+		}
+		return bottomUpDP(nums1,nums2);
+	}
+}

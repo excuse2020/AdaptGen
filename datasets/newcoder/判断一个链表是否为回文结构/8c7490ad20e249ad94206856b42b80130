@@ -1,0 +1,71 @@
+class Solution {
+	boolean isPail(ListNode head) {
+		if (head == null) {
+			return false;
+		}
+		ListNode fast = head;
+		ListNode slow = head;
+		while (fast != null && fast.next != null) {
+			slow = slow.next;
+			fast = fast.next.next;
+		}
+		slow = reverseListNode(slow);
+		fast = head;
+		while (slow != null) {
+			if (slow.val != fast.val) {
+				return false;
+			}
+			fast = fast.next;
+			slow = slow.next;
+		}
+		return true;
+	}
+	boolean isPail2(ListNode head) {
+		if (head == null) {
+			return false;
+		}
+		if (head.next == null) {
+			return true;
+		}
+		ListNode left = head;
+		ListNode mid = head.next;
+		ListNode right = head.next.next;
+		while (right != null && right.next != null) {
+			left = left.next;
+			mid = mid.next;
+			right = right.next.next;
+		}
+		ListNode leftNode, righNode;
+		if (right == null) {
+			left.next = null;
+			leftNode = reverseListNode(head);
+			righNode = mid;
+		} 
+		else {
+			left.next = null;
+			leftNode = reverseListNode(head);
+			righNode = mid.next;
+		}
+		while (leftNode != null && righNode != null) {
+			if (leftNode.val == righNode.val) {
+				leftNode = leftNode.next;
+				righNode = righNode.next;
+			} 
+			else {
+				return false;
+			}
+		}
+		return leftNode == righNode;
+	}
+	ListNode reverseListNode(ListNode head) {
+		ListNode curr = head;
+		ListNode prev = null;
+		while (curr != null) {
+			ListNode temp = curr.next;
+			curr.next = prev;
+			prev = curr;
+			curr = temp;
+		}
+		return prev;
+	}
+}

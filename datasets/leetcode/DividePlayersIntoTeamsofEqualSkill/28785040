@@ -1,0 +1,42 @@
+class Solution {
+	long dividePlayers(int[] skill) {
+		int sum = 0;
+		long ans = 0;
+		int length = skill.length;
+		int teamSize = length / 2;
+		ArrayList<Integer> ls = new ArrayList<>();
+		HashMap<Integer, Integer> hm = new HashMap<>();
+		for (int s: skill) {	
+			hm.put(s,hm.getOrDefault(s,0) + 1);
+			sum += s;
+		}
+		if (sum % teamSize != 0) {
+			return -1;
+		}
+		int skillSum = sum / teamSize;
+		for (int i = 0; i < skill.length; i++) {
+			int comp = skillSum - skill[i];
+			if (hm.getOrDefault(comp,0) >= 1 && hm.getOrDefault(skill[i],0) >= 1) {
+				if (!hm.containsKey(comp) && !hm.containsKey(skill[i])) {
+					return -1;
+				}
+				ans = ans + (skill[i] * comp);
+				int f1 = hm.get(skill[i]);
+				f1--;
+				hm.put(skill[i],f1);
+				int f2 = hm.get(comp);
+				f2--;
+				hm.put(comp,f2);
+			}
+		}
+		for (Map.Entry entry: hm.entrySet()) {	
+			if ((Integer) entry.getValue() > 0) {
+				return -1;
+			}
+		}
+		if (ans == 0) {
+			return -1;
+		}
+		return ans;
+	}
+}

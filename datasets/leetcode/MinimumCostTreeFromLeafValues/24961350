@@ -1,0 +1,29 @@
+class Solution {
+	int[][] tempResult;
+	int getMin(int[] arr, int start, int end) {
+		if (start == end) {
+			return 0;
+		}
+		if (tempResult[start][end] != 0) {
+			return tempResult[start][end];
+		}
+		int smallestAns = Integer.MAX_VALUE;
+		for (int i = start; i < end; i++) {
+			int maxLeft = 0, maxRight = 0;
+			for (int j = start; j <= i; j++) {
+				maxLeft = Math.max(maxLeft,arr[j]);
+			}
+			for (int j = i + 1; j <= end; j++) {
+				maxRight = Math.max(maxRight,arr[j]);
+			}
+			smallestAns = Math.min(smallestAns,maxLeft * maxRight + getMin(arr,start,i) + getMin(arr,i + 1,end));
+			tempResult[start][end] = smallestAns;
+		}
+		return smallestAns;
+	}
+	int mctFromLeafValues(int[] arr) {
+		int n = arr.length - 1;
+		tempResult = new int[n + 1][n + 1];
+		return getMin(arr,0,n);
+	}
+}

@@ -1,0 +1,23 @@
+class Solution {
+	Map<Integer, Integer> map = new HashMap<>();
+	TreeNode reBuild(int[] preOrder, int pl, int pr, int[] vinOrder, int vl, int vr) {
+		TreeNode node = new TreeNode(preOrder[pl]);
+		int vinIndex = map.get(preOrder[pl]);
+		if (pl + 1 <= pl + vinIndex - vl) {
+			node.left = reBuild(preOrder,pl + 1,pl + vinIndex - vl,vinOrder,vl,vinIndex - 1);
+		}
+		if (pl + vinIndex - vl + 1 <= pr) {
+			node.right = reBuild(preOrder,pl + vinIndex - vl + 1,pr,vinOrder,vinIndex + 1,vr);
+		}
+		return node;
+	}
+	TreeNode reConstructBinaryTree(int[] preOrder, int[] vinOrder) {
+		if (preOrder.length == 0) {
+			return null;
+		}
+		for (int i = 0; i < vinOrder.length; ++i) {
+			map.put(vinOrder[i],i);
+		}
+		return reBuild(preOrder,0,preOrder.length - 1,vinOrder,0,vinOrder.length - 1);
+	}
+}

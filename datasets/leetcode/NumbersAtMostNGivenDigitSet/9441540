@@ -1,0 +1,57 @@
+class Solution {
+	int atMostNGivenDigitSet(String[] digits, int n) {
+		int[] ds = new int[digits.length];
+		for (int i = 0; i < digits.length; i++) {
+			ds[i] = Integer.parseInt(digits[i]);
+		}
+		int len = digits.length, c = len;
+		int highest = n;
+		List<Integer> list = new ArrayList<>();
+		list.add(0);
+		while (highest >= 10) {
+			list.add(c);
+			c = c * len;
+			highest = highest / 10;
+		}
+		int[] memo = new int[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			memo[i] = list.get(i);
+		}
+		return helper(ds,n,memo,true);
+	}
+	int helper(int[] digits, int n, int[] memo, boolean firstComputing) {
+		int count = 0;
+		if (n <= 0) {
+			return 0;
+		}
+		if (n <= 10) {
+			for (int i = 0; i < digits.length; i++) {
+				if (digits[i] <= n) {
+					count += 1;
+				}
+			}
+			return count;
+		}
+		int highest = n;
+		int num = 0;
+		while (highest >= 10) {
+			highest = highest / 10;
+			num += 1;
+			if (firstComputing) {
+				count += memo[num];
+			}
+		}
+		for (int i = 0; i < digits.length; i++) {
+			if (digits[i] < highest) {
+				count += memo[num];
+			} 
+			else if (digits[i] == highest) {
+				int k = n - highest * (int) Math.pow(10,num);
+				if (k >= (int) Math.pow(10,num - 1)) {
+					count += helper(digits,k,memo,false);
+				}
+			}
+		}
+		return count;
+	}
+}

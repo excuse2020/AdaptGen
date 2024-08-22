@@ -1,0 +1,53 @@
+class Solution {
+	int helper(int start, int end, ArrayList<Integer> nums) {
+		int sum = 0;
+		while (start < end) {
+			sum = sum + nums.get(start++);
+		}
+		if (start == end) {
+			sum += nums.get(start);
+		}
+		return sum;
+	}
+	boolean helper2(ArrayList<Integer> nums) {
+		int n = nums.size();
+		for (int i = 0; i < n - 1; i++) {
+			for (int j = i + 1; j < n; j++) {
+				if (helper(i,j,nums) == 0) {
+					int current = i;
+					while (j >= i) {
+						nums.remove(current);
+						j--;
+					}
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	ListNode removeZeroSumSublists(ListNode head) {
+		ArrayList<Integer> nums = new ArrayList<>();
+		ListNode temp = head;
+		while (temp != null) {
+			if (temp.val != 0) {
+				nums.add(temp.val);
+			}
+			temp = temp.next;
+		}
+		while (!helper2(nums) && nums.size() != 0) {
+		}
+		if (nums.size() == 0) {
+			System.gc();
+			return null;
+		}
+		ListNode res = new ListNode(nums.get(0));
+		ListNode tail = res;
+		for (int i = 1; i < nums.size(); i++) {
+			ListNode temp1 = new ListNode(nums.get(i));
+			tail.next = temp1;
+			tail = temp1;
+		}
+		System.gc();
+		return res;
+	}
+}

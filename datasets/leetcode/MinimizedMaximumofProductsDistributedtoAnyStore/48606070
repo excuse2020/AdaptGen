@@ -1,0 +1,24 @@
+class Solution {
+	boolean canDeliver(int stores, int[] quantities, int ratio) {
+		int qi = 0, deliveredStores = 0;
+		while (qi < quantities.length && deliveredStores < stores) {
+			deliveredStores += (quantities[qi] / ratio);
+			deliveredStores += (quantities[qi] % ratio == 0 ? 0 : 1);
+			qi++;
+		}
+		return deliveredStores <= stores && qi == quantities.length;
+	}
+	int minimizedMaximum(int n, int[] quantities) {
+		int low = 1, high = 100000, pivot;
+		while (low <= high) {
+			pivot = low + (high - low) / 2;
+			if (canDeliver(n,quantities,pivot)) {
+				high = pivot - 1;
+			} 
+			else {
+				low = pivot + 1;
+			}
+		}
+		return low;
+	}
+}

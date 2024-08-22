@@ -1,0 +1,26 @@
+class Solution {
+	List<Integer>[] nbr;
+	int[] times;
+	int dfs(int u) {
+		int time = 0;
+		for (int v: nbr[u]) {	
+			time = Math.max(time,dfs(v));
+		}
+		return time + times[u];
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		nbr = new ArrayList[n];
+		times = informTime;
+		for (int i = 0; i < n; i++) {
+			nbr[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < n; i++) {
+			if (i == headID) {
+				continue;
+			}
+			int u = manager[i], v = i;
+			nbr[u].add(v);
+		}
+		return dfs(headID);
+	}
+}

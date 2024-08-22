@@ -1,0 +1,39 @@
+class Solution {
+	void backtrack(int n, int open, int close, StringBuilder str, ArrayList<String> res) {
+		if (2 * n == str.length()) {
+			if (check(str.toString())) {
+				res.add(str.toString());
+			}
+			return;
+		}
+		if (open < n) {
+			str.append("(");
+			backtrack(n,open + 1,close,str,res);
+			str.deleteCharAt(str.length() - 1);
+		}
+		if (close < n) {
+			str.append(")");
+			backtrack(n,open,close + 1,str,res);
+			str.deleteCharAt(str.length() - 1);
+		}
+	}
+	boolean check(String str) {
+		Deque<Character> stack = new LinkedList<>();
+		for (char ch: str.toCharArray()) {	
+			if (ch == ')') {
+				if (stack.isEmpty() || stack.pop() != '(') {
+					return false;
+				}
+			} 
+			else {
+				stack.push(ch);
+			}
+		}
+		return stack.isEmpty();
+	}
+	ArrayList<String> generateParenthesis(int n) {
+		ArrayList<String> res = new ArrayList<String>();
+		backtrack(n,0,0,new StringBuilder(),res);
+		return res;
+	}
+}

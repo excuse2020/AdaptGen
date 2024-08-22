@@ -1,0 +1,23 @@
+class Solution {
+	List<String> subdomainVisits(String[] cpdomains) {
+		Map<String, Integer> countMap = new HashMap<>();
+		for (String entry: cpdomains) {	
+			String vals = entry.split(" ");
+			int count = Integer.parseInt(vals[0]);
+			String val = vals[1];
+			countMap.put(val,countMap.getOrDefault(val,0) + count);
+			String[] valArray = val.split("\\\\.");
+			String valEntrySuffix = "";
+			for (int i = valArray.length - 1; i >= 1; i--) {
+				String valArrayEntry = valArray[i] + valEntrySuffix;
+				valEntrySuffix = "." + valArrayEntry;
+				countMap.put(valArrayEntry,countMap.getOrDefault(valArrayEntry,0) + count);
+			}
+		}
+		List<String> result = new ArrayList<>();
+		for (Map.Entry<String, Integer> entry: countMap.entrySet()) {	
+			result.add("" + entry.getValue());
+		}
+		return result;
+	}
+}

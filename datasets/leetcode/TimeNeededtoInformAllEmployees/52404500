@@ -1,0 +1,24 @@
+class Solution {
+	int ans = 0;
+	void findMaxInformTime(int employeeID, int[] informTime, HashMap<Integer, List<Integer>> graph, int time) {
+		if (graph.get(employeeID) == null) {
+			ans = Math.max(ans,time);
+			return;
+		}
+		List<Integer> subordinates = graph.get(employeeID);
+		for (Integer subordinateID: subordinates) {	
+			findMaxInformTime(subordinateID,informTime,graph,time + informTime[employeeID]);
+		}
+		return;
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		HashMap<Integer, List<Integer>> graph = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			List<Integer> subordinates = graph.getOrDefault(manager[i],new ArrayList<Integer>());
+			subordinates.add(i);
+			graph.put(manager[i],subordinates);
+		}
+		findMaxInformTime(headID,informTime,graph,0);
+		return ans;
+	}
+}

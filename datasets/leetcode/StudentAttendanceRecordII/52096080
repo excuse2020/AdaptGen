@@ -1,0 +1,24 @@
+class Solution {
+	int K = (int) 1e9 + 7;
+	int[][][] memo;
+	int checkRecord(int n) {
+		this.memo = new int[n + 1][2][3];
+		return dp(0,0,0,n);
+	}
+	int dp(int day, int absent, int late, int n) {
+		if (absent >= 2 || late >= 3) {
+			return 0;
+		}
+		if (day == n) {
+			return 1;
+		}
+		if (memo[day][absent][late] == 0) {
+			int sum = 0;
+			sum = (sum + dp(day + 1,absent,0,n)) % K;
+			sum = (sum + dp(day + 1,absent,late + 1,n)) % K;
+			sum = (sum + dp(day + 1,absent + 1,0,n)) % K;
+			memo[day][absent][late] = sum;
+		}
+		return memo[day][absent][late];
+	}
+}

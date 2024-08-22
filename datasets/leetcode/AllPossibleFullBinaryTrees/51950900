@@ -1,0 +1,35 @@
+class Solution {
+	List<TreeNode> allPossibleFBT(int n) {
+		Map<Integer, List<TreeNode>> map = new HashMap<>();
+		return helper(n,map);
+	}
+	List<TreeNode> helper(int n, Map<Integer, List<TreeNode>> map) {
+		List<TreeNode> list = new ArrayList<>();
+		if (n % 2 == 0) {
+			return list;
+		}
+		if (map.get(n) != null) {
+			return map.get(n);
+		}
+		if (n == 1) {
+			list.add(new TreeNode(0));
+			map.put(n,list);
+			return list;
+		}
+		for (int left = 1; left < n; left++) {
+			int right = n - 1;
+			List<TreeNode> leftsubtree = helper(left,map);
+			List<TreeNode> rightsubtree = helper(right,map);
+			for (TreeNode l: leftsubtree) {	
+				for (TreeNode r: rightsubtree) {	
+					TreeNode root = new TreeNode(0);
+					root.left = l;
+					root.right = r;
+					list.add(root);
+				}
+			}
+		}
+		map.put(n,list);
+		return list;
+	}
+}

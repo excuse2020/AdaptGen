@@ -1,0 +1,25 @@
+class Solution {
+	int ans = -1;
+	int longestCycle(int[] edges) {
+		int l = edges.length;
+		boolean[] visited = new boolean[l];
+		for (int i = 0; i < l; i++) {
+			if (!visited[i]) {
+				updateLongestCycle(i,visited,edges,new HashMap<>(),0);
+			}
+		}
+		return ans;
+	}
+	void updateLongestCycle(int currentNode, boolean[] visited, int[] edges, Map<Integer, Integer> lastStep, int d) {
+		if (lastStep.containsKey(currentNode)) {
+			ans = Math.max(ans,d - lastStep.get(currentNode));
+			return;
+		}
+		if (currentNode == -1 || visited[currentNode]) {
+			return;
+		}
+		visited[currentNode] = true;
+		lastStep.put(currentNode,d);
+		updateLongestCycle(edges[currentNode],visited,edges,lastStep,d + 1);
+	}
+}

@@ -1,0 +1,67 @@
+class Solution {
+	ArrayList<ArrayList<Integer>> graph;
+	boolean find(int src, int dest, int[] visitCount, int parent) {
+		visitCount[src]++;
+		if (src == dest) {
+			return true;
+		}
+		for (int nbr: graph.get(src)) {	
+			if (nbr != parent) {
+				boolean f1 = find(nbr,dest,visitCount,src);
+				if (f1) {
+					return true;
+				}
+			}
+		}
+		visitCount[src]--;
+		return false;
+	}
+	int min(int node, int[] cost, int[][] dp, int parent, int color) {
+		if (dp[node][color] != -1) {
+			return dp[node][color];
+		}
+		int x = 0;
+		int y = 0;
+		for (int nbr: graph.get(node)) {	
+			if (nbr != parent) {
+				x += min(nbr,cost,dp,node,0);
+				if (color == 0) {
+					y += min(nbr,cost,dp,node,1);
+				}
+			}
+		}
+		if (color == 1) {
+			return dp[node][color] = x + (cost[node]);
+		}
+		return dp[node][color] = Math.min(x + cost[node],y + (cost[node] / 2));
+	}
+	int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
+		graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			int u = edges[i][0];
+			int v = edges[i][1];
+			graph.get(u).add(v);
+			graph.get(v).add(u);
+		}
+		int[] visitCount = new int[n];
+		for (int i = 0; i < trips.length; i++) {
+			int src = trips[i][0];
+			int des = trips[i][1];
+			find(src,des,visitCount,-1);
+		}
+		int[] cost = new int[n];
+		for (int i = 0; i < n; i++) {
+			cost[i] = price[i] * visitCount[i];
+		}
+		int[][] dp = new int[n][2];
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < 2; j++) {
+				dp[i][j] = -1;
+			}
+		}
+		return min(0,cost,dp,-1,0);
+	}
+}

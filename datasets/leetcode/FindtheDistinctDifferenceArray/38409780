@@ -1,0 +1,28 @@
+class Solution {
+	int[] distinctDifferenceArray(int[] nums) {
+		int n = nums.length;
+		int[] distinctElementsPrefix = new int[n + 1];
+		int[] prefixCounts = new int[51];
+		int curNumDistinctElementsPrefix = 0;
+		int[] distinctElementsSuffix = new int[n + 1];
+		int[] suffixCounts = new int[51];
+		int curNumDistinctElementsSuffix = 0;
+		for (int i = 0, j = nums.length - 1; i < nums.length; ++i, --j) {
+			++prefixCounts[nums[i]];
+			if (prefixCounts[nums[i]] == 1) {
+				++curNumDistinctElementsPrefix;
+			}
+			distinctElementsPrefix[i] = curNumDistinctElementsPrefix;
+			++suffixCounts[nums[j]];
+			if (suffixCounts[nums[j]] == 1) {
+				++curNumDistinctElementsSuffix;
+			}
+			distinctElementsSuffix[j] = curNumDistinctElementsSuffix;
+		}
+		int[] diff = new int[n];
+		for (int i = 0; i < n; ++i) {
+			diff[i] = distinctElementsPrefix[i] - distinctElementsSuffix[i + 1];
+		}
+		return diff;
+	}
+}

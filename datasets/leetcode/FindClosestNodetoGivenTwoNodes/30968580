@@ -1,0 +1,30 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		int[] disNode1 = new int[edges.length];
+		int[] disNode2 = new int[edges.length];
+		Arrays.fill(disNode1,Integer.MAX_VALUE);
+		Arrays.fill(disNode2,Integer.MAX_VALUE);
+		dfs(new HashSet<>(),node1,disNode1,edges,0);
+		dfs(new HashSet<>(),node2,disNode2,edges,0);
+		int idx = -1;
+		for (int i = 0; i < edges.length; i++) {
+			if (disNode1[i] != Integer.MAX_VALUE && disNode2[i] != Integer.MAX_VALUE) {
+				if (idx == -1 || Math.max(disNode1[i],disNode2[i]) < Math.max(disNode1[idx],disNode2[idx])) {
+					idx = i;
+				}
+			}
+		}
+		return idx;
+	}
+	void dfs(Set<Integer> visited, int curNode, int[] disNode, int[] edges, int dis) {
+		if (visited.contains(curNode)) {
+			return;
+		}
+		visited.add(curNode);
+		disNode[curNode] = dis;
+		if (edges[curNode] == -1) {
+			return;
+		}
+		dfs(visited,edges[curNode],disNode,edges,dis + 1);
+	}
+}

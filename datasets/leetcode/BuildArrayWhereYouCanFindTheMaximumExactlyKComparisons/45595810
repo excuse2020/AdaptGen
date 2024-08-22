@@ -1,0 +1,32 @@
+class Solution {
+	int M = (int) 1e9 + 7;
+	int numOfArrays(int n, int m, int k) {
+		if (k == 0 || k > m) {
+			return 0;
+		}
+		if (n == 1) {
+			return m;
+		}
+		long[][] prevDp = new long[m + 1][k + 1];
+		for (int max = 1; max <= m; max++) {
+			prevDp[max][1] = 1;
+		}
+		long total = 0;
+		for (int i = 2; i <= n; i++) {
+			long[][] dp = new long[m + 1][k + 1];
+			for (int max = 1; max <= m; max++) {
+				for (int c = 1; c <= k; c++) {
+					dp[max][c] = prevDp[max][c] * max % M;
+					for (int lowerMax = 1; lowerMax < max; lowerMax++) {
+						dp[max][c] = (dp[max][c] + prevDp[lowerMax][c - 1]) % M;
+					}
+					if (i == n) {
+						total = (total + dp[max][k]) % M;
+					}
+				}
+			}
+			prevDp = dp;
+		}
+		return (int) (total % M);
+	}
+}

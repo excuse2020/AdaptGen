@@ -1,0 +1,32 @@
+class Solution {
+	int MOD = (int) 1e9 + 7;
+	Long[] segTree;
+	void construct(int start, int end, int segIdx, int[] arr) {
+		if (start == end) {
+			segTree[segIdx] = (long) arr[start];
+			return;
+		}
+		int mid = start + (end - start) / 2;
+		construct(start,mid,2 * segIdx,arr);
+		construct(mid + 1,end,2 * segIdx + 1,arr);
+		segTree[segIdx] = segTree[2 * segIdx] * segTree[2 * segIdx + 1] % MOD;
+	}
+	int[] productQueries(int n, int[][] queries) {
+		ArrayList<Integer> powers = new ArrayList<>();
+		String bi = Integer.toBinaryString(n);
+		int pow = 0;
+		int i = bi.length() - 1;
+	}
+	long query(int start, int end, int qStart, int qEnd, int segIdx) {
+		if (qEnd < start || qStart > end) {
+			return (long) 1;
+		}
+		if (qStart <= start && qEnd >= end) {
+			return segTree[segIdx];
+		}
+		int mid = start + (end - start) / 2;
+		long left = query(start,mid,qStart,qEnd,2 * segIdx);
+		long right = query(mid + 1,end,qStart,qEnd,2 * segIdx + 1);
+		return left * right % MOD;
+	}
+}

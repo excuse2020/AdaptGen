@@ -1,0 +1,46 @@
+class Solution {
+	int result = 0;
+	int amountOfTime(TreeNode root, int start) {
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < 100001; i++) {
+			adj.add(new ArrayList<>());
+		}
+		boolean[] visited = new boolean[100001];
+		createAdjMatrix(root,adj);
+		calculateInfectedTime(start,visited,adj);
+		return result - 1;
+	}
+	void calculateInfectedTime(int start, boolean[] visited, List<List<Integer>> adj) {
+		Queue<Integer> queue = new LinkedList<>();
+		queue.add(start);
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			while (size-- > 0) {
+				int value = queue.remove();
+				visited[value] = true;
+				for (int i = 0; i < adj.get(value).size(); i++) {
+					if (!visited[adj.get(value).get(i)]) {
+						queue.add(adj.get(value).get(i));
+					}
+				}
+			}
+			result++;
+		}
+	}
+	void createAdjMatrix(TreeNode node, List<List<Integer>> adj) {
+		if (node == null) {
+			return;
+		}
+		int value = node.val;
+		if (node.left != null) {
+			adj.get(value).add(node.left.val);
+			adj.get(node.left.val).add(value);
+		}
+		if (node.right != null) {
+			adj.get(value).add(node.right.val);
+			adj.get(node.right.val).add(value);
+		}
+		createAdjMatrix(node.left,adj);
+		createAdjMatrix(node.right,adj);
+	}
+}

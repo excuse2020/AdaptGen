@@ -1,0 +1,53 @@
+class Solution {
+	int[] convertLstToArr(List<Integer> lst) {
+		int[] arr = new int[lst.size()];
+		for (int i = 0; i < lst.size(); i++) {
+			arr[i] = lst.get(i);
+		}
+		return arr;
+	}
+	int[] findOrder(int numOfCourses, int[][] preRequisites) {
+		int[] indegree = new int[numOfCourses];
+		List<List<Integer>> adjLst = getAdjLstSetIndegree(numOfCourses,preRequisites,indegree);
+		Queue<Integer> q = new LinkedList<>();
+		for (int crs = 0; crs < numOfCourses; crs++) {
+			if (indegree[crs] == 0) {
+				q.add(crs);
+			}
+		}
+		List<Integer> toposort = getToposortByKahnsAlgo(q,adjLst,indegree);
+		if (toposort.size() == numOfCourses) {
+			int[] courseOrder = convertLstToArr(toposort);
+			return courseOrder;
+		}
+		int[] emptyArray = new int[0];
+		return emptyArray;
+	}
+	List<List<Integer>> getAdjLstSetIndegree(int v, int[][] preRequisites, int[] indegree) {
+		List<List<Integer>> adjLst = new ArrayList<>();
+		for (int i = 0; i < v; i++) {
+			adjLst.add(new ArrayList<>());
+		}
+		for (int[] preRequisite: preRequisites) {	
+			int crsToBeComlpeted = preRequisite[0];
+			int crsRequired = preRequisite[1];
+			indegree[crsToBeComlpeted]++;
+			adjLst.get(crsRequired).add(crsToBeComlpeted);
+		}
+		return adjLst;
+	}
+	List<Integer> getToposortByKahnsAlgo(Queue<Integer> q, List<List<Integer>> adjLst, int[] indegree) {
+		List<Integer> toposort = new ArrayList<>();
+		while (q.size() > 0) {
+			int curCrs = q.remove();
+			toposort.add(curCrs);
+			for (int nbrCrs: adjLst.get(curCrs)) {	
+				indegree[nbrCrs]--;
+				if (indegree[nbrCrs] == 0) {
+					q.add(nbrCrs);
+				}
+			}
+		}
+		return toposort;
+	}
+}

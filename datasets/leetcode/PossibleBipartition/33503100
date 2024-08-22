@@ -1,0 +1,41 @@
+class Solution {
+	boolean pass = true;
+	List<Integer>[] buildGraph(int n, int[][] dislikes) {
+		List<Integer>[] adjacency = new ArrayList[n + 1];
+		for (int i = 1; i <= n; i++) {
+			adjacency[i] = new ArrayList<>();
+		}
+		for (int[] pair: dislikes) {	
+			adjacency[pair[0]].add(pair[1]);
+			adjacency[pair[1]].add(pair[0]);
+		}
+		return adjacency;
+	}
+	void dfs(int curr, List<Integer>[] adjacency, boolean[] visited, boolean[] color) {
+		if (!pass) {
+			return;
+		}
+		visited[curr] = true;
+		for (int neighbor: adjacency[curr]) {	
+			if (!visited[neighbor]) {
+				color[neighbor] = !color[curr];
+				dfs(neighbor,adjacency,visited,color);
+			} 
+			else {
+				if (color[curr] == color[neighbor]) {
+					pass = false;
+					return;
+				}
+			}
+		}
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		boolean[] visited = new boolean[n + 1];
+		boolean[] color = new boolean[n + 1];
+		List<Integer>[] adjacency = buildGraph(n,dislikes);
+		for (int i = 1; i <= n; i++) {
+			dfs(i,adjacency,visited,color);
+		}
+		return pass;
+	}
+}

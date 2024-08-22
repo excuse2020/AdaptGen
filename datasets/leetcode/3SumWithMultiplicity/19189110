@@ -1,0 +1,39 @@
+class Solution {
+	int mod = 1000000007;
+	int threeSumMulti(int[] arr, int target) {
+		long count = new long[101];
+		int mx = 0;
+		for (int x: arr) {	
+			mx = mx < x ? x : mx;
+			count[x]++;
+		}
+		int n = Math.min(mx,target);
+		long res = 0;
+		for (int i = 0; i <= n; i++) {
+			if (count[i] == 0) {
+				continue;
+			}
+			for (int j = i; j <= n; j++) {
+				if (count[j] == 0) {
+					continue;
+				}
+				int k = target - i;
+				if (k >= j && k <= n && count[k] > 0) {
+					if (i == j && j == k) {
+						res = (res + (count[i] * (count[i] - 1)) / 6) % mod;
+					} 
+					else if (i == j) {
+						res = (res + count[k] * (count[i] * (count[i] - 1)) / 2) % mod;
+					} 
+					else if (j == k) {
+						res = (res + count[i] * (count[j] * (count[j] - 1)) / 2) % mod;
+					} 
+					else {
+						res = (res + count[i] * count[j]);
+					}
+				}
+			}
+		}
+		return (int) res;
+	}
+}

@@ -1,0 +1,22 @@
+class Solution {
+	HashMap<Integer, Integer> mp = new HashMap<Integer, Integer>();
+	int FindPath(TreeNode root, int sum) {
+		mp.put(0,1);
+		return dfs(root,sum,0);
+	}
+	int dfs(TreeNode root, int sum, int last) {
+		if (root == null) {
+			return 0;
+		}
+		int res = 0;
+		int temp = root.val + last;
+		if (mp.containsKey(temp - sum)) {
+			res += mp.get(temp - sum);
+		}
+		mp.put(temp,mp.getOrDefault(temp,0) + 1);
+		res += dfs(root.left,sum,temp);
+		res += dfs(root.right,sum,temp);
+		mp.put(temp,mp.get(temp) - 1);
+		return res;
+	}
+}

@@ -1,0 +1,71 @@
+class Solution {
+	TreeNode buildTree(int[] preOrder, int[] inOrder) {
+		int len = preOrder.length;
+		if (len == 0) {
+			return null;
+		}
+		HashMap<Integer, Integer> mapOfIndex = new HashMap<>();
+		for (int i = 0; i < inOrder.length; i++) {
+			mapOfIndex.put(inOrder[i],i);
+		}
+		TreeNode root = treeInit(mapOfIndex,preOrder,0,len - 1,inOrder,0,len - 1);
+		return root;
+	}
+	int[] solve(int[] preOrder, int[] midOrder) {
+		int len = preOrder.length;
+		TreeNode root = buildTree(preOrder,midOrder);
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(root);
+		List<Integer> resList = new ArrayList<>();
+		int count = 1;
+		int next = 0;
+		while (!queue.isEmpty()) {
+			for (int i = count; i > 0; i--) {
+				TreeNode tempTreeNode = queue.poll();
+				if (tempTreeNode.left != null) {
+					queue.add(tempTreeNode.left);
+					next++;
+				}
+				if (tempTreeNode.right != null) {
+					queue.add(tempTreeNode.right);
+					next++;
+				}
+				if (i == 1) {
+					resList.add(tempTreeNode.val);
+				}
+			}
+			count = next;
+			next = 0;
+		}
+		int[] resArr = new int[resList.size()];
+		for (int i = 0; i < resArr.length; i++) {
+			resArr[i] = resList.get(i);
+		}
+		return resArr;
+	}
+	TreeNode treeInit(HashMap<Integer, Integer> mapOfIndex, int[] preOrder, int preBegin, int preEnd, int[] midOrder, int midBegin, int midEnd) {
+		TreeNode root = new TreeNode(preOrder[preBegin]);
+		int indexOfRootInMidOrder = mapOfIndex.get(preOrder[preBegin]);
+		int lenOfLeft = indexOfRootInMidOrder - midBegin;
+		int lenOfRight = midEnd - indexOfRootInMidOrder;
+		TreeNode left = null;
+		TreeNode right = null;
+		if (lenOfLeft != 0) {
+			int preBeginLeft = preBegin + 1;
+			int preEndLeft = preBeginLeft + lenOfLeft - 1;
+			int midBeginLeft = midBegin;
+			int midEndLeft = indexOfRootInMidOrder - 1;
+			left = treeInit(mapOfIndex,preOrder,preBeginLeft,preEndLeft,midOrder,midBeginLeft,midEndLeft);
+		}
+		if (lenOfRight != 0) {
+			int preEndRight = preEnd;
+			int preBeginRight = preEndRight - lenOfRight + 1;
+			int midBeginRight = indexOfRootInMidOrder + 1;
+			int midEndRight = midEnd;
+			right = treeInit(mapOfIndex,preOrder,preBeginRight,preEndRight,midOrder,midBeginRight,midEndRight);
+		}
+		root.left = left;
+		root.right = right;
+		return root;
+	}
+}

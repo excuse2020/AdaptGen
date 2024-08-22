@@ -1,0 +1,43 @@
+class Solution {
+	List<Integer> bs(List<Integer> arr, int target) {
+		List<Integer> ans = new ArrayList<>(2);
+		ans.add(-1);
+		ans.add(-1);
+		int s = 0;
+		int e = arr.size() - 1;
+		while (s <= e) {
+			int m = s + (e - s) / 2;
+			if (arr.get(m) == target) {
+				ans.set(0,arr.get(m));
+				ans.set(1,arr.get(m));
+				return ans;
+			}
+			if (arr.get(m) > target) {
+				ans.set(1,arr.get(m));
+				e = m - 1;
+			} 
+			else {
+				ans.set(0,arr.get(m));
+				s = m + 1;
+			}
+		}
+		return ans;
+	}
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		List<List<Integer>> outer = new ArrayList<>();
+		List<Integer> arr = new ArrayList<>();
+		inorder(root,arr);
+		for (int i = 0; i < queries.size(); i++) {
+			outer.add(bs(arr,queries.get(i)));
+		}
+		return outer;
+	}
+	void inorder(TreeNode node, List<Integer> list) {
+		if (node == null) {
+			return;
+		}
+		inorder(node.left,list);
+		list.add(node.val);
+		inorder(node.right,list);
+	}
+}

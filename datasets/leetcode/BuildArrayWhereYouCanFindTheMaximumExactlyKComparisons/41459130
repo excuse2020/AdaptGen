@@ -1,0 +1,38 @@
+class Solution {
+	int MOD = 1000000007;
+	int N, M, K;
+	int[][][] dp;
+	int numOfArrays(int n, int m, int k) {
+		N = n;
+		M = m;
+		K = k;
+		dp = new int[51][51][101];
+		for (int i = 0; i < 51; i++) {
+			for (int j = 0; j < 51; j++) {
+				Arrays.fill(dp[i][j],-1);
+			}
+		}
+		return solve(0,0,0);
+	}
+	int solve(int idx, int cost, int max_sf) {
+		if (idx == N) {
+			if (cost == K) {
+				return 1;
+			}
+			return 0;
+		}
+		if (dp[idx][cost][max_sf] != -1) {
+			return dp[idx][cost][max_sf];
+		}
+		int result = 0;
+		for (int i = 1; i <= M; i++) {
+			if (i > max_sf) {
+				result = (result + solve(idx + 1,cost + 1,i)) % MOD;
+			} 
+			else {
+				result = (result + solve(idx + 1,cost,max_sf)) % MOD;
+			}
+		}
+		return dp[idx][cost][max_sf] = result % MOD;
+	}
+}

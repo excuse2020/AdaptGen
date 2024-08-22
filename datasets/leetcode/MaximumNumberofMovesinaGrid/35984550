@@ -1,0 +1,31 @@
+class Solution {
+	int[][] visited;
+	int dfs(int[][] grid, int row, int col, int n, int m) {
+		if (this.visited[row][col] != Integer.MIN_VALUE) {
+			return this.visited[row][col];
+		}
+		int maxMoves = 0;
+		if (row - 1 >= 0 && col + 1 < m && grid[row - 1][col + 1] > grid[row][col]) {
+			maxMoves = dfs(grid,row - 1,col + 1,n,m) + 1;
+		}
+		if (col + 1 < m && grid[row][col + 1] > grid[row][col]) {
+			maxMoves = Math.max(maxMoves,dfs(grid,row,col + 1,n,m) + 1);
+		}
+		if (row + 1 < n && col + 1 < m && grid[row + 1][col + 1] > grid[row][col]) {
+			maxMoves = Math.max(maxMoves,dfs(grid,row + 1,col + 1,n,m) + 1);
+		}
+		this.visited[row][col] = maxMoves;
+		return maxMoves;
+	}
+	int maxMoves(int[][] grid) {
+		int n = grid.length;
+		int m = grid[0].length;
+		this.visited = new int[n][m];
+		Arrays.stream(this.visited).forEach((array) -> {Arrays.fill(array,Integer.MIN_VALUE)});
+		int maximumNumberOfMoves = 0;
+		for (int i = 0; i < n; i++) {
+			maximumNumberOfMoves = Math.max(maximumNumberOfMoves,dfs(grid,i,0,n,m));
+		}
+		return maximumNumberOfMoves;
+	}
+}

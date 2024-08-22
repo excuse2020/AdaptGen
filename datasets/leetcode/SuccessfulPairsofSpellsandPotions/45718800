@@ -1,0 +1,20 @@
+class Solution {
+	int[] successfulPairs(int[] spells, int[] potions, long success) {
+		int[] cumulativeSum = new int[100_001];
+		for (int index = 0; index < potions.length; ++index) {
+			cumulativeSum[potions[index]]++;
+		}
+		for (int index = cumulativeSum.length - 2; index >= 0; index--) {
+			cumulativeSum[index] += cumulativeSum[index + 1];
+		}
+		int[] result = new int[spells.length];
+		for (int index = 0; index < result.length; ++index) {
+			long minValue = (long) Math.ceil((double) success / spells[index]);
+			if (minValue > cumulativeSum.length - 1) {
+				continue;
+			}
+			result[index] = cumulativeSum[(int)minValue];
+		}
+		return result;
+	}
+}

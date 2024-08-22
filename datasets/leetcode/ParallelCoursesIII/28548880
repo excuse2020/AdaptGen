@@ -1,0 +1,23 @@
+class Solution {
+	HashMap<Integer, List<Integer>> vertices = new HashMap<>();
+	int minTimeCompletionDfs(int[] tasks, int[][] dependencies, int size) {
+		IntStream.rangeClosed(1,size).forEach((u) -> {vertices.put(u,new ArrayList<>())});
+		Arrays.stream(dependencies).forEach((dep) -> {vertices.get(dep[0]).add(dep[1])});
+		Integer[] DP = new Integer[size + 1];
+		int max = 0;
+		for (int u = 1; u <= size; u++) {
+			max = Math.max(minTimeCompletionDfs(u,tasks,DP),max);
+		}
+		return max;
+	}
+	int minTimeCompletionDfs(int u, int[] tasks, Integer[] DP) {
+		if (DP[u] != null) {
+			return DP[u];
+		}
+		int max = 0;
+		for (int v: vertices.get(u)) {	
+			max = Math.max(minTimeCompletionDfs(v,tasks,DP),max);
+		}
+		return DP[u] = max + tasks[u - 1];
+	}
+}

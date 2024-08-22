@@ -1,0 +1,22 @@
+class Solution {
+	int[][] dp = new int[21][2 * 5001];
+	int solve(int[] rods, int ind, int diff) {
+		if (ind == rods.length) {
+			return diff == 0 ? 0 : -5000;
+		}
+		if (dp[ind][diff + 5001] != -1) {
+			return dp[ind][diff + 5001];
+		}
+		int op1 = 0, op2 = 0, op3 = 0;
+		op1 = rods[ind] + solve(rods,ind + 1,diff + rods[ind]);
+		op2 = solve(rods,ind + 1,diff - rods[ind]);
+		op3 = solve(rods,ind + 1,diff);
+		return dp[ind][diff + 5001] = Math.max(op1,Math.max(op2,op3));
+	}
+	int tallestBillboard(int[] rods) {
+		for (int[] row: dp) {	
+			Arrays.fill(row,-1);
+		}
+		return solve(rods,0,0);
+	}
+}

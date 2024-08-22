@@ -1,0 +1,42 @@
+class Solution {
+	int[] parent;
+	int[] size;
+	int find(int i) {
+		if (parent[i] == i) {
+			return i;
+		}
+		return parent[i] = find(parent[i]);
+	}
+	int removeStones(int[][] stones) {
+		int n = stones.length;
+		int ans = 0;
+		parent = new int[n];
+		size = new int[n];
+		for (int i = 0; i < n; i++) {
+			parent[i] = i;
+			size[i] = 1;
+		}
+		for (int i = 0; i < n; i++) {
+			for (int j = i + 1; j < n; j++) {
+				if (stones[i][0] == stones[j][0] || stones[i][1] == stones[j][1]) {
+					union(i,j);
+				}
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			if (size[i] > 1) {
+				ans += size[i] - 1;
+			}
+		}
+		return ans;
+	}
+	void union(int i, int j) {
+		int I = find(i);
+		int J = find(j);
+		if (I != J) {
+			parent[J] = I;
+			size[I] += size[J];
+			size[J] = 0;
+		}
+	}
+}

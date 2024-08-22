@@ -1,0 +1,31 @@
+class Solution {
+	int validSubarraySize(int[] nums, int threshold) {
+		int n = nums.length;
+		Stack<Integer> stack = new Stack<>();
+		int rightIndex = new int[n];
+		Arrays.fill(rightIndex,n);
+		for (int i = 0; i < n; ++i) {
+			while (!stack.isEmpty() && nums[stack.peek()] > nums[i]) {
+				rightIndex[stack.pop()] = i;
+			}
+			stack.add(i);
+		}
+		int leftIndex = new int[n];
+		Arrays.fill(leftIndex,-1);
+		stack.clear();
+		for (int i = n - 1; i >= 0; --i) {
+			while (!stack.isEmpty() && nums[stack.peek()] > nums[i]) {
+				leftIndex[stack.pop()] = i;
+			}
+			stack.add(i);
+		}
+		for (int i = 0; i < n; i++) {
+			int leftBound = leftIndex[i], rightBound = rightIndex[i];
+			int leftCount = i - leftBound, rightCount = rightBound - i;
+			if (nums[i] * (leftCount + rightCount) > threshold) {
+				return leftCount + rightCount;
+			}
+		}
+		return -1;
+	}
+}

@@ -1,0 +1,57 @@
+class Solution {
+	int count;
+	void createPQ(int[][] HM, PriorityQueue<Pair<Integer, int[]>> pq, boolean[][] vis) {
+		int n = HM.length - 1, m = HM[0].length - 1;
+		Arrays.fill(vis[0],true);
+		Arrays.fill(vis[n],true);
+		for (int i = 1; i < n; i++) {
+			vis[i][0] = vis[i][m] = true;
+			pq.add(new Pair<Integer, int[]>(HM[i][0], new int{i, 0}));
+			if (n > 1) {
+				pq.add(new Pair<Integer, int[]>(HM[i][m], new int{i, m}));
+			}
+		}
+		for (int i = 1; i < m; i++) {
+			pq.add(new Pair<Integer, int[]>(HM[0][i], new int{0, i}));
+			if (m > 1) {
+				pq.add(new Pair<Integer, int[]>(HM[n][i], new int{n, i}));
+			}
+		}
+	}
+	int trapRainWater(int[][] HM) {
+		int n = HM.length - 1, m = HM[0].length - 1;
+		boolean[][] vis = new boolean[n + 1][m + 1];
+		PriorityQueue<Pair<Integer, int[]>> pq;
+		pq = new PriorityQueue<>(Comparator.comparing());
+		createPQ(HM,pq,vis);
+		int vol = 0;
+		count = (n - 1) * (m - 1);
+		while (!pq.isEmpty()) {
+			Pair<Integer, int[]> pair = pq.remove();
+			int h = pair.getKey();
+			int i = pair.getValue()[0], j = pair.getValue()[1];
+			if (i < n && !vis[i + 1][j]) {
+				vol += waterAt(pq,vis,i + 1,j,h,HM[i + 1][j]);
+			}
+			if (i > 0 && !vis[i - 1][j]) {
+				vol += waterAt(pq,vis,i - 1,j,h,HM[i - 1][j]);
+			}
+			if (j < m && !vis[i][j + 1]) {
+				vol += waterAt(pq,vis,i,j + 1,h,HM[i][j + 1]);
+			}
+			if (j > 0 && !vis[i][j - 1]) {
+				vol += waterAt(pq,vis,i,j - 1,h,HM[i][j - 1]);
+			}
+			if (count < 1) {
+				return vol;
+			}
+		}
+		return vol;
+	}
+	int waterAt(PriorityQueue<Pair<Integer, int[]>> pq, boolean[][] vis, int i, int j, int h, int h1) {
+		count++;
+		vis[i][j] = true;
+		pq.add(new Pair<Integer, int[]>(Math.max(h,h1), new int{i, j}));
+		return Math.max(h - h1,0);
+	}
+}

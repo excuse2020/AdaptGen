@@ -1,0 +1,25 @@
+class Solution {
+	int MOD = 1_000_000_007;
+	int numberOfPaths(int[][] grid, int k) {
+		if (grid == null || grid.length == 0) {
+			return 0;
+		}
+		int m = grid.length, n = grid[0].length;
+		Integer[][][] dp = new Integer[m + 1][n + 1][k + 1];
+		return solve(m - 1,n - 1,grid,k,0,dp);
+	}
+	int solve(int m, int n, int[][] grid, int k, int sum, Integer[][][] dp) {
+		if (m < 0 || n < 0) {
+			return 0;
+		}
+		if (m == 0 && n == 0) {
+			return (sum + grid[0][0]) % k == 0 ? 1 : 0;
+		}
+		if (dp[m][n][sum % k] != null) {
+			return dp[m][n][sum % k];
+		}
+		int top = solve(m - 1,n,grid,k,sum + grid[m][n],dp) % MOD;
+		int left = solve(m,n - 1,grid,k,sum + grid[m][n],dp) % MOD;
+		return dp[m][n][sum % k] = (top + left) % MOD;
+	}
+}

@@ -1,0 +1,70 @@
+class Solution {
+	int N;
+	List<Integer>[] graph;
+	int getMax(int v, int[] subgroups) {
+		int subGroup = subgroups[v];
+		int[] g = new int[N];
+		boolean[] visited = new boolean[N];
+		int level = 0;
+		Queue<Integer> q = new LinkedList<>();
+		q.add(v);
+		g[v] = 1;
+		visited[v] = true;
+		while (!q.isEmpty()) {
+			level++;
+			int size = q.size();
+			for (int i = 0; i < size; i++) {
+				int c = q.poll();
+				int targetColor = (g[c] == 1) ? 2 : 1;
+				for (int u: graph[c]) {	
+					if (visited[u]) {
+						if (g[u] != targetColor) {
+							return -1;
+						}
+						continue;
+					}
+					visited[u] = true;
+					g[u] = targetColor;
+					subgroups[u] = subGroup;
+					q.add(u);
+				}
+			}
+		}
+		return level;
+	}
+	int magnificentSets(int n, int[][] edges) {
+		N = n;
+		graph = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int[] e: edges) {	
+			e[0]--;
+			e[1]--;
+			if (e[0] == e[1]) {
+				return -1;
+			}
+			graph[e[0]].add(e[1]);
+			graph[e[1]].add(e[0]);
+		}
+		int[] subgroups = new int[n];
+		int[] subgroupresults = new int[n + 1];
+		int currentgroup = 1;
+		for (int i = 0; i < n; i++) {
+			if (subgroups[i] == 0) {
+				subgroups[i] = currentgroup;
+				currentgroup++;
+			}
+			int currentRes = getMax(i,subgroups);
+			if (currentRes == -1) {
+				return -1;
+			}
+			subgroupresults[subgroups[i]] = Math.max(subgroupresults[subgroups[i]],currentRes);
+		}
+		int res = 0;
+		for (int i = 1; i <= n; i++) {
+			res += subgroupresults[i];
+		}
+		return res;
+	}
+}

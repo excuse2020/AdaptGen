@@ -1,0 +1,57 @@
+class Solution {
+	int FIRST_ISLAND = 2;
+	int TARGET_ISLAND = 1, LAND = 1;
+	int VISITED = 3;
+	int WATER = 0;
+	List<Integer[]> directions = List.of(new Integer{0, 1},new Integer{0, -1},new Integer{1, 0},new Integer{-1, 0});
+	Queue<Integer[]> queue = new ArrayDeque<>();
+	void dfs(int i, int j, int[][] grid) {
+		grid[i][j] = FIRST_ISLAND;
+		queue.add(new Integer{i, j});
+		for (Integer[] direction: directions) {	
+			int x = i + direction[0], y = j + direction[1];
+			if (isValid(x,y,grid) && grid[x][y] == LAND) {
+				dfs(x,y,grid);
+			}
+		}
+	}
+	void findFirstIsland(int[][] grid) {
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				if (grid[i][j] == LAND) {
+					dfs(i,j,grid);
+					return;
+				}
+			}
+		}
+	}
+	boolean isValid(int i, int j, int[][] grid) {
+		return i >= 0 && i < grid.length && j >= 0 && j < grid[0].length;
+	}
+	int shortestBridge(int[][] grid) {
+		findFirstIsland(grid);
+		int moves = 0;
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int count = 0; count < size; count++) {
+				Integer[] curr = queue.remove();
+				int i = curr[0], j = curr[1];
+				if (grid[i][j] == TARGET_ISLAND) {
+					return moves - 1;
+				}
+				if (grid[i][j] == VISITED) {
+					continue;
+				}
+				grid[i][j] = VISITED;
+				for (Integer[] direction: directions) {	
+					int x = i + direction[0], y = j + direction[1];
+					if (isValid(x,y,grid) && (grid[x][y] == WATER || grid[x][y] == TARGET_ISLAND)) {
+						queue.add(new Integer{x, y});
+					}
+				}
+			}
+			moves++;
+		}
+		return -1;
+	}
+}

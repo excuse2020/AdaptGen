@@ -1,0 +1,47 @@
+class Solution {
+	int partition(int[] arr, int left, int right) {
+		int temp = arr[left];
+		while (left < right) {
+			while (left < right && arr[right] >= temp) {
+				right--;
+			}
+			arr[left] = arr[right];
+			while (left < right && arr[left] <= temp) {
+				left++;
+			}
+			arr[right] = arr[left];
+		}
+		arr[left] = temp;
+		return left;
+	}
+	void quickSort(int[] arr, int left, int right) {
+		if (left < right) {
+			int mid = partition(arr,left,right);
+			quickSort(arr,left,mid - 1);
+			quickSort(arr,mid + 1,right);
+		}
+	}
+	ListNode sortInList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		List<Integer> list = new ArrayList<>();
+		while (head != null) {
+			list.add(head.val);
+			head = head.next;
+		}
+		int[] arr = new int[list.size()];
+		for (int i = 0; i < arr.length; i++) {
+			arr[i] = list.get(i);
+		}
+		quickSort(arr,0,arr.length - 1);
+		head = new ListNode(arr[0]);
+		ListNode tail = head;
+		for (int i = 1; i < arr.length; i++) {
+			ListNode cur = new ListNode(arr[i]);
+			tail.next = cur;
+			tail = cur;
+		}
+		return head;
+	}
+}

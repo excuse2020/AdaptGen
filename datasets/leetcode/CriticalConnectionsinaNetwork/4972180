@@ -1,0 +1,51 @@
+class Solution {
+	List<List<Integer>> critialConnections;
+	int[] discoveredTime;
+	int[] lowestVertex;
+	List<Integer>[] network;
+	int time = 0;
+	boolean[] visited;
+	void buildNetwork(List<List<Integer>> connections) {
+		for (List<Integer> connection: connections) {	
+			network[connection.get(0)].add(connection.get(1));
+			network[connection.get(1)].add(connection.get(0));
+		}
+	}
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		initialization(n);
+		buildNetwork(connections);
+		getCritialConnections(0,-1);
+		return critialConnections;
+	}
+	void getCritialConnections(int current, int parent) {
+		time++;
+		lowestVertex[current] = time;
+		discoveredTime[current] = time;
+		visited[current] = true;
+		for (int neighbor: network[current]) {	
+			if (neighbor == parent) {
+				continue;
+			}
+			if (visited[neighbor] == false) {
+				getCritialConnections(neighbor,current);
+				lowestVertex[current] = Math.min(lowestVertex[current],lowestVertex[neighbor]);
+				if (lowestVertex[neighbor] > discoveredTime[current]) {
+					critialConnections.add(Arrays.asList(current,neighbor));
+				}
+			} 
+			else {
+				lowestVertex[current] = Math.min(lowestVertex[current],discoveredTime[neighbor]);
+			}
+		}
+	}
+	void initialization(int n) {
+		lowestVertex = new int[n];
+		discoveredTime = new int[n];
+		visited = new boolean[n];
+		critialConnections = new ArrayList<>();
+		network = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			network[i] = new ArrayList<>();
+		}
+	}
+}

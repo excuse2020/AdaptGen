@@ -1,0 +1,34 @@
+class Solution {
+	int binaryToDecimal(ArrayList<Integer> arr) {
+		int ans = 0;
+		int x = 0;
+		for (int i = arr.size() - 1; i >= 0; i--) {
+			ans = ans + arr.get(i) * (int) Math.pow(2,x);
+			x++;
+		}
+		return ans;
+	}
+	void helper(TreeNode root, ArrayList<Integer> curr, ArrayList<Integer> ans) {
+		if (root == null) {
+			return;
+		}
+		if (root.left == null && root.right == null) {
+			curr.add(root.val);
+			int num = binaryToDecimal(curr);
+			ans.set(0,ans.get(0) + num);
+			curr.remove(curr.size() - 1);
+			return;
+		}
+		curr.add(root.val);
+		helper(root.left,curr,ans);
+		helper(root.right,curr,ans);
+		curr.remove(curr.size() - 1);
+	}
+	int sumRootToLeaf(TreeNode root) {
+		ArrayList<Integer> curr = new ArrayList<>();
+		ArrayList<Integer> ans = new ArrayList<>();
+		ans.add(0);
+		helper(root,curr,ans);
+		return ans.get(0);
+	}
+}

@@ -1,0 +1,49 @@
+class Solution {
+	HashMap<Integer, HashSet<Integer>> adj;
+	int n;
+	boolean[] visited;
+	int getNumberOfBombs(int source) {
+		visited[source] = true;
+		int count = 1;
+		if (!adj.containsKey(source)) {
+			return count;
+		}
+		for (int neighbor: adj.get(source)) {	
+			if (visited[neighbor]) {
+				continue;
+			}
+			count += getNumberOfBombs(neighbor);
+		}
+		return count;
+	}
+	int maximumDetonation(int[][] bombs) {
+		adj = new HashMap();
+		n = bombs.length;
+		visited = new boolean[n];
+		for (int source = 0; source < n - 1; source++) {
+			for (int target = source + 1; target < n; target++) {
+				int[] sourceBomb = bombs[source];
+				int[] targetBomb = bombs[target];
+				double distance = Math.sqrt(Math.pow(sourceBomb[0] - targetBomb[0],2) + Math.pow(sourceBomb[1] - targetBomb[1],2));
+				if (!adj.containsKey(source)) {
+					adj.put(source,new HashSet());
+				}
+				if (sourceBomb[2] >= distance) {
+					adj.get(source).add(target);
+				}
+				if (!adj.containsKey(target)) {
+					adj.put(target,new HashSet());
+				}
+				if (targetBomb[2] >= distance) {
+					adj.get(target).add(source);
+				}
+			}
+		}
+		int max = 0;
+		for (int source = 0; source < n; source++) {
+			max = Math.max(max,getNumberOfBombs(source));
+			Arrays.fill(visited,false);
+		}
+		return max;
+	}
+}

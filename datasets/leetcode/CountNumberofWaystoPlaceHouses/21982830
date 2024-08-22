@@ -1,0 +1,24 @@
+class Solution {
+	int mod = 1000_000_007;
+	int countHousePlacements(int n) {
+		Long[][] dpArray = new Long[n][2];
+		long result = dp(false,0,n,dpArray) % mod;
+		result = (result * result) % mod;
+		return Long.valueOf(result).intValue();
+	}
+	long dp(boolean lastIsBuilding, int index, int endIndex, Long[][] dpArray) {
+		if (index == endIndex) {
+			return 1;
+		}
+		if (dpArray[index][lastIsBuilding ? 1 : 0] != null) {
+			return dpArray[index][lastIsBuilding ? 1 : 0];
+		}
+		long count = 0;
+		count += (dp(false,index + 1,endIndex,dpArray) % mod);
+		if (!lastIsBuilding) {
+			count += (dp(true,index + 1,endIndex,dpArray) % mod);
+		}
+		dpArray[index][lastIsBuilding ? 1 : 0] = count;
+		return count;
+	}
+}

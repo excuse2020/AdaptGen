@@ -1,0 +1,47 @@
+class Solution {
+	boolean dfs(int n, int[] leftChild, int[] rightChild, Set<Integer> visited) {
+		if (visited.contains(n)) {
+			return true;
+		}
+		visited.add(n);
+		if (leftChild[n] != -1) {
+			if (dfs(leftChild[n],leftChild,rightChild,visited)) {
+				return true;
+			}
+		}
+		if (rightChild[n] != -1) {
+			if (dfs(rightChild[n],leftChild,rightChild,visited)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		Set<Integer> allChild = new HashSet<>();
+		for (int i = 0; i < n; i++) {
+			allChild.add(leftChild[i]);
+			allChild.add(rightChild[i]);
+		}
+		allChild.remove(-1);
+		int root = -1;
+		for (int i = 0; i < n; i++) {
+			if (allChild.contains(i) == false) {
+				if (root != -1) {
+					return false;
+				}
+				root = i;
+			}
+		}
+		if (root == -1) {
+			return false;
+		}
+		Set<Integer> visited = new HashSet<>();
+		if (dfs(root,leftChild,rightChild,visited)) {
+			return false;
+		}
+		if (visited.size() != n) {
+			return false;
+		}
+		return true;
+	}
+}

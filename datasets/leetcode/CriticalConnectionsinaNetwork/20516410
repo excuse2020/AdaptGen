@@ -1,0 +1,38 @@
+class Solution {
+	List<List<Integer>> adjList;
+	List<List<Integer>> critical;
+	int[] time;
+	int[] visited;
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		time = new int[n];
+		visited = new int[n];
+		critical = new ArrayList<>();
+		adjList = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adjList.add(new ArrayList<>());
+		}
+		for (List<Integer> con: connections) {	
+			adjList.get(con.get(0)).add(con.get(1));
+			adjList.get(con.get(1)).add(con.get(0));
+		}
+		dfs(0,-1,0);
+		return critical;
+	}
+	void dfs(int node, int parent, int t) {
+		visited[node] = 1;
+		time[node] = t++;
+		int currentTime = time[node];
+		for (int neighbor: adjList.get(node)) {	
+			if (neighbor == parent) {
+				continue;
+			}
+			if (visited[neighbor] == 0) {
+				dfs(neighbor,node,t);
+			}
+			time[node] = Math.min(time[node],time[neighbor]);
+			if (currentTime < time[neighbor]) {
+				critical.add(Arrays.asList(node,neighbor));
+			}
+		}
+	}
+}

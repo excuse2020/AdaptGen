@@ -1,0 +1,53 @@
+class Solution {
+	int reachableNodes(int[][] edges, int maxMoves, int n) {
+		List<List<int[]>> adjList = new ArrayList<>();
+		int[] dist = new int[n];
+		Arrays.fill(dist,Integer.MAX_VALUE);
+		for (int i = 0; i < n; i++) {
+			adjList.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			int u = edge[0];
+			int v = edge[1];
+			int cnt = edge[2];
+			adjList.get(u).add(new int{v, cnt});
+			adjList.get(v).add(new int{u, cnt});
+		}
+		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {a[1] - b[1]});
+		pq.offer(new int{0, 0});
+		dist[0] = 0;
+		while (!pq.isEmpty()) {
+			int[] curr = pq.poll();
+			int node = curr[0];
+			int distance = curr[1];
+			if (distance > dist[node]) {
+				continue;
+			}
+			for (int[] next: adjList.get(node)) {	
+				int neighbor = next[0];
+				int cnt = next[1];
+				int newDist = distance + cnt;
+				if (newDist < dist[neighbor]) {
+					dist[neighbor] = newDist;
+					pq.offer(new int{neighbor, newDist});
+				}
+			}
+		}
+		int count = 0;
+		for (int d: dist) {	
+			if (d <= maxMoves) {
+				count++;
+			}
+		}
+		for (int[] edge: edges) {	
+			int u = edge[0];
+			int v = edge[1];
+			int cnt = edge[2];
+			int du = dist[u];
+			int dv = dist[v];
+			int reachable = Math.max(0,maxMoves - du) + Math.max(0,maxMoves - dv);
+			count += Math.min(cnt,reachable);
+		}
+		return count;
+	}
+}

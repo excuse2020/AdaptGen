@@ -1,0 +1,68 @@
+class Solution {
+	List<Integer> markAndGetMap(boolean[] markArr, int anyIndex, Map<Integer, List<Integer>> imap) {
+		Queue<Integer> queue = new LinkedList<>();
+		queue.add(anyIndex);
+		List<Integer> result = new ArrayList<>();
+		markArr[anyIndex] = true;
+		result.add(anyIndex);
+		while (!queue.isEmpty()) {
+			int top = queue.poll();
+			List<Integer> neighbors = imap.get(top);
+			if (neighbors == null) {
+				continue;
+			}
+			for (Integer it: neighbors) {	
+				if (!markArr[it]) {
+					markArr[it] = true;
+					result.add(it);
+					queue.add(it);
+				}
+			}
+		}
+		Collections.sort(result);
+		return result;
+	}
+	String smallestStringWithSwaps(String s, List<List<Integer>> pairs) {
+		int size = s.length();
+		Map<Integer, List<Integer>> imap = new HashMap<>();
+		for (int i = 0; i < size; i++) {
+			imap.put(i,new ArrayList<>());
+		}
+		for (List<Integer> pair: pairs) {	
+			imap.get(pair.get(0)).add(pair.get(1));
+			imap.get(pair.get(1)).add(pair.get(0));
+		}
+		boolean[] usedArr = new boolean[size];
+		Arrays.fill(usedArr,false);
+		Map<Integer, List<Integer>> groupedIndex = new HashMap<>();
+		for (int i = 0; i < size; i++) {
+			if (usedArr[i]) {
+				continue;
+			}
+			groupedIndex.put(i,markAndGetMap(usedArr,i,imap));
+		}
+		List<List<Integer>> indexList = new ArrayList<>(groupedIndex.values());
+		List<List<Character>> sortedChars = new ArrayList<>();
+		for (List<Integer> ls: indexList) {	
+			List<Character> cs = new ArrayList<>();
+			for (Integer ix: ls) {	
+				cs.add(s.charAt(ix));
+			}
+			Collections.sort(cs);
+			sortedChars.add(cs);
+		}
+		Character[] chars = new Character[size];
+		for (int i = 0; i < indexList.size(); i++) {
+			List<Integer> index = indexList.get(i);
+			List<Character> charr = sortedChars.get(i);
+			for (int j = 0; j < index.size(); j++) {
+				chars[index.get(j)] = charr.get(j);
+			}
+		}
+		StringBuilder result = new StringBuilder();
+		for (Character c: chars) {	
+			result.append(c);
+		}
+		return result.toString();
+	}
+}

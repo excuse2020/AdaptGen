@@ -1,0 +1,71 @@
+class Solution {
+	int BSL(int left, int right, MountainArray mountainArr, int target) {
+		while (left <= right) {
+			int mid = left + (right - left) / 2;
+			int midVal = mountainArr.get(mid);
+			if (midVal == target) {
+				return mid;
+			} 
+			else if (midVal < target) {
+				left = mid + 1;
+			} 
+			else {
+				right = mid - 1;
+			}
+		}
+		return -1;
+	}
+	int BSR(int left, int right, MountainArray mountainArr, int target) {
+		while (left <= right) {
+			int mid = left + (right - left) / 2;
+			int midVal = mountainArr.get(mid);
+			if (midVal == target) {
+				return mid;
+			} 
+			else if (midVal > target) {
+				left = mid + 1;
+			} 
+			else {
+				right = mid - 1;
+			}
+		}
+		return -1;
+	}
+	int findInMountainArray(int target, MountainArray mountainArr) {
+		int peakValue = findPeak(mountainArr);
+		int leftside = BSL(0,peakValue,mountainArr,target);
+		int rightside = BSR(peakValue,mountainArr.length() - 1,mountainArr,target);
+		if (leftside == rightside) {
+			return Math.min(rightside,leftside);
+		}
+		return (leftside != -1) ? leftside : rightside;
+	}
+	int findPeak(MountainArray mountainArr) {
+		int start = 0;
+		int end = mountainArr.length() - 1;
+		while (start <= end) {
+			int mid = start + (end - start) / 2;
+			if (mid > 0 && mid < mountainArr.length() - 1) {
+				int midVal = mountainArr.get(mid);
+				int midValLeft = mountainArr.get(mid - 1);
+				int midValRight = mountainArr.get(mid + 1);
+				if (midVal > midValRight && midVal > midValLeft) {
+					return mid;
+				} 
+				else if (midVal < midValRight) {
+					start = mid + 1;
+				} 
+				else if (midVal < midValLeft) {
+					end = mid - 1;
+				}
+			} 
+			else if (mid == 0) {
+				return mountainArr.get(0) > mountainArr.get(1) ? 0 : 1;
+			} 
+			else if (mid == mountainArr.length() - 1) {
+				return mountainArr.get(mountainArr.length() - 1) > mountainArr.get(mountainArr.length() - 2) ? mountainArr.length() - 1 : mountainArr.length() - 2;
+			}
+		}
+		return -1;
+	}
+}

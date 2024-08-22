@@ -1,0 +1,42 @@
+class Solution {
+	void findCombinations(int[] A, int i, int k, Set<List<Integer>> subarrays, List<Integer> out) {
+		if (A.length == 0 || k > A.length) {
+			return;
+		}
+		if (k == 0) {
+			subarrays.add(new ArrayList<>(out));
+			return;
+		}
+		for (int j = i; j < A.length; j++) {
+			out.add(A[j]);
+			findCombinations(A,j + 1,k - 1,subarrays,out);
+			out.remove(out.size() - 1);
+		}
+	}
+	Set<List<Integer>> findCombinations(int[] A, int k) {
+		Set<List<Integer>> subarrays = new HashSet<>();
+		findCombinations(A,0,k,subarrays,new ArrayList<>());
+		return subarrays;
+	}
+	int maximumRows(int[][] mat, int cols) {
+		int col = new int[mat[0].length];
+		for (int i = 0; i < mat[0].length; i++) {
+			col[i] = i;
+		}
+		Set<List<Integer>> combinations = findCombinations(col,cols);
+		int max = Integer.MIN_VALUE;
+		for (List<Integer> arr: combinations) {	
+			int ans = mat.length;
+			for (int j = 0; j < mat.length; j++) {
+				for (int k = 0; k < mat[j].length; k++) {
+					if (mat[j][k] == 1 && !arr.contains(k)) {
+						ans--;
+						break;
+					}
+				}
+			}
+			max = Math.max(max,ans);
+		}
+		return max;
+	}
+}

@@ -1,0 +1,31 @@
+class Solution {
+	TreeNode bstToGst(TreeNode root) {
+		TreeNode dummy = new TreeNode(0);
+		dummy = root;
+		int runningSum = 0;
+		while (root != null) {
+			if (root.right != null) {
+				TreeNode predecessor = root.right;
+				while (predecessor.left != null && predecessor.left != root) {
+					predecessor = predecessor.left;
+				}
+				if (predecessor.left == root) {
+					runningSum += root.val;
+					root.val = runningSum;
+					predecessor.left = null;
+					root = root.left;
+				} 
+				else {
+					predecessor.left = root;
+					root = root.right;
+				}
+			} 
+			else {
+				runningSum += root.val;
+				root.val = runningSum;
+				root = root.left;
+			}
+		}
+		return dummy;
+	}
+}

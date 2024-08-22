@@ -1,0 +1,47 @@
+class Solution {
+	List<List<String>> mostPopularCreator(String[] creators, String[] ids, int[] views) {
+		Map<String, Long> viewcount = new HashMap<>();
+		Map<String, Long> maxcount = new HashMap<>();
+		for (int i = 0; i < creators.length; i++) {
+			if (viewcount.containsKey(creators[i]) == false) {
+				viewcount.put(creators[i],Long.valueOf(views[i]));
+				maxcount.put(creators[i],Long.valueOf(views[i]));
+			} 
+			else {
+				viewcount.put(creators[i],viewcount.get(creators[i]) + views[i]);
+				long max = Math.max(maxcount.get(creators[i]),views[i]);
+				maxcount.put(creators[i],max);
+			}
+		}
+		List<Long> list = new ArrayList<>(viewcount.values());
+		long maxvalue = Collections.max(list);
+		Set<String> maxcreator = new HashSet<>();
+		for (String name: viewcount.keySet()) {	
+			if (viewcount.get(name) == maxvalue) {
+				maxcreator.add(name);
+			}
+		}
+		Map<String, List<String>> maps = new HashMap<>();
+		for (int i = 0; i < creators.length; i++) {
+			if (maxcreator.contains(creators[i]) && views[i] == maxcount.get(creators[i])) {
+				if (maps.containsKey(creators[i]) == false) {
+					List<String> result = new ArrayList<>();
+					result.add(ids[i]);
+					maps.put(creators[i],result);
+				} 
+				else {
+					maps.get(creators[i]).add(ids[i]);
+				}
+			}
+		}
+		List<List<String>> ans = new ArrayList<>();
+		for (String s: maps.keySet()) {	
+			Collections.sort(maps.get(s));
+			List<String> names = new ArrayList<>();
+			names.add(s);
+			names.add(maps.get(s).get(0));
+			ans.add(names);
+		}
+		return ans;
+	}
+}

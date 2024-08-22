@@ -1,0 +1,57 @@
+class Solution {
+	int decreasing(int target, int s, int l, MountainArray mountainArr) {
+		while (s <= l) {
+			int mid = s + (l - s) / 2;
+			int val = mountainArr.get(mid);
+			if (val == target) {
+				return mid;
+			} 
+			else if (val < target) {
+				l = mid - 1;
+			} 
+			else {
+				s = mid + 1;
+			}
+		}
+		return -1;
+	}
+	int findInMountainArray(int target, MountainArray mountainArr) {
+		int peak = findPeak(mountainArr);
+		int s = increasing(target,0,peak,mountainArr);
+		if (s != -1) {
+			return s;
+		}
+		int l = decreasing(target,peak + 1,mountainArr.length() - 1,mountainArr);
+		return l;
+	}
+	int findPeak(MountainArray mountainArr) {
+		int left = 0;
+		int right = mountainArr.length() - 1;
+		while (left < right) {
+			int mid = left + (right - left) / 2;
+			if (mountainArr.get(mid) < mountainArr.get(mid + 1)) {
+				left = mid + 1;
+			} 
+			else {
+				right = mid;
+			}
+		}
+		return left;
+	}
+	int increasing(int target, int s, int l, MountainArray mountainArr) {
+		while (s <= l) {
+			int mid = s + (l - s) / 2;
+			int val = mountainArr.get(mid);
+			if (val == target) {
+				return mid;
+			} 
+			else if (val < target) {
+				s = mid + 1;
+			} 
+			else {
+				l = mid - 1;
+			}
+		}
+		return -1;
+	}
+}

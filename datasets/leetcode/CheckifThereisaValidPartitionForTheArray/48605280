@@ -1,0 +1,40 @@
+class Solution {
+	Boolean[] dp;
+	boolean solve(int[] nums, int i, int n) {
+		if (i == n) {
+			return true;
+		}
+		if (dp[i] != null) {
+			return dp[i];
+		}
+		boolean ans = false;
+		if (i + 1 < n) {
+			if (nums[i] == nums[i + 1]) {
+				boolean equal2El = solve(nums,i + 2,n);
+				if (equal2El) {
+					ans = true;
+				}
+			}
+		}
+		if (i + 2 < n) {
+			if (nums[i] == nums[i + 1] && nums[i + 1] == nums[i + 2]) {
+				boolean equal3El = solve(nums,i + 3,n);
+				if (equal3El) {
+					ans = true;
+				}
+			}
+			if (nums[i] + 1 == nums[i + 1] && nums[i + 1] + 1 == nums[i + 2]) {
+				boolean consecutive3El = solve(nums,i + 3,n);
+				if (consecutive3El) {
+					ans = true;
+				}
+			}
+		}
+		return dp[i] = ans;
+	}
+	boolean validPartition(int[] nums) {
+		int n = nums.length;
+		dp = new Boolean[n + 1];
+		return solve(nums,0,n);
+	}
+}

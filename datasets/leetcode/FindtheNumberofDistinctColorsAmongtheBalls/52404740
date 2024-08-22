@@ -1,0 +1,27 @@
+class Solution {
+	int[] queryResults(int limit, int[][] q) {
+		Map<Integer, Set<Integer>> map = new HashMap<>();
+		Map<Integer, Integer> mapa = new HashMap<>();
+		int[] res = new int[q.length];
+		for (int i = 0; i < res.length; i++) {
+			int ball = q[i][0], color = q[i][1];
+			if (mapa.containsKey(ball)) {
+				int prevColor = mapa.get(ball);
+				mapa.remove(ball);
+				map.get(prevColor).remove(ball);
+				if (map.get(prevColor).size() == 0) {
+					map.remove(prevColor);
+				}
+			}
+			Set<Integer> balls = map.get(color);
+			if (balls == null) {
+				balls = new HashSet<>();
+				map.put(color,balls);
+			}
+			mapa.put(ball,color);
+			balls.add(ball);
+			res[i] = map.size();
+		}
+		return res;
+	}
+}

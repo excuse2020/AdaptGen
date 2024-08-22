@@ -1,0 +1,32 @@
+class Solution {
+	int max = Integer.MAX_VALUE;
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		int n = edges.length;
+		int[] dist1 = new int[n];
+		int[] dist2 = new int[n];
+		Arrays.fill(dist1,max);
+		Arrays.fill(dist2,max);
+		updateDist(edges,dist1,node1);
+		updateDist(edges,dist2,node2);
+		int minDistanceTillNow = max;
+		int minNode = -1;
+		for (int i = 0; i < n; i++) {
+			if (dist1[i] != max && dist2[i] != max) {
+				int max_ = Math.max(dist1[i],dist2[i]);
+				if (minDistanceTillNow > max_) {
+					minDistanceTillNow = max_;
+					minNode = i;
+				}
+			}
+		}
+		return minNode;
+	}
+	void updateDist(int[] edges, int[] dist, int node) {
+		int steps = 0;
+		while (node != -1 && dist[node] == max) {
+			dist[node] = steps++;
+			int parent = edges[node];
+			node = parent;
+		}
+	}
+}

@@ -1,0 +1,38 @@
+class Solution {
+	char getMin(Map<Character, Set<Character>> map, Character key, Set<Character> visited) {
+		if (visited.contains(key)) {
+			return (char) 200;
+		}
+		if (!map.containsKey(key)) {
+			return key;
+		}
+		visited.add(key);
+		Iterator itr = map.get(key).iterator();
+		char min = key;
+		while (itr.hasNext()) {
+			char c = (char) itr.next();
+			char tmpMin = getMin(map,c,visited);
+			min = min < tmpMin ? min : tmpMin;
+		}
+		return min;
+	}
+	String smallestEquivalentString(String s1, String s2, String baseStr) {
+		Map<Character, Set<Character>> map = new HashMap<>();
+		for (int i = 0; i < s1.length(); i++) {
+			map.putIfAbsent(s1.charAt(i),new HashSet<>());
+			map.get(s1.charAt(i)).add(s2.charAt(i));
+			map.putIfAbsent(s2.charAt(i),new HashSet<>());
+			map.get(s2.charAt(i)).add(s1.charAt(i));
+		}
+		char[] result = new char[baseStr.length()];
+		for (int i = 0; i < baseStr.length(); i++) {
+			if (map.containsKey(baseStr.charAt(i))) {
+				result[i] = getMin(map,baseStr.charAt(i),new HashSet<>());
+			} 
+			else {
+				result[i] = baseStr.charAt(i);
+			}
+		}
+		return String.valueOf(result);
+	}
+}

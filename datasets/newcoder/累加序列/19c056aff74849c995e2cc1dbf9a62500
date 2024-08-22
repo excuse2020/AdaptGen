@@ -1,0 +1,27 @@
+class Solution {
+	boolean AdditiveArray(String arr) {
+		return dfs(arr,arr.length(),0,0,0,0);
+	}
+	boolean dfs(String s, int n, int index, long sum, long pre, int k) {
+		if (index == n) {
+			return k > 2;
+		}
+		for (int i = index; i < n; i++) {
+			int left = index, right = i;
+			if (left < right && s.charAt(left) == '0') {
+				continue;
+			}
+			long cur = 0;
+			while (left <= right) {
+				cur = cur * 10 + (s.charAt(left++) - '0');
+			}
+			if (k >= 2 && cur != sum) {
+				continue;
+			}
+			if (dfs(s,n,i + 1,cur + pre,cur,k + 1)) {
+				return true;
+			}
+		}
+		return false;
+	}
+}

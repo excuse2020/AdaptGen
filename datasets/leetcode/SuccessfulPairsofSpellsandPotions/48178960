@@ -1,0 +1,21 @@
+class Solution {
+	int[] successfulPairs(int[] spells, int[] potions, long success) {
+		int maxPotion = 0;
+		for (int potion: potions) {	
+			maxPotion = Math.max(potion,maxPotion);
+		}
+		int[] memory = new int[maxPotion + 1];
+		for (int potion: potions) {	
+			memory[potion] += 1;
+		}
+		for (int i = memory.length - 2; i >= 0; i--) {
+			memory[i] += memory[i + 1];
+		}
+		int[] result = new int[spells.length];
+		for (int i = 0; i < spells.length; i++) {
+			int index = (int) Math.ceil((double) success / spells[i]);
+			result[i] = index <= maxPotion ? memory[index] : 0;
+		}
+		return result;
+	}
+}

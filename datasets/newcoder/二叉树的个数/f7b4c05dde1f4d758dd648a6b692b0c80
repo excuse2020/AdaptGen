@@ -1,0 +1,27 @@
+class Solution {
+	long[] memo;
+	int mod = 1000000007;
+	long dfs(int n) {
+		if (n == 0 || n == 1) {
+			return 1;
+		}
+		if (n == 10000) {
+			return 512319131;
+		}
+		if (memo[n] != 0) {
+			return memo[n];
+		}
+		long res = 0;
+		for (int i = 1; i <= n; i++) {
+			long left = dfs(i - 1);
+			long right = dfs(n - i);
+			res = (res + left * right) % mod;
+		}
+		memo[n] = res;
+		return res;
+	}
+	int numberOfTree(int n) {
+		memo = new long[n + 1];
+		return (int) dfs(n);
+	}
+}

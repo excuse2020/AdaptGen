@@ -1,0 +1,26 @@
+class Solution {
+	List<String> subdomainVisits(String[] cpdomains) {
+		List<String> result = new ArrayList<>();
+		Map<String, Integer> countmap = new HashMap<>();
+		for (String cpdomain: cpdomains) {	
+			String[] firstLevel = cpdomain.trim().split(" ");
+			int count = Integer.parseInt(firstLevel[0]);
+			String completeDomain = firstLevel[1];
+			String[] brokenDownDomain = completeDomain.split("\\\\.");
+			countmap.put(completeDomain,countmap.getOrDefault(completeDomain,0) + count);
+			if (brokenDownDomain.length == 3) {
+				String subdomain = brokenDownDomain[1] + ".";
+				countmap.put(subdomain,countmap.getOrDefault(subdomain,0) + count);
+				countmap.put(brokenDownDomain[2],countmap.getOrDefault(brokenDownDomain[2],0) + count);
+			} 
+			else if (brokenDownDomain.length == 2) {
+				countmap.put(brokenDownDomain[1],countmap.getOrDefault(brokenDownDomain[1],0) + count);
+			}
+		}
+		for (Map.Entry<String, Integer> entry: countmap.entrySet()) {	
+			String resultString = entry.getValue() + " ";
+			result.add(resultString);
+		}
+		return result;
+	}
+}

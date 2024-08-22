@@ -1,0 +1,49 @@
+class Solution {
+	double soupServings(int n) {
+		if (n > 5500) {
+			return 1;
+		}
+		if (n == 0) {
+			return 0.5;
+		}
+		int totalSoup = 0, maxTruns = n / 25 + 1;
+		double ans = 0, soupA = new double[n + 100][maxTruns + 1];
+		soupA[0][0] = 1;
+		for (int j = 1; j <= maxTruns; j++) {
+			for (int i = 0; i <= n + 99; i += 25) {
+				int soupB = j * 100 - i;
+				if (soupB < 0) {
+					continue;
+				}
+				if (i - 25 >= 0 && i - 25 < n && soupB - 75 < n) {
+					soupA[i][j] = soupA[i - 25][j - 1] * 0.25;
+					if (i >= n && soupB >= n) {
+						ans += soupA[i][j] / 2;
+						soupA[i][j] = 0;
+					}
+				}
+				if (i - 50 >= 0 && i - 50 < n && soupB - 50 < n) {
+					soupA[i][j] += soupA[i - 50][j - 1] * 0.25;
+					if (i >= n && soupB >= n) {
+						ans += soupA[i][j] / 2;
+						soupA[i][j] = 0;
+					}
+				}
+				if (i - 75 >= 0 && i - 75 < n && soupB - 25 < n) {
+					soupA[i][j] += soupA[i - 75][j - 1] * 0.25;
+					if (i >= n && soupB >= n) {
+						ans += soupA[i][j] / 2;
+						soupA[i][j] = 0;
+					}
+				}
+				if (i - 100 >= 0 && soupB < n) {
+					soupA[i][j] += soupA[i - 100][j - 1] * 0.25;
+				}
+				if (i >= n && soupB < n) {
+					ans += soupA[i][j];
+				}
+			}
+		}
+		return ans;
+	}
+}

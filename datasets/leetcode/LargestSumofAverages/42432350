@@ -1,0 +1,36 @@
+class Solution {
+	double helper(int i, int[] nums, int k, double[][] dp) {
+		if (i == nums.length) {
+			return 0;
+		}
+		double sum = 0;
+		double elements = 0;
+		if (dp[i][k] != -1) {
+			return dp[i][k];
+		}
+		if (k == 1) {
+			int count = i;
+			while (i != nums.length) {
+				sum += nums[i];
+				i++;
+				elements++;
+			}
+			return dp[count][k] = sum / elements;
+		}
+		double max = 0;
+		for (int j = i; j < nums.length; j++) {
+			elements++;
+			sum += nums[j];
+			double avg = sum / elements;
+			max = Math.max(max,avg + helper(j + 1,nums,k - 1,dp));
+		}
+		return dp[i][k] = max;
+	}
+	double largestSumOfAverages(int[] nums, int k) {
+		double[][] dp = new double[nums.length][k + 1];
+		for (double[] row: dp) {	
+			Arrays.fill(row,-1);
+		}
+		return helper(0,nums,k,dp);
+	}
+}

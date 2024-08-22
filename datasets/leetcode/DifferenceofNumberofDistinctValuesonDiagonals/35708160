@@ -1,0 +1,53 @@
+class Solution {
+	int[][] differenceOfDistinctValues(int[][] grid) {
+		int m = grid.length;
+		int n = grid[0].length;
+		int[][] answer = new int[m][n];
+		int[][] topLeft = new int[m][n];
+		int[][] bottomRight = new int[m][n];
+		for (int r = 0; r < m; r++) {
+			for (int c = 0; c < n; c++) {
+				if (r == 0 || c == 0) {
+					topLeft[r][c] = 0;
+				} 
+				else {
+					topLeft[r][c] = distinctleft(grid,r,c);
+				}
+			}
+		}
+		for (int r = 0; r < m; r++) {
+			for (int c = 0; c < n; c++) {
+				if (r == m - 1 || c == n - 1) {
+					bottomRight[r][c] = 0;
+				} 
+				else {
+					bottomRight[r][c] = distinctright(grid,r,c);
+				}
+			}
+		}
+		for (int r = 0; r < m; r++) {
+			for (int c = 0; c < n; c++) {
+				answer[r][c] = Math.abs(topLeft[r][c] - bottomRight[r][c]);
+			}
+		}
+		return answer;
+	}
+	int distinctleft(int[][] grid, int r, int c) {
+		HashSet<Integer> hs = new HashSet<>();
+		while (r > 0 && c > 0) {
+			r--;
+			c--;
+			hs.add(grid[r][c]);
+		}
+		return hs.size();
+	}
+	int distinctright(int[][] grid, int r, int c) {
+		HashSet<Integer> hs = new HashSet<>();
+		while (r < grid.length - 1 && c < grid[0].length - 1) {
+			r++;
+			c++;
+			hs.add(grid[r][c]);
+		}
+		return hs.size();
+	}
+}

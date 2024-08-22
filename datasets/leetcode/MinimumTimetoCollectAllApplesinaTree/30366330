@@ -1,0 +1,28 @@
+class Solution {
+	List<List<Integer>> adj;
+	int dfs(int n, int p, List<Boolean> hasApple) {
+		int cnt = 0;
+		boolean sts = false;
+		for (var c: adj.get(n)) {	
+			if (c != p) {
+				cnt += dfs(c,n,hasApple);
+				sts = true;
+			}
+		}
+		if (cnt == 0) {
+			return hasApple.get(n) && n != 0 ? 1 : 0;
+		}
+		return sts && p != -1 ? 1 + cnt : cnt;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (var e: edges) {	
+			adj.get(e[0]).add(e[1]);
+			adj.get(e[1]).add(e[0]);
+		}
+		return 2 * dfs(0,-1,hasApple);
+	}
+}

@@ -1,0 +1,48 @@
+class Solution {
+	int t;
+	boolean func(int day) {
+		LinkedList<int[]> q = new LinkedList<>();
+		int y = t.length, x = t[0].length;
+		int vis = new int[y][x];
+		for (int j = 0; j != x; ++j) {
+			if (t[0][j] > day) {
+				q.add(new int{0, j});
+			}
+		}
+		while (!q.isEmpty()) {
+			int temp = q.poll();
+			int i = temp[0], j = temp[1];
+			if (i == y) {
+				return true;
+			}
+			if (i == -1 || j == -1 || j == x || vis[i][j] == 1 || t[i][j] <= day) {
+				continue;
+			}
+			vis[i][j] = 1;
+			q.add(new int{i - 1, j});
+			q.add(new int{i + 1, j});
+			q.add(new int{i, j - 1});
+			q.add(new int{i, j + 1});
+		}
+		return false;
+	}
+	int latestDayToCross(int row, int col, int[][] cells) {
+		t = new int[row][col];
+		for (int r: t) {	
+			Arrays.fill(r,Integer.MAX_VALUE);
+		}
+		for (int day = 0; day != cells.length; ) {
+			t[cells[day][0] - 1][cells[day][1] - 1] = ++day;
+		}
+		int l = 0, r = cells.length;
+		for (int m = (l + r) >> 1; l <= r; m = (l + r) >> 1) {
+			if (func(m)) {
+				l = m + 1;
+			} 
+			else {
+				r = m - 1;
+			}
+		}
+		return l - 1;
+	}
+}

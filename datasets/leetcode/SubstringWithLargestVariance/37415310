@@ -1,0 +1,52 @@
+class Solution {
+	int kadane(List<Integer> l) {
+		int cmax = 0, ans = 0;
+		boolean c1 = false, c_1 = false;
+		for (int c: l) {	
+			cmax += c;
+			if (c == 1) {
+				c1 = true;
+			} 
+			else {
+				c_1 = true;
+			}
+			if (c1 && c_1) {
+				ans = Integer.max(ans,cmax);
+			}
+			if (cmax < 0) {
+				c1 = c_1 = false;
+				cmax = 0;
+			}
+		}
+		return ans;
+	}
+	int largestVariance(String s) {
+		Set<Character> hs = new HashSet<>();
+		int ans = 0;
+		for (char c: s.toCharArray()) {	
+			hs.add(c);
+		}
+		for (char c1: hs) {	
+			for (char c2: hs) {	
+				if (c1 == c2) {
+					continue;
+				}
+				int i = 2;
+				while (i-- > 0) {
+					List<Integer> l1 = new ArrayList<>();
+					for (char c: s.toCharArray()) {	
+						if (c == c1) {
+							l1.add(-1);
+						} 
+						else if (c == c2) {
+							l1.add(1);
+						}
+					}
+					ans = Integer.max(ans,kadane(l1));
+					s = new StringBuilder(s).reverse().toString();
+				}
+			}
+		}
+		return ans;
+	}
+}

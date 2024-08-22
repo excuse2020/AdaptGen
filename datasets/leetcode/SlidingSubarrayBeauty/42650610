@@ -1,0 +1,29 @@
+class Solution {
+	int counterSort(int[] count, int x) {
+		int cnt = 0;
+		for (int i = 50; i >= 1; i--) {
+			cnt += count[i];
+			if (cnt >= x) {
+				return -i;
+			}
+		}
+		return 0;
+	}
+	int[] getSubarrayBeauty(int[] nums, int k, int x) {
+		int[] count = new int[51];
+		int n = nums.length;
+		int[] res = new int[n - k + 1];
+		for (int i = 0; i < n; i++) {
+			if (nums[i] < 0) {
+				count[-nums[i]]++;
+			}
+			if (i >= k && nums[i - k] < 0) {
+				count[-nums[i - k]]--;
+			}
+			if (i >= k - 1) {
+				res[i - k + 1] = counterSort(count,x);
+			}
+		}
+		return res;
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	int[] maximumSumQueries(int[] nums1, int[] nums2, int[][] queries) {
+		int n = nums1.length;
+		TreeSet<Integer> map = new TreeSet<>();
+		HashMap<Integer, TreeSet<Integer>> indexMap = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			map.add(nums1[i]);
+			if (!indexMap.containsKey(nums1[i])) {
+				indexMap.put(nums1[i],new TreeSet<>());
+			}
+			indexMap.get(nums1[i]).add(nums2[i]);
+		}
+		int ans = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			SortedSet<Integer> curr = new TreeSet<>();
+			curr = map.tailSet(queries[i][0],true);
+			int max = -1;
+			for (Integer ele: curr) {	
+				SortedSet<Integer> curr2 = new TreeSet<>();
+				curr2 = indexMap.get(ele).tailSet(queries[i][1]);
+				if (curr2.size() == 0) {
+					continue;
+				}
+				int j = curr2.last();
+				int sum = ele + j;
+				max = Math.max(sum,max);
+			}
+			ans[i] = max;
+		}
+		return ans;
+	}
+}

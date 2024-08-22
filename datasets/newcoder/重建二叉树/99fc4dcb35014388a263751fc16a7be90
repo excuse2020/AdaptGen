@@ -1,0 +1,25 @@
+class Solution {
+	TreeNode reConstructBinaryTree(int[] preOrder, int[] vinOrder) {
+		if (preOrder.length == 0) {
+			return null;
+		}
+		TreeNode binaryTree = new TreeNode(preOrder[0]);
+		int rootIndexInvin = 0;
+		while (preOrder[0] != vinOrder[rootIndexInvin]) {
+			rootIndexInvin++;
+		}
+		System.out.println(rootIndexInvin);
+		int[] dfsLeftVinOrder = new int[rootIndexInvin];
+		int[] dfsLeftPreOrder = new int[rootIndexInvin];
+		System.out.println(dfsLeftPreOrder.length);
+		dfsLeftVinOrder = Arrays.copyOfRange(vinOrder,0,rootIndexInvin);
+		dfsLeftPreOrder = Arrays.copyOfRange(preOrder,1,rootIndexInvin + 1);
+		int[] dfsRightVinOrder = new int[vinOrder.length - rootIndexInvin];
+		int[] dfsRightPreOrder = new int[preOrder.length - rootIndexInvin];
+		dfsRightVinOrder = Arrays.copyOfRange(vinOrder,rootIndexInvin + 1,vinOrder.length);
+		dfsRightPreOrder = Arrays.copyOfRange(preOrder,1 + rootIndexInvin,preOrder.length);
+		binaryTree.left = reConstructBinaryTree(dfsLeftPreOrder,dfsLeftVinOrder);
+		binaryTree.right = reConstructBinaryTree(dfsRightPreOrder,dfsRightVinOrder);
+		return binaryTree;
+	}
+}

@@ -1,0 +1,48 @@
+class Solution {
+	int hours(int[] piles, int f) {
+		int t = 0;
+		for (int i = 0; i < piles.length; i++) {
+			if (piles[i] < f) {
+				t += 1;
+			} 
+			else {
+				t += piles[i] / f;
+				if (piles[i] % f > 0) {
+					t += 1;
+				}
+			}
+		}
+		return t;
+	}
+	int minEatingSpeed(int[] piles, int h) {
+		if (piles.length == 1) {
+			if (piles[0] < h) {
+				return 1;
+			} 
+			else {
+				int t = piles[0] / h;
+				if (piles[0] % h > 0) {
+					return t + 1;
+				}
+				return t;
+			}
+		}
+		long s1 = 0;
+		for (int i = 0; i < piles.length; i++) {
+			s1 += piles[i];
+		}
+		int s = (int) (s1 / h);
+		Arrays.sort(piles);
+		int e = piles[piles.length - 1];
+		while (s < e) {
+			int mid = s + (e - s) / 2;
+			if (hours(piles,mid) > h) {
+				s = mid + 1;
+			} 
+			else {
+				e = mid;
+			}
+		}
+		return s;
+	}
+}

@@ -1,0 +1,44 @@
+class Solution {
+	int secondMinimum(int n, int[][] edges, int time, int change) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList();
+		for (int i = 0; i < n + 1; i++) {
+			adj.add(new ArrayList<Integer>());
+		}
+		for (int[] edge: edges) {	
+			adj.get(edge[0]).add(edge[1]);
+			adj.get(edge[1]).add(edge[0]);
+		}
+		int[][] timeTaken = new int[n + 1][2];
+		for (int i = 0; i < n + 1; i++) {
+			Arrays.fill(timeTaken[i],Integer.MAX_VALUE);
+		}
+		Queue<int[]> queue = new LinkedList();
+		queue.offer(new int{1, 0});
+		while (!queue.isEmpty()) {
+			if (timeTaken[n][1] != Integer.MAX_VALUE) {
+				break;
+			}
+			int[] element = queue.poll();
+			int node = element[0];
+			int curTime = element[1];
+			if (timeTaken[n][1] != Integer.MAX_VALUE) {
+				break;
+			}
+			if ((curTime / change) % 2 == 1) {
+				curTime += change - curTime % change;
+			}
+			curTime += time;
+			for (int neighbour: adj.get(node)) {	
+				if (timeTaken[neighbour][0] == Integer.MAX_VALUE) {
+					timeTaken[neighbour][0] = curTime;
+					queue.offer(new int{neighbour, curTime});
+				} 
+				else if (timeTaken[neighbour][1] == Integer.MAX_VALUE && curTime > timeTaken[neighbour][0]) {
+					timeTaken[neighbour][1] = curTime;
+					queue.offer(new int{neighbour, curTime});
+				}
+			}
+		}
+		return timeTaken[n][1];
+	}
+}

@@ -1,0 +1,43 @@
+class Solution {
+	int count(int[][] points, String s, int l) {
+		HashSet<Character> set = new HashSet<>();
+		int n = points.length;
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			if (Math.abs(points[i][0]) <= l && Math.abs(points[i][1]) <= l) {
+				if (set.contains(s.charAt(i))) {
+					return -1;
+				}
+				set.add(s.charAt(i));
+				ans++;
+			}
+		}
+		return ans;
+	}
+	int maxPointsInsideSquare(int[][] points, String s) {
+		int n = points.length;
+		int high = 0;
+		HashSet<Character> set = new HashSet<>();
+		for (int i = 0; i < n; i++) {
+			high = Math.max(high,Math.max(Math.abs(points[i][0]),Math.abs(points[i][1])));
+			set.add(s.charAt(i));
+		}
+		if (set.size() == n) {
+			return n;
+		}
+		int low = 0;
+		int ans = 0;
+		while (low <= high) {
+			int mid = (high - low) / 2 + low;
+			int validPoints = count(points,s,mid);
+			if (validPoints != -1) {
+				ans = Math.max(ans,validPoints);
+				low = mid + 1;
+			} 
+			else {
+				high = mid - 1;
+			}
+		}
+		return ans;
+	}
+}

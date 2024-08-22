@@ -1,0 +1,61 @@
+class Solution {
+	HashSet<String> ans = new HashSet<>();
+	List<Integer> hours = new ArrayList<>();
+	HashSet<Integer> hoursSet = new HashSet<>();
+	List<Integer> minutes = new ArrayList<>();
+	HashSet<Integer> minutesSet = new HashSet<>();
+	void display(int h, int m) {
+		String hoursStr = new String("");
+		String minutesStr = new String("");
+		if (h <= 11) {
+			hoursStr += String.valueOf(h);
+		}
+		if (m < 10) {
+			minutesStr += "0";
+			minutesStr += String.valueOf(m);
+		} 
+		else if (m <= 59) {
+			minutesStr += String.valueOf(m);
+		}
+		if (h <= 11 && m <= 59) {
+			ans.add(hoursStr + ":");
+		}
+	}
+	void helper(int numLights, int h, int m, HashSet<Integer> hoursSet, HashSet<Integer> minutesSet) {
+		if (numLights < 0 || h > 11 || m > 59) {
+			return;
+		}
+		if (numLights == 0) {
+			display(h,m);
+			return;
+		}
+		for (int currentHour: hours) {	
+			if (!hoursSet.contains(currentHour)) {
+				hoursSet.add(currentHour);
+				helper(numLights - 1,h + currentHour,m,hoursSet,minutesSet);
+				hoursSet.remove(currentHour);
+			}
+		}
+		for (int currentMin: minutes) {	
+			if (!minutesSet.contains(currentMin)) {
+				minutesSet.add(currentMin);
+				helper(numLights - 1,h,m + currentMin,hoursSet,minutesSet);
+				minutesSet.remove(currentMin);
+			}
+		}
+	}
+	List<String> readBinaryWatch(int turnedOn) {
+		hours.add(8);
+		hours.add(4);
+		hours.add(2);
+		hours.add(1);
+		minutes.add(32);
+		minutes.add(16);
+		minutes.add(8);
+		minutes.add(4);
+		minutes.add(2);
+		minutes.add(1);
+		helper(turnedOn,0,0,hoursSet,minutesSet);
+		return new ArrayList<String>(ans);
+	}
+}

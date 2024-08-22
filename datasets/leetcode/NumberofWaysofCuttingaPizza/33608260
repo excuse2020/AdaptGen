@@ -1,0 +1,33 @@
+class Solution {
+	int[][][] dp;
+	int kMod = 1_000_000_007;
+	int[][] prefix;
+	boolean hasApple(int row1, int row2, int col1, int col2) {
+		return (prefix[row2][col2] - prefix[row1][col2] + prefix[row1][col1]) > 0;
+	}
+	int ways(String[] pizza, int k) {
+		int M = pizza.length;
+		int N = pizza[0].length();
+		dp = new int[M][N][k];
+	}
+	int ways(int m, int n, int k, int M, int N) {
+		if (k == 0) {
+			return 1;
+		}
+		if (dp[m][n][k] >= 0) {
+			return dp[m][n][k];
+		}
+		dp[m][n][k] = 0;
+		for (int i = m + 1; i < M; ++i) {
+			if (hasApple(m,i,n,N) && hasApple(i,M,n,N)) {
+				dp[m][n][k] = (dp[m][n][k] + ways(i,n,k - 1,M,N)) % kMod;
+			}
+		}
+		for (int j = n + 1; j < N; ++j) {
+			if (hasApple(m,M,n,j) && hasApple(m,M,j,N)) {
+				dp[m][n][k] = (dp[m][n][k] + ways(m,j,k - 1,M,N)) % kMod;
+			}
+		}
+		return dp[m][n][k];
+	}
+}

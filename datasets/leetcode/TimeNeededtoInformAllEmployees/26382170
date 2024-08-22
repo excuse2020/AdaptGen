@@ -1,0 +1,21 @@
+class Solution {
+	int helper(int[] informTime, Map<Integer, List<Integer>> map, int curr) {
+		if (!map.containsKey(curr)) {
+			return 0;
+		}
+		int min = 0;
+		List<Integer> list = map.get(curr);
+		for (int i = 0; i < list.size(); i++) {
+			min = Math.max(helper(informTime,map,list.get(i)),min);
+		}
+		return min + informTime[curr];
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			map.putIfAbsent(manager[i],new ArrayList<>());
+			map.get(manager[i]).add(i);
+		}
+		return helper(informTime,map,headID);
+	}
+}

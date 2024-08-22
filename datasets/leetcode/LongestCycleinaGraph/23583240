@@ -1,0 +1,45 @@
+class Solution {
+	int count(int node, boolean[] vis, int[] edges) {
+		if (vis[node]) {
+			return 0;
+		}
+		vis[node] = true;
+		return 1 + count(edges[node],vis,edges);
+	}
+	int dfs(int node, boolean[] vis, boolean[] dfsvis, int[] edges) {
+		if (node == -1) {
+			return -1;
+		}
+		if (dfsvis[node]) {
+			return node;
+		}
+		if (vis[node]) {
+			return -1;
+		}
+		vis[node] = true;
+		dfsvis[node] = true;
+		return dfs(edges[node],vis,dfsvis,edges);
+	}
+	int longestCycle(int[] edges) {
+		int n = edges.length;
+		boolean[] vis = new boolean[n];
+		boolean[] cyclestart = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			if (!vis[i]) {
+				if (!vis[i]) {
+					int start = dfs(i,vis,new boolean[n],edges);
+					if (start != -1) {
+						cyclestart[start] = true;
+					}
+				}
+			}
+		}
+		int ans = -1;
+		for (int i = 0; i < n; i++) {
+			if (cyclestart[i]) {
+				ans = Math.max(ans,count(i,new boolean[n],edges));
+			}
+		}
+		return ans;
+	}
+}

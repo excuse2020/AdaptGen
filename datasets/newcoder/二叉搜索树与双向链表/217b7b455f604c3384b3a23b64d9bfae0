@@ -1,0 +1,42 @@
+class Solution {
+	TreeNode Convert(TreeNode pRootOfTree) {
+		if (pRootOfTree == null) {
+			return null;
+		}
+		transform(pRootOfTree);
+		TreeNode flag = pRootOfTree;
+		while (flag.left != null) {
+			flag = flag.left;
+		}
+		return flag;
+	}
+	TreeNode transform(TreeNode root) {
+		if (root != null) {
+			if (root.left != null) {
+				TreeNode transform = transform(root.left);
+				if (transform != null && transform.right != null) {
+					transform.right.right = root;
+					root.left = transform.right;
+				} 
+				else {
+					root.left.right = root;
+				}
+			}
+			if (root.right != null) {
+				TreeNode transform = transform(root.right);
+				if (transform != null && transform.left != null) {
+					transform.left.left = root;
+					root.right = transform.left;
+				} 
+				else {
+					root.right.left = root;
+				}
+			}
+			if (root.right == null && root.left == null) {
+				return null;
+			}
+			return root;
+		}
+		return null;
+	}
+}

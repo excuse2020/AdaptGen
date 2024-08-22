@@ -1,0 +1,89 @@
+class Solution {
+	List<int[]>[][] graph;
+	int[][] values;
+	boolean[][] visited;
+	int dfs(int r, int c) {
+		visited[r][c] = true;
+		int result = 1;
+		for (int[] next: graph[r][c]) {	
+			if (!visited[next[0]][next[1]]) {
+				result = Math.max(result,dfs(next[0],next[1]) + 1);
+			} 
+			else {
+				result = Math.max(result,values[next[0]][next[1]] + 1);
+			}
+		}
+		values[r][c] = result;
+		return result;
+	}
+	int maxIncreasingCells(int[][] mat) {
+		int m = mat.length;
+		int n = mat[0].length;
+		graph = new List[m][n];
+		values = new int[m][n];
+		visited = new boolean[m][n];
+		for (int i = 0; i < m; i++) {
+			int ci = i;
+			PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> {mat[ci][a] - mat[ci][b]});
+			for (int j = 0; j < n; j++) {
+				pq.add(j);
+				graph[i][j] = new ArrayList<>();
+			}
+			List<Integer> from = new ArrayList<>();
+			from.add(pq.remove());
+			while (!pq.isEmpty() && mat[i][pq.peek()] == mat[i][from.get(0)]) {
+				from.add(pq.remove());
+			}
+			while (!pq.isEmpty()) {
+				List<Integer> to = new ArrayList<>();
+				to.add(pq.remove());
+				while (!pq.isEmpty() && mat[i][pq.peek()] == mat[i][to.get(0)]) {
+					to.add(pq.remove());
+				}
+				for (int ii = 0; ii < from.size(); ii++) {
+					for (int j = 0; j < to.size(); j++) {
+						graph[i][from.get(ii)].add(new int{i, to.get(j)});
+					}
+				}
+				from = to;
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			int ci = i;
+			PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> {mat[a][ci] - mat[b][ci]});
+			for (int j = 0; j < m; j++) {
+				pq.add(j);
+			}
+			List<Integer> from = new ArrayList<>();
+			from.add(pq.remove());
+			while (!pq.isEmpty() && mat[pq.peek()][i] == mat[from.get(0)][i]) {
+				from.add(pq.remove());
+			}
+			while (!pq.isEmpty()) {
+				List<Integer> to = new ArrayList<>();
+				to.add(pq.remove());
+				while (!pq.isEmpty() && mat[pq.peek()][i] == mat[to.get(0)][i]) {
+					to.add(pq.remove());
+				}
+				for (int ii = 0; ii < from.size(); ii++) {
+					for (int j = 0; j < to.size(); j++) {
+						graph[from.get(ii)][i].add(new int{to.get(j), i});
+					}
+				}
+				from = to;
+			}
+		}
+		int result = Integer.MIN_VALUE;
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				if (!visited[i][j]) {
+					result = Math.max(result,dfs(i,j));
+				} 
+				else {
+					result = Math.max(result,values[i][j]);
+				}
+			}
+		}
+		return result;
+	}
+}

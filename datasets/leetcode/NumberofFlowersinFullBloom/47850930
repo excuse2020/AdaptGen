@@ -1,0 +1,23 @@
+class Solution {
+	int[] fullBloomFlowers(int[][] flowers, int[] people) {
+		Map<Integer, Integer> map = new TreeMap<>();
+		for (int[] f: flowers) {	
+			map.put(f[0],map.getOrDefault(f[0],0) + 1);
+			map.put(f[1] + 1,map.getOrDefault(f[1] + 1,0) - 1);
+		}
+		Queue<int[]> pq = new PriorityQueue<>((a, b) -> {a[0] - b[0]});
+		for (int i = 0; i < people.length; i++) {
+			pq.add(new int{people[i], i});
+		}
+		int[] ans = new int[people.length];
+		int bloom = 0;
+		for (int k: map.keySet()) {	
+			while (!pq.isEmpty() && pq.peek()[0] < k) {
+				int[] ppl = pq.poll();
+				ans[ppl[1]] = bloom;
+			}
+			bloom += map.get(k);
+		}
+		return ans;
+	}
+}

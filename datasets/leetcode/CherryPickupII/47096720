@@ -1,0 +1,36 @@
+class Solution {
+	int cherryPickup(int[][] grid) {
+		int rows = grid.length;
+		int cols = grid[0].length;
+		int dp = new int[rows][cols][cols];
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				for (int k = 0; k < cols; k++) {
+					dp[i][j][k] = -1;
+				}
+			}
+		}
+		return Math.max(0,cherryPickupUtil(grid,dp,0,0,cols - 1));
+	}
+	int cherryPickupUtil(int[][] grid, int[][][] dp, int row, int col1, int col2) {
+		int rows = grid.length;
+		int cols = grid[0].length;
+		if (row == rows) {
+			return 0;
+		}
+		if (dp[row][col1][col2] != -1) {
+			return dp[row][col1][col2];
+		}
+		int cherries = grid[row][col1] + (col1 != col2 ? grid[row][col2] : 0);
+		int maxCherries = 0;
+		for (int newcol1 = col1 - 1; newcol1 <= col1 + 1; newcol1++) {
+			for (int newcol2 = col2 - 1; newcol2 <= col2 + 1; newcol2++) {
+				if (newcol1 >= 0 && newcol1 < cols && newcol2 >= 0 && newcol2 < cols) {
+					maxCherries = Math.max(maxCherries,cherryPickupUtil(grid,dp,row + 1,newcol1,newcol2));
+				}
+			}
+		}
+		dp[row][col1][col2] = maxCherries + cherries;
+		return dp[row][col1][col2];
+	}
+}

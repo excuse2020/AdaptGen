@@ -1,0 +1,48 @@
+class Solution {
+	String add(String str, int a) {
+		StringBuilder sb = new StringBuilder(str);
+		for (int i = 0; i < sb.length(); i++) {
+			if (i % 2 != 0) {
+				int result = Character.getNumericValue(sb.charAt(i)) + a;
+				result = result >= 10 ? result % 10 : result;
+				sb.setCharAt(i,Character.forDigit(result,10));
+			}
+		}
+		return sb.toString();
+	}
+	String findLexSmallestString(String s, int a, int b) {
+		Queue<String> res = new PriorityQueue<>((letterA, letterB) -> {letterA.compareTo(letterB)});
+		Set<String> visited = new HashSet<>();
+		Queue<String> queue = new LinkedList<>();
+		queue.add(s);
+		res.add(s);
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				String current = queue.poll();
+				current = rotate(current,b);
+				if (!visited.contains(current)) {
+					visited.add(current);
+					queue.add(current);
+					res.add(current);
+				}
+				current = add(current,a);
+				if (!visited.contains(current)) {
+					visited.add(current);
+					queue.add(current);
+					res.add(current);
+				}
+			}
+		}
+		return res.poll();
+	}
+	String rotate(String str, int b) {
+		StringBuilder sb = new StringBuilder(str);
+		for (int i = 0; i < b; i++) {
+			Character last = sb.charAt(sb.length() - 1);
+			sb.deleteCharAt(sb.length() - 1);
+			sb.insert(0,last);
+		}
+		return sb.toString();
+	}
+}

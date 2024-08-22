@@ -1,0 +1,36 @@
+class Solution {
+	int minSwaps(int[][] grid) {
+		int rows = grid.length, cols = grid[0].length;
+		int[] position = new int[rows];
+		for (int r = 0; r < rows; ++r) {
+			int pos = 0;
+			for (int c = cols - 1; c >= 0; --c) {
+				if (grid[r][c] == 1) {
+					break;
+				}
+				pos++;
+			}
+			position[r] = pos;
+		}
+		int count = 0;
+		for (int r = 0; r < rows; ++r) {
+			int target = cols - r;
+			int j = r;
+			for (; j < rows; ++j) {
+				if (position[j] >= target) {
+					break;
+				}
+			}
+			if (j == rows) {
+				return -1;
+			}
+			count += j - r;
+			int temp = position[j];
+			for (int k = j; j > 0; --j) {
+				position[j] = position[j - 1];
+			}
+			position[r] = temp;
+		}
+		return count;
+	}
+}

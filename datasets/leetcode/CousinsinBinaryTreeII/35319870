@@ -1,0 +1,47 @@
+class Solution {
+	Map<Integer, Integer> lvlSum = new HashMap<>();
+	void dfs(TreeNode head, int lvl) {
+		if (head == null) {
+			return;
+		}
+		dfs(head.left,lvl + 1);
+		dfs(head.right,lvl + 1);
+		int s = 0;
+		if (head.left != null) {
+			s += head.left.val;
+		}
+		if (head.right != null) {
+			s += head.right.val;
+		}
+		if (head.left != null) {
+			head.left.val = lvlSum.get(lvl + 1) - s;
+		}
+		if (head.right != null) {
+			head.right.val = lvlSum.get(lvl + 1) - s;
+		}
+	}
+	TreeNode replaceValueInTree(TreeNode root) {
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(root);
+		int lvl = 0;
+		while (!q.isEmpty()) {
+			int s = q.size();
+			int sum = 0;
+			for (int i = 0; i < s; i++) {
+				TreeNode t = q.poll();
+				sum += t.val;
+				if (t.left != null) {
+					q.add(t.left);
+				}
+				if (t.right != null) {
+					q.add(t.right);
+				}
+			}
+			lvlSum.put(lvl,sum);
+			lvl++;
+		}
+		dfs(root,0);
+		root.val = 0;
+		return root;
+	}
+}

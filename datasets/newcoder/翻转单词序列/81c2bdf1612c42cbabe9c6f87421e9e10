@@ -1,0 +1,46 @@
+class Solution {
+	String ReverseSentence(String str) {
+		if (str == null) {
+			return "";
+		}
+		char[] chars = str.toCharArray();
+		int len = 0;
+		int cur = 0;
+		boolean space = true;
+		for (int i = 0; i < chars.length; i++) {
+			if (chars[i] != ' ') {
+				chars[cur++] = chars[i];
+				space = false;
+			} 
+			else if (space == false) {
+				chars[cur++] = ' ';
+				space = true;
+			}
+		}
+		len = space ? (cur - 1) : cur;
+		if (len <= 0) {
+			return "";
+		}
+		reverse(chars,0,len);
+		int prevSapceIdx = -1;
+		for (int i = 0; i < len; i++) {
+			if (chars[i] != ' ') {
+				continue;
+			}
+			reverse(chars,prevSapceIdx + 1,i);
+			prevSapceIdx = i;
+		}
+		reverse(chars,prevSapceIdx + 1,len);
+		return new String(chars, 0, len);
+	}
+	void reverse(char[] chars, int li, int ri) {
+		ri--;
+		while (li < ri) {
+			char tmp = chars[li];
+			chars[li] = chars[ri];
+			chars[ri] = tmp;
+			li++;
+			ri--;
+		}
+	}
+}

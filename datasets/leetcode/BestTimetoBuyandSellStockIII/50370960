@@ -1,0 +1,30 @@
+class Solution {
+	int countMaxProfit(int idx, int buy, int transactions, int[] prices, int n, int[][][] dp) {
+		if (idx == n || transactions == 0) {
+			return 0;
+		}
+		if (dp[idx][buy][transactions] != -1) {
+			return dp[idx][buy][transactions];
+		}
+		if (buy == 1) {
+			int buying = -prices[idx] + countMaxProfit(idx + 1,0,transactions,prices,n,dp);
+			int skiping = 0 + countMaxProfit(idx + 1,1,transactions,prices,n,dp);
+			return dp[idx][buy][transactions] = Math.max(buying,skiping);
+		} 
+		else {
+			int selling = prices[idx] + countMaxProfit(idx + 1,1,transactions - 1,prices,n,dp);
+			int skiping = 0 + countMaxProfit(idx + 1,0,transactions,prices,n,dp);
+			return dp[idx][buy][transactions] = Math.max(selling,skiping);
+		}
+	}
+	int maxProfit(int[] prices) {
+		int n = prices.length;
+		int[][][] dp = new int[n][2][3];
+		for (int[][] curr: dp) {	
+			for (int[] arr: curr) {	
+				Arrays.fill(arr,-1);
+			}
+		}
+		return countMaxProfit(0,1,2,prices,n,dp);
+	}
+}

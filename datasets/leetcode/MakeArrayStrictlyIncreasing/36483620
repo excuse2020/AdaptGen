@@ -1,0 +1,43 @@
+class Solution {
+	Map<Pair<Integer, Integer>, Integer> dp;
+	int binarySearch(int ele, int[] arr) {
+		int left = 0;
+		int right = arr.length;
+		while (left < right) {
+			int mid = (left + right) / 2;
+			if (arr[mid] <= ele) {
+				left = mid + 1;
+			} 
+			else {
+				right = mid;
+			}
+		}
+		return left;
+	}
+	int dfs(int prev, int index, int[] arr1, int[] arr2) {
+		if (index == arr1.length) {
+			return 0;
+		}
+		if (dp.containsKey(new Pair<>(prev, index))) {
+			return dp.get(new Pair<>(prev, index));
+		}
+		int cost = Integer.MAX_VALUE / 2;
+		if (arr1[index] > prev) {
+			cost = dfs(arr1[index],index + 1,arr1,arr2);
+		}
+		int idx = binarySearch(prev,arr2);
+		if (idx < arr2.length) {
+			cost = Math.min(cost,1 + dfs(arr2[idx],index + 1,arr1,arr2));
+		}
+		dp.put(new Pair<>(prev, index),cost);
+		return cost;
+	}
+	int makeArrayIncreasing(int[] arr1, int[] arr2) {
+		dp = new HashMap<>();
+		Arrays.sort(arr2);
+		int m = arr1.length;
+		int n = arr2.length;
+		int val = dfs(-1,0,arr1,arr2);
+		return val >= Integer.MAX_VALUE / 2 ? -1 : val;
+	}
+}

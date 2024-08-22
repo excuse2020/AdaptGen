@@ -1,0 +1,56 @@
+class Solution {
+	int[][] findFarmland(int[][] land) {
+		var ans = new ArrayList<ArrayList<Integer>>();
+		int n = land.length;
+		int m = land[0].length;
+		for (int i = 0; i < n; ++i) {
+			for (int j = 0; j < m; ++j) {
+				if (land[i][j] == 1) {
+					var temp = new ArrayList<Integer>();
+					find_left(land,i,j,n,m,temp);
+					find_right(land,i,j,n,m,temp);
+					ans.add(temp);
+				}
+			}
+		}
+		int n1 = ans.size();
+		int[][] an = new int[n1][4];
+		for (int i = 0; i < n1; ++i) {
+			for (int j = 0; j < 4; ++j) {
+				an[i][j] = ans.get(i).get(j);
+			}
+		}
+		return an;
+	}
+	void find_left(int[][] land, int x, int y, int n, int m, ArrayList<Integer> ans) {
+		land[x][y] = 2;
+		while (x - 1 >= 0 && land[x - 1][y] == 1) {
+			--x;
+			land[x][y] = 2;
+		}
+		while (y - 1 >= 0 && land[x][y - 1] == 1) {
+			--y;
+			land[x][y] = 2;
+		}
+		ans.add(x);
+		ans.add(y);
+	}
+	void find_right(int[][] land, int x, int y, int n, int m, ArrayList<Integer> ans) {
+		land[x][y] = 0;
+		int x_begin = x;
+		int y_begin = y;
+		while (x + 1 < n && (land[x + 1][y] == 1 || land[x + 1][y] == 2)) {
+			++x;
+		}
+		while (y + 1 < m && (land[x][y + 1] == 1 || land[x][y + 1] == 2)) {
+			++y;
+		}
+		for (int i = x_begin; i <= x; ++i) {
+			for (int j = y_begin; j <= y; ++j) {
+				land[i][j] = 0;
+			}
+		}
+		ans.add(x);
+		ans.add(y);
+	}
+}

@@ -1,0 +1,45 @@
+class Solution {
+	List<Integer> parent;
+	List<Integer> rank;
+	int findCircleNum(int[][] isConnected) {
+		rank = new ArrayList<>();
+		parent = new ArrayList<>();
+		for (int i = 0; i <= isConnected.length; i++) {
+			rank.add(0);
+			parent.add(i);
+		}
+		for (int i = 0; i < isConnected.length; i++) {
+			for (int j = 0; j < isConnected[0].length; j++) {
+				if (isConnected[i][j] == 1) {
+					union(i + 1,j + 1);
+				}
+			}
+		}
+		int provinces = 0;
+		for (int i = 1; i < parent.size(); i++) {
+			provinces += parent.get(i) == i ? 1 : 0;
+		}
+		return provinces;
+	}
+	int findParent(int node) {
+		if (node == parent.get(node)) {
+			return node;
+		}
+		parent.set(node,findParent(parent.get(node)));
+		return parent.get(node);
+	}
+	void union(int u, int v) {
+		int ulp_u = findParent(u);
+		int ulp_v = findParent(v);
+		if (rank.get(ulp_u) < rank.get(ulp_v)) {
+			parent.set(ulp_u,ulp_v);
+		} 
+		else if (rank.get(ulp_u) > rank.get(ulp_v)) {
+			parent.set(ulp_v,ulp_u);
+		} 
+		else {
+			parent.set(ulp_v,ulp_u);
+			rank.set(ulp_u,rank.get(ulp_u) + 1);
+		}
+	}
+}

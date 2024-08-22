@@ -1,0 +1,27 @@
+class Solution {
+	int val = Integer.MIN_VALUE;
+	void helper(int curr, int[] edges, boolean[] visited, int step, Map<Integer, Integer> map) {
+		if (curr == -1) {
+			return;
+		}
+		if (map.containsKey(curr)) {
+			val = Math.max(val,step - map.get(curr));
+			return;
+		}
+		if (visited[curr]) {
+			return;
+		}
+		visited[curr] = true;
+		map.put(curr,step);
+		helper(edges[curr],edges,visited,step + 1,map);
+	}
+	int longestCycle(int[] edges) {
+		boolean[] visited = new boolean[edges.length];
+		for (int i = 0; i < edges.length; i++) {
+			if (!visited[i]) {
+				helper(i,edges,visited,0,new HashMap<>());
+			}
+		}
+		return val == Integer.MIN_VALUE ? -1 : val;
+	}
+}

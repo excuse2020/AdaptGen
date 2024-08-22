@@ -1,0 +1,29 @@
+class Solution {
+	int fallingPathSum(int[][] matrix, int row, int col, Integer[][] memo) {
+		if (row == matrix.length - 1) {
+			return matrix[row][col];
+		}
+		if (memo[row][col] != null) {
+			return memo[row][col];
+		}
+		int minPathSum = Integer.MAX_VALUE;
+		minPathSum = Math.min(minPathSum,matrix[row][col] + fallingPathSum(matrix,row + 1,col,memo));
+		if (col > 0) {
+			minPathSum = Math.min(minPathSum,matrix[row][col] + fallingPathSum(matrix,row + 1,col - 1,memo));
+		}
+		if (col < matrix[0].length - 1) {
+			minPathSum = Math.min(minPathSum,matrix[row][col] + fallingPathSum(matrix,row + 1,col + 1,memo));
+		}
+		memo[row][col] = minPathSum;
+		return minPathSum;
+	}
+	int minFallingPathSum(int[][] matrix) {
+		int n = matrix.length;
+		int minSum = Integer.MAX_VALUE;
+		Integer[][] memo = new Integer[n][n];
+		for (int col = 0; col < n; col++) {
+			minSum = Math.min(minSum,fallingPathSum(matrix,0,col,memo));
+		}
+		return minSum;
+	}
+}

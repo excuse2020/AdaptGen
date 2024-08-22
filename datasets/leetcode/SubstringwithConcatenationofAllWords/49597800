@@ -1,0 +1,51 @@
+class Solution {
+	List<Integer> findSubstring(String s, String[] words) {
+		List<Integer> res = new ArrayList<>();
+		int step = words[0].length();
+		if (s.length() < words.length * step) {
+			return res;
+		}
+		Map<String, Integer> wordsCount = new HashMap<>(words.length);
+		for (int i = 0; i < words.length; i++) {
+			wordsCount.merge(words[i],1,);
+		}
+		Set<String> wordsUniq = new HashSet<>(words.length);
+		Collections.addAll(wordsUniq,words);
+		int[] indexes = new int[s.length()];
+		int expectedSum = 0;
+		int i = 1;
+		for (String word: wordsUniq) {	
+			int idx = -1;
+			int count = 0;
+			expectedSum += (2 << i) * wordsCount.get(word);
+			while ((idx = s.indexOf(word,idx + 1)) != -1) {
+				indexes[idx] = i;
+				count++;
+			}
+			if (count == 0) {
+				return res;
+			}
+			i++;
+		}
+		for (int left = 0; left < indexes.length - (words.length - 1); left++) {
+			if (indexes[left] != 0) {
+				int sum = 0;
+				int count = 0;
+				int right = left + words.length * step;
+				if (right <= indexes.length) {
+					for (i = left; i < left + words.length * step; i += step) {
+						if (indexes[i] == 0) {
+							break;
+						}
+						sum += 2 << indexes[i];
+						count++;
+					}
+					if (count == words.length && sum == expectedSum) {
+						res.add(left);
+					}
+				}
+			}
+		}
+		return res;
+	}
+}

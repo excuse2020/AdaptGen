@@ -1,0 +1,38 @@
+class Solution {
+	TreeNode replaceValueInTree(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		List<TreeNode> bfsQueue = new ArrayList<>();
+		root.val = 0;
+		bfsQueue.add(root);
+		Map<TreeNode, Integer> parentChildrenSum = new HashMap<>();
+		while (!bfsQueue.isEmpty()) {
+			List<TreeNode> nodesToProcessNext = new ArrayList<>();
+			int sum = 0;
+			for (TreeNode node: bfsQueue) {	
+				int childSum = 0;
+				if (node.left != null) {
+					nodesToProcessNext.add(node.left);
+					childSum += node.left.val;
+				}
+				if (node.right != null) {
+					nodesToProcessNext.add(node.right);
+					childSum += node.right.val;
+				}
+				if (node.left != null) {
+					parentChildrenSum.put(node.left,childSum);
+				}
+				if (node.right != null) {
+					parentChildrenSum.put(node.right,childSum);
+				}
+				sum += node.val;
+			}
+			for (TreeNode node: bfsQueue) {	
+				node.val = sum - parentChildrenSum.getOrDefault(node,0);
+			}
+			bfsQueue = nodesToProcessNext;
+		}
+		return root;
+	}
+}

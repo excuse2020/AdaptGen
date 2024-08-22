@@ -1,0 +1,54 @@
+class Solution {
+	int count;
+	Map<Integer, List<Integer>> graph;
+	int[] low;
+	int[] ord;
+	List<List<Integer>> result;
+	boolean[] visited;
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		graph = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			graph.put(i,new ArrayList<>());
+		}
+		for (List<Integer> connection: connections) {	
+			int v = connection.get(0);
+			int w = connection.get(1);
+			graph.get(v).add(w);
+			graph.get(w).add(v);
+		}
+		ord = new int[n];
+		low = new int[n];
+		visited = new boolean[n];
+		Arrays.fill(visited,false);
+		result = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			if (!visited[i]) {
+				dfs(i,i);
+			}
+		}
+		return result;
+	}
+	void dfs(int v, int parent) {
+		visited[v] = true;
+		ord[v] = count++;
+		low[v] = ord[v];
+		List<Integer> adjs = graph.get(v);
+		for (int w: adjs) {	
+			if (!visited[w]) {
+				dfs(w,v);
+				low[v] = Math.min(low[w],low[v]);
+				if (low[w] > ord[v]) {
+					List<Integer> bridge = new ArrayList<>();
+					bridge.add(v);
+					bridge.add(w);
+					result.add(bridge);
+				}
+			} 
+			else {
+				if (w != parent) {
+					low[v] = Math.min(low[v],low[w]);
+				}
+			}
+		}
+	}
+}

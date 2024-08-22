@@ -1,0 +1,23 @@
+class Solution {
+	boolean carPooling(int[][] trips, int capacity) {
+		var carPoolingBorders = new int[trips.length * 2][2];
+		for (int i = 0; i < trips.length; i++) {
+			carPoolingBorders[i * 2][0] = trips[i][1];
+			carPoolingBorders[i * 2][1] = trips[i][0];
+			carPoolingBorders[i * 2 + 1][0] = trips[i][2];
+			carPoolingBorders[i * 2 + 1][1] = -trips[i][0];
+		}
+		Arrays.sort(carPoolingBorders,Comparator.comparing((carPoolingBorder) -> {carPoolingBorder[0]}));
+		var maxPooling = 0;
+		for (int i = 0; i < carPoolingBorders.length; i++) {
+			maxPooling += carPoolingBorders[i][1];
+			if (i != carPoolingBorders.length - 1 && carPoolingBorders[i + 1][0] == carPoolingBorders[i][0]) {
+				continue;
+			}
+			if (maxPooling > capacity) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

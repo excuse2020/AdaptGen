@@ -1,0 +1,28 @@
+class Solution {
+	long maximumTripletValue(int[] nums) {
+		int n = nums.length;
+		long max = 0;
+		int max1 = nums[0];
+		PriorityQueue<Pair> pq = new PriorityQueue<>((a, b) -> {Integer.compare(b.val,a.val)});
+		for (int k = 2; k < n; k++) {
+			Pair p = new Pair();
+			p.val = nums[k];
+			p.ind = k;
+			pq.add(p);
+		}
+		for (int j = 1; j <= (n - 2); j++) {
+			max1 = Math.max(max1,nums[j - 1]);
+			int max2 = pq.peek().val;
+			long val = 1l * (max1 - nums[j]);
+			max = Math.max(max,val);
+			while (!pq.isEmpty() && pq.peek().ind <= j + 1) {
+				pq.poll();
+			}
+		}
+		return max;
+	}
+	class Pair {
+		int ind;
+		int val;
+	}
+}

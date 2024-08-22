@@ -1,0 +1,31 @@
+class Solution {
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		int[] indegree = new int[numCourses];
+		List<List<Integer>> adj = new ArrayList<>(numCourses);
+		for (int i = 0; i < numCourses; i++) {
+			adj.add(new ArrayList());
+		}
+		for (int[] prerequisite: prerequisites) {	
+			adj.get(prerequisite[1]).add(prerequisite[0]);
+			indegree[prerequisite[0]]++;
+		}
+		Queue<Integer> q = new LinkedList<>();
+		for (int i = 0; i < numCourses; i++) {
+			if (indegree[i] == 0) {
+				q.offer(i);
+			}
+		}
+		int nodesVisited = 0;
+		while (!q.isEmpty()) {
+			int node = q.poll();
+			nodesVisited++;
+			for (int neighbour: adj.get(node)) {	
+				indegree[neighbour]--;
+				if (indegree[neighbour] == 0) {
+					q.offer(neighbour);
+				}
+			}
+		}
+		return nodesVisited == numCourses;
+	}
+}

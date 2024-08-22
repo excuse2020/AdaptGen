@@ -1,0 +1,24 @@
+class Solution {
+	boolean carPooling(int[][] trips, int capacity) {
+		int distance = 0;
+		for (int i = 0; i < trips.length; i++) {
+			distance = (trips[i][2] > distance) ? trips[i][2] : distance;
+		}
+		int[] diff = new int[distance + 1];
+		for (int i = 0; i < trips.length; i++) {
+			int num = trips[i][0];
+			int pick = trips[i][1];
+			int drop = trips[i][2];
+			diff[pick] += num;
+			diff[drop] -= num;
+		}
+		int[] peopleInCarSoFar = new int[diff.length + 1];
+		for (int i = 1; i < diff.length; i++) {
+			peopleInCarSoFar[i] = peopleInCarSoFar[i - 1] + diff[i - 1];
+			if (peopleInCarSoFar[i] > capacity) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

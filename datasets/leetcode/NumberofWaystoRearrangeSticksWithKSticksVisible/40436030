@@ -1,0 +1,32 @@
+class Solution {
+	int MOD = (int) (1e9 + 7);
+	int memoizationUtility(int n, int k, int[][] cache) {
+		if (n == 0 || k == 0) {
+			return 0;
+		}
+		if (n == k) {
+			return 1;
+		}
+		if (cache[n][k] != 0) {
+			return cache[n][k];
+		}
+		long biggestAtEnd = 1L * memoizationUtility(n - 1,k - 1,cache);
+		long biggestNotAtEnd = 1L * memoizationUtility(n - 1,k,cache);
+		return cache[n][k] = (int) ((biggestAtEnd + biggestNotAtEnd) % MOD);
+	}
+	int rearrangeSticks(int n, int k) {
+		int[][] cache = new int[1001][1001];
+		return memoizationUtility(n,k,cache);
+	}
+	int recursionUtility(int n, int k) {
+		if (n == 0 || k == 0) {
+			return 0;
+		}
+		if (n == k) {
+			return 1;
+		}
+		long biggestAtEnd = 1L * recursionUtility(n - 1,k - 1);
+		long biggestNotAtEnd = 1L * recursionUtility(n - 1,k);
+		return (int) ((biggestAtEnd + biggestNotAtEnd) % MOD);
+	}
+}

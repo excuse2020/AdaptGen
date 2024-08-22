@@ -1,0 +1,61 @@
+class Solution {
+	long maximumTotalDamage(int[] power) {
+		Arrays.sort(power);
+		Map<Integer, Long> sumMap = new TreeMap<>();
+		int n = power.length;
+		int i = 0;
+		while (i < n) {
+			int current = power[i];
+			long sum = 0;
+			while (i < n && power[i] == current) {
+				sum += current;
+				i++;
+			}
+			sumMap.put(current,sum);
+		}
+		int size = sumMap.size();
+		long[][] dp = new long[size][2];
+		i = 0;
+		for (int e: sumMap.keySet()) {	
+			if (i == 0) {
+				dp[i][0] = sumMap.get(e);
+			} 
+			else if (i == 1) {
+				if (dp[i - 1][1] < e - 2) {
+					dp[i][0] = Math.max(dp[i - 1][0],dp[i - 1][0] + sumMap.get(e));
+				} 
+				else {
+					dp[i][0] = Math.max(dp[i - 1][0],sumMap.get(e));
+				}
+			} 
+			else if (i == 2) {
+				if (dp[i - 1][1] < e - 2) {
+					dp[i][0] = Math.max(dp[i - 1][0],dp[i - 1][0] + sumMap.get(e));
+				} 
+				else if (dp[i - 2][1] < e - 2) {
+					dp[i][0] = Math.max(dp[i - 1][0],dp[i - 2][0] + sumMap.get(e));
+				} 
+				else {
+					dp[i][0] = Math.max(dp[i - 1][0],sumMap.get(e));
+				}
+			} 
+			else {
+				if (dp[i - 1][1] < e - 2) {
+					dp[i][0] = Math.max(dp[i - 1][0],dp[i - 1][0] + sumMap.get(e));
+				} 
+				else if (dp[i - 2][1] < e - 2) {
+					dp[i][0] = Math.max(dp[i - 1][0],dp[i - 2][0] + sumMap.get(e));
+				} 
+				else if (dp[i - 3][1] < e - 2) {
+					dp[i][0] = Math.max(dp[i - 1][0],dp[i - 3][0] + sumMap.get(e));
+				} 
+				else {
+					dp[i][0] = Math.max(dp[i - 1][0],Math.max(dp[i - 2][0],dp[i - 3][0]) + sumMap.get(e));
+				}
+			}
+			dp[i][1] = e;
+			i++;
+		}
+		return dp[size - 1][0];
+	}
+}

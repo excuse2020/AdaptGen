@@ -1,0 +1,45 @@
+class Solution {
+	int divide(int dividend, int divisor) {
+		boolean shouldAnsNegative = shouldAnsNegative(dividend,divisor);
+		int max = Integer.MAX_VALUE;
+		int min = Integer.MIN_VALUE;
+		long ans = divideWithoutEdgeCases(dividend,divisor);
+		if (shouldAnsNegative) {
+			if (ans > max) {
+				ans = -min;
+			}
+		} 
+		else {
+			if (ans > max) {
+				ans = max;
+			}
+		}
+		ans = shouldAnsNegative ? -ans : ans;
+		return (int) ans;
+	}
+	long divideWithoutEdgeCases(long n, long d) {
+		n = n < 0 ? -n : n;
+		d = d < 0 ? -d : d;
+		long q = 0;
+		while (n >= d) {
+			long times = 1;
+			long value = d;
+			while (value + value <= n) {
+				value += value;
+				times += times;
+			}
+			q += times;
+			n -= value;
+		}
+		return q;
+	}
+	boolean shouldAnsNegative(int n, int d) {
+		if (n < 0 && d > 0) {
+			return true;
+		}
+		if (n > 0 && d < 0) {
+			return true;
+		}
+		return false;
+	}
+}

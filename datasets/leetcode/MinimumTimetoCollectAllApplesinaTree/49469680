@@ -1,0 +1,32 @@
+class Solution {
+	int getMin(int idx, int par, List<Integer>[] graph, List<Boolean> apple) {
+		boolean ca = apple.get(idx);
+		int res = 0;
+		if (graph[idx] != null) {
+			for (int nei: graph[idx]) {	
+				if (nei == par) {
+					continue;
+				}
+				res += getMin(nei,idx,graph,apple);
+			}
+		}
+		if (par != -1 && (res > 0 || ca)) {
+			res += 2;
+		}
+		return res;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		List<Integer>[] graph = new ArrayList[n];
+		for (int[] edge: edges) {	
+			if (graph[edge[0]] == null) {
+				graph[edge[0]] = new ArrayList<>();
+			}
+			if (graph[edge[1]] == null) {
+				graph[edge[1]] = new ArrayList<>();
+			}
+			graph[edge[0]].add(edge[1]);
+			graph[edge[1]].add(edge[0]);
+		}
+		return getMin(0,-1,graph,hasApple);
+	}
+}

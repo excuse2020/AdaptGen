@@ -1,0 +1,48 @@
+class Solution {
+	int Git(String[] matrix, int versionA, int versionB) {
+		int n = matrix.length;
+		List[] g = new List[n];
+		for (int i = 0; i < n; i++) {
+			g[i] = new ArrayList<Integer>();
+		}
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (matrix[i].charAt(j) == '1') {
+					g[i].add(j);
+				}
+			}
+		}
+		List<Integer> pathA = new ArrayList<>();
+		List<Integer> pathB = new ArrayList<>();
+		int[] vis = new int[n];
+		dfs(0,g,versionA,pathA,vis);
+		Arrays.fill(vis,0);
+		dfs(0,g,versionB,pathB,vis);
+		int i = 0, j = 0, res = -1;
+		while (i < pathA.size() && j < pathB.size()) {
+			if (pathA.get(i) == pathB.get(j)) {
+				res = pathA.get(i);
+			} 
+			else {
+				break;
+			}
+			i++;
+			j++;
+		}
+		return res;
+	}
+	boolean dfs(int cur, List<Integer>[] g, int target, List<Integer> path, int[] vis) {
+		vis[cur] = 1;
+		path.add(cur);
+		if (cur == target) {
+			return true;
+		}
+		for (int next: g[cur]) {	
+			if (vis[next] == 0 && dfs(next,g,target,path,vis)) {
+				return true;
+			}
+		}
+		path.remove(path.size() - 1);
+		return false;
+	}
+}

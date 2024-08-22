@@ -1,0 +1,43 @@
+class Solution {
+	int kMod = 1_000_000_007;
+	int m;
+	int[][] memo = new int[1000][1024];
+	int n;
+	int colorTheGrid(int m, int n) {
+		this.m = m;
+		this.n = n;
+		return dp(0,0,0,0);
+	}
+	int dp(int r, int c, int prevColMask, int currColMask) {
+		if (c == n) {
+			return 1;
+		}
+		if (memo[c][prevColMask] != 0) {
+			return memo[c][prevColMask];
+		}
+		if (r == m) {
+			return dp(0,c + 1,currColMask,0);
+		}
+		int ans = 0;
+		for (int color = 1; color <= 3; ++color) {
+			if (getColor(prevColMask,r) == color) {
+				continue;
+			}
+			if (r > 0 && getColor(currColMask,r - 1) == color) {
+				continue;
+			}
+			ans += dp(r + 1,c,prevColMask,setColor(currColMask,r,color));
+			ans %= kMod;
+		}
+		if (r == 0) {
+			memo[c][prevColMask] = ans;
+		}
+		return ans;
+	}
+	int getColor(int mask, int r) {
+		return mask >> r * 2 & 3;
+	}
+	int setColor(int mask, int r, int color) {
+		return mask | color << r * 2;
+	}
+}

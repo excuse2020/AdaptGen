@@ -1,0 +1,55 @@
+class Solution {
+	void findForAlice(List<List<Integer>> graph, int n, int p, int[] parent, int[] distance) {
+		if (p != -1) {
+			distance[n] = distance[p] + 1;
+		}
+		List<Integer> neighbours = graph.get(n);
+		for (int neighbour: neighbours) {	
+			if (neighbour != p) {
+				findForAlice(graph,neighbour,n,parent,distance);
+			}
+		}
+		parent[n] = p;
+	}
+	int findProfitForAlice(List<List<Integer>> graph, int n, int p, int[] distance, int[] path, int[] amount) {
+		List<Integer> neighbours = graph.get(n);
+		int maxPrice = Integer.MIN_VALUE;
+		for (int neighbour: neighbours) {	
+			if (neighbour != p) {
+				int temp = 0;
+				if (distance[neighbour] == path[neighbour]) {
+					temp = amount[neighbour] / 2;
+				} 
+				else if (path[neighbour] < 0 || path[neighbour] > distance[neighbour]) {
+					temp = amount[neighbour];
+				}
+				maxPrice = Math.max(maxPrice,temp + findProfitForAlice(graph,neighbour,n,distance,path,amount));
+			}
+		}
+		if (maxPrice == Integer.MIN_VALUE) {
+			return 0;
+		}
+		return maxPrice;
+	}
+	int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+		int[] parent = new int[amount.length];
+		int[] distance = new int[amount.length];
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < amount.length; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			graph.get(edge[0]).add(edge[1]);
+			graph.get(edge[1]).add(edge[0]);
+		}
+		findForAlice(graph,0,-1,parent,distance);
+		int[] path = new int[parent.length];
+		Arrays.fill(path,-2);
+		int p = -1;
+		while (bob != -1) {
+			path[bob] = ++p;
+			bob = parent[bob];
+		}
+		return amount[0] + findProfitForAlice(graph,0,-1,distance,path,amount);
+	}
+}

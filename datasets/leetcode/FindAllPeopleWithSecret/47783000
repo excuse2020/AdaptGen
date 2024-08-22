@@ -1,0 +1,33 @@
+class Solution {
+	List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+		Map<Integer, List<int[]>> groupedMeetingsWithTimestamp = new TreeMap<>();
+		for (int[] meeting: meetings) {	
+			List<int[]> existing = groupedMeetingsWithTimestamp.getOrDefault(meeting[2],new ArrayList<>());
+			existing.add(meeting);
+			groupedMeetingsWithTimestamp.put(meeting[2],existing);
+		}
+		Set<Integer> personsWithSecret = new HashSet<>();
+		personsWithSecret.add(0);
+		personsWithSecret.add(firstPerson);
+		for (Map.Entry<Integer, List<int[]>> entry: groupedMeetingsWithTimestamp.entrySet()) {	
+			List<int[]> sameTimeMeetings = entry.getValue();
+			boolean atleastOneChanged = true;
+			while (atleastOneChanged) {
+				atleastOneChanged = false;
+				List<int[]> temp = new ArrayList<>();
+				for (int[] meeting: sameTimeMeetings) {	
+					if (personsWithSecret.contains(meeting[0]) || personsWithSecret.contains(meeting[1])) {
+						personsWithSecret.add(meeting[0]);
+						personsWithSecret.add(meeting[1]);
+						atleastOneChanged = true;
+					} 
+					else {
+						temp.add(meeting);
+					}
+				}
+				sameTimeMeetings = temp;
+			}
+		}
+		return new ArrayList<>(personsWithSecret);
+	}
+}

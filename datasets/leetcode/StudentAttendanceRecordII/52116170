@@ -1,0 +1,29 @@
+class Solution {
+	int checkRecord(int n) {
+		long[][][] dp = new long[n][2][3];
+		for (long[][] val: dp) {	
+			for (long[] val1: val) {	
+				Arrays.fill(val1,-1);
+			}
+		}
+		return (int) f(0,0,0,n,dp);
+	}
+	long f(int ind, int count_a, int count_l, int n, long[][][] dp) {
+		if (count_a >= 2) {
+			return 0;
+		}
+		if (count_l >= 3) {
+			return 0;
+		}
+		if (ind == n) {
+			return 1;
+		}
+		if (dp[ind][count_a][count_l] != -1) {
+			return dp[ind][count_a][count_l];
+		}
+		long p = (f(ind + 1,count_a,0,n,dp)) % (1000000007);
+		long a = (f(ind + 1,count_a + 1,0,n,dp)) % (1000000007);
+		long l = (f(ind + 1,count_a,count_l + 1,n,dp)) % (1000000007);
+		return dp[ind][count_a][count_l] = (p + a) % (1000000007);
+	}
+}

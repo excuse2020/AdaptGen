@@ -1,0 +1,40 @@
+class Solution {
+	byte getBitMap(int[] cells) {
+		byte bitMap = 0;
+		for (int i = 0; i < cells.length; i++) {
+			bitMap |= (cells[i] << (cells.length - 1));
+		}
+		return bitMap;
+	}
+	int[] getCells(byte bitMap) {
+		int[] cells = new int[8];
+		for (int i = 0; i < cells.length; i++) {
+			cells[i] = 1 & (bitMap >>> (cells.length - 1));
+		}
+		return cells;
+	}
+	byte getNextDay(byte bitMap) {
+		bitMap = (byte) ~((bitMap << 1) ^ (bitMap >>> 1));
+		return (byte) (bitMap & 126);
+	}
+	int[] prisonAfterNDays(int[] cells, int N) {
+		HashMap<Byte, Integer> map = new HashMap<>();
+		byte bitMap = getBitMap(cells);
+		while (N > 0) {
+			if (map.containsKey(bitMap)) {
+				int len = map.get(bitMap) - N;
+				N %= len;
+				break;
+			} 
+			else {
+				map.put(bitMap,N);
+				bitMap = getNextDay(bitMap);
+				N--;
+			}
+		}
+		while (N-- > 0) {
+			bitMap = getNextDay(bitMap);
+		}
+		return getCells(bitMap);
+	}
+}

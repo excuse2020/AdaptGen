@@ -1,0 +1,28 @@
+class Solution {
+	int numRollsToTarget(int n, int k, int target) {
+		int[][] dp = new int[n + 1][target + 1];
+		for (int dice = 0; dice <= n; dice++) {
+			Arrays.fill(dp[dice],-1);
+		}
+		return solve(n,k,target,dp);
+	}
+	int solve(int dice, int faces, int target, int[][] dp) {
+		if (dice == 0 && target == 0) {
+			return 1;
+		} 
+		else if (dice <= 0 || target <= 0) {
+			return 0;
+		} 
+		else if (dp[dice][target] != -1) {
+			return dp[dice][target];
+		}
+		int ways = 0;
+		int modulo = 1000_000_007;
+		for (int face = 1; face <= faces; face++) {
+			ways += solve(dice - 1,faces,target - face,dp);
+			ways %= modulo;
+		}
+		dp[dice][target] = ways;
+		return ways;
+	}
+}

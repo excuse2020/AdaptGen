@@ -1,0 +1,36 @@
+class Solution {
+	int findWinningPlayer(int[] skills, int k) {
+		HashMap<Integer, Integer> idxmap = new HashMap<>();
+		HashMap<Integer, Integer> hmap = new HashMap<>();
+		int cmax = 0, maxidx = 0;
+		for (int i = 0; i < skills.length; i++) {
+			if (cmax < skills[i]) {
+				cmax = skills[i];
+				maxidx = i;
+			}
+		}
+		if (k >= skills.length) {
+			return maxidx;
+		}
+		ArrayDeque<Integer> dq = new ArrayDeque<>();
+		for (int i = 0; i < skills.length; i++) {
+			idxmap.put(skills[i],i);
+			hmap.put(skills[i],0);
+			dq.addLast(skills[i]);
+		}
+		int i = 0;
+		while (true) {
+			int first = dq.removeFirst();
+			int second = dq.removeFirst();
+			int max = Math.max(first,second);
+			int min = Math.min(first,second);
+			dq.addFirst(max);
+			dq.addLast(min);
+			int count = hmap.get(max);
+			hmap.put(max,count + 1);
+			if (count + 1 == k) {
+				return idxmap.get(max);
+			}
+		}
+	}
+}

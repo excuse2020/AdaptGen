@@ -1,0 +1,33 @@
+class Solution {
+	int MAX_BITS = 63;
+	long maximumOr(int[] nums, int k) {
+		int[] originalBits = new int[MAX_BITS];
+		for (int num: nums) {	
+			for (int i = 0; num > 0; i++) {
+				if (num % 2 == 1) {
+					originalBits[i]++;
+				}
+				num /= 2;
+			}
+		}
+		long max = 0;
+		for (int num: nums) {	
+			int[] bits = Arrays.copyOf(originalBits,MAX_BITS);
+			for (int i = 0; num > 0; i++) {
+				if (num % 2 == 1) {
+					bits[i]--;
+					bits[i + k]++;
+				}
+				num /= 2;
+			}
+			long result = 0;
+			for (int i = 0; i < MAX_BITS; i++) {
+				if (bits[i] > 0) {
+					result += (1L << i);
+				}
+			}
+			max = Math.max(result,max);
+		}
+		return max;
+	}
+}

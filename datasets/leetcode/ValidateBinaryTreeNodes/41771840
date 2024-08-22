@@ -1,0 +1,49 @@
+class Solution {
+	boolean dfs(int i, int[] leftChild, int[] rightChild, int[] vis) {
+		vis[i] = 1;
+		boolean flag = true;
+		if (leftChild[i] != -1) {
+			if (vis[leftChild[i]] == 1) {
+				return false;
+			}
+			flag &= dfs(leftChild[i],leftChild,rightChild,vis);
+		}
+		if (rightChild[i] != -1) {
+			if (vis[rightChild[i]] == 1) {
+				return false;
+			}
+			flag &= dfs(rightChild[i],leftChild,rightChild,vis);
+		}
+		return flag;
+	}
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		int[] indeg = new int[n];
+		for (int i = 0; i < n; i++) {
+			if (leftChild[i] != -1) {
+				indeg[leftChild[i]]++;
+			}
+			if (rightChild[i] != -1) {
+				indeg[rightChild[i]]++;
+			}
+		}
+		int src = -1;
+		int cnt = 0;
+		for (int i = 0; i < n; i++) {
+			if (indeg[i] == 0) {
+				src = i;
+				cnt++;
+			}
+		}
+		if (cnt != 1) {
+			return false;
+		}
+		int[] vis = new int[n];
+		boolean ans = dfs(src,leftChild,rightChild,vis);
+		for (int i = 0; i < n; i++) {
+			if (vis[i] == 0) {
+				return false;
+			}
+		}
+		return ans;
+	}
+}

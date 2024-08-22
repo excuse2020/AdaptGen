@@ -1,0 +1,41 @@
+class Solution {
+	Map<Integer, Integer> buildDiff(String word) {
+		Map<Integer, Integer> diff = new HashMap<>();
+		for (int i = 1; i < word.length(); i++) {
+			diff.put(i,word.charAt(i) - word.charAt(i - 1));
+		}
+		return diff;
+	}
+	String oddString(String[] words) {
+		if (words.length < 3) {
+			return "";
+		}
+		Map<Integer, Integer> diffs = new HashMap<>();
+		Map<Integer, Integer> firstWordDiffs = buildDiff(words[0]);
+		Map<Integer, Integer> secondWordDiffs = buildDiff(words[1]);
+		Map<Integer, Integer> thirdWordDiffs = buildDiff(words[2]);
+		if (sameDiff(firstWordDiffs,secondWordDiffs) || sameDiff(firstWordDiffs,thirdWordDiffs)) {
+			diffs = firstWordDiffs;
+		} 
+		else {
+			return words[0];
+		}
+		for (int i = 1; i < words[0].length(); i++) {
+			for (String word: words) {	
+				if (diffs.get(i) != word.charAt(i) - word.charAt(i - 1)) {
+					return word;
+				}
+			}
+		}
+		return "";
+	}
+	boolean sameDiff(Map<Integer, Integer> first, Map<Integer, Integer> second) {
+		int size = first.size();
+		for (int i = 1; i <= size; i++) {
+			if (first.get(i).intValue() - second.get(i).intValue() != 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

@@ -1,0 +1,70 @@
+class Solution {
+	int CHAR_BASE;
+	int CHAR_COUNT;
+	String longestDupSubstring(String S) {
+		char[] sc = S.toCharArray();
+		int scLen = sc.length;
+		int longestSubstringIdx = 0;
+		int longestSubstringLen = 0;
+		int[] found = new int[CHAR_COUNT];
+		for (int i = scLen - 1; i >= 0; i--) {
+			if (found[sc[i] - CHAR_BASE]++ > 0) {
+				longestSubstringIdx = i;
+				longestSubstringLen = 1;
+				break;
+			}
+		}
+		if (longestSubstringLen == 0) {
+			return "";
+		}
+		for (int i = scLen - 1; i > 0; i--) {
+			if (sc[i] == sc[i - 1]) {
+				char c = sc[i];
+				int startI = i;
+				int reptCount = 2;
+				for (i = i - 2; i >= 0 && sc[i] == c; i--) {
+				}
+				i++;
+				if (startI - i > longestSubstringLen) {
+					longestSubstringLen = startI - i;
+					longestSubstringIdx = i + 1;
+				}
+			}
+		}
+		if (longestSubstringLen == scLen - 1) {
+			return S.substring(0,longestSubstringLen);
+		}
+		short[] twoCharHead = new short[CHAR_COUNT * CHAR_COUNT];
+		short[] twoCharList = new short[scLen];
+		for (int i = scLen - longestSubstringLen; i > 0; i--) {
+			int twoCharNum = (sc[i] - CHAR_BASE) * CHAR_COUNT + sc[i + 1] - CHAR_BASE;
+			twoCharList[i] = twoCharHead[twoCharNum];
+			twoCharHead[twoCharNum] = (short) i;
+		}
+		int curIdxLimit = scLen - longestSubstringLen;
+		for (int i = 0; i <= curIdxLimit; i++) {
+			int twoCharNum = (sc[i] - CHAR_BASE) * CHAR_COUNT + sc[i + 1] - CHAR_BASE;
+			while (twoCharHead[twoCharNum] <= i && twoCharHead[twoCharNum] != 0) {
+				twoCharHead[twoCharNum] = twoCharList[twoCharHead[twoCharNum]];
+			}
+			int listIdx = twoCharHead[twoCharNum];
+			while (listIdx != 0 && listIdx <= curIdxLimit) {
+				if (sc[i + longestSubstringLen] == sc[listIdx + longestSubstringLen] && sc[i + longestSubstringLen / 2] == sc[listIdx + longestSubstringLen / 2]) {
+					int lowIdx = i + 2;
+					int highIdx = listIdx + 2;
+					while (highIdx < scLen && sc[lowIdx] == sc[highIdx]) {
+						lowIdx++;
+						highIdx++;
+					}
+					if (lowIdx - i > longestSubstringLen) {
+						longestSubstringLen = lowIdx - i;
+						longestSubstringIdx = i;
+						curIdxLimit = scLen - longestSubstringLen;
+					}
+				}
+				listIdx = twoCharList[listIdx];
+			}
+		}
+		return S.substring(longestSubstringIdx,longestSubstringIdx + longestSubstringLen);
+	}
+}

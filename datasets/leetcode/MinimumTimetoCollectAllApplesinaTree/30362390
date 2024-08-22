@@ -1,0 +1,50 @@
+class Solution {
+	int MAX_NODE;
+	List<Boolean> apple;
+	HashMap<Integer, List<Integer>> tre;
+	int[] visited;
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		MAX_NODE = n;
+		tre = new HashMap<>();
+		apple = hasApple;
+		visited = new int[n];
+		for (int[] e: edges) {	
+			pair(e[0],e[1]);
+			pair(e[1],e[0]);
+		}
+		return Math.max(0,recurmin(0) - 2);
+	}
+	void pair(int a, int b) {
+		List<Integer> list = tre.getOrDefault(a,new ArrayList<>());
+		list.add(b);
+		tre.put(a,list);
+	}
+	int recurmin(int n) {
+		if (visited[n] == 1) {
+			return 0;
+		}
+		visited[n] = 1;
+		if (n > MAX_NODE) {
+			return 0;
+		}
+		int cost = 0;
+		if (apple.get(n) == true) {
+			cost += 2;
+		}
+		List<Integer> list = tre.getOrDefault(n,new ArrayList<>());
+		boolean included = false;
+		for (Integer ig: list) {	
+			int childcost = recurmin(ig);
+			if (childcost != 0) {
+				included = true;
+			}
+			cost += childcost;
+		}
+		if (included) {
+			if (!apple.get(n)) {
+				cost += 2;
+			}
+		}
+		return cost;
+	}
+}

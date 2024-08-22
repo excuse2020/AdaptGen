@@ -1,0 +1,26 @@
+class Solution {
+	int mod = 1000000007;
+	int f(int i, int j, int[][] grid, int k, int dp, int sum) {
+		if (i == 0 && j == 0 && (sum + grid[0][0]) % k == 0) {
+			return 1;
+		}
+		if (i < 0 || j < 0) {
+			return 0;
+		}
+		if (dp[i][j][sum] != -1) {
+			return dp[i][j][sum];
+		}
+		int up = f(i - 1,j,grid,k,dp,(sum + grid[i][j] % mod) % k);
+		int left = f(i,j - 1,grid,k,dp,(sum + grid[i][j] % mod) % k);
+		return dp[i][j][sum] = ((up % mod) + (left % mod)) % mod;
+	}
+	int numberOfPaths(int[][] grid, int k) {
+		int[][][] dp = new int[grid.length][grid[0].length][51];
+		for (int[][] mat: dp) {	
+			for (int[] arr: mat) {	
+				Arrays.fill(arr,-1);
+			}
+		}
+		return f(grid.length - 1,grid[0].length - 1,grid,k,dp,0);
+	}
+}

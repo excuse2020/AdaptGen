@@ -1,0 +1,31 @@
+class Solution {
+	int maxPointsInsideSquare(int[][] points, String s) {
+		Map<String, Character> m = new HashMap<>();
+		Set<Character> dup = new HashSet<>();
+		int p = 0;
+		for (int[] pt: points) {	
+			m.put(pt[0] + "*",s.charAt(p));
+			p++;
+		}
+		List<int[]> pointsList = new ArrayList<>(Arrays.asList(points));
+		Collections.sort(pointsList,(a, b) -> {Math.max(Math.abs(a[0]),Math.abs(a[1])) - Math.max(Math.abs(b[0]),Math.abs(b[1]))});
+		int size = 0;
+		int curLevel = 0;
+		int lastSize = 0;
+		for (int[] pt: pointsList) {	
+			int tmpCurLevel = Math.max(Math.abs(pt[0]),Math.abs(pt[1]));
+			if (tmpCurLevel != curLevel) {
+				lastSize = size;
+			}
+			if (dup.contains(m.get(pt[0] + "*"))) {
+				return lastSize;
+			} 
+			else {
+				dup.add(m.get(pt[0] + "*"));
+			}
+			curLevel = tmpCurLevel;
+			size++;
+		}
+		return size;
+	}
+}

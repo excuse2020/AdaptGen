@@ -1,0 +1,37 @@
+class Solution {
+	int[] deckRevealedIncreasing(int[] deck) {
+		Arrays.sort(deck);
+		return process(deck);
+	}
+	int[] process(int[] deck) {
+		if (deck.length <= 2) {
+			return deck;
+		}
+		int[] res = new int[deck.length];
+		int j = 0;
+		for (int i = 0; i < deck.length / 2; i++) {
+			res[j] = deck[i];
+			j += 2;
+		}
+		int lenNoMark = (deck.length / 2) + (deck.length % 2 == 0 ? 0 : 1);
+		int[] noMarked = new int[lenNoMark];
+		j = 0;
+		for (int i = deck.length / 2; i < deck.length; i++) {
+			noMarked[j++] = deck[i];
+		}
+		noMarked = process(noMarked);
+		if (deck.length % 2 == 1) {
+			res[res.length - 1] = noMarked[0];
+			j = 1;
+		} 
+		else {
+			j = 0;
+		}
+		for (int i = 0; i < res.length; i++) {
+			if (res[i] == 0) {
+				res[i] = noMarked[j++];
+			}
+		}
+		return res;
+	}
+}

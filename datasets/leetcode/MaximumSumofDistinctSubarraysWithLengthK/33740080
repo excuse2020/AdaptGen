@@ -1,0 +1,26 @@
+class Solution {
+	long maximumSubarraySum(int[] nums, int k) {
+		long returnSum = 0;
+		long currentSum = 0;
+		int windowStart = 0;
+		Set<Integer> numberSet = new HashSet<>();
+		for (int windowEnd = 0; windowEnd < nums.length; windowEnd++) {
+			int current = nums[windowEnd];
+			currentSum += current;
+			while (!numberSet.add(current)) {
+				int start = nums[windowStart];
+				currentSum -= start;
+				numberSet.remove(start);
+				windowStart++;
+			}
+			if (windowEnd - windowStart == k - 1) {
+				returnSum = Math.max(returnSum,currentSum);
+				int start = nums[windowStart];
+				currentSum -= start;
+				numberSet.remove(start);
+				windowStart++;
+			}
+		}
+		return returnSum;
+	}
+}

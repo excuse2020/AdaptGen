@@ -1,0 +1,31 @@
+class Solution {
+	int maxScore(List<List<Integer>> grid) {
+		int m = grid.size();
+		int n = grid.get(0).size();
+		int[][] dp = new int[m][n];
+		dp[m - 1][n - 1] = grid.get(m - 1).get(n - 1);
+		for (int j = n - 2; j >= 0; j--) {
+			dp[m - 1][j] = Math.max(dp[m - 1][j + 1],grid.get(m - 1).get(j));
+		}
+		for (int i = m - 2; i >= 0; i--) {
+			dp[i][n - 1] = Math.max(dp[i + 1][n - 1],grid.get(i).get(n - 1));
+		}
+		for (int i = m - 2; i >= 0; i--) {
+			for (int j = n - 2; j >= 0; j--) {
+				dp[i][j] = Math.max(grid.get(i).get(j),Math.max(dp[i + 1][j],dp[i][j + 1]));
+			}
+		}
+		int ans = Integer.MIN_VALUE;
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				if (j + 1 < n) {
+					ans = Math.max(ans,dp[i][j + 1] - grid.get(i).get(j));
+				}
+				if (i + 1 < m) {
+					ans = Math.max(ans,dp[i + 1][j] - grid.get(i).get(j));
+				}
+			}
+		}
+		return ans;
+	}
+}

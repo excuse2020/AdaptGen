@@ -1,0 +1,28 @@
+class Solution {
+	int[] advantageCount(int[] nums1, int[] nums2) {
+		int temp1 = nums1.clone();
+		int temp2 = nums2.clone();
+		Arrays.sort(temp1);
+		Arrays.sort(temp2);
+		HashMap<Integer, Queue<Integer>> map = new HashMap<>();
+		int j = 0, k = nums2.length - 1;
+		for (int i = 0; i < nums1.length; i++) {
+			if (temp1[i] > temp2[j]) {
+				if (!map.containsKey(temp2[j])) {
+					map.put(temp2[j],new LinkedList<>());
+				}
+				map.get(temp2[j++]).add(temp1[i]);
+			} 
+			else {
+				if (!map.containsKey(temp2[k])) {
+					map.put(temp2[k],new LinkedList<>());
+				}
+				map.get(temp2[k--]).add(temp1[i]);
+			}
+		}
+		for (int i = 0; i < nums2.length; i++) {
+			nums1[i] = map.get(nums2[i]).poll();
+		}
+		return nums1;
+	}
+}

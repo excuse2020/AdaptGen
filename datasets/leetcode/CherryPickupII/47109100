@@ -1,0 +1,34 @@
+class Solution {
+	int cherryPickup(int[][] grid) {
+		int r = grid.length;
+		int c = grid[0].length;
+		int[][][] memo = new int[r][c][c];
+		for (int[][] memo2: memo) {	
+			for (int[] rows: memo2) {	
+				Arrays.fill(rows,Integer.MIN_VALUE);
+			}
+		}
+		return maxCherry(0,0,c - 1,r,c,grid,memo);
+	}
+	int maxCherry(int i, int j1, int j2, int r, int c, int[][] grid, int[][][] memo) {
+		if (i == r) {
+			return 0;
+		}
+		if (j1 >= c || j2 >= c || j1 < 0 || j2 < 0) {
+			return Integer.MIN_VALUE;
+		}
+		if (memo[i][j1][j2] != Integer.MIN_VALUE) {
+			return memo[i][j1][j2];
+		}
+		int cherry = (j1 == j2) ? grid[i][j1] : grid[i][j1] + grid[i][j2];
+		int max = 0;
+		for (int dj1 = -1; dj1 <= +1; dj1++) {
+			for (int dj2 = -1; dj2 <= +1; dj2++) {
+				int nextCherry = maxCherry(i + 1,dj1 + j1,dj2 + j2,r,c,grid,memo);
+				max = Math.max(cherry + nextCherry,max);
+			}
+		}
+		memo[i][j1][j2] = max;
+		return max;
+	}
+}

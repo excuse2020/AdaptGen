@@ -1,0 +1,30 @@
+class Solution {
+	List<String> wordSubsets(String[] words1, String[] words2) {
+		List<String> res = new ArrayList<>();
+		Map<Character, Integer> store = new HashMap<>();
+		for (String word: words2) {	
+			Map<Character, Integer> map = new HashMap<>();
+			for (char c: word.toCharArray()) {	
+				map.put(c,map.getOrDefault(c,0) + 1);
+				store.put(c,Math.max(map.get(c),store.getOrDefault(c,0)));
+			}
+		}
+		for (String word: words1) {	
+			boolean inAns = true;
+			Map<Character, Integer> clone = new HashMap<>();
+			for (char c: word.toCharArray()) {	
+				clone.put(c,clone.getOrDefault(c,0) + 1);
+			}
+			for (char key: store.keySet()) {	
+				if (store.get(key) > clone.getOrDefault(key,0)) {
+					inAns = false;
+					break;
+				}
+			}
+			if (inAns) {
+				res.add(word);
+			}
+		}
+		return res;
+	}
+}

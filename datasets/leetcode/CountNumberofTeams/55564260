@@ -1,0 +1,22 @@
+class Solution {
+	int calculate(int i, TreeSet<Integer> left, TreeSet<Integer> right) {
+		int smaller = left.headSet(i).size();
+		int larger = right.size() - right.headSet(i).size();
+		return smaller * larger;
+	}
+	int numTeams(int[] rating) {
+		TreeSet<Integer> left = new TreeSet<>();
+		TreeSet<Integer> right = new TreeSet<>();
+		for (int i: rating) {	
+			right.add(i);
+		}
+		int ans = 0;
+		for (int i: rating) {	
+			right.remove(i);
+			ans += calculate(i,left,right);
+			ans += calculate(i,right,left);
+			left.add(i);
+		}
+		return ans;
+	}
+}

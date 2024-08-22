@@ -1,0 +1,40 @@
+class Solution {
+	int count;
+	int InversePairs(int[] array) {
+		count = 0;
+		MergeSort(array,0,array.length - 1);
+		return count;
+	}
+	void Merge(int[] a, int low, int mid, int high) {
+		int[] b = new int[high - low + 1];
+		int k, i, j;
+		for (i = low, j = mid + 1, k = 0; i <= mid && j <= high; k++) {
+			if (a[i] < a[j]) {
+				b[k] = a[i++];
+			} 
+			else {
+				b[k] = a[j++];
+				count += (mid + 1 - i);
+				count %= 1000000007;
+			}
+		}
+		while (i <= mid) {
+			b[k++] = a[i++];
+		}
+		while (j <= high) {
+			b[k++] = a[j++];
+		}
+		for (int kk = 0; kk < b.length; kk++) {
+			a[low + kk] = b[kk];
+		}
+	}
+	void MergeSort(int[] a, int low, int high) {
+		if (low < high) {
+			System.out.println("low:" + low);
+			int mid = (low + high) / 2;
+			MergeSort(a,low,mid);
+			MergeSort(a,mid + 1,high);
+			Merge(a,low,mid,high);
+		}
+	}
+}

@@ -1,0 +1,33 @@
+class Solution {
+	Stack<Integer> st;
+	boolean check(TreeNode root) {
+		if (root == null) {
+			return true;
+		}
+		if (!check(root.right)) {
+			return false;
+		}
+		if (root.left == null && root.right == null && (st.size() == 0 || root.val != st.pop())) {
+			return false;
+		}
+		if (!check(root.left)) {
+			return false;
+		}
+		return true;
+	}
+	boolean leafSimilar(TreeNode root1, TreeNode root2) {
+		st = new Stack<Integer>();
+		traverse(root1);
+		return check(root2) && st.size() == 0;
+	}
+	void traverse(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		traverse(root.left);
+		if (root.left == null && root.right == null) {
+			st.push(root.val);
+		}
+		traverse(root.right);
+	}
+}

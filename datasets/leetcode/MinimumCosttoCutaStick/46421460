@@ -1,0 +1,27 @@
+class Solution {
+	int minCost(int n, int[] cuts) {
+		int len = cuts.length;
+		int[] newCuts = new int[len + 2];
+		int index = 0;
+		newCuts[index++] = 0;
+		for (int c: cuts) {	
+			newCuts[index++] = c;
+		}
+		newCuts[index++] = n;
+		Arrays.sort(newCuts);
+		int[][] dp = new int[len + 2][len + 2];
+		for (int i = dp.length - 1; i >= 0; i--) {
+			for (int j = i; j < dp.length; j++) {
+				if (i == j || i + 1 == j) {
+					continue;
+				}
+				int min = Integer.MAX_VALUE;
+				for (int k = i + 1; k < j; k++) {
+					min = Math.min(min,dp[i][k] + dp[k][j]);
+				}
+				dp[i][j] = min + newCuts[j] - newCuts[i];
+			}
+		}
+		return dp[0][dp.length - 1];
+	}
+}

@@ -1,0 +1,28 @@
+class Solution {
+	long minOperationsToMakeMedianK(int[] nums, int k) {
+		Arrays.sort(nums);
+		int n = nums.length;
+		int mid = n / 2;
+		if (n % 2 == 0) {
+			mid = nums[mid] >= nums[mid - 1] ? mid : mid - 1;
+		}
+		long operations = Math.abs(nums[mid] - k);
+		int start = 0;
+		int end = n;
+		if (nums[mid] >= k) {
+			end = mid;
+		}
+		if (nums[mid] < k) {
+			start = mid + 1;
+		}
+		for (int i = start; i < end; i++) {
+			if (nums[i] < k && nums[mid] < k) {
+				operations += Math.abs(k - nums[i]);
+			}
+			if (nums[i] > k && nums[mid] >= k) {
+				operations += Math.abs(k - nums[i]);
+			}
+		}
+		return operations;
+	}
+}

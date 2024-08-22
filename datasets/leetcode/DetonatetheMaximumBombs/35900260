@@ -1,0 +1,33 @@
+class Solution {
+	void dfs(int[][] bombs, int start, boolean[] visited) {
+		if (visited[start]) {
+			return;
+		}
+		visited[start] = true;
+		for (int i = 0; i < bombs.length; ++i) {
+			if (isReachable(bombs[start],bombs[i])) {
+				dfs(bombs,i,visited);
+			}
+		}
+	}
+	boolean isReachable(int[] x, int[] y) {
+		long dist = ((long) (y[0] - x[0]) * (long) (y[0] - x[0])) + (long) ((y[1] - x[1]) * (long) (y[1] - x[1]));
+		return dist <= ((long) x[2] * (long) x[2]);
+	}
+	int maximumDetonation(int[][] bombs) {
+		boolean[] visited = new boolean[bombs.length];
+		int ans = 1;
+		for (int i = 0; i < bombs.length; ++i) {
+			Arrays.fill(visited,false);
+			dfs(bombs,i,visited);
+			int visitedCount = 0;
+			for (boolean b: visited) {	
+				if (b) {
+					visitedCount++;
+				}
+			}
+			ans = Math.max(ans,visitedCount);
+		}
+		return ans;
+	}
+}

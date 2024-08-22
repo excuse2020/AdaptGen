@@ -1,0 +1,28 @@
+class Solution {
+	int longestPalindrome(String[] words) {
+		int maxValue = 26 * 26;
+		int[] mem = new int[maxValue];
+		int result = 0;
+		for (int x = 0; x < words.length; x++) {
+			int c1 = words[x].charAt(0);
+			int c2 = words[x].charAt(1);
+			int primaryKey = 26 * (c1 - 97) + (c2 - 97);
+			int searchedKey = 26 * (c2 - 97) + (c1 - 97);
+			if (mem[searchedKey] > 0) {
+				result += 4;
+				mem[searchedKey]--;
+			} 
+			else {
+				mem[primaryKey]++;
+			}
+		}
+		for (int code = 0; code < maxValue; code++) {
+			if (mem[code] == 0 || (code / 26 != code % 26)) {
+				continue;
+			}
+			result += 2 * mem[code];
+			break;
+		}
+		return result;
+	}
+}

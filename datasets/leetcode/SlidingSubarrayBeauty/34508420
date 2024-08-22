@@ -1,0 +1,35 @@
+class Solution {
+	int[] getSubarrayBeauty(int[] nums, int k, int x) {
+		int n = nums.length;
+		int[] count = new int[50];
+		for (int i = 0; i < k; i++) {
+			if (nums[i] < 0) {
+				count[nums[i] + 50]++;
+			}
+		}
+		int[] ans = new int[n - k + 1];
+		int j = k;
+		for (int i = 0; i < n && j <= n; i++, j++) {
+			int sum = 0;
+			boolean flag = false;
+			for (int m = 0; m < 50; m++) {
+				sum += count[m];
+				if (sum >= x) {
+					ans[i] = m - 50;
+					flag = true;
+					break;
+				}
+			}
+			if (!flag) {
+				ans[i] = 0;
+			}
+			if (nums[i] < 0) {
+				count[nums[i] + 50]--;
+			}
+			if (j < n && nums[j] < 0) {
+				count[nums[j] + 50]++;
+			}
+		}
+		return ans;
+	}
+}

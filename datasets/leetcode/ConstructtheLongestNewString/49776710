@@ -1,0 +1,40 @@
+class Solution {
+	int[][][][] dp;
+	int helper(int x, int y, int z, int prev) {
+		if (x < 0 || y < 0 || z < 0) {
+			return -2;
+		}
+		if (dp[x][y][z][prev] != -1) {
+			return dp[x][y][z][prev];
+		}
+		int ans = 0;
+		if (prev == 0) {
+			int a = helper(x - 1,y,z,1);
+			int b = helper(x,y - 1,z,2);
+			int c = helper(x,y,z - 1,3);
+			ans = Math.max(a,Math.max(b,c)) + 2;
+		} 
+		else if (prev == 1) {
+			ans = helper(x,y - 1,z,2) + 2;
+		} 
+		else if (prev == 2 || prev == 3) {
+			int a = helper(x - 1,y,z,1);
+			int c = helper(x,y,z - 1,3);
+			ans = Math.max(a,c) + 2;
+		}
+		return dp[x][y][z][prev] = ans;
+	}
+	int longestString(int x, int y, int z) {
+		dp = new int[x + 1][y + 1][z + 1][5];
+		for (int i = 0; i < dp.length; i++) {
+			for (int j = 0; j < dp[i].length; j++) {
+				for (int k = 0; k < dp[i][j].length; k++) {
+					for (int l = 0; l < dp[i][j][k].length; l++) {
+						dp[i][j][k][l] = -1;
+					}
+				}
+			}
+		}
+		return helper(x,y,z,0);
+	}
+}

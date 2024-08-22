@@ -1,0 +1,24 @@
+class Solution {
+	int numDistinct(String s, String t) {
+		HashMap<Character, List<Integer>> charMap = new HashMap<>();
+		char[] tCharArr = t.toCharArray();
+		for (int i = 0; i < t.length(); i++) {
+			char c = tCharArr[i];
+			if (!charMap.containsKey(c)) {
+				charMap.put(c,new ArrayList<Integer>());
+			}
+			charMap.get(c).add(i);
+		}
+		int[] tSum = new int[t.length() + 1];
+		tSum[t.length()] = 1;
+		for (int i = s.length() - 1; i >= 0; i--) {
+			List<Integer> charIndexList = charMap.get(s.charAt(i));
+			if (charIndexList != null) {
+				for (int charIndex: charIndexList) {	
+					tSum[charIndex] += tSum[charIndex + 1];
+				}
+			}
+		}
+		return tSum[0];
+	}
+}

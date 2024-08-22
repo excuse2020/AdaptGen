@@ -1,0 +1,37 @@
+class Solution {
+	int longestString(int x, int y, int z) {
+		int[][][][] dp = new int[2][51][51][51];
+		for (int i = 0; i < 51; ++i) {
+			for (int j = 0; j < 51; ++j) {
+				for (int k = 0; k < 51; ++k) {
+					dp[0][i][j][k] = -1;
+					dp[1][i][j][k] = -1;
+				}
+			}
+		}
+		return Math.max(util(0,x,y,z,dp),util(1,x,y,z,dp));
+	}
+	int util(int last, int x, int y, int z, int[][][][] dp) {
+		if (x == 0 && y == 0 && z == 0) {
+			return 0;
+		}
+		if (dp[last][x][y][z] != -1) {
+			return dp[last][x][y][z];
+		}
+		int res = 0;
+		if (last == 0) {
+			if (y > 0) {
+				res = Math.max(res,2 + util(1,x,y - 1,z,dp));
+			}
+		} 
+		else {
+			if (x > 0) {
+				res = Math.max(res,2 + util(0,x - 1,y,z,dp));
+			}
+			if (z > 0) {
+				res = Math.max(res,2 + util(1,x,y,z - 1,dp));
+			}
+		}
+		return dp[last][x][y][z] = res;
+	}
+}

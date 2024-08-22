@@ -1,0 +1,46 @@
+class Solution {
+	int nextGreaterElement(int n) {
+		int cnt = 0;
+		int temp = n;
+		while (temp != 0) {
+			temp /= 10;
+			cnt++;
+		}
+		temp = n;
+		int[] arr = new int[cnt];
+		for (int i = cnt - 1; i >= 0; i--) {
+			arr[i] = temp % 10;
+			temp /= 10;
+		}
+		int i = cnt - 2;
+		while (i >= 0 && arr[i] >= arr[i + 1]) {
+			i--;
+		}
+		if (i == -1) {
+			return -1;
+		}
+		int j = cnt - 1;
+		while (arr[j] <= arr[i]) {
+			j--;
+		}
+		swap(arr,i,j);
+		reverse(arr,i + 1,cnt - 1);
+		long result = 0;
+		for (int digit: arr) {	
+			result = result * 10 + digit;
+		}
+		return result <= Integer.MAX_VALUE ? (int) result : -1;
+	}
+	void reverse(int[] arr, int start, int end) {
+		while (start < end) {
+			swap(arr,start,end);
+			start++;
+			end--;
+		}
+	}
+	void swap(int[] arr, int i, int j) {
+		int temp = arr[i];
+		arr[i] = arr[j];
+		arr[j] = temp;
+	}
+}

@@ -1,0 +1,40 @@
+class Solution {
+	HashSet<Integer> hash;
+	List<Boolean> checkIfPrerequisite(int n, int[][] pre, int[][] queries) {
+		hash = new HashSet<Integer>();
+		ArrayList<Integer>[] adj = new ArrayList[n];
+		ArrayList<HashSet<Integer>> res = new ArrayList<HashSet<Integer>>();
+		for (int i = 0; i < n; i++) {
+			adj[i] = new ArrayList<Integer>();
+		}
+		for (int i = 0; i < pre.length; i++) {
+			adj[pre[i][0]].add(pre[i][1]);
+		}
+		for (int i = 0; i < n; i++) {
+			dfs(adj,i);
+			res.add(new HashSet<Integer>(hash));
+			hash.clear();
+		}
+		List<Boolean> lst = new ArrayList<>();
+		for (int i = 0; i < queries.length; i++) {
+			int src = queries[i][0];
+			int des = queries[i][1];
+			if (res.get(src).contains(des)) {
+				lst.add(true);
+			} 
+			else {
+				lst.add(false);
+			}
+		}
+		return lst;
+	}
+	void dfs(ArrayList<Integer>[] adj, int i) {
+		if (hash.contains(i)) {
+			return;
+		}
+		hash.add(i);
+		for (int conn: adj[i]) {	
+			dfs(adj,conn);
+		}
+	}
+}

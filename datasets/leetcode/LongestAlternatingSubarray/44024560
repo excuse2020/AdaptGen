@@ -1,0 +1,52 @@
+class Solution {
+	int alternatingSubarray(int[] nums) {
+		List<List<Integer>> subArr = generateSubarrays(nums).stream().filter((x) -> {x.size() > 1}).toList();
+		int count = -1;
+		for (List<Integer> l: subArr) {	
+			int len = l.size();
+			boolean flag = true;
+			int alternateNum = -1;
+			boolean flag2 = true;
+			for (int i = 0; i < len - 1; i++) {
+				if (flag2) {
+					if (l.get(i) - l.get(i + 1) != alternateNum) {
+						flag = false;
+						break;
+					} 
+					else {
+						flag2 = false;
+						alternateNum = alternateNum * -1;
+					}
+				} 
+				else {
+					if (l.get(i) - l.get(i + 1) != alternateNum) {
+						flag = false;
+						break;
+					} 
+					else {
+						flag2 = true;
+						alternateNum = alternateNum * -1;
+					}
+				}
+			}
+			if (flag) {
+				count = Math.max(count,l.size());
+			}
+		}
+		return count;
+	}
+	List<List<Integer>> generateSubarrays(int[] arr) {
+		List<List<Integer>> subarrays = new ArrayList<>();
+		int n = arr.length;
+		for (int start = 0; start < n; start++) {
+			for (int end = start + 1; end <= n; end++) {
+				List<Integer> subarray = new ArrayList<>();
+				for (int i = start; i < end; i++) {
+					subarray.add(arr[i]);
+				}
+				subarrays.add(subarray);
+			}
+		}
+		return subarrays;
+	}
+}

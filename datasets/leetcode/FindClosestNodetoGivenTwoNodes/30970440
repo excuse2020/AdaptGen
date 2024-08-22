@@ -1,0 +1,33 @@
+class Solution {
+	void bfsSearch(int[] edges, int start, int[] dist) {
+		boolean[] visited = new boolean[edges.length];
+		int d = 0;
+		while (start != -1 && !visited[start]) {
+			dist[start] = d;
+			d++;
+			visited[start] = true;
+			start = edges[start];
+		}
+	}
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		int[] dist1 = new int[edges.length];
+		int[] dist2 = new int[edges.length];
+		Arrays.fill(dist1,-1);
+		Arrays.fill(dist2,-1);
+		bfsSearch(edges,node1,dist1);
+		bfsSearch(edges,node2,dist2);
+		int miniDist = Integer.MAX_VALUE;
+		int ret = -1;
+		for (int i = edges.length - 1; i >= 0; i--) {
+			if (dist1[i] == -1 || dist2[i] == -1) {
+				continue;
+			}
+			int max = Math.max(dist1[i],dist2[i]);
+			if (max <= miniDist) {
+				miniDist = max;
+				ret = i;
+			}
+		}
+		return ret;
+	}
+}

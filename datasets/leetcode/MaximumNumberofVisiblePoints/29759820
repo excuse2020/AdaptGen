@@ -1,0 +1,29 @@
+class Solution {
+	int visiblePoints(List<List<Integer>> points, int angle, List<Integer> location) {
+		List<Double> points2 = new ArrayList<>();
+		double angle2 = (angle * Math.PI) / 180, shift = 2 * Math.PI;
+		int x = location.get(0), y = location.get(1);
+		int z = 0;
+		for (List<Integer> g: points) {	
+			int t1 = g.get(0) - x, t2 = g.get(1) - y;
+			if (t1 == 0 && t2 == 0) {
+				z++;
+				continue;
+			}
+			double next = Math.atan2(t1,t2);
+			points2.add(next);
+		}
+		Collections.sort(points2);
+		for (int i = 0; i < points2.size() && points2.get(i) <= angle2; i++) {
+			points2.add(points2.get(i) + shift);
+		}
+		int a = 0, b = 0;
+		while (a < points2.size()) {
+			if (points2.get(a) - points2.get(b) > angle2) {
+				b++;
+			}
+			a++;
+		}
+		return a - b + z;
+	}
+}

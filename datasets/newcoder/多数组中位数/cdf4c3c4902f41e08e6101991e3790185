@@ -1,0 +1,28 @@
+class Solution {
+	int getUpMedian(int[] arr1, int[] arr2) {
+		if (arr1.length > arr2.length) {
+			return getUpMedian(arr2,arr1);
+		}
+		int m = arr1.length;
+		int n = arr2.length;
+		int left = 0, right = m;
+		int median1 = 0, median2 = 0;
+		while (left <= right) {
+			int i = (left + right) / 2;
+			int j = (m + n) / 2 - i;
+			int nums_im1 = (i == 0 ? Integer.MIN_VALUE : arr1[i - 1]);
+			int nums_i = (i == m ? Integer.MAX_VALUE : arr1[i]);
+			int nums_jm1 = (j == 0 ? Integer.MIN_VALUE : arr2[j - 1]);
+			int nums_j = (j == n ? Integer.MAX_VALUE : arr2[j]);
+			if (nums_im1 <= nums_j) {
+				median1 = Math.max(nums_im1,nums_jm1);
+				median2 = Math.min(nums_i,nums_j);
+				left = i + 1;
+			} 
+			else {
+				right = i - 1;
+			}
+		}
+		return (m + n) % 2 == 0 ? median1 : (median1 + median2) / 2;
+	}
+}

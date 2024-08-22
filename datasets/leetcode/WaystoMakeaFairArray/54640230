@@ -1,0 +1,33 @@
+class Solution {
+	int waysToMakeFair(int[] nums) {
+		int n = nums.length;
+		int even_preSum = new int[n + 1];
+		int odd_preSum = new int[n + 1];
+		odd_preSum[0] = 0;
+		for (int i = 0; i < n; i++) {
+			if (i % 2 == 0) {
+				even_preSum[i + 1] = even_preSum[i] + nums[i];
+				odd_preSum[i + 1] = odd_preSum[i];
+			} 
+			else {
+				odd_preSum[i + 1] = odd_preSum[i] + nums[i];
+				even_preSum[i + 1] = even_preSum[i];
+			}
+		}
+		int ans = 0;
+		for (int i = 1; i <= n; i++) {
+			int odd_sum1 = 0;
+			int odd_sum2 = 0;
+			int even_sum1 = 0;
+			int even_sum2 = 0;
+			odd_sum1 = odd_preSum[i - 1];
+			odd_sum2 = even_preSum[n] - even_preSum[i];
+			even_sum1 = even_preSum[i - 1];
+			even_sum2 = odd_preSum[n] - odd_preSum[i];
+			if (odd_sum1 + odd_sum2 == even_sum1 + even_sum2) {
+				ans++;
+			}
+		}
+		return ans;
+	}
+}

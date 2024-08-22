@@ -1,0 +1,44 @@
+class Solution {
+	int longestPalindrome(String[] words) {
+		int n = words.length;
+		HashMap<String, Integer> map = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			map.put(words[i],map.getOrDefault(words[i],0) + 1);
+		}
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			String currWord = words[i];
+			String reverse = new StringBuilder(currWord).reverse().toString();
+			if (!map.containsKey(currWord)) {
+				continue;
+			}
+			if (currWord.equals(reverse)) {
+				int freq = map.get(currWord);
+				int pairs = freq / 2;
+				ans += pairs * 4;
+				freq -= pairs * 2;
+				map.put(currWord,freq);
+				if (map.get(currWord) == 0) {
+					map.remove(currWord);
+				}
+			} 
+			else if (map.containsKey(reverse)) {
+				int freq = Math.min(map.get(currWord),map.get(reverse));
+				ans += freq * 4;
+				map.put(currWord,map.get(currWord) - freq);
+				map.put(reverse,map.get(reverse) - freq);
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			String currWord = words[i];
+			String reverse = new StringBuilder(currWord).reverse().toString();
+			if (currWord.equals(reverse)) {
+				if (map.containsKey(currWord)) {
+					ans += 2;
+					return ans;
+				}
+			}
+		}
+		return ans;
+	}
+}

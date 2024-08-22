@@ -1,0 +1,27 @@
+class Solution {
+	int findServed(int[] customers, int[] grumpy, int start, int end, int guaranteed) {
+		int total = guaranteed;
+		for (int i = start; i <= end; i++) {
+			if (grumpy[i] == 1) {
+				total += customers[i];
+			}
+		}
+		return total;
+	}
+	int maxSatisfied(int[] customers, int[] grumpy, int minutes) {
+		int start = 0;
+		int end = start + minutes - 1;
+		int max = 0;
+		int guaranteed = 0;
+		for (int i = 0; i < customers.length; i++) {
+			guaranteed += grumpy[i] == 0 ? customers[i] : 0;
+		}
+		while (end < customers.length) {
+			int served = findServed(customers,grumpy,start,end,guaranteed);
+			max = Math.max(max,served);
+			start++;
+			end = start + minutes - 1;
+		}
+		return max;
+	}
+}

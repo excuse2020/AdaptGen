@@ -1,0 +1,44 @@
+class Solution {
+	List<List<Integer>> rlst;
+	List<List<Integer>> fourSum(int[] nums, int target) {
+		rlst = new ArrayList<List<Integer>>();
+		Arrays.sort(nums);
+		recurr(nums,4,0,target,new ArrayList<Integer>());
+		return rlst;
+	}
+	void recurr(int[] nums, int k, int index, long target, ArrayList<Integer> lst) {
+		if (k > 2) {
+			for (int x = index; x < nums.length - k + 1; x++) {
+				if (x > index && nums[x] == nums[x - 1]) {
+					continue;
+				}
+				lst.add(nums[x]);
+				recurr(nums,k - 1,x + 1,target - nums[x],lst);
+				lst.remove(lst.size() - 1);
+			}
+		} 
+		else {
+			int i = index;
+			int j = nums.length - 1;
+			while (i < j) {
+				if (nums[i] + nums[j] < target) {
+					i++;
+				} 
+				else if (nums[i] + nums[j] > target) {
+					j--;
+				} 
+				else {
+					lst.add(nums[i]);
+					lst.add(nums[j]);
+					rlst.add(new ArrayList<>(lst));
+					lst.remove(lst.size() - 1);
+					lst.remove(lst.size() - 1);
+					i++;
+					while (i < j && nums[i] == nums[i - 1]) {
+						i++;
+					}
+				}
+			}
+		}
+	}
+}

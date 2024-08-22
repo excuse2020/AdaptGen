@@ -1,0 +1,38 @@
+class Solution {
+	TreeNode Convert(TreeNode pRootOfTree) {
+		if (pRootOfTree == null) {
+			return null;
+		}
+		TreeNode head = pRootOfTree;
+		while (head.left != null) {
+			head = head.left;
+		}
+		innerConvert(pRootOfTree);
+		return head;
+	}
+	void innerConvert(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		TreeNode left = root.left;
+		TreeNode right = root.right;
+		innerConvert(left);
+		innerConvert(right);
+		if (right != null) {
+			TreeNode after = right;
+			while (after.left != null) {
+				after = after.left;
+			}
+			after.left = root;
+			root.right = after;
+		}
+		if (left != null) {
+			TreeNode pre = left;
+			while (pre.right != null) {
+				pre = pre.right;
+			}
+			pre.right = root;
+			root.left = pre;
+		}
+	}
+}

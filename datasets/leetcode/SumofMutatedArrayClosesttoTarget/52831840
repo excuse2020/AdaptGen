@@ -1,0 +1,33 @@
+class Solution {
+	long calculateSum(int value, int[] arr) {
+		long sum = 0;
+		for (int ele: arr) {	
+			sum += Math.min(ele,value);
+		}
+		return sum;
+	}
+	int findBestValue(int[] arr, int target) {
+		int l = 0, h = 0;
+		for (int ele: arr) {	
+			h = Math.max(h,ele);
+		}
+		int bestValue = 0;
+		long closestDifference = Long.MAX_VALUE;
+		while (l <= h) {
+			int mid = l + (h - l) / 2;
+			long currentSum = calculateSum(mid,arr);
+			long currentDifference = Math.abs(currentSum - target);
+			if (currentDifference < closestDifference || (currentDifference == closestDifference && mid < bestValue)) {
+				closestDifference = currentDifference;
+				bestValue = mid;
+			}
+			if (currentSum < target) {
+				l = mid + 1;
+			} 
+			else {
+				h = mid - 1;
+			}
+		}
+		return bestValue;
+	}
+}

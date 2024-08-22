@@ -1,0 +1,19 @@
+class Solution {
+	int countDays(int days, int[][] meetings) {
+		List<List<Integer>> ans = new ArrayList<>();
+		int remaining = days;
+		Arrays.sort(meetings,(x, y) -> {x[0] - y[0]});
+		for (int i = 0; i < meetings.length; i++) {
+			if (ans.isEmpty() || meetings[i][0] > ans.get(ans.size() - 1).get(1)) {
+				ans.add(Arrays.asList(meetings[i][0],meetings[i][1]));
+			} 
+			else {
+				ans.get(ans.size() - 1).set(1,Math.max(ans.get(ans.size() - 1).get(1),meetings[i][1]));
+			}
+		}
+		for (List<Integer> meet: ans) {	
+			remaining -= meet.get(1) - meet.get(0) + 1;
+		}
+		return remaining;
+	}
+}

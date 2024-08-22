@@ -1,0 +1,51 @@
+class Solution {
+	int res = Integer.MAX_VALUE;
+	void addIfValid(int r, int c, int[][] grid, Queue<int[]> queue, int dist) {
+		if (isValid(r,c,grid)) {
+			queue.add(new int{r, c});
+			grid[r][c] = dist + 1;
+		}
+	}
+	void bfs(int[][] grid) {
+		Queue<int[]> queue = new LinkedList<>();
+		queue.add(new int{0, 0});
+		grid[0][0] = 1;
+		int path = 0;
+		while (queue.size() != 0) {
+			int[] point = queue.poll();
+			int r = point[0];
+			int c = point[1];
+			int dist = grid[r][c];
+			if (r == grid.length - 1 && c == grid[0].length - 1) {
+				res = dist;
+				return;
+			}
+			addIfValid(r - 1,c - 1,grid,queue,dist);
+			addIfValid(r - 1,c,grid,queue,dist);
+			addIfValid(r - 1,c + 1,grid,queue,dist);
+			addIfValid(r,c + 1,grid,queue,dist);
+			addIfValid(r + 1,c + 1,grid,queue,dist);
+			addIfValid(r + 1,c,grid,queue,dist);
+			addIfValid(r + 1,c - 1,grid,queue,dist);
+			addIfValid(r,c - 1,grid,queue,dist);
+		}
+	}
+	boolean isValid(int r, int c, int[][] grid) {
+		if (r == -1 || r == grid.length || c == -1 || c == grid[0].length || grid[r][c] != 0) {
+			return false;
+		}
+		return true;
+	}
+	int shortestPathBinaryMatrix(int[][] grid) {
+		if (grid[0][0] == 1 || grid[grid.length - 1][grid[0].length - 1] == 1) {
+			return -1;
+		}
+		bfs(grid);
+		if (res == Integer.MAX_VALUE) {
+			return -1;
+		} 
+		else {
+			return res;
+		}
+	}
+}

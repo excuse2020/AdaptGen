@@ -1,0 +1,60 @@
+class Solution {
+	int[] kmp(String target) {
+		int length = target.length();
+		int index = 0;
+		int[] table = new int[length];
+		for (int i = 1; i < length; i++) {
+			if (target.charAt(index) == target.charAt(i)) {
+				table[i] = table[i - 1] + 1;
+				index++;
+			} 
+			else {
+				index = table[i - 1];
+				while (index > 0 && target.charAt(index) != target.charAt(i)) {
+					index = table[index - 1];
+				}
+				if (target.charAt(index) == target.charAt(i)) {
+					index++;
+				}
+				table[i] = index;
+			}
+		}
+		return table;
+	}
+	int repeatedStringMatch(String a, String b) {
+		int[] table = kmp(b);
+		int bLength = b.length();
+		StringBuilder cur = new StringBuilder();
+		int count = 0;
+		while (cur.length() < bLength) {
+			cur.append(a);
+			count++;
+		}
+		if (search(cur.toString(),b,table)) {
+			return count;
+		}
+		if (search(cur.append(a).toString(),b,table)) {
+			return count + 1;
+		}
+		return -1;
+	}
+	boolean search(String a, String target, int[] table) {
+		int i = 0, j = 0;
+		int aLength = a.length(), targetLength = target.length();
+		while (i < aLength && j < targetLength) {
+			if (a.charAt(i) == target.charAt(j)) {
+				i++;
+				j++;
+			} 
+			else {
+				if (j == 0) {
+					i++;
+				} 
+				else {
+					j = table[j - 1];
+				}
+			}
+		}
+		return j == targetLength;
+	}
+}

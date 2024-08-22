@@ -1,0 +1,32 @@
+class Solution {
+	int[] memo;
+	boolean F(int index, int[] nums) {
+		if (index == nums.length) {
+			return true;
+		}
+		if (index > nums.length) {
+			return false;
+		}
+		if (memo[index] != -1) {
+			return memo[index] == 1;
+		}
+		boolean a = false, b = false, c = false;
+		if (index + 1 < nums.length && nums[index] == nums[index + 1]) {
+			a = true && F(index + 2,nums);
+		}
+		if (index + 2 < nums.length && nums[index] == nums[index + 1] && nums[index + 1] == nums[index + 2]) {
+			b = true && F(index + 3,nums);
+		}
+		if (index + 2 < nums.length && (nums[index + 1] - nums[index]) == 1 && (nums[index + 2] - nums[index + 1]) == 1) {
+			c = true && F(index + 3,nums);
+		}
+		boolean ans = a || b;
+		memo[index] = ans ? 1 : 0;
+		return ans;
+	}
+	boolean validPartition(int[] nums) {
+		memo = new int[nums.length];
+		Arrays.fill(memo,-1);
+		return F(0,nums);
+	}
+}

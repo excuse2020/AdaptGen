@@ -1,0 +1,21 @@
+class Solution {
+	int numberOfWeakCharacters(int[][] properties) {
+		Arrays.sort(properties,new Comparator<int[]>());
+		int[] maxDfnceFromEnd = new int[properties.length];
+		maxDfnceFromEnd[properties.length - 1] = properties[properties.length - 1][1];
+		for (int i = properties.length - 2; i >= 0; i--) {
+			maxDfnceFromEnd[i] = Math.max(maxDfnceFromEnd[i + 1],properties[i][1]);
+		}
+		int res = 0;
+		int j = 1;
+		for (int i = 0; i < properties.length - 1; i++) {
+			while (j < properties.length && properties[i][0] == properties[j][0]) {
+				j++;
+			}
+			if (j < properties.length && properties[i][1] < maxDfnceFromEnd[j]) {
+				res++;
+			}
+		}
+		return res;
+	}
+}

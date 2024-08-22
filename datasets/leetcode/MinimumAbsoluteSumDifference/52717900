@@ -1,0 +1,29 @@
+class Solution {
+	int findDelta(int[] sorted, int num2, int num1) {
+		int l = 0, r = sorted.length - 1;
+		while (l < r) {
+			int mid = l + (r - l) / 2;
+			if (num2 > sorted[mid]) {
+				l = mid + 1;
+			} 
+			else {
+				r = mid;
+			}
+		}
+		int low = l == 0 ? sorted[0] : sorted[l - 1], high = sorted[l];
+		return Math.abs(num1 - num2) - Math.min(Math.abs(low - num2),Math.abs(high - num2));
+	}
+	int minAbsoluteSumDiff(int[] nums1, int[] nums2) {
+		int[] sorted = nums1.clone();
+		Arrays.sort(sorted);
+		long sum = 0l;
+		int len = nums1.length, maxDiff = 0, mod = 1_000_000_007;
+		for (int i = 0; i < len; i++) {
+			int diff = Math.abs(nums1[i] - nums2[i]);
+			sum += diff;
+			int delta = findDelta(sorted,nums2[i],nums1[i]);
+			maxDiff = Math.max(maxDiff,delta);
+		}
+		return (int) ((sum - maxDiff) % mod);
+	}
+}

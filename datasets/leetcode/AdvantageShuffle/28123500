@@ -1,0 +1,36 @@
+class Solution {
+	int[] advantageCount(int[] nums1, int[] nums2) {
+		HashMap<Integer, ArrayList<Integer>> hm = new HashMap<>();
+		int[] bak = new int[nums2.length];
+		for (int i = 0; i < bak.length; i++) {
+			bak[i] = nums2[i];
+		}
+		Arrays.sort(nums1);
+		Arrays.sort(nums2);
+		int j = nums2.length - 1;
+		int l = 0;
+		int r = nums1.length - 1;
+		while (l <= r) {
+			if (!hm.containsKey(nums2[j])) {
+				hm.put(nums2[j],new ArrayList<>());
+			}
+			if (nums1[r] > nums2[j]) {
+				hm.get(nums2[j]).add(nums1[r]);
+				r--;
+				j--;
+			} 
+			else {
+				hm.get(nums2[j]).add(nums1[l]);
+				l++;
+				j--;
+			}
+		}
+		int[] arr = new int[nums1.length];
+		for (int i = 0; i < arr.length; i++) {
+			ArrayList<Integer> lst = hm.get(bak[i]);
+			arr[i] = lst.get(lst.size() - 1);
+			lst.remove(lst.size() - 1);
+		}
+		return arr;
+	}
+}

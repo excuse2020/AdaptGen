@@ -1,0 +1,43 @@
+class Solution {
+	int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+	void getMinMax(ListNode head) {
+		int first_val = -1;
+		int a = -1;
+		int f = 0;
+		int c = 0;
+		ListNode prev = head;
+		ListNode t = head.next;
+		while (t.next != null) {
+			if (t.next == null) {
+				break;
+			}
+			if ((t.val < prev.val && t.val < t.next.val) || (t.val > prev.val && t.val > t.next.val)) {
+				if (f == 0) {
+					first_val = c;
+					a = c;
+					f = 1;
+				} 
+				else {
+					min = Math.min(min,c - a);
+					a = c;
+					max = Math.max(max,c - first_val);
+				}
+			}
+			c++;
+			t = t.next;
+			prev = prev.next;
+		}
+	}
+	int[] nodesBetweenCriticalPoints(ListNode head) {
+		getMinMax(head);
+		int ans = new int[2];
+		ans[0] = -1;
+		ans[1] = -1;
+		if (min == Integer.MAX_VALUE || max == Integer.MIN_VALUE) {
+			return ans;
+		}
+		ans[0] = min;
+		ans[1] = max;
+		return ans;
+	}
+}

@@ -1,0 +1,31 @@
+class Solution {
+	int maxValueOfCoins(List<List<Integer>> ps, int k) {
+		int[][] dp = new int[ps.size()][k + 1];
+		List<Integer> p = ps.get(0);
+		int cv = 0;
+		int cz = p.size();
+		for (int j = 1; j <= Math.min(p.size(),k); j++) {
+			cv += p.get(j - 1);
+			dp[0][j] = cv;
+		}
+		for (int i = 1; i < ps.size(); i++) {
+			p = ps.get(i);
+			cv = 0;
+			for (int w = 1; w <= k; w++) {
+				dp[i][w] = dp[i - 1][w];
+			}
+			for (int j = 1; j <= Math.min(p.size(),k); j++) {
+				cv += p.get(j - 1);
+				dp[i][j] = Math.max(dp[i][j],cv);
+				for (int w = 1; w <= cz; w++) {
+					if (w + j > k) {
+						break;
+					}
+					dp[i][w + j] = Math.max(dp[i][w + j],dp[i - 1][w] + cv);
+				}
+				cz += p.size();
+			}
+		}
+		return dp[ps.size() - 1][k];
+	}
+}

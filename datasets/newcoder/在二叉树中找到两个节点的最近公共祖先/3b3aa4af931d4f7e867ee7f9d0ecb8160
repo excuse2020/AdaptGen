@@ -1,0 +1,28 @@
+class Solution {
+	int lowestCommonAncestor(TreeNode root, int o1, int o2) {
+		Map<Integer, Integer> parents = new HashMap<>();
+		Set<Integer> ancestor = new HashSet<>();
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.offer(root);
+		parents.put(root.val,Integer.MAX_VALUE);
+		while (!parents.containsKey(o1) || !parents.containsKey(o2)) {
+			TreeNode temp = queue.poll();
+			if (temp.left != null) {
+				queue.offer(temp.left);
+				parents.put(temp.left.val,temp.val);
+			}
+			if (temp.right != null) {
+				queue.offer(temp.right);
+				parents.put(temp.right.val,temp.val);
+			}
+		}
+		while (parents.containsKey(o1)) {
+			ancestor.add(o1);
+			o1 = parents.get(o1);
+		}
+		while (!ancestor.contains(o2)) {
+			o2 = parents.get(o2);
+		}
+		return o2;
+	}
+}

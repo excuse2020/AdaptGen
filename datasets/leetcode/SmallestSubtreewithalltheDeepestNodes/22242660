@@ -1,0 +1,44 @@
+class Solution {
+	TreeNode LCA(TreeNode root, TreeNode a, TreeNode b) {
+		if (root == null) {
+			return null;
+		}
+		if (root.val == a.val || root.val == b.val) {
+			return root;
+		}
+		TreeNode l = LCA(root.left,a,b);
+		TreeNode r = LCA(root.right,a,b);
+		if (l != null && r != null) {
+			return root;
+		}
+		return l != null ? l : r;
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		Queue<TreeNode> qt = new LinkedList<>();
+		qt.add(root);
+		TreeNode leftmost = null;
+		TreeNode rightmost = null;
+		while (qt.size() > 0) {
+			int s = qt.size();
+			for (int i = 0; i < s; i++) {
+				TreeNode p = qt.poll();
+				if (i == 0) {
+					leftmost = p;
+				}
+				if (i == s - 1) {
+					rightmost = p;
+				}
+				if (p.left != null) {
+					qt.add(p.left);
+				}
+				if (p.right != null) {
+					qt.add(p.right);
+				}
+			}
+		}
+		return LCA(root,leftmost,rightmost);
+	}
+}

@@ -1,0 +1,26 @@
+class Solution {
+	int n;
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		n = inorder.length - 1;
+		return helper(inorder,postorder,0,n);
+	}
+	TreeNode helper(int[] inorder, int[] postorder, int st, int ed) {
+		if (st > ed) {
+			return null;
+		}
+		TreeNode curr = new TreeNode(postorder[n--]);
+		int idx = -1;
+		for (int i = st; i <= ed; i++) {
+			if (inorder[i] == curr.val) {
+				idx = i;
+				break;
+			}
+		}
+		if (idx == -1) {
+			return null;
+		}
+		curr.right = helper(inorder,postorder,idx + 1,ed);
+		curr.left = helper(inorder,postorder,st,idx - 1);
+		return curr;
+	}
+}

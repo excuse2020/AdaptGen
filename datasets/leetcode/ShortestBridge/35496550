@@ -1,0 +1,65 @@
+class Solution {
+	int findBridge(int[][] grid, List<int[]> q) {
+		int dist = 0;
+		while (!q.isEmpty()) {
+			List<int[]> tmp = new ArrayList<>();
+			for (int[] cur: q) {	
+				int i = cur[0], j = cur[1];
+				for (int[] pair: new int{{i - 1, j}, {i + 1, j}, {i, j - 1}, {i, j + 1}}) {	
+					int newi = pair[0], newj = pair[1];
+					if (newi >= 0 && newi < grid.length && newj >= 0 && newj < grid[0].length) {
+						if (grid[newi][newj] == 1) {
+							return dist;
+						} 
+						else if (grid[newi][newj] == 0) {
+							tmp.add(new int{newi, newj});
+							grid[newi][newj] = -1;
+						}
+					}
+				}
+			}
+			if (!tmp.isEmpty()) {
+				q = tmp;
+				dist += 1;
+			}
+		}
+		return dist;
+	}
+	int shortestBridge(int[][] grid) {
+		List<int[]> q = null;
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				if (grid[i][j] == 0) {
+					continue;
+				}
+				q = traverse(i,j,grid);
+				j = grid[0].length;
+				i = grid.length;
+			}
+		}
+		return findBridge(grid,q);
+	}
+	List<int[]> traverse(int starti, int startj, int[][] grid) {
+		List<int[]> ret = new ArrayList<>();
+		Deque<int[]> q = new ArrayDeque<>();
+		q.add(new int{starti, startj});
+		grid[starti][startj] = -1;
+		while (!q.isEmpty()) {
+			int[] cur = q.poll();
+			int i = cur[0], j = cur[1];
+			for (int[] pair: new int{{i - 1, j}, {i + 1, j}, {i, j - 1}, {i, j + 1}}) {	
+				int newi = pair[0], newj = pair[1];
+				if (newi >= 0 && newi < grid.length && newj >= 0 && newj < grid[0].length) {
+					if (grid[newi][newj] == 1) {
+						q.add(new int{newi, newj});
+						grid[newi][newj] = -1;
+					} 
+					else if (grid[newi][newj] == 0) {
+						ret.add(new int{i, j});
+					}
+				}
+			}
+		}
+		return ret;
+	}
+}

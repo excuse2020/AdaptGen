@@ -1,0 +1,41 @@
+class Solution {
+	int findKth(int[] a, int n, int K) {
+		return partition(0,n - 1,a,K);
+	}
+	int partition(int left, int right, int[] arr, int k) {
+		Random r = new Random();
+		int i = left + 1;
+		int j = right;
+		int flag = Math.abs(r.nextInt()) % (right - left + 1) + left;
+		swap(arr,flag,left);
+		while (true) {
+			while (j >= left + 1 && arr[j] < arr[left]) {
+				j--;
+			}
+			while (i <= right && arr[i] > arr[left]) {
+				i++;
+			}
+			if (i > j) {
+				break;
+			}
+			swap(arr,i,j);
+			i++;
+			j--;
+		}
+		swap(arr,left,j);
+		if (j + 1 == k) {
+			return arr[j];
+		} 
+		else if (j + 1 > k) {
+			return partition(left,j - 1,arr,k);
+		} 
+		else {
+			return partition(j + 1,right,arr,k);
+		}
+	}
+	void swap(int[] arr, int a, int b) {
+		int temp = arr[a];
+		arr[a] = arr[b];
+		arr[b] = temp;
+	}
+}

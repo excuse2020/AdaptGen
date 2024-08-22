@@ -1,0 +1,36 @@
+class Solution {
+	int cherryPickup(int[][] grid) {
+		Integer dp = new Integer[grid.length][grid[0].length][grid[0].length];
+		int r1 = 0;
+		int r2 = grid[0].length - 1;
+		return solve(r1,0,grid,r2,dp);
+	}
+	int solve(int i, int j, int A, int j1, Integer dp) {
+		if (j < 0 || j1 < 0 || j1 >= A[0].length || j >= A[0].length) {
+			return 0;
+		}
+		if (i == A.length - 1) {
+			if (j == j1) {
+				return A[i][j];
+			} 
+			else {
+				return A[i][j] + A[i][j1];
+			}
+		}
+		int max = 0;
+		if (dp[i][j][j1] == null) {
+			for (int r1 = -1; r1 <= 1; r1++) {
+				for (int r2 = -1; r2 <= 1; r2++) {
+					if (j == j1) {
+						max = Math.max(max,A[i][j] + solve(i + 1,j + r1,A,j1 + r2,dp));
+					} 
+					else {
+						max = Math.max(max,A[i][j] + A[i][j1]);
+					}
+				}
+			}
+			dp[i][j][j1] = max;
+		}
+		return dp[i][j][j1];
+	}
+}

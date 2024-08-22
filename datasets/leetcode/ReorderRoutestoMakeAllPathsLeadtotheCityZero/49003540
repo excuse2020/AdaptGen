@@ -1,0 +1,25 @@
+class Solution {
+	int dfs(int city, Map<Integer, List<int[]>> graph, boolean[] visited) {
+		visited[city] = true;
+		int count = 0;
+		if (!graph.containsKey(city)) {
+			return 0;
+		}
+		for (int[] adj: graph.get(city)) {	
+			if (!visited[adj[0]]) {
+				count += adj[1] > 0 ? 1 : 0;
+				count += dfs(adj[0],graph,visited);
+			}
+		}
+		return count;
+	}
+	int minReorder(int n, int[][] connections) {
+		Map<Integer, List<int[]>> graph = new HashMap<>();
+		for (int[] conn: connections) {	
+			graph.computeIfAbsent(conn[0],(k) -> {new ArrayList<>()}).add(new int{conn[1], 1});
+			graph.computeIfAbsent(conn[1],(k) -> {new ArrayList<>()}).add(new int{conn[0], -1});
+		}
+		boolean[] visited = new boolean[n];
+		return dfs(0,graph,visited);
+	}
+}

@@ -1,0 +1,27 @@
+class Solution {
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		int[] degree = new int[n], time = new int[n], q = new int[n];
+		int first = 0, last = 0;
+		for (int m: manager) {	
+			if (m != -1) {
+				degree[m]++;
+			}
+		}
+		for (int i = 0; i < degree.length; i++) {
+			if (degree[i] == 0) {
+				q[last++] = i;
+			}
+		}
+		while (first != last) {
+			int next = q[first++], m = manager[next];
+			if (m == -1) {
+				continue;
+			}
+			time[m] = Math.max(time[m],time[next] + informTime[next]);
+			if (--degree[m] == 0) {
+				q[last++] = m;
+			}
+		}
+		return time[headID] + informTime[headID];
+	}
+}

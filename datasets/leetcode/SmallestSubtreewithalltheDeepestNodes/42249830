@@ -1,0 +1,30 @@
+class Solution {
+	void dfs(TreeNode node, TreeNode parent, Map<TreeNode, Integer> depth) {
+		if (node != null) {
+			depth.put(node,depth.get(parent) + 1);
+			dfs(node.left,node,depth);
+			dfs(node.right,node,depth);
+		}
+	}
+	TreeNode findCommonAncestor(TreeNode node, Map<TreeNode, Integer> depth, int maxDepth) {
+		if (node == null || depth.get(node) == maxDepth) {
+			return node;
+		}
+		TreeNode left = findCommonAncestor(node.left,depth,maxDepth);
+		TreeNode right = findCommonAncestor(node.right,depth,maxDepth);
+		if (left != null && right != null) {
+			return node;
+		}
+		return left != null ? left : right;
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		Map<TreeNode, Integer> depth = new HashMap<>();
+		depth.put(null,-1);
+		dfs(root,null,depth);
+		int maxDepth = -1;
+		for (int d: depth.values()) {	
+			maxDepth = Math.max(maxDepth,d);
+		}
+		return findCommonAncestor(root,depth,maxDepth);
+	}
+}

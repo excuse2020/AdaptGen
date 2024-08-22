@@ -1,0 +1,57 @@
+class Solution {
+	int solve(String s) {
+		if (s == null || s.length() == 0) {
+			return 0;
+		}
+		char[] data = s.toCharArray();
+		int n = data.length;
+		char sign = '+';
+		int number = 0;
+		Stack<Integer> stack = new Stack<>();
+		for (int i = 0; i < data.length; i++) {
+			char item = data[i];
+			if (item == ' ') {
+				continue;
+			}
+			if (item >= '0' && item <= '9') {
+				number = number * 10 + item - '0';
+			}
+			if (item == '(') {
+				int brackets = 1;
+				int j = i + 1;
+				while (brackets > 0) {
+					if (data[j] == '(') {
+						brackets++;
+					} 
+					else if (data[j] == ')') {
+						brackets--;
+					}
+					j++;
+				}
+				number = solve(s.substring(i + 1,j - 1));
+				i = j - 1;
+			}
+			if (item < '0' || item > '9' || i == n - 1) {
+				if (sign == '+') {
+					stack.push(number);
+				} 
+				else if (sign == '-') {
+					stack.push(-1 * number);
+				} 
+				else if (sign == '/') {
+					stack.push(stack.pop() / number);
+				} 
+				else if (sign == '*') {
+					stack.push(stack.pop() * number);
+				}
+				sign = item;
+				number = 0;
+			}
+		}
+		int ans = 0;
+		while (!stack.isEmpty()) {
+			ans += stack.pop();
+		}
+		return ans;
+	}
+}

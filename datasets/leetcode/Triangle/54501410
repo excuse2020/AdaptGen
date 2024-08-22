@@ -1,0 +1,26 @@
+class Solution {
+	int minimumTotal(List<List<Integer>> triangle) {
+		int rows = triangle.size();
+		int dp = new int[rows][rows];
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < rows; j++) {
+				dp[i][j] = -1;
+			}
+		}
+		return work(0,0,rows,triangle,dp);
+	}
+	int work(int i, int j, int rows, List<List<Integer>> tri, int[][] dp) {
+		if (i > rows - 1 || j > i + 1) {
+			return 100000;
+		}
+		if (i == rows - 1) {
+			return tri.get(i).get(j);
+		}
+		if (dp[i][j] != -1) {
+			return dp[i][j];
+		}
+		int up = tri.get(i).get(j) + work(i + 1,j,rows,tri,dp);
+		int left = tri.get(i).get(j) + work(i + 1,j + 1,rows,tri,dp);
+		return dp[i][j] = Math.min(up,left);
+	}
+}

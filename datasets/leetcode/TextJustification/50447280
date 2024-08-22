@@ -1,0 +1,71 @@
+class Solution {
+	void fill(StringBuilder sb, int len) {
+		for (int i = 0; i < len; ++i) {
+			sb.append(" ");
+		}
+	}
+	List<String> fullJustify(String[] words, int maxWidth) {
+		List<String> result = new ArrayList<>();
+		int lineLength = 0;
+		int start = 0;
+		int wordCount = 0;
+		for (int k = 0; k < words.length; ++k, ++wordCount) {
+			lineLength += words[k].length();
+			if ((lineLength + wordCount - 1) >= maxWidth) {
+				lineLength -= words[k].length();
+				result.add(justifiedLine(start,k - 1,words,maxWidth,lineLength));
+				start = k;
+				lineLength = words[k].length();
+				wordCount = 0;
+			}
+		}
+		result.add(justifyLastLine(start,words.length - 1,words,maxWidth));
+		return result;
+	}
+	int getGapsCount(int totalWordsInLine) {
+		if (totalWordsInLine == 1) {
+			return 1;
+		} 
+		else {
+			return totalWordsInLine - 1;
+		}
+	}
+	String justifiedLine(int start, int end, String[] words, int maxWidth, int len) {
+		int totalSpace = maxWidth - len;
+		int totalWordsInLine = end - start + 1;
+		if (totalWordsInLine <= 1) {
+			return justifyLastLine(start,end,words,maxWidth);
+		}
+		int gaps = getGapsCount(totalWordsInLine);
+		int spacePerWord = totalSpace / gaps;
+		int adjustmentSpace = totalSpace % gaps;
+		StringBuilder sb = new StringBuilder();
+		for (int i = start; i <= end; ++i) {
+			sb.append(words[i]);
+			if (i != end) {
+				fill(sb,spacePerWord);
+			}
+			if (adjustmentSpace > 0) {
+				sb.append(" ");
+				--adjustmentSpace;
+			}
+		}
+		return sb.toString();
+	}
+	String justifyLastLine(int start, int end, String[] words, int maxWidth) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = start; i <= end; ++i) {
+			sb.append(words[i]);
+			if (i != end) {
+				sb.append(" ");
+			}
+		}
+		int diff = maxWidth - sb.length();
+		if (diff > 0) {
+			for (int i = 0; i < diff; ++i) {
+				sb.append(" ");
+			}
+		}
+		return sb.toString();
+	}
+}

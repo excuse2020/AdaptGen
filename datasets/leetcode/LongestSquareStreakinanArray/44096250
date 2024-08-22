@@ -1,0 +1,33 @@
+class Solution {
+	int maxLength;
+	Map<Integer, Integer> paths;
+	Set<Integer> seen;
+	void dfs(int counter, int key) {
+		if (paths.containsKey(paths.get(key)) && !seen.contains(paths.get(key))) {
+			seen.add(paths.get(key));
+			dfs(counter + 1,paths.get(key));
+		}
+		maxLength = Math.max(maxLength,counter);
+		return;
+	}
+	Map<Integer, Integer> getMap(int[] nums) {
+		Map<Integer, Integer> paths = new HashMap<>();
+		for (int i = 0; i < nums.length; i++) {
+			paths.put(nums[i],nums[i] * nums[i]);
+		}
+		return paths;
+	}
+	int longestSquareStreak(int[] nums) {
+		Arrays.sort(nums);
+		seen = new HashSet<>();
+		maxLength = 0;
+		paths = getMap(nums);
+		for (int num: nums) {	
+			if (!seen.contains(num)) {
+				seen.add(num);
+				dfs(1,num);
+			}
+		}
+		return (maxLength == 1) ? -1 : maxLength;
+	}
+}

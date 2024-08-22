@@ -1,0 +1,44 @@
+class Solution {
+	List<Boolean> checkIfPrerequisite(int n, int[][] pre, int[][] queries) {
+		Map<Integer, Set<Integer>> adj = new HashMap<>();
+		Map<Integer, Set<Integer>> preMap = new HashMap<>();
+		int[] indegree = new int[n];
+		Queue<Integer> q = new LinkedList<>();
+		for (int i = 0; i < n; i++) {
+			adj.put(i,new HashSet<>());
+			preMap.put(i,new HashSet<>());
+		}
+		for (int[] p: pre) {	
+			indegree[p[1]]++;
+			adj.get(p[0]).add(p[1]);
+		}
+		for (int i = 0; i < n; i++) {
+			if (indegree[i] == 0) {
+				q.add(i);
+			}
+		}
+		while (!q.isEmpty()) {
+			int cur = q.poll();
+			Set<Integer> set = adj.get(cur);
+			for (int next: set) {	
+				preMap.get(next).add(cur);
+				preMap.get(next).addAll(preMap.get(cur));
+				indegree[next]--;
+				if (indegree[next] == 0) {
+					q.add(next);
+				}
+			}
+		}
+		List<Boolean> res = new ArrayList<>();
+		for (int[] query: queries) {	
+			Set<Integer> set = preMap.get(query[1]);
+			if (set.contains(query[0])) {
+				res.add(true);
+			} 
+			else {
+				res.add(false);
+			}
+		}
+		return res;
+	}
+}

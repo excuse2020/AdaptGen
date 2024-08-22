@@ -1,0 +1,30 @@
+class Solution {
+	List<Integer>[] adj = new List[1000_01];
+	int dfs(int s, int parent, int[] time) {
+		if (adj[s].size() == 0) {
+			return parent != -1 ? time[parent] : 0;
+		}
+		int max = 0;
+		for (int n: adj[s]) {	
+			int x = 0;
+			if (parent != -1) {
+				x = time[parent];
+			}
+			int o = x + dfs(n,s,time);
+			max = Math.max(o,max);
+		}
+		return max;
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		for (int j = 0; j <= 100000; j++) {
+			adj[j] = new ArrayList<>();
+		}
+		for (int i = 0; i < n; i++) {
+			if (manager[i] != -1) {
+				adj[manager[i]].add(i);
+			}
+		}
+		int res = dfs(headID,-1,informTime);
+		return res;
+	}
+}

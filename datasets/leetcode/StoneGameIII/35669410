@@ -1,0 +1,37 @@
+class Solution {
+	Integer dp;
+	String stoneGameIII(int[] stoneValue) {
+		dp = new Integer[stoneValue.length][2];
+		int ret = util(stoneValue,0,1);
+		if (ret == 0) {
+			return "Tie";
+		} 
+		else if (ret > 0) {
+			return "Alice";
+		} 
+		else {
+			return "Bob";
+		}
+	}
+	int util(int stones, int idx, int aliceTurn) {
+		if (idx >= stones.length) {
+			return 0;
+		}
+		if (dp[idx][aliceTurn] != null) {
+			return dp[idx][aliceTurn];
+		}
+		int max = Integer.MIN_VALUE;
+		int min = Integer.MAX_VALUE;
+		int sum = 0;
+		for (int i = 0; i < 3; i++) {
+			if (idx + i == stones.length) {
+				break;
+			}
+			sum += stones[idx + i];
+			int ret = (aliceTurn == 1) ? sum + util(stones,idx + i,aliceTurn ^ 1) : -sum + util(stones,idx + i,aliceTurn ^ 1);
+			max = Math.max(max,ret);
+			min = Math.min(min,ret);
+		}
+		return dp[idx][aliceTurn] = (aliceTurn == 1) ? max : min;
+	}
+}

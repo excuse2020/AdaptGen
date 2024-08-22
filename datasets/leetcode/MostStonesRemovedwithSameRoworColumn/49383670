@@ -1,0 +1,67 @@
+class Solution {
+	int numberOfGroups;
+	int numberOfRemovedStones;
+	int[] stoneArray;
+	int[] stoneArraySize;
+	int findRoot(int p) {
+		int root = p;
+		while (stoneArray[root] != root) {
+			root = stoneArray[root];
+		}
+		while (root != p) {
+			int next = stoneArray[p];
+			stoneArray[p] = root;
+			p = next;
+		}
+		return root;
+	}
+	int[][] modifyMatrix(int[][] stones) {
+		for (int i = 0; i < numberOfRemovedStones; i++) {
+			stones[i][0] = 0 - stones[i][0];
+			stones[i][1] = stones[i][1] + 1;
+		}
+		return stones;
+	}
+	int removeStones(int[][] stones) {
+		numberOfRemovedStones = stones.length;
+		modifyMatrix(stones);
+		SortedSet<Integer> sortedStone = new TreeSet<Integer>();
+		for (int i = 0; i < numberOfRemovedStones; i++) {
+			sortedStone.add(stones[i][0]);
+			sortedStone.add(stones[i][1]);
+		}
+		Integer[] array = sortedStone.toArray(new Integer[0]);
+		stoneArray = new int[array.length];
+		stoneArraySize = new int[array.length];
+		for (int i = 0; i < array.length; i++) {
+			stoneArray[i] = i;
+			stoneArraySize[i] = 1;
+		}
+		Map<Integer, Integer> stoneMap = new HashMap<>();
+		for (int i = 0; i < array.length; i++) {
+			stoneMap.put(array[i],i);
+		}
+		numberOfGroups = array.length;
+		for (int i = 0; i < numberOfRemovedStones; i++) {
+			int rootA = findRoot(stoneMap.get(stones[i][0]));
+			int rootB = findRoot(stoneMap.get(stones[i][1]));
+			union(rootA,rootB);
+		}
+		return numberOfRemovedStones - numberOfGroups;
+	}
+	void union(int rootA, int rootB) {
+		if (rootA != rootB) {
+			if (stoneArraySize[rootA] < stoneArraySize[rootB]) {
+				stoneArray[rootA] = rootB;
+				stoneArraySize[rootB] += stoneArraySize[rootA];
+				stoneArraySize[rootA] = 0;
+			} 
+			else {
+				stoneArray[rootB] = rootA;
+				stoneArraySize[rootA] += stoneArraySize[rootB];
+				stoneArraySize[rootB] = 0;
+			}
+			numberOfGroups--;
+		}
+	}
+}

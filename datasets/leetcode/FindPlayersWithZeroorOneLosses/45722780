@@ -1,0 +1,34 @@
+class Solution {
+	Set<Integer> players;
+	Set<Integer> playersWithOneLoss;
+	Set<Integer> playersWithZeroLoss;
+	List<List<Integer>> findWinners(int[][] matches) {
+		players = new HashSet<>();
+		playersWithZeroLoss = new HashSet<>();
+		playersWithOneLoss = new HashSet<>();
+		for (int[] match: matches) {	
+			int currWinner = match[0];
+			int currLoser = match[1];
+			if (!players.contains(currWinner)) {
+				players.add(currWinner);
+				playersWithZeroLoss.add(currWinner);
+			}
+			if (!players.contains(currLoser)) {
+				players.add(currLoser);
+				playersWithOneLoss.add(currLoser);
+			} 
+			else {
+				if (playersWithZeroLoss.contains(currLoser)) {
+					playersWithZeroLoss.remove(currLoser);
+					playersWithOneLoss.add(currLoser);
+				} 
+				else if (playersWithOneLoss.contains(currLoser)) {
+					playersWithOneLoss.remove(currLoser);
+				}
+			}
+		}
+		List<Integer> playersWithNoLossList = playersWithZeroLoss.stream().sorted().collect(Collectors.toList());
+		List<Integer> playersWithOnlyOneLossList = playersWithOneLoss.stream().sorted().collect(Collectors.toList());
+		return List.of(playersWithNoLossList,playersWithOnlyOneLossList);
+	}
+}

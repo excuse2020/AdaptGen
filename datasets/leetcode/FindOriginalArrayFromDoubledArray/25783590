@@ -1,0 +1,39 @@
+class Solution {
+	int[] findOriginalArray(int[] changed) {
+		int[] result = new int[changed.length / 2];
+		boolean returnEmpty = false;
+		if (changed.length % 2 != 0) {
+			returnEmpty = true;
+		} 
+		else {
+			int result_currentIndex = 0;
+			Arrays.sort(changed);
+			Map<Integer, LinkedList<Integer>> hm = new HashMap<>();
+			for (int i = 0; i < changed.length; i++) {
+				if (!hm.containsKey(changed[i])) {
+					hm.put(changed[i],new LinkedList<Integer>());
+				}
+				hm.get(changed[i]).add(i);
+			}
+			for (int i = 0; i < changed.length; i++) {
+				if (changed[i] < 0) {
+					continue;
+				}
+				int doubleVal = changed[i] * 2;
+				if (hm.containsKey(doubleVal)) {
+					result[result_currentIndex++] = changed[i];
+					int doubleValIndex = hm.get(doubleVal).removeLast();
+					changed[doubleValIndex] = -1;
+					if (hm.get(doubleVal).size() == 0) {
+						hm.remove(doubleVal);
+					}
+				} 
+				else {
+					returnEmpty = true;
+					break;
+				}
+			}
+		}
+		return returnEmpty ? new int{} : result;
+	}
+}

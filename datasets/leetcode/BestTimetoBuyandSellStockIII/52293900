@@ -1,0 +1,26 @@
+class Solution {
+	Map<String, Integer> memo = new HashMap<>();
+	int maxProfit(int[] prices) {
+		return maxProfit(prices,0,2,0);
+	}
+	int maxProfit(int[] price, int day, int trans, int holding) {
+		if (trans == 0 || day == price.length) {
+			return 0;
+		}
+		String key = day + ",";
+		if (memo.containsKey(key)) {
+			return memo.get(key);
+		}
+		int doNothing = maxProfit(price,day + 1,trans,holding);
+		int doSomething;
+		if (holding == 1) {
+			doSomething = maxProfit(price,day + 1,trans - 1,0) + price[day];
+		} 
+		else {
+			doSomething = maxProfit(price,day + 1,trans,1) - price[day];
+		}
+		int max = Math.max(doNothing,doSomething);
+		memo.put(key,max);
+		return max;
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	int findParent(int i, int[] parent) {
+		if (parent[i] == -1) {
+			return i;
+		} 
+		else {
+			int root = findParent(parent[i],parent);
+			parent[i] = root;
+			return root;
+		}
+	}
+	int[] findRedundantConnection(int[][] edges) {
+		int[] results = new int[2];
+		int[] parent = new int[edges.length + 1];
+		Arrays.fill(parent,-1);
+		for (int i = 0; i < edges.length; ++i) {
+			if (findParent(edges[i][0],parent) == findParent(edges[i][1],parent)) {
+				results[0] = edges[i][0];
+				results[1] = edges[i][1];
+			} 
+			else {
+				union(edges[i][0],edges[i][1],parent);
+			}
+		}
+		return results;
+	}
+	void union(int x, int y, int[] parent) {
+		int xP = findParent(x,parent);
+		int yP = findParent(y,parent);
+		parent[xP] = yP;
+	}
+}

@@ -1,0 +1,38 @@
+class Solution {
+	int minSumOfLengths(int[] arr, int target) {
+		int n = arr.length;
+		int prefixSum = new int[n];
+		int suffixSum = new int[n];
+		int currSumLeft = 0;
+		int prevLeft = 0;
+		int minLeft = Integer.MAX_VALUE;
+		int currSumRight = 0;
+		int prevRight = n - 1;
+		int minRight = Integer.MAX_VALUE;
+		for (int i = 0; i < n; i++) {
+			currSumLeft += arr[i];
+			while (prevLeft < n && currSumLeft > target) {
+				currSumLeft -= arr[prevLeft++];
+			}
+			if (currSumLeft == target) {
+				minLeft = Math.min(minLeft,(i + 1 - prevLeft));
+			}
+			prefixSum[i] = minLeft;
+			currSumRight += arr[n - i - 1];
+			while (prevRight >= 0 && currSumRight > target) {
+				currSumRight -= arr[prevRight--];
+			}
+			if (currSumRight == target) {
+				minRight = Math.min(minRight,prevRight + 1 - (n - i));
+			}
+			suffixSum[n - i - 1] = minRight;
+		}
+		int result = Integer.MAX_VALUE;
+		for (int i = 0; i < n - 1; i++) {
+			if (prefixSum[i] != Integer.MAX_VALUE && suffixSum[i + 1] != Integer.MAX_VALUE) {
+				result = Math.min(result,prefixSum[i] + suffixSum[i + 1]);
+			}
+		}
+		return (result == Integer.MAX_VALUE) ? -1 : result;
+	}
+}

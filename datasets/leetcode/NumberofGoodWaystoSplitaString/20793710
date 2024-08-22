@@ -1,0 +1,44 @@
+class Solution {
+	int numSplits(String s) {
+		int len = s.length();
+		if (len < 2) {
+			return 0;
+		}
+		HashMap<Character, Integer> part1 = new HashMap<>();
+		HashMap<Character, Integer> part2 = new HashMap<>();
+		int lb = 0, ub = 1;
+		int count1 = 0, count2 = 0;
+		part1.put(s.charAt(lb),1);
+		count1 = 1;
+		for (int i = ub; i < len; i++) {
+			char ch = s.charAt(i);
+			if (part2.containsKey(ch)) {
+				part2.put(ch,part2.get(ch) + 1);
+			} 
+			else {
+				part2.put(ch,1);
+				++count2;
+			}
+		}
+		int result = 0;
+		while (ub < len) {
+			if (count1 == count2) {
+				++result;
+			}
+			char ch = s.charAt(ub);
+			if (part1.containsKey(ch)) {
+				part1.put(ch,part1.get(ch) + 1);
+			} 
+			else {
+				part1.put(ch,1);
+				++count1;
+			}
+			part2.put(ch,part2.get(ch) - 1);
+			if (part2.get(ch) == 0) {
+				--count2;
+			}
+			++ub;
+		}
+		return result;
+	}
+}

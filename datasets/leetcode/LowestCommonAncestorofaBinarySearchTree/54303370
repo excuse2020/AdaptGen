@@ -1,0 +1,37 @@
+class Solution {
+	List<List<TreeNode>> ans;
+	void help(TreeNode root, List<TreeNode> pres, int p, int q) {
+		if (root == null) {
+			return;
+		}
+		if (root.val == p || root.val == q) {
+			ans.add(pres);
+		}
+		if (root.left != null) {
+			List<TreeNode> lal = new ArrayList<>();
+			lal.addAll(pres);
+			lal.add(root.left);
+			help(root.left,lal,p,q);
+		}
+		if (root.right != null) {
+			List<TreeNode> ral = new ArrayList<>();
+			ral.addAll(pres);
+			ral.add(root.right);
+			help(root.right,ral,p,q);
+		}
+	}
+	TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+		ans = new ArrayList<>();
+		help(root,List.of(root),p.val,q.val);
+		List<TreeNode> l = ans.get(0);
+		List<TreeNode> r = ans.get(1);
+		Set<TreeNode> ss = new HashSet<>(r);
+		TreeNode res = null;
+		for (TreeNode x: l) {	
+			if (ss.contains(x)) {
+				res = x;
+			}
+		}
+		return res;
+	}
+}

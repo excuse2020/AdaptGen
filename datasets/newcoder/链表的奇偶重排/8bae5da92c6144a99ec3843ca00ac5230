@@ -1,0 +1,86 @@
+class Solution {
+	ListNode oddEvenList(ListNode head) {
+		return oddEvenList1(head);
+	}
+	ListNode oddEvenList1(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ArrayList<ListNode> jilist = new ArrayList<ListNode>();
+		ArrayList<ListNode> ouList = new ArrayList<ListNode>();
+		ListNode pre = null, cur = head;
+		boolean ji = true;
+		while (cur != null) {
+			if (ji) {
+				jilist.add(cur);
+				ji = false;
+			} 
+			else {
+				ouList.add(cur);
+				ji = true;
+			}
+			cur = cur.next;
+		}
+		for (ListNode temp: jilist) {	
+			if (pre == null) {
+				pre = temp;
+				head = pre;
+			} 
+			else {
+				pre.next = temp;
+				pre = temp;
+			}
+		}
+		for (ListNode temp: ouList) {	
+			pre.next = temp;
+			pre = temp;
+		}
+		pre.next = null;
+		return head;
+	}
+	ListNode oddEvenList2(ListNode head) {
+		ListNode cur, next, pre = null, ouhead, ounext, oupre;
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ouhead = head.next;
+		ounext = ouhead;
+		oupre = ouhead;
+		cur = head;
+		boolean first = true;
+		while (cur != null && cur.next != null) {
+			if (!first) {
+				oupre.next = cur.next;
+			}
+			ounext = cur.next;
+			cur.next = ounext.next;
+			pre = cur;
+			oupre = ounext;
+			cur = ounext.next;
+			first = false;
+		}
+		oupre.next = null;
+		if (cur != null) {
+			cur.next = ouhead;
+		} 
+		else {
+			pre.next = ouhead;
+		}
+		return head;
+	}
+	ListNode oddEvenList3(ListNode head) {
+		if (head == null) {
+			return head;
+		}
+		ListNode oddHead = head, evenHead = head.next;
+		ListNode odd = oddHead, even = evenHead;
+		while (even != null && even.next != null) {
+			odd.next = even.next;
+			odd = odd.next;
+			even.next = odd.next;
+			even = even.next;
+		}
+		odd.next = evenHead;
+		return head;
+	}
+}

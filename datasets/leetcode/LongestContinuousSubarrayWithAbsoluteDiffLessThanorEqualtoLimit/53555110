@@ -1,0 +1,36 @@
+class Solution {
+	int longestSubarray(int[] nums, int limit) {
+		int s = 0, e = 1;
+		int max = 1;
+		int c = 1;
+		int maxnum = 0;
+		int minnum = Integer.MAX_VALUE;
+		while (s < e && e < nums.length) {
+			if (nums[s] == nums[s + 1] && s < nums.length) {
+				c++;
+				s++;
+				e++;
+				max = Math.max(max,c);
+				continue;
+			}
+			int abs = Math.abs(nums[s] - nums[e]);
+			maxnum = Math.max(maxnum,nums[e]);
+			minnum = Math.min(minnum,nums[e]);
+			int mabs = Math.abs(nums[e] - maxnum);
+			int mibs = Math.abs(nums[e] - minnum);
+			if (abs <= limit && mabs <= limit && mibs <= limit) {
+				c++;
+				e++;
+				max = Math.max(max,c);
+			} 
+			else {
+				s++;
+				e = s + 1;
+				c = 1;
+				maxnum = 0;
+				minnum = Integer.MAX_VALUE;
+			}
+		}
+		return max;
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	List<Integer> currentVisitedNodes = new ArrayList<>();
+	int[] countVisitedNodes(List<Integer> edges) {
+		int n = edges.size();
+		int[] ans = new int[n];
+		boolean[] visited = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			if (visited[i]) {
+				continue;
+			}
+			ans[i] = travel(edges,i,visited,ans);
+			int loopElement = currentVisitedNodes.get(currentVisitedNodes.size() - 1);
+			int index = -1;
+			for (int j = 0; j < currentVisitedNodes.size(); j++) {
+				if (currentVisitedNodes.get(j) == loopElement) {
+					index = j;
+					break;
+				}
+			}
+			int listSize = currentVisitedNodes.size();
+			for (int j = index + 1; j < listSize; j++) {
+				ans[currentVisitedNodes.get(j)] = listSize - index;
+			}
+			for (int j = index - 1; j >= 0; j--) {
+				ans[currentVisitedNodes.get(j)] = ans[currentVisitedNodes.get(j + 1)] + 1;
+			}
+			currentVisitedNodes.clear();
+		}
+		return ans;
+	}
+	int travel(List<Integer> graph, int start, boolean[] visited, int[] ans) {
+		currentVisitedNodes.add(start);
+		if (visited[start]) {
+			return ans[start];
+		}
+		visited[start] = true;
+		return 1 + travel(graph,graph.get(start),visited,ans);
+	}
+}

@@ -1,0 +1,58 @@
+class Solution {
+	int INF = 0x3f3f3f3f;
+	int ans = INF;
+	int[] dp;
+	int[] e, ne, h;
+	int idx;
+	int[] w;
+	void add(int a, int b) {
+		e[idx] = b;
+		ne[idx] = h[a];
+		h[a] = idx++;
+	}
+	int dfs(int u, int fa, int sumx, int sumy) {
+		int res = w[u];
+		for (int i = h[u]; i != -1; i = ne[i]) {
+			int j = e[i];
+			if (fa == j) {
+				continue;
+			}
+			int t = dfs(j,u,sumx,sumy);
+			res = res ^ t;
+			if (sumx != -1) {
+				int t1 = sumy;
+				int t2 = t;
+				int t3 = sumx ^ t;
+				ans = Math.min(ans,Math.max(t3,Math.max(t1,t2)) - Math.min(t3,Math.min(t1,t2)));
+			}
+		}
+		return res;
+	}
+	int minimumScore(int[] nums, int[][] edges) {
+		int n = nums.length;
+		w = nums;
+		e = new int[n * 2 + 1];
+		ne = new int[n * 2 + 1];
+		h = new int[n + 1];
+		for (int i = 0; i < n - 1; i++) {
+			Arrays.fill(h,-1);
+			idx = 0;
+			for (int j = 0; j < n - 1; j++) {
+				if (j == i) {
+					continue;
+				}
+				int a = edges[j][0];
+				int b = edges[j][1];
+				add(a,b);
+				add(b,a);
+			}
+			int x = edges[i][0];
+			int y = edges[i][1];
+			int sumx = dfs(x,-1,-1,-1);
+			int sumy = dfs(y,-1,-1,-1);
+			dfs(x,-1,sumx,sumy);
+			dfs(y,-1,sumy,sumx);
+		}
+		return ans;
+	}
+}

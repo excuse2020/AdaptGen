@@ -1,0 +1,71 @@
+class Solution {
+	int minSideJumps(int[] arr) {
+		int dp = new int[4][arr.length];
+		for (int i = 0; i < 4; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		return solveTab(arr);
+	}
+	int solve(int arr, int lane, int pos, int n) {
+		if (pos == n) {
+			return 0;
+		}
+		if (arr[pos + 1] != lane) {
+			return solve(arr,lane,pos + 1,n);
+		} 
+		else {
+			int ans = Integer.MAX_VALUE;
+			for (int i = 1; i < 4; i++) {
+				if (lane != i && arr[pos] != i) {
+					ans = Math.min(ans,1 + solve(arr,i,pos,n));
+				}
+			}
+			return ans;
+		}
+	}
+	int solveMem(int arr, int lane, int pos, int n, int dp) {
+		if (pos == n) {
+			return 0;
+		}
+		if (dp[lane][pos] != -1) {
+			return dp[lane][pos];
+		}
+		if (arr[pos + 1] != lane) {
+			return dp[lane][pos] = solveMem(arr,lane,pos + 1,n,dp);
+		} 
+		else {
+			int ans = Integer.MAX_VALUE;
+			for (int i = 1; i < 4; i++) {
+				if (lane != i && arr[pos] != i) {
+					ans = Math.min(ans,1 + solveMem(arr,i,pos,n,dp));
+				}
+			}
+			return dp[lane][pos] = ans;
+		}
+	}
+	int solveTab(int arr) {
+		int n = arr.length - 1;
+		int dp = new int[4][n + 1];
+		dp[1][n] = 0;
+		dp[2][n] = 0;
+		dp[3][n] = 0;
+		dp[0][n] = 0;
+		for (int pos = n - 1; pos >= 0; pos--) {
+			for (int lane = 1; lane < 4; lane++) {
+				if (arr[pos + 1] != lane) {
+					dp[lane][pos] = dp[lane][pos + 1];
+				} 
+				else {
+					int ans = Integer.MAX_VALUE;
+					for (int i = 1; i < 4; i++) {
+						if (lane != i && arr[pos] != i) {
+							ans = Math.min(ans,1 + dp[i][pos + 1]);
+						}
+					}
+					dp[lane][pos] = ans;
+				}
+			}
+		}
+		return Math.min(dp[2][0],Math.min(1 + dp[1][0],1 + dp[3][0]));
+	}
+}

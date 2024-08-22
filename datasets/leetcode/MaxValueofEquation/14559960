@@ -1,0 +1,31 @@
+class Solution {
+	int findMaxValueOfEquation(int[][] points, int k) {
+		int start = 0;
+		Deque<Integer> maxDiffQ = new LinkedList<>();
+		maxDiffQ.add(0);
+		int result = Integer.MIN_VALUE;
+		for (int j = 1; j < points.length; j++) {
+			int xj = points[j][0];
+			int yj = points[j][1];
+			while (!maxDiffQ.isEmpty() && (xj - points[maxDiffQ.peekFirst()][0] > k)) {
+				maxDiffQ.pollFirst();
+			}
+			if (!maxDiffQ.isEmpty()) {
+				int idx = maxDiffQ.peekFirst();
+				int maxDiff = points[idx][1] - points[idx][0];
+				result = Integer.max(result,maxDiff + xj);
+			}
+			while (!maxDiffQ.isEmpty()) {
+				int idx = maxDiffQ.peekLast();
+				if (points[idx][1] - points[idx][0] <= yj - xj) {
+					maxDiffQ.pollLast();
+				} 
+				else {
+					break;
+				}
+			}
+			maxDiffQ.offerLast(j);
+		}
+		return result;
+	}
+}

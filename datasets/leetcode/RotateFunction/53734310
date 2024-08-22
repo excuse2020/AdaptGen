@@ -1,0 +1,29 @@
+class Solution {
+	int maxRotateFunction(int[] nums) {
+		MaxRotateFinder finder = new MaxRotateFinder();
+		return finder.maxRotateFunction(nums);
+	}
+}
+class MaxRotateFinder {
+	int nums;
+	int sum;
+	int afterOneRotation(int lastElement, int previousSum) {
+		previousSum += sum;
+		previousSum -= (lastElement * nums.length);
+		return previousSum;
+	}
+	int maxRotateFunction(int[] nums) {
+		int currentSum = 0;
+		for (int i = 0; i < nums.length; i++) {
+			currentSum += nums[i] * i;
+		}
+		this.nums = nums;
+		this.sum = Arrays.stream(nums).sum();
+		int maxSum = currentSum;
+		for (int i = nums.length - 1; i >= 0; i--) {
+			currentSum = afterOneRotation(nums[i],currentSum);
+			maxSum = Math.max(maxSum,currentSum);
+		}
+		return maxSum;
+	}
+}

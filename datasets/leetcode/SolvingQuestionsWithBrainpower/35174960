@@ -1,0 +1,23 @@
+class Solution {
+	long mostPoints(int[][] questions) {
+		int n = questions.length;
+		long dp = new long[n];
+		Arrays.fill(dp,-1);
+		return solve(0,questions,dp);
+	}
+	long solve(int idx, int[][] questions, long[] dp) {
+		if (idx >= questions.length) {
+			return 0;
+		}
+		if (dp[idx] != -1) {
+			return dp[idx];
+		}
+		int jump = 1 + questions[idx][1];
+		long notTake = solve(idx + 1,questions,dp);
+		long take = -(int)(1e9);
+		if (idx < questions.length) {
+			take = questions[idx][0] + solve(idx + jump,questions,dp);
+		}
+		return dp[idx] = Math.max(take,notTake);
+	}
+}

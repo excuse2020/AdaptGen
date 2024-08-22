@@ -1,0 +1,50 @@
+class Solution {
+	char findParent(char ch, Map<Character, Character> parent) {
+		if (parent.get(ch) == ch) {
+			return ch;
+		}
+		char par = findParent(parent.get(ch),parent);
+		parent.put(ch,par);
+		return par;
+	}
+	String smallestEquivalentString(String s1, String s2, String baseStr) {
+		int n = s1.length();
+		Map<Character, Character> parent = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			parent.put(s1.charAt(i),s1.charAt(i));
+		}
+		for (int i = 0; i < n; i++) {
+			if (!parent.containsKey(s2.charAt(i))) {
+				parent.put(s2.charAt(i),s2.charAt(i));
+			}
+		}
+		for (int i = 0; i < baseStr.length(); i++) {
+			if (!parent.containsKey(baseStr.charAt(i))) {
+				parent.put(baseStr.charAt(i),baseStr.charAt(i));
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			char ch1 = s1.charAt(i);
+			char ch2 = s2.charAt(i);
+			union(ch1,ch2,parent);
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < baseStr.length(); i++) {
+			char temp = parent.get(baseStr.charAt(i));
+			sb.append(findParent(temp,parent));
+		}
+		return sb.toString();
+	}
+	void union(char x, char y, Map<Character, Character> parent) {
+		char px = findParent(x,parent);
+		char py = findParent(y,parent);
+		if (px != py) {
+			if (px < py) {
+				parent.put(py,px);
+			} 
+			else if (px > py) {
+				parent.put(px,py);
+			}
+		}
+	}
+}

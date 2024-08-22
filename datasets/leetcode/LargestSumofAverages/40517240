@@ -1,0 +1,31 @@
+class Solution {
+	double[][] dp;
+	int len;
+	int[] sum;
+	double dfs(int start, int k) {
+		if (k == 1) {
+			dp[start][k] = (sum[len] - sum[start]) * 1.0 / (len - start);
+			return dp[start][k];
+		}
+		if (dp[start][k] != 0.0d) {
+			return dp[start][k];
+		}
+		double res = 0;
+		for (int i = start; i <= len - k; i++) {
+			double curAvg = (sum[i + 1] - sum[start]) * 1.0d / (i + 1 - start);
+			double nextAvg = dfs(i + 1,k - 1);
+			res = Math.max(res,curAvg + nextAvg);
+		}
+		return dp[start][k] = res;
+	}
+	double largestSumOfAverages(int[] nums, int k) {
+		len = nums.length;
+		dp = new double[len][k + 1];
+		sum = new int[len + 1];
+		for (int i = 1; i <= len; i++) {
+			sum[i] = sum[i - 1] + nums[i - 1];
+		}
+		double res = dfs(0,k);
+		return res;
+	}
+}

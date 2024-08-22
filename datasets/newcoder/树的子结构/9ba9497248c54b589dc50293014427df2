@@ -1,0 +1,46 @@
+class Solution {
+	boolean HasSubtree(TreeNode root1, TreeNode root2) {
+		if (root1 == null || root2 == null) {
+			return false;
+		}
+		Queue<TreeNode> q = new LinkedList<TreeNode>();
+		q.offer(root1);
+		while (!q.isEmpty()) {
+			TreeNode node = q.poll();
+			if (node.val == root2.val) {
+				if (helper(node,root2)) {
+					return true;
+				}
+			}
+			if (node.left != null) {
+				q.offer(node.left);
+			}
+			if (node.right != null) {
+				q.offer(node.right);
+			}
+		}
+		return false;
+	}
+	boolean helper(TreeNode root1, TreeNode root2) {
+		Queue<TreeNode> q1 = new LinkedList<TreeNode>();
+		Queue<TreeNode> q2 = new LinkedList<TreeNode>();
+		q1.offer(root1);
+		q2.offer(root2);
+		while (!q2.isEmpty()) {
+			TreeNode node1 = q1.poll();
+			TreeNode node2 = q2.poll();
+			if (node1 == null || node1.val != node2.val) {
+				return false;
+			}
+			if (node2.left != null) {
+				q1.offer(node1.left);
+				q2.offer(node2.left);
+			}
+			if (node2.right != null) {
+				q1.offer(node1.right);
+				q2.offer(node2.right);
+			}
+		}
+		return true;
+	}
+}

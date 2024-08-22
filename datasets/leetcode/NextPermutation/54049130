@@ -1,0 +1,51 @@
+class Solution {
+	void merge(int a, int s, int mid, int e) {
+		int temp = new int[e - s + 1];
+		int i = s, j = mid + 1, k = 0;
+		while (i <= mid && j <= e) {
+			if (a[i] > a[j]) {
+				temp[k++] = a[j++];
+			} 
+			else {
+				temp[k++] = a[i++];
+			}
+		}
+		while (i <= mid) {
+			temp[k++] = a[i++];
+		}
+		while (j <= e) {
+			temp[k++] = a[j++];
+		}
+		k = 0;
+		while (s <= e) {
+			a[s++] = temp[k++];
+		}
+	}
+	void nextPermutation(int[] nums) {
+		int i = nums.length - 1;
+		while (i > 0 && nums[i] <= nums[i - 1]) {
+			i--;
+		}
+		if (i != 0) {
+			int j = i;
+			for (int x = i; x < nums.length; x++) {
+				if (nums[j] > nums[x] && nums[x] > nums[i - 1]) {
+					j = x;
+				}
+			}
+			int tem = nums[i - 1];
+			nums[i - 1] = nums[j];
+			nums[j] = tem;
+		}
+		sort(nums,i,nums.length - 1);
+	}
+	void sort(int a, int s, int e) {
+		if (s == e) {
+			return;
+		}
+		int mid = s + (int) (e - s) / 2;
+		sort(a,s,mid);
+		sort(a,mid + 1,e);
+		merge(a,s,mid,e);
+	}
+}

@@ -1,0 +1,29 @@
+class Solution {
+	int dfs(int[][] grid, int row, int col) {
+		if (row < 0 || row >= grid.length || col < 0 || col >= grid[0].length || grid[row][col] == 0) {
+			return 0;
+		}
+		int temp = grid[row][col];
+		grid[row][col] = 0;
+		int upSum = dfs(grid,row - 1,col);
+		int leftSum = dfs(grid,row,col - 1);
+		int downSum = dfs(grid,row + 1,col);
+		int rightSum = dfs(grid,row,col + 1);
+		grid[row][col] = temp;
+		temp = temp + Math.max(Math.max(Math.max(upSum,leftSum),downSum),rightSum);
+		return temp;
+	}
+	int getMaximumGold(int[][] grid) {
+		int maxSum = 0;
+		int row = grid.length, col = grid[0].length;
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < col; j++) {
+				if (grid[i][j] > 0) {
+					int sum = dfs(grid,i,j);
+					maxSum = Math.max(maxSum,sum);
+				}
+			}
+		}
+		return maxSum;
+	}
+}

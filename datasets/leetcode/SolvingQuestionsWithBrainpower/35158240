@@ -1,0 +1,20 @@
+class Solution {
+	long mostPoints(int[][] questions) {
+		HashMap<Integer, Long> memo = new HashMap<>();
+		return solve(0,memo,questions);
+	}
+	long solve(int currentIndex, HashMap<Integer, Long> memo, int[][] questions) {
+		if (currentIndex >= questions.length) {
+			return 0;
+		}
+		int CurrentKey = currentIndex;
+		if (memo.containsKey(CurrentKey)) {
+			return memo.get(CurrentKey);
+		}
+		long consider = questions[currentIndex][0] + solve(currentIndex + questions[currentIndex][1],memo,questions);
+		long notConsider = solve(currentIndex + 1,memo,questions);
+		long ans = Math.max(consider,notConsider);
+		memo.put(CurrentKey,ans);
+		return memo.get(CurrentKey);
+	}
+}

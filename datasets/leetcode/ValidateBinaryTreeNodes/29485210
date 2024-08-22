@@ -1,0 +1,57 @@
+class Solution {
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		int[] parent = new int[n];
+		for (int i = 0; i < n; i++) {
+			if (leftChild[i] != -1) {
+				parent[leftChild[i]]++;
+			}
+			if (rightChild[i] != -1) {
+				parent[rightChild[i]]++;
+			}
+			if (parent[i] > 1) {
+				return false;
+			}
+		}
+		int root_node = -1;
+		int multiRoot = 0;
+		for (int i = 0; i < n; i++) {
+			if (parent[i] == 0) {
+				root_node = i;
+				multiRoot++;
+			}
+		}
+		if (root_node == -1 || multiRoot > 1) {
+			return false;
+		}
+		boolean[] visited = new boolean[n];
+		if (!validateBinaryTreeNodes(root_node,leftChild,rightChild,visited)) {
+			return false;
+		}
+		for (int i = 0; i < n; i++) {
+			if (!visited[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean validateBinaryTreeNodes(int node, int[] leftChild, int[] rightChild, boolean[] visited) {
+		visited[node] = true;
+		if (leftChild[node] != -1 && visited[leftChild[node]]) {
+			return false;
+		}
+		if (leftChild[node] != -1) {
+			if (!validateBinaryTreeNodes(leftChild[node],leftChild,rightChild,visited)) {
+				return false;
+			}
+		}
+		if (rightChild[node] != -1 && visited[rightChild[node]]) {
+			return false;
+		}
+		if (rightChild[node] != -1) {
+			if (!validateBinaryTreeNodes(rightChild[node],leftChild,rightChild,visited)) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

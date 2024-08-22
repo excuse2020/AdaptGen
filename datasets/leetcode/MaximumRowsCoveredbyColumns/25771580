@@ -1,0 +1,45 @@
+class Solution {
+	int calculateRows(int[][] arr) {
+		int count = arr.length;
+		for (int[] row: arr) {	
+			for (int i = 0; i < row.length; i++) {
+				if (row[i] == 1) {
+					count--;
+					break;
+				}
+			}
+		}
+		return count;
+	}
+	int helper(int[][] matrix, int col, int num) {
+		if (col > matrix[0].length) {
+			return 0;
+		}
+		if (num == 0) {
+			return calculateRows(matrix);
+		}
+		int max = 0;
+		for (int i = col; i <= matrix[0].length - num; i++) {
+			int[] temp = setZero(matrix,i);
+			max = Math.max(max,helper(matrix,i + 1,num - 1));
+			resetZero(matrix,i,temp);
+		}
+		return max;
+	}
+	int maximumRows(int[][] matrix, int numSelect) {
+		return helper(matrix,0,numSelect);
+	}
+	void resetZero(int[][] arr, int col, int[] temp) {
+		for (int i = 0; i < arr.length; i++) {
+			arr[i][col] = temp[i];
+		}
+	}
+	int[] setZero(int[][] arr, int col) {
+		int[] temp = new int[arr.length];
+		for (int i = 0; i < arr.length; i++) {
+			temp[i] = arr[i][col];
+			arr[i][col] = 0;
+		}
+		return temp;
+	}
+}

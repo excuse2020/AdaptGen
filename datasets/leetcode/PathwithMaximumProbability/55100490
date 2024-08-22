@@ -1,0 +1,26 @@
+class Solution {
+	double maxProbability(int n, int[][] edges, double[] succProb, int start_node, int end_node) {
+		double[] probabilities = new double[n];
+		probabilities[start_node] = 1.0;
+		for (int i = 0; i < n; i++) {
+			boolean hasUpdate = false;
+			for (int j = 0; j < edges.length; j++) {
+				int from = edges[j][0];
+				int to = edges[j][1];
+				double probability = succProb[j];
+				if (probabilities[from] * probability > probabilities[to]) {
+					probabilities[to] = probabilities[from] * probability;
+					hasUpdate = true;
+				}
+				if (probabilities[to] * probability > probabilities[from]) {
+					probabilities[from] = probabilities[to] * probability;
+					hasUpdate = true;
+				}
+			}
+			if (!hasUpdate) {
+				break;
+			}
+		}
+		return probabilities[end_node];
+	}
+}

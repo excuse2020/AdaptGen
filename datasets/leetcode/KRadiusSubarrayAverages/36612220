@@ -1,0 +1,30 @@
+class Solution {
+	int[] getAverages(int[] nums, int k) {
+		if (k == 0) {
+			return nums;
+		}
+		if (k > nums.length) {
+			Arrays.fill(nums,-1);
+			return nums;
+		}
+		long left_sum = new long[nums.length];
+		left_sum[0] = nums[0];
+		for (int i = 1; i < nums.length; i++) {
+			left_sum[i] = left_sum[i - 1] + nums[i];
+		}
+		int left = 0;
+		long x = (2 * k) + 1;
+		for (int i = 0; i < nums.length; i++) {
+			if ((i - k) < 0 || (i + k) >= nums.length) {
+				nums[i] = -1;
+			} 
+			else if ((i - k) >= 0 && (i + k) < nums.length) {
+				long prev_window_sum = left == 0 ? 0 : left_sum[left - 1];
+				long avg = (left_sum[i + k] - prev_window_sum) / x;
+				nums[i] = (int) (avg);
+				left++;
+			}
+		}
+		return nums;
+	}
+}

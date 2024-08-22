@@ -1,0 +1,52 @@
+class Solution {
+	String constructLine(String[] words, int startIndex, int currentIndex, int lineLen, int maxWidth, boolean center) {
+		int numSpaces = currentIndex - startIndex;
+		if (numSpaces == 0) {
+			numSpaces = 1;
+		}
+		int availSpaces = maxWidth - lineLen;
+		int padLen = availSpaces / numSpaces;
+		int residualLen = availSpaces % numSpaces;
+		StringBuilder sb = new StringBuilder(words[startIndex]);
+		for (int i = startIndex + 1; i < currentIndex; i++) {
+			int padSize = padLen;
+			if (residualLen > 0) {
+				padSize++;
+				residualLen--;
+			}
+			if (center) {
+				for (int spaces = 0; spaces < padSize; spaces++) {
+					sb.append(" ");
+				}
+			} 
+			else {
+				sb.append(" ");
+			}
+			sb.append(words[i]);
+		}
+		if (sb.length() < maxWidth) {
+			int padSize = maxWidth - sb.length();
+			for (int spaces = 0; spaces < padSize; spaces++) {
+				sb.append(" ");
+			}
+		}
+		return sb.toString();
+	}
+	List<String> fullJustify(String[] words, int maxWidth) {
+		int startIndex = 0;
+		int currentIndex = 1;
+		int lineLen = words[0].length();
+		List<String> list = new ArrayList<String>(words.length);
+		while (currentIndex < words.length) {
+			if (lineLen + words[currentIndex].length() - startIndex > maxWidth) {
+				list.add(constructLine(words,startIndex,currentIndex,lineLen,maxWidth,true));
+				lineLen = 0;
+				startIndex = currentIndex;
+			}
+			lineLen += words[currentIndex].length();
+			currentIndex++;
+		}
+		list.add(constructLine(words,startIndex,currentIndex,lineLen,maxWidth,false));
+		return list;
+	}
+}

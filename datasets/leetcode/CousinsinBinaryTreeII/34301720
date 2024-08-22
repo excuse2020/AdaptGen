@@ -1,0 +1,71 @@
+class Solution {
+	Map<TreeNode, TreeNode> map = new HashMap<>();
+	Map<TreeNode, Integer> val = new HashMap<>();
+	void getPar(TreeNode root, Map<TreeNode, TreeNode> map) {
+		if (root == null) {
+			return;
+		}
+		if (root.left != null) {
+			if (root.left.left != null) {
+				map.put(root.left.left,root.left);
+			}
+			if (root.left.right != null) {
+				map.put(root.left.right,root.left);
+			}
+		}
+		val.put(root,root.val);
+		if (root.right != null) {
+			if (root.right.left != null) {
+				map.put(root.right.left,root.right);
+			}
+			if (root.right.right != null) {
+				map.put(root.right.right,root.right);
+			}
+		}
+		getPar(root.left,map);
+		getPar(root.right,map);
+	}
+	TreeNode replaceValueInTree(TreeNode root) {
+		if (root == null) {
+			return root;
+		}
+		TreeNode res = root;
+		getPar(root,map);
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(root);
+		while (!q.isEmpty()) {
+			int n = q.size();
+			int levSum = 0;
+			List<TreeNode> arr = new ArrayList<>();
+			for (int i = 0; i < n; i++) {
+				TreeNode curr = q.poll();
+				arr.add(curr);
+				levSum += curr.val;
+				if (curr.left != null) {
+					q.add(curr.left);
+				}
+				if (curr.right != null) {
+					q.add(curr.right);
+				}
+			}
+			for (TreeNode curr: arr) {	
+				if (!map.containsKey(curr)) {
+					curr.val = 0;
+				} 
+				else {
+					TreeNode par = map.get(curr);
+					if (par.right != null && par.right != curr) {
+						curr.val = levSum - val.get(par.right);
+					} 
+					else if (par.left != null && par.left != curr) {
+						curr.val = levSum - val.get(par.left);
+					} 
+					else {
+						curr.val = levSum - curr.val;
+					}
+				}
+			}
+		}
+		return root;
+	}
+}

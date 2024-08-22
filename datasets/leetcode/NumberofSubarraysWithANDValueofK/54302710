@@ -1,0 +1,64 @@
+class Solution {
+	long countSubarrays(int[] nums, int k) {
+		int n = nums.length;
+		int[][] prefix = new int[nums.length + 1][32];
+		for (int i = 0; i < n; i++) {
+			int l = nums[i];
+			int u = 0;
+			while (l != 0) {
+				int r = l % 2;
+				l /= 2;
+				prefix[i + 1][u] = prefix[i][u] + r;
+				u++;
+			}
+		}
+		long ans = 0;
+		for (int i = 1; i <= n; i++) {
+			if (nums[i - 1] < k) {
+				continue;
+			}
+			int val1 = n + 1;
+			int val2 = -1;
+			int start = i;
+			int end = n + 1;
+			while (start < end) {
+				int mid = (start + end) / 2;
+				int l = solve(prefix,i,mid);
+				if (l < k) {
+					end = mid;
+					val1 = mid;
+				} 
+				else {
+					start = mid + 1;
+				}
+			}
+			start = i;
+			end = n + 1;
+			while (start < end) {
+				int mid = (start + end) / 2;
+				int l = solve(prefix,i,mid);
+				if (l <= k) {
+					end = mid;
+					val2 = mid;
+				} 
+				else {
+					start = mid + 1;
+				}
+			}
+			if (val2 == -1) {
+				continue;
+			}
+			ans += val1 - val2;
+		}
+		return ans;
+	}
+	int solve(int[][] prefix, int i, int j) {
+		int el = 0;
+		for (int k = 0; k < 32; k++) {
+			if (prefix[j][k] - prefix[i - 1][k] == j - i + 1) {
+				el += (1 << k);
+			}
+		}
+		return el;
+	}
+}

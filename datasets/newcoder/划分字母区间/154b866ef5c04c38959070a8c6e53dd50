@@ -1,0 +1,69 @@
+class Solution {
+	ArrayList<Integer> solution1(String s) {
+		HashMap<Character, Integer> rightMap = new HashMap<>();
+		int len = s.length();
+		for (int i = 0, j = len - 1; i < len && j >= 0; i++, j--) {
+			if (!rightMap.keySet().contains(s.charAt(j))) {
+				rightMap.put(s.charAt(j),j);
+			}
+		}
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		int left = 0, right = 0;
+		char ch;
+		for (int i = 0; i < len; i++) {
+			ch = s.charAt(i);
+			right = Math.max(right,rightMap.get(ch));
+			if (i == right) {
+				list.add(right - left + 1);
+				left = i + 1;
+			}
+		}
+		return list;
+	}
+	ArrayList<Integer> solution2(String s) {
+		HashMap<Character, Integer> leftMap = new HashMap<>();
+		HashMap<Character, Integer> rightMap = new HashMap<>();
+		int len = s.length();
+		for (int i = 0, j = len - 1; i < len && j >= 0; i++, j--) {
+			if (!leftMap.keySet().contains(s.charAt(i))) {
+				leftMap.put(s.charAt(i),i);
+			}
+			if (!rightMap.keySet().contains(s.charAt(j))) {
+				rightMap.put(s.charAt(j),j);
+			}
+		}
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		int left, right;
+		HashSet<Character> set = new HashSet<>();
+		char ch;
+		for (int i = 0; i < len; ) {
+			ch = s.charAt(i);
+			if (!set.contains(ch)) {
+				set.add(ch);
+				left = leftMap.get(ch);
+				right = rightMap.get(ch);
+				if (left == right) {
+					list.add(1);
+				} 
+				else {
+					for (int j = left + 1; j < right; j++) {
+						ch = s.charAt(j);
+						if (!set.contains(ch)) {
+							set.add(ch);
+							right = Math.max(right,rightMap.get(ch));
+						}
+					}
+					list.add(right - left + 1);
+				}
+				i = right + 1;
+			} 
+			else {
+				i++;
+			}
+		}
+		return list;
+	}
+	ArrayList<Integer> splitString(String s) {
+		return solution1(s);
+	}
+}

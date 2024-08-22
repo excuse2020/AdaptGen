@@ -1,0 +1,59 @@
+class Solution {
+	ListNode merge(ListNode l, ListNode r) {
+		ListNode dummy = new ListNode(-1);
+		ListNode cur = dummy;
+		while (l != null || r != null) {
+			if (r == null || l != null && l.val <= r.val) {
+				cur.next = l;
+				l = l.next;
+			} 
+			else {
+				cur.next = r;
+				r = r.next;
+			}
+			cur = cur.next;
+		}
+		return dummy.next;
+	}
+	ListNode sortInList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode tmp = head;
+		int lens = 0;
+		while (tmp != null) {
+			lens++;
+			tmp = tmp.next;
+		}
+		ListNode res = new ListNode(-1);
+		res.next = head;
+		for (int len = 1; len < lens; len <<= 1) {
+			ListNode pre = res;
+			ListNode cur = res.next;
+			while (cur != null) {
+				ListNode h1 = cur;
+				for (int i = 1; i < len && cur != null && cur.next != null; i++) {
+					cur = cur.next;
+				}
+				ListNode h2 = cur.next;
+				cur.next = null;
+				cur = h2;
+				for (int i = 1; i < len && cur != null && cur.next != null; i++) {
+					cur = cur.next;
+				}
+				ListNode next = null;
+				if (cur != null && cur.next != null) {
+					next = cur.next;
+					cur.next = null;
+				}
+				ListNode merged = merge(h1,h2);
+				pre.next = merged;
+				while (pre.next != null) {
+					pre = pre.next;
+				}
+				cur = next;
+			}
+		}
+		return res.next;
+	}
+}

@@ -1,0 +1,48 @@
+class Solution {
+	ArrayList<String> Permutation(String str) {
+		if (str == null || str.length() == 0) {
+			return new ArrayList<String>();
+		}
+		char[] chars = str.toCharArray();
+		LinkedHashSet<String> results = new LinkedHashSet<>();
+		ArrayList<String> strings = new ArrayList<>();
+		results.add(new String(chars));
+		strings.add(str);
+		int len2 = results.size();
+		int index = 0;
+		while (index < len2) {
+			chars = strings.get(index).toCharArray();
+			index++;
+			for (int i = chars.length - 1; i >= 0; i--) {
+				for (int j = 0; j <= i; j++) {
+					results.addAll(getStr(chars,j,i));
+				}
+			}
+			strings = new ArrayList<>();
+			strings.addAll(results);
+			Collections.sort(strings);
+			len2 = results.size();
+		}
+		Collections.sort(strings);
+		return strings;
+	}
+	ArrayList<String> getStr(char[] chars, int index, int right) {
+		ArrayList<String> strings = new ArrayList<>();
+		if (index > right) {
+			return strings;
+		}
+		char temp = chars[index];
+		ArrayList<String> result = new ArrayList<>();
+		for (int i = index + 1; i <= right; i++) {
+			if (chars[i] == chars[i - 1]) {
+				continue;
+			}
+			chars[index] = chars[i];
+			chars[i] = temp;
+			result.add(new String(chars));
+			chars[i] = chars[index];
+			chars[index] = temp;
+		}
+		return result;
+	}
+}

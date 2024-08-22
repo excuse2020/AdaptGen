@@ -1,0 +1,45 @@
+class Solution {
+	ListNode Merge(ListNode head1, ListNode head2) {
+		if (head1 == null) {
+			return head2;
+		}
+		if (head2 == null) {
+			return head1;
+		}
+		ListNode dummynode = new ListNode(-1);
+		ListNode cur = dummynode;
+		while (head1 != null && head2 != null) {
+			if (head1.val <= head2.val) {
+				cur.next = head1;
+				head1 = head1.next;
+			} 
+			else {
+				cur.next = head2;
+				head2 = head2.next;
+			}
+			cur = cur.next;
+		}
+		if (head1 == null) {
+			cur.next = head2;
+		}
+		if (head2 == null) {
+			cur.next = head1;
+		}
+		return dummynode.next;
+	}
+	ListNode sortInList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode pre = head;
+		ListNode mid = head.next;
+		ListNode fast = head.next.next;
+		while (fast != null && fast.next != null) {
+			pre = pre.next;
+			mid = mid.next;
+			fast = fast.next.next;
+		}
+		pre.next = null;
+		return Merge(sortInList(head),sortInList(mid));
+	}
+}

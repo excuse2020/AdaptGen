@@ -1,0 +1,59 @@
+class Solution {
+	int check(int idx, int leftval, int[] arr1, int[] arr2, HashMap<String, Integer> dp) {
+		if (idx == arr1.length) {
+			return 0;
+		}
+		if (dp.containsKey(idx + "")) {
+			return dp.get(idx + "");
+		}
+		int res1, res2;
+		if (arr1[idx] > leftval) {
+			res1 = check(idx + 1,arr1[idx],arr1,arr2,dp);
+		} 
+		else {
+			res1 = Integer.MAX_VALUE;
+		}
+		int rep = upper_bound(arr2,leftval + 1);
+		if (rep == arr2.length) {
+			res2 = Integer.MAX_VALUE;
+		} 
+		else {
+			res2 = check(idx + 1,arr2[rep],arr1,arr2,dp);
+		}
+		if (res2 == Integer.MAX_VALUE) {
+			dp.put(idx + "",res1);
+		} 
+		else {
+			dp.put(idx + "",Math.min(res1,res2 + 1));
+		}
+		return dp.get(idx + "");
+	}
+	int makeArrayIncreasing(int[] arr1, int[] arr2) {
+		Arrays.sort(arr2);
+		HashMap<String, Integer> dp = new HashMap<>();
+		int val = check(0,Integer.MIN_VALUE,arr1,arr2,dp);
+		if (val != Integer.MAX_VALUE) {
+			return val;
+		} 
+		else {
+			return -1;
+		}
+	}
+	int upper_bound(int[] arr, int target) {
+		int st = 0;
+		int end = arr.length - 1;
+		while (st <= end) {
+			int mid = st + (end - st) / 2;
+			if (arr[mid] < target) {
+				st = mid + 1;
+			} 
+			else if (arr[mid] > target) {
+				end = mid - 1;
+			} 
+			else {
+				return mid;
+			}
+		}
+		return st;
+	}
+}

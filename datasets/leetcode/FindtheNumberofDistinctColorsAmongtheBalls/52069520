@@ -1,0 +1,42 @@
+class Solution {
+	int[] queryResults(int limit, int[][] queries) {
+		HashMap<Integer, Integer> map = new HashMap<>();
+		HashMap<Integer, Integer> occurence = new HashMap<>();
+		HashSet<Integer> set = new HashSet<>();
+		int[] sol = new int[queries.length];
+		int index = 0;
+		for (int[] query: queries) {	
+			int ball = query[0];
+			int color = query[1];
+			if (map.containsKey(ball)) {
+				int oldColor = map.get(ball);
+				occurence.put(oldColor,occurence.get(oldColor) - 1);
+				if (occurence.get(oldColor) == 0) {
+					set.remove(oldColor);
+					occurence.remove(oldColor);
+				}
+				map.put(ball,color);
+				if (occurence.containsKey(color)) {
+					occurence.put(color,occurence.get(color) + 1);
+				} 
+				else {
+					occurence.put(color,1);
+					set.add(color);
+				}
+			} 
+			else {
+				map.put(ball,color);
+				if (occurence.containsKey(color)) {
+					occurence.put(color,occurence.get(color) + 1);
+				} 
+				else {
+					occurence.put(color,1);
+					set.add(color);
+				}
+			}
+			sol[index] = set.size();
+			index++;
+		}
+		return sol;
+	}
+}

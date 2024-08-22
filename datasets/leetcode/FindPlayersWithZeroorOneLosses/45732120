@@ -1,0 +1,27 @@
+class Solution {
+	List<List<Integer>> findWinners(int[][] matches) {
+		TreeSet<Integer> winners = new TreeSet<Integer>();
+		TreeMap<Integer, Integer> losers = new TreeMap<Integer, Integer>();
+		for (int[] eachMatch: matches) {	
+			winners.add(eachMatch[0]);
+		}
+		for (int[] eachMatch: matches) {	
+			winners.remove(eachMatch[1]);
+			if (losers.containsKey(eachMatch[1])) {
+				Integer currVal = losers.get(eachMatch[1]);
+				losers.put(eachMatch[1],currVal + 1);
+			} 
+			else {
+				losers.put(eachMatch[1],1);
+			}
+		}
+		System.out.println(losers);
+		List<Integer> temp = losers.entrySet().stream().filter((each) -> {each.getValue() == 1}).map((each) -> {each.getKey()}).collect(Collectors.toList());
+		System.out.println(winners);
+		System.out.println(temp);
+		List<List<Integer>> res = new ArrayList<>();
+		res.add(new ArrayList<>(winners));
+		res.add(temp);
+		return res;
+	}
+}

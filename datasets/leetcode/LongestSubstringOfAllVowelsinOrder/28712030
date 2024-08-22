@@ -1,0 +1,27 @@
+class Solution {
+	int longestBeautifulSubstring(String word) {
+		int i = 0, j = 0, length = 0;
+		char prev = word.charAt(0);
+		Map<Character, Integer> map = new HashMap<>();
+		while (i < word.length() && j < word.length()) {
+			char c = word.charAt(j);
+			if (c < prev) {
+				if (map.size() == 5) {
+					length = Math.max(length,j - i);
+				}
+				while (i < word.length() && i != j) {
+					map.put(word.charAt(i),map.get(word.charAt(i)) - 1);
+					if (map.get(word.charAt(i)) == 0) {
+						map.remove(word.charAt(i));
+					}
+					i++;
+				}
+			}
+			map.put(c,map.getOrDefault(c,0) + 1);
+			prev = word.charAt(j);
+			j++;
+		}
+		length = map.size() == 5 ? Math.max(length,j - i) : length;
+		return length;
+	}
+}

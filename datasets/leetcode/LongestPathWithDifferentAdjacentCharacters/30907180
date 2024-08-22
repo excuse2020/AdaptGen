@@ -1,0 +1,40 @@
+class Solution {
+	ArrayList<ArrayList<Integer>> adj;
+	int max2;
+	boolean visited;
+	int longestPath(int[] parent, String s) {
+		int n = parent.length;
+		adj = new ArrayList<>();
+		visited = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 1; i < parent.length; i++) {
+			adj.get(parent[i]).add(i);
+			adj.get(i).add(parent[i]);
+		}
+		solve(0,s);
+		return max2;
+	}
+	int solve(int start, String s) {
+		visited[start] = true;
+		int max = 0, smax = 0;
+		for (int nb: adj.get(start)) {	
+			if (!visited[nb] && s.charAt(nb) != s.charAt(start)) {
+				int ans = 1 + solve(nb,s);
+				if (ans > max) {
+					smax = max;
+					max = ans;
+				} 
+				else if (ans > smax) {
+					smax = ans;
+				}
+			} 
+			else if (!visited[nb]) {
+				int ans = solve(nb,s);
+			}
+		}
+		max2 = Math.max(max2,max + smax);
+		return max;
+	}
+}

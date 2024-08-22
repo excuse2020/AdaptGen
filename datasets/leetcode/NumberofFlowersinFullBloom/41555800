@@ -1,0 +1,48 @@
+class Solution {
+	int[] fullBloomFlowers(int[][] flowers, int[] persons) {
+		int n = flowers.length;
+		int[] bloomStartTime = new int[n], bloomEndTime = new int[n];
+		for (int indx = 0; indx < n; indx++) {
+			bloomStartTime[indx] = flowers[indx][0];
+			bloomEndTime[indx] = flowers[indx][1];
+		}
+		Arrays.sort(bloomStartTime);
+		Arrays.sort(bloomEndTime);
+		int[] res = new int[persons.length];
+		for (int indx = 0; indx < persons.length; indx++) {
+			int t = persons[indx];
+			int bloomStartNumber = upper_bound(bloomStartTime,t);
+			int bloomEndNumber = lower_bound(bloomEndTime,t);
+			res[indx] = bloomStartNumber - bloomEndNumber;
+		}
+		return res;
+	}
+	int lower_bound(int[] arr, int target) {
+		int left = 0;
+		int right = arr.length;
+		while (left < right) {
+			int mid = left + (right - left) / 2;
+			if (arr[mid] < target) {
+				left = mid + 1;
+			} 
+			else {
+				right = mid;
+			}
+		}
+		return left;
+	}
+	int upper_bound(int[] arr, int target) {
+		int left = 0;
+		int right = arr.length;
+		while (left < right) {
+			int mid = left + (right - left) / 2;
+			if (arr[mid] <= target) {
+				left = mid + 1;
+			} 
+			else {
+				right = mid;
+			}
+		}
+		return left;
+	}
+}

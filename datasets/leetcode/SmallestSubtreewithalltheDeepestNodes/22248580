@@ -1,0 +1,42 @@
+class Solution {
+	TreeNode result;
+	boolean help(TreeNode root, int ind, int start, int end) {
+		if (root == null) {
+			return false;
+		}
+		if (ind >= start && ind <= end) {
+			if (root.left == null && root.right == null) {
+				result = root;
+			}
+			return true;
+		}
+		boolean left = help(root.left,2 * ind,start,end);
+		boolean right = help(root.right,2 * ind + 1,start,end);
+		if (!left) {
+			return right;
+		} 
+		else if (!right) {
+			return left;
+		}
+		result = root;
+		return true;
+	}
+	int maxDepth(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		int left = maxDepth(root.left);
+		int right = maxDepth(root.right);
+		return Math.max(left,right) + 1;
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		if (root.left == null && root.right == null) {
+			return root;
+		}
+		result = null;
+		int len = maxDepth(root);
+		int start = (int) Math.pow(2,len - 1);
+		help(root,1,start,2 * start - 1);
+		return result;
+	}
+}

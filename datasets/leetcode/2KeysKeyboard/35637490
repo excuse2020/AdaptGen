@@ -1,0 +1,28 @@
+class Solution {
+	int n;
+	int helper(int i, int copy, int pasteCount, int dp) {
+		if (i == n) {
+			return 0;
+		}
+		if (i > n) {
+			return 1000000;
+		}
+		if (dp[i][pasteCount] != -1) {
+			return dp[i][pasteCount];
+		}
+		if (copy == 0) {
+			return dp[i][pasteCount] = 1 + helper(i,1,i,dp);
+		}
+		int op1 = helper(i + pasteCount,1,pasteCount,dp);
+		int op2 = helper(i + pasteCount,0,0,dp);
+		return dp[i][pasteCount] = 1 + Math.min(op1,op2);
+	}
+	int minSteps(int N) {
+		n = N;
+		int dp = new int[n + 1][n + 1];
+		for (int i = 0; i < dp.length; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		return helper(1,0,0,dp);
+	}
+}

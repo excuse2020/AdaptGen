@@ -1,0 +1,29 @@
+class Solution {
+	int maximumWhiteTiles(int[][] tiles, int carpetLen) {
+		int maxCarpetCoverage = 0;
+		Arrays.sort(tiles,new TilesComparator());
+		HashMap<Integer, Integer> prefixsum = new HashMap<>();
+		TreeMap<Integer, Integer> rangemap = new TreeMap<>();
+		int psum = 0;
+		for (int i = 0; i < tiles.length; i++) {
+			rangemap.put(tiles[i][0],tiles[i][1]);
+			prefixsum.put(tiles[i][0],psum);
+			psum += (tiles[i][1] - tiles[i][0] + 1);
+		}
+		for (int i = 0; i < tiles.length; i++) {
+			int startidx = tiles[i][0];
+			int possibleendidx = carpetLen + startidx - 1;
+			int actualendidxkey = rangemap.floorKey(possibleendidx);
+			int constituenttiles = prefixsum.get(actualendidxkey) - prefixsum.get(startidx);
+			int actualendidxval = rangemap.get(actualendidxkey);
+			constituenttiles += (Math.min(actualendidxval,possibleendidx) - actualendidxkey + 1);
+			maxCarpetCoverage = Math.max(maxCarpetCoverage,constituenttiles);
+		}
+		return maxCarpetCoverage;
+	}
+	class TilesComparator {
+		int compare(int[] a, int[] b) {
+			return a[0] - b[0];
+		}
+	}
+}

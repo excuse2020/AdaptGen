@@ -1,0 +1,58 @@
+class Solution {
+	boolean detectCycle(ArrayList<Integer>[] graph, boolean[] stack, boolean[] visit, int curr) {
+		visit[curr] = true;
+		stack[curr] = true;
+		for (int i = 0; i < graph[curr].size(); i++) {
+			if (stack[graph[curr].get(i)]) {
+				return true;
+			}
+			if (!visit[graph[curr].get(i)]) {
+				if (detectCycle(graph,stack,visit,graph[curr].get(i))) {
+					return true;
+				}
+			}
+		}
+		stack[curr] = false;
+		return false;
+	}
+	void dfs(ArrayList<Integer>[] graph, Stack<Integer> st, boolean[] visit, int curr) {
+		visit[curr] = true;
+		for (int i = 0; i < graph[curr].size(); i++) {
+			if (!visit[graph[curr].get(i)]) {
+				dfs(graph,st,visit,graph[curr].get(i));
+			}
+		}
+		st.push(curr);
+	}
+	int[] findOrder(int nc, int[][] pre) {
+		ArrayList<Integer>[] graph = new ArrayList[nc];
+		for (int i = 0; i < nc; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < pre.length; i++) {
+			graph[pre[i][0]].add(pre[i][1]);
+		}
+		boolean[] sst = new boolean[nc];
+		boolean[] vis = new boolean[nc];
+		for (int i = 0; i < nc; i++) {
+			if (!vis[i]) {
+				if (detectCycle(graph,sst,vis,i)) {
+					return new int[0];
+				}
+			}
+		}
+		Stack<Integer> st = new Stack<>();
+		boolean[] visit = new boolean[nc];
+		for (int i = 0; i < nc; i++) {
+			if (!visit[i]) {
+				dfs(graph,st,visit,i);
+			}
+		}
+		int[] ans = new int[st.size()];
+		int p = 0;
+		for (Integer i: st) {	
+			ans[p++] = i;
+		}
+		return ans;
+	}
+}

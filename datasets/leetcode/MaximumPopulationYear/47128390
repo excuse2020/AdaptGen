@@ -1,0 +1,29 @@
+class Solution {
+	int MAX_YEAR = 2050;
+	int MIN_YEAR = 1950;
+	short[] count = new short[MAX_YEAR - MIN_YEAR + 1];
+	int indexToYear(int idx) {
+		return idx + MIN_YEAR;
+	}
+	int maximumPopulation(int[][] logs) {
+		Arrays.fill(count,(short) 0);
+		for (int[] log: logs) {	
+			count[yearToIndex(log[0])]++;
+			count[yearToIndex(log[1])]--;
+		}
+		short maxValue = count[0];
+		int targetYear = MIN_YEAR;
+		for (int i = 1; i < count.length; i++) {
+			count[i] += count[i - 1];
+			short value = count[i];
+			if (value > maxValue) {
+				maxValue = value;
+				targetYear = indexToYear(i);
+			}
+		}
+		return targetYear;
+	}
+	int yearToIndex(int year) {
+		return year - MIN_YEAR;
+	}
+}

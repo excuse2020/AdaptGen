@@ -1,0 +1,73 @@
+class Solution {
+	int[] MySort(int[] arr) {
+		if (arr == null || arr.length < 2) {
+			return arr;
+		}
+		heapSort(arr);
+		return arr;
+	}
+	void adjustHeap(int[] arr, int i, int length) {
+		int tmp = arr[i];
+		for (int k = 2 * i + 1; k < length; k = 2 * k + 1) {
+			if (k + 1 < length && arr[k] < arr[k + 1]) {
+				k++;
+			}
+			if (arr[k] > tmp) {
+				arr[i] = arr[k];
+				i = k;
+			} 
+			else {
+				break;
+			}
+		}
+		arr[i] = tmp;
+	}
+	void bubbleSort(int[] arr) {
+		int n = arr.length;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n - i; j++) {
+				if (arr[j] > arr[j + 1]) {
+					int tmp = arr[j];
+					arr[j] = arr[j + 1];
+					arr[j + 1] = tmp;
+				}
+			}
+		}
+	}
+	void heapSort(int[] arr) {
+		for (int i = arr.length / 2 - 1; i >= 0; i--) {
+			adjustHeap(arr,i,arr.length);
+		}
+		for (int j = arr.length - 1; j > 0; j--) {
+			int temp = arr[j];
+			arr[j] = arr[0];
+			arr[0] = temp;
+			adjustHeap(arr,0,j);
+		}
+	}
+	int partition(int[] arr, int l, int r) {
+		int tmp = arr[l];
+		while (l < r) {
+			while (l < r && arr[r] >= tmp) {
+				r--;
+			}
+			arr[l] = arr[r];
+			while (l < r && arr[l] <= tmp) {
+				l++;
+			}
+			arr[r] = arr[l];
+		}
+		arr[l] = tmp;
+		return l;
+	}
+	void quickSort(int[] arr) {
+		quickSort(arr,0,arr.length - 1);
+	}
+	void quickSort(int[] arr, int l, int r) {
+		if (l < r) {
+			int middle = partition(arr,l,r);
+			quickSort(arr,l,middle - 1);
+			quickSort(arr,middle + 1,r);
+		}
+	}
+}

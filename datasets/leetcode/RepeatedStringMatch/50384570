@@ -1,0 +1,59 @@
+class Solution {
+	long MOD = 1000000007;
+	long hash(String str) {
+		long val = 0;
+		long base = 101;
+		for (int i = 0; i < str.length(); i++) {
+			val = (val * base + str.charAt(i)) % MOD;
+		}
+		return val;
+	}
+	boolean rabinkarp(String a, String b, long value) {
+		int i = 0;
+		int j = 0;
+		long val = 0;
+		long base = 101;
+		long power = 1;
+		for (int k = 0; k < b.length() - 1; k++) {
+			power = (power * base) % MOD;
+		}
+		while (j < a.length()) {
+			val = (val * base + a.charAt(j)) % MOD;
+			if (j - i + 1 < b.length()) {
+				j++;
+			} 
+			else if (j - i + 1 == b.length()) {
+				if (val == value && a.substring(i,j + 1).equals(b)) {
+					return true;
+				}
+				long subtract = (a.charAt(i) * power) % MOD;
+				if (val >= subtract) {
+					val -= subtract;
+				} 
+				else {
+					val = MOD - (subtract - val);
+				}
+				i++;
+				j++;
+			}
+		}
+		return false;
+	}
+	int repeatedStringMatch(String a, String b) {
+		if (a.contains(b)) {
+			return 1;
+		}
+		StringBuilder sb = new StringBuilder(a);
+		int count = 1;
+		int maxLength = a.length() * 2 + b.length();
+		long val = hash(b);
+		while (sb.length() <= maxLength) {
+			if (sb.length() >= b.length() && rabinkarp(sb.toString(),b,val)) {
+				return count;
+			}
+			sb.append(a);
+			count++;
+		}
+		return -1;
+	}
+}

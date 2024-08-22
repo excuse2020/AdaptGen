@@ -1,0 +1,37 @@
+class Solution {
+	HashMap<Integer, Integer> map = new HashMap<>();
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		for (int i = 0; i < edges.length; i++) {
+			map.put(i,edges[i]);
+		}
+		int n = edges.length;
+		int MAX_VALUE = 10000000;
+		int[] costreach1 = new int[n];
+		Arrays.fill(costreach1,MAX_VALUE);
+		costfill(node1,0,costreach1);
+		int[] costreach2 = new int[n];
+		Arrays.fill(costreach2,MAX_VALUE);
+		costfill(node2,0,costreach2);
+		int ans = MAX_VALUE;
+		int ndex = -1;
+		for (int i = 0; i < n; i++) {
+			int ncost = Math.max(costreach1[i],costreach2[i]);
+			if (ncost < ans) {
+				ndex = i;
+				ans = ncost;
+			}
+		}
+		return ndex;
+	}
+	void costfill(int n, int level, int[] costreach) {
+		if (costreach[n] < level) {
+			return;
+		}
+		costreach[n] = level;
+		int targ = map.get(n);
+		if (targ == -1) {
+			return;
+		}
+		costfill(targ,level + 1,costreach);
+	}
+}

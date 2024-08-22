@@ -1,0 +1,22 @@
+class Solution {
+	Integer dp;
+	int minv = Integer.MIN_VALUE;
+	int[] nums1, nums2;
+	int f(int i, int j) {
+		if (i == nums1.length || j == nums2.length) {
+			return minv;
+		}
+		if (dp[i][j] != null) {
+			return dp[i][j];
+		}
+		int a = nums1[i] * nums2[j], b = f(i + 1,j + 1), c = b == minv ? minv : a + b;
+		return dp[i][j] = Arrays.stream(new int{a, b, c, f(i + 1,j), f(i,j + 1)}).max().getAsInt();
+	}
+	int maxDotProduct(int[] nums1, int[] nums2) {
+		this.nums1 = nums1;
+		this.nums2 = nums2;
+		int n = nums1.length, m = nums2.length;
+		dp = new Integer[n][m];
+		return f(0,0);
+	}
+}

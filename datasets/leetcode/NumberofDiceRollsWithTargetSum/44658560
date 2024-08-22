@@ -1,0 +1,25 @@
+class Solution {
+	int helper(int n, int k, int target, int sum, Integer[][] map) {
+		if (sum > target) {
+			return 0;
+		}
+		if (sum == target && n == 0) {
+			return 1;
+		}
+		if (map[n][sum] != null) {
+			return map[n][sum];
+		}
+		int ways = 0;
+		if (n > 0) {
+			for (int i = 1; i <= k; i++) {
+				ways = (ways + helper(n - 1,k,target,sum + i,map)) % 1000000007;
+			}
+		}
+		map[n][sum] = ways;
+		return ways;
+	}
+	int numRollsToTarget(int n, int k, int target) {
+		Integer[][] map = new Integer[n + 1][1001];
+		return helper(n,k,target,0,map);
+	}
+}

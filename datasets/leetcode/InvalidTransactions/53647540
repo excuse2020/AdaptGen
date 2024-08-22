@@ -1,0 +1,66 @@
+class Solution {
+	List<String> invalidTransactions(String[] transactions) {
+		Map<String, List<String>> transactionLog = new HashMap<>();
+		List<String> invalidTransactions = new ArrayList<>();
+		Set<String> uniqueNames = new HashSet<>();
+		Set<String> invalidTransactionsSet = new HashSet<>();
+		for (int i = 0; i < transactions.length; i++) {
+			String transaction = transactions[i];
+			String[] transactionDetails = transaction.split(",");
+			System.out.println("Transaction Detail " + List.of(transactionDetails));
+			if (!transactionLog.containsKey(transactionDetails[0])) {
+				List<String> newLog = new ArrayList<>();
+				newLog.add(transaction);
+				transactionLog.put(transactionDetails[0],newLog);
+			} 
+			else {
+				List<String> log = transactionLog.get(transactionDetails[0]);
+				log.add(transaction);
+				transactionLog.put(transactionDetails[0],log);
+			}
+			uniqueNames.add(transactionDetails[0]);
+		}
+		for (String name: uniqueNames) {	
+			List<String> personsTransactions = transactionLog.get(name);
+			for (int j = 0; j < personsTransactions.size(); j++) {
+				String personsTransactionString = personsTransactions.get(j);
+				String[] personsTransaction = personsTransactionString.split(",");
+				Integer mins = Integer.parseInt(personsTransaction[1]);
+				String amount = personsTransaction[2];
+				String city = personsTransaction[3];
+				Integer amountInt = Integer.parseInt(amount);
+				if (amountInt > 1000) {
+					invalidTransactionsSet.add(personsTransactionString);
+				}
+				for (int k = j + 1; k < personsTransactions.size(); k++) {
+					String personsTransactionOtherString = personsTransactions.get(k);
+					String[] personsTransactionOther = personsTransactionOtherString.split(",");
+					Integer minsOther = Integer.parseInt(personsTransactionOther[1]);
+					String amountOther = personsTransactionOther[2];
+					String cityOther = personsTransactionOther[3];
+					if (!city.equals(cityOther)) {
+						Integer timeComparePlus = mins + 60;
+						Integer timeCompareMinus = mins - 60;
+						if (minsOther <= timeComparePlus && minsOther >= timeCompareMinus) {
+							invalidTransactionsSet.add(String.join(",",personsTransaction));
+							invalidTransactionsSet.add(String.join(",",personsTransactionOther));
+						}
+					}
+				}
+			}
+		}
+		invalidTransactions = new ArrayList<>(invalidTransactionsSet);
+		Map<String, Integer> duplicatesMap = new HashMap<>();
+		for (String transaction: transactions) {	
+			if (!duplicatesMap.containsKey(transaction)) {
+				duplicatesMap.put(transaction,1);
+			} 
+			else {
+				Integer count = duplicatesMap.get(transaction);
+				duplicatesMap.put(transaction,count++);
+				invalidTransactions.add(transaction);
+			}
+		}
+		return invalidTransactions;
+	}
+}

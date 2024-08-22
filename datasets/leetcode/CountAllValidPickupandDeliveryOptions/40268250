@@ -1,0 +1,39 @@
+class Solution {
+	long[][] dp;
+	int mod = (int) (1e9 + 7);
+	int countOrders(int n) {
+		return topDown(n);
+	}
+	long rec(int p, int d) {
+		long ans = 0;
+		if (p == 0 && d == 0) {
+			return 1;
+		} 
+		else if (d < 0) {
+			return 0;
+		} 
+		else if (p < 0) {
+			return 0;
+		} 
+		else if (dp[p][d] >= 0) {
+			return dp[p][d];
+		} 
+		else if (p == d) {
+			ans = (d * (rec(p,d - 1) % mod)) % mod;
+		} 
+		else {
+			long pickup = ((p - d) * (rec(p - 1,d) % mod)) % mod;
+			long deliver = (d * (rec(p,d - 1) % mod)) % mod;
+			ans = (pickup + deliver) % mod;
+		}
+		dp[p][d] = ans;
+		return ans;
+	}
+	int topDown(int n) {
+		dp = new long[n + 1][n + 1];
+		for (long[] arr: dp) {	
+			Arrays.fill(arr,-1);
+		}
+		return (int) (rec(n,n) % mod);
+	}
+}

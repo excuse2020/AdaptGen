@@ -1,0 +1,32 @@
+class Solution {
+	void addNode(List<Integer> data, ListNode node) {
+		if (node != null) {
+			data.add(node.val);
+			addNode(data,node.next);
+		}
+	}
+	void getNode(ListNode node, List<Integer> newData, int cur) {
+		if (cur + 1 < newData.size()) {
+			node.next = new ListNode(newData.get(cur + 1));
+			getNode(node.next,newData,cur + 1);
+		}
+	}
+	ListNode mergeKLists(ArrayList<ListNode> lists) {
+		if (lists == null || lists.isEmpty()) {
+			return null;
+		}
+		List<Integer> data = new ArrayList<>();
+		for (int i = 0; i < lists.size(); i++) {
+			if (lists.get(i) != null) {
+				addNode(data,lists.get(i));
+			}
+		}
+		if (!data.isEmpty()) {
+			List<Integer> newData = data.stream().sorted().collect(Collectors.toList());
+			ListNode rootNode = new ListNode(newData.get(0));
+			getNode(rootNode,newData,0);
+			return rootNode;
+		}
+		return null;
+	}
+}

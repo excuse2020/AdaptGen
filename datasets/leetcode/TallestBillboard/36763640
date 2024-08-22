@@ -1,0 +1,23 @@
+class Solution {
+	int tallestBillboard(int[] rods) {
+		int n = rods.length;
+		int dp = new int[n][2 * 5000 + 1];
+		for (int[] arr: dp) {	
+			Arrays.fill(arr,-1);
+		}
+		int ans = tallestBuilding(rods,0,0,dp);
+		return ans < 0 ? 0 : ans;
+	}
+	int tallestBuilding(int[] rods, int idx, int diff, int[][] dp) {
+		if (idx == rods.length) {
+			return diff == 0 ? 0 : Integer.MIN_VALUE;
+		}
+		if (dp[idx][diff + 5000] != -1) {
+			return dp[idx][diff + 5000];
+		}
+		int notTake = tallestBuilding(rods,idx + 1,diff,dp);
+		int takeSum1 = rods[idx] + tallestBuilding(rods,idx + 1,rods[idx] + diff,dp);
+		int takeSum2 = tallestBuilding(rods,idx + 1,diff - rods[idx],dp);
+		return dp[idx][diff + 5000] = Math.max(notTake,Math.max(takeSum1,takeSum2));
+	}
+}

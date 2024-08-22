@@ -1,0 +1,58 @@
+class Solution {
+	int findInMountainArray(int target, MountainArray mountainArr) {
+		if (mountainArr.length() < 3) {
+			return -1;
+		}
+		int peakIndex = findPeakIndex(mountainArr);
+		int resultIndex = -1;
+		if (target >= mountainArr.get(0) && target <= mountainArr.get(peakIndex)) {
+			resultIndex = searchElementIndex(mountainArr,target,0,peakIndex);
+		}
+		if (resultIndex == -1) {
+			resultIndex = searchElementIndex(mountainArr,target,peakIndex,mountainArr.length() - 1);
+		}
+		return resultIndex;
+	}
+	int findPeakIndex(MountainArray arr) {
+		if (arr.length() < 0) {
+			return -1;
+		}
+		int start = 0, end = arr.length() - 1;
+		while (start < end) {
+			int mid = start + (end - start) / 2;
+			if (arr.get(mid) > arr.get(mid + 1)) {
+				end = mid;
+			} 
+			else {
+				start = mid + 1;
+			}
+		}
+		return start;
+	}
+	int searchElementIndex(MountainArray arr, int target, int start, int end) {
+		boolean isAscendingOrder = arr.get(start) < arr.get(end);
+		while (start <= end) {
+			int mid = start + (end - start) / 2;
+			if (target == arr.get(mid)) {
+				return mid;
+			}
+			if (isAscendingOrder) {
+				if (target < arr.get(mid)) {
+					end = mid - 1;
+				} 
+				else if (target > arr.get(mid)) {
+					start = mid + 1;
+				}
+			} 
+			else {
+				if (target < arr.get(mid)) {
+					start = mid + 1;
+				} 
+				else if (target > arr.get(mid)) {
+					end = mid - 1;
+				}
+			}
+		}
+		return -1;
+	}
+}

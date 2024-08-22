@@ -1,0 +1,34 @@
+class Solution {
+	int eatApple(PriorityQueue<int[]> pickedApples, int currentDay) {
+		int eaten = 0;
+		while (!pickedApples.isEmpty() && eaten == 0) {
+			int[] current = pickedApples.peek();
+			if (currentDay <= current[1]) {
+				eaten++;
+				if (--current[0] == 0) {
+					pickedApples.poll();
+				}
+			} 
+			else {
+				pickedApples.poll();
+			}
+		}
+		return eaten;
+	}
+	int eatenApples(int[] apples, int[] days) {
+		int eatenApples = 0;
+		PriorityQueue<int[]> pickedApples = new PriorityQueue<>(Comparator.comparingInt((a) -> {a[1]}));
+		for (int i = 0; i < days.length; i++) {
+			if (apples[i] > 0) {
+				pickedApples.add(new int{apples[i], (days[i] + i) - 1});
+			}
+			eatenApples += eatApple(pickedApples,i);
+		}
+		int currentDay = days.length;
+		while (!pickedApples.isEmpty()) {
+			eatenApples += eatApple(pickedApples,currentDay);
+			currentDay++;
+		}
+		return eatenApples;
+	}
+}

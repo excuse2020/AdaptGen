@@ -1,0 +1,31 @@
+class Solution {
+	TreeNode findNode(int[] pre, int preStart, int preEnd, int[] middle, int middleStart, int middleEnd) {
+		TreeNode node = new TreeNode(pre[preStart]);
+		int rootIndex = 0;
+		for (int i = middleStart; i <= middleEnd; i++) {
+			if (node.val == middle[i]) {
+				rootIndex = i;
+				break;
+			}
+		}
+		int leftCount = rootIndex - middleStart;
+		if (leftCount > 0) {
+			node.left = findNode(pre,preStart + 1,preStart + leftCount,middle,middleStart,rootIndex - 1);
+		}
+		int rightCount = middleEnd - rootIndex;
+		if (rightCount > 0) {
+			node.right = findNode(pre,preStart + leftCount,preEnd,middle,rootIndex + 1,middleEnd);
+		}
+		return node;
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] vin) {
+		if (pre == null || vin == null) {
+			return null;
+		}
+		if (pre.length == 0 || vin.length == 0) {
+			return null;
+		}
+		TreeNode node = findNode(pre,0,pre.length - 1,vin,0,vin.length - 1);
+		return node;
+	}
+}

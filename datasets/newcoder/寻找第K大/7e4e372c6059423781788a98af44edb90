@@ -1,0 +1,40 @@
+class Solution {
+	int findKth(int[] a, int n, int K) {
+		return topK(a,0,a.length - 1,K);
+	}
+	int partition(int[] arr, int left, int right) {
+		int first = arr[left];
+		while (left < right) {
+			while (left < right && arr[right] >= first) {
+				right--;
+			}
+			swap(arr,left,right);
+			while (left < right && arr[left] <= first) {
+				left++;
+			}
+			swap(arr,left,right);
+		}
+		return left;
+	}
+	void swap(int[] arr, int a, int b) {
+		int temp = arr[a];
+		arr[a] = arr[b];
+		arr[b] = temp;
+	}
+	int topK(int[] arr, int left, int right, int k) {
+		if (left > right) {
+			return -1;
+		}
+		int point = partition(arr,left,right);
+		int surplus = right - point + 1;
+		if (surplus == k) {
+			return arr[point];
+		} 
+		else if (surplus < k) {
+			return topK(arr,left,point - 1,k - surplus);
+		} 
+		else {
+			return topK(arr,point + 1,right,k);
+		}
+	}
+}

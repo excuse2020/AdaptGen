@@ -1,0 +1,43 @@
+class Solution {
+	void insertEdge(int source, int destination, Map<Integer, List<Integer>> newEdges) {
+		List<Integer> currPath = newEdges.getOrDefault(source,new ArrayList<>());
+		List<Integer> reversePath = newEdges.getOrDefault(destination,new ArrayList<>());
+		currPath.add(destination);
+		reversePath.add(source);
+		newEdges.put(source,currPath);
+		newEdges.put(destination,reversePath);
+	}
+	int reachableNodes(int[][] edges, int maxMoves, int n) {
+		Map<Integer, List<Integer>> newEdges = new HashMap<>();
+		newEdges.put(0,new ArrayList<>());
+		for (int[] edge: edges) {	
+			int source = edge[0];
+			int destination = edge[1];
+			int cnt = edge[2];
+			while (cnt-- > 0) {
+				insertEdge(source,n,newEdges);
+				source = n;
+				n++;
+			}
+			insertEdge(source,destination,newEdges);
+		}
+		Queue<Integer> q = new LinkedList<>();
+		Set<Integer> visited = new HashSet<>();
+		q.add(0);
+		visited.add(0);
+		while (!q.isEmpty() && maxMoves-- > 0) {
+			int size = q.size();
+			while (size-- > 0) {
+				int curr = q.poll();
+				List<Integer> neighbors = newEdges.get(curr);
+				for (int neighbor: neighbors) {	
+					if (!visited.contains(neighbor)) {
+						q.offer(neighbor);
+						visited.add(neighbor);
+					}
+				}
+			}
+		}
+		return visited.size();
+	}
+}

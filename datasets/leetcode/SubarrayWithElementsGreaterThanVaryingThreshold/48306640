@@ -1,0 +1,41 @@
+class Solution {
+	int usingMonotonicStack(int[] nums, int threshold) {
+		int n = nums.length;
+		int k = -1;
+		Stack<Integer> stack = new Stack<>();
+		for (int i = 0; i < n; i++) {
+			if (k != -1) {
+				break;
+			}
+			while (!stack.isEmpty() && nums[i] <= nums[stack.peek()]) {
+				int newMin = nums[stack.pop()];
+				int leftEnd = stack.isEmpty() ? 0 : stack.peek() + 1;
+				int rightEnd = i - 1;
+				int windowLen = rightEnd - leftEnd + 1;
+				long val = windowLen * newMin;
+				if (val > threshold) {
+					k = windowLen;
+				}
+			}
+			stack.push(i);
+		}
+		if (k != -1) {
+			return k;
+		}
+		while (!stack.isEmpty()) {
+			int newMin = nums[stack.pop()];
+			int leftEnd = stack.isEmpty() ? 0 : stack.peek() + 1;
+			int rightEnd = n - 1;
+			int windowLen = rightEnd - leftEnd + 1;
+			long val = windowLen * newMin;
+			if (val > threshold) {
+				k = windowLen;
+				break;
+			}
+		}
+		return k;
+	}
+	int validSubarraySize(int[] nums, int threshold) {
+		return usingMonotonicStack(nums,threshold);
+	}
+}

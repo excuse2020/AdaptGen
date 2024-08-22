@@ -1,0 +1,38 @@
+class Solution {
+	List<Integer> topStudents(String[] positive_feedback, String[] negative_feedback, String[] report, int[] student_id, int n) {
+		HashSet<String> s = new HashSet<>();
+		for (int i = 0; i < positive_feedback.length; i++) {
+			s.add(positive_feedback[i]);
+		}
+		HashSet<String> s1 = new HashSet<>();
+		for (int i = 0; i < negative_feedback.length; i++) {
+			s1.add(negative_feedback[i]);
+		}
+		HashMap<Integer, Integer> hm = new HashMap<>();
+		for (int j = 0; j < report.length; j++) {
+			int m = 0;
+			String[] arr = report[j].split(" ");
+			for (int k = 0; k < arr.length; k++) {
+				if (s.contains(arr[k])) {
+					m += 3;
+				} 
+				else if (s1.contains(arr[k])) {
+					m -= 1;
+				}
+			}
+			hm.put(student_id[j],m);
+		}
+		List<Integer> ans = new ArrayList<>();
+		if (n > report.length) {
+			return ans;
+		}
+		PriorityQueue<Map.Entry<Integer, Integer>> maxHeap = new PriorityQueue<>((e1, e2) -> {e1.getValue() == e2.getValue() ? e1.getKey() - e2.getKey() : e2.getValue() - e1.getValue()});
+		maxHeap.addAll(hm.entrySet());
+		while (n != 0) {
+			Map.Entry<Integer, Integer> entry = maxHeap.poll();
+			ans.add(entry.getKey());
+			n--;
+		}
+		return ans;
+	}
+}

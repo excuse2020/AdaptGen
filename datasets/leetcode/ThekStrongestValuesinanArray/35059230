@@ -1,0 +1,35 @@
+class Solution {
+	int[] getStrongest(int[] arr, int k) {
+		int n = arr.length;
+		Arrays.sort(arr);
+		int median = arr[(n - 1) / 2];
+		TreeMap<Integer, TreeMap<Integer, Integer>> map = new TreeMap<>();
+		for (int i = 0; i < n; i++) {
+			int mid = Math.abs(median - arr[i]);
+			map.putIfAbsent(mid,new TreeMap<>());
+			map.get(mid).put(arr[i],map.get(mid).getOrDefault(arr[i],0) + 1);
+		}
+		int[] ans = new int[k];
+		int j = 0;
+		while (k-- > 0) {
+			if (map.size() == 0) {
+				break;
+			}
+			Integer max = map.lastKey();
+			if (max == null) {
+				break;
+			}
+			int last = map.get(max).lastKey();
+			map.get(max).put(last,map.get(max).getOrDefault(last,0) - 1);
+			if (map.get(max).get(last) == 0) {
+				map.get(max).remove(last);
+			}
+			ans[j] = last;
+			j++;
+			if (map.get(max).size() == 0) {
+				map.remove(max);
+			}
+		}
+		return ans;
+	}
+}

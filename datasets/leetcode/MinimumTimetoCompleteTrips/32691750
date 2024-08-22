@@ -1,0 +1,28 @@
+class Solution {
+	boolean canPossible(int[] time, long mid, int totalTrips) {
+		long trip = 0;
+		for (int i = 0; i < time.length; i++) {
+			trip += mid / (long) time[i];
+		}
+		if (trip >= totalTrips) {
+			return true;
+		}
+		return false;
+	}
+	long minimumTime(int[] time, int totalTrips) {
+		long l = 1;
+		long h = Arrays.stream(time).min().getAsInt() * (long) totalTrips;
+		long ans = 0;
+		while (l <= h) {
+			long mid = l + (h - l) / 2;
+			if (canPossible(time,mid,totalTrips)) {
+				ans = mid;
+				h = mid - 1;
+			} 
+			else {
+				l = mid + 1;
+			}
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,45 @@
+class Solution {
+	boolean dfsSearch(String bottom, Map<String, Boolean> memo, Map<String, List<Character>> allowedMap) {
+		if (memo.containsKey(bottom)) {
+			return memo.get(bottom);
+		}
+		if (bottom.length() == 1) {
+			memo.put(bottom,true);
+			return true;
+		}
+		List<String> nextLevels = new ArrayList<>();
+		findNextLevel(bottom,allowedMap,0,nextLevels,new StringBuilder());
+		for (String cand: nextLevels) {	
+			boolean res = dfsSearch(cand,memo,allowedMap);
+			if (res) {
+				memo.put(bottom,res);
+				return true;
+			}
+		}
+		memo.put(bottom,false);
+		return false;
+	}
+	void findNextLevel(String curLevel, Map<String, List<Character>> map, int curIndex, List<String> res, StringBuilder path) {
+		if (path.length() == curLevel.length() - 1) {
+			res.add(path.toString());
+			return;
+		}
+		for (int i = curIndex + 1; i < curLevel.length(); i++) {
+			List<Character> candidates = map.getOrDefault(curLevel.substring(i - 1,i + 1),Collections.emptyList());
+			for (char c: candidates) {	
+				path.append(c);
+				findNextLevel(curLevel,map,i,res,path);
+				path.setLength(path.length() - 1);
+			}
+		}
+	}
+	boolean pyramidTransition(String bottom, List<String> allowed) {
+		Map<String, Boolean> memo = new HashMap<>();
+		Map<String, List<Character>> allowedMap = new HashMap<>();
+		for (String str: allowed) {	
+			allowedMap.putIfAbsent(str.substring(0,2),new ArrayList<>());
+			allowedMap.get(str.substring(0,2)).add(str.charAt(2));
+		}
+		return dfsSearch(bottom,memo,allowedMap);
+	}
+}

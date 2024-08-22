@@ -1,0 +1,28 @@
+class Solution {
+	int minIncrements(int n, int[] cost) {
+		int increments = 0;
+		Stack<Integer> toVisit = new Stack<>();
+		Set<Integer> visited = new HashSet<>();
+		toVisit.add(1);
+		while (!toVisit.isEmpty()) {
+			Integer node = toVisit.peek();
+			int left = (node * 2) + 1;
+			int right = (node * 2);
+			if (right > n) {
+				toVisit.pop();
+				visited.add(node);
+				continue;
+			}
+			if (!visited.contains(right)) {
+				toVisit.add(left);
+				toVisit.add(right);
+				continue;
+			}
+			toVisit.pop();
+			visited.add(node);
+			increments += Math.abs(cost[left - 1] - cost[right - 1]);
+			cost[node - 1] += Math.max(cost[left - 1],cost[right - 1]);
+		}
+		return increments;
+	}
+}

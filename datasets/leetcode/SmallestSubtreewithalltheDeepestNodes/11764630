@@ -1,0 +1,63 @@
+class Solution {
+	TreeNode answer = null;
+	boolean dfs(TreeNode node1, TreeNode node2, TreeNode node) {
+		if (node == null) {
+			return false;
+		}
+		if (answer != null) {
+			return false;
+		}
+		boolean isNodeTrue = false;
+		if (node == node1 || node == node2) {
+			isNodeTrue = true;
+		}
+		boolean left = dfs(node1,node2,node.left);
+		boolean right = dfs(node1,node2,node.right);
+		if ((left && right) || (left && isNodeTrue)) {
+			answer = node;
+		}
+		return left || right;
+	}
+	void findLowestCommonAncestor(TreeNode node1, TreeNode node2, TreeNode root) {
+		dfs(node1,node2,root);
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		if (root == null || (root.left == null && root.right == null)) {
+			return root;
+		}
+		List<TreeNode> treeNodeList = new ArrayList();
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(root);
+		treeNodeList.add(root);
+		int count = 1;
+		while (!q.isEmpty()) {
+			int tempCount = 0;
+			List<TreeNode> tempList = new ArrayList();
+			while (count != 0) {
+				count--;
+				TreeNode val = q.poll();
+				if (val.left != null) {
+					q.add(val.left);
+					tempCount++;
+					tempList.add(val.left);
+				}
+				if (val.right != null) {
+					q.add(val.right);
+					tempCount++;
+					tempList.add(val.right);
+				}
+			}
+			count = tempCount;
+			if (!tempList.isEmpty()) {
+				treeNodeList = new ArrayList(tempList);
+			}
+		}
+		TreeNode node1 = treeNodeList.get(0);
+		TreeNode node2 = treeNodeList.get(treeNodeList.size() - 1);
+		if (node1 == node2) {
+			return node1;
+		}
+		findLowestCommonAncestor(node1,node2,root);
+		return answer;
+	}
+}

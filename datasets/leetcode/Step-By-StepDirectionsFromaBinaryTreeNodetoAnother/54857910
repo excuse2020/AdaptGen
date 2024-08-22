@@ -1,0 +1,79 @@
+class Solution {
+	StringBuilder sb = new StringBuilder();
+	StringBuilder sb1 = new StringBuilder();
+	TreeNode LCA(TreeNode root, int start, int end) {
+		if (root == null) {
+			return null;
+		}
+		if (root.val == start || root.val == end) {
+			return root;
+		}
+		TreeNode lefty = LCA(root.left,start,end);
+		TreeNode righty = LCA(root.right,start,end);
+		if (lefty != null && righty != null) {
+			return root;
+		} 
+		else if (lefty == null && righty != null) {
+			return righty;
+		} 
+		else {
+			return lefty;
+		}
+	}
+	String getDirections(TreeNode root, int start, int end) {
+		TreeNode lca = LCA(root,start,end);
+		boolean ppath = path(lca,start);
+		String prefx = sb.toString();
+		boolean spath = search(lca,end,-1);
+		String sufx = sb1.reverse().toString();
+		StringBuilder ans = new StringBuilder();
+		ans.append(prefx);
+		ans.append(sufx);
+		return ans.toString();
+	}
+	boolean path(TreeNode root, int dest) {
+		if (root == null) {
+			return false;
+		}
+		if (root.val == dest) {
+			sb.append("");
+			return true;
+		}
+		boolean lefty = path(root.left,dest);
+		boolean righty = path(root.right,dest);
+		if (lefty || righty) {
+			sb.append("U");
+			return true;
+		}
+		return false;
+	}
+	boolean search(TreeNode root, int dest, int left) {
+		if (root == null) {
+			return false;
+		}
+		if (root.val == dest) {
+			if (left == 1) {
+				sb1.append("L");
+			} 
+			else if (left == 0) {
+				sb1.append("R");
+			} 
+			else {
+				sb1.append("");
+			}
+			return true;
+		}
+		boolean lefty = search(root.left,dest,1);
+		boolean righty = search(root.right,dest,0);
+		if (lefty || righty) {
+			if (left == 1) {
+				sb1.append("L");
+			} 
+			else if (left == 0) {
+				sb1.append("R");
+			}
+			return true;
+		}
+		return false;
+	}
+}

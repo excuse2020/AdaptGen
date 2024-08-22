@@ -1,0 +1,33 @@
+class Solution {
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		int totalEdges = 2 * edges.length;
+		ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(i,new ArrayList<>());
+		}
+		for (int edge: edges) {	
+			graph.get(edge[0]).add(edge[1]);
+			graph.get(edge[1]).add(edge[0]);
+		}
+		Queue<Integer> leaves = new LinkedList<>();
+		for (int i = 0; i < n; i++) {
+			if (i != 0 && graph.get(i).size() == 1 && !hasApple.get(i)) {
+				leaves.add(i);
+			}
+		}
+		while (!leaves.isEmpty()) {
+			Integer leaf = leaves.poll();
+			if (graph.get(leaf).size() == 0) {
+				continue;
+			}
+			Integer neighbour = graph.get(leaf).iterator().next();
+			graph.get(leaf).remove(neighbour);
+			graph.get(neighbour).remove(leaf);
+			if (neighbour != 0 && graph.get(neighbour).size() == 1 && !hasApple.get(neighbour)) {
+				leaves.add(neighbour);
+			}
+			totalEdges -= 2;
+		}
+		return totalEdges;
+	}
+}

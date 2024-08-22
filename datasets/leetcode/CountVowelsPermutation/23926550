@@ -1,0 +1,21 @@
+class Solution {
+	int countVowelPermutation(int n) {
+		int[][] dp = new int[n + 1][5];
+		int MOD = (int) 1e9 + 7;
+		int a = 0, e = 1, i = 2, o = 3, u = 4;
+		Arrays.fill(dp[1],1);
+		for (int j = 2; j <= n; j++) {
+			dp[j][a] += (((dp[j - 1][e] + dp[j - 1][i]) % MOD) + dp[j - 1][u]) % MOD;
+			dp[j][e] += (dp[j - 1][a] + dp[j - 1][i]) % MOD;
+			dp[j][i] += (dp[j - 1][e] + dp[j - 1][o]) % MOD;
+			dp[j][o] += dp[j - 1][i] % MOD;
+			dp[j][u] += (dp[j - 1][i] + dp[j - 1][o]) % MOD;
+		}
+		int perms = 0;
+		for (int j = 0; j < 5; j++) {
+			perms += dp[n][j];
+			perms %= MOD;
+		}
+		return perms;
+	}
+}

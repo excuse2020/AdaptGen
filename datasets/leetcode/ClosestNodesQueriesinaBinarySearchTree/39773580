@@ -1,0 +1,45 @@
+class Solution {
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		var list = new ArrayList<Integer>();
+		var result = new ArrayList<List<Integer>>();
+		traverseTheTree(root,list);
+		Collections.sort(list);
+		System.out.println(list);
+		for (int i = 0; i < queries.size(); i++) {
+			var query = queries.get(i);
+			var index = Collections.binarySearch(list,query);
+			if (index < 0) {
+				var min = ((1 + Collections.binarySearch(list,query)) * -1) - 1;
+				var max = ((1 + Collections.binarySearch(list,query)) * -1);
+				var minVal = 0;
+				var maxVal = 0;
+				if (min < 0) {
+					minVal = -1;
+				} 
+				else {
+					minVal = list.get(min);
+				}
+				if (max >= list.size()) {
+					maxVal = -1;
+				} 
+				else {
+					maxVal = list.get(max);
+				}
+				result.add(List.of(minVal,maxVal));
+			} 
+			else {
+				result.add(List.of(list.get(index),list.get(index)));
+			}
+		}
+		return result;
+	}
+	void traverseTheTree(TreeNode root, List<Integer> list) {
+		if (root.left != null) {
+			traverseTheTree(root.left,list);
+		}
+		list.add(root.val);
+		if (root.right != null) {
+			traverseTheTree(root.right,list);
+		}
+	}
+}

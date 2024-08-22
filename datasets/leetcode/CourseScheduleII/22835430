@@ -1,0 +1,42 @@
+class Solution {
+	boolean DFS(List<List<Integer>> adjList, boolean[] visited, int start, boolean[] helper) {
+		visited[start] = true;
+		helper[start] = true;
+		List<Integer> nbrs = adjList.get(start);
+		for (int nbr: nbrs) {	
+			if (helper[nbr]) {
+				return true;
+			}
+			if (visited[nbr] == false) {
+				boolean isCycle = DFS(adjList,visited,nbr,helper);
+				if (isCycle) {
+					return true;
+				}
+			}
+		}
+		helper[start] = false;
+		return false;
+	}
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		List<List<Integer>> adjList = new ArrayList<>();
+		for (int i = 0; i <= numCourses; i++) {
+			adjList.add(new ArrayList<>());
+		}
+		for (int[] prerequisite: prerequisites) {	
+			int v = prerequisite[0];
+			int u = prerequisite[1];
+			adjList.get(u).add(v);
+		}
+		boolean[] visited = new boolean[numCourses + 1];
+		boolean[] helper = new boolean[numCourses + 1];
+		for (int i = 0; i <= numCourses; i++) {
+			if (visited[i] == false) {
+				boolean isCycle = DFS(adjList,visited,i,helper);
+				if (isCycle) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

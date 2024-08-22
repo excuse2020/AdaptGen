@@ -1,0 +1,64 @@
+class Solution {
+	int n = 0;
+	boolean isItPossibleToComplete(int maxGap, int[] stones) {
+		int i = 0, lastTaken = 0;
+		boolean[] arr = new boolean[n];
+		while (i < n) {
+			lastTaken = i;
+			int j = i + 1;
+			while (j < n && stones[j] - stones[i] <= maxGap) {
+				if (!arr[j]) {
+					lastTaken = j;
+				}
+				j++;
+			}
+			if (lastTaken == n - 1) {
+				break;
+			}
+			if (lastTaken == i) {
+				return false;
+			}
+			i = lastTaken;
+			arr[i] = true;
+		}
+		i = n - 1;
+		lastTaken = n - 1;
+		while (i >= 0) {
+			lastTaken = i;
+			int j = i - 1;
+			while (j >= 0 && stones[i] - stones[j] <= maxGap) {
+				if (!arr[j]) {
+					lastTaken = j;
+				}
+				j--;
+			}
+			if (lastTaken == 0) {
+				break;
+			}
+			if (lastTaken == i) {
+				return false;
+			}
+			i = lastTaken;
+			arr[i] = true;
+		}
+		return true;
+	}
+	int maxJump(int[] stones) {
+		n = stones.length;
+		int ans = 0;
+		int str = 0, end = stones[n - 1] - stones[0];
+		while (str <= end) {
+			int mid = str + (end - str) / 2;
+			boolean isPossible = isItPossibleToComplete(mid,stones);
+			System.out.println(mid + " : ");
+			if (isPossible) {
+				ans = mid;
+				end = mid - 1;
+			} 
+			else {
+				str = mid + 1;
+			}
+		}
+		return ans;
+	}
+}

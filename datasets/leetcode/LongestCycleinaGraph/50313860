@@ -1,0 +1,32 @@
+class Solution {
+	int max_len = -1;
+	void dfs(int u, boolean vis, int count, boolean stack, int edges) {
+		if (u != -1) {
+			vis[u] = true;
+			stack[u] = true;
+			int v = edges[u];
+			if (v != -1 && !vis[v]) {
+				count[v] = count[u] + 1;
+				dfs(v,vis,count,stack,edges);
+			} 
+			else if (v != -1 && stack[v]) {
+				int len = count[u] - count[v] + 1;
+				max_len = Math.max(max_len,len);
+			}
+			stack[u] = false;
+		}
+	}
+	int longestCycle(int[] edges) {
+		int v = edges.length;
+		int count = new int[v];
+		boolean vis = new boolean[v];
+		boolean stack = new boolean[v];
+		Arrays.fill(count,1);
+		for (int i = 0; i < v; i++) {
+			if (vis[i] == false) {
+				dfs(i,vis,count,stack,edges);
+			}
+		}
+		return max_len;
+	}
+}

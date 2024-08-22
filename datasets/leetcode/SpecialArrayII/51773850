@@ -1,0 +1,25 @@
+class Solution {
+	boolean[] isArraySpecial(int[] nums, int[][] queries) {
+		boolean[] diffParity = new boolean[nums.length - 1];
+		boolean[] results = new boolean[queries.length];
+		for (int i = 0; i < nums.length - 1; i++) {
+			diffParity[i] = (nums[i] % 2) != (nums[i + 1] % 2);
+		}
+		int[] prefixDiff = new int[nums.length];
+		for (int i = 0; i < nums.length - 1; i++) {
+			prefixDiff[i + 1] = prefixDiff[i] + (diffParity[i] ? 1 : 0);
+		}
+		for (int i = 0; i < queries.length; i++) {
+			int from = queries[i][0];
+			int to = queries[i][1];
+			if (from == to) {
+				results[i] = true;
+			} 
+			else {
+				int countDiffParity = prefixDiff[to] - prefixDiff[from];
+				results[i] = countDiffParity == (to - from);
+			}
+		}
+		return results;
+	}
+}

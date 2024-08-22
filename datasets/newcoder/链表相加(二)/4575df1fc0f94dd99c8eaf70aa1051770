@@ -1,0 +1,36 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		ListNode head1Reverse = reverse(head1);
+		ListNode head2Reverse = reverse(head2);
+		ListNode newHead = new ListNode(-1);
+		ListNode curNode = newHead;
+		int preAdd = 0;
+		while (head1Reverse != null || head2Reverse != null) {
+			int v1 = head1Reverse == null ? 0 : head1Reverse.val;
+			int v2 = head2Reverse == null ? 0 : head2Reverse.val;
+			int curVal = (v1 + v2) % 10;
+			preAdd = (v1 + v2) / 10;
+			ListNode node = new ListNode(curVal);
+			curNode.next = node;
+			curNode = node;
+			head1Reverse = head1Reverse == null ? null : head1Reverse.next;
+			head2Reverse = head2Reverse == null ? null : head2Reverse.next;
+		}
+		if (preAdd == 1) {
+			ListNode node = new ListNode(1);
+			curNode.next = node;
+		}
+		return reverse(newHead.next);
+	}
+	ListNode reverse(ListNode head) {
+		ListNode pre = null;
+		ListNode cur = head;
+		while (cur != null) {
+			ListNode next = cur.next;
+			cur.next = pre;
+			pre = cur;
+			cur = next;
+		}
+		return pre;
+	}
+}

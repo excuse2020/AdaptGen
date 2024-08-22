@@ -1,0 +1,35 @@
+class Solution {
+	int find(int row, int col, int[][] grid, int[][] dp) {
+		int ans = 0;
+		if (dp[row][col] != -1) {
+			return dp[row][col];
+		}
+		if (isValid(row,col + 1,grid,grid[row][col])) {
+			ans = Math.max(ans,1 + find(row,col + 1,grid,dp));
+		}
+		if (isValid(row - 1,col + 1,grid,grid[row][col])) {
+			ans = Math.max(ans,1 + find(row - 1,col + 1,grid,dp));
+		}
+		if (isValid(row + 1,col + 1,grid,grid[row][col])) {
+			ans = Math.max(ans,1 + find(row + 1,col + 1,grid,dp));
+		}
+		return dp[row][col] = ans;
+	}
+	boolean isValid(int row, int col, int[][] grid, int val) {
+		if (row < 0 || row >= grid.length || col >= grid[0].length || grid[row][col] <= val) {
+			return false;
+		}
+		return true;
+	}
+	int maxMoves(int[][] grid) {
+		int ans = 0;
+		int[][] dp = new int[grid.length][grid[0].length];
+		for (int[] a: dp) {	
+			Arrays.fill(a,-1);
+		}
+		for (int i = 0; i < grid.length; i++) {
+			ans = Math.max(ans,find(i,0,grid,dp));
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,100 @@
+class Solution {
+	int[] sortItems(int n, int m, int[] group, List<List<Integer>> beforeItems) {
+		int groupId = m;
+		for (int i = 0; i < group.length; i++) {
+			if (group[i] == -1) {
+				group[i] = groupId++;
+			}
+		}
+		HashMap<Integer, ArrayList<Integer>> itemBefore = new HashMap<>();
+		int[] itemDegree = new int[n];
+		HashMap<Integer, ArrayList<Integer>> groupBefore = new HashMap<>();
+		int[] groupDegree = new int[groupId];
+		for (int i = 0; i < groupId; i++) {
+			groupBefore.put(i,new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			itemBefore.put(i,new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			for (int cur: beforeItems.get(i)) {	
+				itemBefore.get(cur).add(i);
+				itemDegree[i]++;
+				if (group[i] != group[cur]) {
+					groupBefore.get(group[cur]).add(group[i]);
+					groupDegree[group[i]]++;
+				}
+			}
+		}
+		Queue<Integer> q = new LinkedList<>();
+		List<Integer> groupOrder = new ArrayList<>();
+		Set<Integer> visit = new HashSet<>();
+		for (int i = 0; i < groupId; i++) {
+			if (groupDegree[i] == 0) {
+				q.add(i);
+				groupOrder.add(i);
+				visit.add(i);
+			}
+		}
+		while (!q.isEmpty()) {
+			int cur = q.poll();
+			for (int next: groupBefore.get(cur)) {	
+				if (visit.contains(next)) {
+					continue;
+				}
+				groupDegree[next]--;
+				if (groupDegree[next] == 0) {
+					q.add(next);
+					groupOrder.add(next);
+					visit.add(next);
+				}
+			}
+		}
+		if (groupOrder.size() != groupId) {
+			return new int[0];
+		}
+		q = new LinkedList<>();
+		List<Integer> itemOrder = new ArrayList<>();
+		visit = new HashSet<>();
+		for (int i = 0; i < n; i++) {
+			if (itemDegree[i] == 0) {
+				q.add(i);
+				itemOrder.add(i);
+				visit.add(i);
+			}
+		}
+		while (!q.isEmpty()) {
+			int cur = q.poll();
+			for (int next: itemBefore.get(cur)) {	
+				if (visit.contains(next)) {
+					continue;
+				}
+				itemDegree[next]--;
+				if (itemDegree[next] == 0) {
+					q.add(next);
+					itemOrder.add(next);
+					visit.add(next);
+				}
+			}
+		}
+		if (itemOrder.size() != n) {
+			return new int[0];
+		}
+		Map<Integer, ArrayList<Integer>> itemOrderSameGroup = new HashMap<>();
+		for (int cur: itemOrder) {	
+			itemOrderSameGroup.putIfAbsent(group[cur],new ArrayList<>());
+			itemOrderSameGroup.get(group[cur]).add(cur);
+		}
+		int[] res = new int[n];
+		int i = 0;
+		for (int cur: groupOrder) {	
+			if (itemOrderSameGroup.containsKey(cur)) {
+				for (int item: itemOrderSameGroup.get(cur)) {	
+					res[i] = item;
+					i++;
+				}
+			}
+		}
+		return res;
+	}
+}

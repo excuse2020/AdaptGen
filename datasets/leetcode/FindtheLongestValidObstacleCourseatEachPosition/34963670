@@ -1,0 +1,27 @@
+class Solution {
+	int bs(int low, int high, int target, int[] indices, int[] obstacles) {
+		if (low > high) {
+			return low;
+		}
+		int mid = low + (high - low) / 2;
+		if (obstacles[indices[mid]] > target) {
+			return bs(low,mid - 1,target,indices,obstacles);
+		} 
+		else {
+			return bs(mid + 1,high,target,indices,obstacles);
+		}
+	}
+	int[] longestObstacleCourseAtEachPosition(int[] obstacles) {
+		int n = obstacles.length;
+		int[] res = new int[n];
+		int[] indices = new int[n + 1];
+		int len = 0;
+		for (int i = 0; i < n; i++) {
+			int newLen = bs(1,len,obstacles[i],indices,obstacles);
+			res[i] = newLen;
+			len = Math.max(len,newLen);
+			indices[newLen] = i;
+		}
+		return res;
+	}
+}

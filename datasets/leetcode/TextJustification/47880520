@@ -1,0 +1,52 @@
+class Solution {
+	String createLine(List<String> words, int maxWidth) {
+		int gaps = words.size() - 1;
+		if (gaps == 0) {
+			return words.get(0) + " ".repeat(maxWidth - words.get(0).length());
+		}
+		int spaces = maxWidth;
+		for (String s: words) {	
+			spaces -= s.length();
+		}
+		int spacesPergap = spaces / gaps;
+		StringBuilder formatted_str = new StringBuilder();
+		int remainder = spaces % gaps;
+		formatted_str.append(words.get(0));
+		for (int i = 1; i < words.size(); i++) {
+			formatted_str.append(" ".repeat(spacesPergap));
+			if (remainder > 0) {
+				formatted_str.append(" ");
+				remainder--;
+			}
+			formatted_str.append(words.get(i));
+		}
+		return formatted_str.toString();
+	}
+	List<String> fullJustify(String[] words, int maxWidth) {
+		List<String> lines = new ArrayList<>();
+		List<String> currLine = new ArrayList<>();
+		int lenCurrLine = 0;
+		for (int i = 0; i < words.length; i++) {
+			String s = words[i];
+			int n_space = lenCurrLine == 0 ? 0 : 1;
+			if (lenCurrLine + s.length() > maxWidth) {
+				String formattedStr = createLine(currLine,maxWidth);
+				lines.add(formattedStr);
+				currLine = new ArrayList<>();
+				lenCurrLine = 0;
+			}
+			currLine.add(s);
+			lenCurrLine += lenCurrLine == 0 ? s.length() : s.length() + 1;
+		}
+		if (currLine.size() > 0) {
+			StringBuilder lastLine = new StringBuilder();
+			lastLine.append(currLine.get(0));
+			for (int i = 1; i < currLine.size(); i++) {
+				lastLine.append(" " + currLine.get(i));
+			}
+			lastLine.append(" ".repeat(maxWidth - lastLine.length()));
+			lines.add(lastLine.toString());
+		}
+		return lines;
+	}
+}

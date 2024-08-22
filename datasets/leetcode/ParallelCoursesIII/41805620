@@ -1,0 +1,46 @@
+class Solution {
+	int minimumTime(int n, int[][] relations, int[] time) {
+		int[] indegree = new int[n];
+		int m = relations.length;
+		HashMap<Integer, List<Integer>> map = new HashMap<>();
+		for (int i = 0; i < m; i++) {
+			indegree[relations[i][1] - 1]++;
+			if (map.containsKey(relations[i][0] - 1)) {
+				List<Integer> temp = map.get(relations[i][0] - 1);
+				temp.add(relations[i][1] - 1);
+				map.replace(relations[i][0] - 1,temp);
+			} 
+			else {
+				List<Integer> temp = new ArrayList<>();
+				temp.add(relations[i][1] - 1);
+				map.put(relations[i][0] - 1,temp);
+			}
+		}
+		int[] total = new int[n];
+		Deque<Integer> dq = new ArrayDeque<>();
+		for (int i = 0; i < n; i++) {
+			if (indegree[i] == 0) {
+				total[i] = time[i];
+				dq.addLast(i);
+			}
+		}
+		while (!dq.isEmpty()) {
+			int curr = dq.pollFirst();
+			if (map.containsKey(curr)) {
+				List<Integer> temp = map.get(curr);
+				for (int i = 0; i < temp.size(); i++) {
+					indegree[temp.get(i)]--;
+					total[temp.get(i)] = Math.max(total[temp.get(i)],total[curr] + time[temp.get(i)]);
+					if (indegree[temp.get(i)] == 0) {
+						dq.addLast(temp.get(i));
+					}
+				}
+			}
+		}
+		int result = Integer.MIN_VALUE;
+		for (int i = 0; i < n; i++) {
+			result = Math.max(result,total[i]);
+		}
+		return result;
+	}
+}

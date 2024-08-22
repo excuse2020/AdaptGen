@@ -1,0 +1,28 @@
+class Solution {
+	RandomListNode Clone(RandomListNode pHead) {
+		if (pHead == null) {
+			return null;
+		}
+		RandomListNode tempHead = pHead;
+		while (tempHead != null) {
+			RandomListNode temp = new RandomListNode(tempHead.label);
+			temp.next = tempHead.next;
+			tempHead.next = temp;
+			tempHead = tempHead.next.next;
+		}
+		RandomListNode originHead = pHead;
+		while (originHead != null) {
+			originHead.next.random = originHead.random == null ? null : originHead.random.next;
+			originHead = originHead.next.next;
+		}
+		originHead = pHead;
+		RandomListNode res = pHead.next;
+		while (originHead != null) {
+			RandomListNode newHead = originHead.next;
+			originHead.next = originHead.next.next;
+			newHead.next = newHead.next == null ? null : newHead.next.next;
+			originHead = originHead.next;
+		}
+		return res;
+	}
+}

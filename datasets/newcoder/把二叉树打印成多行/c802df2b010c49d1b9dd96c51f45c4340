@@ -1,0 +1,55 @@
+class Solution {
+	ArrayList<ArrayList<Integer>> Print(TreeNode root) {
+		ArrayList<ArrayList<Integer>> ret = new ArrayList<>();
+		if (root == null) {
+			return ret;
+		}
+		Queue<TreeNode> q1 = new LinkedList<>();
+		Queue<Integer> q2 = new LinkedList<>();
+		ArrayList<Integer> last = new ArrayList<>();
+		ret.add(last);
+		q1.offer(root);
+		q2.offer(-1);
+		int val;
+		while (!q1.isEmpty()) {
+			root = q1.poll();
+			val = q2.poll();
+			last = ret.get(ret.size() - 1);
+			last.add(root.val);
+			if (val != -1) {
+				if (root.left != null) {
+					q1.offer(root.left);
+					q2.offer(1);
+				}
+				if (root.right != null) {
+					q1.offer(root.right);
+					q2.offer(1);
+				}
+			} 
+			else {
+				if (root.left != null || root.right != null) {
+					last = new ArrayList<>();
+					ret.add(last);
+					if (root.left != null) {
+						q1.offer(root.left);
+						if (root.right != null) {
+							q2.offer(1);
+							q1.offer(root.right);
+							q2.offer(-1);
+						} 
+						else {
+							q2.offer(-1);
+						}
+					} 
+					else {
+						if (root.right != null) {
+							q1.offer(root.right);
+							q2.offer(-1);
+						}
+					}
+				}
+			}
+		}
+		return ret;
+	}
+}

@@ -1,0 +1,36 @@
+class Solution {
+	Map<Integer, ArrayList<Integer>> resultMap = new HashMap<>();
+	int arrHash(ArrayList<Integer> arr) {
+		if (arr.size() == 0) {
+			return -9999;
+		}
+		int len = arr.size();
+		int sum = 0;
+		for (int i = 0; i < len; i++) {
+			sum = (sum + 1) * 10 + arr.get(i);
+		}
+		System.out.println("数组" + arr.toString());
+		return sum;
+	}
+	void dfs(int[] arr, int idx, ArrayList<Integer> t) {
+		resultMap.put(arrHash(t),t);
+		if (idx >= arr.length) {
+			return;
+		}
+		ArrayList<Integer> newArr2 = new ArrayList<>(t);
+		newArr2.add(arr[idx]);
+		dfs(arr,idx + 1,newArr2);
+		ArrayList<Integer> newArr1 = new ArrayList<>(t);
+		dfs(arr,idx + 1,newArr1);
+	}
+	ArrayList<ArrayList<Integer>> subsets(int[] S) {
+		Arrays.sort(S);
+		dfs(S,0,new ArrayList<>());
+		ArrayList<ArrayList<Integer>> returnData = new ArrayList<>();
+		for (Integer key: resultMap.keySet()) {	
+			returnData.add(resultMap.get(key));
+		}
+		Collections.sort(returnData,new Comparator<ArrayList<Integer>>());
+		return returnData;
+	}
+}

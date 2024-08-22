@@ -1,0 +1,39 @@
+class Solution {
+	int max = 0;
+	int longestPath(int[] parent, String s) {
+		int n = parent.length;
+		if (n == 1) {
+			return 1;
+		}
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int i = 1; i < n; i++) {
+			graph.get(parent[i]).add(i);
+		}
+		solve(0,graph,s);
+		return max;
+	}
+	int solve(int src, List<List<Integer>> graph, String s) {
+		if (graph.get(src).size() == 0) {
+			return 1;
+		}
+		int l = 0, ls = 0;
+		for (int nbr: graph.get(src)) {	
+			int count = solve(nbr,graph,s);
+			if (s.charAt(src) == s.charAt(nbr)) {
+				continue;
+			}
+			if (count > l) {
+				ls = l;
+				l = count;
+			} 
+			else if (count > ls) {
+				ls = count;
+			}
+		}
+		max = Math.max(max,l + ls);
+		return l + 1;
+	}
+}

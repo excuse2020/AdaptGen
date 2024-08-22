@@ -1,0 +1,35 @@
+class Solution {
+	int minimumNumbers(int num, int k) {
+		if (num == 0) {
+			return 0;
+		}
+		int temp = num;
+		int[] coins = new int[temp / 10];
+		for (int i = 0; i < coins.length; i++) {
+			coins[i] = k;
+			k += 10;
+		}
+		int n = coins.length;
+		if (n == 1) {
+			return num % coins[0] != 0 ? -1 : num / coins[0];
+		}
+		int[][] dp = new int[n + 1][num + 1];
+		for (int i = 0; i < n + 1; i++) {
+			dp[i][0] = 0;
+		}
+		for (int j = 1; j < num + 1; j++) {
+			dp[0][j] = Integer.MAX_VALUE - 1;
+		}
+		for (int i = 1; i < n + 1; i++) {
+			for (int j = 1; j < num + 1; j++) {
+				if (coins[i - 1] > j) {
+					dp[i][j] = dp[i - 1][j];
+				} 
+				else if (coins[i - 1] <= j) {
+					dp[i][j] = Math.min(dp[i - 1][j],dp[i][j - coins[i - 1]] + 1);
+				}
+			}
+		}
+		return dp[n][num] != Integer.MAX_VALUE - 1 ? dp[n][num] : -1;
+	}
+}

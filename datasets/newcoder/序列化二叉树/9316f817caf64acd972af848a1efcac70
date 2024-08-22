@@ -1,0 +1,37 @@
+class Solution {
+	int index = -1;
+	TreeNode Deserialize(String str) {
+		if (str == null || str == "") {
+			return null;
+		}
+		String[] strs = str.split("!");
+		return DeserializeHelp(strs);
+	}
+	TreeNode DeserializeHelp(String[] strs) {
+		index++;
+		if (!strs[index].equals("#")) {
+			TreeNode node = new TreeNode(Integer.parseInt(strs[index]));
+			node.left = DeserializeHelp(strs);
+			node.right = DeserializeHelp(strs);
+			return node;
+		}
+		return null;
+	}
+	String Serialize(TreeNode root) {
+		if (root == null) {
+			return "";
+		}
+		StringBuilder sb = new StringBuilder();
+		SerializeHelp(root,sb);
+		return sb.toString();
+	}
+	void SerializeHelp(TreeNode root, StringBuilder sb) {
+		if (root == null) {
+			sb.append("#!");
+			return;
+		}
+		sb.append(root.val).append("!");
+		SerializeHelp(root.left,sb);
+		SerializeHelp(root.right,sb);
+	}
+}

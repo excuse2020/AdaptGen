@@ -1,0 +1,39 @@
+class Solution {
+	int INF = 0x3f3f3f3f;
+	int N = 510, M = 5010;
+	int[] dist = new int[N];
+	int[] he = new int[N], e = new int[M], ne = new int[M], w = new int[M];
+	int n, m, k, idx;
+	void add(int a, int b, int c) {
+		e[idx] = b;
+		ne[idx] = he[a];
+		he[a] = idx;
+		w[idx] = c;
+		idx++;
+	}
+	void bf() {
+		Arrays.fill(dist,INF);
+		dist[1] = 0;
+		for (int p = 1; p <= n; p++) {
+			int[] prev = dist.clone();
+			for (int a = 1; a <= n; a++) {
+				for (int i = he[a]; i != -1; i = ne[i]) {
+					int b = e[i];
+					dist[b] = Math.min(dist[b],prev[a] + w[i]);
+				}
+			}
+		}
+	}
+	int findShortestPath(int _n, int _k, int[][] graph) {
+		n = _n;
+		k = _k;
+		m = graph.length;
+		Arrays.fill(he,-1);
+		for (int[] t: graph) {	
+			int u = t[0], v = t[1], c = t[2];
+			add(u,v,c);
+		}
+		bf();
+		return dist[n] >= INF / 2 ? -1 : dist[n];
+	}
+}

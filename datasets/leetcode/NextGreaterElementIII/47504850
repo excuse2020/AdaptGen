@@ -1,0 +1,49 @@
+class Solution {
+	int nextGreaterElement(int n) {
+		String num = Integer.toString(n);
+		char[] numArray = num.toCharArray();
+		int[] numbers = new int[numArray.length];
+		for (int i = 0; i < numArray.length; i++) {
+			numbers[i] = Character.getNumericValue(numArray[i]);
+		}
+		int possible_index = -1;
+		for (int i = numbers.length - 2; i >= 0; i--) {
+			if (numbers[i] < numbers[i + 1]) {
+				possible_index = i;
+				break;
+			}
+		}
+		if (possible_index == -1) {
+			return -1;
+		}
+		int val = numbers[possible_index];
+		int smallest_val = possible_index + 1;
+		for (int i = possible_index + 1; i < numbers.length; i++) {
+			if (numbers[i] > val && numbers[smallest_val] >= numbers[i]) {
+				smallest_val = i;
+			}
+		}
+		int temp = numbers[possible_index];
+		numbers[possible_index] = numbers[smallest_val];
+		numbers[smallest_val] = temp;
+		reverseArray(numbers,possible_index + 1,numbers.length - 1);
+		StringBuilder ans = new StringBuilder();
+		for (int i = 0; i < numArray.length; i++) {
+			ans.append(numbers[i]);
+		}
+		long ansLong = Long.parseLong(ans.toString());
+		if (ansLong > Integer.MAX_VALUE) {
+			return -1;
+		}
+		return (int) ansLong;
+	}
+	void reverseArray(int[] numbers, int start, int end) {
+		while (start < end) {
+			int temp = numbers[start];
+			numbers[start] = numbers[end];
+			numbers[end] = temp;
+			start++;
+			end--;
+		}
+	}
+}

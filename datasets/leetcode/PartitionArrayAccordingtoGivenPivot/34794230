@@ -1,0 +1,41 @@
+class Solution {
+	void merge(int[] nums, int c1, int c2, int size, int pivot) {
+		int startMediumInFirst = c1;
+		int endMediumInSecond = c2;
+		while (startMediumInFirst < c2 && nums[startMediumInFirst] < pivot) {
+			startMediumInFirst++;
+		}
+		while (endMediumInSecond < Math.min(nums.length,c2 + size) && nums[endMediumInSecond] <= pivot) {
+			endMediumInSecond++;
+		}
+		endMediumInSecond--;
+		reverse(nums,startMediumInFirst,c2 - 1);
+		reverse(nums,c2,endMediumInSecond);
+		reverse(nums,startMediumInFirst,endMediumInSecond);
+	}
+	int[] pivotArray(int[] nums, int pivot) {
+		int n = nums.length;
+		int chunkSize = 1;
+		while (chunkSize < n) {
+			int curIndex = 0;
+			while (curIndex < n) {
+				int nextIndex = curIndex + chunkSize;
+				if (nextIndex < n) {
+					merge(nums,curIndex,nextIndex,chunkSize,pivot);
+				}
+				curIndex += chunkSize * 2;
+			}
+			chunkSize *= 2;
+		}
+		return nums;
+	}
+	void reverse(int[] nums, int start, int end) {
+		while (start < end) {
+			int temp = nums[start];
+			nums[start] = nums[end];
+			nums[end] = temp;
+			start++;
+			end--;
+		}
+	}
+}

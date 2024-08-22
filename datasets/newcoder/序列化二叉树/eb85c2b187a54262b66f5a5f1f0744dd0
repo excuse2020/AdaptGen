@@ -1,0 +1,47 @@
+class Solution {
+	TreeNode Deserialize(String str) {
+		if (str.equals("")) {
+			return null;
+		}
+		String[] split = str.split("_");
+		Queue<TreeNode> queue = new LinkedList<>();
+		TreeNode root = new TreeNode(Integer.parseInt(split[0]));
+		queue.add(root);
+		for (int i = 1; i < split.length - 1; i += 2) {
+			TreeNode node = queue.poll();
+			String a = split[i];
+			String b = split[i + 1];
+			if (!"#".equals(a)) {
+				TreeNode nodeA = new TreeNode(Integer.parseInt(a));
+				node.left = nodeA;
+				queue.add(nodeA);
+			}
+			if (!"#".equals(b)) {
+				TreeNode nodeB = new TreeNode(Integer.parseInt(b));
+				node.right = nodeB;
+				queue.add(nodeB);
+			}
+		}
+		return root;
+	}
+	String Serialize(TreeNode root) {
+		if (root == null) {
+			return "";
+		}
+		StringBuilder builder = new StringBuilder();
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(root);
+		while (!queue.isEmpty()) {
+			TreeNode node = queue.poll();
+			if (node == null) {
+				builder.append("#").append("_");
+			} 
+			else {
+				builder.append(node.val).append("_");
+				queue.add(node.left);
+				queue.add(node.right);
+			}
+		}
+		return builder.toString();
+	}
+}

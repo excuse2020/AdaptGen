@@ -1,0 +1,47 @@
+class Solution {
+	Map<Integer, List<Integer>> map = new HashMap<>();
+	int amountOfTime(TreeNode root, int start) {
+		traversal(root,null);
+		Queue<Integer> queue = new LinkedList<>();
+		Set<Integer> visited = new HashSet<>();
+		queue.add(start);
+		int count = -1;
+		while (true) {
+			int size = queue.size();
+			while (size > 0) {
+				int val = queue.poll();
+				visited.add(val);
+				for (int neighbor: map.get(val)) {	
+					if (!visited.contains(neighbor)) {
+						queue.add(neighbor);
+					}
+				}
+				size -= 1;
+			}
+			count += 1;
+			if (queue.isEmpty()) {
+				break;
+			}
+		}
+		return count;
+	}
+	void traversal(TreeNode node, Integer parent) {
+		if (node == null) {
+			return;
+		}
+		if (!map.containsKey(node.val)) {
+			map.put(node.val,new ArrayList<>());
+		}
+		if (parent != null) {
+			map.get(node.val).add(parent);
+		}
+		if (node.left != null) {
+			map.get(node.val).add(node.left.val);
+		}
+		if (node.right != null) {
+			map.get(node.val).add(node.right.val);
+		}
+		traversal(node.left,node.val);
+		traversal(node.right,node.val);
+	}
+}

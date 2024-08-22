@@ -1,0 +1,36 @@
+class Solution {
+	int memo(int[][] arr, int[][] dp, int row, int col) {
+		if (col < 0 || col >= arr[0].length) {
+			return (int) Math.pow(10,9);
+		}
+		if (row == arr.length - 1) {
+			return arr[row][col];
+		}
+		if (dp[row][col] != Integer.MAX_VALUE) {
+			return dp[row][col];
+		}
+		int down = memo(arr,dp,row + 1,col);
+		int left = memo(arr,dp,row + 1,col - 1);
+		int right = memo(arr,dp,row + 1,col + 1);
+		dp[row][col] = Math.min(Math.min(down,left),right);
+		dp[row][col] += arr[row][col];
+		return dp[row][col];
+	}
+	int minFallingPathSum(int[][] matrix) {
+		int n = matrix.length;
+		int m = matrix[0].length;
+		int[][] dp = new int[n][m];
+		for (int[] arr: dp) {	
+			Arrays.fill(arr,Integer.MAX_VALUE);
+		}
+		for (int i = 0; i < m; i++) {
+			dp[n - 1][i] = matrix[n - 1][i];
+		}
+		int min = Integer.MAX_VALUE;
+		for (int i = 0; i < m; i++) {
+			int val = memo(matrix,dp,0,i);
+			min = Math.min(min,val);
+		}
+		return min;
+	}
+}

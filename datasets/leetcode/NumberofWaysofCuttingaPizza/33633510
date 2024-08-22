@@ -1,0 +1,32 @@
+class Solution {
+	int dfs(int i, int j, int k, String[] pizza, int[][] presum, int[][][] dp) {
+		if (presum[i][j] == 0) {
+			return 0;
+		}
+		if (k == 0) {
+			return 1;
+		}
+		if (dp[i][j][k] != -1) {
+			return dp[i][j][k];
+		}
+		int hor = 0;
+		int ver = 0;
+		for (int m = i + 1; m < pizza.length; m++) {
+			if (presum[i][j] - presum[m][j] > 0) {
+				hor = (hor + dfs(m,j,k - 1,pizza,presum,dp)) % 1000000007;
+			}
+		}
+		for (int n = j + 1; n < pizza[0].length(); n++) {
+			if (presum[i][j] - presum[i][n] > 0) {
+				ver = (ver + dfs(i,n,k - 1,pizza,presum,dp)) % 1000000007;
+			}
+		}
+		return dp[i][j][k] = (hor + ver) % 1000000007;
+	}
+	int ways(String[] pizza, int k) {
+		int m = pizza.length;
+		int n = pizza[0].length();
+		int[][] presum = new int[m + 1][n + 1];
+		int[][][] dp = new int[m + 1][n + 1][k + 1];
+	}
+}

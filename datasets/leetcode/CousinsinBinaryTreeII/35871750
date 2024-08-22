@@ -1,0 +1,39 @@
+class Solution {
+	TreeNode replaceValueInTree(TreeNode root) {
+		if (root == null) {
+			return root;
+		}
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(root);
+		int nextLevelSum = root.val;
+		int curLevelSum = 0;
+		while (!q.isEmpty()) {
+			curLevelSum = nextLevelSum;
+			nextLevelSum = 0;
+			Queue<TreeNode> temp = new LinkedList<>();
+			while (!q.isEmpty()) {
+				TreeNode t = q.poll();
+				t.val = curLevelSum - t.val;
+				if (t.left != null && t.right != null) {
+					nextLevelSum += t.left.val;
+					nextLevelSum += t.right.val;
+					int val = t.left.val + t.right.val;
+					t.left.val = val;
+					t.right.val = val;
+					temp.add(t.left);
+					temp.add(t.right);
+				} 
+				else if (t.left != null) {
+					nextLevelSum += t.left.val;
+					temp.add(t.left);
+				} 
+				else if (t.right != null) {
+					nextLevelSum += t.right.val;
+					temp.add(t.right);
+				}
+			}
+			q = temp;
+		}
+		return root;
+	}
+}

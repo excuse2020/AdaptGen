@@ -1,0 +1,34 @@
+class Solution {
+	int findKth(int[] a, int n, int K) {
+		return findKth(a,0,n - 1,n - K);
+	}
+	int findKth(int[] a, int low, int high, int KIndex) {
+		int pivot = a[low];
+		int i = low;
+		int j = high;
+		while (i < j) {
+			while (a[j] >= pivot && i < j) {
+				j--;
+			}
+			while (a[i] <= pivot && i < j) {
+				i++;
+			}
+			if (i < j) {
+				int temp = a[j];
+				a[j] = a[i];
+				a[i] = temp;
+			}
+		}
+		a[low] = a[j];
+		a[j] = pivot;
+		if (j == KIndex) {
+			return a[j];
+		} 
+		else if (j > KIndex) {
+			return findKth(a,low,j - 1,KIndex);
+		} 
+		else {
+			return findKth(a,j + 1,high,KIndex);
+		}
+	}
+}

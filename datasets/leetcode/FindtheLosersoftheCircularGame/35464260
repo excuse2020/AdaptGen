@@ -1,0 +1,30 @@
+class Solution {
+	int[] circularGameLosers(int n, int k) {
+		Set<Integer> players = new HashSet<>();
+		Set<Integer> receivers = new HashSet<>();
+		int nextPlayer = 1;
+		int count = 2;
+		int[] loosers = null;
+		int originalSteps = k;
+		for (int i = 1; i <= n; i++) {
+			players.add(i);
+		}
+		boolean added = receivers.add(nextPlayer);
+		while (added) {
+			nextPlayer += k;
+			while (nextPlayer > n) {
+				nextPlayer = nextPlayer - n;
+			}
+			k = originalSteps * count;
+			count++;
+			added = receivers.add(nextPlayer);
+		}
+		players.removeAll(receivers);
+		loosers = new int[players.size()];
+		count = 0;
+		for (int i: players) {	
+			loosers[count++] = i;
+		}
+		return loosers;
+	}
+}

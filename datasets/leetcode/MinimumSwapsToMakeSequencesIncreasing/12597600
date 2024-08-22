@@ -1,0 +1,28 @@
+class Solution {
+	int cal(int dp, int a, int b, int index, int a1, int b1) {
+		int min = Integer.MAX_VALUE;
+		if (a[index] < a1 && b[index] < b1) {
+			min = Math.min(min,dp[index][0]);
+		}
+		if (b[index] < a1 && a[index] < b1) {
+			min = Math.min(min,dp[index][1]);
+		}
+		return min;
+	}
+	int minSwap(int[] a, int[] b) {
+		int n = a.length;
+		int dp = new int[n][2];
+		dp[0][0] = 0;
+		dp[0][1] = 1;
+		for (int i = 1; i < n; i++) {
+			int ans1 = cal(dp,a,b,i - 1,a[i],b[i]);
+			int ans2 = cal(dp,a,b,i - 1,b[i],a[i]);
+			dp[i][0] = ans1;
+			if (ans2 != Integer.MAX_VALUE) {
+				ans2++;
+			}
+			dp[i][1] = ans2;
+		}
+		return Math.min(dp[n - 1][0],dp[n - 1][1]);
+	}
+}

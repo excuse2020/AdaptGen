@@ -1,0 +1,23 @@
+class Solution {
+	int dpMinTotal(List<List<Integer>> triangle, int i, int j, int[] dp) {
+		int index = ((i * (i + 1)) / 2) + j;
+		if (dp[index] == Integer.MIN_VALUE) {
+			dp[index] = triangle.get(i).get(j) + Math.min(dpMinTotal(triangle,i + 1,j,dp),dpMinTotal(triangle,i + 1,j + 1,dp));
+		}
+		return dp[index];
+	}
+	int minimumTotal(List<List<Integer>> triangle) {
+		int n = triangle.size();
+		int[] dp = new int[((n * (n + 1)) / 2) + 1];
+		int temp = ((n * (n - 1)) / 2) + 1;
+		int k = temp;
+		for (int j = 0; j < n; j++) {
+			dp[k++] = triangle.get(n - 1).get(j);
+		}
+		k = 0;
+		for (int i = 0; i < temp; i++) {
+			dp[k++] = Integer.MIN_VALUE;
+		}
+		return dpMinTotal(triangle,0,0,dp);
+	}
+}

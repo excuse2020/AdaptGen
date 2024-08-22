@@ -1,0 +1,51 @@
+class Solution {
+	Integer[][][] mem = null;
+	int dp(int[] h, int[][] c, int i, int col, int prev) {
+		if (col == 0 && i == c.length) {
+			return 0;
+		}
+		if (col < 0) {
+			return Integer.MAX_VALUE - 10000;
+		}
+		if (i >= c.length) {
+			return Integer.MAX_VALUE - 10000;
+		}
+		if (prev > -1 && mem[i][col][prev] != null) {
+			return mem[i][col][prev];
+		}
+		int ans = 0;
+		if (h[i] != 0) {
+			if (prev == h[i]) {
+				ans = dp(h,c,i + 1,col,h[i]);
+			} 
+			else {
+				ans = dp(h,c,i + 1,col - 1,h[i]);
+			}
+			if (prev > -1) {
+				mem[i][col][prev] = ans;
+			}
+			return ans;
+		}
+		int mn = Integer.MAX_VALUE - 10000;
+		for (int j = 0; j < c[i].length; j++) {
+			if (prev != j + 1) {
+				mn = Math.min(mn,c[i][j] + dp(h,c,i + 1,col - 1,j + 1));
+			} 
+			else {
+				mn = Math.min(mn,c[i][j] + dp(h,c,i + 1,col,j + 1));
+			}
+		}
+		if (prev > -1) {
+			mem[i][col][prev] = mn;
+		}
+		return mn;
+	}
+	int minCost(int[] houses, int[][] cost, int m, int n, int target) {
+		mem = new Integer[cost.length + 1][target + 1][cost[0].length + 2];
+		int ans = dp(houses,cost,0,target,-1);
+		if (ans >= Integer.MAX_VALUE - 10000) {
+			return -1;
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,25 @@
+class Solution {
+	void dfs(ArrayList<ArrayList<Integer>> list, ArrayList<Integer> child, int index, int[] num, boolean[] vis) {
+		if (index == num.length) {
+			list.add(new ArrayList<>(child));
+			return;
+		}
+		for (int i = 0; i < num.length; i++) {
+			if (i > 0 && num[i] == num[i - 1] && !vis[i - 1] || vis[i]) {
+				continue;
+			}
+			child.add(num[i]);
+			vis[i] = true;
+			dfs(list,child,index + 1,num,vis);
+			vis[i] = false;
+			child.remove(child.size() - 1);
+		}
+	}
+	ArrayList<ArrayList<Integer>> permute(int[] num) {
+		Arrays.sort(num);
+		ArrayList<ArrayList<Integer>> list = new ArrayList<>();
+		ArrayList<Integer> child = new ArrayList<>();
+		dfs(list,child,0,num,new boolean[num.length]);
+		return list;
+	}
+}

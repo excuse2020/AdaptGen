@@ -1,0 +1,30 @@
+class Solution {
+	RandomListNode Clone(RandomListNode pHead) {
+		Map<RandomListNode, RandomListNode> map = new HashMap();
+		RandomListNode head = new RandomListNode(-1), node = head, pre;
+		head.next = pHead;
+		while (pHead != null) {
+			node = new RandomListNode(pHead.label);
+			node.random = pHead.random;
+			node.next = pHead.next;
+			pHead.next = node;
+			pHead = node.next;
+		}
+		node = head.next;
+		while (node != null) {
+			node = node.next;
+			node.random = node.random == null ? null : node.random.next;
+			node = node.next;
+		}
+		node = head;
+		pHead = head.next;
+		while (node.next != null) {
+			pre = node;
+			node = node.next.next;
+			pHead.next = node.next;
+			pre.next = node;
+			pHead = pHead.next;
+		}
+		return head.next;
+	}
+}

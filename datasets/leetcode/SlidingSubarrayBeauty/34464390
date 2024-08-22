@@ -1,0 +1,65 @@
+class Solution {
+	int[] getSubarrayBeauty(int[] nums, int k, int x) {
+		int[] ans = new int[nums.length - k + 1];
+		int ansidx = 0;
+		int slow = 0;
+		int fast = 0;
+		ArrayList<Integer> li = new ArrayList<Integer>();
+		while (fast < nums.length) {
+			if (fast < k - 1) {
+				insertElement(li,nums[fast]);
+				fast++;
+			} 
+			else {
+				if (fast != k - 1) {
+					removeElement(li,nums[slow]);
+					slow++;
+				}
+				insertElement(li,nums[fast]);
+				fast++;
+				if (li.get(x - 1) < 0) {
+					ans[ansidx] = li.get(x - 1);
+					ansidx++;
+				} 
+				else {
+					ans[ansidx] = 0;
+					ansidx++;
+				}
+			}
+		}
+		return ans;
+	}
+	void insertElement(ArrayList<Integer> li, int num) {
+		int low = 0;
+		int high = li.size() - 1;
+		while (low <= high) {
+			int mid = (low + high) / 2;
+			if (li.get(mid) <= num) {
+				low = mid + 1;
+			} 
+			else {
+				high = mid - 1;
+			}
+		}
+		li.add(low,num);
+		return;
+	}
+	void removeElement(ArrayList<Integer> li, int num) {
+		int low = 0;
+		int high = li.size() - 1;
+		while (low <= high) {
+			int mid = (low + high) / 2;
+			if (li.get(mid) == num) {
+				li.remove(mid);
+				break;
+			} 
+			else if (li.get(mid) < num) {
+				low = mid + 1;
+			} 
+			else {
+				high = mid - 1;
+			}
+		}
+		return;
+	}
+}

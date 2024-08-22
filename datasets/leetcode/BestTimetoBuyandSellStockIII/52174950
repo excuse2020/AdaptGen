@@ -1,0 +1,25 @@
+class Solution {
+	int maxProfit(int[] prices) {
+		int[][][] dp = new int[prices.length][2][3];
+		for (int[][] x: dp) {	
+			for (int[] y: x) {	
+				Arrays.fill(y,-1);
+			}
+		}
+		return recur(prices,2,0,0,dp);
+	}
+	int recur(int[] prices, int bal, int idx, int last, int[][][] dp) {
+		if (idx == prices.length || bal == 0) {
+			return 0;
+		}
+		if (dp[idx][last][bal] != -1) {
+			return dp[idx][last][bal];
+		}
+		if (last == 0) {
+			return dp[idx][last][bal] = Math.max(recur(prices,bal,idx + 1,0,dp),-prices[idx] + recur(prices,bal,idx + 1,1,dp));
+		} 
+		else {
+			return dp[idx][last][bal] = Math.max(recur(prices,bal,idx + 1,1,dp),prices[idx] + recur(prices,bal - 1,idx + 1,0,dp));
+		}
+	}
+}

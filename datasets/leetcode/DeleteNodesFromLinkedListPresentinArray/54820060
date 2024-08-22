@@ -1,0 +1,45 @@
+class Solution {
+	boolean help(int[] nums, int a) {
+		int l = 0, h = nums.length - 1, mid = 0;
+		while (l <= h) {
+			mid = (l + h) / 2;
+			if (nums[mid] == a) {
+				return true;
+			} 
+			else if (nums[mid] > a) {
+				h = mid - 1;
+			} 
+			else {
+				l = mid + 1;
+			}
+		}
+		return false;
+	}
+	ListNode modifiedList(int[] nums, ListNode head) {
+		int n = nums.length;
+		Arrays.sort(nums);
+		ListNode slow = head;
+		ListNode fast = slow.next;
+		while (fast != null) {
+			if (fast.val > nums[n - 1]) {
+				slow = fast;
+				fast = fast.next;
+				continue;
+			}
+			if (help(nums,fast.val)) {
+				slow.next = fast.next;
+				fast = fast.next;
+			} 
+			else {
+				slow = fast;
+				fast = fast.next;
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			if (head.val == nums[i]) {
+				head = head.next;
+			}
+		}
+		return head;
+	}
+}

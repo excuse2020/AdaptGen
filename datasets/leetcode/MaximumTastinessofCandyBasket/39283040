@@ -1,0 +1,33 @@
+class Solution {
+	boolean isPossible(int[] prices, int diff, int k) {
+		int countPairs = 1;
+		int min = prices[0];
+		int length = prices.length;
+		for (int index = 1; index < length; index++) {
+			if ((prices[index] - min) >= diff) {
+				countPairs++;
+				min = prices[index];
+			}
+		}
+		return (countPairs >= k);
+	}
+	int maximumTastiness(int[] price, int k) {
+		Arrays.sort(price);
+		int length = price.length;
+		int maxDiff = price[length - 1] - price[0];
+		int minDiff = 0;
+		int midDiff = 0;
+		int ans = -1;
+		while (minDiff <= maxDiff) {
+			midDiff = minDiff + (maxDiff - minDiff) / 2;
+			if (isPossible(price,midDiff,k)) {
+				ans = midDiff;
+				minDiff = midDiff + 1;
+			} 
+			else {
+				maxDiff = midDiff - 1;
+			}
+		}
+		return ans;
+	}
+}

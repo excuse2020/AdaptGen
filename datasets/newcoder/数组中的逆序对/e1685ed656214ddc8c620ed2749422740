@@ -1,0 +1,43 @@
+class Solution {
+	int InversePairs(int[] array) {
+		if (array.length < 2) {
+			return 0;
+		}
+		int[] tmp = new int[array.length];
+		int ret = sortAndCount(0,array.length - 1,array,tmp);
+		return ret % 1000000007;
+	}
+	int mergeAndCount(int l, int m, int r, int[] array, int[] tmp) {
+		for (int i = l; i <= r; i++) {
+			tmp[i] = array[i];
+		}
+		int x = l, y = m + 1;
+		int count = 0;
+		for (int i = l; i <= r; i++) {
+			if (x > m) {
+				array[i] = tmp[y];
+				y++;
+			} 
+			else if (y > r || tmp[x] <= tmp[y]) {
+				array[i] = tmp[x];
+				x++;
+			} 
+			else {
+				array[i] = tmp[y];
+				y++;
+				count += m - x + 1;
+			}
+		}
+		return count;
+	}
+	int sortAndCount(int l, int r, int[] array, int[] tmp) {
+		if (l == r) {
+			return 0;
+		}
+		int m = l + (r - l) / 2;
+		int lPairs = sortAndCount(l,m,array,tmp) % 1000000007;
+		int rPairs = sortAndCount(m + 1,r,array,tmp) % 1000000007;
+		int lrPairs = mergeAndCount(l,m,r,array,tmp) % 1000000007;
+		return lPairs + rPairs;
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	int countDays(int days, int[][] meetings) {
+		List<int[]> intervals = processIntervals(meetings);
+		int count = 0;
+		for (int row: intervals) {	
+			int x = row[0];
+			int y = row[1];
+			for (int i = x; i <= y; i++) {
+				count++;
+			}
+		}
+		return days - count;
+	}
+	List<int[]> mergeIntervals(int[][] intervals) {
+		List<int[]> merged = new ArrayList<>();
+		int[] currentInterval = intervals[0];
+		merged.add(currentInterval);
+		for (int[] interval: intervals) {	
+			int currentEnd = currentInterval[1];
+			int nextStart = interval[0];
+			int nextEnd = interval[1];
+			if (currentEnd >= nextStart) {
+				currentInterval[1] = Math.max(currentEnd,nextEnd);
+			} 
+			else {
+				currentInterval = interval;
+				merged.add(currentInterval);
+			}
+		}
+		return merged;
+	}
+	List<int[]> processIntervals(int[][] intervals) {
+		if (intervals == null || intervals.length == 0) {
+			return new ArrayList<>();
+		}
+		Arrays.sort(intervals,(a, b) -> {Integer.compare(a[0],b[0])});
+		return mergeIntervals(intervals);
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	int check(int row, int col) {
+		int sum = 0;
+		while (row != 0) {
+			sum = sum + (row % 10);
+			row = row / 10;
+		}
+		while (col != 0) {
+			sum = sum + (col % 10);
+			col = col / 10;
+		}
+		return sum;
+	}
+	int movingCount(int threshold, int rows, int cols) {
+		int[][] dp = new int[rows + 1][cols + 1];
+		int sum = 0;
+		dp[0][0] = 1;
+		dp[0][1] = 1;
+		dp[1][0] = 1;
+		for (int i = 1; i <= rows; i++) {
+			for (int j = 1; j <= cols; j++) {
+				if (i >= 0 && j >= 0 && check(i - 1,j - 1) <= threshold) {
+					if (dp[i][j - 1] == 1 || dp[i - 1][j] == 1) {
+						dp[i][j] = 1;
+						sum++;
+					}
+				}
+			}
+		}
+		return sum;
+	}
+}

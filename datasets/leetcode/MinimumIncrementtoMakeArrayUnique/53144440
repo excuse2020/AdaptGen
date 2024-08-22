@@ -1,0 +1,25 @@
+class Solution {
+	int minIncrementForUnique(int[] nums) {
+		if (nums.length == 1) {
+			return 0;
+		}
+		int max = Arrays.stream(nums).max().getAsInt();
+		int[] count = new int[max + 2];
+		for (int num: nums) {	
+			count[num]++;
+		}
+		int moves = 0;
+		for (int i = 0; i < max + 1; i++) {
+			if (count[i] > 1) {
+				int toMove = count[i] - 1;
+				count[i + 1] += toMove;
+				moves += toMove;
+			}
+		}
+		if (count[max + 1] != 0) {
+			int rem = count[max + 1] - 1;
+			moves += rem * (rem + 1) / 2;
+		}
+		return moves;
+	}
+}

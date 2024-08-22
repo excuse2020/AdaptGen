@@ -1,0 +1,35 @@
+class Solution {
+	int findKth(int[] a, int n, int K) {
+		return returnK(a,0,a.length - 1,a.length - K);
+	}
+	int returnK(int[] a, int s, int e, int K) {
+		while (s >= e) {
+			return a[s];
+		}
+		int l = s;
+		int r = e;
+		int stand = a[s];
+		while (l < r) {
+			while (l < r && a[r] >= stand) {
+				r--;
+			}
+			while (l < r && a[l] <= stand) {
+				l++;
+			}
+			int temp = a[l];
+			a[l] = a[r];
+			a[r] = temp;
+		}
+		a[s] = a[l];
+		a[l] = stand;
+		if (l == K) {
+			return stand;
+		} 
+		else if (l < K) {
+			return returnK(a,l + 1,e,K);
+		} 
+		else {
+			return returnK(a,s,l - 1,K);
+		}
+	}
+}

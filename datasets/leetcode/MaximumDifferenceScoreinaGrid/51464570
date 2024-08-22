@@ -1,0 +1,59 @@
+class Solution {
+	int maxScore(List<List<Integer>> grid) {
+		int m = grid.size();
+		int n = grid.get(0).size();
+		int[][] col = new int[m][n];
+		for (int j = 0; j < n; j++) {
+			col[m - 1][j] = grid.get(m - 1).get(j);
+		}
+		for (int i = m - 2; i >= 0; i--) {
+			for (int j = n - 1; j >= 0; j--) {
+				col[i][j] = Math.max(grid.get(i).get(j),col[i + 1][j]);
+			}
+		}
+		int[][] row = new int[m][n];
+		for (int i = 0; i < m; i++) {
+			row[i][n - 1] = grid.get(i).get(n - 1);
+		}
+		for (int i = 0; i < m; i++) {
+			for (int j = n - 2; j >= 0; j--) {
+				row[i][j] = Math.max(row[i][j + 1],grid.get(i).get(j));
+			}
+		}
+		int max1 = Integer.MIN_VALUE;
+		for (int i = 0; i < m - 1; i++) {
+			for (int j = 0; j < n; j++) {
+				int x = grid.get(i).get(j);
+				for (int k = i + 1; k < m; k++) {
+					if (j + 1 < n) {
+						int g = (col[k][j] - x);
+						int h = (row[k][j + 1] - col[k][j]);
+						int z = g + h;
+						max1 = Math.max(max1,Math.max(g,Math.max(h,g + h)));
+					} 
+					else {
+						max1 = Math.max(max1,col[k][j] - x);
+					}
+				}
+			}
+		}
+		int max2 = Integer.MIN_VALUE;
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n - 1; j++) {
+				int x = grid.get(i).get(j);
+				for (int k = j + 1; k < n; k++) {
+					if (i + 1 < m) {
+						int g = (row[i][k] - x);
+						int h = (col[i + 1][k] - row[i][k]);
+						int z = g + h;
+						max2 = Math.max(max2,Math.max(g,Math.max(g + h,z)));
+					} 
+					else {
+						max2 = Math.max(max2,row[i][k] - x);
+					}
+				}
+			}
+		}
+		return Math.max(max1,max2);
+	}
+}

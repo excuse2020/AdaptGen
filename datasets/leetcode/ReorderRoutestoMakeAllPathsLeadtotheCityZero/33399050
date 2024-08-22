@@ -1,0 +1,37 @@
+class Solution {
+	int dfs(int node, int par, List<Integer>[] graph, Set<Integer>[] set) {
+		if (graph[node] == null) {
+			return 0;
+		}
+		int count = 0;
+		for (int neighbor: graph[node]) {	
+			if (neighbor == par) {
+				continue;
+			}
+			if (set[node] != null && set[node].contains(neighbor)) {
+				count++;
+			}
+			count += dfs(neighbor,node,graph,set);
+		}
+		return count;
+	}
+	int minReorder(int n, int[][] connections) {
+		List<Integer>[] graph = new ArrayList[n];
+		Set<Integer>[] set = new HashSet[n];
+		for (int[] connection: connections) {	
+			if (graph[connection[0]] == null) {
+				graph[connection[0]] = new ArrayList<>();
+			}
+			if (graph[connection[1]] == null) {
+				graph[connection[1]] = new ArrayList<>();
+			}
+			if (set[connection[0]] == null) {
+				set[connection[0]] = new HashSet<>();
+			}
+			set[connection[0]].add(connection[1]);
+			graph[connection[0]].add(connection[1]);
+			graph[connection[1]].add(connection[0]);
+		}
+		return dfs(0,-1,graph,set);
+	}
+}

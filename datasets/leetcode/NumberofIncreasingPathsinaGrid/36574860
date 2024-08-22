@@ -1,0 +1,36 @@
+class Solution {
+	int mod = 1000000007;
+	int countPaths(int[][] grid) {
+		boolean tr = new boolean[grid.length][grid[0].length];
+		int[][] val = new int[grid.length][grid[0].length];
+		int ans = 0;
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				if (!tr[i][j]) {
+					ans += dfs(grid,val,i,j,0);
+					ans %= mod;
+				}
+			}
+		}
+		return ans % mod;
+	}
+	int dfs(int[][] g, int[][] v, int i, int j, int c) {
+		if (i < 0 || i >= g.length || j < 0 || j >= g[0].length || c >= g[i][j]) {
+			return 0;
+		}
+		if (v[i][j] != 0) {
+			return v[i][j];
+		}
+		v[i][j] += dfs(g,v,i + 1,j,g[i][j]);
+		v[i][j] %= mod;
+		v[i][j] += dfs(g,v,i - 1,j,g[i][j]);
+		v[i][j] %= mod;
+		v[i][j] += dfs(g,v,i,j + 1,g[i][j]);
+		v[i][j] %= mod;
+		v[i][j] += dfs(g,v,i,j - 1,g[i][j]);
+		v[i][j] %= mod;
+		v[i][j] += 1;
+		v[i][j] %= mod;
+		return v[i][j];
+	}
+}

@@ -1,0 +1,54 @@
+class Solution {
+	int findParent(int[] ver, int v) {
+		if (ver[v] != v) {
+			ver[v] = findParent(ver,ver[v]);
+			return ver[v];
+		}
+		return v;
+	}
+	int regionsBySlashes(String[] grid) {
+		int n = grid.length + 1;
+		int ver = new int[n * n];
+		int size = new int[n * n];
+		for (int i = 0; i < n * n; i++) {
+			ver[i] = i;
+			size[i] = 1;
+		}
+		for (int i = 0; i < n; i++) {
+			ver[i] = 0;
+		}
+		for (int i = (n - 1) * n; i < n * n; i++) {
+			ver[i] = 0;
+		}
+		for (int i = 0; i < n * n; i = i + n) {
+			ver[i] = 0;
+		}
+		for (int i = n - 1; i < n * n; i = i + n) {
+			ver[i] = 0;
+		}
+		size[0] = n + n;
+		int regions = 1;
+		int currentVal = 0;
+		int i = 0;
+		int j = 0;
+		char out = grid[i].charAt(j);
+	}
+	boolean union(int[] ver, int size, int a, int b) {
+		int parentA = findParent(ver,a);
+		int parentB = findParent(ver,b);
+		if (parentA == parentB) {
+			return false;
+		} 
+		else {
+			if (size[parentA] > size[parentB]) {
+				ver[parentB] = parentA;
+				size[parentA] += size[parentB];
+			} 
+			else {
+				ver[parentA] = parentB;
+				size[parentB] += size[parentB];
+			}
+			return true;
+		}
+	}
+}

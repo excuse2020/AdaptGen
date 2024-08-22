@@ -1,0 +1,23 @@
+class Solution {
+	int majority(int[] stones, int i, int j, int[][] dp) {
+		if (j == i + 1) {
+			return Math.abs(stones[i] - stones[j]);
+		}
+		if (dp[i][j] != -1) {
+			return dp[i][j];
+		}
+		return dp[i][j] = Math.max(stones[i] - majority(stones,i + 1,j,dp),stones[j] - majority(stones,i,j - 1,dp));
+	}
+	boolean stoneGame(int[] piles) {
+		int n = piles.length;
+		int[][] dp = new int[n][n];
+		for (int[] x: dp) {	
+			Arrays.fill(x,-1);
+		}
+		int maj = majority(piles,0,piles.length - 1,dp);
+		if (maj > 0) {
+			return true;
+		}
+		return false;
+	}
+}

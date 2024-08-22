@@ -1,0 +1,32 @@
+class Solution {
+	int MOD = (int) 1e9 + 7;
+	int numberOfPermutations(int n, int[][] requirements) {
+		Map<Integer, Integer> map = new HashMap<>();
+		int max = 0;
+		for (int[] req: requirements) {	
+			map.put(req[0],req[1]);
+			max = Math.max(max,req[1]);
+		}
+		long[][] dp = new long[n][max + 1];
+		for (long[] d: dp) {	
+			Arrays.fill(d,-1);
+		}
+		return (int) solve(n,0,0,map,dp) % MOD;
+	}
+	long solve(int n, int index, int inversions, Map<Integer, Integer> map, long[][] dp) {
+		if (index == n - 1) {
+			return map.get(index) == inversions ? 1 : 0;
+		}
+		if (inversions >= dp[0].length || (map.containsKey(index) && map.get(index) != inversions)) {
+			return 0;
+		}
+		if (dp[index][inversions] != -1) {
+			return dp[index][inversions];
+		}
+		long count = 0;
+		for (int i = inversions; i <= (index + 1); i++) {
+			count += solve(n,index + 1,i,map,dp);
+		}
+		return dp[index][inversions] = count % MOD;
+	}
+}

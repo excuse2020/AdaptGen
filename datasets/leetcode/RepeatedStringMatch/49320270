@@ -1,0 +1,37 @@
+class Solution {
+	void createDP(int[] dp, char[] str) {
+		for (int i = 0, j = 1; j < dp.length; j++) {
+			if (str[i] == str[j]) {
+				dp[j] = ++i;
+			} 
+			else if (str[i=(i != 0 ? dp[i - 1] : 0)] == str[j]) {
+				dp[j] = ++i;
+			}
+		}
+	}
+	int getCount(char[] str1, char[] str2, int[] dp) {
+		int i = 0, j = 0, m = str1.length, n = str2.length;
+		int maxlen = m + n - 1;
+		while (i <= maxlen && j < n) {
+			if (str1[i % m] == str2[j]) {
+				i++;
+				j++;
+			} 
+			else if (j > 0) {
+				j = dp[j - 1];
+			} 
+			else {
+				i++;
+			}
+		}
+		int count = (int) Math.ceil(i * 1.0 / m);
+		return j == n ? count : -1;
+	}
+	int repeatedStringMatch(String a, String b) {
+		char[] str1 = a.toCharArray();
+		char[] str2 = b.toCharArray();
+		int[] dp = new int[str2.length];
+		createDP(dp,str2);
+		return getCount(str1,str2,dp);
+	}
+}

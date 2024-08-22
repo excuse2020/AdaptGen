@@ -1,0 +1,73 @@
+class Solution {
+	Map<Integer, Set<Integer>> graph;
+	int[] indegree;
+	int k;
+	int min;
+	int n;
+	boolean[] taken;
+	void dfs(int total, int semester) {
+		if (total == n) {
+			min = Math.min(min,semester);
+			return;
+		}
+		for (var batch: nextBatches()) {	
+			take(batch);
+			dfs(total + batch.size(),semester + 1);
+			untake(batch);
+		}
+	}
+	int minNumberOfSemesters(int n, int[][] relations, int k) {
+		this.n = n;
+		this.k = k;
+		this.graph = new HashMap<Integer, Set<Integer>>();
+		this.indegree = new int[n + 1];
+		this.taken = new boolean[n + 1];
+		this.min = Integer.MAX_VALUE;
+		for (int i = 1; i <= n; i++) {
+			graph.put(i,new HashSet<>());
+		}
+		for (int[] r: relations) {	
+			graph.get(r[0]).add(r[1]);
+			indegree[r[1]]++;
+		}
+		dfs(0,0);
+		return min;
+	}
+	List<List<Integer>> nextBatches() {
+		List<List<Integer>> batch = new LinkedList<>();
+		List<Integer> available = IntStream.range(1,n + 1).filter((i) -> {!taken[i] && indegree[i] <= 0}).boxed().toList();
+		pick(batch,new ArrayList<>(),available,0,k);
+		return batch;
+	}
+	void pick(List<List<Integer>> all, List<Integer> cur, List<Integer> list, int start, int k) {
+		if (k >= list.size()) {
+			all.add(new ArrayList<>(list));
+			return;
+		}
+		if (k == 0) {
+			all.add(new ArrayList<>(cur));
+			return;
+		}
+		for (int i = start; i < list.size(); i++) {
+			cur.add(list.get(i));
+			pick(all,cur,list,i + 1,k - 1);
+			cur.remove(cur.size() - 1);
+		}
+	}
+	void take(List<Integer> courses) {
+		for (int c: courses) {	
+			taken[c] = true;
+			for (int next: graph.get(c)) {	
+				indegree[next]--;
+			}
+		}
+	}
+	void untake(List<Integer> courses) {
+		for (int c: courses) {	
+			taken[c] = false;
+			for (int next: graph.get(c)) {	
+				indegree[next]++;
+			}
+		}
+	}
+}

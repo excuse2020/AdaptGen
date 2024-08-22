@@ -1,0 +1,41 @@
+class Solution {
+	boolean bfs(Map<Integer, List<Integer>> adj, int index, int[] group) {
+		Queue<Integer> queue = new LinkedList<>();
+		queue.offer(index);
+		group[index] = 0;
+		while (!queue.isEmpty()) {
+			int node = queue.poll();
+			if (!adj.containsKey(node)) {
+				continue;
+			}
+			for (int neighbor: adj.get(node)) {	
+				if (group[neighbor] == group[node]) {
+					return false;
+				}
+				if (group[neighbor] == -1) {
+					group[neighbor] = 1 - group[node];
+					queue.add(neighbor);
+				}
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		Map<Integer, List<Integer>> adj = new HashMap<>();
+		for (int[] edge: dislikes) {	
+			int a = edge[0], b = edge[1];
+			adj.computeIfAbsent(a,(value) -> {new ArrayList<Integer>()}).add(b);
+			adj.computeIfAbsent(b,(value) -> {new ArrayList<Integer>()}).add(a);
+		}
+		int[] group = new int[n + 1];
+		Arrays.fill(group,-1);
+		for (int i = 1; i <= n; i++) {
+			if (group[i] == -1) {
+				if (!bfs(adj,i,group)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

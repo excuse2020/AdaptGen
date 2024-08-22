@@ -1,0 +1,40 @@
+class Solution {
+	ArrayList<Integer> list = new ArrayList<>();
+	void getRes(TreeNode root, int level) {
+		if (root == null) {
+			return;
+		}
+		if (list.size() < level + 1) {
+			list.add(root.val);
+		}
+		getRes(root.right,level + 1);
+		getRes(root.left,level + 1);
+	}
+	TreeNode getTree(int[] preOrder, int[] inOrder) {
+		if (preOrder.length == 0) {
+			return null;
+		}
+		TreeNode root = new TreeNode(preOrder[0]);
+		int mid = 0;
+		for (int i = 0; i < inOrder.length; i++, mid++) {
+			if (inOrder[i] == root.val) {
+				break;
+			}
+		}
+		root.left = getTree(Arrays.copyOfRange(preOrder,1,1 + mid),Arrays.copyOfRange(inOrder,0,mid));
+		root.right = getTree(Arrays.copyOfRange(preOrder,mid + 1,preOrder.length),Arrays.copyOfRange(inOrder,mid + 1,inOrder.length));
+		return root;
+	}
+	int[] solve(int[] preOrder, int[] inOrder) {
+		if (preOrder.length == 0) {
+			return null;
+		}
+		TreeNode root = getTree(preOrder,inOrder);
+		getRes(root,0);
+		int[] res = new int[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			res[i] = list.get(i);
+		}
+		return res;
+	}
+}

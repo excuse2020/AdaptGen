@@ -1,0 +1,33 @@
+class Solution {
+	TreeNode reConstructBinaryTree(int[] pre, int[] in) {
+		if (pre.length != 0 && in.length != 0) {
+			TreeNode treenode = new TreeNode(pre[0]);
+			int i = 0;
+			while (pre[0] != in[i]) {
+				i++;
+			}
+			int[] inLeft = new int[i];
+			int[] inRight = new int[in.length - i];
+			for (int j = 0; j < inLeft.length; j++) {
+				inLeft[j] = in[j];
+			}
+			for (int j = 0; j < inRight.length; j++) {
+				inRight[j] = in[j + inLeft.length + 1];
+			}
+			int[] preLeft = new int[i];
+			int[] preRight = new int[in.length - i];
+			for (int j = 0; j < preLeft.length; j++) {
+				preLeft[j] = pre[1 + j];
+			}
+			for (int j = 0; j < preRight.length; j++) {
+				preRight[j] = pre[j + preLeft.length + 1];
+			}
+			treenode.left = reConstructBinaryTree(preLeft,inLeft);
+			treenode.right = reConstructBinaryTree(preRight,inRight);
+			return treenode;
+		} 
+		else {
+			return null;
+		}
+	}
+}

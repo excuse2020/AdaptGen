@@ -1,0 +1,24 @@
+class Solution {
+	Integer[][][][] dp;
+	int minimumCost(int m, int n, int[] horizontalCut, int[] verticalCut) {
+		int max = Math.max(m,n);
+		dp = new Integer[max][max][max][max];
+		return solve(0,n - 1,0,m - 1,horizontalCut,verticalCut);
+	}
+	int solve(int i, int j, int k, int l, int[] h, int[] v) {
+		if ((j - i + 1) == 1 && (l - k + 1) == 1) {
+			return 0;
+		}
+		if (dp[i][j][k][l] != null) {
+			return dp[i][j][k][l];
+		}
+		int min = Integer.MAX_VALUE;
+		for (int cut = i; cut < j; cut++) {
+			min = Math.min(min,v[cut] + solve(i,cut,k,l,h,v));
+		}
+		for (int cut = k; cut < l; cut++) {
+			min = Math.min(min,h[cut] + solve(i,j,k,cut,h,v));
+		}
+		return dp[i][j][k][l] = min;
+	}
+}

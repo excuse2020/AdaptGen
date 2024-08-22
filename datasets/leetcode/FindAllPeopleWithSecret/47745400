@@ -1,0 +1,29 @@
+class Solution {
+	List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+		Set<Integer> ans = new HashSet<>();
+		int[] timeknown = new int[n];
+		Arrays.fill(timeknown,Integer.MAX_VALUE);
+		timeknown[firstPerson] = timeknown[0] = 0;
+		HashMap<Integer, List<int[]>> adj = new HashMap<>();
+		for (int[] it: meetings) {	
+			adj.computeIfAbsent(it[0],(k) -> {new ArrayList<>()}).add(new int{it[1], it[2]});
+			adj.computeIfAbsent(it[1],(k) -> {new ArrayList<>()}).add(new int{it[0], it[2]});
+		}
+		Queue<Integer> q = new LinkedList<>();
+		q.offer(firstPerson);
+		q.offer(0);
+		ans.add(firstPerson);
+		ans.add(0);
+		while (!q.isEmpty()) {
+			int curr = q.poll();
+			for (int[] it: adj.getOrDefault(curr,new ArrayList<>())) {	
+				if (it[1] >= timeknown[curr] && timeknown[it[0]] > it[1]) {
+					timeknown[it[0]] = it[1];
+					ans.add(it[0]);
+					q.offer(it[0]);
+				}
+			}
+		}
+		return new ArrayList<>(ans);
+	}
+}

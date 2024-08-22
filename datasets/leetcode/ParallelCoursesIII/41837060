@@ -1,0 +1,35 @@
+class Solution {
+	int minimumTime(int n, int[][] relations, int[] time) {
+		List<List<List<Integer>>> adj = new ArrayList<>();
+		int ans = 0;
+		int[] dist = new int[n + 1], in = new int[n + 1];
+		for (int i = 0; i <= n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int[] relation: relations) {	
+			adj.get(relation[0]).add(List.of(relation[1],time[relation[0] - 1]));
+			in[relation[1]]++;
+		}
+		Queue<Integer> queue = new LinkedList<>();
+		for (int i = 1; i <= n; i++) {
+			dist[i] = in[i] == 0 ? 0 : Integer.MIN_VALUE;
+			if (in[i] == 0) {
+				queue.offer(i);
+			}
+		}
+		while (!queue.isEmpty()) {
+			int node = queue.poll();
+			if (adj.get(node).isEmpty()) {
+				ans = Math.max(dist[node] + time[node - 1],ans);
+			}
+			for (List<Integer> neighbourD: adj.get(node)) {	
+				dist[neighbourD.get(0)] = Math.max(dist[neighbourD.get(0)],neighbourD.get(1) + dist[node]);
+				in[neighbourD.get(0)]--;
+				if (in[neighbourD.get(0)] == 0) {
+					queue.offer(neighbourD.get(0));
+				}
+			}
+		}
+		return ans;
+	}
+}

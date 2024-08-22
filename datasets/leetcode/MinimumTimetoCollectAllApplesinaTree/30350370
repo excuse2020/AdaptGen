@@ -1,0 +1,40 @@
+class Solution {
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		HashSet<Integer> hs = new HashSet<>();
+		hs.add(0);
+		for (var v: edges) {	
+			int start = v[0];
+			int end = v[1];
+			if (hs.contains(start)) {
+				graph.get(start).add(end);
+			} 
+			else {
+				graph.get(end).add(start);
+			}
+			hs.add(end);
+		}
+		int ans = new int[1];
+		recur(graph,ans,0,hasApple);
+		return ans[0];
+	}
+	boolean recur(ArrayList<ArrayList<Integer>> graph, int ans, int curr, List<Boolean> check) {
+		boolean temp = false;
+		for (int p: graph.get(curr)) {	
+			if (check.get(p)) {
+				temp = true;
+				ans[0] += 2;
+			}
+			temp = temp | recur(graph,ans,p,check);
+		}
+		if (curr != 0) {
+			if (temp && !check.get(curr)) {
+				ans[0] += 2;
+			}
+		}
+		return temp;
+	}
+}

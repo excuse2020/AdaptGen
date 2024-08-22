@@ -1,0 +1,32 @@
+class Solution {
+	int mod = (int) 1000000007;
+	int checkRecord(int n) {
+		int dp = new int[n + 1][2][3];
+		for (int[][] matrix: dp) {	
+			for (int[] row: matrix) {	
+				Arrays.fill(row,-1);
+			}
+		}
+		return solve(n,0,0,dp);
+	}
+	int solve(int n, int cntAb, int cntConsLate, int[][][] dp) {
+		if (n == 0) {
+			if (cntAb < 2 && cntConsLate < 3) {
+				return 1;
+			} 
+			else {
+				return 0;
+			}
+		}
+		if (cntAb >= 2 || cntConsLate >= 3) {
+			return 0;
+		}
+		if (dp[n][cntAb][cntConsLate] != -1) {
+			return dp[n][cntAb][cntConsLate];
+		}
+		int opt1 = solve(n - 1,cntAb + 1,0,dp);
+		int opt2 = solve(n - 1,cntAb,cntConsLate + 1,dp);
+		int opt3 = solve(n - 1,cntAb,0,dp);
+		return dp[n][cntAb][cntConsLate] = (opt1 + (opt2 + opt3) % mod) % mod;
+	}
+}

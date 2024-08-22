@@ -1,0 +1,22 @@
+class Solution {
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		int n = inorder.length;
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			map.put(inorder[i],i);
+		}
+		return helper(postorder,map,0,n - 1,0,n - 1);
+	}
+	TreeNode helper(int[] post, HashMap<Integer, Integer> map, int inStart, int inEnd, int postStart, int postEnd) {
+		if (inStart > inEnd) {
+			return null;
+		}
+		int rootVal = post[postEnd];
+		int locationOfRoot = map.get(rootVal);
+		int numOfLeftNodes = locationOfRoot - inStart;
+		TreeNode node = new TreeNode(rootVal);
+		node.left = helper(post,map,inStart,locationOfRoot - 1,postStart,postStart + numOfLeftNodes - 1);
+		node.right = helper(post,map,locationOfRoot + 1,inEnd,postStart + numOfLeftNodes,postEnd - 1);
+		return node;
+	}
+}

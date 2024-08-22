@@ -1,0 +1,54 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		if (head1 == null) {
+			return head2;
+		}
+		if (head2 == null) {
+			return head1;
+		}
+		Stack<ListNode> stack1 = putNodesIntoStack(head1);
+		Stack<ListNode> stack2 = putNodesIntoStack(head2);
+		Stack<ListNode> result = new Stack<ListNode>();
+		int carryOver = 0;
+		while (!stack1.empty() || !stack2.empty()) {
+			int total = carryOver;
+			if (!stack1.empty()) {
+				total += stack1.pop().val;
+			}
+			if (!stack2.empty()) {
+				total += stack2.pop().val;
+			}
+			carryOver = total / 10;
+			ListNode currentNode = new ListNode(total % 10);
+			result.push(currentNode);
+		}
+		if (carryOver != 0) {
+			result.push(new ListNode(carryOver));
+		}
+		return buildLinkedListByStack(result);
+	}
+	ListNode buildLinkedListByStack(Stack<ListNode> stack) {
+		if (stack == null || stack.empty()) {
+			return null;
+		}
+		ListNode head = stack.pop();
+		ListNode currentNode = head;
+		ListNode nextNode;
+		while (!stack.empty()) {
+			nextNode = stack.pop();
+			currentNode.next = nextNode;
+			nextNode.next = null;
+			currentNode = nextNode;
+		}
+		return head;
+	}
+	Stack<ListNode> putNodesIntoStack(ListNode head) {
+		ListNode pointer = head;
+		Stack<ListNode> stack = new Stack<ListNode>();
+		while (pointer != null) {
+			stack.push(pointer);
+			pointer = pointer.next;
+		}
+		return stack;
+	}
+}

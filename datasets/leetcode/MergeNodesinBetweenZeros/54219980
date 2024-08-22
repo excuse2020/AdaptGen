@@ -1,0 +1,36 @@
+class Solution {
+	ListNode getNewList(Queue<Integer> q) {
+		var temp = new ListNode();
+		var head = temp;
+		while (q.size() > 1) {
+			temp.val = q.poll();
+			temp.next = new ListNode();
+			temp = temp.next;
+		}
+		temp.val = q.poll();
+		return head;
+	}
+	Queue<Integer> getSumQueue(ListNode head) {
+		Queue<Integer> q = new LinkedList<>();
+		ListNode cur = head.next;
+		int sum = 0;
+		while (cur != null) {
+			if (cur.val == 0 && sum > 0) {
+				q.offer(sum);
+				sum = 0;
+			} 
+			else {
+				sum += cur.val;
+			}
+			cur = cur.next;
+		}
+		return q;
+	}
+	ListNode mergeNodes(ListNode head) {
+		if (head == null) {
+			return head;
+		}
+		var q = getSumQueue(head);
+		return getNewList(q);
+	}
+}

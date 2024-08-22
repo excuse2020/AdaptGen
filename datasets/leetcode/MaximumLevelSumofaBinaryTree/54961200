@@ -1,0 +1,28 @@
+class Solution {
+	void inorderBTree(TreeNode root, int level, LinkedHashMap<Integer, Integer> levelSumMap) {
+		if (root == null) {
+			return;
+		}
+		inorderBTree(root.left,level + 1,levelSumMap);
+		if (!levelSumMap.containsKey(level)) {
+			levelSumMap.put(level,root.val);
+		} 
+		else {
+			levelSumMap.put(level,levelSumMap.get(level) + root.val);
+		}
+		inorderBTree(root.right,level + 1,levelSumMap);
+	}
+	int maxLevelSum(TreeNode root) {
+		LinkedHashMap<Integer, Integer> levelSumMap = new LinkedHashMap<Integer, Integer>();
+		int maxSum = Integer.MIN_VALUE;
+		int level = 0;
+		inorderBTree(root,1,levelSumMap);
+		for (Map.Entry<Integer, Integer> e: levelSumMap.entrySet()) {	
+			if (maxSum <= e.getValue()) {
+				maxSum = e.getValue();
+				level = e.getKey();
+			}
+		}
+		return level;
+	}
+}

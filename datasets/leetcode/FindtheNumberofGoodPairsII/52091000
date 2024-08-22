@@ -1,0 +1,30 @@
+class Solution {
+	long numberOfPairs(int[] nums1, int[] nums2, int k) {
+		int m = nums1.length;
+		int n = nums2.length;
+		long count = 0;
+		TreeMap<Long, Integer> map1 = new TreeMap<>();
+		for (long num: nums1) {	
+			map1.put(num,map1.getOrDefault(num,0) + 1);
+		}
+		HashMap<Long, Integer> map2 = new HashMap<>();
+		for (long num: nums2) {	
+			map2.put(num,map2.getOrDefault(num,0) + 1);
+		}
+		for (long key: map2.keySet()) {	
+			long target = key * k;
+			if (target == 1) {
+				count += m * (long) map2.get(key);
+			} 
+			else {
+				long max = map1.lastKey() / target;
+				for (long j = 1; j <= max; j++) {
+					if (map1.containsKey((long) (j * target))) {
+						count = (count + (long) map1.get((long) (j * target)) * (long) map2.get(key));
+					}
+				}
+			}
+		}
+		return count;
+	}
+}

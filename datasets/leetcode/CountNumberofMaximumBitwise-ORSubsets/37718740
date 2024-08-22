@@ -1,0 +1,47 @@
+class Solution {
+	void DFS(int ind, int[] nums, List<Integer> ds, List<Integer> OR) {
+		if (ind == nums.length) {
+			int a = ListOr(ds);
+			OR.add(a);
+			return;
+		}
+		ds.add(nums[ind]);
+		DFS(ind + 1,nums,ds,OR);
+		ds.remove(ds.size() - 1);
+		DFS(ind + 1,nums,ds,OR);
+	}
+	int ListOr(List<Integer> OR) {
+		if (OR == null || OR.isEmpty()) {
+			return 0;
+		}
+		int result = OR.get(0);
+		for (int i = 1; i < OR.size(); i++) {
+			result |= OR.get(i);
+		}
+		return result;
+	}
+	int countMaxOrSubsets(int[] nums) {
+		List<Integer> ds = new ArrayList<>();
+		List<Integer> OR = new ArrayList<>();
+		DFS(0,nums,ds,OR);
+		return maxcount(OR);
+	}
+	int maxcount(List<Integer> ds) {
+		if (ds == null || ds.isEmpty()) {
+			return 0;
+		}
+		int maxElement = ds.get(0);
+		int maxCount = 1;
+		for (int i = 1; i < ds.size(); i++) {
+			int currentElement = ds.get(i);
+			if (currentElement > maxElement) {
+				maxElement = currentElement;
+				maxCount = 1;
+			} 
+			else if (currentElement == maxElement) {
+				maxCount++;
+			}
+		}
+		return maxCount;
+	}
+}

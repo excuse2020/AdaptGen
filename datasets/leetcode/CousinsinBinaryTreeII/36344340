@@ -1,0 +1,42 @@
+class Solution {
+	TreeNode replaceValueInTree(TreeNode root) {
+		Map<Integer, Integer> map = new HashMap<>();
+		Queue<List<TreeNode>> queue = new LinkedList<>();
+		List<TreeNode> listRoot = new ArrayList<>();
+		listRoot.add(root);
+		queue.add(listRoot);
+		int sum = 0;
+		for (TreeNode node: listRoot) {	
+			sum += node.val;
+		}
+		map.put(0,sum);
+		int level = -1;
+		while (!queue.isEmpty()) {
+			int n = queue.size();
+			level++;
+			for (int i = 0; i < n; i++) {
+				List<TreeNode> list = queue.poll();
+				int localSum = 0;
+				for (TreeNode node: list) {	
+					localSum += node.val;
+				}
+				for (TreeNode node: list) {	
+					node.val = map.get(level) - localSum;
+					List<TreeNode> list1 = new ArrayList<>();
+					if (node.left != null) {
+						map.put(level + 1,map.getOrDefault(level + 1,0) + node.left.val);
+						list1.add(node.left);
+					}
+					if (node.right != null) {
+						map.put(level + 1,map.getOrDefault(level + 1,0) + node.right.val);
+						list1.add(node.right);
+					}
+					if (list1.size() > 0) {
+						queue.add(list1);
+					}
+				}
+			}
+		}
+		return root;
+	}
+}

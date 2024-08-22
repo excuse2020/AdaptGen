@@ -1,0 +1,55 @@
+class Solution {
+	long dfs(int src, int parent, int level, int[] vis, List<Integer>[] g, int[] amt) {
+		long cost = 0;
+		if (vis[src] == 0) {
+			cost = cost + amt[src];
+		} 
+		else if (vis[src] > level) {
+			cost = cost + amt[src];
+		} 
+		else if (vis[src] == level) {
+			cost = cost + amt[src] / 2;
+		}
+		long current = -1000000000;
+		for (int n: g[src]) {	
+			if (n != parent) {
+				current = Math.max(dfs(n,src,level + 1,vis,g,amt),current);
+			}
+		}
+		if (current == -1000000000) {
+			return cost;
+		}
+		return cost + current;
+	}
+	int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+		int n = amount.length;
+		List<Integer>[] g = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			g[i] = new ArrayList<>();
+		}
+		for (int[] edge: edges) {	
+			g[edge[0]].add(edge[1]);
+			g[edge[1]].add(edge[0]);
+		}
+		int cnt = 0;
+		int[] vis = new int[n];
+		moveToZero(bob,-1,1,vis,g);
+		return (int) dfs(0,-1,1,vis,g,amount);
+	}
+	boolean moveToZero(int src, int parent, int level, int[] vis, List<Integer>[] g) {
+		if (src == 0) {
+			vis[src] = level;
+			return true;
+		}
+		vis[src] = level;
+		for (int n: g[src]) {	
+			if (parent != n) {
+				if (moveToZero(n,src,level + 1,vis,g) == true) {
+					return true;
+				}
+			}
+		}
+		vis[src] = 0;
+		return false;
+	}
+}

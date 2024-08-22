@@ -1,0 +1,70 @@
+class Solution {
+	int[] parent;
+	int[] rank;
+	int find(int node) {
+		if (node == parent[node]) {
+			return node;
+		}
+		return parent[node] = find(parent[node]);
+	}
+	int[] findRedundantDirectedConnection(int[][] edges) {
+		int n = edges.length;
+		int[] indegree = new int[n + 1];
+		int bl1 = -1;
+		int bl2 = -1;
+		Arrays.fill(indegree,-1);
+		for (int i = 0; i < edges.length; i++) {
+			int u = edges[i][0];
+			int v = edges[i][1];
+			if (indegree[v] == -1) {
+				indegree[v] = i;
+			} 
+			else {
+				bl1 = i;
+				bl2 = indegree[v];
+				break;
+			}
+		}
+		parent = new int[n + 1];
+		rank = new int[n + 1];
+		for (int i = 1; i <= n; i++) {
+			parent[i] = i;
+			rank[i] = 1;
+		}
+		for (int i = 0; i < edges.length; i++) {
+			if (i == bl1) {
+				continue;
+			}
+			int u = edges[i][0];
+			int v = edges[i][1];
+			boolean flag = union(u,v);
+			if (flag == true) {
+				if (bl1 == -1) {
+					return edges[i];
+				} 
+				else {
+					return edges[bl2];
+				}
+			}
+		}
+		return edges[bl1];
+	}
+	boolean union(int u, int v) {
+		int lu = find(u);
+		int lv = find(v);
+		if (lu != lv) {
+			if (rank[lu] > rank[lv]) {
+				parent[lv] = lu;
+			} 
+			else if (rank[lv] > rank[lu]) {
+				parent[lu] = lv;
+			} 
+			else {
+				parent[lv] = lu;
+				rank[lu]++;
+			}
+			return false;
+		}
+		return true;
+	}
+}

@@ -1,0 +1,74 @@
+class Solution {
+	String res = "";
+	void addAll(List<String> allList) {
+		for (int i = 0; i < allList.size(); i++) {
+			String a1 = allList.get(i);
+			if (res.length() == 0) {
+				res = a1;
+				continue;
+			}
+			String a2 = res;
+			if (a1.length() <= a2.length()) {
+				String tmp = a1;
+				a1 = a2;
+				a2 = tmp;
+			}
+			int location = 0;
+			char[] chars = new char[a1.length()];
+			for (int m = a1.length() - 1; m >= 0; m--) {
+				int d1 = a1.charAt(m) - '0';
+				int j = m - a1.length() + a2.length();
+				int d2 = 0;
+				if (j >= 0) {
+					d2 = a2.charAt(j) - '0';
+				}
+				int curRes = (d1 + d2) + location;
+				location = curRes / 10;
+				int tmp = curRes % 10;
+				chars[m] = (char) (tmp + '0');
+			}
+			String resData = String.valueOf(chars);
+			if (location > 0) {
+				resData = location + resData;
+			}
+			res = resData;
+		}
+	}
+	String solve(String s, String t) {
+		if (s.equals("0") || t.equals("0")) {
+			res = "0";
+			return res;
+		}
+		if (s.length() <= t.length()) {
+			String temp = s;
+			s = t;
+			t = temp;
+		}
+		List<String> allList = new ArrayList<>();
+		for (int j = t.length() - 1; j >= 0; j--) {
+			int location = 0;
+			int d2 = t.charAt(j) - '0';
+			char[] chars = new char[s.length()];
+			for (int i = s.length() - 1; i >= 0; i--) {
+				int d1 = s.charAt(i) - '0';
+				int curRes = Math.multiplyExact(d1,d2) + location;
+				location = curRes / 10;
+				int tmp = curRes % 10;
+				chars[i] = (char) (tmp + '0');
+			}
+			String resData = String.valueOf(chars);
+			if (location > 0) {
+				resData = location + resData;
+			}
+			int has0 = t.length() - j;
+			if (has0 > 0) {
+				for (int m = 0; m < has0 && m >= 0; m++) {
+					resData += "0";
+				}
+			}
+			allList.add(resData);
+		}
+		addAll(allList);
+		return res;
+	}
+}

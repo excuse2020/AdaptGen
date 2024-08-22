@@ -1,0 +1,32 @@
+class Solution {
+	TreeNode makeTree(ListNode head, int size) {
+		if (size <= 0) {
+			return null;
+		}
+		if (size == 1) {
+			return new TreeNode(head.val);
+		}
+		int rootSize = size / 2 + 1;
+		int count = 0;
+		ListNode headCopy = head;
+		while (rootSize >= 2 && count != rootSize - 2 && headCopy != null) {
+			count++;
+			headCopy = headCopy.next;
+		}
+		TreeNode root = new TreeNode(headCopy.next.val);
+		ListNode right = headCopy.next.next;
+		headCopy.next = null;
+		root.left = makeTree(head,rootSize - 1);
+		root.right = makeTree(right,size - rootSize);
+		return root;
+	}
+	TreeNode sortedListToBST(ListNode head) {
+		ListNode headCopy = head;
+		int size = 0;
+		while (headCopy != null) {
+			size++;
+			headCopy = headCopy.next;
+		}
+		return makeTree(head,size);
+	}
+}

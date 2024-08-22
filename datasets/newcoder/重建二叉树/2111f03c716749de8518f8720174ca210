@@ -1,0 +1,22 @@
+class Solution {
+	TreeNode reConstructBinaryTree(int[] preOrder, int[] vinOrder) {
+		int num = preOrder.length;
+		if (num == 0) {
+			return null;
+		}
+		int rootVal = preOrder[0];
+		TreeNode root = new TreeNode(rootVal);
+		int left = 0;
+		while (vinOrder[left] != rootVal) {
+			left++;
+		}
+		if (left > 0) {
+			root.left = reConstructBinaryTree(Arrays.copyOfRange(preOrder,1,left + 1),Arrays.copyOfRange(vinOrder,0,left));
+		}
+		int right = num - (left + 1);
+		if (right > 0) {
+			root.right = reConstructBinaryTree(Arrays.copyOfRange(preOrder,left + 1,num),Arrays.copyOfRange(vinOrder,left + 1,num));
+		}
+		return root;
+	}
+}

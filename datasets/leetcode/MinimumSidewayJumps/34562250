@@ -1,0 +1,97 @@
+class Solution {
+	int mod = 1000000000;
+	int helperMem(int[] obstacles, int lane, int index, int[][] dp) {
+		int n = obstacles.length;
+		if (index == n - 1) {
+			return 0;
+		}
+		if (dp[lane][index] != -1) {
+			return dp[lane][index];
+		}
+		if (obstacles[index + 1] != lane) {
+			return helperMem(obstacles,lane,index + 1,dp);
+		} 
+		else {
+			int ans = Integer.MAX_VALUE;
+			for (int i = 1; i <= 3; i++) {
+				if (lane != i && obstacles[index] != i) {
+					ans = Math.min(ans,1 + helperMem(obstacles,i,index,dp));
+				}
+			}
+			return dp[lane][index] = ans;
+		}
+	}
+	int helperRec(int[] obstacles, int lane, int index) {
+		int n = obstacles.length;
+		if (index == n - 1) {
+			return 0;
+		}
+		if (obstacles[index + 1] != lane) {
+			return helperRec(obstacles,lane,index + 1);
+		} 
+		else {
+			int ans = Integer.MAX_VALUE;
+			for (int i = 1; i <= 3; i++) {
+				if (lane != i && obstacles[index] != i) {
+					ans = Math.min(ans,1 + helperRec(obstacles,i,index));
+				}
+			}
+			return ans;
+		}
+	}
+	int helperSO(int[] obstacles) {
+		int n = obstacles.length;
+		int[] curr = new int[4];
+		int[] next = new int[4];
+		Arrays.fill(curr,mod);
+		Arrays.fill(next,0);
+		for (int index = n - 2; index >= 0; index--) {
+			for (int lane = 1; lane <= 3; lane++) {
+				if (obstacles[index + 1] != lane) {
+					curr[lane] = next[lane];
+				} 
+				else {
+					int ans = mod;
+					for (int i = 1; i <= 3; i++) {
+						if (lane != i && obstacles[index] != i) {
+							ans = Math.min(ans,1 + next[i]);
+						}
+					}
+					curr[lane] = ans;
+				}
+			}
+			next = curr;
+		}
+		return Math.min(next[1] + 1,Math.min(next[2],next[3] + 1));
+	}
+	int helperTab(int[] obstacles) {
+		int n = obstacles.length;
+		int[][] dp = new int[4][obstacles.length];
+		for (int row: dp) {	
+			Arrays.fill(row,mod);
+		}
+		for (int i = 0; i <= 3; i++) {
+			dp[i][n - 1] = 0;
+		}
+		for (int index = n - 2; index >= 0; index--) {
+			for (int lane = 1; lane <= 3; lane++) {
+				if (obstacles[index + 1] != lane) {
+					dp[lane][index] = dp[lane][index + 1];
+				} 
+				else {
+					int ans = mod;
+					for (int i = 1; i <= 3; i++) {
+						if (lane != i && obstacles[index] != i) {
+							ans = Math.min(ans,1 + dp[i][index + 1]);
+						}
+					}
+					dp[lane][index] = ans;
+				}
+			}
+		}
+		return Math.min(dp[1][0] + 1,Math.min(dp[2][0],dp[3][0] + 1));
+	}
+	int minSideJumps(int[] obstacles) {
+		return helperSO(obstacles);
+	}
+}

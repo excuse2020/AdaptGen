@@ -1,0 +1,30 @@
+class Solution {
+	long maximumSumOfHeights(List<Integer> maxHeights) {
+		long ans = 0;
+		for (int k = 0; k < maxHeights.size(); k++) {
+			Stack<Integer> stack = new Stack<>();
+			long sum = 0;
+			for (int i = k; i >= 0; i--) {
+				while (!stack.isEmpty() && maxHeights.get(i) <= stack.peek()) {
+					stack.pop();
+				}
+				sum += stack.isEmpty() ? maxHeights.get(i) : stack.peek();
+				if (stack.isEmpty() || maxHeights.get(i) < stack.peek()) {
+					stack.push(maxHeights.get(i));
+				}
+			}
+			stack.clear();
+			for (int i = k + 1; i < maxHeights.size(); i++) {
+				while (!stack.isEmpty() && maxHeights.get(i) <= stack.peek()) {
+					stack.pop();
+				}
+				sum += stack.isEmpty() ? maxHeights.get(i) : stack.peek();
+				if (stack.isEmpty() || maxHeights.get(i) < stack.peek()) {
+					stack.push(maxHeights.get(i));
+				}
+			}
+			ans = Math.max(ans,sum);
+		}
+		return ans;
+	}
+}

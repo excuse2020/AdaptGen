@@ -1,0 +1,54 @@
+class Solution {
+	List<List<Integer>> levelOrder(TreeNode root) {
+		List<List<Integer>> levels = new ArrayList<List<Integer>>();
+		if (root == null) {
+			return levels;
+		}
+		Queue<TreeNode> q = new LinkedList<TreeNode>();
+		q.add(root);
+		while (!q.isEmpty()) {
+			int size = q.size();
+			List<Integer> level = new ArrayList<Integer>();
+			for (int i = 0; i < size; i++) {
+				TreeNode p = q.poll();
+				level.add(p.val);
+				if (p.left != null) {
+					q.add(p.left);
+				}
+				if (p.right != null) {
+					q.add(p.right);
+				}
+			}
+			levels.add(level);
+		}
+		return levels;
+	}
+	int maxLevelSum(TreeNode root) {
+		int max_sum_level = 0;
+		if (root == null) {
+			return max_sum_level;
+		}
+		List<List<Integer>> nodes = new ArrayList<List<Integer>>();
+		nodes = levelOrder(root);
+		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+		int level = 1;
+		int maxValue = Integer.MIN_VALUE;
+		for (List<Integer> list: nodes) {	
+			int sum = 0;
+			for (int num: list) {	
+				sum = sum + num;
+			}
+			map.put(level,sum);
+			level++;
+		}
+		System.out.println(map);
+		for (Map.Entry<Integer, Integer> entry: map.entrySet()) {	
+			int value = entry.getValue();
+			if (value > maxValue) {
+				maxValue = value;
+				max_sum_level = entry.getKey();
+			}
+		}
+		return max_sum_level;
+	}
+}

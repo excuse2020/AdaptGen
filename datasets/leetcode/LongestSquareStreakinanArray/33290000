@@ -1,0 +1,26 @@
+class Solution {
+	int longestSquareStreak(int[] nums) {
+		Arrays.sort(nums);
+		int n = nums.length;
+		int j = 0;
+		for (int i = 1; i < n; i++) {
+			if (nums[i] != nums[j]) {
+				j++;
+				nums[j] = nums[i];
+			}
+		}
+		n = j + 1;
+		int[] dp = new int[nums[n - 1] + 1];
+		Arrays.fill(dp,0);
+		int maxNum = nums[n - 1];
+		for (int i = n - 1; i >= 0; i--) {
+			dp[nums[i]] = 1;
+			long squaredNum = (long) nums[i] * nums[i];
+			if (squaredNum <= maxNum) {
+				dp[nums[i]] += dp[(int)squaredNum];
+			}
+		}
+		int ans = Arrays.stream(dp).max().getAsInt();
+		return ans < 2 ? -1 : ans;
+	}
+}

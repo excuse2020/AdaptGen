@@ -1,0 +1,38 @@
+class Solution {
+	int dp;
+	int helper(int stones, int idx, int flag) {
+		if (idx >= stones.length) {
+			return 0;
+		}
+		if (dp[idx][flag] != Integer.MIN_VALUE) {
+			return dp[idx][flag];
+		}
+		int res = (flag == 0) ? -Integer.MIN_VALUE : Integer.MAX_VALUE;
+		int sum = 0;
+		for (int k = 1; k <= Math.min(stones.length - idx,3); k++) {
+			sum += stones[idx + k - 1];
+			if (flag == 0) {
+				res = Math.max(res,sum + helper(stones,idx + k,flag ^ 1));
+			} 
+			else {
+				res = Math.min(res,helper(stones,idx + k,flag ^ 1));
+			}
+		}
+		return dp[idx][flag] = res;
+	}
+	String stoneGameIII(int[] stoneValue) {
+		dp = new int[stoneValue.length][2];
+		for (var a: dp) {	
+			Arrays.fill(a,Integer.MIN_VALUE);
+		}
+		int sa = helper(stoneValue,0,0);
+		int sum = 0;
+		for (var s: stoneValue) {	
+			sum += s;
+		}
+		if (sa == sum - sa) {
+			return "Tie";
+		}
+		return sa > sum - sa ? "Alice" : "Bob";
+	}
+}

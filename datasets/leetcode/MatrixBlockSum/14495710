@@ -1,0 +1,36 @@
+class Solution {
+	int n, m;
+	int getValue(int[][] mat, int r, int c) {
+		if (r < 0 || r > n - 1 || c < 0 || c > m - 1) {
+			return 0;
+		}
+		return mat[r][c];
+	}
+	int[][] matrixBlockSum(int[][] mat, int k) {
+		n = mat.length;
+		m = mat[0].length;
+		if (n == 1 && m == 1) {
+			return mat;
+		}
+		int[][] sum = new int[n][m];
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				if (j == 0) {
+					for (int x = i - k; x <= i + k; x++) {
+						for (int y = j - k; y <= j + k; y++) {
+							sum[i][j] += getValue(mat,x,y);
+						}
+					}
+				}
+				if (j < m - 1) {
+					sum[i][j + 1] = sum[i][j];
+					for (int x = i - k; x <= i + k; x++) {
+						sum[i][j + 1] -= getValue(mat,x,j - k);
+						sum[i][j + 1] += getValue(mat,x,j + k);
+					}
+				}
+			}
+		}
+		return sum;
+	}
+}

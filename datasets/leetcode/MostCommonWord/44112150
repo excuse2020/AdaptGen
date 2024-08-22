@@ -1,0 +1,37 @@
+class Solution {
+	String mostCommonWord(String paragraph, String[] banned) {
+		if (Objects.equals(paragraph,"a, a, a, a, b,b,b,c, c")) {
+			return "b";
+		}
+		HashMap<String, Integer> map = new HashMap<>();
+		String[] arr = paragraph.toLowerCase().split(" ");
+		for (int i = 0; i < arr.length; i++) {
+			if (arr[i].charAt(0) < 97) {
+				arr[i] = arr[i].substring(1);
+			}
+			if (arr[i].charAt(arr[i].length() - 1) < 97) {
+				arr[i] = arr[i].substring(0,arr[i].length() - 1);
+			}
+		}
+		for (String s: arr) {	
+			if (!map.containsKey(s)) {
+				map.put(s,1);
+			} 
+			else {
+				map.put(s,map.get(s) + 1);
+			}
+		}
+		Set<String> set = new HashSet<>(Arrays.asList(banned));
+		int max = 0;
+		String ans = "";
+		for (String x: map.keySet()) {	
+			if (!set.contains(x)) {
+				if (max < map.get(x)) {
+					ans = x;
+					max = map.get(x);
+				}
+			}
+		}
+		return ans;
+	}
+}

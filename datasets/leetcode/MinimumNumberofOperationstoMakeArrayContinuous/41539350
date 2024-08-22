@@ -1,0 +1,38 @@
+class Solution {
+	boolean check(int mid, int[] nums, int un) {
+		int fast = mid - 1;
+		int slow = 0;
+		while (fast < un) {
+			if (nums[fast] - nums[slow] <= nums.length - 1) {
+				return true;
+			}
+			++fast;
+			++slow;
+		}
+		return false;
+	}
+	int minOperations(int[] nums) {
+		int ans = 0;
+		int n = nums.length;
+		int un = 1;
+		Arrays.sort(nums);
+		for (int i = 1; i < nums.length; ++i) {
+			if (nums[i] != nums[i - 1]) {
+				nums[un++] = nums[i];
+			}
+		}
+		int low = 1, high = un;
+		ans = 0;
+		while (low <= high) {
+			int mid = low + high >> 1;
+			if (check(mid,nums,un)) {
+				ans = Math.max(ans,mid);
+				low = mid + 1;
+			} 
+			else {
+				high = mid - 1;
+			}
+		}
+		return n - ans;
+	}
+}

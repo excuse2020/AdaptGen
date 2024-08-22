@@ -1,0 +1,52 @@
+class Solution {
+	int[][] buildLcp(char[] s, int n) {
+		var res = new int[n][n];
+		for (int r = n - 1; r >= 0; r--) {
+			for (int c = n - 1; c >= 0; c--) {
+				if (s[r] == s[c]) {
+					res[r][c] = 1;
+					if (r + 1 < n && c + 1 < n) {
+						res[r][c] += res[r + 1][c + 1];
+					}
+				}
+			}
+		}
+		return res;
+	}
+	String findTheString(int[][] lcp) {
+		int n = lcp.length;
+		if (!isDiag(lcp,n)) {
+			return "";
+		}
+		if (!isLeq(lcp,n)) {
+			return "";
+		}
+		var w = new char[n];
+	}
+	boolean isDiag(int[][] lcp, int n) {
+		for (int r = 0; r < n; r++) {
+			for (int c = r; c < n; c++) {
+				if (lcp[r][c] != lcp[c][r]) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	boolean isLeq(int[][] lcp, int n) {
+		for (int r = 0; r < n; r++) {
+			int remRow = n - r;
+			for (int c = 0; c < n; c++) {
+				int remCol = n - c;
+				var v = lcp[r][c];
+				if (v > remRow || v > remCol) {
+					return false;
+				}
+				if (r == c && v != remRow) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

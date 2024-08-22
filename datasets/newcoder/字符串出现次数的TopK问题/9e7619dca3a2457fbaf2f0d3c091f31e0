@@ -1,0 +1,32 @@
+class Solution {
+	String[][] topKstrings(String[] strings, int k) {
+		String[][] res = new String[k][2];
+		HashMap<String, Integer> map = new HashMap<>();
+		for (int i = 0; i < strings.length; i++) {
+			if (map.containsKey(strings[i])) {
+				map.put(strings[i],map.get(strings[i]) + 1);
+			} 
+			else {
+				map.put(strings[i],1);
+			}
+		}
+		PriorityQueue<Map.Entry<String, Integer>> pq = new PriorityQueue<>((o1, o2) -> {o1.getValue().equals(o2.getValue()) ? o2.getKey().compareTo(o1.getKey()) : o1.getValue() - o2.getValue()});
+		int size = 0;
+		for (Map.Entry<String, Integer> m: map.entrySet()) {	
+			if (size < k) {
+				pq.offer(m);
+				size++;
+			} 
+			else if ((m.getValue().equals(pq.peek().getValue()) ? pq.peek().getKey().compareTo(m.getKey()) : m.getValue() - pq.peek().getValue()) > 0) {
+				pq.poll();
+				pq.offer(m);
+			}
+		}
+		for (int i = k - 1; i >= 0; i--) {
+			Map.Entry<String, Integer> entry = (Map.Entry) pq.poll();
+			res[i][0] = entry.getKey();
+			res[i][1] = String.valueOf(entry.getValue());
+		}
+		return res;
+	}
+}

@@ -1,0 +1,36 @@
+class Solution {
+	int leftCount = 0, rightCount = 0;
+	TreeNode playerOneNode = null;
+	boolean btreeGameWinningMove(TreeNode root, int n, int x) {
+		if (root == null || isLeaf(root)) {
+			return false;
+		}
+		findNode(root,x);
+		leftCount = countNodes(playerOneNode.left);
+		rightCount = countNodes(playerOneNode.right);
+		return canPlayerTwoWin(n);
+	}
+	boolean canPlayerTwoWin(int all) {
+		return (leftCount > (all - leftCount)) || (rightCount > (all - rightCount));
+	}
+	int countNodes(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		return 1 + countNodes(root.left);
+	}
+	void findNode(TreeNode root, int searchValue) {
+		if (root == null) {
+			return;
+		}
+		if (root.val == searchValue) {
+			playerOneNode = root;
+			return;
+		}
+		findNode(root.left,searchValue);
+		findNode(root.right,searchValue);
+	}
+	boolean isLeaf(TreeNode root) {
+		return root.left == null && root.right == null;
+	}
+}

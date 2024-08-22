@@ -1,0 +1,53 @@
+class Solution {
+	ListNode getMiddle(ListNode head) {
+		ListNode fast = head.next;
+		ListNode slow = head;
+		while (fast != null && fast.next != null) {
+			fast = fast.next.next;
+			slow = slow.next;
+		}
+		ListNode middle = slow.next;
+		slow.next = null;
+		return middle;
+	}
+	ListNode merge(ListNode head, ListNode middle) {
+		ListNode res = new ListNode(Integer.MIN_VALUE);
+		ListNode cur = res;
+		ListNode cur1 = head;
+		ListNode cur2 = middle;
+		while (cur1 != null && cur2 != null) {
+			if (cur1.val <= cur2.val) {
+				cur.next = cur1;
+				cur = cur.next;
+				cur1 = cur1.next;
+			} 
+			else {
+				cur.next = cur2;
+				cur = cur.next;
+				cur2 = cur2.next;
+			}
+		}
+		if (cur1 != null) {
+			cur.next = cur1;
+		} 
+		else {
+			cur.next = cur2;
+		}
+		return res.next;
+	}
+	ListNode sort(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode middle = getMiddle(head);
+		head = sort(head);
+		middle = sort(middle);
+		return merge(head,middle);
+	}
+	ListNode sortInList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		return sort(head);
+	}
+}

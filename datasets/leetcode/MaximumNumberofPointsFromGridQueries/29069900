@@ -1,0 +1,53 @@
+class Solution {
+	int[] maxPoints(int[][] grid, int[] queries) {
+		int k = queries.length;
+		int res = new int[k];
+		int newQ = new int[k];
+		Map<Integer, Integer> map = new HashMap();
+		for (int i = 0; i < k; i++) {
+			newQ[i] = queries[i];
+		}
+		Arrays.sort(newQ);
+		PriorityQueue<int[]> q = new PriorityQueue<>((a, b) -> {Integer.compare(a[2],b[2])});
+		q.add(new int{0, 0, 0});
+		boolean vis = new boolean[grid.length][grid[0].length];
+		while (!q.isEmpty()) {
+			int temp = q.remove();
+			int i = temp[0], j = temp[1], idx = temp[2];
+			if (!outOfBounds(i,j,grid.length,grid[0].length) && !vis[i][j]) {
+				while (idx < newQ.length && newQ[idx] <= grid[i][j]) {
+					idx++;
+				}
+				if (idx != newQ.length) {
+					res[idx]++;
+					vis[i][j] = true;
+					q.add(new int{i, j + 1, idx});
+					q.add(new int{i + 1, j, idx});
+					q.add(new int{i, j - 1, idx});
+					q.add(new int{i - 1, j, idx});
+				}
+			}
+		}
+		map.put(newQ[0],res[0]);
+		for (int i = 0; i < res.length - 1; i++) {
+			if (newQ[i] == newQ[i + 1]) {
+				res[i + 1] = res[i];
+			} 
+			else {
+				res[i + 1] += res[i];
+			}
+			map.put(newQ[i + 1],res[i + 1]);
+		}
+		int finalRes = new int[k];
+		for (int i = 0; i < k; i++) {
+			finalRes[i] = map.getOrDefault(queries[i],0);
+		}
+		return finalRes;
+	}
+	boolean outOfBounds(int i, int j, int r, int c) {
+		if (i < 0 || i >= r || j < 0 || j >= c) {
+			return true;
+		}
+		return false;
+	}
+}

@@ -1,0 +1,30 @@
+class Solution {
+	String pathToDest = "";
+	String pathToStart = "";
+	void dfs(TreeNode root, int p, int q, StringBuilder path) {
+		if (root == null) {
+			return;
+		}
+		if (root.val == p) {
+			pathToStart = path.toString();
+		}
+		if (root.val == q) {
+			pathToDest = path.toString();
+		}
+	}
+	String getDirections(TreeNode root, int startValue, int destValue) {
+		dfs(lca(root,startValue,destValue),startValue,destValue,new StringBuilder());
+		return "U".repeat(pathToStart.length()) + pathToDest;
+	}
+	TreeNode lca(TreeNode root, int p, int q) {
+		if (root == null || root.val == p || root.val == q) {
+			return root;
+		}
+		TreeNode left = lca(root.left,p,q);
+		TreeNode right = lca(root.right,p,q);
+		if (left != null && right != null) {
+			return root;
+		}
+		return left == null ? right : left;
+	}
+}

@@ -1,0 +1,43 @@
+class Solution {
+	int ans;
+	int countPairs(TreeNode root, int distance) {
+		ans = 0;
+		Map<TreeNode, Integer> map = util(root,distance);
+		return ans;
+	}
+	Map<TreeNode, Integer> util(TreeNode root, int dist) {
+		if (root == null) {
+			return new HashMap<>();
+		} 
+		else if (root.left == null && root.right == null) {
+			Map<TreeNode, Integer> newMap = new HashMap<>();
+			newMap.put(root,1);
+			return newMap;
+		} 
+		else {
+			Map<TreeNode, Integer> left = util(root.left,dist);
+			Map<TreeNode, Integer> right = util(root.right,dist);
+			Set<TreeNode> keyL = left.keySet();
+			Set<TreeNode> keyR = right.keySet();
+			Map<TreeNode, Integer> newMap = new HashMap<>();
+			for (TreeNode l: keyL) {	
+				for (TreeNode r: keyR) {	
+					if (left.get(l) + right.get(r) <= dist) {
+						ans++;
+					}
+				}
+			}
+			for (TreeNode l: keyL) {	
+				if (left.get(l) + 1 <= dist) {
+					newMap.put(l,left.get(l) + 1);
+				}
+			}
+			for (TreeNode r: keyR) {	
+				if (right.get(r) + 1 <= dist) {
+					newMap.put(r,right.get(r) + 1);
+				}
+			}
+			return newMap;
+		}
+	}
+}

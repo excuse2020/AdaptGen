@@ -1,0 +1,38 @@
+class Solution {
+	void dfs(int curr, List<Integer>[] adj, boolean[] visited, Set<Integer>[] res) {
+		if (visited[curr]) {
+			return;
+		}
+		visited[curr] = true;
+		for (int parent: adj[curr]) {	
+			dfs(parent,adj,visited,res);
+			res[curr].addAll(res[parent]);
+			res[curr].add(parent);
+		}
+	}
+	List<List<Integer>> getAncestors(int n, int[][] edges) {
+		List<Integer>[] rev = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			rev[i] = new ArrayList<>();
+		}
+		for (int[] edge: edges) {	
+			rev[edge[1]].add(edge[0]);
+		}
+		boolean[] visited = new boolean[n];
+		Set<Integer>[] res = new HashSet[n];
+		for (int i = 0; i < n; i++) {
+			res[i] = new HashSet<>();
+		}
+		for (int i = 0; i < n; i++) {
+			if (!rev[i].isEmpty()) {
+				dfs(i,rev,visited,res);
+			}
+		}
+		List<List<Integer>> result = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			result.add(new ArrayList<>(res[i]));
+			Collections.sort(result.get(i));
+		}
+		return result;
+	}
+}

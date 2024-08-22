@@ -1,0 +1,48 @@
+class Solution {
+	TreeNode reCons(int[] xianxu, int[] zhongxu) {
+		if (xianxu == null || xianxu.length == 0) {
+			return null;
+		}
+		int i;
+		TreeNode root = new TreeNode(xianxu[0]);
+		for (i = 0; i < zhongxu.length; i++) {
+			if (zhongxu[i] == xianxu[0]) {
+				root.left = reCons(Arrays.copyOfRange(xianxu,1,1 + i),Arrays.copyOfRange(zhongxu,0,i));
+				root.right = reCons(Arrays.copyOfRange(xianxu,1 + i,xianxu.length),Arrays.copyOfRange(zhongxu,i + 1,zhongxu.length));
+				break;
+			}
+		}
+		return root;
+	}
+	int[] solve(int[] xianxu, int[] zhongxu) {
+		TreeNode root = reCons(xianxu,zhongxu);
+		return view(root);
+	}
+	int[] view(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		List<Integer> list = new ArrayList<>();
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.offer(root);
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			TreeNode tempNode = null;
+			while (size-- > 0) {
+				tempNode = queue.poll();
+				if (tempNode.left != null) {
+					queue.offer(tempNode.left);
+				}
+				if (tempNode.right != null) {
+					queue.offer(tempNode.right);
+				}
+			}
+			list.add(tempNode.val);
+		}
+		int[] res = new int[list.size()];
+		for (int i = 0; i < res.length; i++) {
+			res[i] = list.get(i);
+		}
+		return res;
+	}
+}

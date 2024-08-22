@@ -1,0 +1,26 @@
+class Solution {
+	TreeNode build(int[] postorder, int postStart, int postEnd, int[] inorder, int inStart, int inEnd, Map<Integer, Integer> inorderIndex) {
+		if (postStart > postEnd) {
+			return null;
+		}
+		TreeNode root = new TreeNode(postorder[postStart]);
+		int rootPos = inorderIndex.get(postorder[postStart]);
+		int rightTreeLen = inEnd - rootPos;
+		root.right = build(postorder,postStart + 1,postStart + rightTreeLen,inorder,rootPos + 1,inEnd,inorderIndex);
+		root.left = build(postorder,postStart + 1,postEnd,inorder,inStart,rootPos - 1,inorderIndex);
+		return root;
+	}
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		int n = inorder.length;
+		Map<Integer, Integer> inorderIndex = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			inorderIndex.put(inorder[i],i);
+			if (i < n / 2) {
+				int temp = postorder[i];
+				postorder[i] = postorder[n - 1 - i];
+				postorder[n - 1 - i] = temp;
+			}
+		}
+		return build(postorder,0,n - 1,inorder,0,n - 1,inorderIndex);
+	}
+}

@@ -1,0 +1,61 @@
+class Solution {
+	int calculateSum(int A) {
+		int res = 0;
+		for (int a: A) {	
+			res += a;
+		}
+		return res;
+	}
+	int minOperations(int[] A, int[] B) {
+		Arrays.sort(A);
+		Arrays.sort(B);
+		int sumA = calculateSum(A);
+		int sumB = calculateSum(B);
+		if (sumA == sumB) {
+			return 0;
+		}
+		if (sumA > sumB) {
+			return solve(A,B,sumA,sumB);
+		} 
+		else {
+			return solve(B,A,sumB,sumA);
+		}
+	}
+	int solve(int[] A, int[] B, int sumA, int sumB) {
+		int lenA = A.length;
+		int lenB = B.length;
+		int minA = lenA * 1;
+		int maxA = lenA * 6;
+		int minB = lenB * 1;
+		int maxB = lenB * 6;
+		if (maxA < minB || maxB < minA) {
+			return -1;
+		}
+		int ai = lenA - 1;
+		int bi = 0;
+		int ops = 0;
+		while (ai >= 0 || bi < lenB) {
+			int changeA = -1;
+			int changeB = -1;
+			if (ai >= 0) {
+				changeA = A[ai] - 1;
+			}
+			if (bi < lenB) {
+				changeB = 6 - B[bi];
+			}
+			if (changeA >= changeB) {
+				sumA = sumA - A[ai] + 1;
+				ai--;
+			} 
+			else {
+				sumB = sumB - B[bi] + 6;
+				bi++;
+			}
+			ops++;
+			if (sumA <= sumB) {
+				return ops;
+			}
+		}
+		return -1;
+	}
+}

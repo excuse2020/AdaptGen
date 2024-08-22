@@ -1,0 +1,33 @@
+class Solution {
+	boolean canFinish(int n, int[][] pre) {
+		int count = 0;
+		int[] in = new int[n];
+		Queue<Integer> q = new LinkedList<>();
+		for (int i = 0; i < pre.length; i++) {
+			in[pre[i][0]]++;
+		}
+		List<List<Integer>> list = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			list.add(new ArrayList<>());
+		}
+		for (int i = 0; i < pre.length; i++) {
+			list.get(pre[i][1]).add(pre[i][0]);
+		}
+		for (int i = 0; i < n; i++) {
+			if (in[i] == 0) {
+				q.add(i);
+			}
+		}
+		while (!q.isEmpty()) {
+			int node = q.poll();
+			count++;
+			for (int itr: list.get(node)) {	
+				in[itr]--;
+				if (in[itr] == 0) {
+					q.add(itr);
+				}
+			}
+		}
+		return count == n ? true : false;
+	}
+}

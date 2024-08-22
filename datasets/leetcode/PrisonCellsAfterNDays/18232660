@@ -1,0 +1,45 @@
+class Solution {
+	String computeKey(int[] cells) {
+		StringBuilder sb = new StringBuilder();
+		for (int cell: cells) {	
+			sb.append(cell);
+		}
+		return sb.toString();
+	}
+	int[] computeNextDay(int[] cells) {
+		int[] newCells = new int[cells.length];
+		newCells[0] = 0;
+		for (int i = 1; i < newCells.length - 1; i++) {
+			if (cells[i - 1] == cells[i + 1]) {
+				newCells[i] = 1;
+			} 
+			else {
+				newCells[i] = 0;
+			}
+		}
+		newCells[cells.length - 1] = 0;
+		return newCells;
+	}
+	int[] prisonAfterNDays(int[] cells, int n) {
+		HashMap<String, Integer> cellPermutationsByIteration = new HashMap<>();
+		boolean fastForward = false;
+		while (n > 0) {
+			if (!fastForward) {
+				String key = computeKey(cells);
+				if (cellPermutationsByIteration.containsKey(key)) {
+					fastForward = true;
+					int test = cellPermutationsByIteration.get(key);
+					n = n % (cellPermutationsByIteration.get(key) - n);
+				} 
+				else {
+					cellPermutationsByIteration.put(key,n);
+				}
+			}
+			if (n > 0) {
+				n--;
+				cells = computeNextDay(cells);
+			}
+		}
+		return cells;
+	}
+}

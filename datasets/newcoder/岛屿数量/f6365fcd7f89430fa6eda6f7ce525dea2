@@ -1,0 +1,47 @@
+class Solution {
+	int solve(char[][] grid) {
+		int n = grid.length;
+		if (n == 0) {
+			return 0;
+		}
+		int m = grid[0].length;
+		int count = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				if (grid[i][j] == '1') {
+					count++;
+					grid[i][j] = '0';
+					Queue<Integer> q1 = new LinkedList<Integer>();
+					Queue<Integer> q2 = new LinkedList<Integer>();
+					q1.offer(i);
+					q2.offer(j);
+					while (!q1.isEmpty()) {
+						int row = q1.poll();
+						int col = q2.poll();
+						if (row - 1 >= 0 && grid[row - 1][col] == '1') {
+							q1.offer(row - 1);
+							q2.offer(col);
+							grid[row - 1][col] = '0';
+						}
+						if (row + 1 < n && grid[row + 1][col] == '1') {
+							q1.offer(row + 1);
+							q2.offer(col);
+							grid[row + 1][col] = '0';
+						}
+						if (col - 1 >= 0 && grid[row][col - 1] == '1') {
+							q1.offer(row);
+							q2.offer(col - 1);
+							grid[row][col - 1] = '0';
+						}
+						if (col + 1 < m && grid[row][col + 1] == '1') {
+							q1.offer(row);
+							q2.offer(col + 1);
+							grid[row][col + 1] = '0';
+						}
+					}
+				}
+			}
+		}
+		return count;
+	}
+}

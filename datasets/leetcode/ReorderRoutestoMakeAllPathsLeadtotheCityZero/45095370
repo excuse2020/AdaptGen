@@ -1,0 +1,30 @@
+class Solution {
+	int minReorder(int n, int[][] connections) {
+		int res = 0;
+		HashMap<Integer, List<int[]>> adj = new HashMap<>();
+		for (int[] conn: connections) {	
+			adj.putIfAbsent(conn[0],new ArrayList<>());
+			adj.putIfAbsent(conn[1],new ArrayList<>());
+			adj.get(conn[0]).add(new int{conn[1], -1});
+			adj.get(conn[1]).add(new int{conn[0], 1});
+		}
+		Queue<Integer> qu = new LinkedList<>();
+		qu.offer(0);
+		HashSet<Integer> visited = new HashSet<>();
+		while (!qu.isEmpty()) {
+			int poll = qu.poll();
+			visited.add(poll);
+			List<int[]> next = adj.get(poll);
+			for (int[] ne: next) {	
+				if (!visited.contains(ne[0]) && ne[1] == -1) {
+					res++;
+					qu.offer(ne[0]);
+				} 
+				else if (!visited.contains(ne[0])) {
+					qu.offer(ne[0]);
+				}
+			}
+		}
+		return res;
+	}
+}

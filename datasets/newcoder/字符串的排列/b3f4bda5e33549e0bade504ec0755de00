@@ -1,0 +1,31 @@
+class Solution {
+	ArrayList<String> Permutation(String str) {
+		ArrayList<String> result = new ArrayList<String>();
+		PriorityQueue<String> queue = new PriorityQueue<>(16);
+		process(str.toCharArray(),queue,0);
+		while (!queue.isEmpty()) {
+			result.add(queue.poll());
+		}
+		return result;
+	}
+	void process(char[] str, PriorityQueue<String> res, int index) {
+		if (index == str.length) {
+			res.add(String.valueOf(str));
+			return;
+		}
+		boolean[] visit = new boolean[26];
+		for (int i = index; i < str.length; i++) {
+			if (!visit[str[i] - 'a']) {
+				visit[str[i] - 'a'] = true;
+				swap(str,i,index);
+				process(str,res,index + 1);
+				swap(str,i,index);
+			}
+		}
+	}
+	void swap(char[] arr, int i, int j) {
+		char tmp = arr[i];
+		arr[i] = arr[j];
+		arr[j] = tmp;
+	}
+}

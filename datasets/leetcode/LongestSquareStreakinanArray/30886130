@@ -1,0 +1,41 @@
+class Solution {
+	int longestSquareStreakBottomUp(int[] nums) {
+		Map<Integer, Integer> dp = new HashMap<>();
+		Arrays.sort(nums);
+		int maxLen = -1;
+		for (int i = 0; i < nums.length; i++) {
+			int root = (int) Math.sqrt(nums[i]);
+			if (root * root == nums[i]) {
+				dp.put(nums[i],dp.getOrDefault(root,0) + 1);
+			} 
+			else {
+				dp.put(nums[i],1);
+			}
+			maxLen = Math.max(maxLen,dp.get(nums[i]));
+		}
+		return maxLen == 1 ? -1 : maxLen;
+	}
+	int longestSquareStreakTopDown(int[] nums) {
+		Arrays.sort(nums);
+		Map<Integer, Integer> m = new HashMap<>();
+		for (int ele: nums) {	
+			m.put(ele,m.getOrDefault(ele,1) + 1);
+		}
+		int maxLen = -1;
+		for (int i = nums.length - 1; i >= 0; i--) {
+			int root = (int) Math.sqrt(nums[i]);
+			int len = -1, p = nums[i];
+			while (m.containsKey(root) && m.get(root) > 0) {
+				if (root * root != p) {
+					break;
+				}
+				len = len == -1 ? 2 : len + 1;
+				m.put(root,m.get(root) - 1);
+				p = root;
+				root = (int) Math.sqrt(root);
+			}
+			maxLen = Math.max(maxLen,len);
+		}
+		return maxLen;
+	}
+}

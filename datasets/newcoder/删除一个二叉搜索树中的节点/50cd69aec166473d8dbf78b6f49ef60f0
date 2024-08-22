@@ -1,0 +1,86 @@
+class Solution {
+	TreeNode deleteNode(TreeNode root, int key) {
+		if (null == root) {
+			return root;
+		}
+		HashMap<TreeNode, TreeNode> fathersMap = new HashMap<>();
+		fathersMap.put(root,root);
+		TreeNode node = search(root,key,fathersMap);
+		if (null == node) {
+			return root;
+		} 
+		else {
+			if (node == root) {
+				TreeNode tmpNode = null;
+				if (null == node.left && null == node.right) {
+					tmpNode = null;
+				} 
+				else if (null == node.left && null != node.right) {
+					tmpNode = node.right;
+				} 
+				else if (null != node.left && null == node.right) {
+					tmpNode = node.left;
+				} 
+				else {
+					tmpNode = node.right;
+					TreeNode help = tmpNode;
+					while (null != help.left) {
+						help = help.left;
+					}
+					help.left = node.left;
+				}
+				return tmpNode;
+			} 
+			else {
+				TreeNode fatherNode = fathersMap.get(node);
+				TreeNode tmpNode = null;
+				if (null == node.left && null == node.right) {
+					tmpNode = null;
+				} 
+				else if (null == node.left && null != node.right) {
+					tmpNode = node.right;
+				} 
+				else if (null != node.left && null == node.right) {
+					tmpNode = node.left;
+				} 
+				else {
+					tmpNode = node.right;
+					TreeNode help = tmpNode;
+					while (null != help.left) {
+						help = help.left;
+					}
+					help.left = node.left;
+				}
+				if (fatherNode.left == node) {
+					fatherNode.left = tmpNode;
+				} 
+				else {
+					fatherNode.right = tmpNode;
+				}
+				return root;
+			}
+		}
+	}
+	TreeNode search(TreeNode node, int key, HashMap<TreeNode, TreeNode> fathersMap) {
+		if (null == node) {
+			return null;
+		} 
+		else {
+			if (node.val == key) {
+				return node;
+			} 
+			else if (node.val < key) {
+				if (null != node.right) {
+					fathersMap.put(node.right,node);
+				}
+				return search(node.right,key,fathersMap);
+			} 
+			else {
+				if (null != node.left) {
+					fathersMap.put(node.left,node);
+				}
+				return search(node.left,key,fathersMap);
+			}
+		}
+	}
+}

@@ -1,0 +1,44 @@
+class Solution {
+	int height(TreeNode node) {
+		if (node == null) {
+			return 0;
+		}
+		return Math.max(height(node.left),height(node.right)) + 1;
+	}
+	void leverOrderTraversal(TreeNode node, int l, List<TreeNode> temp) {
+		if (node == null) {
+			return;
+		}
+		if (l == 1) {
+			temp.add(node);
+		}
+		leverOrderTraversal(node.left,l - 1,temp);
+		leverOrderTraversal(node.right,l - 1,temp);
+	}
+	TreeNode lowestCommonAncestor(TreeNode root, TreeNode node1, TreeNode node2) {
+		if (root == null) {
+			return null;
+		}
+		if (root.val == node1.val || root.val == node2.val) {
+			return root;
+		}
+		TreeNode left_lca = lowestCommonAncestor(root.left,node1,node2);
+		TreeNode right_lca = lowestCommonAncestor(root.right,node1,node2);
+		if (left_lca != null && right_lca != null) {
+			return root;
+		}
+		return (left_lca == null) ? right_lca : left_lca;
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		return subtreeWithAllDeepestUtil(root);
+	}
+	TreeNode subtreeWithAllDeepestUtil(TreeNode node) {
+		int h = height(node);
+		List<TreeNode> temp = new ArrayList<>();
+		leverOrderTraversal(node,h,temp);
+		if (temp.size() == 1) {
+			return temp.get(0);
+		}
+		return lowestCommonAncestor(node,temp.get(0),temp.get(temp.size() - 1));
+	}
+}

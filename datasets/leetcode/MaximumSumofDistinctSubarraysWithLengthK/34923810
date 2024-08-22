@@ -1,0 +1,28 @@
+class Solution {
+	long maximumSubarraySum(int[] nums, int k) {
+		long maxSum = 0;
+		long sum = 0;
+		int i = 0, j = 0;
+		var map = new HashMap<Integer, Integer>();
+		while (j < nums.length) {
+			sum = sum + nums[j];
+			map.put(nums[j],map.getOrDefault(nums[j],0) + 1);
+			if (j - i + 1 < k) {
+				j++;
+			} 
+			else if (j - i + 1 == k) {
+				if (map.size() == k) {
+					maxSum = Math.max(maxSum,sum);
+				}
+				sum = sum - nums[i];
+				map.put(nums[i],map.get(nums[i]) - 1);
+				if (map.get(nums[i]) == 0) {
+					map.remove(nums[i]);
+				}
+				i++;
+				j++;
+			}
+		}
+		return maxSum;
+	}
+}

@@ -1,0 +1,38 @@
+class Solution {
+	int[] countSubTrees(int n, int[][] edges, String labels) {
+		List<Set<Integer>> ed = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			ed.add(new HashSet<Integer>());
+		}
+		for (int[] edge: edges) {	
+			ed.get(edge[0]).add(edge[1]);
+			ed.get(edge[1]).add(edge[0]);
+		}
+		int[] visited = new int[n];
+		int[] ans = new int[n];
+		traverse(ed,ans,0,labels,visited);
+		return ans;
+	}
+	int[] traverse(List<Set<Integer>> edges, int[] ans, int node, String labels) {
+		int[] f = new int[26];
+		for (int i: edges.get(node)) {	
+			int[] subcount = traverse(edges,ans,i,labels);
+			for (int j = 0; j < 26; j++) {
+				f[j] += subcount[j];
+			}
+		}
+	}
+	int[] traverse(List<Set<Integer>> edges, int[] ans, int node, String labels, int[] visited) {
+		visited[node] = 1;
+		int[] f = new int[26];
+		for (int i: edges.get(node)) {	
+			if (visited[i] == 1) {
+				continue;
+			}
+			int[] subcount = traverse(edges,ans,i,labels,visited);
+			for (int j = 0; j < 26; j++) {
+				f[j] += subcount[j];
+			}
+		}
+	}
+}

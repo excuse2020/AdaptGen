@@ -1,0 +1,40 @@
+class Solution {
+	int timer = 1;
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (List<Integer> connection: connections) {	
+			adj.get(connection.get(0)).add(connection.get(1));
+			adj.get(connection.get(1)).add(connection.get(0));
+		}
+		int[] vis = new int[n];
+		int[] timeInsertion = new int[n];
+		int[] lowestTimeInsertion = new int[n];
+		List<List<Integer>> ans = new ArrayList<>();
+		dfs(0,-1,adj,vis,timeInsertion,lowestTimeInsertion,ans);
+		return ans;
+	}
+	void dfs(int node, int parent, List<List<Integer>> adj, int[] vis, int[] tin, int[] ltin, List<List<Integer>> ans) {
+		vis[node] = 1;
+		tin[node] = timer;
+		ltin[node] = timer;
+		timer++;
+		for (int nextNode: adj.get(node)) {	
+			if (nextNode == parent) {
+				continue;
+			}
+			if (vis[nextNode] == 0) {
+				dfs(nextNode,node,adj,vis,tin,ltin,ans);
+				ltin[node] = Math.min(ltin[node],ltin[nextNode]);
+				if (ltin[nextNode] > tin[node]) {
+					ans.add(Arrays.asList(nextNode,node));
+				}
+			} 
+			else {
+				ltin[node] = Math.min(ltin[node],ltin[nextNode]);
+			}
+		}
+	}
+}

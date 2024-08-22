@@ -1,0 +1,37 @@
+class Solution {
+	int MOD = (int) 1e9 + 7;
+	int[][][][] dp;
+	int count(String num1, String num2, int min_sum, int max_sum) {
+		int maxLength = num2.length();
+		int minLength = num1.length();
+		int leadingZeroes = maxLength - minLength;
+		String num1extended = "0".repeat(leadingZeroes) + num1;
+		dp = new int[maxLength][2][2][401];
+		for (int[][][] dim1: dp) {	
+			for (int[][] dim2: dim1) {	
+				for (int[] dim3: dim2) {	
+					Arrays.fill(dim3,-1);
+				}
+			}
+		}
+		int total = countStrings(0,true,true,max_sum,num1extended,num2);
+		int unnecessary = countStrings(0,true,true,min_sum - 1,num1extended,num2);
+		int ans = (total - unnecessary) % MOD;
+		if (ans < 0) {
+			ans += MOD;
+		}
+		return ans;
+	}
+	int countStrings(int i, boolean tight1, boolean tight2, int sum, String num1, String num2) {
+		if (sum < 0) {
+			return 0;
+		}
+		if (i == num2.length()) {
+			return 1;
+		}
+		if (dp[i][tight1 ? 1 : 0][tight2 ? 1 : 0][sum] != -1) {
+			return dp[i][tight1 ? 1 : 0][tight2 ? 1 : 0][sum];
+		}
+		int lo;
+	}
+}

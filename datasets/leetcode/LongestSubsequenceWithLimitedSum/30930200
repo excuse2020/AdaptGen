@@ -1,0 +1,63 @@
+class Solution {
+	int[] answerQueries(int[] nums, int[] queries) {
+		heapSort(nums);
+		for (int i = 1; i < nums.length; i++) {
+			nums[i] += nums[i - 1];
+		}
+		int[] result = new int[queries.length];
+		for (int i = 0; i < result.length; i++) {
+			int index = binarySearch(nums,queries[i]);
+			result[i] = Math.abs(index + 1);
+		}
+		return result;
+	}
+	int binarySearch(int[] nums, int target) {
+		int start = 0;
+		int end = nums.length - 1;
+		while (start <= end) {
+			int middle = start + (end - start) / 2;
+			if (nums[middle] == target) {
+				return middle;
+			} 
+			else if (nums[middle] > target) {
+				end = middle - 1;
+			} 
+			else {
+				start = middle + 1;
+			}
+		}
+		return -(start + 1);
+	}
+	void heapSort(int[] nums) {
+		int size = nums.length;
+		int index = size / 2 - 1;
+		while (index >= 0) {
+			heapify(nums,size,index);
+			index--;
+		}
+		for (int i = size - 1; i > 0; i--) {
+			swap(nums,0,i);
+			heapify(nums,i,0);
+		}
+	}
+	void heapify(int[] nums, int size, int index) {
+		int maximum = index;
+		int leftChild = 2 * index + 1;
+		int rightChild = 2 * index + 2;
+		if (leftChild < size && nums[leftChild] > nums[maximum]) {
+			maximum = leftChild;
+		}
+		if (rightChild < size && nums[rightChild] > nums[maximum]) {
+			maximum = rightChild;
+		}
+		if (maximum != index) {
+			swap(nums,maximum,index);
+			heapify(nums,size,maximum);
+		}
+	}
+	void swap(int[] nums, int index1, int index2) {
+		int temp = nums[index1];
+		nums[index1] = nums[index2];
+		nums[index2] = temp;
+	}
+}

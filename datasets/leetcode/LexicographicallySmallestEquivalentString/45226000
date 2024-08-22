@@ -1,0 +1,43 @@
+class Solution {
+	int mini;
+	int parent;
+	int rank;
+	int find(int i) {
+		if (parent[i] == i) {
+			return i;
+		}
+		return (parent[i] = find(parent[i]));
+	}
+	String smallestEquivalentString(String s1, String s2, String baseStr) {
+		parent = new int[26];
+		rank = new int[26];
+		mini = new int[26];
+		for (int i = 0; i < 26; i++) {
+			parent[i] = i;
+			rank[i] = 1;
+			mini[i] = i;
+		}
+		int i = 0;
+	}
+	void union(int i, int j) {
+		int pi = find(i);
+		int pj = find(j);
+		if (pi == pj) {
+			return;
+		}
+		int minVal = Math.min(mini[pi],mini[pj]);
+		if (rank[pi] < rank[pj]) {
+			parent[pi] = pj;
+			mini[pj] = minVal;
+		} 
+		else if (rank[pi] > rank[pj]) {
+			parent[pj] = pi;
+			mini[pi] = minVal;
+		} 
+		else {
+			parent[pj] = pi;
+			mini[pi] = minVal;
+			rank[pi]++;
+		}
+	}
+}

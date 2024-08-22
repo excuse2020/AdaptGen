@@ -1,0 +1,54 @@
+class Solution {
+	boolean isAncestor(String a, String b) {
+		boolean once = false;
+		int c = 0;
+		int an = a.length();
+		int i = 0;
+		char ac;
+	}
+	int longestStrChain(String[] words) {
+		for (int i = 0; i < words.length; i++) {
+			int smallest = words[i].length();
+			int smalli = i;
+			for (int j = i + 1; j < words.length; j++) {
+				if (words[j].length() < smallest) {
+					smallest = words[j].length();
+					smalli = j;
+				}
+			}
+			if (i == smalli) {
+				continue;
+			}
+			String temp = words[smalli];
+			words[smalli] = words[i];
+			words[i] = temp;
+		}
+		int longest = 0;
+		int[] chain = new int[words.length];
+		for (int i = words.length - 2; i >= 0; i--) {
+			int in = words[i].length();
+			int current_len = 0;
+			for (int j = i + 1; j < words.length; j++) {
+				int jn = words[j].length();
+				if (jn == in) {
+					continue;
+				} 
+				else if (jn > in + 1) {
+					break;
+				} 
+				else {
+					if (isAncestor(words[i],words[j])) {
+						if (chain[j] + 1 > current_len) {
+							current_len = chain[j] + 1;
+						}
+					}
+				}
+			}
+			chain[i] = current_len;
+			if (current_len > longest) {
+				longest = current_len;
+			}
+		}
+		return longest + 1;
+	}
+}

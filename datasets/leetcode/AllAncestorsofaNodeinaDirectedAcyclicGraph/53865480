@@ -1,0 +1,38 @@
+class Solution {
+	List<List<Integer>> getAncestors(int n, int[][] edges) {
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = edges.length - 1; i >= 0; i--) {
+			int a = edges[i][0];
+			int b = edges[i][1];
+			adj.get(b).add(a);
+		}
+		List<List<Integer>> ls = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			ls.add(new ArrayList<>());
+		}
+		for (int x = 0; x < adj.size(); x++) {
+			Queue<Integer> q = new LinkedList<>();
+			q.add(x);
+			int v = new int[n];
+			TreeSet<Integer> set = new TreeSet<>();
+			while (!q.isEmpty()) {
+				int nod = q.poll();
+				v[nod] = 1;
+				for (int f = 0; f < adj.get(nod).size(); f++) {
+					int u = adj.get(nod).get(f);
+					if (v[u] == 0) {
+						q.add(u);
+						set.add(u);
+					}
+				}
+			}
+			for (int m: set) {	
+				ls.get(x).add(m);
+			}
+		}
+		return ls;
+	}
+}

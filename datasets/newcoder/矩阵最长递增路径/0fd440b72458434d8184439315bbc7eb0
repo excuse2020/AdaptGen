@@ -1,0 +1,34 @@
+class Solution {
+	int max = 0;
+	boolean[][] visited;
+	void dfs(int[][] matrix, int x, int y, int dis, int pre) {
+		if (x < 0 || x >= matrix.length || y < 0 || y >= matrix[0].length) {
+			if (max < dis) {
+				max = dis;
+			}
+			return;
+		}
+		if (!visited[x][y] && pre < matrix[x][y]) {
+			visited[x][y] = true;
+			dfs(matrix,x - 1,y,dis + 1,matrix[x][y]);
+			dfs(matrix,x + 1,y,dis + 1,matrix[x][y]);
+			dfs(matrix,x,y - 1,dis + 1,matrix[x][y]);
+			dfs(matrix,x,y + 1,dis + 1,matrix[x][y]);
+			visited[x][y] = false;
+		} 
+		else {
+			if (max < dis) {
+				max = dis;
+			}
+		}
+	}
+	int solve(int[][] matrix) {
+		visited = new boolean[matrix.length][matrix[0].length];
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix[0].length; j++) {
+				dfs(matrix,i,j,0,Integer.MIN_VALUE);
+			}
+		}
+		return max;
+	}
+}

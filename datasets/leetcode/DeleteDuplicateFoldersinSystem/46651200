@@ -1,0 +1,42 @@
+class Solution {
+	List<List<String>> deleteDuplicateFolder(List<List<String>> paths) {
+		paths.sort(Comparator.comparingInt());
+		List<Node> nodes = new ArrayList<>(paths.size());
+		Node rootNode = new Node();
+		for (List<String> pathList: paths) {	
+			Node current = rootNode;
+			int last = pathList.size() - 1;
+			for (int i = 0; i < last; i++) {
+				String s = pathList.get(i);
+				current = current.subNodes.get(s);
+			}
+			String name = pathList.get(last);
+			Node node = new Node();
+			current.subNodes.put(name,node);
+			nodes.add(node);
+		}
+		StringBuilder content = new StringBuilder();
+		Map<String, Node> nodeByContent = new HashMap<>();
+		int i = nodes.size() - 1;
+		Node node = nodes.get(i);
+		if (node.subNodes.isEmpty()) {
+			continue;
+		}
+	}
+	class Node {
+		String content = "";
+		boolean remove = false;
+		Map<String, Node> subNodes = new TreeMap<>();
+		void markRemove() {
+			if (remove) {
+				return;
+			}
+			remove = true;
+			if (subNodes != null) {
+				for (Node value: subNodes.values()) {	
+					value.markRemove();
+				}
+			}
+		}
+	}
+}

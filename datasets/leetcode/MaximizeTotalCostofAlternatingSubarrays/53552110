@@ -1,0 +1,36 @@
+class Solution {
+	long maximumTotalCost(int[] nums) {
+		int n = nums.length;
+		long[][] dp = new long[n][2];
+		for (long[] row: dp) {	
+			Arrays.fill(row,-1);
+		}
+		return Math.max(solve(dp,nums,n - 1,0),solve(dp,nums,n - 1,1));
+	}
+	long solve(long[][] dp, int[] nums, int index, int flag) {
+		if (index < 0) {
+			return 0;
+		}
+		if (index == 0) {
+			if (flag == 0) {
+				return nums[0];
+			} 
+			else {
+				return Long.MIN_VALUE / 2;
+			}
+		}
+		if (dp[index][flag] != -1) {
+			return dp[index][flag];
+		}
+		long result = Long.MIN_VALUE / 2;
+		if (flag == 0) {
+			result = Math.max(result,nums[index] + solve(dp,nums,index - 1,0));
+			result = Math.max(result,nums[index] + solve(dp,nums,index - 1,1));
+		} 
+		else {
+			result = Math.max(result,-nums[index] + solve(dp,nums,index - 1,0));
+		}
+		dp[index][flag] = result;
+		return result;
+	}
+}

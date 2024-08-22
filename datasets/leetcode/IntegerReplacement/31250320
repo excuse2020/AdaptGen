@@ -1,0 +1,27 @@
+class Solution {
+	int helper(int val, HashMap<Integer, Integer> dp) {
+		if (val == Integer.MAX_VALUE) {
+			return 32;
+		}
+		if (val <= 1) {
+			return 0;
+		}
+		if (dp.containsKey(val)) {
+			return dp.get(val);
+		}
+		int even = Integer.MAX_VALUE;
+		int odd = Integer.MAX_VALUE;
+		if (val % 2 == 0) {
+			even = 1 + helper(val / 2,dp);
+		} 
+		else {
+			odd = Math.min(1 + helper(val + 1,dp),1 + helper(val - 1,dp));
+		}
+		dp.put(val,Math.min(even,odd));
+		return Math.min(even,odd);
+	}
+	int integerReplacement(int n) {
+		HashMap<Integer, Integer> dp = new HashMap<>();
+		return helper(n,dp);
+	}
+}

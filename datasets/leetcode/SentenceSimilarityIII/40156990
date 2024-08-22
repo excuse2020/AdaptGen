@@ -1,0 +1,22 @@
+class Solution {
+	boolean areSentencesSimilar(String sentence1, String sentence2) {
+		return areSimilar(sentence1.split(" "),sentence2.split(" "));
+	}
+	boolean areSimilar(String[] chunks1, String[] chunks2) {
+		String[] shortSentence = chunks1.length <= chunks2.length ? chunks1 : chunks2;
+		String[] longSentence = chunks1.length <= chunks2.length ? chunks2 : chunks1;
+		int leftMismatchIndex = findMismatchIndex(0,shortSentence.length,0,1,shortSentence,longSentence);
+		if (leftMismatchIndex == shortSentence.length) {
+			return true;
+		}
+		int rightMismatch = findMismatchIndex(shortSentence.length - 1,leftMismatchIndex - 1,longSentence.length - 1,-1,shortSentence,longSentence);
+		return leftMismatchIndex == 1 + rightMismatch;
+	}
+	int findMismatchIndex(int shortFrom, int shortTo, int longFrom, int direction, String[] shortSentence, String[] longSentence) {
+		while (shortFrom != shortTo && shortSentence[shortFrom].equals(longSentence[longFrom])) {
+			shortFrom += direction;
+			longFrom += direction;
+		}
+		return shortFrom;
+	}
+}

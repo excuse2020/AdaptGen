@@ -1,0 +1,84 @@
+class Solution {
+	int solve(String s) {
+		char[] chs = s.toCharArray();
+		Stack<Integer> st = new Stack<>();
+		Stack<Integer> st2 = new Stack<>();
+		Stack<Character> opt = new Stack<>();
+		Stack<Character> opt2 = new Stack<>();
+		int n = -1;
+		StringBuilder sub = new StringBuilder();
+		int lk = 0, rk = 0;
+		for (char c: chs) {	
+			if (sub.length() > 0) {
+				if (c == '(') {
+					lk++;
+				}
+				if (c == ')') {
+					rk++;
+				}
+				if (lk == rk) {
+					st.push(solve(sub.substring(1)));
+					sub = new StringBuilder();
+					lk = rk = 0;
+				} 
+				else {
+					sub.append(c);
+				}
+				continue;
+			}
+			if (c >= '0' && c <= '9') {
+				n = (n < 0 ? 0 : n) * 10 + c - '0';
+			} 
+			else {
+				if (n > -1) {
+					st.push(n);
+					n = -1;
+				}
+				if (c != ' ') {
+					if (c == '(') {
+						sub.append("(");
+						lk++;
+					} 
+					else {
+						opt.push(c);
+					}
+				}
+			}
+		}
+		if (n > -1) {
+			st.push(n);
+		}
+		while (!opt.isEmpty()) {
+			opt2.push(opt.pop());
+		}
+		while (!st.isEmpty()) {
+			st2.push(st.pop());
+		}
+		while (!opt2.isEmpty()) {
+			if (opt2.peek() == '*') {
+				st2.push(st2.pop() * st2.pop());
+				opt2.pop();
+			} 
+			else {
+				opt.push(opt2.pop());
+				st.push(st2.pop());
+			}
+		}
+		while (!opt.isEmpty()) {
+			opt2.push(opt.pop());
+		}
+		while (!st.isEmpty()) {
+			st2.push(st.pop());
+		}
+		while (!opt2.isEmpty()) {
+			if (opt2.peek() == '+') {
+				st2.push(st2.pop() + st2.pop());
+			} 
+			else if (opt2.peek() == '-') {
+				st2.push(st2.pop() - st2.pop());
+			}
+			opt2.pop();
+		}
+		return st2.pop();
+	}
+}

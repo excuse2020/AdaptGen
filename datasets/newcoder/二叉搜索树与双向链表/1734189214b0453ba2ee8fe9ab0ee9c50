@@ -1,0 +1,46 @@
+class Solution {
+	TreeNode Convert(TreeNode pRootOfTree) {
+		if (pRootOfTree == null) {
+			return null;
+		}
+		ResultNodes result = ConvertRecursive(pRootOfTree);
+		return result.head;
+	}
+	ResultNodes ConvertRecursive(TreeNode pRootOfTree) {
+		if (pRootOfTree == null) {
+			return null;
+		}
+		if (pRootOfTree.left == null && pRootOfTree.right == null) {
+			ResultNodes result = new ResultNodes();
+			result.head = pRootOfTree;
+			result.tail = pRootOfTree;
+			return result;
+		}
+		ResultNodes left, right, result = new ResultNodes();
+		left = ConvertRecursive(pRootOfTree.left);
+		right = ConvertRecursive(pRootOfTree.right);
+		if (left != null) {
+			left.tail.right = pRootOfTree;
+			pRootOfTree.left = left.tail;
+			result.head = left.head;
+		} 
+		else {
+			pRootOfTree.left = null;
+			result.head = pRootOfTree;
+		}
+		if (right != null) {
+			right.head.left = pRootOfTree;
+			pRootOfTree.right = right.head;
+			result.tail = right.tail;
+		} 
+		else {
+			pRootOfTree.right = null;
+			result.tail = pRootOfTree;
+		}
+		return result;
+	}
+	class ResultNodes {
+		TreeNode head;
+		TreeNode tail;
+	}
+}

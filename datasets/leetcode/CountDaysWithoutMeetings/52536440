@@ -1,0 +1,26 @@
+class Solution {
+	int countDays(int days, int[][] mat) {
+		Arrays.sort(mat,(a, b) -> {Integer.compare(a[0],b[0])});
+		List<List<Integer>> ans = new ArrayList<>();
+		int res = 0;
+		int start = mat[0][0];
+		int end = mat[0][1];
+		for (int i = 0; i < mat.length; i++) {
+			if (mat[i][0] <= end) {
+				end = Math.max(end,mat[i][1]);
+			} 
+			else {
+				ans.add(new ArrayList<>(Arrays.asList(start,end)));
+				start = mat[i][0];
+				end = mat[i][1];
+			}
+		}
+		ans.add(new ArrayList<>(Arrays.asList(start,end)));
+		res += ans.get(0).get(0) - 1;
+		for (int i = 1; i < ans.size(); i++) {
+			res += ans.get(i).get(0) - ans.get(i - 1).get(1);
+		}
+		res += days - ans.get(ans.size() - 1).get(1);
+		return res;
+	}
+}

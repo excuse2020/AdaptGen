@@ -1,0 +1,42 @@
+class Solution {
+	int InversePairs(int[] array) {
+		int len = array.length;
+		int start = 0;
+		int end = len - 1;
+		int[] copy = new int[len];
+		for (int i = 0; i < len; i++) {
+			copy[i] = array[i];
+		}
+		Long count = merge1(array,copy,start,end);
+		return (int) (count % 1000000007L);
+	}
+	Long merge1(int[] array, int[] copy, int start, int end) {
+		if (start == end) {
+			copy[start] = array[start];
+			return 0L;
+		}
+		int mid = start + ((end - start) >> 1);
+		Long left = merge1(copy,array,start,mid);
+		Long right = merge1(copy,array,mid + 1,end);
+		int count = 0;
+		int i = mid;
+		int j = end;
+		int copyend = end;
+		while (i >= start && j >= mid + 1) {
+			if (array[i] > array[j]) {
+				copy[copyend--] = array[i--];
+				count += j - mid;
+			} 
+			else {
+				copy[copyend--] = array[j--];
+			}
+		}
+		for (; i >= start; i--) {
+			copy[copyend--] = array[i];
+		}
+		for (; j >= mid + 1; j--) {
+			copy[copyend--] = array[j];
+		}
+		return left + right;
+	}
+}

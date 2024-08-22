@@ -1,0 +1,53 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		Stack<Integer> stack1 = new Stack<>();
+		Stack<Integer> stack2 = new Stack<>();
+		ListNode p1 = head1;
+		ListNode p2 = head2;
+		while (p1 != null) {
+			stack1.push(p1.val);
+			p1 = p1.next;
+		}
+		while (p2 != null) {
+			stack2.push(p2.val);
+			p2 = p2.next;
+		}
+		int carry = 0;
+		Stack<Integer> stack3 = new Stack<>();
+		while (!stack1.empty() && !stack2.empty()) {
+			int tem = carry + stack1.pop();
+			stack3.push(tem % 10);
+			carry = tem / 10;
+		}
+		while (!stack1.empty()) {
+			int tem = stack1.pop() + carry;
+			stack3.push(tem % 10);
+			carry = tem / 10;
+		}
+		while (!stack2.empty()) {
+			int tem = stack2.pop() + carry;
+			stack3.push(tem % 10);
+			carry = tem / 10;
+		}
+		if (carry != 0) {
+			stack3.push(carry);
+		}
+		ListNode p3 = head1;
+		while (p3.next != null) {
+			p3 = p3.next;
+		}
+		p3.next = head2;
+		ListNode p4 = head1;
+		while (!stack3.empty()) {
+			p4.val = stack3.pop();
+			if (stack3.empty()) {
+				continue;
+			} 
+			else {
+				p4 = p4.next;
+			}
+		}
+		p4.next = null;
+		return head1;
+	}
+}

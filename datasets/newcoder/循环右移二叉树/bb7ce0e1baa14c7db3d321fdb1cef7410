@@ -1,0 +1,48 @@
+class Solution {
+	Map<TreeNode, Integer> map = new HashMap<>();
+	TreeNode cyclicShiftTree(TreeNode root, int k) {
+		List<List<TreeNode>> list = levelOrder(root);
+		for (int i = list.size() - 1; i > 0; i--) {
+			List<TreeNode> child = list.get(i);
+			List<TreeNode> parent = list.get(i - 1);
+			for (int j = 0; j < child.size(); j++) {
+				TreeNode chi = child.get(j);
+				TreeNode par = parent.get((map.get(chi) + k) % (parent.size() * 2) / 2);
+				if ((map.get(chi) + k) % (parent.size() * 2) == 0) {
+					par.left = chi;
+				} 
+				else {
+					par.right = chi;
+				}
+			}
+		}
+		return root;
+	}
+	List<List<TreeNode>> levelOrder(TreeNode root) {
+		List<List<TreeNode>> ans = new ArrayList<>();
+		if (root == null) {
+			return ans;
+		}
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.offer(root);
+		while (queue.size() != 0) {
+			List<TreeNode> tmp = new ArrayList<>();
+			int index = 0;
+			for (int i = queue.size(); i > 0; i--) {
+				TreeNode cur = queue.poll();
+				index++;
+				if (cur.val == -1) {
+					continue;
+				}
+				tmp.add(cur);
+				map.put(cur,index - 1);
+				queue.offer(cur.left == null ? new TreeNode(-1) : cur.left);
+				queue.offer(cur.right == null ? new TreeNode(-1) : cur.right);
+				cur.left = null;
+				cur.right = null;
+			}
+			ans.add(tmp);
+		}
+		return ans;
+	}
+}

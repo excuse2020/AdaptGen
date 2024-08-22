@@ -1,0 +1,24 @@
+class Solution {
+	int[] canSeePersonsCount(int[] heights) {
+		Deque<Integer> stack = new ArrayDeque<>();
+		int len = heights.length;
+		int ptr = len - 1;
+		int[] res = new int[len];
+		for (int i = len - 1; i >= 0; i--) {
+			int h = heights[i];
+			if (i == ptr) {
+				res[i] = 0;
+				stack.push(h);
+				continue;
+			}
+			int evict = 0;
+			while (!stack.isEmpty() && stack.peek().intValue() < h) {
+				stack.poll();
+				evict++;
+			}
+			res[i] = stack.isEmpty() ? evict : evict + 1;
+			stack.push(h);
+		}
+		return res;
+	}
+}

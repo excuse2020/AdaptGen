@@ -1,0 +1,27 @@
+class Solution {
+	List<Boolean> checkIfPrerequisite(int n, int[][] prerequisites, int[][] queries) {
+		int[][] dp = new int[n][n];
+		for (int i = 0; i < n; i++) {
+			Arrays.fill(dp[i],(int) 1e9);
+			dp[i][i] = 0;
+		}
+		for (int[] edge: prerequisites) {	
+			dp[edge[0]][edge[1]] = 1;
+		}
+		for (int intermediateNode = 0; intermediateNode < n; intermediateNode++) {
+			for (int source = 0; source < n; source++) {
+				for (int destination = 0; destination < n; destination++) {
+					if (dp[source][destination] > dp[source][intermediateNode] + dp[intermediateNode][destination]) {
+						dp[source][destination] = dp[source][intermediateNode] + dp[intermediateNode][destination];
+					}
+				}
+			}
+		}
+		List<Boolean> answer = new ArrayList<>();
+		for (int i = 0; i < queries.length; i++) {
+			int[] query = queries[i];
+			answer.add(dp[query[0]][query[1]] < (int) 1e9);
+		}
+		return answer;
+	}
+}

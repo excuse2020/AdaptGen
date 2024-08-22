@@ -1,0 +1,28 @@
+class Solution {
+	int maxValueOfCoins(List<List<Integer>> piles, int k) {
+		int[][] memo = new int[k + 1][piles.size()];
+		return recur(piles,k,0,memo);
+	}
+	int recur(List<List<Integer>> piles, int numberOfCoins, int index, int[][] memo) {
+		if (numberOfCoins == 0 || index == piles.size()) {
+			return 0;
+		}
+		if (memo[numberOfCoins][index] > 0) {
+			return memo[numberOfCoins][index];
+		}
+		int exclude = recur(piles,numberOfCoins,index + 1,memo);
+		List<Integer> pile = piles.get(index);
+		int sum = 0;
+		int include = 0;
+		int nextCoinNum = numberOfCoins;
+		for (int coin: pile) {	
+			sum += coin;
+			if (nextCoinNum == 0) {
+				break;
+			}
+			nextCoinNum--;
+			include = Math.max(include,sum + recur(piles,nextCoinNum,index + 1,memo));
+		}
+		return memo[numberOfCoins][index] = Math.max(include,exclude);
+	}
+}

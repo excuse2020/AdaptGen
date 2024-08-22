@@ -1,0 +1,40 @@
+class Solution {
+	int find(int[] array, int value) {
+		for (int i = 0; i < array.length; i++) {
+			if (array[i] == value) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] vin) {
+		System.out.print(Arrays.toString(pre));
+		System.out.print(Arrays.toString(vin));
+		int lo = 0;
+		int hi = vin.length;
+		if (pre != null && pre.length != 0) {
+			TreeNode rootnode = new TreeNode(pre[0]);
+			if (vin.length == 1) {
+				return rootnode;
+			}
+			System.out.print(Arrays.toString(pre));
+			System.out.print(Arrays.toString(vin));
+			int mid = find(vin,pre[0]);
+			System.out.print(mid);
+			if (mid != 0) {
+				int[] left_vin = Arrays.copyOfRange(vin,lo,mid);
+				int[] left_pre = Arrays.copyOfRange(pre,1,left_vin.length + 1);
+				rootnode.left = reConstructBinaryTree(left_pre,left_vin);
+				System.out.print("left suc");
+			}
+			if (mid != pre.length) {
+				int[] right_vin = Arrays.copyOfRange(vin,mid + 1,hi);
+				int[] right_pre = Arrays.copyOfRange(pre,pre.length - right_vin.length,pre.length);
+				rootnode.right = reConstructBinaryTree(right_pre,right_vin);
+				System.out.print("right suc");
+			}
+			return rootnode;
+		}
+		return null;
+	}
+}

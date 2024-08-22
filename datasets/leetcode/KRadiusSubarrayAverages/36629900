@@ -1,0 +1,38 @@
+class Solution {
+	int[] getAverages(int[] nums, int k) {
+		if (k == 0) {
+			return nums;
+		}
+		int len = nums.length;
+		int[] ans = new int[len];
+		int windowSize = 2 * k + 1;
+		if (windowSize > len) {
+			for (int i = 0; i < len; i++) {
+				nums[i] = -1;
+			}
+			return nums;
+		}
+		int index = 0;
+		long window = 0;
+		while (index < k) {
+			ans[index] = -1;
+			window += nums[index++];
+		}
+		int left = index - k, right = index + k;
+		while (index < right + 1) {
+			window += nums[index++];
+		}
+		while (right < len - 1) {
+			ans[index - k - 1] = (int) (window / windowSize);
+			window += nums[++right];
+			window -= nums[left++];
+			index++;
+		}
+		ans[index - k - 1] = (int) (window / windowSize);
+		while (index - k < len) {
+			ans[index - k] = -1;
+			index++;
+		}
+		return ans;
+	}
+}

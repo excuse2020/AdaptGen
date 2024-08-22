@@ -1,0 +1,53 @@
+class Solution {
+	String EMPTY = "-1";
+	String currLCS = "";
+	String LCS(String s1, String s2) {
+		if (s1 == null || s1.isEmpty() || s2 == null || s2.isEmpty()) {
+			return EMPTY;
+		}
+		int[][] c = new int[s1.length() + 1][s2.length() + 1];
+		StringBuilder rsb = new StringBuilder();
+		LCSLength(s1.toCharArray(),s2.toCharArray(),c);
+		LCSPrint(c,s1.length(),s2.length(),rsb,s1.toCharArray(),s2.toCharArray());
+		if (rsb.length() == 0) {
+			return EMPTY;
+		}
+		return rsb.toString();
+	}
+	void LCSLength(char[] x, char[] y, int[][] c) {
+		for (int i = 0, j = 1; j < c[0].length; j++) {
+			c[i][j] = 0;
+		}
+		for (int i = 1, j = 0; i < c.length; i++) {
+			c[i][j] = 0;
+		}
+		for (int i = 1; i < c.length; i++) {
+			for (int j = 1; j < c[0].length; j++) {
+				if (x[i - 1] == y[j - 1]) {
+					c[i][j] = c[i - 1][j - 1] + 1;
+				} 
+				else if (c[i - 1][j] >= c[i][j - 1]) {
+					c[i][j] = c[i - 1][j];
+				} 
+				else {
+					c[i][j] = c[i][j - 1];
+				}
+			}
+		}
+	}
+	void LCSPrint(int[][] c, int i, int j, StringBuilder rsb, char[] x, char[] y) {
+		if (i == 0 || j == 0) {
+			return;
+		}
+		if (x[i - 1] == y[j - 1]) {
+			LCSPrint(c,i - 1,j - 1,rsb,x,y);
+			rsb.append(x[i - 1]);
+		} 
+		else if (c[i - 1][j] >= c[i][j - 1]) {
+			LCSPrint(c,i - 1,j,rsb,x,y);
+		} 
+		else {
+			LCSPrint(c,i,j - 1,rsb,x,y);
+		}
+	}
+}

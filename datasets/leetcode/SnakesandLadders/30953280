@@ -1,0 +1,45 @@
+class Solution {
+	int n;
+	int getNextElement(int key, int[][] board) {
+		int row = (key - 1) / n;
+		int col = (key - 1) % n;
+		if ((row & 1) != 0) {
+			col = (n - 1);
+		}
+		return board[row][col];
+	}
+	int snakesAndLadders(int[][] board) {
+		n = board.length;
+		for (int i = 0; i <= Math.floor(n / 2) - 1; i++) {
+			int temp = board[i];
+			board[i] = board[n - i - 1];
+			board[n - i - 1] = temp;
+		}
+		HashSet<Integer> set = new HashSet<>();
+		Queue<Pair<Integer, Integer>> queue = new LinkedList<>();
+		queue.add(new Pair<>(1, 0));
+		set.add(1);
+		while (!queue.isEmpty()) {
+			Pair pair = queue.poll();
+			int parentKey = (int) pair.getKey();
+			int parentCost = (int) pair.getValue();
+			for (int i = parentKey + 1; i <= parentKey + 6; i++) {
+				if (i > n * n) {
+					continue;
+				}
+				int nextElement = getNextElement(i,board);
+				if (nextElement == -1) {
+					nextElement = i;
+				}
+				if (nextElement == n * n) {
+					return parentCost + 1;
+				}
+				if (!set.contains(nextElement)) {
+					set.add(nextElement);
+					queue.add(new Pair<Integer, Integer>(nextElement, parentCost + 1));
+				}
+			}
+		}
+		return -1;
+	}
+}

@@ -1,0 +1,27 @@
+class Solution {
+	int maxSumAfterPartitioning(int[] arr, int k) {
+		int dp = new int[501][501];
+		for (int s: dp) {	
+			Arrays.fill(s,-1);
+		}
+		return solve(arr,k,0,0,dp);
+	}
+	int solve(int a, int k, int i, int l, int dp) {
+		if (i >= a.length) {
+			return 0;
+		}
+		if (dp[i][l] != -1) {
+			return dp[i][l];
+		}
+		int res = 0;
+		int currMax = -1;
+		for (int j = i; j < Math.min(i + k,a.length); j++) {
+			currMax = Math.max(currMax,a[j]);
+			int partitionSum = (j - i + 1) * currMax;
+			int remainingSum = solve(a,k,j + 1,j - i + 1,dp);
+			res = Math.max(res,partitionSum + remainingSum);
+		}
+		dp[i][l] = res;
+		return res;
+	}
+}

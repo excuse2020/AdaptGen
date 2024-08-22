@@ -1,0 +1,48 @@
+class Solution {
+	ListNode findTail(ListNode head) {
+		if (head == null) {
+			return null;
+		}
+		while (head.next != null) {
+			head = head.next;
+		}
+		return head;
+	}
+	ListNode sort(ListNode head) {
+		if (head == null) {
+			return null;
+		}
+		ListNode h = head.next;
+		ListNode left = new ListNode(0);
+		ListNode right = new ListNode(0);
+		while (h != null) {
+			if (head.val >= h.val) {
+				ListNode temp = left.next;
+				left.next = h;
+				h = h.next;
+				left.next.next = temp;
+			} 
+			else {
+				ListNode temp = right.next;
+				right.next = h;
+				h = h.next;
+				right.next.next = temp;
+			}
+		}
+		left = sort(left.next);
+		right = sort(right.next);
+		ListNode tail = findTail(left);
+		if (tail == null) {
+			head.next = right;
+			return head;
+		} 
+		else {
+			tail.next = head;
+			head.next = right;
+			return left;
+		}
+	}
+	ListNode sortInList(ListNode head) {
+		return sort(head);
+	}
+}

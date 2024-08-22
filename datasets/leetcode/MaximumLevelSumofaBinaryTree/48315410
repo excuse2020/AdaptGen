@@ -1,0 +1,29 @@
+class Solution {
+	int height(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		return Math.max(height(root.left),height(root.right)) + 1;
+	}
+	void helper(TreeNode root, int[] sum, int level) {
+		if (root == null) {
+			return;
+		}
+		sum[level] = sum[level] + root.val;
+		helper(root.left,sum,level + 1);
+		helper(root.right,sum,level + 1);
+	}
+	int maxLevelSum(TreeNode root) {
+		int[] levels = new int[height(root) + 1];
+		helper(root,levels,1);
+		int max = levels[1];
+		int maxLevel = 1;
+		for (int i = 1; i < levels.length; i++) {
+			if (levels[i] > max) {
+				maxLevel = i;
+				max = levels[i];
+			}
+		}
+		return maxLevel;
+	}
+}

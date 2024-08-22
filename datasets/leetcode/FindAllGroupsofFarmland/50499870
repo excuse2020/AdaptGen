@@ -1,0 +1,37 @@
+class Solution {
+	int[][] findFarmland(int[][] land) {
+		int n = land.length, m = land[0].length, cnt = new int[n][m][2], size = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = m - 1; j > -1; j--) {
+				if (land[i][j] != 0 && j != m - 1) {
+					cnt[i][j][0] += cnt[i][j + 1][0];
+				}
+				cnt[i][j][0] += land[i][j];
+			}
+		}
+		for (int i = n - 1; i > -1; i--) {
+			for (int j = 0; j < m; j++) {
+				if (land[i][j] != 0 && i != n - 1) {
+					cnt[i][j][1] += cnt[i + 1][j][1];
+				}
+				cnt[i][j][1] += land[i][j];
+				if (land[i][j] != 0 && (i - 1 == -1 || land[i - 1][j] == 0) && (j - 1 == -1 || land[i][j - 1] == 0)) {
+					land[i][j] = -1;
+					size++;
+				}
+			}
+		}
+		int cords = new int[size][4], k = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				if (land[i][j] == -1) {
+					cords[k][0] = i;
+					cords[k][1] = j;
+					cords[k][2] = i + cnt[i][j][1] - 1;
+					cords[k++][3] = j + cnt[i][j][0] - 1;
+				}
+			}
+		}
+		return cords;
+	}
+}

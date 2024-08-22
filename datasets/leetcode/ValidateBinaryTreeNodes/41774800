@@ -1,0 +1,49 @@
+class Solution {
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		int[] count = new int[n];
+		for (int i = 0; i < n; i++) {
+			if (leftChild[i] != -1) {
+				count[leftChild[i]]++;
+			}
+			if (rightChild[i] != -1) {
+				count[rightChild[i]]++;
+			}
+		}
+		int rootNode = -1;
+		for (int i = 0; i < n; i++) {
+			if (count[i] == 0) {
+				if (rootNode == -1) {
+					rootNode = i;
+				} 
+				else {
+					return false;
+				}
+			}
+		}
+		if (rootNode == -1) {
+			return false;
+		}
+		boolean[] visited = new boolean[n];
+		Queue<Integer> queue = new LinkedList<>();
+		queue.offer(rootNode);
+		while (!queue.isEmpty()) {
+			int currNode = queue.poll();
+			if (visited[currNode]) {
+				return false;
+			}
+			visited[currNode] = true;
+			if (leftChild[currNode] != -1) {
+				queue.offer(leftChild[currNode]);
+			}
+			if (rightChild[currNode] != -1) {
+				queue.offer(rightChild[currNode]);
+			}
+		}
+		for (boolean v: visited) {	
+			if (!v) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

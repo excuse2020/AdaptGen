@@ -1,0 +1,27 @@
+class Solution {
+	int GetGold(int[][] grid, int i, int j, int maxSum) {
+		if (i < 0 || i >= grid.length || j < 0 || j >= grid[0].length) {
+			return maxSum;
+		}
+		if (grid[i][j] == 0) {
+			return maxSum;
+		}
+		maxSum += grid[i][j];
+		var crr = grid[i][j];
+		grid[i][j] = 0;
+		maxSum = Math.max(maxSum,Math.max(GetGold(grid,i + 1,j,maxSum),Math.max(GetGold(grid,i - 1,j,maxSum),Math.max(GetGold(grid,i,j + 1,maxSum),GetGold(grid,i,j - 1,maxSum)))));
+		grid[i][j] = crr;
+		return maxSum;
+	}
+	int getMaximumGold(int[][] grid) {
+		var sum = 0;
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				if (grid[i][j] != 0) {
+					sum = Math.max(sum,GetGold(grid,i,j,0));
+				}
+			}
+		}
+		return sum;
+	}
+}

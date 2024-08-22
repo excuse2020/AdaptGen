@@ -1,0 +1,29 @@
+class Solution {
+	boolean isPossible(int[] target) {
+		long totalSum = 0;
+		int len = target.length;
+		PriorityQueue<Long> maxHeap = new PriorityQueue<Long>(Collections.reverseOrder());
+		for (int num: target) {	
+			long val = num;
+			totalSum += val;
+			maxHeap.add(val);
+		}
+		while (maxHeap.size() > 0) {
+			long max = maxHeap.remove();
+			long remainingSum = totalSum - max;
+			if (max == 1 || remainingSum == 1) {
+				return true;
+			}
+			if (remainingSum == 0 || remainingSum > max) {
+				return false;
+			}
+			long updatedMax = max % remainingSum;
+			if (updatedMax == 0) {
+				return false;
+			}
+			maxHeap.add(updatedMax);
+			totalSum = remainingSum + updatedMax;
+		}
+		return true;
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	int MOD = (int) Math.pow(10,9) + 7;
+	int[][][] dp;
+	int[] group;
+	int maxG;
+	int maxP;
+	int[] profit;
+	int profitableSchemes(int n, int minProfit, int[] group, int[] profit) {
+		dp = new int[minProfit + 1][n + 1][group.length + 1];
+		this.group = group;
+		this.profit = profit;
+		maxG = n;
+		maxP = minProfit;
+		for (int[][] arr: dp) {	
+			for (int[] subArr: arr) {	
+				Arrays.fill(subArr,-1);
+			}
+		}
+		return minProfit != 0 ? solveRec(0,0,0) % MOD : (solveRec(0,0,0) + 1) % MOD;
+	}
+	int solveRec(int index, int curProfit, int curPeople) {
+		if (index >= group.length) {
+			return 0;
+		}
+		if (dp[Math.min(curProfit,maxP)][curPeople][index] != -1) {
+			return dp[Math.min(curProfit,maxP)][curPeople][index];
+		}
+		int ans = 0;
+		if (curPeople + group[index] <= maxG) {
+			if (curProfit + profit[index] >= maxP) {
+				ans += 1;
+			}
+			ans += solveRec(index + 1,curProfit + profit[index],curPeople + group[index]) % MOD;
+		}
+		ans += solveRec(index + 1,curProfit,curPeople) % MOD;
+		dp[Math.min(curProfit,maxP)][curPeople][index] = ans % MOD;
+		return ans;
+	}
+}

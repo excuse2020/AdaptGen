@@ -1,0 +1,40 @@
+class Solution {
+	int play(int index, int[] stoneValue, int turn, Integer[][] dp) {
+		int n = stoneValue.length;
+		if (index == n) {
+			return 0;
+		}
+		if (dp[index][turn] != null) {
+			return dp[index][turn];
+		}
+		if (turn == 0) {
+			dp[index][turn] = Integer.MIN_VALUE;
+			int sum = 0;
+			for (int i = 0; i < 3 && (index + i) < n; i++) {
+				sum += stoneValue[i + index];
+				dp[index][turn] = Math.max(dp[index][turn],sum + play(index + i,stoneValue,1,dp));
+			}
+		} 
+		else {
+			dp[index][turn] = Integer.MAX_VALUE;
+			int sum = 0;
+			for (int i = 0; i < 3 && (index + i) < n; i++) {
+				sum += stoneValue[i + index];
+				dp[index][turn] = Math.min(dp[index][turn],play(index + i,stoneValue,0,dp) - sum);
+			}
+		}
+		return dp[index][turn];
+	}
+	String stoneGameIII(int[] stoneValue) {
+		int n = stoneValue.length;
+		Integer[][] dp = new Integer[n][2];
+		int result = play(0,stoneValue,0,dp);
+		if (result > 0) {
+			return "Alice";
+		}
+		if (result < 0) {
+			return "Bob";
+		}
+		return "Tie";
+	}
+}

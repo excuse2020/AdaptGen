@@ -1,0 +1,38 @@
+class Solution {
+	int count = 0;
+	void helper(int node, boolean visited, List<List<Integer>> in, List<List<Integer>> out) {
+		if (visited[node]) {
+			return;
+		}
+		visited[node] = true;
+		for (Integer i: out.get(node)) {	
+			if (!visited[i]) {
+				this.count++;
+				helper(i,visited,in,out);
+			}
+		}
+		for (Integer i: in.get(node)) {	
+			if (!visited[i]) {
+				helper(i,visited,in,out);
+			}
+		}
+		return;
+	}
+	int minReorder(int n, int[][] connections) {
+		List<List<Integer>> in = new ArrayList<>();
+		List<List<Integer>> out = new ArrayList<>();
+		boolean visited = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			in.add(new ArrayList<>());
+			out.add(new ArrayList<>());
+		}
+		for (int i = 0; i < connections.length; i++) {
+			int v = connections[i][0];
+			int u = connections[i][1];
+			out.get(v).add(u);
+			in.get(u).add(v);
+		}
+		helper(0,visited,in,out);
+		return count;
+	}
+}

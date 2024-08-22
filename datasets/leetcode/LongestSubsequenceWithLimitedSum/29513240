@@ -1,0 +1,45 @@
+class Solution {
+	int[] answerQueries(int[] nums, int[] queries) {
+		Arrays.sort(nums);
+		int M = queries.length;
+		int N = nums.length;
+		int[] psum = new int[N];
+		psum[0] = nums[0];
+		for (int i = 1; i < N; i++) {
+			psum[i] = nums[i] + psum[i - 1];
+		}
+		int[] a = new int[M];
+		for (int i = 0; i < M; i++) {
+			int target = queries[i];
+			int pos = bsearch(target,psum);
+			if (pos == 0) {
+				if (a[0] > target) {
+					a[i] = 0;
+				} 
+				else {
+					a[i] = 1;
+				}
+			} 
+			else {
+				a[i] = pos + 1;
+			}
+		}
+		return a;
+	}
+	int bsearch(int val, int[] nums) {
+		int l = 0, r = nums.length - 1;
+		while (l <= r) {
+			int mid = (l + r) / 2;
+			if (nums[mid] == val) {
+				return mid;
+			} 
+			else if (nums[mid] > val) {
+				r = mid - 1;
+			} 
+			else {
+				l = mid + 1;
+			}
+		}
+		return r;
+	}
+}

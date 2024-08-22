@@ -1,0 +1,58 @@
+class Solution {
+	Set<Transaction> addInvalidTransaction(List<Transaction> runningTxns, HashSet<Transaction> invalidTxns) {
+		if (runningTxns.isEmpty()) {
+			return invalidTxns;
+		} 
+		else {
+			var currentTxn = runningTxns.get(0);
+			runningTxns.remove(0);
+			if (!currentTxn.isValidAmount()) {
+				invalidTxns.add(currentTxn);
+			}
+			if (runningTxns.size() >= 1) {
+				for (Transaction txn: runningTxns) {	
+					if (Math.abs(currentTxn.time - txn.time) <= 60 && !currentTxn.city.equals(txn.city)) {
+						invalidTxns.add(txn);
+						invalidTxns.add(currentTxn);
+					}
+				}
+			}
+			return addInvalidTransaction(runningTxns,invalidTxns);
+		}
+	}
+	List<String> invalidTransactions(String[] txns) {
+		var invalidTxns = new HashSet<Transaction>();
+		var txnMap = new HashMap<String, ArrayList<Transaction>>();
+		for (String txnString: txns) {	
+			var txn = Transaction.fromString(txnString);
+			var txnName = txn.name;
+			txnMap.putIfAbsent(txnName,new ArrayList<>());
+			txnMap.get(txnName).add(txn);
+		}
+		for (String txnName: txnMap.keySet()) {	
+			addInvalidTransaction(txnMap.get(txnName),invalidTxns);
+		}
+		return invalidTxns.stream().map().collect(Collectors.toList());
+	}
+}
+class Transaction {
+	int amount;
+	String city;
+	String name;
+	int time;
+	Transaction fromString(String transaction) {
+		var txn = new Transaction();
+		var txnValues = transaction.split(",");
+		txn.name = txnValues[0];
+		txn.time = Integer.parseInt(txnValues[1]);
+		txn.amount = Integer.parseInt(txnValues[2]);
+		txn.city = txnValues[3];
+		return txn;
+	}
+	boolean isValidAmount() {
+		return amount < 1000;
+	}
+	String toString() {
+		return name + ",";
+	}
+}

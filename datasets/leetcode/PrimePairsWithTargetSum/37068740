@@ -1,0 +1,40 @@
+class Solution {
+	List<List<Integer>> findPrimePairs(int n) {
+		List<List<Integer>> res = new ArrayList();
+		if (n <= 3) {
+			return res;
+		}
+		if (n % 2 == 1) {
+			if (isPrime(n - 2)) {
+				res.add(new ArrayList(Arrays.asList(2,n - 2)));
+			}
+			return res;
+		}
+		boolean[] composite = new boolean[n + 1];
+		primeArray(composite,n);
+		for (int i = 2; i <= n / 2; i++) {
+			int complement = n - i;
+			if (!composite[i] && !composite[complement]) {
+				res.add(Arrays.asList(i,complement));
+			}
+		}
+		return res;
+	}
+	boolean isPrime(int n) {
+		for (int i = 2; i * i <= n; i++) {
+			if (n % i == 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+	void primeArray(boolean[] composite, int n) {
+		for (int i = 2; i * i <= n; i++) {
+			if (!composite[i]) {
+				for (int j = i * i; j <= n; j += i) {
+					composite[j] = true;
+				}
+			}
+		}
+	}
+}

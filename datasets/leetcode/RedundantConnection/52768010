@@ -1,0 +1,36 @@
+class Solution {
+	int findParent(int num, int[] disjointSet) {
+		while (disjointSet[num] != num) {
+			num = disjointSet[num];
+		}
+		return num;
+	}
+	int[] findRedundantConnection(int[][] edges) {
+		int n = edges.length + 1;
+		int[] res = new int[2];
+		int[] disjoinSet = new int[n];
+		int[] size = new int[n];
+		for (int i = 1; i < n; i += 1) {
+			disjoinSet[i] = i;
+			size[i] = 1;
+		}
+		for (int[] edge: edges) {	
+			int u = findParent(edge[0],disjoinSet);
+			int w = findParent(edge[1],disjoinSet);
+			if (u == w) {
+				res[0] = edge[0];
+				res[1] = edge[1];
+				continue;
+			}
+			if (size[u] >= size[w]) {
+				disjoinSet[w] = u;
+				size[u] += size[w];
+			} 
+			else {
+				disjoinSet[u] = w;
+				size[w] += size[u];
+			}
+		}
+		return res;
+	}
+}

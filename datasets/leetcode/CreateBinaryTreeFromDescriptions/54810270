@@ -1,0 +1,67 @@
+class Solution {
+	TreeNode createBinaryTree(int[][] descriptions) {
+		if (descriptions == null || descriptions.length == 0) {
+			return null;
+		}
+		HashMap<Integer, TreeNode> map = new HashMap<>();
+		for (int i = 0; i < descriptions.length; i++) {
+			int first = descriptions[i][0];
+			int second = descriptions[i][1];
+			boolean isLeft = descriptions[i][2] == 0 ? false : true;
+			if (map.containsKey(first) && map.containsKey(second)) {
+				if (isLeft) {
+					map.get(first).left = map.get(second);
+				} 
+				else {
+					map.get(first).right = map.get(second);
+				}
+			} 
+			else if (map.containsKey(first)) {
+				TreeNode node = new TreeNode(second);
+				map.put(second,node);
+				if (isLeft) {
+					map.get(first).left = node;
+				} 
+				else {
+					map.get(first).right = node;
+				}
+			} 
+			else if (map.containsKey(second)) {
+				TreeNode node = new TreeNode(first);
+				map.put(first,node);
+				if (isLeft) {
+					node.left = map.get(second);
+				} 
+				else {
+					node.right = map.get(second);
+				}
+			} 
+			else {
+				TreeNode root = new TreeNode(first);
+				TreeNode child = new TreeNode(second);
+				map.put(first,root);
+				map.put(second,child);
+				if (isLeft) {
+					root.left = child;
+				} 
+				else {
+					root.right = child;
+				}
+			}
+		}
+		boolean flag = false;
+		for (int i = 0; i < descriptions.length; i++) {
+			flag = false;
+			for (int j = 0; j < descriptions.length; j++) {
+				if (descriptions[i][0] == descriptions[j][1]) {
+					flag = true;
+					break;
+				}
+			}
+			if (flag == false) {
+				return map.get(descriptions[i][0]);
+			}
+		}
+		return null;
+	}
+}

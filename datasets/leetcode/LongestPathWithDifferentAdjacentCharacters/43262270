@@ -1,0 +1,37 @@
+class Solution {
+	int res = 1;
+	List<Integer>[] buildGraph(int[] parent, String s) {
+		List<Integer>[] graph = new List[parent.length];
+		for (int i = 0; i < graph.length; i++) {
+			graph[i] = new ArrayList<Integer>();
+		}
+		for (int i = 1; i < parent.length; i++) {
+			graph[parent[i]].add(i);
+		}
+		return graph;
+	}
+	int longestPath(int[] parent, String s) {
+		List<Integer>[] graph = buildGraph(parent,s);
+		traverse(graph,0,s);
+		return res;
+	}
+	int traverse(List<Integer>[] graph, int cur, String s) {
+		Integer path1 = 0;
+		Integer path2 = 0;
+		for (int child: graph[cur]) {	
+			int len = traverse(graph,child,s);
+			if (s.charAt(child) == s.charAt(cur)) {
+				continue;
+			}
+			if (path1 > len) {
+				path2 = Math.max(len,path2);
+			} 
+			else {
+				path2 = path1;
+				path1 = len;
+			}
+		}
+		res = Math.max(res,path1 + path2);
+		return path1 + 1;
+	}
+}

@@ -1,0 +1,31 @@
+class Solution {
+	int maxGold;
+	int n, m;
+	void dfs(int i, int j, int[][] grid, int[][] visited, int sum) {
+		if (i < 0 || i >= n || j < 0 || j >= m || grid[i][j] == 0 || visited[i][j] == 1) {
+			return;
+		}
+		visited[i][j] = 1;
+		sum += grid[i][j];
+		maxGold = Math.max(maxGold,sum);
+		dfs(i + 1,j,grid,visited,sum);
+		dfs(i,j + 1,grid,visited,sum);
+		dfs(i - 1,j,grid,visited,sum);
+		dfs(i,j - 1,grid,visited,sum);
+		visited[i][j] = 0;
+		sum -= grid[i][j];
+	}
+	int getMaximumGold(int[][] grid) {
+		this.n = grid.length;
+		this.m = grid[0].length;
+		int[][] visited = new int[n][m];
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				if (grid[i][j] != 0) {
+					dfs(i,j,grid,visited,0);
+				}
+			}
+		}
+		return maxGold;
+	}
+}

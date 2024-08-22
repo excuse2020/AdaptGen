@@ -1,0 +1,31 @@
+class Solution {
+	int Parent;
+	int count = 0;
+	int visited;
+	int findParent(int child) {
+		if (visited[child] > 0 || Parent[child] == -1) {
+			return 0;
+		}
+		visited[child] = 1 + findParent(Parent[child]);
+		return visited[child];
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		visited = new int[n];
+		Parent = new int[n];
+		Arrays.fill(Parent,-1);
+		for (int[] pair: edges) {	
+			if (Parent[pair[1]] != -1) {
+				Parent[pair[0]] = pair[1];
+			} 
+			else {
+				Parent[pair[1]] = pair[0];
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			if (hasApple.get(i)) {
+				count += findParent(i);
+			}
+		}
+		return 2 * count;
+	}
+}

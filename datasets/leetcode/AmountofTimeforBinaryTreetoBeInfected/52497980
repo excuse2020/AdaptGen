@@ -1,0 +1,64 @@
+class Solution {
+	TreeNode TargetKonHai(TreeNode root, int target, Map<TreeNode, TreeNode> parentMap) {
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(root);
+		TreeNode targetNode = null;
+		while (!q.isEmpty()) {
+			int n = q.size();
+			for (int i = 0; i < n; i++) {
+				TreeNode current = q.poll();
+				if (current.val == target) {
+					targetNode = current;
+				}
+				if (current.left != null) {
+					parentMap.put(current.left,current);
+					q.add(current.left);
+				}
+				if (current.right != null) {
+					parentMap.put(current.right,current);
+					q.add(current.right);
+				}
+			}
+		}
+		return targetNode;
+	}
+	int amountOfTime(TreeNode root, int start) {
+		Map<TreeNode, TreeNode> parentMap = new HashMap<>();
+		TreeNode targetNode = TargetKonHai(root,start,parentMap);
+		return bfs(targetNode,parentMap);
+	}
+	int bfs(TreeNode targetNode, Map<TreeNode, TreeNode> parentMap) {
+		Map<TreeNode, Boolean> visited = new HashMap<>();
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(targetNode);
+		visited.put(targetNode,true);
+		int time = 0;
+		while (!q.isEmpty()) {
+			int n = q.size();
+			boolean burned = false;
+			for (int i = 0; i < n; i++) {
+				TreeNode current = q.poll();
+				if (current.left != null && !visited.containsKey(current.left)) {
+					q.add(current.left);
+					visited.put(current.left,true);
+					burned = true;
+				}
+				if (current.right != null && !visited.containsKey(current.right)) {
+					q.add(current.right);
+					visited.put(current.right,true);
+					burned = true;
+				}
+				TreeNode parent = parentMap.get(current);
+				if (parent != null && !visited.containsKey(parent)) {
+					q.add(parent);
+					visited.put(parent,true);
+					burned = true;
+				}
+			}
+			if (burned == true) {
+				time++;
+			}
+		}
+		return time;
+	}
+}

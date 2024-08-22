@@ -1,0 +1,36 @@
+class Solution {
+	Map<Integer, List<Integer>> graph;
+	List<List<Integer>> rslt;
+	void dfs(int src, int cur, boolean[] vis) {
+		if (src != cur) {
+			rslt.get(cur).add(src);
+		}
+		vis[cur] = true;
+		if (!graph.containsKey(cur)) {
+			return;
+		}
+		for (Integer child: graph.get(cur)) {	
+			if (!vis[child]) {
+				dfs(src,child,vis);
+			}
+		}
+	}
+	List<List<Integer>> getAncestors(int n, int[][] edges) {
+		graph = new HashMap<>();
+		for (int[] edge: edges) {	
+			int src = edge[0];
+			int dst = edge[1];
+			graph.putIfAbsent(src,new ArrayList<>());
+			graph.get(src).add(dst);
+		}
+		rslt = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			rslt.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			boolean[] vis = new boolean[n];
+			dfs(i,i,vis);
+		}
+		return rslt;
+	}
+}

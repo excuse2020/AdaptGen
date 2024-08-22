@@ -1,0 +1,19 @@
+class Solution {
+	int trap(int[] height) {
+		Stack<Integer> decStack = new Stack<>();
+		int trappedWater = 0;
+		for (int i = 0; i < height.length; i++) {
+			while (!decStack.isEmpty() && height[i] > height[decStack.peek()]) {
+				int top = decStack.pop();
+				if (decStack.isEmpty()) {
+					break;
+				}
+				int width = i - decStack.peek();
+				int wallHeight = Math.min(height[i],height[decStack.peek()]) - height[top];
+				trappedWater += (width * wallHeight);
+			}
+			decStack.push(i);
+		}
+		return trappedWater;
+	}
+}

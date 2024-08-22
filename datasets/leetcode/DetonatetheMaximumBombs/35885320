@@ -1,0 +1,32 @@
+class Solution {
+	int bfs(int[][] bombs, Queue<Integer> q, int n) {
+		int total = 0;
+		boolean[] blasted = new boolean[n];
+		while (!q.isEmpty()) {
+			int index = q.poll();
+			if (!blasted[index]) {
+				total++;
+				blasted[index] = true;
+				for (int i = 0; i < n; i++) {
+					if (check(bombs[index][0],bombs[index][1],bombs[index][2],bombs[i][0],bombs[i][1]) && !blasted[i]) {
+						q.add(i);
+					}
+				}
+			}
+		}
+		return total;
+	}
+	boolean check(int a, int b, int r, int p1, int p2) {
+		return Math.sqrt(Math.pow(p1 - a,2) + Math.pow(p2 - b,2)) <= r;
+	}
+	int maximumDetonation(int[][] bombs) {
+		int n = bombs.length;
+		int result = 0;
+		for (int i = 0; i < n; i++) {
+			Queue<Integer> q = new LinkedList<>();
+			q.add(i);
+			result = Math.max(result,bfs(bombs,q,n));
+		}
+		return result;
+	}
+}

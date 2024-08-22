@@ -1,0 +1,36 @@
+class Solution {
+	List<TreeNode> allPossibleFBT(int n) {
+		List<TreeNode> dp = new ArrayList[n + 1];
+		System.out.println(Arrays.toString(dp));
+		bt(n,dp);
+		return dp[n];
+	}
+	List<TreeNode> bt(int n, List<TreeNode> dp) {
+		if (n % 2 == 0) {
+			return dp[n] = new ArrayList<>();
+		}
+		if (n == 1) {
+			List<TreeNode> res = new ArrayList<>();
+			TreeNode root = new TreeNode();
+			res.add(root);
+			return dp[n] = res;
+		}
+		if (dp[n] != null) {
+			return dp[n];
+		}
+		List<TreeNode> res = new ArrayList<>();
+		for (int i = 1; i < n; i += 2) {
+			List<TreeNode> left = bt(i,dp);
+			List<TreeNode> right = bt(n - i,dp);
+			for (TreeNode l: left) {	
+				for (TreeNode r: right) {	
+					TreeNode root = new TreeNode();
+					root.left = l;
+					root.right = r;
+					res.add(root);
+				}
+			}
+		}
+		return dp[n] = res;
+	}
+}

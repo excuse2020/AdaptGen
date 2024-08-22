@@ -1,0 +1,39 @@
+class Solution {
+	int countPairs(TreeNode root, int distance) {
+		return solve(root,distance,new ArrayList<>());
+	}
+	int solve(TreeNode node, int dist, List<Integer> ls) {
+		if (node == null) {
+			return 0;
+		}
+		if (node.left == null && node.right == null) {
+			ls.add(0);
+			return 0;
+		}
+		List<Integer> left = new ArrayList<>();
+		List<Integer> right = new ArrayList<>();
+		int count = 0;
+		count += solve(node.left,dist,left);
+		for (int i = 0; i < left.size(); i++) {
+			left.set(i,left.get(i) + 1);
+		}
+		count += solve(node.right,dist,right);
+		for (int i = 0; i < right.size(); i++) {
+			right.set(i,right.get(i) + 1);
+		}
+		for (int i = 0; i < left.size(); i++) {
+			for (int j = 0; j < right.size(); j++) {
+				if (left.get(i) + right.get(j) <= dist) {
+					count++;
+				}
+			}
+		}
+		for (int x: left) {	
+			ls.add(x);
+		}
+		for (int x: right) {	
+			ls.add(x);
+		}
+		return count;
+	}
+}

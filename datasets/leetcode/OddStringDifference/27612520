@@ -1,0 +1,36 @@
+class Solution {
+	int[] getDiff(char[] chrs) {
+		int[] diffs = new int[chrs.length - 1];
+		for (int i = 0; i < chrs.length - 1; i++) {
+			diffs[i] = chrs[i + 1] - chrs[i];
+		}
+		return diffs;
+	}
+	int getOddWord(char[] word1, char[] word2) {
+		for (int i = 0; i < word1.length - 1; i++) {
+			if (word1[i + 1] - word1[i] != word2[i + 1] - word2[i]) {
+				return 0;
+			}
+		}
+		return -1;
+	}
+	String oddString(String[] words) {
+		int[] diffs = getDiff(words[0].toCharArray());
+		boolean duplicatedFound = false;
+		for (int i = 1; i < words.length; i++) {
+			char[] chrs = words[i].toCharArray();
+			for (int j = 0; j < chrs.length - 1; j++) {
+				if (diffs[j] != chrs[j + 1] - chrs[j]) {
+					if (duplicatedFound) {
+						return words[i];
+					} 
+					else {
+						return words[i + getOddWord(chrs,words[i + 1].toCharArray())];
+					}
+				}
+			}
+			duplicatedFound = true;
+		}
+		return "";
+	}
+}

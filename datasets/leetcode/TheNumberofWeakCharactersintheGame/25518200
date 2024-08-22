@@ -1,0 +1,30 @@
+class Solution {
+	int numberOfWeakCharacters(int[][] p) {
+		int ans = 0;
+		Arrays.sort(p,(a, b) -> {a[0] != b[0] ? a[0] - b[0] : a[1] - b[1]});
+		PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+		int i = p.length - 1;
+		int max = p[i][1];
+		int j = i;
+		while (j >= 0 && p[i][0] == p[j][0]) {
+			max = Math.max(max,p[j][1]);
+			j--;
+		}
+		pq.offer(max);
+		max = 0;
+		while (j >= 0) {
+			if (p[j][0] == p[j + 1][0]) {
+				max = Math.max(max,p[j][1]);
+			} 
+			else {
+				pq.offer(max);
+				max = p[j][1];
+			}
+			if (pq.peek() > p[j][1]) {
+				ans++;
+			}
+			j--;
+		}
+		return ans;
+	}
+}

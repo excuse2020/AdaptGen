@@ -1,0 +1,27 @@
+class Solution {
+	int[] bCache;
+	void backwardCache(int[] prices) {
+		bCache = new int[prices.length];
+		int maxProfit = 0;
+		int sellPrice = prices[prices.length - 1];
+		for (int index = prices.length - 1; index >= 0; index--) {
+			int todayPrice = prices[index];
+			sellPrice = Math.max(sellPrice,todayPrice);
+			bCache[index] = maxProfit = Math.max(maxProfit,sellPrice - todayPrice);
+		}
+	}
+	int forwardCache(int[] prices) {
+		int result = 0;
+		int buyPrice = prices[0];
+		for (int index = 0; index < prices.length; index++) {
+			int todayPrice = prices[index];
+			buyPrice = Math.min(buyPrice,todayPrice);
+			result = Math.max(result,todayPrice - buyPrice + bCache[index]);
+		}
+		return result;
+	}
+	int maxProfit(int[] prices) {
+		backwardCache(prices);
+		return forwardCache(prices);
+	}
+}

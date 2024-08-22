@@ -1,0 +1,46 @@
+class Solution {
+	Map<Character, Set<String>> dict = new HashMap<>();
+	long res = 0;
+	long distinctNames(String[] ideas) {
+		int N = ideas.length;
+		for (int i = 0; i < N; i++) {
+			char c = ideas[i].charAt(0);
+			if (!dict.containsKey(c)) {
+				dict.put(c,new HashSet<>());
+			}
+			dict.get(c).add(ideas[i].substring(1));
+		}
+		for (char k1: dict.keySet()) {	
+			Set<String> s1 = dict.get(k1);
+			for (char k2: dict.keySet()) {	
+				if (k1 == k2) {
+					continue;
+				}
+				Set<String> s2 = dict.get(k2);
+				Set<String> common = getCommon(s1,s2);
+				int a = getDiff(s1,common);
+				int b = getDiff(s2,common);
+				res += a * (long) b;
+			}
+		}
+		return res;
+	}
+	Set<String> getCommon(Set<String> a, Set<String> b) {
+		Set<String> ret = new HashSet<>();
+		for (String s: a) {	
+			if (b.contains(s)) {
+				ret.add(s);
+			}
+		}
+		return ret;
+	}
+	int getDiff(Set<String> a, Set<String> b) {
+		int ret = 0;
+		for (String s: a) {	
+			if (!b.contains(s)) {
+				ret++;
+			}
+		}
+		return ret;
+	}
+}

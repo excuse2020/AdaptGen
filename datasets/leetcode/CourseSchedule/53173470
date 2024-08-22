@@ -1,0 +1,32 @@
+class Solution {
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		int k = numCourses;
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		Queue<Integer> q = new LinkedList<>();
+		for (int i = 0; i < numCourses; i++) {
+			adj.add(new ArrayList<>());
+		}
+		int[] topobhai = new int[numCourses];
+		for (int[] arr: prerequisites) {	
+			topobhai[arr[0]] += 1;
+			adj.get(arr[1]).add(arr[0]);
+		}
+		for (int i = 0; i < numCourses; i++) {
+			if (topobhai[i] == 0) {
+				q.add(i);
+				k--;
+			}
+		}
+		while (!q.isEmpty()) {
+			int curr = q.remove();
+			for (int item: adj.get(curr)) {	
+				topobhai[item] -= 1;
+				if (topobhai[item] == 0) {
+					q.add(item);
+					k--;
+				}
+			}
+		}
+		return k == 0;
+	}
+}

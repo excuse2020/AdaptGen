@@ -1,0 +1,30 @@
+class Solution {
+	int cherryPickup(int[][] grid) {
+		int[][][] mem = new int[71][71][71];
+		for (int[][] arr2: mem) {	
+			for (int[] arr1: arr2) {	
+				Arrays.fill(arr1,-1);
+			}
+		}
+		return cherryPickup(grid,new int{0, -1, 1},0,0,grid[0].length - 1,mem);
+	}
+	int cherryPickup(int[][] grid, int[] dir, int row, int c1, int c2, int[][][] mem) {
+		if (row == grid.length) {
+			return 0;
+		}
+		if (c1 >= grid[0].length || c2 >= grid[0].length || c1 < 0 || c2 < 0) {
+			return 0;
+		}
+		if (mem[row][c1][c2] != -1) {
+			return mem[row][c1][c2];
+		}
+		int result = 0;
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				result = Math.max(result,cherryPickup(grid,dir,row + 1,c1 + dir[i],c2 + dir[j],mem));
+			}
+		}
+		result += c1 == c2 ? grid[row][c1] : grid[row][c1] + grid[row][c2];
+		return mem[row][c1][c2] = result;
+	}
+}

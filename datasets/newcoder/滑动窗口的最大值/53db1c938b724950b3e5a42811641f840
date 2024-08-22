@@ -1,0 +1,26 @@
+class Solution {
+	ArrayList<Integer> maxInWindows(int[] num, int size) {
+		if (num.length < size || size < 1 || num.length == 0) {
+			return new ArrayList<Integer>();
+		}
+		ArrayList<Integer> list = new ArrayList<>();
+		ArrayDeque<Integer> deque = new ArrayDeque<>();
+		int begin = -1;
+		for (int i = 0; i < num.length; i++) {
+			while (!deque.isEmpty() && deque.getLast() < num[i]) {
+				deque.pollLast();
+			}
+			deque.add(num[i]);
+			if (deque.size() == 1) {
+				begin = i;
+			}
+			if (begin + size <= i) {
+				deque.pollFirst();
+			}
+			if (i + 1 >= size) {
+				list.add(deque.peekFirst());
+			}
+		}
+		return list;
+	}
+}

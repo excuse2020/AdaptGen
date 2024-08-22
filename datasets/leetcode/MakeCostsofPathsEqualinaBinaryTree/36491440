@@ -1,0 +1,48 @@
+class Solution {
+	int ans;
+	int[] leftSum;
+	int maxLength;
+	int[] rightSum;
+	int getMaxLength(int[] cost, int i) {
+		if (i >= cost.length) {
+			return 0;
+		}
+		if (cost.length <= ((2 * i) + 1) || cost.length <= ((2 * i) + 2)) {
+			leftSum[i] = cost[i];
+			rightSum[i] = cost[i];
+			return cost[i];
+		}
+		leftSum[i] = getMaxLength(cost,2 * i + 1) + cost[i];
+		rightSum[i] = getMaxLength(cost,2 * i + 2) + cost[i];
+		return Math.max(leftSum[i],rightSum[i]);
+	}
+	int minIncrements(int n, int[] cost) {
+		leftSum = new int[n];
+		rightSum = new int[n];
+		maxLength = getMaxLength(cost,0);
+		traverse1(cost,maxLength,0);
+		return ans;
+	}
+	void traverse1(int[] cost, int remainingSum, int i) {
+		if (i >= cost.length) {
+			return;
+		}
+		if (cost.length <= ((2 * i) + 1) || cost.length <= ((2 * i) + 2)) {
+			ans = ans + (remainingSum - leftSum[i]);
+			return;
+		}
+		int inc = 0;
+		if (leftSum[i] < remainingSum && rightSum[i] < remainingSum) {
+			inc = remainingSum - Math.max(leftSum[i],rightSum[i]);
+			leftSum[i] += inc;
+			rightSum[i] += inc;
+			cost[i] += inc;
+			ans += inc;
+		} 
+		else {
+			inc = 0;
+		}
+		traverse1(cost,remainingSum - cost[i],2 * i + 1);
+		traverse1(cost,remainingSum - cost[i],2 * i + 2);
+	}
+}

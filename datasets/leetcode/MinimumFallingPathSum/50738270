@@ -1,0 +1,23 @@
+class Solution {
+	int minFallingPathSum(int[][] matrix) {
+		int ans = Integer.MAX_VALUE;
+		for (int i = matrix.length - 1; i >= 0; i--) {
+			ans = Integer.min(ans,minFallingPathSumUtil(matrix,0,i));
+		}
+		return ans;
+	}
+	int minFallingPathSumUtil(int matrix, int row, int col) {
+		if (row == matrix.length - 1) {
+			return matrix[row][col];
+		}
+		int leftDia = Integer.MAX_VALUE, down = Integer.MAX_VALUE, rightDia = Integer.MAX_VALUE;
+		if (col - 1 >= 0) {
+			leftDia = matrix[row][col] + minFallingPathSumUtil(matrix,row + 1,col - 1);
+		}
+		down = matrix[row][col] + minFallingPathSumUtil(matrix,row + 1,col);
+		if (col + 1 < matrix[0].length) {
+			rightDia = matrix[row][col] + minFallingPathSumUtil(matrix,row + 1,col + 1);
+		}
+		return Integer.min(down,Integer.min(leftDia,rightDia));
+	}
+}

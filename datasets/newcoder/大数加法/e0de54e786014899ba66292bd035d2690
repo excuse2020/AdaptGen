@@ -1,0 +1,43 @@
+class Solution {
+	int[] charArray2IntArray(char[] charArray) {
+		int[] intArray = new int[charArray.length];
+		for (int i = 0; i < charArray.length; i++) {
+			intArray[i] = charArray[i] - '0';
+		}
+		return intArray;
+	}
+	String solve(String s, String t) {
+		int largerLength = s.length() - t.length() > 0 ? s.length() : t.length();
+		int length = largerLength + 1;
+		char[] charArrayS = s.toCharArray();
+		char[] charArrayT = t.toCharArray();
+		int[] arrayS = charArray2IntArray(charArrayS);
+		int[] arrayT = charArray2IntArray(charArrayT);
+		int[][] temp = new int[length][3];
+		for (int i = 0; i < length; i++) {
+			if (arrayS.length - i > 0) {
+				temp[i][0] = arrayS[arrayS.length - 1 - i];
+			}
+			if (arrayT.length - i > 0) {
+				temp[i][1] = arrayT[arrayT.length - 1 - i];
+			}
+			int unit = temp[i][0] + temp[i][1];
+			if (unit > 9) {
+				temp[i][2] = unit - 10;
+				temp[i + 1][2] = 1;
+			} 
+			else {
+				temp[i][2] = unit;
+			}
+		}
+		int result = 0;
+		StringBuilder stringBuilder = new StringBuilder();
+		if (temp[temp.length - 1][2] != 0) {
+			stringBuilder.append(temp[temp.length - 1][2]);
+		}
+		for (int j = temp.length - 2; j >= 0; j--) {
+			stringBuilder.append(temp[j][2]);
+		}
+		return stringBuilder.toString();
+	}
+}

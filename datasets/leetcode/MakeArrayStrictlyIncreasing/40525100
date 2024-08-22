@@ -1,0 +1,47 @@
+class Solution {
+	Map<Integer, Integer> mp;
+	int n;
+	int makeArrayIncreasing(int[] arr1, int[] arr2) {
+		n = arr1.length;
+		mp = new HashMap<>();
+		Arrays.sort(arr2);
+		int ans = solve(0,Integer.MIN_VALUE,arr1,arr2);
+		return (ans != (int) (1e9 + 7) ? ans : -1);
+	}
+	int solve(int i, int prev, int[] arr1, int arr2) {
+		if (i >= n) {
+			return 0;
+		}
+		int result1 = (int) (1e9 + 7);
+		int memoKey = 1000 * prev + i;
+		if (mp.containsKey(memoKey)) {
+			return mp.get(memoKey);
+		}
+		if (arr1[i] > prev) {
+			result1 = solve(i + 1,arr1[i],arr1,arr2);
+		}
+		int result2 = (int) (1e9 + 7);
+		int replace = upperbound(arr2,prev,arr1[i]);
+		if (replace != -1) {
+			result2 = 1 + solve(i + 1,arr2[replace],arr1,arr2);
+		}
+		mp.put(memoKey,Math.min(result1,result2));
+		return Math.min(result1,result2);
+	}
+	int upperbound(int arr, int target, int prev) {
+		int left = 0;
+		int res = -1;
+		int right = arr.length - 1;
+		while (left <= right) {
+			int mid = (left + right) / 2;
+			if (arr[mid] > target) {
+				res = mid;
+				right = mid - 1;
+			} 
+			else {
+				left = mid + 1;
+			}
+		}
+		return res;
+	}
+}

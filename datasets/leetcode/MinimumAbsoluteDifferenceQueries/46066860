@@ -1,0 +1,52 @@
+class Solution {
+	int[] minDifference(int[] nums, int[][] queries) {
+		int maxNum = 0;
+		for (int i = 0; i < nums.length; i++) {
+			if (nums[i] > maxNum) {
+				maxNum = nums[i];
+			}
+		}
+		int[][] occurenceCount = new int[nums.length];
+		for (int i = 0; i < occurenceCount.length; i++) {
+			if (i == 0) {
+				occurenceCount[i] = new int[maxNum];
+			} 
+			else {
+				occurenceCount[i] = Arrays.copyOf(occurenceCount[i - 1],maxNum);
+			}
+			occurenceCount[i][nums[i] - 1]++;
+		}
+		int[] answers = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			int prevNum = -1;
+			int minDiff = -1;
+			int left = queries[i][0];
+			int right = queries[i][1];
+			int a_counted = 0;
+			for (int j = 0; (j < maxNum) && (a_counted < (right - left + 1)); j++) {
+				int count;
+				if (left == 0) {
+					count = occurenceCount[right][j];
+				} 
+				else {
+					count = occurenceCount[right][j] - occurenceCount[left - 1][j];
+				}
+				a_counted += count;
+				if (count > 0) {
+					if (minDiff > 0 && (j - prevNum < minDiff)) {
+						minDiff = j - prevNum;
+					} 
+					else if ((minDiff == -1) && (prevNum != -1)) {
+						minDiff = j - prevNum;
+					}
+					if (minDiff == 1) {
+						break;
+					}
+					prevNum = j;
+				}
+			}
+			answers[i] = minDiff;
+		}
+		return answers;
+	}
+}

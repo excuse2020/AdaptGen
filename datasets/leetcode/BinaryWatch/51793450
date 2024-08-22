@@ -1,0 +1,40 @@
+class Solution {
+	void construct(int count, List<String> list, String prefix, boolean isHour) {
+		if (count < 0) {
+			return;
+		}
+		if (prefix.length() == (isHour ? 4 : 6)) {
+			if (count == 0) {
+				int integer = Integer.parseInt(prefix,2);
+				if (isHour && integer < 12) {
+					list.add(integer + "");
+				} 
+				else if (!isHour && integer <= 59) {
+					list.add(integer < 10 ? ("0" + integer) : integer + "");
+				}
+			}
+			return;
+		}
+		construct(count - 1,list,prefix + "1",isHour);
+		construct(count,list,prefix + "0",isHour);
+	}
+	void generate(List<String> hours, List<String> mins, List<String> result) {
+		hours.stream().forEach((h) -> {mins.stream().forEach((m) -> {result.add(h + ":")})});
+	}
+	List<String> readBinaryWatch(int turnedOn) {
+		List<String> result = new ArrayList<>();
+		if (turnedOn > 8) {
+			return result;
+		}
+		for (int i = 0; i <= turnedOn; i++) {
+			if (i <= 4 && turnedOn - i <= 6) {
+				List<String> hours = new ArrayList<>();
+				List<String> mins = new ArrayList<>();
+				construct(i,hours,"",true);
+				construct(turnedOn - i,mins,"",false);
+				generate(hours,mins,result);
+			}
+		}
+		return result;
+	}
+}

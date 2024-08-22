@@ -1,0 +1,38 @@
+class Solution {
+	long helper(int i, List<Integer> maxHeights) {
+		long sum = maxHeights.get(i);
+		long last = sum;
+		for (int j = i - 1; j >= 0; j--) {
+			int curr = maxHeights.get(j);
+			if (curr < last) {
+				last = curr;
+			}
+			sum += last;
+		}
+		last = maxHeights.get(i);
+		for (int j = i + 1; j < maxHeights.size(); j++) {
+			int curr = maxHeights.get(j);
+			if (curr < last) {
+				last = curr;
+			}
+			sum += last;
+		}
+		return sum;
+	}
+	long maximumSumOfHeights(List<Integer> maxHeights) {
+		long max = 0;
+		for (int i = 0; i < maxHeights.size(); i++) {
+			int curr = maxHeights.get(i);
+			int prev = i == 0 ? 0 : maxHeights.get(i - 1);
+			if (prev == curr) {
+				continue;
+			}
+			int next = i == maxHeights.size() - 1 ? 0 : maxHeights.get(i + 1);
+			if (curr < prev || curr < next) {
+				continue;
+			}
+			max = Math.max(max,helper(i,maxHeights));
+		}
+		return max;
+	}
+}

@@ -1,0 +1,43 @@
+class Solution {
+	int getAvailSlotBefore(int time, int[] passengers) {
+		int ptr = passengers.length - 1;
+		while (ptr >= 0) {
+			if (passengers[ptr] < time) {
+				return time;
+			} 
+			else if (passengers[ptr] == time) {
+				time--;
+				ptr--;
+			} 
+			else {
+				ptr--;
+			}
+		}
+		return time;
+	}
+	int latestTimeCatchTheBus(int[] buses, int[] passengers, int capacity) {
+		Arrays.sort(buses);
+		Arrays.sort(passengers);
+		int lastBusPassCount = 0;
+		int busPtr = 0;
+		int passengerPtr = 0;
+		for (int bus: buses) {	
+			lastBusPassCount = 0;
+			while (passengerPtr < passengers.length) {
+				if (bus >= passengers[passengerPtr] && lastBusPassCount < capacity) {
+					lastBusPassCount++;
+					passengerPtr++;
+				} 
+				else {
+					break;
+				}
+			}
+		}
+		if (lastBusPassCount < capacity) {
+			return getAvailSlotBefore(buses[buses.length - 1],passengers);
+		} 
+		else {
+			return getAvailSlotBefore(passengers[passengerPtr - 1],passengers);
+		}
+	}
+}

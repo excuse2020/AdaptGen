@@ -1,0 +1,53 @@
+class Solution {
+	List<List<Integer>> levelOrder(TreeNode root) {
+		List<List<Integer>> result = new ArrayList<>();
+		if (root == null) {
+			return result;
+		}
+		Queue<TreeNode> que = new ArrayDeque<>();
+		que.add(root);
+		List<Integer> level = new ArrayList<>();
+		while (que.size() > 0) {
+			int count = que.size();
+			for (int i = 0; i < count; i++) {
+				TreeNode node = que.remove();
+				level.add(node.val);
+				if (node.left != null) {
+					que.add(node.left);
+				}
+				if (node.right != null) {
+					que.add(node.right);
+				}
+			}
+			result.add(level);
+			level = new ArrayList<>();
+		}
+		return result;
+	}
+	int minimumOperations(TreeNode root) {
+		List<List<Integer>> list = levelOrder(root);
+		int count = 0;
+		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+		for (List<Integer> temp: list) {	
+			for (int i = 0; i < temp.size(); i++) {
+				map.put(temp.get(i),i);
+			}
+			List<Integer> copy = new ArrayList<>();
+			for (int i = 0; i < temp.size(); i++) {
+				copy.add(temp.get(i));
+			}
+			Collections.sort(copy);
+			for (int i = 0; i < temp.size(); i++) {
+				if (temp.get(i) != copy.get(i)) {
+					int index = map.get(copy.get(i));
+					Collections.swap(temp,index,i);
+					count++;
+					map.put(temp.get(i),i);
+					map.put(temp.get(index),index);
+				}
+			}
+			map = new HashMap<Integer, Integer>();
+		}
+		return count;
+	}
+}

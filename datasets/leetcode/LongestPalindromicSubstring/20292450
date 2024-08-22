@@ -1,0 +1,35 @@
+class Solution {
+	int max = 1;
+	Boolean[][] memo;
+	int start = 0, end = 0;
+	boolean dp(String s, int st, int e) {
+		if (memo[st][e] != null) {
+			return memo[st][e];
+		}
+		if (st == e) {
+			return true;
+		}
+		if (st > e) {
+			return true;
+		}
+		if (s.charAt(st) == s.charAt(e) && dp(s,st + 1,e - 1)) {
+			memo[st][e] = true;
+			if (max < e - st + 1) {
+				max = e - st + 1;
+				start = st;
+				end = e;
+			}
+		} 
+		else {
+			memo[st][e] = false;
+			dp(s,st + 1,e);
+			dp(s,st,e - 1);
+		}
+		return memo[st][e];
+	}
+	String longestPalindrome(String s) {
+		memo = new Boolean[s.length()][s.length()];
+		dp(s,0,s.length() - 1);
+		return s.substring(start,end + 1);
+	}
+}

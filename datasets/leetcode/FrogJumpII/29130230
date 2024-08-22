@@ -1,0 +1,54 @@
+class Solution {
+	boolean can(int dif, int a) {
+		int last = 0;
+		int prelast = 0;
+		boolean vi = new boolean[a.length];
+		for (int i = 1; i < a.length; i++) {
+			if (a[i] - a[last] > dif) {
+				if (last == prelast) {
+					return false;
+				}
+				last = prelast;
+				i--;
+				vi[last] = true;
+			} 
+			else {
+				prelast = i;
+			}
+		}
+		last = a.length - 1;
+		prelast = last;
+		for (int i = a.length - 2; i > -1; i--) {
+			if (vi[i]) {
+				continue;
+			}
+			if (a[last] - a[i] > dif) {
+				if (last == prelast) {
+					return false;
+				}
+				last = prelast;
+				i++;
+			} 
+			else {
+				prelast = i;
+			}
+		}
+		return true;
+	}
+	int maxJump(int[] a) {
+		int max = (int) 1e9;
+		int min = 0;
+		int ans = 0;
+		while (max >= min) {
+			int mid = (max + min) / 2;
+			if (can(mid,a)) {
+				max = mid - 1;
+				ans = mid;
+			} 
+			else {
+				min = mid + 1;
+			}
+		}
+		return ans;
+	}
+}

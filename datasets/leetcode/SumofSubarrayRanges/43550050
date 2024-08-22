@@ -1,0 +1,37 @@
+class Solution {
+	long subArrayRanges(int[] A) {
+		Deque<Integer> stMax = new ArrayDeque<>();
+		Deque<Integer> stMin = new ArrayDeque<>();
+		int n = A.length;
+		long total = 0;
+		for (int i = 0; i <= n; i++) {
+			while (!stMax.isEmpty() && (i == n || A[i] > A[stMax.peek()])) {
+				int maxId = stMax.pop();
+				int leftBoundary = -1;
+				int rightBoundary = i;
+				if (!stMax.isEmpty()) {
+					leftBoundary = stMax.peek();
+				}
+				int numLeft = maxId - leftBoundary;
+				int numRight = rightBoundary - maxId;
+				total += (long) A[maxId] * numLeft;
+			}
+			while (!stMin.isEmpty() && (i == n || A[i] < A[stMin.peek()])) {
+				int minId = stMin.pop();
+				int leftBoundary = -1;
+				int rightBoundary = i;
+				if (!stMin.isEmpty()) {
+					leftBoundary = stMin.peek();
+				}
+				int numLeft = minId - leftBoundary;
+				int numRight = rightBoundary - minId;
+				total -= (long) A[minId] * numLeft;
+			}
+			if (i < n) {
+				stMax.push(i);
+				stMin.push(i);
+			}
+		}
+		return total;
+	}
+}

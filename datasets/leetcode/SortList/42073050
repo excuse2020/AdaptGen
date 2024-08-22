@@ -1,0 +1,44 @@
+class Solution {
+	ListNode divide(ListNode h) {
+		if (h.next == null) {
+			return h;
+		}
+		ListNode s = h;
+		ListNode f = h;
+		while (f.next != null && f.next.next != null) {
+			s = s.next;
+			f = f.next.next;
+		}
+		ListNode t = s.next;
+		s.next = null;
+		return merge(divide(h),divide(t));
+	}
+	ListNode merge(ListNode h, ListNode t) {
+		ListNode k = new ListNode(0);
+		ListNode q = k;
+		while (h != null && t != null) {
+			if (h.val < t.val) {
+				q.next = h;
+				h = h.next;
+			} 
+			else {
+				q.next = t;
+				t = t.next;
+			}
+			q = q.next;
+		}
+		if (h != null) {
+			q.next = h;
+		}
+		if (t != null) {
+			q.next = t;
+		}
+		return k.next;
+	}
+	ListNode sortList(ListNode head) {
+		if (head == null) {
+			return null;
+		}
+		return divide(head);
+	}
+}

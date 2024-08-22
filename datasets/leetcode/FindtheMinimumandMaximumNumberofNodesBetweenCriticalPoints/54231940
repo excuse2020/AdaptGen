@@ -1,0 +1,53 @@
+class Solution {
+	int getMinDiff(List<Integer> list) {
+		int minDiff = Integer.MAX_VALUE;
+		for (int i = 0; i < list.size() - 1; i++) {
+			minDiff = Math.min(minDiff,list.get(i + 1) - list.get(i));
+		}
+		return minDiff;
+	}
+	int[] nodesBetweenCriticalPoints(ListNode head) {
+		if (head.next.next == null || head.next.next.next == null) {
+			int[] res = new int[2];
+			res[0] = -1;
+			res[1] = -1;
+			return res;
+		}
+		int[] res = new int[2];
+		List<Integer> list = new ArrayList<>();
+		List<Integer> nodePos = new ArrayList<>();
+		ListNode temp = head;
+		int pos = 1;
+		while (temp != null) {
+			if (list.size() > 2) {
+				int midElm = list.get(1);
+				if (midElm > list.get(0) && midElm > list.get(2)) {
+					nodePos.add(pos - 2);
+				} 
+				else if (midElm < list.get(0) && midElm < list.get(2)) {
+					nodePos.add(pos - 2);
+				}
+				list.remove(0);
+			}
+			list.add(temp.val);
+			temp = temp.next;
+			pos++;
+		}
+		int midElm = list.get(1);
+		if (midElm > list.get(0) && midElm > list.get(2)) {
+			nodePos.add(pos - 2);
+		} 
+		else if (midElm < list.get(0) && midElm < list.get(2)) {
+			nodePos.add(pos - 2);
+		}
+		if (nodePos.size() < 2) {
+			res[0] = -1;
+			res[1] = -1;
+			return res;
+		}
+		System.out.println(nodePos);
+		res[0] = getMinDiff(nodePos);
+		res[1] = nodePos.get(nodePos.size() - 1) - nodePos.get(0);
+		return res;
+	}
+}

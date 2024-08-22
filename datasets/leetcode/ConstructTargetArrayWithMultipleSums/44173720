@@ -1,0 +1,34 @@
+class Solution {
+	boolean isPossible(int[] arr) {
+		if (arr.length == 1) {
+			return arr[0] == 1;
+		}
+		PriorityQueue<Integer> p = new PriorityQueue<Integer>(arr.length, Collections.reverseOrder());
+		int s = 0;
+		for (int k: arr) {	
+			s += k;
+			if (k == 1) {
+				continue;
+			}
+			p.add(k);
+		}
+		int t = 0;
+		while (p.size() > 0) {
+			int a = p.poll();
+			int b = p.size() == 0 ? 1 : p.peek();
+			if (a == b) {
+				return false;
+			}
+			if (2 * a - s <= 0) {
+				return false;
+			}
+			int x = (int) Math.floor((a - b) / (s - a));
+			x = x == 0 ? 1 : x;
+			if ((a - (x * (s - a))) > 1) {
+				p.add((a - (x * (s - a))));
+			}
+			s -= (x * (s - a));
+		}
+		return true;
+	}
+}

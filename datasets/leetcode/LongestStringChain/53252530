@@ -1,0 +1,36 @@
+class Solution {
+	boolean isPredecessor(String[] words, int cur, int prev) {
+		if (words[cur].length() - words[prev].length() == 1) {
+			int p = 0, c = 0;
+			String curWord = words[cur];
+			String prevWord = words[prev];
+			for (p = 0, c = 0; p < prevWord.length() && c < curWord.length(); c++) {
+				if (curWord.charAt(c) == prevWord.charAt(p)) {
+					p++;
+				}
+			}
+			return p == words[prev].length();
+		}
+		return false;
+	}
+	int longestStrChain(String[] words) {
+		int[][] dp = new int[words.length + 1][words.length + 1];
+		Arrays.sort(words,(w1, w2) -> {w1.length() - w2.length()});
+		return longestStrChainTopDown(words);
+	}
+	int longestStrChainTopDown(String[] words) {
+		int[] dp = new int[words.length + 1];
+		int maxLen = 0;
+		for (int i = 0; i < words.length; i++) {
+			for (int j = 0; j < i; j++) {
+				if (isPredecessor(words,i,j) && dp[i] < (1 + dp[j])) {
+					dp[i] = 1 + dp[j];
+				}
+			}
+			if (maxLen < dp[i]) {
+				maxLen = dp[i];
+			}
+		}
+		return maxLen + 1;
+	}
+}

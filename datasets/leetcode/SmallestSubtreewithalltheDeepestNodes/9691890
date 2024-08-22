@@ -1,0 +1,44 @@
+class Solution {
+	TreeNode LCS(TreeNode root, TreeNode t1, TreeNode t2) {
+		if (root == null) {
+			return null;
+		}
+		if (root == t1 || root == t2) {
+			return root;
+		}
+		TreeNode left = LCS(root.left,t1,t2);
+		TreeNode right = LCS(root.right,t1,t2);
+		if (left != null && right != null) {
+			return root;
+		}
+		return left == null ? right : left;
+	}
+	int _depth(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		int leftHeight = this._depth(root.left);
+		int rightHeight = this._depth(root.right);
+		return leftHeight > rightHeight ? leftHeight + 1 : rightHeight + 1;
+	}
+	void findNodeAtDepth(TreeNode root, int currDepth, int targetDepth, List<TreeNode> descendants) {
+		if (root == null) {
+			return;
+		}
+		if (root.left == null && root.right == null && currDepth == targetDepth) {
+			descendants.add(root);
+			return;
+		}
+		findNodeAtDepth(root.left,currDepth + 1,targetDepth,descendants);
+		findNodeAtDepth(root.right,currDepth + 1,targetDepth,descendants);
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		int max_depth = this._depth(root);
+		List<TreeNode> descendants = new ArrayList<>();
+		findNodeAtDepth(root,1,max_depth,descendants);
+		int n = descendants.size();
+		TreeNode t1 = n >= 1 ? descendants.get(0) : null;
+		TreeNode t2 = n > 1 ? descendants.get(n - 1) : null;
+		return LCS(root,t1,t2);
+	}
+}

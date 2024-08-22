@@ -1,0 +1,30 @@
+class Solution {
+	Map<String, Integer> domainVisits = new HashMap<>();
+	String domainVisit(String key, int value) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(value);
+		sb.append(" ");
+		sb.append(key);
+		return sb.toString();
+	}
+	void populateDomainVisits(String cpdomain) {
+		String[] cpdomainValues = cpdomain.split(" ");
+		int visits = Integer.valueOf(cpdomainValues[0]);
+		String domainName = cpdomainValues[1];
+		String[] subDomains = domainName.split("\\\\.");
+		StringBuilder domainBuilder = new StringBuilder("");
+		for (int d = subDomains.length - 1; d >= 0; d--) {
+			domainBuilder.insert(0,subDomains[d]);
+			domainVisits.put(domainBuilder.toString(),domainVisits.getOrDefault(domainBuilder.toString(),0) + visits);
+			domainBuilder.insert(0,".");
+		}
+	}
+	List<String> subdomainVisits(String[] cpdomains) {
+		List<String> results = new ArrayList<>();
+		for (String cpdomain: cpdomains) {	
+			populateDomainVisits(cpdomain);
+		}
+		domainVisits.forEach((key, value) -> {results.add(domainVisit(key,value))});
+		return results;
+	}
+}

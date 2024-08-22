@@ -1,0 +1,70 @@
+class Solution {
+	void helper1(int[] result, Map<Integer, List<Pair<Integer, Integer>>> graph, int start) {
+		Queue<Integer> queue = new ArrayDeque<>();
+		queue.offer(start);
+		Set<Integer> visited = new HashSet<>();
+		int count = 0;
+		visited.add(start);
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				int current = queue.poll();
+				if (graph.get(current) == null) {
+					continue;
+				}
+				List<Pair<Integer, Integer>> neighbors = graph.get(current);
+				for (Pair<Integer, Integer> nei: neighbors) {	
+					int next = nei.getKey();
+					int edge = nei.getValue();
+					if (visited.add(next)) {
+						queue.offer(next);
+						count += edge;
+					}
+				}
+			}
+		}
+		result[start] = count;
+	}
+	void helper2(int[] result, Map<Integer, List<Pair<Integer, Integer>>> graph, int start) {
+		Queue<Integer> queue = new ArrayDeque<>();
+		queue.offer(start);
+		Set<Integer> visited = new HashSet<>();
+		visited.add(start);
+		while (!queue.isEmpty()) {
+			int current = queue.poll();
+			int edges = result[current];
+			List<Pair<Integer, Integer>> neighbors = graph.get(current);
+			for (Pair<Integer, Integer> nei: neighbors) {	
+				int next = nei.getKey();
+				int edge = nei.getValue();
+				if (visited.contains(next)) {
+					continue;
+				}
+				if (edge == 0) {
+					result[next] = result[current] + 1;
+				} 
+				else {
+					result[next] = result[current] - 1;
+				}
+				queue.offer(next);
+				visited.add(next);
+			}
+		}
+	}
+	int[] minEdgeReversals(int n, int[][] edges) {
+		int[] result = new int[n];
+		Arrays.fill(result,Integer.MAX_VALUE);
+		Map<Integer, List<Pair<Integer, Integer>>> graph = new HashMap<>();
+		for (int[] edge: edges) {	
+			int current = edge[0];
+			int next = edge[1];
+			graph.putIfAbsent(current,new ArrayList<>());
+			graph.get(current).add(new Pair<>(next, 0));
+			graph.putIfAbsent(next,new ArrayList<>());
+			graph.get(next).add(new Pair<>(current, 1));
+		}
+		helper1(result,graph,0);
+		helper2(result,graph,0);
+		return result;
+	}
+}

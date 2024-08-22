@@ -1,0 +1,64 @@
+class Solution {
+	int binarySearchUpper(List<Integer> list, int target) {
+		int start = 0;
+		int end = list.size();
+		int mid;
+		while (start < end) {
+			mid = (start + end) / 2;
+			if (list.get(mid) > target) {
+				end = mid;
+			} 
+			else {
+				start = mid + 1;
+			}
+		}
+		return end;
+	}
+	int[] secondGreaterElement(int[] nums) {
+		int result = new int[nums.length];
+		Deque<int[]> deque = new ArrayDeque<int[]>();
+		int firstGreater = new int[nums.length][2];
+		for (int i = 0; i < firstGreater.length; i++) {
+			firstGreater[i][0] = -1;
+			firstGreater[i][1] = i;
+		}
+		for (int i = 0; i < nums.length; i++) {
+			if (deque.isEmpty()) {
+				deque.addLast(new int{nums[i], i});
+			} 
+			else {
+				while (!deque.isEmpty() && deque.peekLast()[0] < nums[i]) {
+					int val = deque.pollLast();
+					firstGreater[val[1]][0] = i;
+				}
+				deque.addLast(new int{nums[i], i});
+			}
+		}
+		Arrays.sort(firstGreater,new Comparator<int[]>());
+		Arrays.fill(result,-1);
+		List<Integer> list = new ArrayList<Integer>();
+		int numIdx = nums.length - 1;
+		for (int i = 0; i < result.length; i++) {
+			if (firstGreater[i][0] != -1) {
+				while (numIdx > firstGreater[i][0]) {
+					while (list.size() > 0 && list.get(0) <= nums[numIdx]) {
+						list.remove(0);
+					}
+					list.add(0,nums[numIdx]);
+					numIdx--;
+				}
+				if (list.size() == 0) {
+					continue;
+				}
+				int idx = binarySearchUpper(list,nums[firstGreater[i][1]]);
+				if (idx < list.size()) {
+					result[firstGreater[i][1]] = list.get(idx);
+				}
+			} 
+			else {
+				break;
+			}
+		}
+		return result;
+	}
+}

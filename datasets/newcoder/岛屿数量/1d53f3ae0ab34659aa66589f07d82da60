@@ -1,0 +1,28 @@
+class Solution {
+	void dfsMarkNeighborAsZero(char[][] grid, int row, int column) {
+		if (isOutOfBoundary(grid,row,column) || grid[row][column] == '0') {
+			return;
+		}
+		grid[row][column] = '0';
+		dfsMarkNeighborAsZero(grid,row - 1,column);
+		dfsMarkNeighborAsZero(grid,row + 1,column);
+		dfsMarkNeighborAsZero(grid,row,column - 1);
+		dfsMarkNeighborAsZero(grid,row,column + 1);
+	}
+	boolean isOutOfBoundary(char[][] grid, int row, int column) {
+		return row < 0 || row > grid.length - 1 || column < 0 || column > grid[0].length - 1;
+	}
+	int solve(char[][] grid) {
+		boolean[][] visited = new boolean[grid.length][grid[0].length];
+		int count = 0;
+		for (int row = 0; row < grid.length; row++) {
+			for (int column = 0; column < grid[0].length; column++) {
+				if (grid[row][column] == '1') {
+					count += 1;
+					dfsMarkNeighborAsZero(grid,row,column);
+				}
+			}
+		}
+		return count;
+	}
+}

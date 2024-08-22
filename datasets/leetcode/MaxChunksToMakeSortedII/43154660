@@ -1,0 +1,32 @@
+class Solution {
+	int maxChunksToSorted(int[] arr) {
+		Deque<Integer> deque = new LinkedList<>();
+		for (int i = arr.length - 1; i >= 0; i--) {
+			while (deque.size() > 0 && arr[deque.getLast()] < arr[i]) {
+				deque.removeLast();
+			}
+			deque.add(i);
+		}
+		int[] minFromRight = new int[arr.length];
+		int min = arr[arr.length - 1];
+		minFromRight[arr.length - 1] = arr[arr.length - 1];
+		for (int i = arr.length - 2; i >= 0; i--) {
+			min = Math.min(min,arr[i]);
+			minFromRight[i] = min;
+		}
+		int count = 0;
+		while (deque.size() > 0) {
+			int index = deque.removeFirst();
+			if (minFromRight[index] == arr[index]) {
+				count++;
+			} 
+			else if (minFromRight[index] < arr[index] && (deque.size() > 0 && minFromRight[index] >= arr[deque.getFirst()])) {
+				count++;
+			} 
+			else if (deque.size() == 0) {
+				count++;
+			}
+		}
+		return count;
+	}
+}

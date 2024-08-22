@@ -1,0 +1,66 @@
+class Solution {
+	int maxLength(List<String> arr) {
+		int n = arr.size();
+		int[][] dp = new int[n][1 << n];
+		boolean[] valid = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			Set<Character> a = new HashSet<>();
+			boolean ok = true;
+			for (Character c: arr.get(i).toCharArray()) {	
+				if (a.contains(c)) {
+					ok = false;
+					break;
+				} 
+				else {
+					a.add(c);
+				}
+			}
+			if (ok) {
+				valid[i] = true;
+			} 
+			else {
+				valid[i] = false;
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		return rec(arr,0,0,n,dp,valid);
+	}
+	int rec(List<String> arr, int i, int mask, int n, int[][] dp, boolean[] valid) {
+		if (i == n) {
+			return 0;
+		}
+		if (dp[i][mask] != -1) {
+			return dp[i][mask];
+		}
+		int ans = 0;
+		boolean good = true;
+		if (valid[i]) {
+			for (int j = 0; j < i; j++) {
+				if ((mask & (1 << j)) > 0) {
+					String s = arr.get(j);
+					for (Character c: arr.get(i).toCharArray()) {	
+						if (s.contains(String.valueOf(c))) {
+							good = false;
+							break;
+						}
+					}
+					if (!good) {
+						break;
+					}
+				}
+			}
+		} 
+		else {
+			good = false;
+		}
+		if (good) {
+			ans = Math.max(arr.get(i).length() + rec(arr,i + 1,mask | (1 << i),n,dp,valid),rec(arr,i + 1,mask,n,dp,valid));
+		} 
+		else {
+			ans = rec(arr,i + 1,mask,n,dp,valid);
+		}
+		return dp[i][mask] = ans;
+	}
+}

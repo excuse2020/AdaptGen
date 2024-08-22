@@ -1,0 +1,29 @@
+class Solution {
+	long maximumSumOfHeights(List<Integer> maxHeights) {
+		long res = 0;
+		int n = maxHeights.size();
+		Deque<Integer> stack = new LinkedList<>();
+		long[] l2r = new long[n];
+		long[] r2l = new long[n];
+		for (int i = 0; i < n; i++) {
+			while (!stack.isEmpty() && maxHeights.get(i) < maxHeights.get(stack.peek())) {
+				stack.pop();
+			}
+			l2r[i] = (stack.isEmpty() ? 0 : l2r[stack.peek()] + maxHeights.get(stack.peek())) + (i - (stack.isEmpty() ? 0 : stack.peek() + 1)) * (long) maxHeights.get(i);
+			stack.push(i);
+		}
+		Collections.reverse(maxHeights);
+		stack.clear();
+		for (int i = 0; i < n; i++) {
+			while (!stack.isEmpty() && maxHeights.get(i) < maxHeights.get(stack.peek())) {
+				stack.pop();
+			}
+			r2l[i] = (stack.isEmpty() ? 0 : r2l[stack.peek()] + maxHeights.get(stack.peek())) + (i - (stack.isEmpty() ? 0 : stack.peek() + 1)) * (long) maxHeights.get(i);
+			stack.push(i);
+		}
+		for (int i = 0; i < n; i++) {
+			res = Math.max(res,l2r[i] + r2l[n - 1 - i]);
+		}
+		return res;
+	}
+}

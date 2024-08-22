@@ -1,0 +1,41 @@
+class Solution {
+	int helper(int[] obstacles, int lane, int index, int[][] dp) {
+		if (index == obstacles.length - 1) {
+			return 0;
+		}
+		if (obstacles[index] == lane + 1) {
+			return Integer.MAX_VALUE;
+		}
+		if (dp[index][lane] != -1) {
+			return dp[index][lane];
+		}
+		dp[index][lane] = 0;
+		int firstLane = Integer.MAX_VALUE, secondLane = Integer.MAX_VALUE, thirdLane = Integer.MAX_VALUE;
+		if (obstacles[index] != 1) {
+			firstLane = helper(obstacles,0,index + 1,dp);
+		}
+		if (obstacles[index] != 2) {
+			secondLane = helper(obstacles,1,index + 1,dp);
+		}
+		if (obstacles[index] != 3) {
+			thirdLane = helper(obstacles,2,index + 1,dp);
+		}
+		if (firstLane != Integer.MAX_VALUE) {
+			firstLane += (lane == 0 ? 0 : 1);
+		}
+		if (secondLane != Integer.MAX_VALUE) {
+			secondLane += (lane == 1 ? 0 : 1);
+		}
+		if (thirdLane != Integer.MAX_VALUE) {
+			thirdLane += (lane == 2 ? 0 : 1);
+		}
+		return dp[index][lane] = Math.min(firstLane,Math.min(secondLane,thirdLane));
+	}
+	int minSideJumps(int[] obstacles) {
+		int[][] dp = new int[obstacles.length + 1][3];
+		for (int i = 0; i < dp.length; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		return helper(obstacles,1,0,dp);
+	}
+}

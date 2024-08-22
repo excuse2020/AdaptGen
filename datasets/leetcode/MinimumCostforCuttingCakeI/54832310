@@ -1,0 +1,40 @@
+class Solution {
+	int[][][][] dp = null;
+	int min(int sm, int em, int sn, int en, int[] h, int[] v) {
+		if (em - sm <= 0 || en - sn <= 0) {
+			return 10000000;
+		}
+		if (em - sm == 1 && en - sn == 1) {
+			return 0;
+		}
+		if (dp[sm][em][sn][en] != -1) {
+			return dp[sm][em][sn][en];
+		}
+		int ans = 10000000;
+		if (em - sm > 1) {
+			for (int i = sm + 1; i < em; i++) {
+				int cost = h[i - 1] + min(sm,i,sn,en,h,v);
+				ans = Math.min(ans,cost);
+			}
+		}
+		if (en - sn > 1) {
+			for (int i = sn + 1; i < en; i++) {
+				int cost = v[i - 1] + min(sm,em,sn,i,h,v);
+				ans = Math.min(ans,cost);
+			}
+		}
+		dp[sm][em][sn][en] = ans;
+		return ans;
+	}
+	int minimumCost(int m, int n, int[] horizontalCut, int[] verticalCut) {
+		dp = new int[m + 1][m + 1][n + 1][n + 1];
+		for (int i = 0; i < m + 1; i++) {
+			for (int j = 0; j < m + 1; j++) {
+				for (int k = 0; k < n + 1; k++) {
+					Arrays.fill(dp[i][j][k],-1);
+				}
+			}
+		}
+		return min(0,m,0,n,horizontalCut,verticalCut);
+	}
+}

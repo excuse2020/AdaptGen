@@ -1,0 +1,32 @@
+class Solution {
+	int dfs(int node, List<List<Integer>> tree, List<Boolean> hasApple, Set<Integer> vis) {
+		if (vis.contains(node)) {
+			return 0;
+		}
+		vis.add(node);
+		int time = 0;
+		for (int child: tree.get(node)) {	
+			time += dfs(child,tree,hasApple,vis);
+		}
+		return (time > 0) ? (time + 2) : ((hasApple.get(node) == true) ? 2 : 0);
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		List<List<Integer>> tree = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			tree.add(new ArrayList<>());
+		}
+		for (int[] e: edges) {	
+			int a = e[0];
+			int b = e[1];
+			tree.get(a).add(b);
+			tree.get(b).add(a);
+		}
+		Set<Integer> vis = new HashSet<>();
+		vis.add(0);
+		int time = 0;
+		for (int child: tree.get(0)) {	
+			time += dfs(child,tree,hasApple,vis);
+		}
+		return time;
+	}
+}

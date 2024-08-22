@@ -1,0 +1,37 @@
+class Solution {
+	int networkBecomesIdle(int[][] edges, int[] patience) {
+		int[] shortest = new int[patience.length];
+		Arrays.fill(shortest,Integer.MAX_VALUE);
+		shortest[0] = 0;
+		List<Integer>[] adj = new ArrayList[patience.length];
+		for (int[] edge: edges) {	
+			if (adj[edge[0]] == null) {
+				adj[edge[0]] = new ArrayList<>();
+			}
+			if (adj[edge[1]] == null) {
+				adj[edge[1]] = new ArrayList<>();
+			}
+			adj[edge[0]].add(edge[1]);
+			adj[edge[1]].add(edge[0]);
+		}
+		Queue<Integer> queue = new LinkedList<>();
+		queue.offer(0);
+		while (!queue.isEmpty()) {
+			int cur = queue.poll();
+			for (int next: adj[cur]) {	
+				int time = shortest[cur] + 1;
+				if (Integer.MAX_VALUE == shortest[next]) {
+					shortest[next] = time;
+					queue.offer(next);
+				}
+			}
+		}
+		int max = 0;
+		for (int i = 1; i < patience.length; i++) {
+			int travel = shortest[i] * 2;
+			int pait = ((travel - 1) / patience[i]) * patience[i] + 1;
+			max = Integer.max(max,travel + pait);
+		}
+		return max;
+	}
+}

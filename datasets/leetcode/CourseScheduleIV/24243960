@@ -1,0 +1,37 @@
+class Solution {
+	Boolean[][] dp;
+	List<Boolean> checkIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
+		List<Integer>[] graph = new LinkedList[numCourses];
+		List<Boolean> result = new LinkedList();
+		dp = new Boolean[numCourses][numCourses];
+		for (int i = 0; i < numCourses; i++) {
+			graph[i] = new LinkedList();
+		}
+		for (int[] edge: prerequisites) {	
+			graph[edge[1]].add(edge[0]);
+		}
+		for (int[] query: queries) {	
+			if (dfs(query[0],query[1],graph)) {
+				result.add(true);
+			} 
+			else {
+				result.add(false);
+			}
+		}
+		return result;
+	}
+	boolean dfs(int end, int start, List<Integer>[] graph) {
+		if (start == end) {
+			return true;
+		}
+		if (dp[start][end] != null) {
+			return dp[start][end];
+		}
+		for (int neighbour: graph[start]) {	
+			if (dfs(end,neighbour,graph)) {
+				return dp[start][end] = true;
+			}
+		}
+		return dp[start][end] = false;
+	}
+}

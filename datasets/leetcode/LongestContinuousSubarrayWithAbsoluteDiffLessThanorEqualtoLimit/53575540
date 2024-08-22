@@ -1,0 +1,30 @@
+class Solution {
+	int longestSubarray(int[] nums, int limit) {
+		Deque<Integer> maxDeque = new LinkedList<>();
+		Deque<Integer> minDeque = new LinkedList<>();
+		int i = 0;
+		int j;
+		int maxSubArraySize = 0;
+		for (j = 0; j < nums.length; j++) {
+			while (!maxDeque.isEmpty() && nums[j] > maxDeque.peekLast()) {
+				maxDeque.pollLast();
+			}
+			while (!minDeque.isEmpty() && nums[j] < minDeque.peekLast()) {
+				minDeque.pollLast();
+			}
+			maxDeque.offer(nums[j]);
+			minDeque.offer(nums[j]);
+			if (maxDeque.peek() - minDeque.peek() > limit) {
+				if (maxDeque.peek() == nums[i]) {
+					maxDeque.poll();
+				}
+				if (minDeque.peek() == nums[i]) {
+					minDeque.poll();
+				}
+				i++;
+			}
+			maxSubArraySize = Math.max(maxSubArraySize,j - i + 1);
+		}
+		return maxSubArraySize;
+	}
+}

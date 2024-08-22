@@ -1,0 +1,53 @@
+class Solution {
+	void merge(int arr, int l, int m, int h) {
+		int i = l;
+		int j = m + 1;
+		int arr2 = new int[h - l + 1];
+		int k = 0;
+		while (i <= m && j <= h) {
+			if (arr[i] <= arr[j]) {
+				arr2[k] = arr[i];
+				i++;
+			} 
+			else {
+				arr2[k] = arr[j];
+				j++;
+			}
+			k++;
+		}
+		while (i <= m) {
+			arr2[k] = arr[i];
+			i++;
+			k++;
+		}
+		while (j <= h) {
+			arr2[k] = arr[j];
+			j++;
+			k++;
+		}
+		int p = 0;
+		for (int x = l; x <= h; x++) {
+			arr[x] = arr2[p];
+			p++;
+		}
+	}
+	void mergesort(int arr, int low, int high) {
+		if (low < high) {
+			int mid = (low + high) / 2;
+			mergesort(arr,low,mid);
+			mergesort(arr,mid + 1,high);
+			merge(arr,low,mid,high);
+		}
+	}
+	int minMovesToSeat(int[] seats, int[] students) {
+		mergesort(seats,0,seats.length - 1);
+		mergesort(students,0,students.length - 1);
+		int d = 0;
+		int sum = 0;
+		for (int i = 0; i < seats.length; i++) {
+			d = Math.abs(seats[i] - students[i]);
+			sum += d;
+		}
+		return sum;
+	}
+}

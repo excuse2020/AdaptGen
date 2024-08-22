@@ -1,0 +1,27 @@
+class Solution {
+	int[] FindGreatestSumOfSubArray(int[] array) {
+		int n = array.length;
+		int[] dp = new int[n];
+		dp[0] = array[0];
+		int maxsum = array[0];
+		int left = 0, right = 0;
+		int resl = 0, resr = 0;
+		for (int i = 1; i < n; i++) {
+			right++;
+			dp[i] = Math.max(dp[i - 1] + array[i],array[i]);
+			if (dp[i - 1] + array[i] < array[i]) {
+				left = right;
+			}
+			if (dp[i] > maxsum || dp[i] == maxsum && (right - left + 1) > (resr - resl + 1)) {
+				maxsum = dp[i];
+				resl = left;
+				resr = right;
+			}
+		}
+		int[] res = new int[resr - resl + 1];
+		for (int i = resl; i <= resr; i++) {
+			res[i - resl] = array[i];
+		}
+		return res;
+	}
+}

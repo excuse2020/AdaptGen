@@ -1,0 +1,48 @@
+class Solution {
+	long dividePlayers(int[] skill) {
+		int n = skill.length;
+		long sum = 0;
+		for (int x: skill) {	
+			sum += x;
+		}
+		int teams = (n) / 2;
+		double score = (sum * 1.0) / teams;
+		System.out.println("sum==" + sum);
+		if (Math.floor(score) != score) {
+			return -1;
+		}
+		long product = 0;
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			map.put(skill[i],map.getOrDefault(skill[i],0) + 1);
+		}
+		int orgscore = (int) score;
+		for (int key: map.keySet()) {	
+			int t1 = map.get(key);
+			int c = Math.abs(orgscore - key);
+			if (map.containsKey(c)) {
+				long temp = key * c;
+				if (t1 != map.get(c)) {
+					return -1;
+				}
+				if (key == c) {
+					if (t1 % 2 != 0) {
+						return -1;
+					} 
+					else {
+						product += (t1 / 2) * (temp);
+					}
+				} 
+				else {
+					product += (t1 * temp);
+				}
+				map.put(key,0);
+				map.put(c,0);
+			} 
+			else {
+				return -1;
+			}
+		}
+		return product;
+	}
+}

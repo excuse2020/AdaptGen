@@ -1,0 +1,57 @@
+class Solution {
+	TreeNode head;
+	Map<Integer, TreeNode> parents = new HashMap<>();
+	boolean[] visited = new boolean[100001];
+	int amountOfTime(TreeNode root, int start) {
+		dfs(root,start,null);
+		Deque<TreeNode> q = new ArrayDeque<>();
+		if (head.left != null) {
+			q.addLast(head.left);
+		}
+		if (head.right != null) {
+			q.addLast(head.right);
+		}
+		if (parents.containsKey(head.val)) {
+			q.addLast(parents.get(head.val));
+		}
+		visited[head.val] = true;
+		int time = 0;
+		while (!q.isEmpty()) {
+			int n = q.size();
+			boolean atLeastOneInfected = false;
+			for (int i = 0; i < n; i++) {
+				TreeNode cur = q.removeFirst();
+				if (!visited[cur.val]) {
+					visited[cur.val] = true;
+					if (cur.left != null) {
+						q.addLast(cur.left);
+					}
+					if (cur.right != null) {
+						q.addLast(cur.right);
+					}
+					if (parents.containsKey(cur.val)) {
+						q.addLast(parents.get(cur.val));
+					}
+					atLeastOneInfected = true;
+				}
+			}
+			if (atLeastOneInfected) {
+				time++;
+			}
+		}
+		return time;
+	}
+	void dfs(TreeNode root, int start, TreeNode parent) {
+		if (root == null) {
+			return;
+		}
+		if (root.val == start) {
+			head = root;
+		}
+		if (parent != null) {
+			parents.put(root.val,parent);
+		}
+		dfs(root.left,start,root);
+		dfs(root.right,start,root);
+	}
+}

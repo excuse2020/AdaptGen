@@ -1,0 +1,35 @@
+class Solution {
+	int dp;
+	int helper(int i, int last, int sum, int[] arr) {
+		if (sum == 3) {
+			return 1;
+		}
+		if (i == arr.length) {
+			return 0;
+		}
+		if (dp[last + 1][sum] != -1) {
+			return dp[last + 1][sum];
+		}
+		int l = 0;
+		if (last == -1 || arr[last] < arr[i]) {
+			l = helper(i + 1,i,sum + 1,arr);
+		}
+		int r = helper(i + 1,last,sum,arr);
+		return dp[last + 1][sum] = l + r;
+	}
+	int numTeams(int[] rating) {
+		dp = new int[rating.length + 1][4];
+		for (int arr: dp) {	
+			Arrays.fill(arr,-1);
+		}
+		int rev = new int[rating.length];
+		for (int i = 0; i < rating.length; i++) {
+			rev[rating.length - i - 1] = rating[i];
+		}
+		int l = helper(0,-1,0,rating);
+		for (int arr: dp) {	
+			Arrays.fill(arr,-1);
+		}
+		return helper(0,-1,0,rev) + l;
+	}
+}

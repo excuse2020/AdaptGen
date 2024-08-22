@@ -1,0 +1,39 @@
+class Solution {
+	Map<String, List<Character>> allowdMap;
+	int n;
+	boolean backtrack(List<Character>[] lines, int curLine, int curChar) {
+		if (curLine == 0) {
+			return true;
+		}
+		boolean lastCharInLine = (curChar == curLine - 1);
+		String base = "" + lines[curLine + 1].get(curChar);
+		if (!allowdMap.containsKey(base)) {
+			return false;
+		}
+		for (char possibility: (List<Character>) allowdMap.get(base)) {	
+			lines[curLine].add(possibility);
+			if (lastCharInLine && backtrack(lines,curLine - 1,0) || (!lastCharInLine && backtrack(lines,curLine,curChar + 1))) {
+				return true;
+			}
+			lines[curLine].remove(curChar);
+		}
+		return false;
+	}
+	boolean pyramidTransition(String bottom, List<String> allowed) {
+		n = bottom.length();
+		List<Character>[] lines = new List[n + 1];
+		for (int i = 1; i <= n; i++) {
+			lines[i] = new ArrayList<>();
+		}
+		for (char c: bottom.toCharArray()) {	
+			lines[n].add(c);
+		}
+		allowdMap = new HashMap<>();
+		for (String s: allowed) {	
+			String base = s.substring(0,2);
+			allowdMap.putIfAbsent(base,new ArrayList());
+			allowdMap.get(base).add(s.charAt(2));
+		}
+		return backtrack(lines,n - 1,0);
+	}
+}

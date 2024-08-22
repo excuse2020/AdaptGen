@@ -1,0 +1,40 @@
+class Solution {
+	int findWinningPlayer(int[] skills, int k) {
+		int n = skills.length;
+		Deque<Integer> dq = new ArrayDeque<>();
+		for (int i = 0; i < skills.length; i++) {
+			dq.offer(skills[i]);
+		}
+		int currentChampion = dq.poll();
+		int winCount = 0;
+		if (k > skills.length) {
+			int ans = 0;
+			int index = 0;
+			for (int i = 0; i < skills.length; i++) {
+				if (ans < skills[i]) {
+					ans = skills[i];
+					index = i;
+				}
+			}
+			return index;
+		}
+		while (winCount < k) {
+			int challenger = dq.poll();
+			if (challenger > currentChampion) {
+				dq.offer(currentChampion);
+				currentChampion = challenger;
+				winCount = 1;
+			} 
+			else {
+				dq.offer(challenger);
+				winCount++;
+			}
+		}
+		for (int i = 0; i < skills.length; i++) {
+			if (currentChampion == skills[i]) {
+				return i;
+			}
+		}
+		return currentChampion;
+	}
+}

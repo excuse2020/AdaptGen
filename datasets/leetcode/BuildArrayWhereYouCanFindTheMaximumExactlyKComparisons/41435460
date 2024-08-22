@@ -1,0 +1,22 @@
+class Solution {
+	int numOfArrays(int n, int m, int k) {
+		long dp = new long[m][k], ans = 0L, MOD = 1000000007L;
+		for (int i = 0; i < m; i++) {
+			dp[i][0] = 1;
+		}
+		for (int i = 1; i < n; i++) {
+			long row = new long[k + 1];
+			row[1] = 1;
+			for (int j = 1; j < m; j++) {
+				for (int y = Math.min(j,k - 1); y >= 0; y--) {
+					row[y + 1] += dp[j][y];
+					dp[j][y] = (dp[j][y] * (j + 1) + row[y]) % MOD;
+				}
+			}
+		}
+		for (int j = 0; j < m; j++) {
+			ans += dp[j][k - 1];
+		}
+		return (int) (ans % MOD);
+	}
+}

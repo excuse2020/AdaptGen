@@ -1,0 +1,36 @@
+class Solution {
+	int longestPalindrome(String[] words) {
+		HashMap<String, Integer> freq = new HashMap<>();
+		int i;
+		int ans = 0;
+		for (i = 0; i < words.length; i++) {
+			freq.put(words[i],freq.getOrDefault(words[i],0) + 1);
+		}
+		ArrayList<String> possibleMiddleWords = new ArrayList<>();
+		int pairs = 0;
+		for (Map.Entry<String, Integer> e: freq.entrySet()) {	
+			String first = e.getKey();
+			if (first.charAt(0) == first.charAt(1)) {
+				pairs += e.getValue() / 2;
+				if (e.getValue() % 2 != 0) {
+					possibleMiddleWords.add(e.getKey());
+				}
+				freq.put(first,0);
+			} 
+			else {
+				StringBuilder str = new StringBuilder();
+				str.append(first.charAt(1));
+				str.append(first.charAt(0));
+				String second = str.toString();
+				if (freq.containsKey(second)) {
+					pairs += Math.min(freq.get(first),freq.get(second));
+					freq.put(second,0);
+				}
+				freq.put(first,0);
+			}
+		}
+		int middle = possibleMiddleWords.size() >= 1 ? 2 : 0;
+		ans = pairs * 4 + middle;
+		return ans;
+	}
+}

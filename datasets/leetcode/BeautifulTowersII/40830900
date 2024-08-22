@@ -1,0 +1,52 @@
+class Solution {
+	long maximumSumOfHeights(List<Integer> maxHeights) {
+		int n = maxHeights.size();
+		long[] suffix = suffixCompute(maxHeights);
+		long[] prefix = prefixCompute(maxHeights);
+		long ans = 0;
+		for (int i = 0; i < n; i++) {
+			ans = Math.max(ans,prefix[i] + suffix[i]);
+		}
+		return ans;
+	}
+	long[] prefixCompute(List<Integer> maxHeights) {
+		int n = maxHeights.size();
+		long[] nums = new long[n];
+		Stack<Integer> st = new Stack<>();
+		for (int i = 0; i < n; i++) {
+			while (!st.isEmpty() && maxHeights.get(st.peek()) >= maxHeights.get(i)) {
+				st.pop();
+			}
+			if (st.isEmpty()) {
+				nums[i] = i * (long) maxHeights.get(i);
+			} 
+			else {
+				int j = st.peek();
+				int total = i - j;
+				nums[i] = (total * (long) maxHeights.get(i)) + nums[st.peek()];
+			}
+			st.push(i);
+		}
+		return nums;
+	}
+	long[] suffixCompute(List<Integer> maxHeights) {
+		int n = maxHeights.size();
+		long[] nums = new long[n];
+		Stack<Integer> st = new Stack<>();
+		for (int i = n - 1; i >= 0; i--) {
+			while (!st.isEmpty() && maxHeights.get(st.peek()) >= maxHeights.get(i)) {
+				st.pop();
+			}
+			if (st.isEmpty()) {
+				nums[i] = (n - i) * (long) maxHeights.get(i);
+			} 
+			else {
+				int j = st.peek() - 1;
+				int total = j - i;
+				nums[i] = (total * (long) maxHeights.get(i)) + nums[st.peek()];
+			}
+			st.push(i);
+		}
+		return nums;
+	}
+}

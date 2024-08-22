@@ -1,0 +1,23 @@
+class Solution {
+	Long[][] cache;
+	long dp(int i, int[] nums, int taken) {
+		if (i == 0) {
+			return nums[0];
+		}
+		if (cache[i][taken] != null) {
+			return cache[i][taken];
+		}
+		long takenCost = Long.MIN_VALUE, notTakenCost = Long.MIN_VALUE;
+		if (taken == 0) {
+			takenCost = Math.max(dp(i - 1,nums,1) + Math.abs(nums[i]),dp(i - 1,nums,0) + nums[i]);
+		} 
+		else {
+			notTakenCost = dp(i - 1,nums,0) + nums[i];
+		}
+		return cache[i][taken] = Math.max(takenCost,notTakenCost);
+	}
+	long maximumTotalCost(int[] nums) {
+		cache = new Long[nums.length][2];
+		return dp(nums.length - 1,nums,0);
+	}
+}

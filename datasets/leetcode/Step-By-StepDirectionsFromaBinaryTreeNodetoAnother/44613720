@@ -1,0 +1,43 @@
+class Solution {
+	String end;
+	TreeNode sourceNode = null;
+	String start;
+	String getDirections(TreeNode root, int startValue, int destValue) {
+		getSourceNode(root,startValue,destValue);
+		StringBuilder sb = new StringBuilder();
+		getPath(sourceNode,startValue,destValue,sb);
+		return start + end;
+	}
+	void getPath(TreeNode root, int startValue, int destValue, StringBuilder s) {
+		if (root == null) {
+			return;
+		}
+		if (root.val == startValue) {
+			String sts = "";
+			for (int i = 0; i < s.length(); i++) {
+				sts += "U";
+			}
+			start = sts.toString();
+		}
+		if (root.val == destValue) {
+			end = s.toString();
+		}
+		s.append("L");
+		getPath(root.left,startValue,destValue,s);
+	}
+	boolean getSourceNode(TreeNode root, int startValue, int destValue) {
+		if (root == null) {
+			return false;
+		}
+		boolean b1 = getSourceNode(root.left,startValue,destValue);
+		boolean b2 = getSourceNode(root.right,startValue,destValue);
+		if ((b1 == true && b2 == true) || ((b1 == true || b2 == true) && (root.val == startValue || root.val == destValue))) {
+			sourceNode = root;
+			return false;
+		}
+		if ((b1 == true || b2 == true) || (root.val == startValue || root.val == destValue)) {
+			return true;
+		}
+		return false;
+	}
+}

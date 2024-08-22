@@ -1,0 +1,33 @@
+class Solution {
+	int longest = 1;
+	Map<Integer, List<Integer>> map;
+	String s;
+	int dfs(int node) {
+		List<Integer> list = new ArrayList<>();
+		list.add(0);
+		list.add(0);
+		if (map.containsKey(node)) {
+			for (int n: map.get(node)) {	
+				int temp = dfs(n);
+				if (s.charAt(n) != s.charAt(node)) {
+					list.add(temp);
+				}
+			}
+		}
+		Collections.sort(list,(i, j) -> {j - i});
+		longest = Math.max(list.get(0) + list.get(1),longest);
+		return 1 + list.get(0);
+	}
+	int longestPath(int[] parent, String s) {
+		this.s = s;
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int i = 0; i < parent.length; i++) {
+			List<Integer> l1 = map.getOrDefault(parent[i],new ArrayList<Integer>());
+			l1.add(i);
+			map.put(parent[i],l1);
+		}
+		this.map = map;
+		dfs(0);
+		return longest;
+	}
+}

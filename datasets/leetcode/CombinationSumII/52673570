@@ -1,0 +1,31 @@
+class Solution {
+	List<List<Integer>> res = new ArrayList<>();
+	List<List<Integer>> combinationSum2(int[] candidates, int target) {
+		Arrays.sort(candidates);
+		dfs(0,candidates,new ArrayList<>(),0,target);
+		return res;
+	}
+	void dfs(int i, int[] candidates, List<Integer> list, int sum, int target) {
+		if (sum == target) {
+			List<Integer> in = new ArrayList<>();
+			for (int val: list) {	
+				in.add(val);
+			}
+			if (!res.contains(in)) {
+				res.add(in);
+			}
+			return;
+		}
+		if (i >= candidates.length || sum > target) {
+			return;
+		}
+		list.add(candidates[i]);
+		dfs(i + 1,candidates,list,sum + candidates[i],target);
+		list.remove(list.size() - 1);
+		int j = i + 1;
+		while (j < (candidates.length - 1) && candidates[i] == candidates[j]) {
+			j += 1;
+		}
+		dfs(j,candidates,list,sum,target);
+	}
+}

@@ -1,0 +1,23 @@
+class Solution {
+	int countDays(int days, int[][] meetings) {
+		TreeMap<Integer, Integer> dayChanges = new TreeMap<>();
+		for (int[] meeting: meetings) {	
+			dayChanges.put(meeting[0],dayChanges.getOrDefault(meeting[0],0) + 1);
+			dayChanges.put(meeting[1] + 1,dayChanges.getOrDefault(meeting[1] + 1,0) - 1);
+		}
+		int count = 0;
+		int ongoingMeetings = 0;
+		int currentDay = 1;
+		for (int day: dayChanges.keySet()) {	
+			if (ongoingMeetings == 0) {
+				count += day - currentDay;
+			}
+			ongoingMeetings += dayChanges.get(day);
+			currentDay = day;
+		}
+		if (ongoingMeetings == 0) {
+			count += days - currentDay + 1;
+		}
+		return count;
+	}
+}

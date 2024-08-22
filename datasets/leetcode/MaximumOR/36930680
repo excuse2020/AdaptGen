@@ -1,0 +1,29 @@
+class Solution {
+	long maximumOr(int[] nums, int k) {
+		long bits = new long[64];
+		for (int i = 0; i < nums.length; i++) {
+			for (int j = 0; j < 64; j++) {
+				bits[j] += (((long) nums[i] >> j) & 1);
+			}
+		}
+		long max = 0;
+		for (int i = 0; i < nums.length; i++) {
+			long t = nums[i];
+			for (int j = 0; j < 64; j++) {
+				bits[j] -= ((t >> j) & 1);
+			}
+			t *= (1L << k);
+			long curr = 0;
+			for (int j = 0; j < 64; j++) {
+				bits[j] += ((t >> j) & 1);
+				if (bits[j] > 0) {
+					curr |= (1L << j);
+				}
+				bits[j] -= ((t >> j) & 1);
+				bits[j] += (((long) nums[i] >> j) & 1);
+			}
+			max = Math.max(max,curr);
+		}
+		return max;
+	}
+}

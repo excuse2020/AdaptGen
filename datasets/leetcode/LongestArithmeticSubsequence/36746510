@@ -1,0 +1,41 @@
+class Solution {
+	int n;
+	int longestArithSeqLength(int[] nums) {
+		int[][] dp = new int[nums.length][1002];
+		for (int i = 0; i < dp.length; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		int max = 0;
+		n = nums.length;
+		max = Math.max(rec(nums,dp,0,-501,0),max);
+		return dp[0][0];
+	}
+	int rec(int[] nums, int[][] dp, int i, int cur, int last) {
+		if (i == nums.length) {
+			return 0;
+		}
+		if (dp[i][cur + 501] != -1) {
+			return dp[i][cur + 501];
+		}
+		int take = Integer.MIN_VALUE;
+		int nottake = Integer.MIN_VALUE;
+		int res = 1;
+		if (cur == -501) {
+			for (int j = i + 1; j < n; j++) {
+				take = 1 + rec(nums,dp,j,nums[j] - nums[i],nums[j]);
+				nottake = rec(nums,dp,j,cur,last);
+				res = Math.max(res,Math.max(take,nottake));
+			}
+		} 
+		else {
+			for (int j = i + 1; j < n; j++) {
+				if (nums[j] - nums[i] == cur) {
+					take = 1 + rec(nums,dp,j,cur,nums[j]);
+				}
+				res = Math.max(res,take);
+			}
+		}
+		dp[i][cur + 501] = res;
+		return dp[i][cur + 501];
+	}
+}

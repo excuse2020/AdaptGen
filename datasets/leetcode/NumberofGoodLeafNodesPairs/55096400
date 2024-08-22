@@ -1,0 +1,57 @@
+class Solution {
+	Map<TreeNode, List<TreeNode>> graph = new HashMap<>();
+	Set<TreeNode> leafNodes = new HashSet<>();
+	int bfs(TreeNode root, int distance) {
+		Queue<TreeNode> q = new LinkedList<>();
+		Set<TreeNode> visit = new HashSet<>();
+		int count = 0;
+		q.add(root);
+		int level = 0;
+		while (!q.isEmpty() && level <= distance) {
+			int qqr = q.size();
+			for (int j = 0; j < qqr; j++) {
+				TreeNode temp = q.poll();
+				if (leafNodes.contains(temp) && temp != root) {
+					count++;
+				}
+				visit.add(temp);
+				for (TreeNode i: graph.get(temp)) {	
+					if (!visit.contains(i)) {
+						q.add(i);
+					}
+				}
+			}
+			level++;
+		}
+		return count;
+	}
+	int countPairs(TreeNode root, int distance) {
+		makegraph(root,null);
+		int ans = 0;
+		for (TreeNode i: leafNodes) {	
+			ans += bfs(i,distance);
+		}
+		return ans / 2;
+	}
+	void makegraph(TreeNode root, TreeNode parent) {
+		if (root == null) {
+			return;
+		}
+		List<TreeNode> k = new ArrayList<>();
+		if (root.left != null) {
+			k.add(root.left);
+		}
+		if (root.right != null) {
+			k.add(root.right);
+		}
+		if (parent != null) {
+			k.add(parent);
+		}
+		graph.put(root,k);
+		if (root.left == null && root.right == null) {
+			leafNodes.add(root);
+		}
+		makegraph(root.left,root);
+		makegraph(root.right,root);
+	}
+}

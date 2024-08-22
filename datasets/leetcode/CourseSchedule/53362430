@@ -1,0 +1,47 @@
+class Solution {
+	void calcIndeg(List<Integer> graph, int indeg) {
+		for (int i = 0; i < graph.length; i++) {
+			int v = i;
+			for (int j = 0; j < graph[v].size(); j++) {
+				int k = graph[v].get(j);
+				indeg[k]++;
+			}
+		}
+	}
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		List<Integer> graph = new ArrayList[numCourses];
+		for (int i = 0; i < numCourses; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < prerequisites.length; i++) {
+			graph[prerequisites[i][1]].add(prerequisites[i][0]);
+		}
+		return topSort(graph,numCourses);
+	}
+	boolean topSort(List<Integer> graph, int numCourses) {
+		int indeg = new int[graph.length];
+		List<Integer> result = new ArrayList<>();
+		calcIndeg(graph,indeg);
+		Queue<Integer> q = new LinkedList<>();
+		for (int i = 0; i < indeg.length; i++) {
+			if (indeg[i] == 0) {
+				q.add(i);
+			}
+		}
+		while (!q.isEmpty()) {
+			int curr = q.remove();
+			result.add(curr);
+			for (int j = 0; j < graph[curr].size(); j++) {
+				int l = graph[curr].get(j);
+				indeg[l]--;
+				if (indeg[l] == 0) {
+					q.add(l);
+				}
+			}
+		}
+		if (result.size() != numCourses) {
+			return false;
+		}
+		return true;
+	}
+}

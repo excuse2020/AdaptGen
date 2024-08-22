@@ -1,0 +1,49 @@
+class Solution {
+	List<List<Integer>> adj;
+	Set<Integer> seen;
+	long countPairs(int n, int[][] edges) {
+		adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int[] arr: edges) {	
+			int u = arr[0];
+			int v = arr[1];
+			adj.get(u).add(v);
+			adj.get(v).add(u);
+		}
+		List<Integer> component = new ArrayList<>();
+		seen = new HashSet<>();
+		for (int i = 0; i < n; i++) {
+			if (!seen.contains(i)) {
+				component.add(dfs(i));
+			}
+		}
+		long count = 0;
+		if (component.size() == 1) {
+			return 0;
+		}
+		Collections.sort(component,Collections.reverseOrder());
+		System.out.println(component);
+		int size = component.size();
+		int[] pre = new int[size];
+		pre[size - 1] = component.get(size - 1);
+		for (int i = size - 2; i >= 0; i--) {
+			pre[i] = component.get(i) + pre[i + 1];
+		}
+		for (int i = 0; i < size - 1; i++) {
+			count += (((long) (pre[i + 1])) * ((long) (component.get(i))));
+		}
+		return count;
+	}
+	int dfs(int u) {
+		seen.add(u);
+		int count = 1;
+		for (int v: adj.get(u)) {	
+			if (!seen.contains(v)) {
+				count += dfs(v);
+			}
+		}
+		return count;
+	}
+}

@@ -1,0 +1,53 @@
+class Solution {
+	int longestWPI(int[] h) {
+		int len = h.length, t = 0, f = 0;
+		boolean[] b = new boolean[len];
+		for (int i = 0; i < len; i++) {
+			if (h[i] > 8) {
+				b[i] = true;
+				t++;
+			} 
+			else {
+				f++;
+			}
+		}
+		if (t > f) {
+			return len;
+		}
+		if (t < 2) {
+			return t;
+		}
+		int l = -1, r = len;
+		while (!b[++l]) {
+			f--;
+		}
+		if (t > f) {
+			return t * 2 - 1;
+		}
+		while (!b[--r]) {
+			f--;
+		}
+		if (t > f) {
+			return t * 2 - 1;
+		}
+		int g = f - t + 1;
+		int[] ind = new int[g];
+		for (int i = 0; i < g; i++) {
+			int flag = 0, s = l;
+			while (flag >= 0) {
+				flag += b[l++] ? 1 : -1;
+			}
+			ind[i] = l - s;
+		}
+		int ans = r - l + 1;
+		for (int i = g - 1; i >= 0; i--) {
+			l -= ind[i];
+			int flag = 0;
+			while (flag >= 0) {
+				flag += b[r--] ? 1 : -1;
+			}
+			ans = Math.max(ans,r - l + 1);
+		}
+		return ans;
+	}
+}

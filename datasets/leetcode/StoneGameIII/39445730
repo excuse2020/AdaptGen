@@ -1,0 +1,40 @@
+class Solution {
+	int getScore(int index, int[] arr, int size) {
+		int score = 0;
+		for (int i = 0; i < size; i++) {
+			score += getValue(index + i,arr);
+		}
+		return score;
+	}
+	int getValue(int index, int[] arr) {
+		if (index >= arr.length) {
+			return 0;
+		}
+		return arr[index];
+	}
+	int slv(int n, boolean play, int[] stoneValue, int[][] memo) {
+		if (n >= stoneValue.length) {
+			return 0;
+		}
+		int col = play ? 1 : 0;
+		if (memo[n][col] != -1) {
+			return memo[n][col];
+		}
+		if (play) {
+			memo[n][col] = Math.max(getScore(n,stoneValue,1) + slv(n + 1,false,stoneValue,memo),Math.max(getScore(n,stoneValue,2) + slv(n + 2,false,stoneValue,memo),getScore(n,stoneValue,3) + +slv(n + 3,false,stoneValue,memo)));
+		} 
+		else {
+			memo[n][col] = Math.min(slv(n + 1,true,stoneValue,memo),Math.min(slv(n + 2,true,stoneValue,memo),slv(n + 3,true,stoneValue,memo)));
+		}
+		return memo[n][col];
+	}
+	String stoneGameIII(int[] stoneValue) {
+		int[][] memo = new int[stoneValue.length][2];
+		for (int[] row: memo) {	
+			Arrays.fill(row,-1);
+		}
+		int aliceScore = slv(0,true,stoneValue,memo);
+		int bobScore = Arrays.stream(stoneValue).sum() - aliceScore;
+		return aliceScore > bobScore ? "Alice" : aliceScore < bobScore ? "Bob" : "Tie";
+	}
+}

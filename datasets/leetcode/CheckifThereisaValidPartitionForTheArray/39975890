@@ -1,0 +1,32 @@
+class Solution {
+	boolean validPartition(int[] nums) {
+		return validPartition(nums,0,new HashMap<>());
+	}
+	boolean validPartition(int[] nums, int ind, Map<Integer, Boolean> memo) {
+		if (memo.containsKey(ind)) {
+			return memo.get(ind);
+		}
+		if (ind == nums.length) {
+			return true;
+		}
+		if (ind == nums.length - 1) {
+			return false;
+		}
+		if (nums[ind] == nums[ind + 1]) {
+			if (validPartition(nums,ind + 2,memo)) {
+				memo.put(ind,true);
+				return true;
+			}
+			if (ind < nums.length - 2 && nums[ind] == nums[ind + 2] && validPartition(nums,ind + 3,memo)) {
+				memo.put(ind,true);
+				return true;
+			}
+		}
+		if (ind < nums.length - 2 && nums[ind] == nums[ind + 1] - 1 && nums[ind] == nums[ind + 2] - 2 && validPartition(nums,ind + 3,memo)) {
+			memo.put(ind,true);
+			return true;
+		}
+		memo.put(ind,false);
+		return false;
+	}
+}

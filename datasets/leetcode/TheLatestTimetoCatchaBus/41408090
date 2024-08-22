@@ -1,0 +1,23 @@
+class Solution {
+	int latestTimeCatchTheBus(int[] buses, int[] pass, int capacity) {
+		Arrays.sort(buses);
+		Arrays.sort(pass);
+		int p = 0, lb = buses[buses.length - 1];
+		int latestTime = 0;
+		var visited = new HashSet<Integer>();
+		for (int i = 0; i < buses.length; i++) {
+			int cb = buses[i];
+			int k = capacity;
+			while (p < pass.length && k > 0 && pass[p] <= cb) {
+				visited.add(pass[p]);
+				p++;
+				k--;
+			}
+			latestTime = k != 0 ? cb : pass[p - 1];
+			while (visited.contains(latestTime)) {
+				latestTime--;
+			}
+		}
+		return latestTime;
+	}
+}

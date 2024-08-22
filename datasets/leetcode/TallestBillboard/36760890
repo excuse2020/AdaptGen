@@ -1,0 +1,17 @@
+class Solution {
+	int tallestBillboard(int[] rods) {
+		Map<Integer, Integer> dp = new HashMap<>();
+		dp.put(0,0);
+		for (int x: rods) {	
+			Map<Integer, Integer> nxt = new HashMap<>(dp);
+			for (Map.Entry<Integer, Integer> entry: dp.entrySet()) {	
+				int d = entry.getKey();
+				int y = entry.getValue();
+				nxt.put(d + x,Math.max(nxt.getOrDefault(d + x,0),y));
+				nxt.put(Math.abs(d - x),Math.max(nxt.getOrDefault(Math.abs(d - x),0),y + Math.min(d,x)));
+			}
+			dp = nxt;
+		}
+		return dp.getOrDefault(0,0);
+	}
+}

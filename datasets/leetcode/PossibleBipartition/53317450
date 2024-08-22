@@ -1,0 +1,35 @@
+class Solution {
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		int[] col = new int[n + 1];
+		Arrays.fill(col,-1);
+		List<Integer>[] graph = new ArrayList[n + 1];
+		for (int i = 1; i <= n; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < dislikes.length; i++) {
+			graph[dislikes[i][0]].add(dislikes[i][1]);
+			graph[dislikes[i][1]].add(dislikes[i][0]);
+		}
+		for (int i = 1; i <= n; i++) {
+			if (col[i] == -1) {
+				Queue<Integer> q = new LinkedList<>();
+				q.add(i);
+				col[i] = 0;
+				while (!q.isEmpty()) {
+					int curr = q.poll();
+					for (int j = 0; j < graph[curr].size(); j++) {
+						int neighbor = graph[curr].get(j);
+						if (col[neighbor] == -1) {
+							col[neighbor] = 1 - col[curr];
+							q.add(neighbor);
+						} 
+						else if (col[neighbor] == col[curr]) {
+							return false;
+						}
+					}
+				}
+			}
+		}
+		return true;
+	}
+}

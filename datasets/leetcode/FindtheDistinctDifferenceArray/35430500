@@ -1,0 +1,36 @@
+class Solution {
+	int[] distinctDifferenceArray(int[] nums) {
+		HashSet<Integer> hs = new HashSet<>();
+		int[] pre = new int[nums.length];
+		int[] post = new int[nums.length];
+		pre[0] = 1;
+		hs.add(nums[0]);
+		for (int i = 1; i < nums.length; i++) {
+			if (hs.contains(nums[i])) {
+				pre[i] = pre[i - 1];
+			} 
+			else {
+				hs.add(nums[i]);
+				pre[i] = pre[i - 1] + 1;
+			}
+		}
+		HashSet<Integer> hs1 = new HashSet<>();
+		hs1.add(nums[nums.length - 1]);
+		post[nums.length - 1] = 1;
+		for (int i = nums.length - 2; i >= 0; i--) {
+			if (hs1.contains(nums[i])) {
+				post[i] = post[i + 1];
+			} 
+			else {
+				hs1.add(nums[i]);
+				post[i] = post[i + 1] + 1;
+			}
+		}
+		int[] diff = new int[nums.length];
+		for (int i = 0; i < nums.length - 1; i++) {
+			diff[i] = pre[i] - post[i + 1];
+		}
+		diff[nums.length - 1] = pre[nums.length - 1];
+		return diff;
+	}
+}

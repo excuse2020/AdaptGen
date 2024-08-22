@@ -1,0 +1,46 @@
+class Solution {
+	int repeatedStringMatch(String a, String b) {
+		if (b.equals("")) {
+			return 0;
+		}
+		if (a.contains(b)) {
+			return 1;
+		}
+		if ((a + a).contains(b)) {
+			return 2;
+		}
+		int index = b.indexOf(a), count = 0, aLenght = a.length();
+		if (index != 0) {
+			if (index == -1) {
+				return -1;
+			}
+			if (!validatePerfixAndSuf(b.substring(0,index),a)) {
+				return -1;
+			}
+			count = 1;
+		}
+		while (index + aLenght <= b.length()) {
+			if (!b.substring(index,index + a.length()).equals(a)) {
+				return -1;
+			}
+			count++;
+			index += aLenght;
+		}
+		if (index < b.length()) {
+			if (!a.startsWith(b.substring(index))) {
+				return -1;
+			}
+			count++;
+		}
+		return count;
+	}
+	boolean validatePerfixAndSuf(String bPrefix, String a) {
+		int aIter = a.length() - 1;
+		for (int i = bPrefix.length() - 1; i >= 0; i--) {
+			if (bPrefix.charAt(i) != a.charAt(aIter--)) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

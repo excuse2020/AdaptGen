@@ -1,0 +1,22 @@
+class Solution {
+	int constrainedSubsetSum(int[] nums, int k) {
+		int n = nums.length;
+		int[] dp = new int[n];
+		dp[n - 1] = nums[n - 1];
+		int max = nums[n - 1];
+		int VAL = 0, INDEX = 1;
+		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {b[VAL] - a[VAL]});
+		pq.add(new int{nums[n - 1], n - 1});
+		for (int i = n - 2; i >= 0; i--) {
+			dp[i] = nums[i];
+			while (!pq.isEmpty() && pq.peek()[INDEX] > i + k) {
+				pq.poll();
+			}
+			int[] curr = pq.peek();
+			dp[i] = Math.max(dp[i],dp[curr[INDEX]] + nums[i]);
+			pq.add(new int{dp[i], i});
+			max = Math.max(max,dp[i]);
+		}
+		return max;
+	}
+}

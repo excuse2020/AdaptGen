@@ -1,0 +1,45 @@
+class Solution {
+	int networkBecomesIdle(int[][] edges, int[] patience) {
+		int N = patience.length;
+		int[] dist = new int[N];
+		Arrays.fill(dist,-1);
+		HashMap<Integer, HashSet<Integer>> graph = new HashMap<>();
+		for (int[] e: edges) {	
+			int u = e[0];
+			int v = e[1];
+			if (!graph.containsKey(u)) {
+				graph.put(u,new HashSet<>());
+			}
+			if (!graph.containsKey(v)) {
+				graph.put(v,new HashSet<>());
+			}
+			graph.get(u).add(v);
+			graph.get(v).add(u);
+		}
+		Queue<Integer> q = new ArrayDeque<>();
+		q.add(0);
+		dist[0] = 0;
+		int cnt = 0;
+		while (!q.isEmpty()) {
+			int len = q.size();
+			for (int i = 0; i < len; i++) {
+				int u = q.poll();
+				for (int v: graph.get(u)) {	
+					if (dist[v] == -1) {
+						dist[v] = cnt + 1;
+						q.add(v);
+					}
+				}
+			}
+			cnt++;
+		}
+		int ans = 0;
+		for (int i = 1; i < N; i++) {
+			int d = dist[i];
+			int p = patience[i];
+			int tmp = ((2 * d - 1) / p) * p;
+			ans = Math.max(ans,tmp + d * 2 + 1);
+		}
+		return ans;
+	}
+}

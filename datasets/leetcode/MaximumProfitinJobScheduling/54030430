@@ -1,0 +1,43 @@
+class Solution {
+	int bs(int[] start, int time, int s) {
+		int e = start.length - 1;
+		while (s <= e) {
+			int mid = s + (e - s) / 2;
+			if (start[mid] >= time) {
+				e = mid - 1;
+			} 
+			else {
+				s = mid + 1;
+			}
+		}
+		return s < start.length ? s : -1;
+	}
+	int helper(int[] start, int[] end, int ind, int[] profit, int[] dp) {
+		if (ind == start.length) {
+			return 0;
+		}
+		if (dp[ind] != -1) {
+			return dp[ind];
+		}
+		int take = 0;
+		int next = bs(start,end[ind],ind);
+		take += profit[ind];
+		if (next != -1) {
+			take += helper(start,end,next,profit,dp);
+		}
+		int notTake = helper(start,end,ind + 1,profit,dp);
+		return dp[ind] = Math.max(take,notTake);
+	}
+	int jobScheduling(int[] start, int[] end, int[] profit) {
+		int[] dp = new int[start.length];
+		Arrays.fill(dp,-1);
+		List<List<Integer>> list = new ArrayList<>();
+		for (int i = 0; i < start.length; i++) {
+			List<Integer> temp = new ArrayList<>();
+			temp.add(start[i]);
+			temp.add(end[i]);
+			temp.add(profit[i]);
+			list.add(temp);
+		}
+	}
+}

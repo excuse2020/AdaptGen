@@ -1,0 +1,23 @@
+class Solution {
+	int dfs(List<List<Integer>> neighbours, boolean[] visited, int rootCity) {
+		visited[rootCity] = true;
+		int count = 0;
+		for (int city: neighbours.get(rootCity)) {	
+			if (!visited[Math.abs(city)]) {
+				count += dfs(neighbours,visited,Math.abs(city)) + (city > 0 ? 1 : 0);
+			}
+		}
+		return count;
+	}
+	int minReorder(int n, int[][] connections) {
+		List<List<Integer>> neighbours = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			neighbours.add(new ArrayList<>());
+		}
+		for (int city: connections) {	
+			neighbours.get(city[0]).add(city[1]);
+			neighbours.get(city[1]).add(-city[0]);
+		}
+		return dfs(neighbours,new boolean[n],0);
+	}
+}

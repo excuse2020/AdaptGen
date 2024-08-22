@@ -1,0 +1,47 @@
+class Solution {
+	int dp;
+	boolean solve(int n, int ch) {
+		if (n == 0 && ch == 0) {
+			return false;
+		}
+		if (n == 0 && ch == 1) {
+			return true;
+		}
+		if (dp[n][ch] != -1) {
+			if (dp[n][ch] == 0) {
+				return false;
+			} 
+			else {
+				return true;
+			}
+		}
+		boolean ans = true;
+		if (ch == 0) {
+			ans = false;
+			for (int i = 1; i * i <= n; i++) {
+				ans |= solve(n - i * i,1 - ch);
+			}
+		} 
+		else {
+			ans = true;
+			for (int i = 1; i * i <= n; i++) {
+				ans &= solve(n - i * i,1 - ch);
+			}
+		}
+		if (ans) {
+			dp[n][ch] = 1;
+		} 
+		else {
+			dp[n][ch] = 0;
+		}
+		return ans;
+	}
+	boolean winnerSquareGame(int n) {
+		dp = new int[n + 1][2];
+		for (int i = 0; i <= n; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		solve(n,0);
+		return dp[n][0] == 1 ? true : false;
+	}
+}

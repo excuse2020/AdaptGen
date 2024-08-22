@@ -1,0 +1,27 @@
+class Solution {
+	boolean canEat(int[] piles, long val, int h) {
+		long cnt = 0;
+		for (int x: piles) {	
+			cnt += x / val;
+			if (x % val != 0) {
+				++cnt;
+			}
+		}
+		return cnt <= h;
+	}
+	int minEatingSpeed(int[] piles, int h) {
+		long low = 1, high = Arrays.stream(piles).max().getAsInt();
+		long ans = 0;
+		while (low <= high) {
+			long mid = low + (high - low) / 2;
+			if (canEat(piles,mid,h)) {
+				ans = mid;
+				high = mid - 1;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		return (int) ans;
+	}
+}

@@ -1,0 +1,33 @@
+class Solution {
+	int maxPalindromes(String s, int k) {
+		boolean[][] dp = new boolean[s.length()][s.length()];
+		List<List<Integer>> intervals = new ArrayList<>();
+		for (int gap = 0; gap < s.length(); gap++) {
+			for (int i = 0, j = gap; i < s.length() && j < s.length(); i++, j++) {
+				if (gap == 0) {
+					dp[i][j] = true;
+				} 
+				else if (gap == 1) {
+					dp[i][j] = s.charAt(i) == s.charAt(j);
+				} 
+				else {
+					dp[i][j] = s.charAt(i) == s.charAt(j) && dp[i + 1][j - 1];
+				}
+				if (dp[i][j] && j - i + 1 >= k) {
+					intervals.add(Arrays.asList(i,j));
+				}
+			}
+		}
+		Collections.sort(intervals,Comparator.comparingInt((a) -> {a.get(1)}));
+		int ans = 0;
+		int occupied = Integer.MIN_VALUE;
+		for (int i = 0; i < intervals.size(); i++) {
+			List<Integer> currentEvent = intervals.get(i);
+			if (currentEvent.get(0) > occupied) {
+				ans++;
+				occupied = currentEvent.get(1);
+			}
+		}
+		return ans;
+	}
+}

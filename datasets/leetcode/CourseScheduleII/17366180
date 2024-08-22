@@ -1,0 +1,58 @@
+class Solution {
+	boolean cycle(ArrayList<ArrayList<Integer>> adj, int[] visited, int i) {
+		if (visited[i] == 2) {
+			return true;
+		}
+		visited[i] = 2;
+		for (int j = 0; j < adj.get(i).size(); j++) {
+			if (visited[adj.get(i).get(j)] != 1) {
+				if (cycle(adj,visited,adj.get(i).get(j))) {
+					return true;
+				}
+			}
+		}
+		visited[i] = 1;
+		return false;
+	}
+	void dfs(ArrayList<ArrayList<Integer>> adj, Stack<Integer> stack, int i, boolean[] vis) {
+		vis[i] = true;
+		for (int j = 0; j < adj.get(i).size(); j++) {
+			if (!vis[adj.get(i).get(j)]) {
+				dfs(adj,stack,adj.get(i).get(j),vis);
+			}
+		}
+		stack.push(i);
+	}
+	int[] findOrder(int n, int[][] pre) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<ArrayList<Integer>>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<Integer>());
+		}
+		for (int i = 0; i < pre.length; i++) {
+			adj.get(pre[i][1]).add(pre[i][0]);
+		}
+		int[] visited = new int[n];
+		for (int i = 0; i < adj.size(); i++) {
+			if (visited[i] == 0) {
+				if (cycle(adj,visited,i)) {
+					return new int[0];
+				}
+			}
+		}
+		Stack<Integer> stack = new Stack<>();
+		boolean vis = new boolean[n];
+		Arrays.fill(vis,false);
+		for (int i = 0; i < n; i++) {
+			if (!vis[i]) {
+				dfs(adj,stack,i,vis);
+			}
+		}
+		int[] res = new int[stack.size()];
+		int i = 0;
+		while (!stack.empty()) {
+			res[i] = stack.pop();
+			i++;
+		}
+		return res;
+	}
+}

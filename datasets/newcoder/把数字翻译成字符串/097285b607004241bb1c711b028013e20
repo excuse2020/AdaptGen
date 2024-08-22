@@ -1,0 +1,57 @@
+class Solution {
+	int solve(String nums) {
+		int[] numsCount = new int[nums.length()];
+		if (nums.length() == 0) {
+			return 0;
+		}
+		if (nums.length() == 1) {
+			return nums.equals("0") ? 0 : 1;
+		}
+		StringBuilder sb = new StringBuilder();
+		char c1 = nums.charAt(0);
+		char c2 = nums.charAt(1);
+		sb.append(c1).append(c2);
+		int num = Integer.parseInt(sb.toString());
+		if (num == 0 || num <= 9) {
+			return 0;
+		} 
+		else if (num == 10 || num == 20) {
+			numsCount[0] = 1;
+			numsCount[1] = 1;
+		} 
+		else if (num <= 26) {
+			numsCount[0] = 1;
+			numsCount[1] = 2;
+		} 
+		else {
+			numsCount[0] = 1;
+			numsCount[1] = 1;
+		}
+		for (int i = 2; i < nums.length(); i++) {
+			sb.setLength(0);
+			c1 = nums.charAt(i - 1);
+			c2 = nums.charAt(i);
+			sb.append(c1).append(c2);
+			num = Integer.parseInt(sb.toString());
+			if (num == 0) {
+				return 0;
+			} 
+			else if (num <= 9) {
+				numsCount[i] = numsCount[i - 1];
+			} 
+			else if (num == 10 || num == 20) {
+				numsCount[i] = numsCount[i - 2];
+			} 
+			else if (num <= 26) {
+				numsCount[i] = numsCount[i - 1] + numsCount[i - 2];
+			} 
+			else if (num % 10 == 0) {
+				return 0;
+			} 
+			else {
+				numsCount[i] = numsCount[i - 1];
+			}
+		}
+		return numsCount[nums.length() - 1];
+	}
+}

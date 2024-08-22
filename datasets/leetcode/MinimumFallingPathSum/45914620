@@ -1,0 +1,32 @@
+class Solution {
+	int memo;
+	int helper(int row, int col, int matrix, int n) {
+		if (row == n - 1 && (col >= 0 && col <= n - 1)) {
+			return matrix[row][col];
+		}
+		if (row < 0 || row >= n || col < 0 || col >= n) {
+			return 1000000;
+		}
+		if (memo[row][col] != Integer.MIN_VALUE) {
+			return memo[row][col];
+		}
+		int min = Integer.MAX_VALUE;
+		min = Math.min(helper(row + 1,col + 1,matrix,n),min);
+		min = Math.min(helper(row + 1,col,matrix,n),min);
+		min = Math.min(helper(row + 1,col - 1,matrix,n),min);
+		return memo[row][col] = matrix[row][col] + min;
+	}
+	int minFallingPathSum(int[][] matrix) {
+		int n = matrix.length;
+		memo = new int[n][n];
+		for (int temp: memo) {	
+			Arrays.fill(temp,Integer.MIN_VALUE);
+		}
+		int ans = Integer.MAX_VALUE;
+		for (int i = 0; i < n; i++) {
+			int temp = helper(0,i,matrix,n);
+			ans = Math.min(ans,temp);
+		}
+		return ans;
+	}
+}

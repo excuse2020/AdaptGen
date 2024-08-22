@@ -1,0 +1,44 @@
+class Solution {
+	void addPerform(int num, int[] freq) {
+		for (int i = 0; i < 32; i++) {
+			if ((num & (1 << i)) > 0) {
+				freq[32 - i - 1]++;
+			}
+		}
+	}
+	int getVal(int[] freq, int st, int end) {
+		int val = 0;
+		for (int i = 0; i < 32; i++) {
+			if (freq[i] == (end - st + 1)) {
+				val = val + (int) Math.pow(2,32 - i);
+			}
+		}
+		return val;
+	}
+	int minimumDifference(int[] nums, int k) {
+		int n = nums.length;
+		int[] freq = new int[32];
+		int ans = Integer.MAX_VALUE;
+		int st = 0;
+		for (int end = 0; end < n; end++) {
+			int num = nums[end];
+			addPerform(num,freq);
+			int val = getVal(freq,st,end);
+			ans = Math.min(ans,Math.abs(k - val));
+			while (val <= k && end >= st) {
+				removePerform(nums[st],freq);
+				st++;
+				val = getVal(freq,st,end);
+				ans = Math.min(ans,Math.abs(k - val));
+			}
+		}
+		return ans;
+	}
+	void removePerform(int num, int[] freq) {
+		for (int i = 0; i < 32; i++) {
+			if ((num & (1 << i)) > 0) {
+				freq[32 - i - 1]--;
+			}
+		}
+	}
+}

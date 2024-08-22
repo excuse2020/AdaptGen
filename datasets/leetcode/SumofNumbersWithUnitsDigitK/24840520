@@ -1,0 +1,25 @@
+class Solution {
+	int INF = Integer.MAX_VALUE - 1;
+	int minimumNumbers(int num, int k) {
+		int n = 1 + num / 10;
+		int[][] dp = new int[n + 1][num + 1];
+		for (int[] I: dp) {	
+			Arrays.fill(I,INF);
+		}
+		for (int i = 0; i <= n; i++) {
+			dp[i][0] = 0;
+		}
+		for (int i = 1; i <= n; i++) {
+			for (int j = 1; j <= num; j++) {
+				if (k <= j) {
+					dp[i][j] = Math.min(1 + dp[i][j - k],dp[i - 1][j]);
+				} 
+				else {
+					dp[i][j] = dp[i - 1][j];
+				}
+			}
+			k += 10;
+		}
+		return dp[n][num] != INF ? dp[n][num] : -1;
+	}
+}

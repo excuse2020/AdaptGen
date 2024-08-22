@@ -1,0 +1,36 @@
+class Solution {
+	int cnt = 0;
+	boolean[] visited;
+	boolean solve(int node, int[] leftChild, int[] rightChild) {
+		if (node == -1) {
+			return true;
+		}
+		if (visited[node]) {
+			return false;
+		}
+		cnt--;
+		visited[node] = true;
+		return solve(leftChild[node],leftChild,rightChild) && solve(rightChild[node],leftChild,rightChild);
+	}
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		int[] indegree = new int[n];
+		for (int i = 0; i < n; i++) {
+			if (leftChild[i] != -1) {
+				indegree[leftChild[i]]++;
+				cnt++;
+			}
+			if (rightChild[i] != -1) {
+				indegree[rightChild[i]]++;
+				cnt++;
+			}
+		}
+		visited = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			if (indegree[i] == 0) {
+				boolean flag = solve(i,leftChild,rightChild);
+				return flag && cnt == -1;
+			}
+		}
+		return false;
+	}
+}

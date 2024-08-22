@@ -1,0 +1,32 @@
+class Solution {
+	int dfs(int curr, int parent, HashMap<Integer, ArrayList<Integer>> map, HashMap<Integer, ArrayList<Integer>> dirMap) {
+		int ans = 0;
+		for (int nei: dirMap.getOrDefault(curr,new ArrayList<>())) {	
+			if (nei != parent) {
+				ans++;
+			}
+		}
+		for (int nei: map.getOrDefault(curr,new ArrayList<>())) {	
+			if (nei != parent) {
+				ans += dfs(nei,curr,map,dirMap);
+			}
+		}
+		return ans;
+	}
+	int minReorder(int n, int[][] connections) {
+		HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+		HashMap<Integer, ArrayList<Integer>> dirMap = new HashMap<>();
+		for (int i = 0; i < n - 1; i++) {
+			ArrayList<Integer> a = map.getOrDefault(connections[i][0],new ArrayList<>());
+			ArrayList<Integer> b = dirMap.getOrDefault(connections[i][0],new ArrayList<>());
+			a.add(connections[i][1]);
+			b.add(connections[i][1]);
+			map.put(connections[i][0],a);
+			dirMap.put(connections[i][0],b);
+			a = map.getOrDefault(connections[i][1],new ArrayList<>());
+			a.add(connections[i][0]);
+			map.put(connections[i][1],a);
+		}
+		return dfs(0,-1,map,dirMap);
+	}
+}

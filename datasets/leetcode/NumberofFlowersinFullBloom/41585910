@@ -1,0 +1,25 @@
+class Solution {
+	record Entry(Type type, int time, int positionInInputArray, int flowersInbloom) {
+	}
+	int[] fullBloomFlowers(int[][] flowers, int[] people) {
+		var map = new TreeMap<Entry, Integer>(Comparator.comparingInt().thenComparing().thenComparingInt());
+		for (int i = 0; i < flowers.length; i++) {
+			var currentFlower = flowers[i];
+			map.merge(new Entry(Type.FLOWER, currentFlower[0], i, 0),1,);
+			map.merge(new Entry(Type.FLOWER, currentFlower[1] + 1, i, 0),-1,);
+		}
+		for (int i = 0; i < people.length; i++) {
+			var currentPerson = people[i];
+			map.put(new Entry(Type.PERSON, currentPerson, i, 0),0);
+		}
+		var count = 0;
+		var results = new TreeSet<>(Comparator.comparingInt());
+		for (var entry: map.entrySet()) {	
+			count += entry.getValue();
+			if (entry.getKey().type == Type.PERSON) {
+				results.add(new Entry(Type.PERSON, entry.getKey().time, entry.getKey().positionInInputArray, count));
+			}
+		}
+		return results.stream().mapToInt().toArray();
+	}
+}

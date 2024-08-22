@@ -1,0 +1,54 @@
+class Solution {
+	String getEquation(int[] pointA, int[] pointB) {
+		float xdiff = pointB[0] - pointA[0];
+		float ydiff = pointB[1] - pointA[1];
+		if (ydiff == 0) {
+			return "y=" + pointB[1];
+		} 
+		else if (xdiff == 0) {
+			return "x=" + pointB[0];
+		}
+		float slope = ydiff / xdiff;
+		float yintercept = pointB[1] - (slope * pointB[0]);
+		String eqn = getEquation(slope,yintercept);
+		return eqn;
+	}
+	String getEquation(float m, float c) {
+		if (c > 0) {
+			return "y=" + m;
+		} 
+		else if (c < 0) {
+			return "y=" + m;
+		}
+		return "y=" + m;
+	}
+	int maxPoints(int[][] points) {
+		Map<String, Set<Integer>> hmap = new HashMap();
+		int maxHits = 0;
+		Set<Integer> hitSet;
+		String eqn = "";
+		if (points != null && points.length == 1) {
+			return 1;
+		}
+		for (int i = 0; i < points.length; i++) {
+			for (int j = i + 1; j < points.length; j++) {
+				eqn = getEquation(points[i],points[j]);
+				if (hmap.get(eqn) != null) {
+					hitSet = hmap.get(eqn);
+				} 
+				else {
+					hitSet = new HashSet<>();
+				}
+				hitSet.add(i);
+				hitSet.add(j);
+				hmap.put(eqn,hitSet);
+				if (hitSet.size() > maxHits) {
+					maxHits = hitSet.size();
+					System.out.println(maxHits);
+					System.out.println(hitSet);
+				}
+			}
+		}
+		return maxHits;
+	}
+}

@@ -1,0 +1,38 @@
+class Solution {
+	int maxct = 0;
+	int[][] vist;
+	void callpath(int i, int j, int[][] grid, int ct) {
+		if (i > grid.length - 1 || j > grid[0].length - 1) {
+			return;
+		}
+		if (vist[i][j] == 1) {
+			return;
+		} 
+		else {
+			if (i - 1 >= 0 && j + 1 < grid[0].length && grid[i][j] < grid[i - 1][j + 1]) {
+				vist[i][j] = 1;
+				maxct = Math.max(maxct,ct + 1);
+				callpath(i - 1,j + 1,grid,ct + 1);
+			}
+			if (j + 1 < grid[0].length && grid[i][j] < grid[i][j + 1]) {
+				vist[i][j] = 1;
+				maxct = Math.max(maxct,ct + 1);
+				callpath(i,j + 1,grid,ct + 1);
+			}
+			if (i + 1 < grid.length && j + 1 < grid[0].length && grid[i][j] < grid[i + 1][j + 1]) {
+				vist[i][j] = 1;
+				maxct = Math.max(maxct,ct + 1);
+				callpath(i + 1,j + 1,grid,ct + 1);
+			}
+			vist[i][j] = 1;
+			return;
+		}
+	}
+	int maxMoves(int[][] grid) {
+		vist = new int[grid.length][grid[0].length];
+		for (int i = 0; i < grid.length; i++) {
+			callpath(i,0,grid,0);
+		}
+		return maxct;
+	}
+}

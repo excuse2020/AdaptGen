@@ -1,0 +1,53 @@
+class Solution {
+	int getNumberOfBacklogOrders(int[][] orders) {
+		PriorityQueue<Pair<Integer, Long>> buy = new PriorityQueue<>(new Comparator<>());
+		PriorityQueue<Pair<Integer, Long>> sell = new PriorityQueue<>(new Comparator<>());
+		for (int[] od: orders) {	
+			int p = od[0], cnt = od[1], type = od[2];
+			if (type == 0) {
+				while (!sell.isEmpty() && sell.peek().getKey() <= p && cnt > 0) {
+					if (cnt < sell.peek().getValue()) {
+						Pair<Integer, Long> t = sell.poll();
+						if (t.getValue() > cnt) {
+							sell.add(new Pair<Integer, Long>(t.getKey(), t.getValue() - cnt));
+						}
+						cnt = 0;
+					} 
+					else {
+						Pair<Integer, Long> t = sell.poll();
+						cnt -= t.getValue();
+					}
+				}
+				if (cnt > 0) {
+					buy.add(new Pair<Integer, Long>(p, (long) cnt));
+				}
+			} 
+			else {
+				while (!buy.isEmpty() && buy.peek().getKey() >= p && cnt > 0) {
+					if (cnt < buy.peek().getValue()) {
+						Pair<Integer, Long> t = buy.poll();
+						if (t.getValue() > cnt) {
+							buy.add(new Pair<Integer, Long>(t.getKey(), t.getValue() - cnt));
+						}
+						cnt = 0;
+					} 
+					else {
+						Pair<Integer, Long> t = buy.poll();
+						cnt -= t.getValue();
+					}
+				}
+				if (cnt > 0) {
+					sell.add(new Pair<Integer, Long>(p, (long) cnt));
+				}
+			}
+		}
+		long ans = 0;
+		for (Pair<Integer, Long> p: buy) {	
+			ans += p.getValue();
+		}
+		for (Pair<Integer, Long> p: sell) {	
+			ans += p.getValue();
+		}
+		return (int) (ans % 1000000007);
+	}
+}

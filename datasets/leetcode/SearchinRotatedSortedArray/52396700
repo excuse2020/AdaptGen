@@ -1,0 +1,40 @@
+class Solution {
+	int search(int[] nums, int target) {
+		int len = nums.length;
+		int left = 0;
+		int right = nums.length - 1;
+		while (left < right) {
+			if (right - left + 1 <= 3) {
+				int min = left;
+				for (int i = left; i <= right; i++) {
+					if (nums[i] < nums[min]) {
+						min = i;
+					}
+				}
+				left = min;
+				break;
+			}
+			int mid = (left + right) / 2;
+			if (nums[mid] > nums[left] && nums[left] > nums[(left - 1 + len) % len]) {
+				left = mid + 1;
+			} 
+			else {
+				right = mid;
+			}
+		}
+		int offset = left;
+		left = 0;
+		right = nums.length - 1;
+		while (left < right) {
+			int mid = (left + right) / 2;
+			if (nums[(mid + offset) % len] < target) {
+				left = mid + 1;
+			} 
+			else {
+				right = mid;
+			}
+		}
+		int res = (left + offset) % len;
+		return nums[res] == target ? res : -1;
+	}
+}

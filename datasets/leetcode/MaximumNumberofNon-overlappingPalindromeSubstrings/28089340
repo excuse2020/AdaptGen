@@ -1,0 +1,46 @@
+class Solution {
+	int helper(String s, int[] dp, int i, int k) {
+		if (i >= s.length()) {
+			return 0;
+		}
+		int ans = 0;
+		if (dp[i] != -1) {
+			return dp[i];
+		}
+		for (int j = i + k - 1; j < s.length(); j++) {
+			boolean palindrome = pal(s,i,j,k);
+			if (palindrome) {
+				ans = Math.max(ans,1 + helper(s,dp,j + 1,k));
+			}
+		}
+		ans = Math.max(ans,helper(s,dp,i + 1,k));
+		dp[i] = ans;
+		return ans;
+	}
+	int maxPalindromes(String s, int k) {
+		HashSet<Character> set = new HashSet<Character>();
+		for (int i = 0; i < s.length(); i++) {
+			set.add(s.charAt(i));
+		}
+		if (set.size() == 1) {
+			return s.length() / k;
+		}
+		int[] dp = new int[2001];
+		Arrays.fill(dp,-1);
+		return helper(s,dp,0,k);
+	}
+	boolean pal(String s, int a, int b, int k) {
+		if (b >= s.length()) {
+			return false;
+		}
+		int freq = 0;
+		int length = b - a + 1;
+		for (int j = a; j < a + length / 2; j++) {
+			if (s.charAt(j) != s.charAt(b - freq)) {
+				return false;
+			}
+			++freq;
+		}
+		return true;
+	}
+}

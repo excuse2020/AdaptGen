@@ -1,0 +1,45 @@
+class Solution {
+	StringBuilder[] values;
+	boolean findDirection(TreeNode root, int value, int idx) {
+		if (root.val == value) {
+			return true;
+		}
+		if (root.left != null) {
+			values[idx].append("L");
+			if (!findDirection(root.left,value,idx)) {
+				values[idx].deleteCharAt(values[idx].length() - 1);
+			} 
+			else {
+				return true;
+			}
+		}
+		if (root.right != null) {
+			values[idx].append("R");
+			if (!findDirection(root.right,value,idx)) {
+				values[idx].deleteCharAt(values[idx].length() - 1);
+			} 
+			else {
+				return true;
+			}
+		}
+		return false;
+	}
+	String getDirections(TreeNode root, int startValue, int destValue) {
+		values = new StringBuilder[2];
+		values[0] = new StringBuilder();
+		values[1] = new StringBuilder();
+		findDirection(root,startValue,0);
+		findDirection(root,destValue,1);
+		int i = 0, temp;
+		while (i < values[0].length() && i < values[1].length() && values[0].charAt(i) == values[1].charAt(i)) {
+			i++;
+		}
+		temp = i;
+		StringBuilder res = new StringBuilder();
+		while (i < values[0].length()) {
+			res.append("U");
+			i++;
+		}
+		return res.append(values[1].substring(temp)).toString();
+	}
+}

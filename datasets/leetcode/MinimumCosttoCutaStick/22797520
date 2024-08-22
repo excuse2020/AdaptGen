@@ -1,0 +1,55 @@
+class Solution {
+	int dp;
+	int minCost(int n, int[] cuts) {
+		int len = cuts.length;
+		dp = new int[len + 2][len + 2];
+		int mycuts = new int[len + 2];
+		mycuts[0] = 0;
+		mycuts[len + 1] = n;
+		for (int i = 1; i < len + 1; i++) {
+			mycuts[i] = cuts[i - 1];
+		}
+		Arrays.sort(mycuts);
+		for (int i = len; i > 0; i--) {
+			for (int j = i; j <= len; j++) {
+				int min = Integer.MAX_VALUE;
+				for (int k = i; k <= j; k++) {
+					int val = mycuts[j + 1] - mycuts[i - 1] + dp[i][k - 1] + dp[k + 1][j];
+					min = Math.min(min,val);
+				}
+				dp[i][j] = min;
+			}
+		}
+		return dp[1][len];
+	}
+	int minCostRecur(int n, int[] cuts) {
+		int len = cuts.length;
+		dp = new int[len + 2][len + 2];
+		int mycuts = new int[len + 2];
+		mycuts[0] = 0;
+		mycuts[len + 1] = n;
+		for (int i = 1; i < len + 1; i++) {
+			mycuts[i] = cuts[i - 1];
+		}
+		for (int[] row: dp) {	
+			Arrays.fill(row,-1);
+		}
+		Arrays.sort(mycuts);
+		return solve(0,len + 1,mycuts);
+	}
+	int solve(int start, int end, int[] cuts) {
+		if (start >= end - 1) {
+			return 0;
+		}
+		if (dp[start][end] != -1) {
+			return dp[start][end];
+		}
+		int min = Integer.MAX_VALUE;
+		for (int i = start + 1; i < end; i++) {
+			int val = cuts[end] - cuts[start] + solve(start,i,cuts) + solve(i,end,cuts);
+			min = Math.min(min,val);
+		}
+		dp[start][end] = min;
+		return min;
+	}
+}

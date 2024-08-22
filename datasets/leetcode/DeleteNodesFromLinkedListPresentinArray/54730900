@@ -1,0 +1,45 @@
+class Solution {
+	boolean hasNum(int[] nums, int num) {
+		int L = 0;
+		int R = nums.length - 1;
+		while (L <= R) {
+			int M = L + (R - L) / 2;
+			if (nums[M] < num) {
+				L = M + 1;
+			} 
+			else if (nums[M] > num) {
+				R = M - 1;
+			} 
+			else {
+				return true;
+			}
+		}
+		return false;
+	}
+	ListNode modifiedList(int[] nums, ListNode head) {
+		ListNode dummy = new ListNode(0);
+		dummy.next = head;
+		ListNode prev = dummy;
+		Arrays.sort(nums);
+		while (head != null) {
+			int val = head.val;
+			boolean bHasNum = hasNum(nums,val);
+			if (bHasNum) {
+				while (bHasNum && head.next != null) {
+					ListNode headNext = head.next;
+					head.next = null;
+					head = headNext;
+					bHasNum = hasNum(nums,head.val);
+				}
+				if (head.next == null && bHasNum) {
+					prev.next = null;
+					break;
+				}
+				prev.next = head;
+			}
+			prev = prev.next;
+			head = head.next;
+		}
+		return dummy.next;
+	}
+}

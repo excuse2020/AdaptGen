@@ -1,0 +1,37 @@
+class Solution {
+	long[][][] dp;
+	int minSteps(int n) {
+		dp = new long[n + 1][n + 1][2];
+		for (int i = 0; i <= n; i++) {
+			for (int j = 0; j <= n; j++) {
+				Arrays.fill(dp[i][j],-1);
+			}
+		}
+		long ans = solve(n,1,0,0);
+		return (int) ans;
+	}
+	long solve(int n, int currLen, int copyLen, int flag) {
+		if (currLen == n) {
+			return 0;
+		}
+		if (currLen > n) {
+			return Integer.MAX_VALUE;
+		}
+		if (dp[currLen][copyLen][flag] != -1) {
+			return dp[currLen][copyLen][flag];
+		}
+		if (currLen == 1 && flag == 0) {
+			return dp[currLen][copyLen][flag] = 1 + solve(n,currLen,1,1);
+		} 
+		else {
+			if (flag == 1) {
+				return dp[currLen][copyLen][flag] = 1 + solve(n,currLen + copyLen,copyLen,0);
+			} 
+			else {
+				long y = solve(n,currLen + copyLen,copyLen,flag) + 1;
+				long z = solve(n,currLen,currLen,1) + 1;
+				return dp[currLen][copyLen][flag] = Math.min(y,z);
+			}
+		}
+	}
+}

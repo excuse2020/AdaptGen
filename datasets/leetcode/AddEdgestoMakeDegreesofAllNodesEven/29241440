@@ -1,0 +1,65 @@
+class Solution {
+	int additionLeft = 2;
+	int findMapNode(int toProcessNode, Set<Integer> queue, Map<Integer, Set<Integer>> nodeEdges) {
+		for (int curOdd: queue) {	
+			if (curOdd == toProcessNode) {
+				continue;
+			}
+			if (!nodeEdges.get(toProcessNode).contains(curOdd)) {
+				return curOdd;
+			}
+		}
+		for (int i = 1; i <= nodeEdges.size(); i++) {
+			if (i == toProcessNode || queue.contains(i)) {
+				continue;
+			}
+			if (!nodeEdges.get(toProcessNode).contains(i)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	boolean isPossible(int n, List<List<Integer>> edges) {
+		Map<Integer, Set<Integer>> nodeEdges = new HashMap<>();
+		for (int i = 1; i <= n; i++) {
+			nodeEdges.put(i,new HashSet<>());
+		}
+		for (List<Integer> edge: edges) {	
+			int nodeA = edge.get(0);
+			int nodeB = edge.get(1);
+			nodeEdges.get(nodeA).add(nodeB);
+			nodeEdges.get(nodeB).add(nodeA);
+		}
+		Set<Integer> queue = new HashSet<>();
+		for (Map.Entry<Integer, Set<Integer>> entry: nodeEdges.entrySet()) {	
+			if (entry.getValue().size() % 2 != 0) {
+				queue.add(entry.getKey());
+			}
+		}
+		if (queue.size() % 2 != 0 || queue.size() > 4) {
+			return false;
+		}
+		while (!queue.isEmpty() && additionLeft-- > 0) {
+			int toProcessNode = queue.iterator().next();
+			int mapNode = findMapNode(toProcessNode,queue,nodeEdges);
+			if (mapNode == -1) {
+				return false;
+			}
+			nodeEdges.get(toProcessNode).add(mapNode);
+			nodeEdges.get(mapNode).add(toProcessNode);
+			queue.remove(toProcessNode);
+			if (queue.contains(mapNode)) {
+				queue.remove(mapNode);
+			} 
+			else {
+				queue.add(mapNode);
+			}
+		}
+		if (queue.isEmpty()) {
+			return true;
+		} 
+		else {
+			return false;
+		}
+	}
+}

@@ -1,0 +1,41 @@
+class Solution {
+	int InversePairs(int[] array) {
+		if (array == null || array.length == 0) {
+			return 0;
+		}
+		int[] temp = new int[array.length];
+		return sort(array,temp,0,array.length - 1);
+	}
+	int sort(int[] arr, int[] temp, int left, int right) {
+		if (left < right) {
+			int mid = (right - left) / 2 + left;
+			int count = 0;
+			count += sort(arr,temp,left,mid);
+			count += sort(arr,temp,mid + 1,right);
+			int i = mid;
+			int j = right;
+			int t = right;
+			while (i >= left && j >= mid + 1) {
+				if (arr[i] > arr[j]) {
+					temp[t--] = arr[i--];
+					count = (count + j - mid) % 1000000007;
+				} 
+				else {
+					temp[t--] = arr[j--];
+				}
+			}
+			while (i >= left) {
+				temp[t--] = arr[i--];
+			}
+			while (j >= mid + 1) {
+				temp[t--] = arr[j--];
+			}
+			t = right;
+			while (right >= left) {
+				arr[right--] = temp[t--];
+			}
+			return count;
+		}
+		return 0;
+	}
+}

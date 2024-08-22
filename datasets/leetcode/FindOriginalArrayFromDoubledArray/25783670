@@ -1,0 +1,45 @@
+class Solution {
+	int[] findOriginalArray(int[] changed) {
+		if (changed == null) {
+			return new int[0];
+		}
+		int n = changed.length;
+		if (n % 2 != 0) {
+			return new int[0];
+		}
+		Arrays.sort(changed);
+		Map<Integer, Integer> map = new TreeMap();
+		List<Integer> list = new ArrayList();
+		for (int i: changed) {	
+			map.put(i,map.getOrDefault(i,0) + 1);
+		}
+		for (int i: changed) {	
+			if (map.get(i) > 0) {
+				if (map.containsKey(i * 2)) {
+					if (map.get(i * 2) > 0) {
+						list.add(i);
+						map.put(i * 2,map.get(i * 2) - 1);
+					} 
+					else {
+						return new int[0];
+					}
+				} 
+				else {
+					return new int[0];
+				}
+				map.put(i,map.get(i) - 1);
+			}
+		}
+		if (list.size() == n / 2) {
+			int[] ans = new int[n / 2];
+			int j = 0;
+			for (int i: list) {	
+				ans[j++] = i;
+			}
+			return ans;
+		} 
+		else {
+			return new int[0];
+		}
+	}
+}

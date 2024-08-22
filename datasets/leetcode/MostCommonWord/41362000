@@ -1,0 +1,29 @@
+class Solution {
+	String mostCommonWord(String paragraph, String[] banned) {
+		List<String> hs = Arrays.asList(banned);
+		String[] arr = paragraph.replaceAll("[^a-zA-Z0-9 ]"," ").toLowerCase().split("\\\\s+");
+		Map<String, Integer> hm = new LinkedHashMap<>();
+		for (int i = 0; i < arr.length; i++) {
+			String st = arr[i];
+			if (hm.containsKey(st)) {
+				hm.put(st,hm.get(st) + 1);
+			} 
+			else {
+				hm.put(st,1);
+			}
+		}
+		hm = hm.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors.toMap(,,(e1, e2) -> {e1},));
+		for (Map.Entry<String, Integer> rn: hm.entrySet()) {	
+			String st = rn.getKey();
+			if (!hs.isEmpty()) {
+				if (!hs.contains(st)) {
+					return st;
+				}
+			} 
+			else {
+				return rn.getKey();
+			}
+		}
+		return "";
+	}
+}

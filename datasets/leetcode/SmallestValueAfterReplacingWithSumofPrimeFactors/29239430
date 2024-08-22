@@ -1,0 +1,47 @@
+class Solution {
+	boolean[] isPrime;
+	boolean[] vis;
+	void fill(int n) {
+		isPrime = new boolean[n + 1];
+		Arrays.fill(isPrime,true);
+		vis = new boolean[n + 1];
+		for (int i = 2; i <= n / i; i++) {
+			if (!vis[i]) {
+				int num = i;
+				int mul = 2;
+				while (num * mul < isPrime.length) {
+					int prod = num * mul;
+					isPrime[prod] = false;
+					vis[prod] = true;
+					mul++;
+				}
+			}
+		}
+	}
+	int smallestValue(int n) {
+		fillPrimes(n);
+		int prev = n;
+		while (!isPrime[n]) {
+			n = sumOfPrimeFactors(n);
+			if (prev == n) {
+				break;
+			}
+			prev = n;
+		}
+		return n;
+	}
+	int sumOfPrimeFactors(int n) {
+		int sum = 0;
+		int i = 2;
+		while (i <= n) {
+			if (isPrime[i] && n % i == 0) {
+				n /= i;
+				sum += i;
+			} 
+			else {
+				i++;
+			}
+		}
+		return sum;
+	}
+}

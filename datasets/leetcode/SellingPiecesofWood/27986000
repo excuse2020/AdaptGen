@@ -1,0 +1,30 @@
+class Solution {
+	long dp;
+	HashMap<Pair<Integer, Integer>, Long> hm;
+	long sellingWood(int m, int n, int[][] prices) {
+		hm = new HashMap<>();
+		dp = new long[m + 1][n + 1];
+		for (int i = 0; i <= m; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		for (int i = 0; i < prices.length; i++) {
+			hm.put(new Pair(prices[i][0], prices[i][1]),new Long(prices[i][2]));
+		}
+		return solve(m,n,prices);
+	}
+	long solve(int m, int n, int[][] prices) {
+		if (dp[m][n] != -1) {
+			return dp[m][n];
+		}
+		long ans = 0;
+		long val = hm.containsKey(new Pair(m, n)) ? hm.get(new Pair(m, n)) : 0;
+		ans = val;
+		for (int i = 1; i <= m / 2; i++) {
+			ans = Math.max(ans,solve(i,n,prices) + solve(m - i,n,prices));
+		}
+		for (int j = 1; j <= n / 2; j++) {
+			ans = Math.max(ans,solve(m,j,prices) + solve(m,n - j,prices));
+		}
+		return dp[m][n] = ans;
+	}
+}

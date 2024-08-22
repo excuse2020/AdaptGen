@@ -1,0 +1,37 @@
+class Solution {
+	int longestCycle(int[] edges) {
+		int maximum = -1;
+		int[] visited = new int[edges.length];
+		for (int i = 0; i < visited.length; i++) {
+			visited[i] = -1;
+		}
+		for (int i = 0; i < edges.length; i++) {
+			if (visited[i] != -1) {
+				continue;
+			}
+			int counter = 0;
+			int current = i;
+			Set<Integer> visitedInTheRound = new HashSet();
+			while (true) {
+				if (visited[current] == -1) {
+					visited[current] = counter;
+					visitedInTheRound.add(current);
+					int nextPos = edges[current];
+					if (nextPos == -1) {
+						break;
+					}
+					current = nextPos;
+					counter++;
+				} 
+				else {
+					if (!visitedInTheRound.contains(current)) {
+						break;
+					}
+					maximum = Math.max(counter - visited[current],maximum);
+					break;
+				}
+			}
+		}
+		return maximum;
+	}
+}

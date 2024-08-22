@@ -1,0 +1,79 @@
+class Solution {
+	int[][] buildMatrix(int k, int[][] rowConditions, int[][] colConditions) {
+		ArrayList<Integer>[] rowGraph = new ArrayList[k + 1];
+		ArrayList<Integer>[] colGraph = new ArrayList[k + 1];
+		int[][] matrix = new int[k][k];
+		for (int i = 0; i <= k; i++) {
+			rowGraph[i] = new ArrayList<>();
+			colGraph[i] = new ArrayList<>();
+		}
+		for (int[] row: rowConditions) {	
+			rowGraph[row[0]].add(row[1]);
+		}
+		for (int[] col: colConditions) {	
+			colGraph[col[0]].add(col[1]);
+		}
+		if (isCyclic(rowGraph) || isCyclic(colGraph)) {
+			return new int[0][0];
+		}
+		List<Integer> row = getTopologicalList(rowGraph);
+		List<Integer> col = getTopologicalList(colGraph);
+		Map<Integer, Integer> rowIndex = new HashMap<>();
+		Map<Integer, Integer> colIndex = new HashMap<>();
+		for (int n = 0; n < k; n++) {
+			rowIndex.put(row.get(n),k - n);
+			colIndex.put(col.get(n),k - n);
+		}
+		for (int n = 1; n <= k; n++) {
+			int rw = rowIndex.get(n);
+			int cl = colIndex.get(n);
+			matrix[rw][cl] = n;
+		}
+		return matrix;
+	}
+	void getTopological(int i, ArrayList<Integer>[] graph, boolean[] v, List<Integer> topo) {
+		v[i] = true;
+		for (int child: graph[i]) {	
+			if (!v[child]) {
+				getTopological(child,graph,v,topo);
+			}
+		}
+		topo.add(i);
+	}
+	List<Integer> getTopologicalList(ArrayList<Integer>[] graph) {
+		List<Integer> topo = new ArrayList<>();
+		int k = graph.length;
+		boolean[] v = new boolean[k];
+		for (int n = 1; n < k; n++) {
+			if (!v[n]) {
+				getTopological(n,graph,v,topo);
+			}
+		}
+		return topo;
+	}
+	boolean isCyclic(ArrayList<Integer>[] graph) {
+		int k = graph.length;
+		boolean[] v = new boolean[k];
+		boolean[] stack = new boolean[k];
+		for (int n = 1; n < k; n++) {
+			if (!v[n] && isCyclicUtil(n,graph,v,stack)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	boolean isCyclicUtil(int n, ArrayList<Integer>[] graph, boolean[] v, boolean[] stack) {
+		v[n] = true;
+		stack[n] = true;
+		for (int child: graph[n]) {	
+			if (stack[child]) {
+				return true;
+			} 
+			else if (!v[child] && isCyclicUtil(child,graph,v,stack)) {
+				return true;
+			}
+		}
+		stack[n] = false;
+		return false;
+	}
+}

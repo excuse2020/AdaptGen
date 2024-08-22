@@ -1,0 +1,42 @@
+class Solution {
+	int lastStoneWeight(int[] stones) {
+		int n = stones.length;
+		int maxi = Arrays.stream(stones).max().getAsInt();
+		int weights = new int[maxi + 1];
+		for (int stone: stones) {	
+			weights[stone]++;
+		}
+		int i = maxi;
+		while (i > 0) {
+			if (weights[i] > 0) {
+				if (weights[i] > 1) {
+					maxi = weights[i] == 2 ? 0 : i;
+					weights[i] -= 2;
+				} 
+				else {
+					maxi = i;
+					int y = i;
+					i--;
+					while (i > 0 && weights[i] == 0) {
+						i--;
+					}
+					if (i == 0) {
+						break;
+					}
+					int x = i;
+					weights[y] -= 1;
+					weights[x] -= 1;
+					if (x != y) {
+						i = Math.max(y - x,i);
+						weights[y - x]++;
+					}
+					maxi = 0;
+				}
+			} 
+			else {
+				i--;
+			}
+		}
+		return maxi;
+	}
+}

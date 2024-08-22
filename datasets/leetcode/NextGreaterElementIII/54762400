@@ -1,0 +1,39 @@
+class Solution {
+	int nextGreaterElement(int n) {
+		boolean isPossible = false;
+		char ch = (n + "").toCharArray(), maxCh = ch[ch.length - 1];
+		for (int i = ch.length - 2; i > -1; i--) {
+			if (maxCh > ch[i]) {
+				int ind = sort(ch,i + 1,i);
+				char tc = ch[ind];
+				ch[ind] = ch[i];
+				ch[i] = tc;
+				isPossible = true;
+				break;
+			} 
+			else {
+				maxCh = ch[i];
+			}
+		}
+		if (!isPossible) {
+			return -1;
+		}
+		long num = Long.parseLong(String.valueOf(ch));
+		return num <= Integer.MAX_VALUE ? (int) num : -1;
+	}
+	int sort(char ch, int i, int k) {
+		int ind = -1;
+		char tch = new char[ch.length - i];
+		for (int j = i; j < ch.length; j++) {
+			tch[j - i] = ch[j];
+		}
+		Arrays.sort(tch);
+		for (int j = i; j < ch.length; j++) {
+			ch[j] = tch[j - i];
+			if (ind == -1 && ch[j] > ch[k]) {
+				ind = j;
+			}
+		}
+		return ind;
+	}
+}

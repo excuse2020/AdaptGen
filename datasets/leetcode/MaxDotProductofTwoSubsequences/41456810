@@ -1,0 +1,32 @@
+class Solution {
+	int maxDotProduct(int[] nums1, int[] nums2) {
+		if (nums2.length < nums1.length) {
+			return maxDotProduct(nums2,nums1);
+		}
+		int l1 = nums1.length, l2 = nums2.length;
+		int[] memo = new int[l1];
+		for (int n: nums2) {	
+			int diag = 0, last = 0;
+			for (int i = 0; i < l1; i++) {
+				int tmp = memo[i];
+				last = memo[i] = Math.max(last,Math.max(tmp,diag + n * nums1[i]));
+				diag = tmp;
+			}
+		}
+		if (memo[l1 - 1] == 0) {
+			int max1 = 5000, max2 = 5000;
+			for (int n: nums1) {	
+				if (Math.abs(n) < Math.abs(max1)) {
+					max1 = n;
+				}
+			}
+			for (int n: nums2) {	
+				if (Math.abs(n) < Math.abs(max2)) {
+					max2 = n;
+				}
+			}
+			return max1 * max2;
+		}
+		return memo[l1 - 1];
+	}
+}

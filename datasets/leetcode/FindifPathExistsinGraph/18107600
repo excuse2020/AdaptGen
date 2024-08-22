@@ -1,0 +1,27 @@
+class Solution {
+	boolean validPath(int n, int[][] edges, int source, int destination) {
+		List<List<Integer>> adjust = new ArrayList<>();
+		IntStream.range(0,n).forEach((i) -> {adjust.add(new ArrayList<>())});
+		for (int[] edge: edges) {	
+			adjust.get(edge[0]).add(edge[1]);
+			adjust.get(edge[1]).add(edge[0]);
+		}
+		Queue<Integer> stack = new LinkedList<>();
+		stack.add(source);
+		boolean[] seen = new boolean[n];
+		seen[source] = true;
+		while (!stack.isEmpty()) {
+			int node = stack.poll();
+			if (node == destination) {
+				return true;
+			}
+			for (Integer next: adjust.get(node)) {	
+				if (!seen[next]) {
+					stack.add(next);
+					seen[next] = true;
+				}
+			}
+		}
+		return false;
+	}
+}

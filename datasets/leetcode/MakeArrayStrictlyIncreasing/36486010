@@ -1,0 +1,43 @@
+class Solution {
+	HashMap<Pair<Integer, Integer>, Integer> dp = new HashMap<>();
+	int getIndex(int value, int[] arr) {
+		int low = 0;
+		int high = arr.length;
+		while (low < high) {
+			int mid = low + (high - low) / 2;
+			if (arr[mid] <= value) {
+				low = mid + 1;
+			} 
+			else {
+				high = mid;
+			}
+		}
+		return low;
+	}
+	int helper(int prev, int currInd, int[] arr1, int[] arr2) {
+		if (currInd > arr1.length - 1) {
+			return 0;
+		}
+		if (dp.containsKey(new Pair<>(currInd, prev))) {
+			return dp.get(new Pair<>(currInd, prev));
+		}
+		int cost = Integer.MAX_VALUE;
+		if (prev < arr1[currInd]) {
+			cost = helper(arr1[currInd],currInd + 1,arr1,arr2);
+		}
+		int indexToReplace = getIndex(prev,arr2);
+		if (indexToReplace < arr2.length) {
+			int res = helper(arr2[indexToReplace],currInd + 1,arr1,arr2);
+			if (res != Integer.MAX_VALUE) {
+				cost = Math.min(cost,1 + res);
+			}
+		}
+		dp.put(new Pair<>(currInd, prev),cost);
+		return cost;
+	}
+	int makeArrayIncreasing(int[] arr1, int[] arr2) {
+		Arrays.sort(arr2);
+		int res = helper(-1,0,arr1,arr2);
+		return res == Integer.MAX_VALUE ? -1 : res;
+	}
+}

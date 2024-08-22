@@ -1,0 +1,43 @@
+class Solution {
+	int earliestNonOverlapping(int[][] events, int time, int n) {
+		int start = 0;
+		int end = n - 1;
+		while (start <= end) {
+			int mid = start + (end - start) / 2;
+			if (events[mid][1] < time) {
+				if (events[mid + 1][1] < time) {
+					start = mid + 1;
+				} 
+				else {
+					return mid;
+				}
+			} 
+			else {
+				end = mid - 1;
+			}
+		}
+		return -1;
+	}
+	int maxTwoEvents(int[][] events) {
+		int n = events.length;
+		int[] memo = new int[n];
+		Arrays.sort(events,Comparator.comparingInt((a) -> {a[1]}));
+		int valMax = 0;
+		for (int i = 0; i < n; i++) {
+			valMax = Math.max(valMax,events[i][2]);
+			memo[i] = valMax;
+		}
+		int res = 0;
+		for (int i = 0; i < n; i++) {
+			int nextEvent = earliestNonOverlapping(events,events[i][0],n);
+			if (nextEvent != -1) {
+				int ans = memo[nextEvent] + events[i][2];
+				res = Math.max(res,ans);
+			} 
+			else {
+				res = Math.max(res,events[i][2]);
+			}
+		}
+		return res;
+	}
+}

@@ -1,0 +1,67 @@
+class Solution {
+	int numBusesToDestination(int[][] routes, int source, int x) {
+		if (source == x) {
+			return 0;
+		}
+		List<List<Integer>> adj = new ArrayList<>();
+		for (var route: routes) {	
+			adj.add(new ArrayList<>());
+			Arrays.sort(route);
+		}
+		for (int i = 0; i < routes.length; ++i) {
+			int[] a = routes[i];
+			for (int j = i + 1; j < routes.length; ++j) {
+				int left = 0, right = 0;
+				int[] b = routes[j];
+				boolean flag = false;
+				while (left < a.length && right < b.length) {
+					if (a[left] == b[right]) {
+						flag = true;
+						break;
+					} 
+					else if (a[left] < b[right]) {
+						left++;
+					} 
+					else {
+						right++;
+					}
+				}
+				if (flag) {
+					adj.get(i).add(j);
+					adj.get(j).add(i);
+				}
+			}
+		}
+		Set<Integer> seen = new HashSet<>();
+		Set<Integer> target = new HashSet<>();
+		Queue<Integer> q = new LinkedList<>();
+		for (int i = 0; i < routes.length; ++i) {
+			var route = routes[i];
+			if (Arrays.binarySearch(route,source) >= 0) {
+				seen.add(i);
+				q.add(i);
+			}
+			if (Arrays.binarySearch(route,x) >= 0) {
+				target.add(i);
+			}
+		}
+		int buses = 1;
+		while (!q.isEmpty()) {
+			int size = q.size();
+			while (size-- > 0) {
+				int bus = q.poll();
+				if (target.contains(bus)) {
+					return buses;
+				}
+				for (var adjBus: adj.get(bus)) {	
+					if (!seen.contains(adjBus)) {
+						seen.add(adjBus);
+						q.add(adjBus);
+					}
+				}
+			}
+			buses++;
+		}
+		return -1;
+	}
+}

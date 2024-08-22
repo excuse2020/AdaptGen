@@ -1,0 +1,40 @@
+class Solution {
+	int an = 0, bn = 0;
+	Integer dp;
+	int fun(int ith, int a, int jth, int b) {
+		if (ith == an || jth == bn) {
+			return 0;
+		}
+		if (dp[ith][jth] != null) {
+			return dp[ith][jth];
+		}
+		int max = 0;
+		int nontake = fun(ith + 1,a,jth,b);
+		int case1 = fun(ith,a,jth + 1,b);
+		int case2 = (a[ith] * b[jth]) + fun(ith + 1,a,jth + 1,b);
+		max = Math.max(case1,case2);
+		return dp[ith][jth] = Math.max(max,nontake);
+	}
+	int maxDotProduct(int[] a, int[] b) {
+		an = a.length;
+		bn = b.length;
+		dp = new Integer[an + 1][bn + 1];
+		int max = -(int)1e6;
+		int f = max, s = max, fm = (int) 1e6, sm = (int) 1e6;
+		for (int i = 0; i < an; i++) {
+			f = Math.max(f,a[i]);
+			fm = Math.min(fm,a[i]);
+		}
+		for (int i = 0; i < bn; i++) {
+			s = Math.max(s,b[i]);
+			sm = Math.min(sm,b[i]);
+		}
+		max = Math.max(Math.max(f * s,f * sm),Math.max(s * fm,s * f));
+		System.out.println(f + ",");
+		int cur = fun(0,a,0,b);
+		if (cur != 0) {
+			return cur;
+		}
+		return max;
+	}
+}

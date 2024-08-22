@@ -1,0 +1,24 @@
+class Solution {
+	int[] canSeePersonsCount(int[] heights) {
+		int len = heights.length;
+		int[] res = new int[len];
+		Stack<Integer> stack = new Stack<>();
+		int[] heights2 = new int[len + 1];
+		System.arraycopy(heights,0,heights2,0,len);
+		heights2[len] = Integer.MAX_VALUE;
+		stack.push(len);
+		for (int i = len - 1; i >= 0; i--) {
+			int count = 1;
+			while (!stack.isEmpty() && heights2[i] > heights2[stack.peek()]) {
+				stack.pop();
+				count++;
+			}
+			if (stack.peek() == len) {
+				count--;
+			}
+			stack.push(i);
+			res[i] = count;
+		}
+		return res;
+	}
+}

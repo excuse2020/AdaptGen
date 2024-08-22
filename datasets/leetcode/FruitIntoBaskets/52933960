@@ -1,0 +1,52 @@
+class Solution {
+	int totalFruit(int[] fruits) {
+		int n = fruits.length;
+		if (n <= 2) {
+			return n;
+		}
+		int maxFruits = 2;
+		int basket1 = -1;
+		int basket2 = -1;
+		int bk1Cnt = 1;
+		int bk2Cnt = 0;
+		basket1 = fruits[0];
+		int[] freq = new int[n];
+		freq[0] = 1;
+		for (int i = 1; i < n; i++) {
+			int currFruit = fruits[i];
+			int prevFruit = fruits[i - 1];
+			if (currFruit == prevFruit) {
+				freq[i] = freq[i - 1] + 1;
+			} 
+			else {
+				freq[i] = 1;
+			}
+			if (currFruit == basket1) {
+				bk1Cnt++;
+			} 
+			else if (currFruit == basket2 || basket2 == -1) {
+				if (basket2 == -1) {
+					bk2Cnt = 1;
+				} 
+				else {
+					bk2Cnt++;
+				}
+				basket2 = currFruit;
+			} 
+			else {
+				if (prevFruit == basket1) {
+					basket2 = currFruit;
+					bk2Cnt = 1;
+					bk1Cnt = freq[i - 1];
+				} 
+				else {
+					basket1 = currFruit;
+					bk1Cnt = 1;
+					bk2Cnt = freq[i - 1];
+				}
+			}
+			maxFruits = Math.max(maxFruits,bk1Cnt + bk2Cnt);
+		}
+		return maxFruits;
+	}
+}

@@ -1,0 +1,38 @@
+class Solution {
+	int pairs = 0;
+	int countPairs(TreeNode root, int distance) {
+		dfs(root,distance);
+		return pairs;
+	}
+	HashMap<Integer, Integer> dfs(TreeNode node, int d) {
+		if (node == null) {
+			return new HashMap<>();
+		}
+		if (node.left == null && node.right == null) {
+			HashMap<Integer, Integer> res = new HashMap<>();
+			res.put(1,1);
+			return res;
+		}
+		HashMap<Integer, Integer> leftDist = dfs(node.left,d);
+		HashMap<Integer, Integer> rightDist = dfs(node.right,d);
+		for (int d1: leftDist.keySet()) {	
+			for (int d2: rightDist.keySet()) {	
+				if (d1 + d2 <= d) {
+					pairs += leftDist.get(d1) * rightDist.get(d2);
+				}
+			}
+		}
+		HashMap<Integer, Integer> allDist = new HashMap<>();
+		for (int d1: leftDist.keySet()) {	
+			if (d1 + 1 <= d) {
+				allDist.put(d1 + 1,leftDist.get(d1));
+			}
+		}
+		for (int d2: rightDist.keySet()) {	
+			if (d2 + 1 <= d) {
+				allDist.put(d2 + 1,allDist.getOrDefault(d2 + 1,0) + rightDist.get(d2));
+			}
+		}
+		return allDist;
+	}
+}

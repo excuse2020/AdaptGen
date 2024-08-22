@@ -1,0 +1,26 @@
+class Solution {
+	int minRefuelStops(int target, int startFuel, int[][] stations) {
+		PriorityQueue<Integer> pq = new PriorityQueue(Collections.reverseOrder());
+		int travel = 0, remainingFuel = startFuel, ans = 0;
+		for (int i = 0; i <= stations.length; ) {
+			if (remainingFuel + travel >= target) {
+				return ans;
+			}
+			if (i != stations.length && stations[i][0] <= travel + remainingFuel) {
+				remainingFuel = remainingFuel - (stations[i][0] - travel);
+				travel = stations[i][0];
+				pq.offer(stations[i][1]);
+				i++;
+			} 
+			else {
+				if (pq.isEmpty()) {
+					return -1;
+				}
+				int fuelAtStation = pq.poll();
+				remainingFuel = remainingFuel + fuelAtStation;
+				ans++;
+			}
+		}
+		return -1;
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	int Partition(int[] array, int start, int end) {
+		int pivot = array[start];
+		while (start < end) {
+			while (start < end && array[end] >= pivot) {
+				end--;
+			}
+			array[start] = array[end];
+			while ((start < end && array[start] <= pivot)) {
+				start++;
+			}
+			array[end] = array[start];
+		}
+		array[start] = pivot;
+		return start;
+	}
+	int QuickSort(int[] array, int start, int end, int K) {
+		int pivot = Partition(array,start,end);
+		if (end - pivot + 1 == K) {
+			return array[pivot];
+		} 
+		else if (end - pivot + 1 > K) {
+			return QuickSort(array,pivot + 1,end,K);
+		} 
+		else {
+			return QuickSort(array,start,pivot - 1,K - (end - pivot + 1));
+		}
+	}
+	int findKth(int[] a, int n, int K) {
+		return QuickSort(a,0,n - 1,K);
+	}
+}

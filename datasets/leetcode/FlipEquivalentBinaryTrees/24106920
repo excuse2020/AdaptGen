@@ -1,0 +1,54 @@
+class Solution {
+	boolean flipEquiv(TreeNode root1, TreeNode root2) {
+		if (root1 == null && root2 == null) {
+			return true;
+		}
+		if (root1 == null || root2 == null) {
+			return false;
+		}
+		HashMap<Integer, Integer> map1 = new HashMap<>();
+		HashMap<Integer, Integer> map2 = new HashMap<>();
+		map1.put(root1.val,-1);
+		map2.put(root2.val,-1);
+		PriorityQueue<TreeNode> q1 = new PriorityQueue<>((a, b) -> {a.val - b.val});
+		PriorityQueue<TreeNode> q2 = new PriorityQueue<>((a, b) -> {a.val - b.val});
+		q1.add(root1);
+		q2.add(root2);
+		while (!q1.isEmpty() || !q2.isEmpty()) {
+			PriorityQueue<TreeNode> q11 = new PriorityQueue<>((a, b) -> {a.val - b.val});
+			PriorityQueue<TreeNode> q22 = new PriorityQueue<>((a, b) -> {a.val - b.val});
+			if (q1.size() != q2.size()) {
+				return false;
+			}
+			int size = q1.size();
+			for (int i = 0; i < size; i++) {
+				TreeNode node1 = q1.remove();
+				TreeNode node2 = q2.remove();
+				if (map1.get(node1.val) != map2.get(node2.val)) {
+					return false;
+				}
+				map1.remove(node1.val);
+				map2.remove(node2.val);
+				if (node1.left != null) {
+					q11.add(node1.left);
+					map1.put(node1.left.val,node1.val);
+				}
+				if (node1.right != null) {
+					q11.add(node1.right);
+					map1.put(node1.right.val,node1.val);
+				}
+				if (node2.left != null) {
+					q22.add(node2.left);
+					map2.put(node2.left.val,node2.val);
+				}
+				if (node2.right != null) {
+					q22.add(node2.right);
+					map2.put(node2.right.val,node2.val);
+				}
+			}
+			q1 = q11;
+			q2 = q22;
+		}
+		return true;
+	}
+}

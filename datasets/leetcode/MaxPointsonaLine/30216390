@@ -1,0 +1,32 @@
+class Solution {
+	int maxPoints(int[][] points) {
+		if (points.length <= 2) {
+			return points.length;
+		}
+		Map<String, Integer> koeffCountMap = new HashMap<>();
+		for (int fp = 0; fp < points.length - 1; fp++) {
+			Set<String> visitedKeys = new HashSet<>();
+			for (int sp = fp + 1; sp < points.length; sp++) {
+				int x1 = points[fp][0];
+				int x2 = points[sp][0];
+				int y1 = points[fp][1];
+				int y2 = points[sp][1];
+				String koeffKey = "";
+				if (x1 == x2) {
+					koeffKey = Integer.toString(x1);
+				} 
+				else {
+					double k = ((double) y1 - y2) / (x1 - x2);
+					double b = (x2 * y1 - x1 * y2) / (x2 - x1);
+					koeffKey = k + "!";
+				}
+				if (!visitedKeys.contains(koeffKey)) {
+					koeffCountMap.putIfAbsent(koeffKey,1);
+					koeffCountMap.put(koeffKey,koeffCountMap.get(koeffKey) + 1);
+					visitedKeys.add(koeffKey);
+				}
+			}
+		}
+		return Collections.max(koeffCountMap.values());
+	}
+}

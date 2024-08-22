@@ -1,0 +1,37 @@
+class Solution {
+	int highestscore = 0;
+	void helper(int[][] students, int[][] mentors, int idx, int m) {
+		if (idx == m) {
+			int score = 0;
+			for (int i = 0; i < m; i++) {
+				score += score(students[i],mentors[i]);
+			}
+			highestscore = Math.max(highestscore,score);
+		} 
+		else {
+			for (int i = idx; i < m; i++) {
+				swap(mentors,i,idx);
+				helper(students,mentors,idx + 1,m);
+				swap(mentors,i,idx);
+			}
+		}
+	}
+	int maxCompatibilitySum(int[][] students, int[][] mentors) {
+		helper(students,mentors,0,students.length);
+		return highestscore;
+	}
+	int score(int[] a, int[] b) {
+		int count = 0;
+		for (int i = 0; i < b.length; i++) {
+			if (a[i] == b[i]) {
+				count += 1;
+			}
+		}
+		return count;
+	}
+	void swap(int[][] mentors, int i, int j) {
+		int[] tmp = mentors[i];
+		mentors[i] = mentors[j];
+		mentors[j] = tmp;
+	}
+}

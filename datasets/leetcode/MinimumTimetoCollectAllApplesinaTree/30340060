@@ -1,0 +1,30 @@
+class Solution {
+	List<Boolean> ha;
+	int res = 0;
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		List al = new List[n];
+		for (int i = 0; i < n; i++) {
+			al[i] = new ArrayList<Integer>();
+		}
+		ha = hasApple;
+		for (int edge: edges) {	
+			al[edge[0]].add(edge[1]);
+			al[edge[1]].add(edge[0]);
+		}
+		recurse(al,-1,0);
+		return res;
+	}
+	boolean recurse(List<Integer> al, int parent, int currNode) {
+		boolean hasAppleInThisPath = false;
+		for (int child: al[currNode]) {	
+			if (child != parent) {
+				boolean value = recurse(al,currNode,child);
+				if (value) {
+					res += 2;
+				}
+				hasAppleInThisPath |= value;
+			}
+		}
+		return hasAppleInThisPath | ha.get(currNode);
+	}
+}

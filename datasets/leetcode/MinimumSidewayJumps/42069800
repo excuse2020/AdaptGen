@@ -1,0 +1,32 @@
+class Solution {
+	int helper(int lane, int i, int[] obstacles, int[][] dp) {
+		if (i + 1 == obstacles.length) {
+			return 0;
+		}
+		if (obstacles[i] == lane) {
+			return (int) 1e6;
+		}
+		if (dp[lane][i] != -1) {
+			return dp[lane][i];
+		}
+		if (obstacles[i + 1] == lane) {
+			if (lane == 1) {
+				return dp[lane][i] = 1 + Math.min(helper(2,i,obstacles,dp),helper(3,i,obstacles,dp));
+			}
+			if (lane == 2) {
+				return dp[lane][i] = 1 + Math.min(helper(1,i,obstacles,dp),helper(3,i,obstacles,dp));
+			} 
+			else {
+				return dp[lane][i] = 1 + Math.min(helper(1,i,obstacles,dp),helper(2,i,obstacles,dp));
+			}
+		}
+		return dp[lane][i] = helper(lane,i + 1,obstacles,dp);
+	}
+	int minSideJumps(int[] obstacles) {
+		int[][] dp = new int[4][obstacles.length];
+		for (int[] row: dp) {	
+			Arrays.fill(row,-1);
+		}
+		return helper(2,0,obstacles,dp);
+	}
+}

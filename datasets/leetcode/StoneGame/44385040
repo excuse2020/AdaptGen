@@ -1,0 +1,26 @@
+class Solution {
+	Boolean[][] cache;
+	boolean helper(int[] piles, int aliceSum, int bobSum, int left, int right) {
+		if (left > right) {
+			if (aliceSum > bobSum) {
+				return true;
+			}
+			return false;
+		}
+		if (cache[left][right] != null) {
+			return cache[left][right];
+		}
+		boolean aliceLeftBobLeft = helper(piles,aliceSum + piles[left],bobSum + piles[left + 1],left + 2,right);
+		boolean aliceLeftBobRight = helper(piles,aliceSum + piles[left],bobSum + piles[right],left + 1,right - 1);
+		boolean aliceRightBobLeft = helper(piles,aliceSum + piles[right],bobSum + piles[left],left + 3,right - 1);
+		boolean aliceRightBobRight = helper(piles,aliceSum + piles[right],bobSum + piles[right - 1],left,right - 2);
+		boolean res = aliceLeftBobLeft || aliceLeftBobRight;
+		cache[left][right] = res;
+		return res;
+	}
+	boolean stoneGame(int[] piles) {
+		int len = piles.length;
+		cache = new Boolean[len][len];
+		return helper(piles,0,0,0,piles.length - 1);
+	}
+}

@@ -1,0 +1,61 @@
+class Solution {
+	int findHash(int[] arr, int diff) {
+		Map<Integer, Integer> map = new HashMap<>();
+		int ans = 0;
+		for (int i = 0; i < arr.length; i++) {
+			map.put(arr[i],map.getOrDefault(arr[i] - diff,0) + 1);
+			ans = Math.max(ans,map.get(arr[i]));
+		}
+		return ans;
+	}
+	int findMem(int[] arr, int diff, int index, int prev, int[][] dp) {
+		if (index >= arr.length) {
+			return 0;
+		}
+		if (dp[index][prev + 1] != -1) {
+			return dp[index][prev + 1];
+		}
+		int inc = 0;
+		int exc = 0;
+		exc = findMem(arr,diff,index + 1,prev,dp);
+		if (prev == -1 || arr[index] - arr[prev] == diff) {
+			inc = 1 + findMem(arr,diff,index + 1,index,dp);
+		}
+		return dp[index][prev + 1] = Math.max(inc,exc);
+	}
+	int findOpt(int[] arr, int diff) {
+		int[] next = new int[arr.length + 1];
+		for (int index = arr.length - 1; index >= 0; index--) {
+			int[] curr = new int[arr.length + 1];
+			for (int prev = index - 1; prev >= -1; prev--) {
+				int inc = 0;
+				int exc = 0;
+				exc = next[prev + 1];
+				if (prev == -1 || arr[index] - arr[prev] == diff) {
+					inc = 1 + next[index + 1];
+				}
+				curr[prev + 1] = Math.max(inc,exc);
+			}
+			next = curr;
+		}
+		return next[0];
+	}
+	int findTab(int[] arr, int diff) {
+		int[][] dp = new int[arr.length + 1][arr.length + 1];
+		for (int index = arr.length - 1; index >= 0; index--) {
+			for (int prev = index - 1; prev >= -1; prev--) {
+				int inc = 0;
+				int exc = 0;
+				exc = dp[index + 1][prev + 1];
+				if (prev == -1 || arr[index] - arr[prev] == diff) {
+					inc = 1 + dp[index + 1][index + 1];
+				}
+				dp[index][prev + 1] = Math.max(inc,exc);
+			}
+		}
+		return dp[0][0];
+	}
+	int longestSubsequence(int[] arr, int difference) {
+		return findHash(arr,difference);
+	}
+}

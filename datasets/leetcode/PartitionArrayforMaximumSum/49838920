@@ -1,0 +1,19 @@
+class Solution {
+	int dfs(int index, int[] arr, int k, Map<Integer, Integer> cache) {
+		if (cache.containsKey(index)) {
+			return cache.get(index);
+		}
+		int currMax = 0;
+		int result = 0;
+		for (int j = index; j < Math.min(arr.length,index + k); j++) {
+			int windowSize = j - index + 1;
+			currMax = Math.max(currMax,arr[j]);
+			result = Math.max(result,dfs(j + 1,arr,k,cache) + windowSize * currMax);
+		}
+		cache.put(index,result);
+		return result;
+	}
+	int maxSumAfterPartitioning(int[] arr, int k) {
+		return dfs(0,arr,k,new HashMap<>());
+	}
+}

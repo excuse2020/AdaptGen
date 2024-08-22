@@ -1,0 +1,64 @@
+class Solution {
+	void calcSubResult(LinkedList<Integer> numStack, LinkedList<Character> opStack) {
+		int n2 = numStack.pop();
+		int n1 = numStack.pop();
+		int op = opStack.pop();
+		if (op == '+') {
+			numStack.push(n1 + n2);
+		} 
+		else if (op == '-') {
+			numStack.push(n1 - n2);
+		} 
+		else if (op == '*') {
+			numStack.push(n1 * n2);
+		} 
+		else {
+		}
+	}
+	int solve(String s) {
+		LinkedList<Integer> numStack = new LinkedList<>();
+		LinkedList<Character> opStack = new LinkedList<>();
+		int num = 0;
+		boolean hasNum = false;
+		for (int i = 0; i < s.length(); i++) {
+			char c = s.charAt(i);
+			if (c >= '0' && c <= '9') {
+				hasNum = true;
+				num = num * 10 + (c - '0');
+				if (i != s.length() - 1) {
+					continue;
+				}
+			}
+			if (hasNum) {
+				numStack.push(num);
+				num = 0;
+				hasNum = false;
+			}
+			if (c == '+' || c == '-') {
+				while (!opStack.isEmpty() && (opStack.peek() == '+' || opStack.peek() == '-' || opStack.peek() == '*')) {
+					calcSubResult(numStack,opStack);
+				}
+				opStack.push(c);
+			} 
+			else if (c == '*' || c == '/') {
+				while (!opStack.isEmpty() && (opStack.peek() == '*' || opStack.peek() == '/')) {
+					calcSubResult(numStack,opStack);
+				}
+				opStack.push(c);
+			} 
+			else if (c == '(') {
+				opStack.push(c);
+			} 
+			else if (c == ')') {
+				while (!opStack.isEmpty() && opStack.peek() != '(') {
+					calcSubResult(numStack,opStack);
+				}
+				opStack.pop();
+			}
+		}
+		while (!opStack.isEmpty()) {
+			calcSubResult(numStack,opStack);
+		}
+		return numStack.pop();
+	}
+}

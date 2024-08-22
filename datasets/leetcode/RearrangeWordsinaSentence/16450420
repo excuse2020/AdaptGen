@@ -1,0 +1,33 @@
+class Solution {
+	String arrangeWords(String text) {
+		Map<Integer, StringBuilder> lenToWordsMap = new HashMap<>();
+		String[] words = text.split(" ");
+		words[0] = words[0].toLowerCase();
+		int maxLength = 0;
+		for (String word: words) {	
+			int currentWordLength = word.length();
+			StringBuilder previousWordsOfSameLength = lenToWordsMap.get(currentWordLength);
+			if (null == previousWordsOfSameLength) {
+				StringBuilder wordStr = new StringBuilder(word);
+				lenToWordsMap.put(currentWordLength,wordStr);
+			} 
+			else {
+				previousWordsOfSameLength.append(" ").append(word);
+			}
+			maxLength = Math.max(maxLength,currentWordLength);
+		}
+		StringBuilder result = new StringBuilder();
+		for (int i = 0; i <= maxLength; i++) {
+			StringBuilder stringPortion = lenToWordsMap.get(i);
+			if (null != stringPortion) {
+				result.append(stringPortion);
+				if (i != maxLength) {
+					result.append(" ");
+				}
+			}
+		}
+		char firstChar = result.charAt(0);
+		result.setCharAt(0,Character.toUpperCase(firstChar));
+		return result.toString();
+	}
+}

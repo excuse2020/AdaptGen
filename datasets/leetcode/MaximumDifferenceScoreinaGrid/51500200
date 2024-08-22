@@ -1,0 +1,39 @@
+class Solution {
+	int maxScore(List<List<Integer>> grid) {
+		int[][] dp = new int[grid.size()][grid.get(0).size()];
+		int score = Integer.MIN_VALUE;
+		for (int i = dp.length - 1; i >= 0; i--) {
+			for (int j = dp[0].length - 1; j >= 0; j--) {
+				if (i == dp.length - 1) {
+					if (dp[0].length - j < 3) {
+						dp[i][j] = grid.get(dp.length - 1).get(dp[0].length - 1) - grid.get(dp.length - 1).get(dp[0].length - 2);
+					} 
+					else {
+						int diffj = grid.get(i).get(j + 1) - grid.get(i).get(j);
+						dp[i][j] = Math.max(diffj,dp[i][j + 1] + diffj);
+					}
+				} 
+				else if (j == dp[0].length - 1) {
+					if (dp.length - i < 3) {
+						dp[i][j] = grid.get(dp.length - 1).get(dp[0].length - 1) - grid.get(dp.length - 2).get(dp[0].length - 1);
+					} 
+					else {
+						int diffi = grid.get(i + 1).get(j) - grid.get(i).get(j);
+						dp[i][j] = Math.max(dp[i + 1][j] + diffi,diffi);
+					}
+				} 
+				else {
+					int diffi = grid.get(i + 1).get(j) - grid.get(i).get(j);
+					int diffj = grid.get(i).get(j + 1) - grid.get(i).get(j);
+					dp[i][j] = Math.max(diffi,dp[i + 1][j] + diffi);
+					dp[i][j] = Math.max(dp[i][j],diffj);
+					dp[i][j] = Math.max(dp[i][j],dp[i][j + 1] + diffj);
+				}
+				if (i < dp.length - 1 || j < dp[0].length - 1) {
+					score = Math.max(score,dp[i][j]);
+				}
+			}
+		}
+		return score;
+	}
+}

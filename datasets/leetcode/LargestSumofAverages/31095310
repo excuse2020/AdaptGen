@@ -1,0 +1,29 @@
+class Solution {
+	double[][] dp;
+	double largestSumOfAverages(int[] nums, int k) {
+		dp = new double[nums.length + 1][k + 1];
+		for (int i = 0; i <= nums.length; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		return solve(0,nums,k);
+	}
+	double solve(int i, int[] nums, int k) {
+		if (k < 0) {
+			return Integer.MIN_VALUE / 2;
+		}
+		if (i == nums.length) {
+			return 0;
+		}
+		if (dp[i][k] != -1) {
+			return dp[i][k];
+		}
+		int n = nums.length;
+		double max = Integer.MIN_VALUE / 2;
+		int sum = 0;
+		for (int st = i; st < n; st++) {
+			sum += nums[st];
+			max = Math.max(max,(double) ((1.0) * sum / (st - i + 1) * 1.0) + solve(st + 1,nums,k - 1));
+		}
+		return dp[i][k] = max;
+	}
+}

@@ -1,0 +1,84 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		if (head1 == null || head2 == null) {
+			return null;
+		}
+		StringBuffer sb1 = new StringBuffer();
+		StringBuffer sb2 = new StringBuffer();
+		helper(sb1,head1);
+		helper(sb2,head2);
+		StringBuffer resSb = strPlus(sb1,sb2);
+		int[] resArray = str2int(resSb);
+		ListNode head = intArray2ListNode(resArray);
+		return head;
+	}
+	void helper(StringBuffer sb, ListNode head) {
+		ListNode p = head;
+		while (p != null) {
+			sb.append(p.val + "");
+			p = p.next;
+		}
+		sb = sb.reverse();
+	}
+	ListNode intArray2ListNode(int[] array) {
+		ListNode head = null;
+		ListNode p = null;
+		for (int i = 0; i < array.length; i++) {
+			ListNode node = new ListNode(array[i]);
+			if (head == null) {
+				head = node;
+				p = head;
+			} 
+			else {
+				p.next = node;
+				p = p.next;
+			}
+		}
+		return head;
+	}
+	int[] str2int(StringBuffer sb) {
+		char[] str = sb.toString().toCharArray();
+		int[] res = new int[str.length];
+		for (int i = 0; i < res.length; i++) {
+			res[i] = str[i] - '0';
+		}
+		return res;
+	}
+	StringBuffer strPlus(StringBuffer sb1, StringBuffer sb2) {
+		String str1 = sb1.toString();
+		String str2 = sb2.toString();
+		int maxLength = str1.length() > str2.length() ? str1.length() : str2.length();
+		int[] arr1 = new int[maxLength + 1];
+		int[] arr2 = new int[maxLength + 1];
+		int[] carry = new int[maxLength + 1];
+		int[] res = new int[maxLength + 1];
+		for (int i = 0; i < str1.length(); i++) {
+			arr1[i] = str1.charAt(i) - '0';
+		}
+		for (int i = 0; i < str2.length(); i++) {
+			arr2[i] = str2.charAt(i) - '0';
+		}
+		for (int i = 0; i < maxLength + 1; i++) {
+			int tmp = arr1[i] + arr2[i];
+			if (i != 0) {
+				tmp += carry[i - 1];
+			}
+			if (tmp - 10 >= 0) {
+				tmp -= 10;
+				carry[i] = 1;
+			} 
+			else {
+				carry[i] = 0;
+			}
+			res[i] = tmp;
+		}
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < res.length; i++) {
+			if (i == res.length - 1 && res[i] == 0) {
+				continue;
+			}
+			sb.append(res[i] + "");
+		}
+		return sb.reverse();
+	}
+}

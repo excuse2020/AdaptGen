@@ -1,0 +1,53 @@
+class Solution {
+	void goToParent(int[] parent, int current, boolean[] path) {
+		if (current == 0 || path[current]) {
+			return;
+		}
+		path[current] = true;
+		goToParent(parent,parent[current],path);
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		Map<Integer, List<Integer>> connections = new HashMap<>();
+		for (int i = 0; i < edges.length; i++) {
+			int v1 = edges[i][0];
+			int v2 = edges[i][1];
+			List<Integer> val1 = connections.getOrDefault(v1,new ArrayList<>());
+			val1.add(v2);
+			connections.put(v1,val1);
+			List<Integer> val2 = connections.getOrDefault(v2,new ArrayList<>());
+			val2.add(v1);
+			connections.put(v2,val2);
+		}
+		Queue<Integer> queue = new LinkedList<>();
+		boolean[] visited = new boolean[n];
+		int[] parent = new int[n];
+		queue.add(0);
+		visited[0] = true;
+		while (!queue.isEmpty()) {
+			int node = queue.poll();
+			List<Integer> val = connections.get(node);
+			for (int i = 0; i < val.size(); i++) {
+				int candidate = val.get(i);
+				if (visited[candidate]) {
+					continue;
+				}
+				parent[candidate] = node;
+				visited[candidate] = true;
+				queue.add(candidate);
+			}
+		}
+		boolean[] path = new boolean[n];
+		for (int i = 0; i < hasApple.size(); i++) {
+			if (hasApple.get(i)) {
+				goToParent(parent,i,path);
+			}
+		}
+		int answer = 0;
+		for (int i = 0; i < path.length; i++) {
+			if (path[i]) {
+				answer++;
+			}
+		}
+		return answer * 2;
+	}
+}

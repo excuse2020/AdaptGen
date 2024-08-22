@@ -1,0 +1,32 @@
+class Solution {
+	int[] advantageCount(int[] nums1, int[] nums2) {
+		Map<Integer, Stack<Integer>> map = new HashMap<>();
+		int n = nums2.length;
+		int i = 0, j = 0, k = n - 1;
+		int[] res = Arrays.copyOf(nums2,n);
+		Arrays.sort(nums1);
+		Arrays.sort(nums2);
+		while (j <= k) {
+			int val1 = nums1[i++];
+			int val2 = nums2[j];
+			if (val1 > val2) {
+				if (!map.containsKey(val2)) {
+					map.put(val2,new Stack<>());
+				}
+				map.get(val2).push(val1);
+				j++;
+			} 
+			else {
+				int temp = nums2[k--];
+				if (!map.containsKey(temp)) {
+					map.put(temp,new Stack<>());
+				}
+				map.get(temp).push(val1);
+			}
+		}
+		for (int l = 0; l < n; l++) {
+			res[l] = map.get(res[l]).pop();
+		}
+		return res;
+	}
+}

@@ -1,0 +1,53 @@
+class Solution {
+	int bfs(int i, int n, int[] vis, List<List<Integer>> adjList, List<Integer> componentNodeCount) {
+		Queue<Integer> queue = new LinkedList<Integer>();
+		queue.offer(i);
+		int totalSum = 0;
+		int componentSum = 0;
+		vis[i] = 1;
+		while (!queue.isEmpty()) {
+			Integer cur = queue.poll();
+			componentSum++;
+			for (Integer val: adjList.get(cur)) {	
+				if (vis[val] == -1) {
+					queue.offer(val);
+					vis[val] = 1;
+				}
+			}
+		}
+		totalSum += componentSum;
+		componentNodeCount.add(componentSum);
+		return totalSum;
+	}
+	long countPairs(int n, int[][] edges) {
+		List<List<Integer>> adjList = getAdjacencyList(n,edges);
+		int[] vis = new int[n];
+		Arrays.fill(vis,-1);
+		Integer totalSum = 0;
+		List<Integer> componentNodeCount = new ArrayList<Integer>();
+		for (int i = 0; i < n; i++) {
+			if (vis[i] == -1) {
+				totalSum += bfs(i,n,vis,adjList,componentNodeCount);
+			}
+		}
+		long ans = 0;
+		for (int ind = 0; ind < componentNodeCount.size(); ind++) {
+			ans += (long) componentNodeCount.get(ind) * (totalSum - componentNodeCount.get(ind));
+			totalSum -= componentNodeCount.get(ind);
+		}
+		return ans;
+	}
+	List<List<Integer>> getAdjacencyList(int n, int[][] edges) {
+		List<List<Integer>> adjList = new ArrayList<List<Integer>>();
+		for (int i = 0; i < n; i++) {
+			adjList.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			int u = edge[0];
+			int v = edge[1];
+			adjList.get(u).add(v);
+			adjList.get(v).add(u);
+		}
+		return adjList;
+	}
+}

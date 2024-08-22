@@ -1,0 +1,48 @@
+class Solution {
+	int findClosestValue(int[] nums1, int target) {
+		int left = 0, right = nums1.length - 1;
+		while (left < right) {
+			int mid = right - (right - left) / 2;
+			if (nums1[mid] == target) {
+				return nums1[mid];
+			}
+			if (nums1[mid] > target) {
+				right = mid - 1;
+			} 
+			else {
+				left = mid;
+			}
+		}
+		if (left < nums1.length - 1 && Math.abs(nums1[left] - target) > Math.abs(nums1[left + 1] - target)) {
+			return nums1[left + 1];
+		}
+		return nums1[left];
+	}
+	int minAbsoluteSumDiff(int[] nums1, int[] nums2) {
+		int n = nums1.length;
+		int[] smallestDiff = new int[n];
+		int smallestDiffIndex = 0;
+		int biggestDiffSave = 0;
+		int smallestD = 0;
+		for (int i = 0; i < n; i++) {
+			smallestDiff[i] = Math.abs(nums1[i] - nums2[i]);
+		}
+		Arrays.sort(nums1);
+		for (int i = 0; i < n; i++) {
+			int closest = findClosestValue(nums1,nums2[i]);
+			int diff = Math.abs(nums2[i] - closest);
+			if (biggestDiffSave < Math.abs(smallestDiff[i] - diff)) {
+				biggestDiffSave = Math.abs(smallestDiff[i] - diff);
+				smallestDiffIndex = i;
+				smallestD = diff;
+			}
+		}
+		smallestDiff[smallestDiffIndex] = smallestD;
+		long result = 0;
+		for (int i = 0; i < n; i++) {
+			result += smallestDiff[i];
+		}
+		long M = (long) 1e9 + 7;
+		return (int) ((result + M) % M);
+	}
+}

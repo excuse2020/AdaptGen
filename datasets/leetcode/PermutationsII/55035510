@@ -1,0 +1,32 @@
+class Solution {
+	int n;
+	List<List<Integer>> result = new ArrayList<>();
+	List<List<Integer>> permuteUnique(int[] nums) {
+		n = nums.length;
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			map.put(nums[i],map.getOrDefault(nums[i],0) + 1);
+		}
+		List<Integer> temp = new ArrayList<>();
+		solve(map,temp);
+		return result;
+	}
+	void solve(Map<Integer, Integer> map, List<Integer> temp) {
+		if (temp.size() == n) {
+			result.add(new ArrayList<>(temp));
+			return;
+		}
+		for (Map.Entry<Integer, Integer> entry: map.entrySet()) {	
+			Integer val = entry.getKey();
+			Integer count = entry.getValue();
+			if (count == 0) {
+				continue;
+			}
+			temp.add(val);
+			map.put(val,count - 1);
+			solve(map,temp);
+			temp.remove(temp.size() - 1);
+			map.put(val,count);
+		}
+	}
+}

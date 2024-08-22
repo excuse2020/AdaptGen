@@ -1,0 +1,43 @@
+class Solution {
+	int getSum(int n) {
+		int sum = 0;
+		while (n > 0) {
+			sum += n % 10;
+			n = n / 10;
+		}
+		return sum;
+	}
+	int haveCount(int threshold, int rows, int cols, int flag) {
+		if (rows > flag.length - 1 || cols > flag[0].length - 1 || rows < 0 || cols < 0) {
+			return 0;
+		}
+		if (flag[rows][cols] == 1) {
+			return 0;
+		}
+		if (getSum(rows) + getSum(cols) > threshold) {
+			return 0;
+		}
+		flag[rows][cols] = 1;
+		haveCount(threshold,rows,cols + 1,flag);
+		haveCount(threshold,rows + 1,cols,flag);
+		haveCount(threshold,rows,cols - 1,flag);
+		haveCount(threshold,rows - 1,cols,flag);
+		return 1;
+	}
+	int movingCount(int threshold, int rows, int cols) {
+		int flag = new int[rows][cols];
+		int count = 0;
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				flag[i][j] = 0;
+			}
+		}
+		haveCount(threshold,0,0,flag);
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				count += flag[i][j];
+			}
+		}
+		return count;
+	}
+}

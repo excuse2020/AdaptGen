@@ -1,0 +1,35 @@
+class Solution {
+	int[] secondGreaterElement(int[] nums) {
+		int[] output = new int[nums.length];
+		Arrays.fill(output,-1);
+		TreeSet<int[]> set1 = new TreeSet<>((a, b) -> {a[0] != b[0] ? a[0] - b[0] : a[1] - b[1]});
+		TreeSet<int[]> set2 = new TreeSet<>((a, b) -> {a[0] != b[0] ? a[0] - b[0] : a[1] - b[1]});
+		for (int i = 0; i < nums.length; i++) {
+			int num = nums[i];
+			Iterator<int[]> it = set2.iterator();
+			while (it.hasNext()) {
+				int[] entry = it.next();
+				if (entry[0] < num) {
+					output[entry[1]] = num;
+					it.remove();
+				} 
+				else {
+					break;
+				}
+			}
+			it = set1.iterator();
+			while (it.hasNext()) {
+				int[] entry = it.next();
+				if (entry[0] < num) {
+					set2.add(entry);
+					it.remove();
+				} 
+				else {
+					break;
+				}
+			}
+			set1.add(new int{num, i});
+		}
+		return output;
+	}
+}

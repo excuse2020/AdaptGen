@@ -1,0 +1,33 @@
+class Solution {
+	boolean found = true;
+	void dfs(int u, int[] colors, int color, ArrayList<ArrayList<Integer>> graph) {
+		colors[u] = color;
+		for (int to: graph.get(u)) {	
+			if (colors[to] == color) {
+				found = false;
+			} 
+			else if (colors[to] == 0) {
+				dfs(to,colors,3 - color,graph);
+			}
+		}
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; ++i) {
+			graph.add(new ArrayList<>());
+		}
+		for (int i = 0; i < dislikes.length; ++i) {
+			int a = dislikes[i][0] - 1;
+			int b = dislikes[i][1] - 1;
+			graph.get(a).add(b);
+			graph.get(b).add(a);
+		}
+		int[] colors = new int[n];
+		for (int u = 0; u < n; ++u) {
+			if (colors[u] == 0) {
+				dfs(u,colors,1,graph);
+			}
+		}
+		return found;
+	}
+}

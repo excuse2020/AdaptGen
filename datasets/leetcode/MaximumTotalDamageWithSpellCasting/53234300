@@ -1,0 +1,28 @@
+class Solution {
+	long maximumTotalDamage(int[] power) {
+		TreeMap<Long, Long> mp = new TreeMap<>();
+		long ans = 0l;
+		Arrays.sort(power);
+		for (int j = 0; j < power.length; ) {
+			long i = power[j];
+			Long floor = mp.floorKey(i - 3);
+			long tmp = 0l;
+			if (floor != null) {
+				tmp = mp.get(floor);
+			}
+			int k = j;
+			while (j < power.length && power[k] == power[j]) {
+				j++;
+			}
+			long len = j - k;
+			tmp = tmp + power[k] * len;
+			long tmp2 = 0l;
+			if (mp.containsKey(i)) {
+				tmp2 = mp.get(i);
+			}
+			ans = Math.max(ans,Math.max(tmp,tmp2 + i));
+			mp.put(i,(long) ans);
+		}
+		return ans;
+	}
+}

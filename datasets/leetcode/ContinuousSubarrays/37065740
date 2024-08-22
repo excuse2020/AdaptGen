@@ -1,0 +1,26 @@
+class Solution {
+	long continuousSubarrays(int[] nums) {
+		long res = 0;
+		TreeMap<Integer, Integer> map = new TreeMap<>();
+		for (int i = 0, j = 0; j < nums.length; j++) {
+			map.put(nums[j],map.getOrDefault(nums[j],0) + 1);
+			while (nums[j] > map.firstKey() + 2) {
+				removeOne(map,nums[i++]);
+			}
+			while (nums[j] < map.lastKey() - 2) {
+				removeOne(map,nums[i++]);
+			}
+			res += j - i + 1;
+		}
+		return res;
+	}
+	void removeOne(TreeMap<Integer, Integer> map, int key) {
+		int count = map.get(key) - 1;
+		if (count == 0) {
+			map.remove(key);
+		} 
+		else {
+			map.put(key,count);
+		}
+	}
+}

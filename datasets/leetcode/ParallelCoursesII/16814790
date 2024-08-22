@@ -1,0 +1,84 @@
+class Solution {
+	void getCombinations(List<Integer> list, List<List<Integer>> combinations, ArrayList<Integer> p, int index, int listIndex, int k) {
+		if (p.size() == k) {
+			combinations.add((ArrayList<Integer>) p.clone());
+			return;
+		}
+		if (index == list.size()) {
+			return;
+		}
+		p.add(list.get(index));
+		getCombinations(list,combinations,p,index + 1,listIndex,k);
+		p.remove(p.size() - 1);
+		getCombinations(list,combinations,p,index + 1,listIndex,k);
+	}
+	int[] getIncoming(Map<Integer, List<Integer>> adjMap, List<Integer> list, int[] incoming) {
+		int[] in = incoming.clone();
+		for (int elem: list) {	
+			in[elem]--;
+			List<Integer> adj = adjMap.getOrDefault(elem,new ArrayList<>());
+			for (int next: adj) {	
+				in[next]--;
+			}
+		}
+		return in;
+	}
+	int minNumberOfSemesters(int n, int[][] relations, int k) {
+		if (relations.length == 0) {
+			int temp = n / k;
+			if (n % k != 0) {
+				temp++;
+			}
+			return temp;
+		}
+		Map<Integer, List<Integer>> adjMap = new HashMap<>();
+		int[] incoming = new int[n + 1];
+		incoming[0] = -1;
+		for (int[] relation: relations) {	
+			List<Integer> list = adjMap.getOrDefault(relation[0],new ArrayList<>());
+			list.add(relation[1]);
+			adjMap.put(relation[0],list);
+			incoming[relation[1]]++;
+		}
+		Map<String, Integer> memo = new HashMap<>();
+		return recur(adjMap,incoming,k,memo);
+	}
+	int recur(Map<Integer, List<Integer>> adjMap, int[] incoming, int k, Map<String, Integer> memo) {
+		boolean returnFlag = true;
+		for (int in: incoming) {	
+			if (in >= 0) {
+				returnFlag = false;
+				break;
+			}
+		}
+		if (returnFlag) {
+			return 0;
+		}
+		String key = Arrays.toString(incoming);
+		if (memo.containsKey(key)) {
+			return memo.get(key);
+		}
+		List<Integer> list = new ArrayList<>();
+		for (int i = 1; i < incoming.length; i++) {
+			if (incoming[i] == 0) {
+				list.add(i);
+			}
+		}
+		if (list.size() <= k) {
+			int[] newIncoming = getIncoming(adjMap,list,incoming);
+			int temp = 1 + recur(adjMap,newIncoming,k,memo);
+			memo.put(key,temp);
+			return temp;
+		}
+		List<List<Integer>> combinations = new ArrayList<>();
+		ArrayList<Integer> p = new ArrayList<>();
+		getCombinations(list,combinations,p,0,0,k);
+		int ans = Integer.MAX_VALUE;
+		for (List<Integer> combination: combinations) {	
+			int[] newIncoming = getIncoming(adjMap,combination,incoming);
+			ans = Math.min(ans,1 + recur(adjMap,newIncoming,k,memo));
+		}
+		memo.put(key,ans);
+		return ans;
+	}
+}

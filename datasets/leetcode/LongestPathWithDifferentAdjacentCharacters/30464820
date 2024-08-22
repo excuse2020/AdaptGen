@@ -1,0 +1,45 @@
+class Solution {
+	int result;
+	int dfs(int node, int parent, Map<Integer, List<Integer>> adj, String s) {
+		int longest = 0;
+		int secondLongest = 0;
+		if (!adj.containsKey(node)) {
+			return result = 1;
+		}
+		for (int child: adj.get(node)) {	
+			if (child == parent) {
+				continue;
+			}
+			int childLongestLength = dfs(child,node,adj,s);
+			if (s.charAt(child) == s.charAt(node)) {
+				continue;
+			}
+			if (childLongestLength > secondLongest) {
+				secondLongest = childLongestLength;
+			}
+			if (secondLongest > longest) {
+				int temp = longest;
+				longest = secondLongest;
+				secondLongest = temp;
+			}
+		}
+		int eitherLeftOrRight = Math.max(longest,secondLongest) + 1;
+		int subGraphAns = longest + secondLongest;
+		int onlyRoot = 1;
+		result = Math.max(result,Math.max(subGraphAns,Math.max(eitherLeftOrRight,onlyRoot)));
+		return Math.max(eitherLeftOrRight,onlyRoot);
+	}
+	int longestPath(int[] parent, String s) {
+		int n = parent.length;
+		Map<Integer, List<Integer>> adj = new HashMap<>();
+		for (int i = 1; i < n; i++) {
+			int u = i;
+			int v = parent[i];
+			adj.computeIfAbsent(u,(value) -> {new ArrayList<>()}).add(v);
+			adj.computeIfAbsent(v,(value) -> {new ArrayList<>()}).add(u);
+		}
+		result = 0;
+		dfs(0,-1,adj,s);
+		return result;
+	}
+}

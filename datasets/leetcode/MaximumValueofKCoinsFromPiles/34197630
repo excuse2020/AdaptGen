@@ -1,0 +1,29 @@
+class Solution {
+	int[][] dp;
+	int ch(List<List<Integer>> p, int i, int k) {
+		if (k == 0 || i == p.size()) {
+			return 0;
+		}
+		int max = 0;
+		if (dp[i][k] != 0) {
+			return dp[i][k];
+		}
+		for (int j = 0; j < p.get(i).size() && k - j > 0; j++) {
+			max = Math.max(max,p.get(i).get(j) + ch(p,i + 1,k - j));
+		}
+		max = Math.max(max,ch(p,i + 1,k));
+		return dp[i][k] = max;
+	}
+	int maxValueOfCoins(List<List<Integer>> piles, int k) {
+		dp = new int[piles.size()][k + 1];
+		List<List<Integer>> l = new ArrayList<>();
+		for (int i = 0; i < piles.size(); i++) {
+			l.add(new ArrayList<>());
+			l.get(i).add(piles.get(i).get(0));
+			for (int j = 1; j < k && j < piles.get(i).size(); j++) {
+				l.get(i).add(piles.get(i).get(j) + l.get(i).get(j - 1));
+			}
+		}
+		return ch(l,0,k);
+	}
+}

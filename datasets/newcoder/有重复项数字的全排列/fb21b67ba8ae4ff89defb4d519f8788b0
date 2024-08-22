@@ -1,0 +1,34 @@
+class Solution {
+	int N = 10;
+	boolean[] isVisited = new boolean[N];
+	int[] path = new int[N];
+	int[] realNum;
+	ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+	int step;
+	void dfs(int u) {
+		if (u == step) {
+			ArrayList<Integer> one = new ArrayList<>();
+			for (int i = 1; i <= step; i++) {
+				one.add(realNum[path[i] - 1]);
+			}
+			if (!res.contains(one)) {
+				res.add(one);
+			}
+		}
+		for (int i = 1; i <= step; i++) {
+			if (!isVisited[i]) {
+				path[u + 1] = i;
+				isVisited[i] = true;
+				dfs(u + 1);
+				isVisited[i] = false;
+			}
+		}
+	}
+	ArrayList<ArrayList<Integer>> permuteUnique(int[] num) {
+		realNum = num;
+		Arrays.sort(realNum);
+		step = realNum.length;
+		dfs(0);
+		return res;
+	}
+}

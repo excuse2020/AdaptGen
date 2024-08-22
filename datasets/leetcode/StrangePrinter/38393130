@@ -1,0 +1,28 @@
+class Solution {
+	int[][] dp;
+	int strangePrinter(String s) {
+		dp = new int[s.length()][s.length()];
+		for (int i = 0; i < dp.length; i++) {
+			dp[i][i] = 1;
+		}
+		for (int i = s.length() - 1; i >= 0; i--) {
+			for (int j = 0; j < s.length(); j++) {
+				if (i > j) {
+					continue;
+				}
+				if (i == j) {
+					continue;
+				}
+				int cnt = Integer.MAX_VALUE;
+				for (int k = i; k < j; k++) {
+					cnt = Math.min(cnt,dp[i][k] + dp[k + 1][j]);
+				}
+				if (s.charAt(i) == s.charAt(j)) {
+					cnt--;
+				}
+				dp[i][j] = cnt;
+			}
+		}
+		return dp[0][s.length() - 1];
+	}
+}

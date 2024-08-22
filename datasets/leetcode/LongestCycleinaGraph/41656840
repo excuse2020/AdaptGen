@@ -1,0 +1,51 @@
+class Solution {
+	int longestCycle(int[] edges) {
+		int n = edges.length;
+		int[] indegree = new int[n];
+		for (int i = 0; i < n; i++) {
+			if (edges[i] == -1) {
+				continue;
+			}
+			int next = edges[i];
+			indegree[next]++;
+		}
+		Queue<Integer> queue = new ArrayDeque<>();
+		Set<Integer> visited = new HashSet<>();
+		for (int i = 0; i < n; i++) {
+			if (indegree[i] == 0) {
+				queue.offer(i);
+				visited.add(i);
+			}
+		}
+		while (!queue.isEmpty()) {
+			int current = queue.poll();
+			if (edges[current] == -1) {
+				continue;
+			}
+			int next = edges[current];
+			if (next == -1) {
+				continue;
+			}
+			indegree[next]--;
+			if (indegree[next] == 0) {
+				queue.offer(next);
+				visited.add(next);
+			}
+		}
+		int result = -1;
+		for (int i = 0; i < n; i++) {
+			if (visited.contains(i)) {
+				continue;
+			}
+			int current = i;
+			int count = 0;
+			while (!visited.contains(i)) {
+				count++;
+				current = edges[current];
+				visited.add(current);
+			}
+			result = Math.max(result,count);
+		}
+		return result;
+	}
+}

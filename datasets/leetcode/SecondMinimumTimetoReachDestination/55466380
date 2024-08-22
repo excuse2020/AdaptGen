@@ -1,0 +1,47 @@
+class Solution {
+	List[] getGraph(int[][] edges, int n) {
+		List[] graph = new List[n + 1];
+		for (int i = 1; i <= n; i++) {
+			graph[i] = new ArrayList<Integer>();
+		}
+		for (int[] e: edges) {	
+			graph[e[0]].add(e[1]);
+			graph[e[1]].add(e[0]);
+		}
+		return graph;
+	}
+	int secondMinimum(int n, int[][] edges, int time, int change) {
+		int timeElapsed = 0, firstArrivedTime = -1;
+		List[] graph = getGraph(edges,n);
+		int visited = new int[n + 1];
+		Queue<Integer> q = new LinkedList<>();
+		q.offer(1);
+		while (true) {
+			int qSize = q.size();
+			Set<Integer> seen = new HashSet<Integer>();
+			for (int i = 0; i < qSize; i++) {
+				int cur = q.poll();
+				if (cur == n && timeElapsed > 0) {
+					if (firstArrivedTime == -1) {
+						firstArrivedTime = timeElapsed;
+					} 
+					else if (firstArrivedTime < timeElapsed) {
+						return timeElapsed;
+					}
+				}
+				for (int neighbor: (List<Integer>) graph[cur]) {	
+					if (seen.add(neighbor) && visited[neighbor] < 2) {
+						q.offer(neighbor);
+					}
+				}
+			}
+			for (int v: seen) {	
+				visited[v]++;
+			}
+			if (((timeElapsed / change) % 2) == 1) {
+				timeElapsed += change - (timeElapsed % change);
+			}
+			timeElapsed += time;
+		}
+	}
+}

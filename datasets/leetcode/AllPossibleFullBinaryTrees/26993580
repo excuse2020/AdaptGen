@@ -1,0 +1,30 @@
+class Solution {
+	List<TreeNode>[][] store;
+	List<TreeNode> allPossibleFBT(int n) {
+		store = new ArrayList[n + 1][n + 1];
+		return helper(1,n);
+	}
+	List<TreeNode> helper(int s, int e) {
+		List<TreeNode> nodes = new ArrayList<>();
+		if (s > e) {
+			nodes.add(null);
+			return nodes;
+		}
+		if (store[s][e] != null) {
+			return store[s][e];
+		}
+		for (int i = s; i <= e; i++) {
+			List<TreeNode> l = helper(s,i - 1);
+			List<TreeNode> r = helper(i + 1,e);
+			for (TreeNode p: l) {	
+				for (TreeNode q: r) {	
+					if ((p == null && q != null) || (q == null && p != null)) {
+						continue;
+					}
+					nodes.add(new TreeNode(0, p, q));
+				}
+			}
+		}
+		return store[s][e] = nodes;
+	}
+}

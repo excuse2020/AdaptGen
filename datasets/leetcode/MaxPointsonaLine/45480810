@@ -1,0 +1,32 @@
+class Solution {
+	int maxPoints(int[][] points) {
+		if (points.length == 1) {
+			return 1;
+		}
+		double inf = (double) 1000000;
+		int ans = Integer.MIN_VALUE;
+		for (int i = 0; i < points.length; i++) {
+			Map<Double, Integer> m = new HashMap<>();
+			for (int j = i + 1; j < points.length; j++) {
+				int y2y1 = points[j][1] - points[i][1];
+				int x2x1 = points[j][0] - points[i][0];
+				if (x2x1 == 0) {
+					m.put((double) inf,m.getOrDefault(inf,0) + 1);
+				} 
+				else {
+					double slope = (double) ((double) y2y1 / (double) x2x1);
+					if (slope == -0.0) {
+						slope = 0.0;
+					}
+					m.put(slope,m.getOrDefault(slope,0) + 1);
+				}
+			}
+			for (double key: m.keySet()) {	
+				if (m.get(key) > ans) {
+					ans = m.get(key);
+				}
+			}
+		}
+		return ans + 1;
+	}
+}

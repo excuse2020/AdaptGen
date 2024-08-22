@@ -1,0 +1,26 @@
+class Solution {
+	Integer dp;
+	int getMaxSelect(List<List<Integer>> piles, int idx, int k) {
+		if (idx >= piles.size() || k == 0) {
+			return 0;
+		}
+		if (dp[idx][k] != null) {
+			return dp[idx][k];
+		}
+		List<Integer> currentPile = piles.get(idx);
+		int selectionSize = Math.min(currentPile.size(),k);
+		int currentSum = 0;
+		int maxSum = 0;
+		for (int i = 0; i < selectionSize; i++) {
+			currentSum += currentPile.get(i);
+			int item = currentSum + getMaxSelect(piles,idx + 1,k - (i + 1));
+			maxSum = Math.max(maxSum,item);
+		}
+		int doNotSelect = getMaxSelect(piles,idx + 1,k);
+		return dp[idx][k] = Math.max(maxSum,doNotSelect);
+	}
+	int maxValueOfCoins(List<List<Integer>> piles, int k) {
+		dp = new Integer[piles.size() + 1][k + 1];
+		return getMaxSelect(piles,0,k);
+	}
+}

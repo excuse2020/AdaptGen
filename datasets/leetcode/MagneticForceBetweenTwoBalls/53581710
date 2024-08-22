@@ -1,0 +1,39 @@
+class Solution {
+	int binary(int[] position, int m) {
+		int start = 1, end = position[position.length - 1];
+		int ans = 1;
+		while (start <= end) {
+			int mid = start + (end - start) / 2;
+			if (possible(position,m,(int) mid)) {
+				ans = mid;
+				start = mid + 1;
+			} 
+			else {
+				end = mid - 1;
+			}
+		}
+		return ans;
+	}
+	int maxDistance(int[] position, int m) {
+		Arrays.sort(position);
+		return binary(position,m);
+	}
+	boolean possible(int[] arr, int m, int minDist) {
+		m--;
+		int pos = 0;
+		for (int x = 1; x < arr.length; x++) {
+			while (x < arr.length && arr[x] - arr[pos] < minDist) {
+				x++;
+			}
+			if (x >= arr.length && m > 0) {
+				return false;
+			}
+			pos = x;
+			m--;
+			if (m == 0) {
+				return true;
+			}
+		}
+		return (m == 0);
+	}
+}

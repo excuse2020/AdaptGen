@@ -1,0 +1,33 @@
+class Solution {
+	long maximumSubarraySum(int[] nums, int k) {
+		long max = -1;
+		long curr = 0;
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < k; i++) {
+			curr += nums[i];
+			if (map.containsKey(nums[i])) {
+				max = 0;
+			}
+			map.put(nums[i],map.getOrDefault(nums[i],0) + 1);
+		}
+		max = max == 0 ? 0 : curr;
+		for (int i = k; i < nums.length; i++) {
+			curr = curr - nums[i - k];
+			map.put(nums[i - k],map.get(nums[i - k]) - 1);
+			if (map.get(nums[i - k]) == 0) {
+				map.remove(nums[i - k]);
+			}
+			curr += nums[i];
+			if (!map.containsKey(nums[i])) {
+				map.put(nums[i],1);
+				if (map.size() == k) {
+					max = Math.max(curr,max);
+				}
+			} 
+			else {
+				map.put(nums[i],map.getOrDefault(nums[i],0) + 1);
+			}
+		}
+		return max;
+	}
+}

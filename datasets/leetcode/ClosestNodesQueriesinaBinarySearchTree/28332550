@@ -1,0 +1,62 @@
+class Solution {
+	List<Integer> sortedlist = new ArrayList<>();
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		inorder(root);
+		List<List<Integer>> ans = new ArrayList<>();
+		for (int curr: queries) {	
+			int min1 = getMin(curr);
+			int min2 = getMax(curr);
+			List<Integer> temp = new ArrayList<>();
+			temp.add(min1);
+			temp.add(min2);
+			ans.add(temp);
+		}
+		return ans;
+	}
+	int getMax(int curr) {
+		int ans = -1;
+		int start = 0;
+		int end = sortedlist.size() - 1;
+		while (start <= end) {
+			int mid = (start + end) / 2;
+			if (sortedlist.get(mid) == curr) {
+				return curr;
+			} 
+			else if (sortedlist.get(mid) < curr) {
+				start = mid + 1;
+			} 
+			else if (sortedlist.get(mid) > curr) {
+				ans = sortedlist.get(mid);
+				end = mid - 1;
+			}
+		}
+		return ans;
+	}
+	int getMin(int curr) {
+		int ans = -1;
+		int start = 0;
+		int end = sortedlist.size() - 1;
+		while (start <= end) {
+			int mid = (start + end) / 2;
+			if (sortedlist.get(mid) == curr) {
+				return curr;
+			} 
+			else if (sortedlist.get(mid) > curr) {
+				end = mid - 1;
+			} 
+			else if (sortedlist.get(mid) < curr) {
+				ans = sortedlist.get(mid);
+				start = mid + 1;
+			}
+		}
+		return ans;
+	}
+	void inorder(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		inorder(root.left);
+		sortedlist.add(root.val);
+		inorder(root.right);
+	}
+}

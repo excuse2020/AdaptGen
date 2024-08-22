@@ -1,0 +1,29 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		if (node1 == node2) {
+			return node1;
+		}
+		int n = edges.length, i, res = Integer.MAX_VALUE, ans = -1, maxval;
+		int reachedBy1 = new int[n], reachedBy2 = new int[n];
+		storePathLen(reachedBy1,node1,edges);
+		storePathLen(reachedBy2,node2,edges);
+		for (i = 0; i < n; i++) {
+			maxval = Math.max(reachedBy1[i],reachedBy2[i]);
+			if (res > maxval && Math.min(reachedBy1[i],reachedBy2[i]) != 0) {
+				res = maxval;
+				ans = i;
+			}
+		}
+		return ans;
+	}
+	void storePathLen(int[] reach, int startingPoint, int[] edges) {
+		int currPos = startingPoint, prevDistance = 0;
+		while (reach[currPos] == 0) {
+			reach[currPos] = ++prevDistance;
+			currPos = edges[currPos];
+			if (currPos == -1) {
+				break;
+			}
+		}
+	}
+}

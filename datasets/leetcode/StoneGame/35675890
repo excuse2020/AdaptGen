@@ -1,0 +1,27 @@
+class Solution {
+	int dp;
+	int helper(int piles, int l, int r) {
+		if (l >= piles.length || r < 0 || l > r) {
+			return 0;
+		}
+		if (dp[l][r] != -1) {
+			return dp[l][r];
+		}
+		int t = helper(piles,l + 1,r - 1);
+		int ans1 = piles[l] + Math.min(helper(piles,l + 2,r),t);
+		int ans2 = piles[r] + Math.min(t,helper(piles,l,r - 2));
+		return dp[l][r] = Math.max(ans1,ans2);
+	}
+	boolean stoneGame(int[] piles) {
+		dp = new int[piles.length][piles.length];
+		for (var a: dp) {	
+			Arrays.fill(a,-1);
+		}
+		int s1 = helper(piles,0,piles.length - 1);
+		int sum = 0;
+		for (var n: piles) {	
+			sum += n;
+		}
+		return s1 >= (sum - s1);
+	}
+}

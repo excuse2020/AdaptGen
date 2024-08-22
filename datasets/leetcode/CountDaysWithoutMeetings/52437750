@@ -1,0 +1,21 @@
+class Solution {
+	int countDays(int days, int[][] meetings) {
+		Arrays.sort(meetings,(a, b) -> {Integer.compare(a[0],b[0])});
+		int count = meetings[0][0] - 1;
+		ArrayList<ArrayList<Integer>> array = new ArrayList<>();
+		for (int i = 0; i < meetings.length; i++) {
+			int start = meetings[i][0];
+			int end = meetings[i][1];
+			while (i + 1 < meetings.length && meetings[i + 1][0] <= end) {
+				end = Math.max(end,meetings[i + 1][1]);
+				i++;
+			}
+			array.add(new ArrayList<>(Arrays.asList(start,end)));
+		}
+		for (int i = 0; i < array.size() - 1; i++) {
+			count += array.get(i + 1).get(0) - array.get(i).get(1);
+		}
+		count += days - array.get(array.size() - 1).get(1);
+		return count;
+	}
+}

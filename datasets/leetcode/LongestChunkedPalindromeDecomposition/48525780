@@ -1,0 +1,44 @@
+class Solution {
+	int longestDecomposition(String text) {
+		char[] c = text.toCharArray();
+		int highest = 0;
+		int lowest = c.length;
+		int ans = 0;
+		while (highest < lowest) {
+			char letter = c[highest];
+			int length = 0;
+			for (int i = lowest - 1; i >= 0; i--) {
+				int temp_lowest;
+				if (c[i] == letter) {
+					length = lowest - i;
+					temp_lowest = i;
+				} 
+				else {
+					continue;
+				}
+				if (highest >= temp_lowest) {
+					if (highest < lowest) {
+						ans++;
+					}
+					lowest = -1;
+					break;
+				}
+				boolean same = true;
+				for (int j = 0; j < length; j++) {
+					char left = c[highest + j];
+					char right = c[temp_lowest + j];
+					if (left != right) {
+						same = false;
+					}
+				}
+				if (same) {
+					ans += 2;
+					highest += length;
+					lowest = i;
+					break;
+				}
+			}
+		}
+		return ans;
+	}
+}

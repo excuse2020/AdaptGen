@@ -1,0 +1,52 @@
+class Solution {
+	ArrayList<ArrayList<Integer>> fournumber(ArrayList<Integer> nums, int target) {
+		if (nums.size() < 4) {
+			return new ArrayList<>();
+		}
+		Collections.sort(nums);
+		HashSet<ArrayList<Integer>> ans = new HashSet<>();
+		for (int i = 0; i < nums.size() - 3; i++) {
+			if (i >= 1 && nums.get(i) == nums.get(i - 1)) {
+				continue;
+			}
+			if (nums.get(i) + nums.get(i + 1) > target) {
+				break;
+			}
+			if (nums.get(i) + nums.get(nums.size() - 1) < target) {
+				continue;
+			}
+			for (int j = i + 1; j < nums.size() - 2; j++) {
+				if (j >= i + 2 && nums.get(j) == nums.get(j - 1)) {
+					continue;
+				}
+				if (nums.get(i) + nums.get(j) > target) {
+					break;
+				}
+				if (nums.get(i) + nums.get(j) < target) {
+					continue;
+				}
+				int left = j + 1;
+				int right = nums.size() - 1;
+				while (left < right) {
+					while (left < right && nums.get(i) + nums.get(j) == target) {
+						ArrayList<Integer> tmp = new ArrayList<>();
+						tmp.add(nums.get(i));
+						tmp.add(nums.get(j));
+						tmp.add(nums.get(left));
+						tmp.add(nums.get(right));
+						ans.add(tmp);
+						left++;
+						right--;
+					}
+					while (left < right && nums.get(i) + nums.get(j) > target) {
+						right--;
+					}
+					while (left < right && nums.get(i) + nums.get(j) < target) {
+						left++;
+					}
+				}
+			}
+		}
+		return new ArrayList<>(ans);
+	}
+}

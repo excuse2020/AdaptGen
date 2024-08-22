@@ -1,0 +1,27 @@
+class Solution {
+	long taskSchedulerII(int[] tasks, int space) {
+		int n = tasks.length;
+		Map<Integer, Integer> mp = new HashMap<>();
+		long[] dp = new long[n];
+		Arrays.fill(dp,Long.MAX_VALUE);
+		dp[0] = 1L;
+		mp.put(tasks[0],0);
+		for (int i = 1; i < n; i++) {
+			int cur = tasks[i];
+			if (!mp.containsKey(cur)) {
+				dp[i] = dp[i - 1] + 1;
+			} 
+			else {
+				int lastIndex = mp.get(cur);
+				if (i - lastIndex > space) {
+					dp[i] = dp[i - 1] + 1;
+				} 
+				else {
+					dp[i] = Math.max(dp[i - 1] + 1,dp[lastIndex] + (space + 1));
+				}
+			}
+			mp.put(cur,i);
+		}
+		return dp[n - 1];
+	}
+}

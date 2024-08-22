@@ -1,0 +1,30 @@
+class Solution {
+	int dfs(int x, int y, int rows, int cols, int threshold, boolean[][] visited) {
+		if (x < 0 || x >= rows || y < 0 || y >= cols || !isValidMove(x,y,threshold) || visited[x][y]) {
+			return 0;
+		}
+		visited[x][y] = true;
+		int count = 1;
+		count += dfs(x + 1,y,rows,cols,threshold,visited);
+		count += dfs(x - 1,y,rows,cols,threshold,visited);
+		count += dfs(x,y + 1,rows,cols,threshold,visited);
+		count += dfs(x,y - 1,rows,cols,threshold,visited);
+		return count;
+	}
+	boolean isValidMove(int x, int y, int threshold) {
+		int digitSum = 0;
+		while (x > 0) {
+			digitSum += x % 10;
+			x /= 10;
+		}
+		while (y > 0) {
+			digitSum += y % 10;
+			y /= 10;
+		}
+		return digitSum <= threshold;
+	}
+	int movingCount(int threshold, int rows, int cols) {
+		boolean[][] visited = new boolean[rows][cols];
+		return dfs(0,0,rows,cols,threshold,visited);
+	}
+}

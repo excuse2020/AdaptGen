@@ -1,0 +1,94 @@
+class Solution {
+	String solve(String s, String t) {
+		int index = 9;
+		if (s.length() < index && t.length() < index) {
+			return String.valueOf(Integer.parseInt(s) + Integer.parseInt(t));
+		}
+		String str = "";
+		ArrayList<Integer> a = new ArrayList<>();
+		ArrayList<Integer> b = new ArrayList<>();
+		ArrayList<Integer> ans = new ArrayList<>();
+		int small = 0;
+		int big = 0;
+		for (int i = s.length(); i > 0; i -= index) {
+			String temp_str = s.substring(i - index > 0 ? i - index : 0,i);
+			int temp = Integer.parseInt(temp_str);
+			a.add(temp);
+		}
+		System.out.println(a);
+		for (int i = t.length(); i > 0; i -= index) {
+			String temp_str = t.substring(i - index > 0 ? i - index : 0,i);
+			int temp = Integer.parseInt(temp_str);
+			b.add(temp);
+		}
+		System.out.println(b);
+		if (s.length() < t.length()) {
+			small = a.size();
+			big = b.size();
+			ans.addAll(b);
+		} 
+		else {
+			small = b.size();
+			big = a.size();
+			ans.addAll(a);
+		}
+		if (big != small) {
+			for (int i = small - 1; i >= 0; i--) {
+				int sum = a.get(i) + b.get(i);
+				if (sum > 999999999) {
+					ans.set(i,sum - 1000000000);
+					ans.set(i + 1,ans.get(i + 1) + 1);
+				} 
+				else {
+					ans.set(i,sum);
+				}
+			}
+			for (int i = small; i < big - 1; i++) {
+				int num = ans.get(i);
+				if (num > 999999999) {
+					ans.set(i,num - 1000000000);
+					ans.set(i + 1,ans.get(i + 1) + 1);
+				} 
+				else {
+					ans.set(i,num);
+				}
+			}
+		} 
+		else {
+			boolean isUp = false;
+			for (int i = 0; i < big; i++) {
+				int sum = a.get(i) + b.get(i);
+				if (isUp) {
+					sum++;
+					isUp = false;
+				}
+				if (sum > 999999999) {
+					ans.set(i,sum - 1000000000);
+					if (i == ans.size() - 1) {
+						ans.add(1);
+					} 
+					else {
+						isUp = true;
+					}
+				} 
+				else {
+					ans.set(i,sum);
+				}
+			}
+		}
+		int n_size = 0;
+		for (Integer i: ans) {	
+			if (++n_size != ans.size()) {
+				int len = String.valueOf(i).length();
+				str = String.valueOf(i) + str;
+				while (len++ < index) {
+					str = "0" + str;
+				}
+			} 
+			else {
+				str = String.valueOf(i) + str;
+			}
+		}
+		return str;
+	}
+}

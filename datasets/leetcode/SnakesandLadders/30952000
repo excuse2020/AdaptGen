@@ -1,0 +1,49 @@
+class Solution {
+	int snakesAndLadders(int[][] board) {
+		Queue<Integer> queue = new LinkedList<>(Arrays.asList(2,3,4,5,6,7));
+		Queue<Integer> tempQueue = new LinkedList<>();
+		int len = board.length, n = len * len, ind = 0, totalMoves = 1;
+		int[] flatBoard = new int[n + 1];
+		boolean reverse = false;
+		boolean[] visited = new boolean[n + 1];
+		for (int i = len - 1; i > -1; --i) {
+			if (reverse) {
+				for (int j = len - 1; j > -1; --j) {
+					flatBoard[++ind] = board[i][j];
+				}
+			} 
+			else {
+				for (int val: board[i]) {	
+					flatBoard[++ind] = val;
+				}
+			}
+			reverse = !reverse;
+		}
+		while (true) {
+			while (!queue.isEmpty()) {
+				int val = queue.poll();
+				if (val == n) {
+					return totalMoves;
+				}
+				int boardVal = flatBoard[val];
+				val = boardVal == -1 ? val : boardVal;
+				if (val == n) {
+					return totalMoves;
+				}
+				int min = Math.min(n,val + 6) + 1;
+				for (int i = val + 1; i < min; ++i) {
+					if (!visited[i]) {
+						visited[i] = true;
+						tempQueue.add(i);
+					}
+				}
+			}
+			++totalMoves;
+			if (totalMoves == n) {
+				return -1;
+			}
+			queue.addAll(tempQueue);
+			tempQueue.clear();
+		}
+	}
+}

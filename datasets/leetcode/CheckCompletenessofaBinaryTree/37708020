@@ -1,0 +1,31 @@
+class Solution {
+	int[] serial;
+	int count(TreeNode root) {
+		if (root == null) {
+			return 0;
+		} 
+		else {
+			return 1 + count(root.left);
+		}
+	}
+	void fill(TreeNode t, int dex) {
+		if (t != null) {
+			if (dex < serial.length) {
+				serial[dex] = t.val;
+				fill(t.left,2 * dex + 1);
+				fill(t.right,2 * dex + 2);
+			}
+		}
+	}
+	boolean isCompleteTree(TreeNode root) {
+		int nodeCt = count(root);
+		serial = new int[nodeCt];
+		fill(root,0);
+		for (int x: serial) {	
+			if (x == 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

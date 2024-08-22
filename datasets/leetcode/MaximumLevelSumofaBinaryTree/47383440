@@ -1,0 +1,27 @@
+class Solution {
+	int maxLevelSum(TreeNode root) {
+		int max = Integer.MIN_VALUE;
+		int maxIndex = -1;
+		ArrayList<Integer> levelSum = new ArrayList<>();
+		populateLevelSum(root,0,levelSum);
+		for (int i = 0; i < levelSum.size(); i++) {
+			if (max < levelSum.get(i)) {
+				max = levelSum.get(i);
+				maxIndex = i;
+			}
+		}
+		return maxIndex + 1;
+	}
+	void populateLevelSum(TreeNode root, int level, ArrayList<Integer> levelSum) {
+		if (root == null) {
+			return;
+		}
+		if (level + 1 > levelSum.size()) {
+			levelSum.add(0);
+		}
+		int value = levelSum.get(level) + root.val;
+		levelSum.set(level,value);
+		populateLevelSum(root.left,level + 1,levelSum);
+		populateLevelSum(root.right,level + 1,levelSum);
+	}
+}

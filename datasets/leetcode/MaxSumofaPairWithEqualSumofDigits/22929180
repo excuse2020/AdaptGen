@@ -1,0 +1,59 @@
+class Solution {
+	long getSum(int a) {
+		long sum = 0;
+		int num = a;
+		while (num > 0) {
+			sum += num % 10;
+			num /= 10;
+		}
+		return sum;
+	}
+	int maximumSum(int[] nums) {
+		int len = nums.length;
+		if (len == 0) {
+			return 0;
+		}
+		boolean flag = true;
+		PriorityQueue<Long> helper = new PriorityQueue<>();
+		long max = Integer.MIN_VALUE;
+		long[][] digitSum = new long[len][2];
+		for (int index = 0; index < len; index++) {
+			digitSum[index][0] = nums[index];
+			digitSum[index][1] = getSum(nums[index]);
+		}
+		Arrays.sort(digitSum,(a, b) -> {Long.compare(b[1],a[1])});
+		for (int index = 1; index < len; index++) {
+			if (digitSum[index][1] == digitSum[index - 1][1]) {
+				helper.add(digitSum[index][0]);
+				if (flag) {
+					helper.add(digitSum[index - 1][0]);
+					flag = false;
+				}
+				while (helper.size() > 2) {
+					helper.poll();
+				}
+			} 
+			else {
+				flag = true;
+				if (helper.size() == 2) {
+					long a = helper.peek();
+					helper.poll();
+					long b = helper.peek();
+					max = Math.max(max,(a + b));
+					helper.poll();
+				}
+			}
+		}
+		if (helper.size() == 2) {
+			long a = helper.peek();
+			helper.poll();
+			long b = helper.peek();
+			max = Math.max(max,(a + b));
+			helper.poll();
+		}
+		if (max == Integer.MIN_VALUE) {
+			return -1;
+		}
+		return (int) max;
+	}
+}

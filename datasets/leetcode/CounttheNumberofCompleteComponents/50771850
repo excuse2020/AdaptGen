@@ -1,0 +1,58 @@
+class Solution {
+	int[] parent;
+	int countCompleteComponents(int n, int[][] edges) {
+		parent = new int[n];
+		for (int i = 0; i < n; i++) {
+			parent[i] = i;
+		}
+		int[] totalEdges = new int[n];
+		for (int[] edge: edges) {	
+			int u = edge[0];
+			int v = edge[1];
+			totalEdges[u]++;
+			totalEdges[v]++;
+			int pu = find(u);
+			int pv = find(v);
+			if (pu > pv) {
+				parent[pu] = pv;
+			} 
+			else {
+				parent[pv] = pu;
+			}
+		}
+		Set<Integer> distinctGroups = new HashSet<>();
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			if (totalEdges[i] == 0) {
+				distinctGroups.add(i);
+			} 
+			else {
+				parent[i] = find(i);
+				distinctGroups.add(parent[i]);
+			}
+			map.putIfAbsent(parent[i],new ArrayList<>());
+			map.get(parent[i]).add(i);
+		}
+		int count = 0;
+		for (int grp: distinctGroups) {	
+			int nodesCount = map.get(grp).size();
+			int shouldHave = nodesCount * (nodesCount - 1) / 2;
+			int curCount = 0;
+			for (int node: map.get(grp)) {	
+				curCount += totalEdges[node];
+			}
+			curCount /= 2;
+			if (curCount >= shouldHave) {
+				count++;
+			}
+		}
+		return count;
+	}
+	int find(int x) {
+		if (x == parent[x]) {
+			return x;
+		}
+		parent[x] = find(parent[x]);
+		return parent[x];
+	}
+}

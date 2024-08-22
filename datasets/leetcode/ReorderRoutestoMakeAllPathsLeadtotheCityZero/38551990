@@ -1,0 +1,30 @@
+class Solution {
+	int minReorder(int n, int[][] connections) {
+		ArrayList<ArrayList<Integer>> ll = new ArrayList<ArrayList<Integer>>();
+		for (int i = 0; i < n; i++) {
+			ll.add(new ArrayList<>());
+		}
+		for (int i = 0; i < connections.length; i++) {
+			ll.get(connections[i][0]).add(connections[i][1]);
+			ll.get(connections[i][1]).add(-connections[i][0]);
+		}
+		Queue<Integer> q = new LinkedList<>();
+		boolean vis = new boolean[n];
+		q.add(0);
+		int cnt = 0;
+		vis[0] = true;
+		while (!q.isEmpty()) {
+			int curr = q.poll();
+			for (int x: ll.get(Math.abs(curr))) {	
+				if (!vis[Math.abs(x)]) {
+					vis[Math.abs(x)] = true;
+					q.add(x);
+					if (x > 0) {
+						cnt++;
+					}
+				}
+			}
+		}
+		return cnt;
+	}
+}

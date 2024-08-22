@@ -1,0 +1,41 @@
+class Solution {
+	int countBits(int num) {
+		int count = 0;
+		while (num > 0) {
+			if (num % 2 == 1) {
+				count++;
+			}
+			num /= 2;
+		}
+		return count;
+	}
+	int[] sortByBits(int[] arr) {
+		Map<Integer, List<Integer>> map = new TreeMap<>();
+		for (int num: arr) {	
+			int bitCount = countBits(num);
+			List<Integer> list;
+			if (!map.containsKey(bitCount)) {
+				list = new ArrayList<>();
+			} 
+			else {
+				list = map.get(bitCount);
+			}
+			list.add(num);
+			map.put(bitCount,list);
+		}
+		List<Integer> finalList = new ArrayList<>();
+		for (Map.Entry<Integer, List<Integer>> entry: map.entrySet()) {	
+			List<Integer> temp = entry.getValue();
+			Collections.sort(temp);
+			for (int num: temp) {	
+				finalList.add(num);
+			}
+		}
+		int len = finalList.size();
+		int[] result = new int[len];
+		for (int i = 0; i < len; i++) {
+			result[i] = finalList.get(i);
+		}
+		return result;
+	}
+}

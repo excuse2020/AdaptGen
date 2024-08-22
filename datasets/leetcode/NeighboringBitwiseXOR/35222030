@@ -1,0 +1,31 @@
+class Solution {
+	boolean dfs(Integer[] memo, int[] derived, int idx, int cur, int next) {
+		if (idx >= derived.length) {
+			return true;
+		}
+		if (memo[idx] != null && memo[idx] != cur) {
+			return false;
+		}
+		if (memo[(idx + 1) % derived.length] != null && memo[(idx + 1) % derived.length] != next) {
+			return false;
+		}
+		if ((cur ^ next) != derived[idx]) {
+			return false;
+		}
+		memo[idx] = cur;
+		memo[(idx + 1) % derived.length] = next;
+		return dfs(memo,derived,idx + 1,next,0) || dfs(memo,derived,idx + 1,next,1);
+	}
+	boolean doesValidArrayExist(int[] derived) {
+		if (derived.length == 1) {
+			if (derived[0] == 1) {
+				return false;
+			} 
+			else {
+				return true;
+			}
+		}
+		Integer[] memo = new Integer[derived.length];
+		return dfs(memo,derived,0,0,0) || dfs(memo,derived,0,0,1);
+	}
+}

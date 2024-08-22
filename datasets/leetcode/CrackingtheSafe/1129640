@@ -1,0 +1,48 @@
+class Solution {
+	String crackSafe(int n, int k) {
+		StringBuilder sb = new StringBuilder();
+		int len = (int) Math.pow(k,n) + (n - 1);
+		HashSet<String> set = new HashSet<>();
+		generate(set,"",n,k);
+		for (int i = 0; i < k; i++) {
+			for (int j = 0; j < n; j++) {
+				sb.append(String.valueOf(i));
+				len--;
+				if (sb.length() >= n) {
+					set.remove(new String(sb.substring(sb.length() - n)));
+				}
+			}
+		}
+		helper(len,sb,set,n,k);
+		return sb.toString();
+	}
+	void generate(HashSet<String> set, String curr, int n, int k) {
+		if (curr.length() == n) {
+			set.add(curr);
+			return;
+		}
+		for (int i = 0; i < k; i++) {
+			generate(set,curr + String.valueOf(i),n,k);
+		}
+	}
+	boolean helper(int len, StringBuilder sb, HashSet<String> set, int n, int k) {
+		if (len == 0) {
+			return true;
+		}
+		String curr = new String(sb.substring(sb.length() - n + 1));
+		for (String s: set) {	
+			if (s.startsWith(curr)) {
+				String c = s.substring(s.indexOf(curr) + curr.length());
+				int l = sb.length();
+				sb.append(c);
+				HashSet<String> clone = (HashSet<String>) set.clone();
+				clone.remove(s);
+				if (helper(len - 1,sb,clone,n,k)) {
+					return true;
+				}
+				sb.setLength(l);
+			}
+		}
+		return false;
+	}
+}

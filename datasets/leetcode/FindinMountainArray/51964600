@@ -1,0 +1,52 @@
+class Solution {
+	int findInMountainArray(int target, MountainArray mountainArr) {
+		int peak = peakElement(mountainArr);
+		int firstHalf = orderbinarySearch(mountainArr,0,peak,target);
+		if (firstHalf != -1) {
+			return firstHalf;
+		} 
+		else {
+			return orderbinarySearch(mountainArr,peak + 1,mountainArr.length() - 1,target);
+		}
+	}
+	int orderbinarySearch(MountainArray mountainArr, int low, int high, int target) {
+		boolean isAsc = mountainArr.get(low) < mountainArr.get(high);
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			if (mountainArr.get(mid) == target) {
+				return mid;
+			}
+			if (isAsc) {
+				if (target > mountainArr.get(mid)) {
+					low = mid + 1;
+				} 
+				else {
+					high = mid - 1;
+				}
+			} 
+			else {
+				if (target > mountainArr.get(mid)) {
+					high = mid - 1;
+				} 
+				else {
+					low = mid + 1;
+				}
+			}
+		}
+		return -1;
+	}
+	int peakElement(MountainArray mountainArr) {
+		int low = 0;
+		int end = mountainArr.length() - 1;
+		while (low < end) {
+			int mid = low + (end - low) / 2;
+			if (mountainArr.get(mid) > mountainArr.get(mid + 1)) {
+				end = mid;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		return low;
+	}
+}

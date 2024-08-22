@@ -1,0 +1,57 @@
+class Solution {
+	Map<Long, Long> map = new HashMap<>();
+	int findNthDigit(int n) {
+		if (n <= 9) {
+			return n;
+		}
+		long start = 0;
+		long end = n;
+		long ats = 0;
+		while (start <= end) {
+			long mid = (start + end) >> 1;
+			long required = giveMeNumber(mid);
+			if (required == n) {
+				ats = mid;
+				break;
+			}
+			if (required > n) {
+				end = mid - 1;
+			} 
+			else {
+				start = mid + 1;
+			}
+		}
+		if (ats != 0) {
+			return (int) (ats % 10);
+		}
+		System.out.println("End " + end);
+		long y = giveMeNumber(end + 1);
+		int cntr = 0;
+		System.out.println("Value " + y);
+		end++;
+		while (cntr < y - n) {
+			cntr++;
+			end /= 10;
+		}
+		return (int) (end % 10);
+	}
+	long giveMeNumber(long num) {
+		if (map.containsKey(num)) {
+			return map.get(num);
+		}
+		if (num <= 9) {
+			return num;
+		}
+		int pow = 0;
+		long temp = num;
+		while (temp != 0) {
+			pow++;
+			temp = temp / 10;
+		}
+		long x = (long) Math.pow(10,pow - 1) - 1;
+		long ans = giveMeNumber(x);
+		ans += pow * (num - x);
+		map.put(num,ans);
+		return ans;
+	}
+}

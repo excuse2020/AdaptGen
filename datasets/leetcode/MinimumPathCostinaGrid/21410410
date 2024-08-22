@@ -1,0 +1,26 @@
+class Solution {
+	int helper(int[][] grid, int[][] moveCost, int row, int from, int[][] dp) {
+		if (row >= grid.length) {
+			return 0;
+		}
+		int minCost = Integer.MAX_VALUE;
+		for (int c = 0; c < grid[row].length; c++) {
+			int costToCome = from == -1 ? 0 : moveCost[from][c];
+			int currCost = 0;
+			if (dp[row][c] != 0) {
+				currCost = dp[row][c];
+			} 
+			else {
+				currCost = helper(grid,moveCost,row + 1,grid[row][c],dp);
+				dp[row][c] = currCost;
+			}
+			currCost += grid[row][c] + costToCome;
+			minCost = Math.min(minCost,currCost);
+		}
+		return minCost;
+	}
+	int minPathCost(int[][] grid, int[][] moveCost) {
+		int dp = new int[grid.length][grid[0].length];
+		return helper(grid,moveCost,0,-1,dp);
+	}
+}

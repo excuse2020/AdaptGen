@@ -1,0 +1,64 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		return solveByReverse(head1,head2);
+	}
+	ListNode reverseListNoe(ListNode node) {
+		ListNode prev = null;
+		ListNode curr = node;
+		while (curr != null) {
+			ListNode tempNext = curr.next;
+			curr.next = prev;
+			prev = curr;
+			curr = tempNext;
+		}
+		return prev;
+	}
+	ListNode solveByCollection(ListNode head1, ListNode head2) {
+		Stack<Integer> stack1 = new Stack<Integer>();
+		while (head1 != null) {
+			stack1.push(head1.val);
+			head1 = head1.next;
+		}
+		Stack<Integer> stack2 = new Stack<Integer>();
+		while (head2 != null) {
+			stack2.push(head2.val);
+			head2 = head2.next;
+		}
+		ListNode head = null;
+		int carry = 0;
+		while (!stack1.isEmpty() || !stack2.isEmpty()) {
+			if (!stack1.isEmpty()) {
+				carry += stack1.pop();
+			}
+			if (!stack2.isEmpty()) {
+				carry += stack2.pop();
+			}
+			ListNode newNode = new ListNode(carry % 10);
+			newNode.next = head;
+			head = newNode;
+			carry /= 10;
+		}
+		return head;
+	}
+	ListNode solveByReverse(ListNode head1, ListNode head2) {
+		ListNode temp1 = reverseListNoe(head1);
+		ListNode temp2 = reverseListNoe(head2);
+		ListNode head = null;
+		int carry = 0;
+		while (temp1 != null || temp2 != null || carry != 0) {
+			if (temp1 != null) {
+				carry += temp1.val;
+				temp1 = temp1.next;
+			}
+			if (temp2 != null) {
+				carry += temp2.val;
+				temp2 = temp2.next;
+			}
+			ListNode newNode = new ListNode(carry % 10);
+			newNode.next = head;
+			head = newNode;
+			carry /= 10;
+		}
+		return head;
+	}
+}

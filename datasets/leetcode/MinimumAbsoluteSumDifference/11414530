@@ -1,0 +1,26 @@
+class Solution {
+	int MOD = (int) (1e9 + 7);
+	int minAbsoluteSumDiff(int[] nums1, int[] nums2) {
+		int sum = 0, minSum = Integer.MAX_VALUE;
+		TreeSet<Integer> s = new TreeSet<>();
+		for (int i = 0; i < nums1.length; i++) {
+			s.add(nums1[i]);
+			sum = (sum + Math.abs(nums1[i] - nums2[i])) % MOD;
+		}
+		if (sum == 0) {
+			return 0;
+		}
+		for (int pos = 0; pos < nums1.length; pos++) {
+			if (nums1[pos] == nums2[pos]) {
+				continue;
+			}
+			int updatedSum = sum - (Math.abs(nums1[pos] - nums2[pos]));
+			Integer lower = s.floor(nums2[pos]);
+			lower = (lower != null) ? lower : nums1[pos];
+			Integer higher = s.ceiling(nums2[pos]);
+			higher = (higher != null) ? higher : nums1[pos];
+			minSum = Math.min(minSum,Math.min((updatedSum + Math.abs(lower - nums2[pos])) % MOD,(updatedSum + Math.abs(higher - nums2[pos])) % MOD));
+		}
+		return minSum;
+	}
+}

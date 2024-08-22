@@ -1,0 +1,35 @@
+class Solution {
+	int[] array, temp;
+	int mod = 1000000007;
+	int InversePairs(int[] nums) {
+		int n = nums.length;
+		array = nums;
+		temp = new int[n];
+		return mergeSort(0,n - 1);
+	}
+	int mergeSort(int left, int right) {
+		if (left >= right) {
+			return 0;
+		}
+		int mid = (left + right) / 2;
+		int res = mergeSort(left,mid) + mergeSort(mid + 1,right);
+		res %= mod;
+		int i = left, j = mid + 1, k;
+		for (k = left; k <= right; ++k) {
+			temp[k] = array[k];
+		}
+		for (k = left; k <= right; ++k) {
+			if (i == mid + 1) {
+				array[k] = temp[j++];
+			} 
+			else if (j == right + 1 || temp[i] <= temp[j]) {
+				array[k] = temp[i++];
+			} 
+			else {
+				res = (res + mid - i + 1) % mod;
+				array[k] = temp[j++];
+			}
+		}
+		return res % mod;
+	}
+}

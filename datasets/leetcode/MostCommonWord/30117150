@@ -1,0 +1,30 @@
+class Solution {
+	String mostCommonWord(String paragraph, String[] banned) {
+		String[] paraArray = paragraph.split("[!?\',;. ]+");
+		HashSet<String> bannedSet = new HashSet<>();
+		for (int i = 0; i < banned.length; i++) {
+			bannedSet.add(banned[i]);
+		}
+		HashMap<String, Integer> paraMap = new HashMap<>();
+		for (int i = 0; i < paraArray.length; i++) {
+			if (paraMap.containsKey(paraArray[i].toLowerCase())) {
+				paraMap.put(paraArray[i].toLowerCase(),paraMap.get(paraArray[i].toLowerCase()) + 1);
+			} 
+			else {
+				paraMap.put(paraArray[i].toLowerCase(),1);
+			}
+			if (bannedSet.contains(paraArray[i].toLowerCase())) {
+				paraMap.remove(paraArray[i].toLowerCase());
+			}
+		}
+		int countMostFreqWord = 0;
+		String mostFreqWord = "";
+		for (String s: paraMap.keySet()) {	
+			if (paraMap.get(s) > countMostFreqWord) {
+				mostFreqWord = s;
+				countMostFreqWord = paraMap.get(s);
+			}
+		}
+		return mostFreqWord;
+	}
+}

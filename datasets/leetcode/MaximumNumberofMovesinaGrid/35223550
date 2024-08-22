@@ -1,0 +1,30 @@
+class Solution {
+	int edit(int i, int j, int[][] grid, int temp, boolean[][] bol, int[][] dp) {
+		if (i < 0 || j < 0 || i >= grid.length || j >= grid[0].length) {
+			return 0;
+		}
+		if (grid[i][j] <= temp) {
+			return 0;
+		}
+		if (bol[i][j]) {
+			return dp[i][j];
+		}
+		int one = edit(i - 1,j + 1,grid,grid[i][j],bol,dp);
+		int two = edit(i,j + 1,grid,grid[i][j],bol,dp);
+		int three = edit(i + 1,j + 1,grid,grid[i][j],bol,dp);
+		one = Math.max(one,two);
+		one = Math.max(one,three);
+		bol[i][j] = true;
+		dp[i][j] = 1 + one;
+		return 1 + one;
+	}
+	int maxMoves(int[][] grid) {
+		int res = 0;
+		boolean bol = new boolean[grid.length][grid[0].length];
+		int dp = new int[grid.length][grid[0].length];
+		for (int i = 0; i < grid.length; i++) {
+			res = Math.max(res,edit(i,0,grid,0,bol,dp));
+		}
+		return --res;
+	}
+}

@@ -1,0 +1,21 @@
+class Solution {
+	int smallestChair(int[][] times, int targetFriend) {
+		int targetTime = times[targetFriend][0];
+		Arrays.sort(times,(a, b) -> {a[0] - b[0]});
+		PriorityQueue<Integer> leftSeats = new PriorityQueue<>();
+		for (int i = 0; i < times.length; i++) {
+			leftSeats.offer(i);
+		}
+		PriorityQueue<int[]> stayFriends = new PriorityQueue<>((a, b) -> {a[1] - b[1]});
+		for (int[] time: times) {	
+			while (!stayFriends.isEmpty() && stayFriends.peek()[1] <= time[0]) {
+				leftSeats.offer(stayFriends.poll()[2]);
+			}
+			if (time[0] == targetTime) {
+				return leftSeats.peek();
+			}
+			stayFriends.offer(new int{time[0], time[1], leftSeats.poll()});
+		}
+		return 0;
+	}
+}

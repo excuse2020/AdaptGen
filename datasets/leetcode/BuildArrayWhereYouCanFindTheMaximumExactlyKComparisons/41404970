@@ -1,0 +1,27 @@
+class Solution {
+	int numOfArrays(int n, int m, int k) {
+		int MOD = (int) Math.pow(10,9) + 7;
+		long[][][] dp = new long[n][m + 1][k + 1];
+		for (int i = 1; i <= m; i++) {
+			dp[0][i][1] = 1;
+		}
+		for (int x = 1; x < n; x++) {
+			for (int y = 1; y <= m; ++y) {
+				for (int z = 1; z <= k; ++z) {
+					for (int i = 0; i < y; i++) {
+						dp[x][y][z] += dp[x - 1][i][z - 1];
+						dp[x][y][z] %= MOD;
+					}
+					dp[x][y][z] += dp[x - 1][y][z] * y;
+					dp[x][y][z] %= MOD;
+				}
+			}
+		}
+		int res = 0;
+		for (int i = 0; i <= m; i++) {
+			res += dp[n - 1][i][k];
+			res %= MOD;
+		}
+		return res;
+	}
+}

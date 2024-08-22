@@ -1,0 +1,43 @@
+class Solution {
+	int lastStoneWeight(int[] stones) {
+		List<Integer> list = new ArrayList<>();
+		for (int i = 0; i < stones.length; i++) {
+			list.add(stones[i]);
+		}
+		while (list.size() > 1) {
+			playGame(list);
+		}
+		if (list.size() == 1) {
+			return list.get(0);
+		} 
+		else {
+			return 0;
+		}
+	}
+	void playGame(List<Integer> list) {
+		int maxIndex = -1;
+		int secondMaxIndex = -1;
+		int max = Integer.MIN_VALUE;
+		int secondMax = Integer.MIN_VALUE;
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i) > max) {
+				secondMax = max;
+				secondMaxIndex = maxIndex;
+				max = list.get(i);
+				maxIndex = i;
+			} 
+			else if (list.get(i) > secondMax) {
+				secondMax = list.get(i);
+				secondMaxIndex = i;
+			}
+		}
+		if (maxIndex == secondMaxIndex) {
+			list.remove(maxIndex);
+			list.remove(secondMaxIndex);
+		} 
+		else {
+			list.set(maxIndex,max - secondMax);
+			list.remove(secondMaxIndex);
+		}
+	}
+}

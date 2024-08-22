@@ -1,0 +1,49 @@
+class Solution {
+	int SHIFT;
+	List<String> alertNames(String[] keyName, String[] keyTime) {
+		Map<String, PriorityQueue<Integer>> map = new HashMap();
+		for (int i = 0; i < keyName.length; i++) {
+			if (!map.containsKey(keyName[i])) {
+				map.put(keyName[i],new PriorityQueue());
+			}
+			map.get(keyName[i]).offer(timeToSeconds(keyTime[i]));
+		}
+		PriorityQueue<String> resultQueue = new PriorityQueue();
+		int prevTimeS = 0, current = 0, counter = 0, index = 0, left = 0, right = 0;
+		for (Map.Entry<String, PriorityQueue<Integer>> entry: map.entrySet()) {	
+			if (entry.getValue().size() < 3) {
+				continue;
+			}
+			index = 0;
+			int[] times = new int[entry.getValue().size()];
+			while (entry.getValue().peek() != null) {
+				times[index++] = entry.getValue().poll();
+			}
+			left = 0;
+			right = 1;
+			while (right < times.length) {
+				if (times[right] - times[left] <= 60 && right - left == 2) {
+					resultQueue.add(entry.getKey());
+					break;
+				}
+				if (times[right] - times[left] > 60) {
+					left++;
+					continue;
+				}
+				right++;
+			}
+			continue;
+		}
+		List<String> result = new ArrayList(resultQueue.size());
+		while (resultQueue.peek() != null) {
+			result.add(resultQueue.poll());
+		}
+		return result;
+	}
+	int timeToSeconds(String s) {
+		int result = (((int) (s.charAt(0))) - SHIFT) * 10 + (((int) (s.charAt(1))) - SHIFT);
+		result *= 60;
+		result += (((int) (s.charAt(3))) - SHIFT) * 10 + (((int) (s.charAt(4))) - SHIFT);
+		return result;
+	}
+}

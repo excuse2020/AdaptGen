@@ -1,0 +1,35 @@
+class Solution {
+	long minimumTotalCost(int[] nums1, int[] nums2) {
+		HashMap<Integer, Integer> counts = new HashMap<>();
+		int k = 0, m = 0, n = nums1.length;
+		boolean[] operated = new boolean[n];
+		long output = 0;
+		for (int i = 0; i < n; i++) {
+			if (nums1[i] == nums2[i]) {
+				operated[i] = true;
+				counts.put(nums1[i],counts.getOrDefault(nums1[i],0) + 1);
+				m++;
+				output += i;
+			}
+		}
+		for (Map.Entry<Integer, Integer> count: counts.entrySet()) {	
+			if (count.getValue() > m >> 1) {
+				k = count.getKey();
+				break;
+			}
+		}
+		if (k > 0) {
+			for (int i = 0; i < n && counts.get(k) > m >> 1; i++) {
+				if (!operated[i] && nums1[i] != k && nums2[i] != k) {
+					m++;
+					operated[i] = true;
+					output += i;
+				}
+			}
+			if (counts.get(k) > m >> 1) {
+				return -1;
+			}
+		}
+		return output;
+	}
+}

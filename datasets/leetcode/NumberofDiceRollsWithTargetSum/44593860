@@ -1,0 +1,29 @@
+class Solution {
+	int dp;
+	int mod = 1000000007;
+	int helper2(int n, int k, int t) {
+		int dp = new int[n + 1][t + 1];
+		dp[0][0] = 1;
+		for (int i = 1; i <= n; i++) {
+			dp[i][0] = 0;
+		}
+		for (int i = 1; i <= t; i++) {
+			dp[0][i] = 0;
+		}
+		for (int x = 1; x <= n; x++) {
+			for (int tar = 1; tar <= t; tar++) {
+				int ans = 0;
+				for (int i = 1; i <= k; i++) {
+					if (tar - i >= 0) {
+						ans = (ans % mod + dp[x - 1][tar - i] % mod) % mod;
+					}
+				}
+				dp[x][tar] = ans;
+			}
+		}
+		return dp[n][t];
+	}
+	int numRollsToTarget(int n, int k, int target) {
+		return helper2(n,k,target);
+	}
+}

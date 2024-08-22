@@ -1,0 +1,33 @@
+class Solution {
+	boolean canTaste(int[] price, int k, int minDistance) {
+		int num = price[0];
+		k--;
+		int priceIndex = 1;
+		while (k > 0) {
+			if (priceIndex >= price.length) {
+				return false;
+			}
+			if (price[priceIndex] >= num + minDistance) {
+				k--;
+				num = price[priceIndex];
+			}
+			priceIndex++;
+		}
+		return true;
+	}
+	int maximumTastiness(int[] price, int k) {
+		Arrays.sort(price);
+		int low = 1;
+		int high = price[price.length - 1] - price[0];
+		while (low <= high) {
+			int middle = low + (high - low) / 2;
+			if (canTaste(price,k,middle)) {
+				low = middle + 1;
+			} 
+			else {
+				high = middle - 1;
+			}
+		}
+		return high;
+	}
+}

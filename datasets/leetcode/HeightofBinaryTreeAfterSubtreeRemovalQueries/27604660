@@ -1,0 +1,55 @@
+class Solution {
+	int N = 100010;
+	int[] ans;
+	int[] height;
+	int[] largerChild;
+	int n = 0;
+	int[][] tree;
+	int dfs(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		n++;
+		int leftHeight = dfs(root.left);
+		int rightHeight = dfs(root.right);
+		int v = root.val;
+		if (root.left != null) {
+			tree[v][0] = root.left.val;
+		}
+		if (root.right != null) {
+			tree[v][1] = root.right.val;
+		}
+		height[v] = Math.max(leftHeight,rightHeight) + 1;
+		if (leftHeight > rightHeight) {
+			largerChild[v] = 0;
+		} 
+		else if (leftHeight < rightHeight) {
+			largerChild[v] = 1;
+		}
+		return height[v];
+	}
+	int[] treeQueries(TreeNode root, int[] queries) {
+		tree = new int[N][2];
+		largerChild = new int[N];
+		height = new int[N];
+		ans = new int[N];
+		Arrays.fill(largerChild,-1);
+		dfs(root);
+		for (int i = 1; i <= n; i++) {
+			ans[i] = height[root.val];
+		}
+		int curr = root.val, pathLength = 0, maxHeight = 0;
+		while (largerChild[curr] != -1) {
+			pathLength++;
+			int leftOrRight = largerChild[curr];
+			maxHeight = Math.max(maxHeight,height[tree[curr][leftOrRight ^ 1]] + pathLength);
+			ans[tree[curr][leftOrRight]] = maxHeight;
+			curr = tree[curr][leftOrRight];
+		}
+		int[] ret = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			ret[i] = ans[queries[i]] - 1;
+		}
+		return ret;
+	}
+}

@@ -1,0 +1,40 @@
+class Solution {
+	int findWinningPlayer(int[] skills, int k) {
+		int N = skills.length;
+		Stack<Integer> st = new Stack<>();
+		int[] arr = new int[skills.length];
+		for (int i = N - 1; i >= 0; --i) {
+			while (!st.isEmpty() && skills[i] >= skills[st.peek()]) {
+				st.pop();
+			}
+			if (st.isEmpty()) {
+				arr[i] = N - i;
+			} 
+			else {
+				arr[i] = st.peek() - i;
+			}
+			st.push(i);
+		}
+		int[] maxi = new int[N];
+		maxi[0] = -1;
+		for (int i = 1; i < N; ++i) {
+			maxi[i] = Math.max(maxi[i - 1],skills[i - 1]);
+		}
+		for (int i = 0; i < N; ++i) {
+			if (maxi[i] > 0 && maxi[i] < skills[i]) {
+				arr[i]++;
+			}
+		}
+		int idx = 0, max = skills[0];
+		for (int i = 0; i < N; ++i) {
+			if (arr[i] >= k) {
+				return i;
+			}
+			if (skills[i] > max) {
+				max = skills[i];
+				idx = i;
+			}
+		}
+		return idx;
+	}
+}

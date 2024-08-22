@@ -1,0 +1,62 @@
+class Solution {
+	ArrayList<ArrayList<Integer>> arrayList = new ArrayList<>();
+	int len = 0;
+	void process(int[] S, int start, ArrayList<Integer> tmpArrayList) {
+		ArrayList<Integer> addArrayList = new ArrayList<>();
+		addArrayList.addAll(tmpArrayList);
+		addArrayList.sort(new ComparaInteger());
+		arrayList.add(addArrayList);
+		if (start >= len) {
+			return;
+		}
+		for (int i = start; i < len; i++) {
+			tmpArrayList.add(S[i]);
+			process(S,i + 1,tmpArrayList);
+			tmpArrayList.remove(tmpArrayList.size() - 1);
+		}
+		return;
+	}
+	ArrayList<ArrayList<Integer>> subsets(int[] S) {
+		len = S.length;
+		if (0 == len) {
+			return arrayList;
+		}
+		ArrayList<Integer> tmpArrayList = new ArrayList<>();
+		process(S,0,tmpArrayList);
+		return arrayList;
+	}
+	class ComparaArrayList {
+		int compare(ArrayList<Integer> arr1, ArrayList<Integer> arr2) {
+			int len1 = arr1.size();
+			int len2 = arr2.size();
+			int p1 = 0;
+			int p2 = 0;
+			while (p1 < len1 && p2 < len2) {
+				if (arr1.get(p1) < arr2.get(p2)) {
+					return -1;
+				} 
+				else if (arr1.get(p1) > arr2.get(p2)) {
+					return 1;
+				} 
+				else {
+					p1++;
+					p2++;
+				}
+			}
+			if (len1 < len2) {
+				return -1;
+			} 
+			else if (len1 > len2) {
+				return 1;
+			} 
+			else {
+				return 0;
+			}
+		}
+	}
+	class ComparaInteger {
+		int compare(Integer num1, Integer num2) {
+			return num1 - num2;
+		}
+	}
+}

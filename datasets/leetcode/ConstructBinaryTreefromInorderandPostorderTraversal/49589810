@@ -1,0 +1,29 @@
+class Solution {
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		if (inorder.length == 0 || postorder.length == 0) {
+			return null;
+		}
+		int n = postorder.length;
+		TreeNode root = new TreeNode(postorder[n - 1]);
+		Stack<TreeNode> st = new Stack<>();
+		st.push(root);
+		int inorder_index = inorder.length - 1;
+		for (int i = n - 2; i >= 0; i--) {
+			int preval = postorder[i];
+			TreeNode current = st.peek();
+			if (current.val != inorder[inorder_index]) {
+				current.right = new TreeNode(preval);
+				st.push(current.right);
+			} 
+			else {
+				while (!st.isEmpty() && st.peek().val == inorder[inorder_index]) {
+					current = st.pop();
+					inorder_index--;
+				}
+				current.left = new TreeNode(preval);
+				st.push(current.left);
+			}
+		}
+		return root;
+	}
+}

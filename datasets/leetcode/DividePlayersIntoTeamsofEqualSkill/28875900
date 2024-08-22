@@ -1,0 +1,41 @@
+class Solution {
+	long dividePlayers(int[] skill) {
+		if (skill.length == 2) {
+			return (long) (skill[0] * skill[1]);
+		}
+		long sum = 0;
+		for (int i: skill) {	
+			sum += i;
+		}
+		long n = skill.length / 2;
+		if ((double) sum / n != (long) sum / n) {
+			return (long) -1;
+		}
+		long target = (long) (sum / n);
+		HashMap<Integer, Integer> hash = new HashMap();
+		for (int i: skill) {	
+			hash.put(i,hash.getOrDefault(i,0) + 1);
+		}
+		long ans = 0;
+		for (int i = 0; i < skill.length; i++) {
+			int curr = skill[i];
+			int need = (int) (target - curr);
+			if (!hash.containsKey(curr)) {
+				continue;
+			}
+			hash.put(curr,hash.get(curr) - 1);
+			if (hash.get(curr) == 0) {
+				hash.remove(curr);
+			}
+			if (!hash.containsKey(need)) {
+				return (long) -1;
+			}
+			hash.put(need,hash.get(need) - 1);
+			if (hash.get(need) == 0) {
+				hash.remove(need);
+			}
+			ans = ans + (long) (curr * need);
+		}
+		return ans;
+	}
+}

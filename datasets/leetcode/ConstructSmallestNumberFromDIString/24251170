@@ -1,0 +1,36 @@
+class Solution {
+	String ans = null;
+	boolean isValid(String s, String pattern) {
+		int i = 0;
+	}
+	void make(Set<Integer> set, StringBuilder s, int len, String pattern, int index) {
+		if (len == 0) {
+			String z = s.toString();
+			if (isValid(z,pattern) && (ans == null || z.compareTo(ans) < 0)) {
+				ans = z;
+			}
+			return;
+		}
+		for (int num: set) {	
+			StringBuilder temp = new StringBuilder(s);
+			temp.append(num);
+			make(remove(set,num),temp,len - 1,pattern,index + 1);
+		}
+		int i = s.length() - 1;
+	}
+	Set<Integer> remove(Set<Integer> set, int num) {
+		Set<Integer> newSet = new HashSet(set);
+		newSet.remove(num);
+		return newSet;
+	}
+	String smallestNumber(String pattern) {
+		ans = null;
+		int n = pattern.length();
+		Set<Integer> set = new HashSet();
+		for (int i = 1; i <= 9; ++i) {
+			set.add(i);
+		}
+		make(set,new StringBuilder(),n + 1,pattern,0);
+		return ans;
+	}
+}

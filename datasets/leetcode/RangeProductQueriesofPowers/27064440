@@ -1,0 +1,28 @@
+class Solution {
+	int[] productQueries(int n, int[][] queries) {
+		int[] binaryNum = new int[32];
+		int i = 0;
+		while (n > 0) {
+			binaryNum[i] = n % 2;
+			n = n / 2;
+			i++;
+		}
+		List<Long> power = new ArrayList<>();
+		for (int j = i - 1; j >= 0; j--) {
+			if (binaryNum[j] != 0) {
+				power.add((long) Math.pow(2,j));
+			}
+		}
+		power.sort(Comparator.comparingLong((a) -> {a}));
+		int[] answer = new int[queries.length];
+		for (int k = 0; k < queries.length; k++) {
+			long temp = 1;
+			for (int j = queries[k][0]; j <= queries[k][1]; j++) {
+				temp *= power.get(j) % 1000000007;
+				temp = temp % 1000000007;
+			}
+			answer[k] = (int) temp % 1000000007;
+		}
+		return answer;
+	}
+}

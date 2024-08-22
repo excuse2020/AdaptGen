@@ -1,0 +1,36 @@
+class Solution {
+	int minimumTime(int n, int[][] relations, int[] time) {
+		Map<Integer, List<Integer>> adjList = new HashMap();
+		for (int i = 0; i < n; i++) {
+			adjList.put(i,new ArrayList<Integer>());
+		}
+		int[] indegree = new int[n];
+		for (int[] edge: relations) {	
+			adjList.get(edge[0] - 1).add(edge[1] - 1);
+			indegree[edge[1] - 1]++;
+		}
+		Queue<Integer> queue = new LinkedList();
+		int[] maxTime = new int[n];
+		for (int i = 0; i < n; i++) {
+			if (indegree[i] == 0) {
+				queue.offer(i);
+				maxTime[i] = time[i];
+			}
+		}
+		while (!queue.isEmpty()) {
+			Integer node = queue.poll();
+			for (int neighbor: adjList.get(node)) {	
+				maxTime[neighbor] = Math.max(maxTime[neighbor],maxTime[node] + time[neighbor]);
+				indegree[neighbor]--;
+				if (indegree[neighbor] == 0) {
+					queue.offer(neighbor);
+				}
+			}
+		}
+		int result = 0;
+		for (int i = 0; i < n; i++) {
+			result = Math.max(result,maxTime[i]);
+		}
+		return result;
+	}
+}

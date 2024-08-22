@@ -1,0 +1,89 @@
+class Solution {
+	int outputIter = 0, n = ;
+	boolean printGrouproTopologicalSort(int group, int[] output, boolean groupPrinted, List[] groupsBefore, List[] itemsBefore, List[] itemsInGroup, Set<Integer> cycleWatch) {
+		if (!cycleWatch.add(group)) {
+			return false;
+		}
+		for (int groupBefore: (List<Integer>) groupsBefore[group]) {	
+			if (!groupPrinted[groupBefore]) {
+				if (!printGrouproTopologicalSort(groupBefore,output,groupPrinted,groupsBefore,itemsBefore,itemsInGroup,cycleWatch)) {
+					return false;
+				}
+			}
+		}
+		boolean[] printed = new boolean[n];
+		for (int item: (List<Integer>) itemsInGroup[group]) {	
+			if (!printed[item]) {
+				if (!printItemsTopologicalSort(item,output,itemsBefore,printed,new HashSet())) {
+					return false;
+				}
+			}
+		}
+		groupPrinted[group] = true;
+		return true;
+	}
+	boolean printItemsTopologicalSort(int item, int[] output, List[] itemsBefore, boolean[] printed, Set<Integer> cycleWatch) {
+		if (!cycleWatch.add(item)) {
+			return false;
+		}
+		for (int itemBefore: (List<Integer>) itemsBefore[item]) {	
+			if (!printed[itemBefore]) {
+				if (!printItemsTopologicalSort(itemBefore,output,itemsBefore,printed,cycleWatch)) {
+					return false;
+				}
+			}
+		}
+		output[outputIter++] = item;
+		printed[item] = true;
+		return true;
+	}
+	int[] sortItems(int n, int m, int[] group, List<List<Integer>> beforeItems) {
+		this.n = n;
+		int groups = m, sizeOneGroups = 0;
+		Map<Integer, Integer> sizeOneGroupsMap = new HashMap<>();
+		for (int item: group) {	
+			if (item == -1) {
+				groups++;
+			}
+		}
+		List[] groupsBefore = new List[groups];
+		List[] itemsBefore = new List[n];
+		List[] itemsInGroup = new List[groups];
+		for (int i = 0; i < groups; i++) {
+			groupsBefore[i] = new ArrayList<Integer>();
+			itemsInGroup[i] = new ArrayList<Integer>();
+		}
+		for (int i = 0; i < n; i++) {
+			itemsBefore[i] = new ArrayList<Integer>();
+			if (group[i] == -1) {
+				itemsInGroup[m + sizeOneGroups].add(i);
+				sizeOneGroupsMap.put(i,m + sizeOneGroups++);
+			} 
+			else {
+				itemsInGroup[group[i]].add(i);
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			int groupI = group[i] != -1 ? group[i] : sizeOneGroupsMap.get(i);
+			for (int item: beforeItems.get(i)) {	
+				int groupItemBefore = group[item] != -1 ? group[item] : sizeOneGroupsMap.get(item);
+				if (groupI == groupItemBefore) {
+					itemsBefore[i].add(item);
+				} 
+				else {
+					groupsBefore[groupI].add(groupItemBefore);
+				}
+			}
+		}
+		int output = new int[n];
+		boolean groupPrinted = new boolean[groups];
+		for (int i = 0; i < groups; i++) {
+			if (!groupPrinted[i]) {
+				if (!printGrouproTopologicalSort(i,output,groupPrinted,groupsBefore,itemsBefore,itemsInGroup,new HashSet())) {
+					return new int[0];
+				}
+			}
+		}
+		return output;
+	}
+}

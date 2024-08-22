@@ -1,0 +1,51 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		return plus(reverse(head1),reverse(head2));
+	}
+	ListNode plus(ListNode h1, ListNode h2) {
+		ListNode result = null;
+		ListNode cur = null;
+		int flag = 0;
+		while (h1 != null && h2 != null) {
+			h1.val = h1.val + h2.val;
+			flag = h1.val / 10;
+			h1.val = h1.val % 10;
+			if (h1.next == null) {
+				h1.next = h2.next;
+				h2.next = null;
+			}
+			cur = h1;
+			h1 = h1.next;
+			h2 = h2.next;
+			cur.next = result;
+			result = cur;
+		}
+		while (h1 != null) {
+			if (flag > 0) {
+				h1.val += flag;
+				flag = h1.val / 10;
+				h1.val = h1.val % 10;
+				if (h1.next == null) {
+					h1.next = new ListNode(flag);
+					break;
+				}
+			}
+			cur = h1;
+			h1 = h1.next;
+			cur.next = result;
+			result = cur;
+		}
+		return result;
+	}
+	ListNode reverse(ListNode head) {
+		ListNode result = null;
+		ListNode cur = null;
+		while (head != null) {
+			cur = head;
+			head = head.next;
+			cur.next = result;
+			result = cur;
+		}
+		return result;
+	}
+}

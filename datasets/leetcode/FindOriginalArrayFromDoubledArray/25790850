@@ -1,0 +1,49 @@
+class Solution {
+	int[] EMPTY = new int[0];
+	int bsearch(List<Integer> list, int item) {
+		int n = list.size();
+		int left = 0;
+		int right = n - 1;
+		while (left <= right) {
+			int mid = left + (right - left) / 2;
+			int midVal = list.get(mid);
+			if (midVal == item) {
+				return mid;
+			}
+			if (midVal < item) {
+				left = mid + 1;
+			} 
+			else {
+				right = mid - 1;
+			}
+		}
+		return -1;
+	}
+	int[] findOriginalArray(int[] changed) {
+		int n = changed.length;
+		if (n % 2 == 1) {
+			return EMPTY;
+		}
+		List<Integer> list = new ArrayList<>(n);
+		for (int ch: changed) {	
+			list.add(ch);
+		}
+		Collections.sort(list);
+		List<Integer> result = new ArrayList<>(n / 2);
+		while (!list.isEmpty()) {
+			int min = list.remove(0);
+			int min2 = 2 * min;
+			int idx = this.bsearch(list,min2);
+			if (idx == -1) {
+				return EMPTY;
+			}
+			list.remove(idx);
+			result.add(min);
+		}
+		int[] res = new int[n / 2];
+		for (int i = 0; i < n / 2; i++) {
+			res[i] = result.get(i);
+		}
+		return res;
+	}
+}

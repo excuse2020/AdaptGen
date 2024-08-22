@@ -1,0 +1,52 @@
+class Solution {
+	int[][] ones, dp;
+	int minDistance(int[] houses, int k) {
+		Arrays.sort(houses);
+		ones = new int[houses.length][houses.length];
+		dp = new int[houses.length][houses.length];
+		for (int[] x: dp) {	
+			Arrays.fill(x,-1);
+		}
+		for (int i = 0; i < houses.length; i++) {
+			for (int j = i; j < houses.length; j++) {
+				ones[i][j] = one(houses,i,j);
+			}
+		}
+		return recur(houses,k,0);
+	}
+	int one(int[] houses, int l, int r) {
+		int sum = 0, cnt = 0;
+		int[] left = new int[r - l + 1], right = new int[r - l + 1];
+		for (int i = l + 1; i <= r; i++) {
+			sum += (i - l) * (houses[i] - houses[i - 1]);
+			left[i - l] = sum;
+		}
+		sum = 0;
+		for (int i = r - 1, idx = r - l; i >= l; i--) {
+			sum += (r - i) * (-houses[i] + houses[i + 1]);
+			right[idx--] = sum;
+		}
+		int res = 1000000;
+		for (int i = 0; i < left.length; i++) {
+			res = Math.min(res,left[i] + right[i]);
+		}
+		return res;
+	}
+	int recur(int[] houses, int k, int idx) {
+		if (k >= houses.length - idx) {
+			return 0;
+		}
+		if (k == 1) {
+			return ones[idx][houses.length - 1];
+		}
+		if (dp[k][idx] != -1) {
+			return dp[k][idx];
+		}
+		int ans = 1000000;
+		int rem = houses.length - idx;
+		for (int i = idx; i < idx + rem && i < houses.length; i++) {
+			ans = Math.min(ans,ones[idx][i] + recur(houses,k - 1,i + 1));
+		}
+		return dp[k][idx] = ans;
+	}
+}

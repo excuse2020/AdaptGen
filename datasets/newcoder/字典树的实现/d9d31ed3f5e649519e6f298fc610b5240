@@ -1,0 +1,67 @@
+class Solution {
+	Trie trie = new Trie();
+	String[] trieU(String[][] operators) {
+		List<String> list = new ArrayList<>();
+		for (String[] cur: operators) {	
+			if (cur[0].equals("1")) {
+				trie.insert(cur[1],1);
+			} 
+			else if (cur[0].equals("2")) {
+				trie.insert(cur[1],-1);
+			} 
+			else if (cur[0].equals("3")) {
+				list.add(trie.search(cur[1]) ? "YES" : "NO");
+			} 
+			else if (cur[0].equals("4")) {
+				list.add(String.valueOf(trie.prefixNumber(cur[1])));
+			}
+		}
+		int m = list.size();
+		String[] ans = new String[m];
+		for (int i = 0; i < m; i++) {
+			ans[i] = list.get(i);
+		}
+		return ans;
+	}
+	class Trie {
+		int N = 1000009;
+		int[] cnt = new int[N];
+		int idx = 0;
+		int[] isWord = new int[N];
+		int[][] tr = new int[N][26];
+		void insert(String s, int v) {
+			int p = 0;
+			for (int i = 0; i < s.length(); i++) {
+				int u = s.charAt(i) - 'a';
+				if (tr[p][u] == 0) {
+					tr[p][u] = ++idx;
+				}
+				p = tr[p][u];
+				cnt[p] += v;
+			}
+			isWord[p] += v;
+		}
+		int prefixNumber(String s) {
+			int p = 0;
+			for (int i = 0; i < s.length(); i++) {
+				int u = s.charAt(i) - 'a';
+				if (cnt[tr[p][u]] == 0) {
+					return 0;
+				}
+				p = tr[p][u];
+			}
+			return cnt[p];
+		}
+		boolean search(String s) {
+			int p = 0;
+			for (int i = 0; i < s.length(); i++) {
+				int u = s.charAt(i) - 'a';
+				if (cnt[tr[p][u]] == 0) {
+					return false;
+				}
+				p = tr[p][u];
+			}
+			return isWord[p] > 0;
+		}
+	}
+}

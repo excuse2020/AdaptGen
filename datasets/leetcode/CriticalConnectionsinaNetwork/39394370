@@ -1,0 +1,38 @@
+class Solution {
+	int timmer = 1;
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList());
+		}
+		for (List<Integer> it: connections) {	
+			adj.get(it.get(0)).add(it.get(1));
+			adj.get(it.get(1)).add(it.get(0));
+		}
+		boolean visi = new boolean[n];
+		int[] time = new int[n];
+		int[] low = new int[n];
+		List<List<Integer>> ans = new ArrayList();
+		dfs(0,-1,visi,time,low,adj,ans);
+		return ans;
+	}
+	void dfs(int node, int parent, boolean visi, int time, int low, ArrayList<ArrayList<Integer>> adj, List<List<Integer>> ans) {
+		visi[node] = true;
+		time[node] = low[node] = timmer++;
+		for (int e: adj.get(node)) {	
+			if (e == parent) {
+				continue;
+			}
+			if (!visi[e]) {
+				dfs(e,node,visi,time,low,adj,ans);
+				low[node] = Math.min(low[node],low[e]);
+				if (low[e] > time[node]) {
+					ans.add(Arrays.asList(e,node));
+				}
+			} 
+			else {
+				low[node] = Math.min(low[node],low[e]);
+			}
+		}
+	}
+}

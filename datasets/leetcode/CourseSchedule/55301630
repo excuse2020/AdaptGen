@@ -1,0 +1,35 @@
+class Solution {
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		boolean[] visited = new boolean[numCourses];
+		boolean[] inRecursion = new boolean[numCourses];
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < numCourses; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int[] pair: prerequisites) {	
+			int a = pair[0];
+			int b = pair[1];
+			graph.get(b).add(a);
+		}
+		for (int i = 0; i < numCourses; i++) {
+			if (!visited[i] && dfs(i,graph,visited,inRecursion)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean dfs(int course, List<List<Integer>> graph, boolean[] visited, boolean[] inRecursion) {
+		visited[course] = true;
+		inRecursion[course] = true;
+		for (int next: graph.get(course)) {	
+			if (!visited[next] && dfs(next,graph,visited,inRecursion)) {
+				return true;
+			} 
+			else if (inRecursion[next]) {
+				return true;
+			}
+		}
+		inRecursion[course] = false;
+		return false;
+	}
+}

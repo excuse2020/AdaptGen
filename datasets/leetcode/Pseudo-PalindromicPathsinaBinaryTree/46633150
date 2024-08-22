@@ -1,0 +1,39 @@
+class Solution {
+	boolean isPalindromic(int[] arr) {
+		int odds = 0;
+		for (int x: arr) {	
+			if (x % 2 != 0) {
+				odds++;
+			}
+			if (odds > 1) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int process(TreeNode root, int[] arr) {
+		if (root == null) {
+			return 0;
+		}
+		arr[root.val]++;
+		if (root.left == null && root.right == null) {
+			return isPalindromic(arr) ? 1 : 0;
+		}
+		int ans = 0;
+		if (root.left != null) {
+			int val = root.left.val;
+			ans = process(root.left,arr);
+			arr[val]--;
+		}
+		if (root.right != null) {
+			int val = root.right.val;
+			ans += process(root.right,arr);
+			arr[val]--;
+		}
+		return ans;
+	}
+	int pseudoPalindromicPaths(TreeNode root) {
+		int[] arr = new int[10];
+		return process(root,arr);
+	}
+}

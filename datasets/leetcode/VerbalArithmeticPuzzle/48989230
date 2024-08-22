@@ -1,0 +1,63 @@
+class Solution {
+	boolean flag;
+	boolean isSolvable(String[] words, String result) {
+		HashSet<Character> noZero = new HashSet<>();
+		HashMap<Character, Integer> hm = new HashMap<>();
+		int base = 1;
+		for (int i = 0; i < words.length; i++) {
+			base = 1;
+			for (int j = words[i].length() - 1; j >= 0; j--) {
+				char ch = words[i].charAt(j);
+				if (j == 0) {
+					noZero.add(words[i].charAt(j));
+				}
+				hm.put(ch,hm.getOrDefault(ch,0) + base);
+				base = base * 10;
+			}
+		}
+		base = 1;
+		for (int i = result.length() - 1; i >= 0; i--) {
+			char ch = result.charAt(i);
+			if (i == 0) {
+				noZero.add(ch);
+			}
+			hm.put(ch,hm.getOrDefault(ch,0) - base);
+			base = base * 10;
+		}
+		char nums = new char[hm.size()];
+		int id = 0;
+		for (char ch: hm.keySet()) {	
+			nums[id] = ch;
+			id++;
+		}
+		flag = false;
+		boolean visited = new boolean[10];
+		solve(hm,noZero,nums,0,visited,0);
+		return flag;
+	}
+	void solve(HashMap<Character, Integer> hm, HashSet<Character> noZero, char[] nums, int pos, boolean visited, int sum) {
+		if (pos >= nums.length) {
+			if (sum == 0) {
+				flag = true;
+			}
+			return;
+		}
+		for (int i = 0; i <= 9; i++) {
+			if (i == 0 && noZero.contains(nums[pos])) {
+				continue;
+			}
+			if (visited[i]) {
+				continue;
+			}
+			visited[i] = true;
+			sum += i * hm.get(nums[pos]);
+			solve(hm,noZero,nums,pos + 1,visited,sum);
+			if (flag == true) {
+				return;
+			}
+			sum -= i * hm.get(nums[pos]);
+			visited[i] = false;
+		}
+		return;
+	}
+}

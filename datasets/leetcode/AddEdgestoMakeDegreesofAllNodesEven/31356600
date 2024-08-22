@@ -1,0 +1,71 @@
+class Solution {
+	boolean isPossible(int n, List<List<Integer>> edges) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i <= n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.size(); i++) {
+			int u = edges.get(i).get(0);
+			int v = edges.get(i).get(1);
+			adj.get(u).add(v);
+			adj.get(v).add(u);
+		}
+		ArrayList<Integer> oddDeg = new ArrayList<>();
+		for (int i = 0; i < adj.size(); i++) {
+			if (adj.get(i).size() % 2 == 0) {
+				continue;
+			}
+			oddDeg.add(i);
+		}
+		int size = oddDeg.size();
+		if (size > 4 || size == 1 || size == 3) {
+			return false;
+		}
+		if (size == 0) {
+			return true;
+		} 
+		else if (size == 2) {
+			int u = oddDeg.get(0);
+			int v = oddDeg.get(1);
+			if (!adj.get(u).contains(v)) {
+				return true;
+			}
+			for (int i = 1; i <= n; i++) {
+				if (i == u || i == v) {
+					continue;
+				}
+				if (!adj.get(i).contains(u) && !adj.get(i).contains(v)) {
+					return true;
+				}
+			}
+			return false;
+		}
+		for (int i = 0; i < 4; i++) {
+			int u = oddDeg.get(i);
+			for (int j = 0; j < 4; j++) {
+				if (j == i) {
+					continue;
+				}
+				int v = oddDeg.get(j);
+				if (!adj.get(u).contains(v)) {
+					for (int k = 0; k < 4; k++) {
+						if (k == i || k == j) {
+							continue;
+						}
+						int s = oddDeg.get(k);
+						for (int l = 0; l < 4; l++) {
+							if (l == i || l == j || l == k) {
+								continue;
+							}
+							int t = oddDeg.get(l);
+							if (!adj.get(s).contains(t)) {
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+}

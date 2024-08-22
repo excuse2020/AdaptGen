@@ -1,0 +1,41 @@
+class Solution {
+	ArrayList<Integer> GetLeastNumbers_Solution(int[] input, int k) {
+		if (k == 0 || input.length == 0) {
+			return new ArrayList();
+		}
+		if (k > input.length) {
+			return new ArrayList<Integer>();
+		}
+		return quickSearch(input,0,input.length - 1,k - 1);
+	}
+	int partition(int[] input, int lo, int hi) {
+		int point = input[lo];
+		int i = lo, j = hi + 1;
+		while (true) {
+			while (++i <= hi && input[i] < point) {
+			}
+			while (--j >= lo && input[j] > point) {
+			}
+			if (i >= j) {
+				break;
+			}
+			int t = input[j];
+			input[j] = input[i];
+			input[i] = t;
+		}
+		input[lo] = input[j];
+		input[j] = point;
+		return j;
+	}
+	ArrayList<Integer> quickSearch(int[] input, int lo, int hi, int k) {
+		int j = partition(input,lo,hi);
+		if (j == k) {
+			ArrayList<Integer> arrayList = new ArrayList<Integer>();
+			for (int i = 0; i < j + 1; i++) {
+				arrayList.add(input[i]);
+			}
+			return arrayList;
+		}
+		return j > k ? quickSearch(input,lo,j - 1,k) : quickSearch(input,j + 1,hi,k);
+	}
+}

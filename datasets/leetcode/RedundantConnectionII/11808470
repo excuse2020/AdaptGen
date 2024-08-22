@@ -1,0 +1,54 @@
+class Solution {
+	int par;
+	int[] detectCycle(int[][] edges, int[] skipEdge) {
+		par = new int[edges.length + 1];
+		for (int i = 1; i < par.length; i++) {
+			par[i] = i;
+		}
+		for (int[] e: edges) {	
+			int src = e[0];
+			int dest = e[1];
+			if (src == skipEdge[0] && dest == skipEdge[1]) {
+				continue;
+			}
+			int p1 = findpar(src);
+			int p2 = findpar(dest);
+			if (p1 == p2) {
+				return e;
+			}
+			par[p2] = p1;
+		}
+		return null;
+	}
+	int[] findRedundantDirectedConnection(int[][] edges) {
+		int n = edges.length;
+		int[] indegree = new int[n + 1];
+		int twoIndegreeVtx = -1;
+		for (int[] e: edges) {	
+			indegree[e[1]]++;
+			if (indegree[e[1]] == 2) {
+				twoIndegreeVtx = e[1];
+			}
+		}
+		if (twoIndegreeVtx == -1) {
+			return detectCycle(edges,new int{-1, -1});
+		}
+		for (int i = edges.length - 1; i >= 0; i--) {
+			int[] e = edges[i];
+			if (e[1] == twoIndegreeVtx) {
+				int[] redEdge = detectCycle(edges,e);
+				if (redEdge == null) {
+					return e;
+				}
+			}
+		}
+		return new int[0];
+	}
+	int findpar(int u) {
+		if (u == par[u]) {
+			return u;
+		}
+		par[u] = findpar(par[u]);
+		return par[u];
+	}
+}

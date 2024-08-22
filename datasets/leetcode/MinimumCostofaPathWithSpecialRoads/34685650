@@ -1,0 +1,54 @@
+class Solution {
+	int getDistance(int x1, int y1, int x2, int y2) {
+		return Math.abs(x1 - x2) + Math.abs(y1 - y2);
+	}
+	int minimumCost(int[] start, int[] target, int[][] specialRoads) {
+		int maxRow = Math.max(start[0],target[0]);
+		int maxCol = Math.max(start[1],target[1]);
+		int res = getDistance(start[0],start[1],target[0],target[1]);
+		int N = maxCol + 1;
+		Map<Integer, Integer> distance = new HashMap<>();
+		Map<Integer, List<int[]>> edges = new HashMap<>();
+		for (int[] bridge: specialRoads) {	
+			int key = bridge[0] * N + bridge[1];
+			edges.putIfAbsent(key,new ArrayList<>());
+			edges.get(key).add(new int{bridge[2], bridge[3], bridge[4]});
+		}
+		for (int[] road: specialRoads) {	
+			int key = start[0] * N + start[1];
+			edges.putIfAbsent(key,new ArrayList<>());
+			edges.get(key).add(new int{road[0], road[1], getDistance(start[0],start[1],road[0],road[1])});
+		}
+		for (int[] from: specialRoads) {	
+			int key = from[2] * N + from[3];
+			edges.putIfAbsent(key,new ArrayList<>());
+			edges.get(key).add(new int{target[0], target[1], getDistance(from[2],from[3],target[0],target[1])});
+			for (int[] to: specialRoads) {	
+				edges.get(key).add(new int{to[0], to[1], getDistance(from[2],from[3],to[0],to[1])});
+			}
+		}
+		PriorityQueue<int[]> q = new PriorityQueue<>((a, b) -> {a[2] - b[2]});
+		q.offer(new int{start[0], start[1], 0});
+		distance.put(start[0] * N + start[1],0);
+		while (!q.isEmpty()) {
+			int[] cur = q.poll();
+			if (cur[0] == target[0] && cur[1] == target[1]) {
+				return Math.min(res,cur[2]);
+			}
+			int key = cur[0] * N + cur[1];
+			if (edges.containsKey(key)) {
+				for (int[] data: edges.get(key)) {	
+					int x = data[0];
+					int y = data[1];
+					int cost = cur[2] + data[2];
+					int nk = x * N + y;
+					if (!distance.containsKey(nk) || cost < distance.get(nk)) {
+						q.offer(new int{x, y, cost});
+						distance.put(nk,cost);
+					}
+				}
+			}
+		}
+		return res;
+	}
+}

@@ -1,0 +1,37 @@
+class Solution {
+	int snakesAndLadders(int[][] board) {
+		int m = board.length;
+		Queue<Integer> queue = new ArrayDeque<>();
+		Set<Integer> visited = new HashSet<>();
+		queue.offer(1);
+		visited.add(1);
+		int step = 0;
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				int current = queue.poll();
+				if (current == m * m) {
+					return step;
+				}
+				for (int j = 1; j <= 6; j++) {
+					int next = current + j;
+					if (next > m * m) {
+						break;
+					}
+					int row = m - (next - 1) / m - 1;
+					int col = (m - row) % 2 == 0 ? m - (next - 1) % m - 1 : (next - 1) % m;
+					if (visited.add(next)) {
+						if (board[row][col] == -1) {
+							queue.offer(next);
+						} 
+						else {
+							queue.offer(board[row][col]);
+						}
+					}
+				}
+			}
+			step++;
+		}
+		return -1;
+	}
+}

@@ -1,0 +1,69 @@
+class Solution {
+	void bfs(int n, Map<Integer, List<Integer>> adjList, Map<Integer, Integer> contibutionMap, int start, int end) {
+		Queue<Integer> q = new LinkedList<>();
+		boolean[] visited = new boolean[n];
+		int[] parent = new int[n];
+		Arrays.fill(parent,-1);
+		q.offer(start);
+		visited[start] = true;
+		while (!q.isEmpty()) {
+			int temp = q.poll();
+			if (temp == end) {
+				break;
+			}
+			for (int neighbour: adjList.get(temp)) {	
+				if (!visited[neighbour]) {
+					q.offer(neighbour);
+					visited[neighbour] = true;
+					parent[neighbour] = temp;
+				}
+			}
+		}
+		start = end;
+		while (start != -1) {
+			contibutionMap.put(start,contibutionMap.getOrDefault(start,0) + 1);
+			start = parent[start];
+		}
+	}
+	int dfs(Map<Integer, Integer> contributionMap, Map<Integer, List<Integer>> adjList, int[] price, int curr, int[][] dp, int isParentHalved, int parent) {
+		if (dp[curr][isParentHalved] != -1) {
+			return dp[curr][isParentHalved];
+		}
+		int halved = contributionMap.getOrDefault(curr,0) * (price[curr] / 2);
+		int notHalved = contributionMap.getOrDefault(curr,0) * price[curr];
+		for (int neighbour: adjList.get(curr)) {	
+			if (neighbour != parent) {
+				notHalved += dfs(contributionMap,adjList,price,neighbour,dp,0,curr);
+			}
+		}
+		if (isParentHalved == 1) {
+			return dp[curr][isParentHalved] = notHalved;
+		}
+		for (int neighbour: adjList.get(curr)) {	
+			if (neighbour != parent) {
+				halved += dfs(contributionMap,adjList,price,neighbour,dp,1,curr);
+			}
+		}
+		return dp[curr][isParentHalved] = Math.min(halved,notHalved);
+	}
+	int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
+		Map<Integer, List<Integer>> adjList = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			adjList.put(i,new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			adjList.get(edge[0]).add(edge[1]);
+			adjList.get(edge[1]).add(edge[0]);
+		}
+		Map<Integer, Integer> contributionMap = new HashMap<>();
+		for (int[] t: trips) {	
+			bfs(n,adjList,contributionMap,t[0],t[1]);
+		}
+		int[][] dp = new int[n][2];
+		for (int[] row: dp) {	
+			Arrays.fill(row,-1);
+		}
+		int ans = dfs(contributionMap,adjList,price,0,dp,0,-1);
+		return ans;
+	}
+}

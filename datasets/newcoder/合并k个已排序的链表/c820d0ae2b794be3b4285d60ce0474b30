@@ -1,0 +1,52 @@
+class Solution {
+	ListNode Merge(ListNode list1, ListNode list2) {
+		if (list1 == null || list2 == null) {
+			if (list1 != null) {
+				return list1;
+			}
+			return list2;
+		}
+		ListNode head = new ListNode(-1);
+		ListNode p = head;
+		while (list1 != null && list2 != null) {
+			ListNode temp1Node, temp2Node;
+			temp1Node = list1.next;
+			temp2Node = list2.next;
+			ListNode curNode = new ListNode(-1);
+			if (list1.val < list2.val) {
+				curNode.val = list1.val;
+				curNode.next = head.next;
+				head.next = curNode;
+				head = head.next;
+				list1 = temp1Node;
+			} 
+			else {
+				curNode.val = list2.val;
+				curNode.next = head.next;
+				head.next = curNode;
+				head = head.next;
+				list2 = temp2Node;
+			}
+		}
+		if (list1 != null) {
+			head.next = list1;
+		}
+		if (list2 != null) {
+			head.next = list2;
+		}
+		return p.next;
+	}
+	ListNode mergeKLists(ArrayList<ListNode> lists) {
+		if (lists.size() == 0) {
+			return null;
+		}
+		for (int i = 0; i < lists.size() - 1; i++) {
+			ListNode left = lists.get(i);
+			ListNode right = lists.get(i + 1);
+			ListNode m = Merge(left,right);
+			lists.add(m);
+			i += 1;
+		}
+		return lists.get(lists.size() - 1);
+	}
+}

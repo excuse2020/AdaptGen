@@ -1,0 +1,42 @@
+class Solution {
+	int minimumRounds(int[] tasks) {
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int counter = 0; counter < tasks.length; counter++) {
+			if (map.containsKey(tasks[counter]) == false) {
+				map.put(tasks[counter],1);
+			} 
+			else {
+				int frequency = map.get(tasks[counter]);
+				map.put(tasks[counter],frequency + 1);
+			}
+		}
+		ArrayList<Integer> list = new ArrayList<>();
+		for (Map.Entry<Integer, Integer> entry: map.entrySet()) {	
+			if (entry.getValue() < 2) {
+				return -1;
+			}
+			list.add(entry.getValue());
+		}
+		Collections.sort(list,Collections.reverseOrder());
+		int rounds = 0;
+		for (int counter = 0; counter < list.size(); counter++) {
+			int value = list.get(counter);
+			if (value % 3 == 0) {
+				rounds += value / 3;
+			} 
+			else if (value % 3 == 2) {
+				int valueoftwo = value - ((value / 3) * 3);
+				rounds += value / 3 + valueoftwo / 2;
+			} 
+			else if (value % 3 == 1) {
+				int valueofthree = (value / 3 - 1) * 3;
+				int valueoftwo = value - valueofthree;
+				rounds += valueofthree / 3 + valueoftwo / 2;
+			} 
+			else if (value % 2 == 0) {
+				rounds += value / 2;
+			}
+		}
+		return rounds;
+	}
+}

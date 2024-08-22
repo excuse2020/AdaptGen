@@ -1,0 +1,44 @@
+class Solution {
+	int memo;
+	int n = 0;
+	int getNext(int[][] arr, int s, int target) {
+		int e = n - 1;
+		int result = n + 1;
+		while (s <= e) {
+			int mid = s + (e - s) / 2;
+			if (arr[mid][0] >= target) {
+				result = mid;
+				e = mid - 1;
+			} 
+			else {
+				s = mid + 1;
+			}
+		}
+		return result;
+	}
+	int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
+		n = startTime.length;
+		int[][] arr = new int[n][3];
+		memo = new int[n];
+		Arrays.fill(memo,-1);
+		for (int i = 0; i < n; i++) {
+			arr[i][0] = startTime[i];
+			arr[i][1] = endTime[i];
+			arr[i][2] = profit[i];
+		}
+		Arrays.sort(arr,Comparator.comparingInt((vec) -> {vec[0]}));
+		return solve(arr,0);
+	}
+	int solve(int[][] arr, int i) {
+		if (i >= n) {
+			return 0;
+		}
+		if (memo[i] != -1) {
+			return memo[i];
+		}
+		int next = getNext(arr,i + 1,arr[i][1]);
+		int taken = arr[i][2] + solve(arr,next);
+		int skip = solve(arr,i + 1);
+		return memo[i] = Math.max(taken,skip);
+	}
+}

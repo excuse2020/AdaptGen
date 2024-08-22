@@ -1,0 +1,62 @@
+class Solution {
+	List<Integer>[] canVisit;
+	int[] in;
+	char[] labels;
+	int[] out;
+	void inside(int node) {
+		in[node] = 1;
+		for (int i: canVisit[node]) {	
+			inside(i);
+			if (labels[i] != labels[node]) {
+				in[node] = Math.max(in[node],in[i] + 1);
+			}
+		}
+	}
+	int longestPath(int[] parent, String s) {
+		int n = parent.length;
+		canVisit = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			canVisit[i] = new ArrayList<>();
+		}
+		for (int i = 1; i < n; i++) {
+			canVisit[parent[i]].add(i);
+		}
+		in = new int[n];
+		out = new int[n];
+		labels = s.toCharArray();
+		inside(0);
+		outside(0);
+		int max = -1;
+		for (int i = 0; i < n; i++) {
+			max = Math.max(max,in[i] + out[i]);
+		}
+		return max;
+	}
+	void outside(int node) {
+		int mx = 0, mx2 = 0;
+		for (int child: canVisit[node]) {	
+			if (labels[child] == labels[node]) {
+				continue;
+			}
+			if (in[child] + 1 >= mx) {
+				mx2 = mx;
+				mx = in[child] + 1;
+			} 
+			else if (in[child] + 1 >= mx2) {
+				mx2 = in[child] + 1;
+			}
+		}
+		for (int child: canVisit[node]) {	
+			if (labels[child] != labels[node]) {
+				out[child] = out[node] + 1;
+				if (mx != in[child] + 1) {
+					out[child] = Math.max(mx,out[child]);
+				} 
+				else {
+					out[child] = Math.max(out[child],mx2);
+				}
+			}
+			outside(child);
+		}
+	}
+}

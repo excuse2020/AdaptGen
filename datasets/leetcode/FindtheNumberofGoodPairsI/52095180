@@ -1,0 +1,24 @@
+class Solution {
+	int numberOfPairs(int[] nums1, int[] nums2, int k) {
+		Map<Integer, Integer> numToCnt = new HashMap<>();
+		for (int num: nums2) {	
+			numToCnt.put(num,numToCnt.getOrDefault(num,0) + 1);
+		}
+		int ret = 0;
+		for (int num: nums1) {	
+			if (num % k != 0) {
+				continue;
+			}
+			num /= k;
+			for (int i = (int) Math.sqrt(num); i >= 1; i -= 1) {
+				if (num % i == 0) {
+					ret += numToCnt.getOrDefault(i,0);
+					if (num / i != i) {
+						ret += numToCnt.getOrDefault(num / i,0);
+					}
+				}
+			}
+		}
+		return ret;
+	}
+}

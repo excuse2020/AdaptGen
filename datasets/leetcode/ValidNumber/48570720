@@ -1,0 +1,51 @@
+class Solution {
+	Result consumeDecimalNumber(char[] chars, int start) {
+	}
+	Result consumeDigits(char[] chars, int start) {
+		if (start >= chars.length || !Character.isDigit(chars[start])) {
+			return nope(start);
+		}
+		while (start < chars.length && Character.isDigit(chars[start])) {
+			start++;
+		}
+		return yes(start);
+	}
+	Result consumeInteger(char[] chars, int start) {
+		if (start >= chars.length) {
+			return nope(start);
+		}
+	}
+	boolean isNumber(String s) {
+		return isNumber(s.toCharArray(),0);
+	}
+	boolean isNumber(char[] chars, int start) {
+		Result decimalNumber = consumeDecimalNumber(chars,start);
+		Result in = consumeInteger(chars,start);
+		if (!decimalNumber.result && !in.result) {
+			return false;
+		}
+		start = decimalNumber.result ? decimalNumber.nextPosition : in.nextPosition;
+		if (start == chars.length) {
+			return true;
+		}
+	}
+	Result nope(int nextPosition) {
+		Result result = new Result();
+		result.result = false;
+		result.nextPosition = nextPosition;
+		return result;
+	}
+	Result yes(int nextPosition) {
+		Result result = new Result();
+		result.result = true;
+		result.nextPosition = nextPosition;
+		return result;
+	}
+	class Result {
+		int nextPosition;
+		boolean result;
+		String toString() {
+			return "{ result = " + result;
+		}
+	}
+}

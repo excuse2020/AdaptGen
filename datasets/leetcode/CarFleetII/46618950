@@ -1,0 +1,26 @@
+class Solution {
+	double[] getCollisionTimes(int[][] cars) {
+		int rows = cars.length;
+		int cols = cars[0].length;
+		double ans = new double[rows];
+		for (int i = 0; i < rows; i++) {
+			ans[i] = -1;
+		}
+		Stack<Integer> st = new Stack();
+		for (int i = ans.length - 1; i >= 0; i--) {
+			while (!st.empty() && cars[st.peek()][1] >= cars[i][1]) {
+				st.pop();
+			}
+			while (!st.empty()) {
+				double colTime = (double) (cars[st.peek()][0] - cars[i][0]) / (cars[i][1] - cars[st.peek()][1]);
+				if (ans[st.peek()] == -1 || colTime <= ans[st.peek()]) {
+					ans[i] = colTime;
+					break;
+				}
+				st.pop();
+			}
+			st.push(i);
+		}
+		return ans;
+	}
+}

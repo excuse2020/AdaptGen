@@ -1,0 +1,33 @@
+class Solution {
+	TreeNode replaceValueInTree(TreeNode root) {
+		Queue<Pair<TreeNode, Integer>> q = new LinkedList<>();
+		q.offer(new Pair(root, 0));
+		int totalSumAtSameHeight = 0;
+		while (!q.isEmpty()) {
+			int k = q.size();
+			int prev = totalSumAtSameHeight;
+			totalSumAtSameHeight = 0;
+			while (k-- > 0) {
+				Pair<TreeNode, Integer> p = q.poll();
+				int siblingSum = 0;
+				TreeNode curr = p.getKey();
+				if (curr.left != null) {
+					siblingSum += curr.left.val;
+					totalSumAtSameHeight += curr.left.val;
+				}
+				if (curr.right != null) {
+					siblingSum += curr.right.val;
+					totalSumAtSameHeight += curr.right.val;
+				}
+				if (p.getKey().left != null) {
+					q.offer(new Pair(curr.left, siblingSum));
+				}
+				if (p.getKey().right != null) {
+					q.offer(new Pair(curr.right, siblingSum));
+				}
+				curr.val = prev - p.getValue();
+			}
+		}
+		return root;
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	List<List<TreeNode>> list = new ArrayList<>();
+	Map<TreeNode, TreeNode> par = new HashMap<>();
+	void dfs(TreeNode p, TreeNode child, int lv) {
+		if (child == null) {
+			return;
+		}
+		if (list.size() < lv + 1) {
+			list.add(new ArrayList<>());
+		}
+		par.put(child,p);
+		dfs(child,child.left,lv + 1);
+		list.get(lv).add(child);
+		dfs(child,child.right,lv + 1);
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		dfs(null,root,0);
+		HashSet<TreeNode> hs = new HashSet<>(list.get(list.size() - 1));
+		Queue<TreeNode> q = new LinkedList<>(list.get(list.size() - 1));
+		while (q.size() != 1) {
+			int sz = hs.size();
+			for (int i = 0; i < sz; i++) {
+				TreeNode node = q.poll();
+				if (node == null) {
+					return root;
+				}
+				hs.remove(node);
+				hs.add(par.get(node));
+			}
+			for (TreeNode n: hs) {	
+				q.add(n);
+			}
+		}
+		return q.poll();
+	}
+}

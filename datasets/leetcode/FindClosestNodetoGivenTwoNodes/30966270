@@ -1,0 +1,32 @@
+class Solution {
+	void calculateDistance(int nextIndex, int[] dist, int origNode, int[] edges) {
+		int counter = 0;
+		while (nextIndex != -1 && dist[nextIndex] == Integer.MAX_VALUE) {
+			dist[nextIndex] = counter++;
+			nextIndex = edges[nextIndex];
+			if (nextIndex == origNode) {
+				break;
+			}
+		}
+	}
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		boolean[] visited = new boolean[edges.length];
+		int[] dist = new int[edges.length];
+		int minDist = Integer.MAX_VALUE, minIndex = -1;
+		Arrays.fill(dist,Integer.MAX_VALUE);
+		calculateDistance(node1,dist,node1,edges);
+		int nextIndex = node2;
+		int counter = 0;
+		while (nextIndex != -1 && !visited[nextIndex]) {
+			visited[nextIndex] = true;
+			int maxDist = Math.max(dist[nextIndex],counter);
+			if (minDist > maxDist || (minDist == maxDist && nextIndex < minIndex)) {
+				minDist = maxDist;
+				minIndex = nextIndex;
+			}
+			counter++;
+			nextIndex = edges[nextIndex];
+		}
+		return minIndex;
+	}
+}

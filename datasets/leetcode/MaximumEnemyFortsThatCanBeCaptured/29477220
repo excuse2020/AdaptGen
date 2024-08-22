@@ -1,0 +1,44 @@
+class Solution {
+	int captureForts(int[] forts) {
+		int start = 1, end = -1;
+		Map<Integer, ArrayList<Integer>> map = new HashMap<>();
+		map.put(start,new ArrayList<Integer>());
+		map.put(end,new ArrayList<Integer>());
+		for (int index = 0; index < forts.length; index++) {
+			int fort = forts[index];
+			if (fort == 1 || fort == -1) {
+				ArrayList<Integer> t = map.get(fort);
+				t.add(index);
+				map.put(fort,t);
+			}
+		}
+		int maxCapture = 0;
+		for (int startIndex: map.get(start)) {	
+			for (int endIndex: map.get(end)) {	
+				if (endIndex < startIndex) {
+					int k = startIndex - 1;
+					while (k > endIndex && forts[k] == 0) {
+						k--;
+					}
+					if (k == endIndex) {
+						if (maxCapture < startIndex - endIndex) {
+							maxCapture = startIndex - endIndex;
+						}
+					}
+				} 
+				else if (endIndex > startIndex) {
+					int k = startIndex + 1;
+					while (k < endIndex && forts[k] == 0) {
+						k++;
+					}
+					if (k == endIndex) {
+						if (maxCapture < endIndex - startIndex) {
+							maxCapture = endIndex - startIndex;
+						}
+					}
+				}
+			}
+		}
+		return maxCapture;
+	}
+}

@@ -1,0 +1,55 @@
+class Solution {
+	ArrayList<String> arrayList = new ArrayList<>();
+	HashSet<ArrayList<Integer>> hashSet = new HashSet<>();
+	String[] addOpt(String num, int target) {
+		ArrayList<Integer> currentNumber = new ArrayList<>();
+		splitString(currentNumber,num,0);
+		for (ArrayList<Integer> tmpArr: hashSet) {	
+			isEqualTarget(new StringBuffer(String.valueOf(tmpArr.get(0))),tmpArr,1,target,tmpArr.get(0));
+		}
+		String[] ans = new String[arrayList.size()];
+		for (int i = 0; i < arrayList.size(); i++) {
+			ans[i] = arrayList.get(i);
+		}
+		return ans;
+	}
+	void isEqualTarget(StringBuffer currentString, ArrayList<Integer> currentNumber, int index, int target, int previousNum) {
+		if (index >= currentNumber.size()) {
+			if (previousNum == target) {
+				arrayList.add(new String(currentString));
+			}
+			return;
+		}
+		StringBuffer copySB1 = new StringBuffer(new String(currentString));
+		StringBuffer copySB2 = new StringBuffer(new String(currentString));
+		currentString.append("+" + currentNumber.get(index));
+		isEqualTarget(currentString,currentNumber,index + 1,target,previousNum + currentNumber.get(index));
+		copySB1.append("-" + currentNumber.get(index));
+		isEqualTarget(copySB1,currentNumber,index + 1,target,previousNum - currentNumber.get(index));
+		copySB2.append("*" + currentNumber.get(index));
+		isEqualTarget(copySB2,currentNumber,index + 1,target,previousNum * currentNumber.get(index));
+	}
+	void splitString(ArrayList<Integer> currentNumber, String num, int index) {
+		if (index >= num.length()) {
+			ArrayList<Integer> copyArr = new ArrayList<>(currentNumber);
+			copyArr.sort(new ComparaInteger());
+			hashSet.add(copyArr);
+			return;
+		}
+		if (num.charAt(index) == '0') {
+			currentNumber.add(Integer.valueOf(0));
+			splitString(currentNumber,num,index + 1);
+			return;
+		}
+		for (int splitIndex = index + 1; splitIndex <= num.length(); splitIndex++) {
+			currentNumber.add(Integer.valueOf(num.substring(index,splitIndex)));
+			splitString(currentNumber,num,splitIndex);
+			currentNumber.remove(currentNumber.size() - 1);
+		}
+	}
+	class ComparaInteger {
+		int compare(Integer num1, Integer num2) {
+			return num1 - num2;
+		}
+	}
+}

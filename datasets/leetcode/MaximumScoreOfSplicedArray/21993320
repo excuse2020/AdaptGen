@@ -1,0 +1,29 @@
+class Solution {
+	int maximumsSplicedArray(int[] nums1, int[] nums2) {
+		long sum1 = 0, sum2 = 0;
+		for (int i = 0; i < nums1.length; i++) {
+			sum1 = sum1 + nums1[i];
+			sum2 = sum2 + nums2[i];
+		}
+		long case1 = solve(nums1,nums2,sum1,sum2);
+		long case2 = solve(nums2,nums1,sum2,sum1);
+		return (int) Math.max(case1,case2);
+	}
+	long solve(int[] nums1, int[] nums2, long sum1, long sum2) {
+		long windowSum1 = 0, windowSum2 = 0;
+		int low = 0, n = nums1.length;
+		long mxSum = 0;
+		for (int high = 0; high < n; high++) {
+			windowSum1 += nums1[high];
+			windowSum2 += nums2[high];
+			while (windowSum1 > windowSum2 && low <= high) {
+				windowSum1 -= nums1[low];
+				windowSum2 -= nums2[low];
+				low++;
+			}
+			long newSum = sum1 - windowSum1 + windowSum2;
+			mxSum = Math.max(mxSum,newSum);
+		}
+		return mxSum;
+	}
+}

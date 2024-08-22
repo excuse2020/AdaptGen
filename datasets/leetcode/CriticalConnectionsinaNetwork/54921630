@@ -1,0 +1,49 @@
+class Solution {
+	int[] discovery;
+	int[] low;
+	List<List<Integer>> lx = new ArrayList<>();
+	int time = 0;
+	boolean[] vis;
+	void bridges(List<List<Integer>> graph, int n, int src, int parent) {
+		discovery[src] = time;
+		low[src] = time;
+		time++;
+		List<Integer> nbrs = graph.get(src);
+		for (int nbr: nbrs) {	
+			if (nbr == parent) {
+				continue;
+			} 
+			else if (vis[nbr] == false) {
+				vis[nbr] = true;
+				bridges(graph,n,nbr,src);
+				low[src] = Math.min(low[src],low[nbr]);
+				if (low[nbr] > discovery[src]) {
+					List<Integer> temp = new ArrayList<>();
+					temp.add(src);
+					temp.add(nbr);
+					lx.add(temp);
+				}
+			} 
+			else {
+				low[src] = Math.min(low[src],discovery[nbr]);
+			}
+		}
+	}
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		vis = new boolean[n];
+		low = new int[n];
+		discovery = new int[n];
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (List<Integer> connection: connections) {	
+			int u = connection.get(0);
+			int v = connection.get(1);
+			graph.get(u).add(v);
+			graph.get(v).add(u);
+		}
+		bridges(graph,n,0,-1);
+		return lx;
+	}
+}

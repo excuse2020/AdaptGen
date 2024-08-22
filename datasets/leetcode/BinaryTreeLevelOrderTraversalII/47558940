@@ -1,0 +1,49 @@
+class Solution {
+	List<List<Integer>> levelOrderBottom(TreeNode root) {
+		List<List<Integer>> list = new ArrayList<>();
+		Queue<TreeNode> queue = new LinkedList<>();
+		if (root != null) {
+			queue.add(root);
+		}
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			List<Integer> subList = new ArrayList<>();
+			for (int i = 0; i < size; i++) {
+				TreeNode node = queue.poll();
+				subList.add(node.val);
+				if (node.left != null) {
+					queue.add(node.left);
+				}
+				if (node.right != null) {
+					queue.add(node.right);
+				}
+			}
+			list.add(subList);
+		}
+		Collections.reverse(list);
+		return list;
+	}
+}
+class Solution {
+	List<List<Integer>> list = new ArrayList<>();
+	void calculateHeight(TreeNode root, int height) {
+		if (root == null) {
+			return;
+		}
+		if (height == list.size()) {
+			list.add(new ArrayList<>());
+		}
+		if (root.left != null) {
+			calculateHeight(root.left,height + 1);
+		}
+		if (root.right != null) {
+			calculateHeight(root.right,height + 1);
+		}
+		list.get(height).add(root.val);
+	}
+	List<List<Integer>> levelOrderBottom(TreeNode root) {
+		calculateHeight(root,0);
+		Collections.reverse(list);
+		return list;
+	}
+}

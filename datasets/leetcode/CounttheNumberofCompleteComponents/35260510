@@ -1,0 +1,50 @@
+class Solution {
+	int edge = 0, ncount = 0;
+	int countCompleteComponents(int n, int[][] edges) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			adj.get(edges[i][0]).add(edges[i][1]);
+			adj.get(edges[i][1]).add(edges[i][0]);
+		}
+		int[] vis = new int[n];
+		int count = 0;
+		int prev = 0;
+		for (int i = 0; i < n; i++) {
+			int c = 0;
+			if (vis[i] == 0) {
+				dfs(i,adj,vis);
+				for (int j = 0; j < n; j++) {
+					if (vis[j] == 1) {
+						c += 1;
+					}
+				}
+				ncount = c - prev;
+				prev = c;
+				if (isComplete(edge / 2,ncount)) {
+					count += 1;
+				}
+				edge = 0;
+			}
+		}
+		return count;
+	}
+	void dfs(int node, ArrayList<ArrayList<Integer>> adj, int[] vis) {
+		vis[node] = 1;
+		edge += adj.get(node).size();
+		for (int i = 0; i < adj.get(node).size(); i++) {
+			if (vis[adj.get(node).get(i)] == 0) {
+				dfs(adj.get(node).get(i),adj,vis);
+			}
+		}
+	}
+	boolean isComplete(int e, int nc) {
+		int ans = nc * (nc - 1) / 2;
+		if (ans == e) {
+			return true;
+		}
+		return false;
+	}
+}

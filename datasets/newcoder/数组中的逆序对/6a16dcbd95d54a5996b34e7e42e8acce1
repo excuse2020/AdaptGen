@@ -1,0 +1,36 @@
+class Solution {
+	int[] nums, temp;
+	int InversePairs(int[] array) {
+		this.nums = array;
+		temp = new int[nums.length];
+		return mergersort(0,array.length - 1);
+	}
+	int mergersort(int l, int r) {
+		if (l >= r) {
+			return 0;
+		}
+		int m = (l + r) / 2;
+		int res = mergersort(l,m - 1) + mergersort(m,r);
+		for (int i = l; i <= r; i++) {
+			temp[i] = nums[i];
+		}
+		int i = l;
+		int j = m;
+		for (int k = l; k <= r; k++) {
+			if (i == m) {
+				nums[k] = temp[j++];
+			} 
+			else if (j == r + 1) {
+				nums[k] = temp[i++];
+			} 
+			else if (temp[i] <= temp[j]) {
+				nums[k] = temp[i++];
+			} 
+			else {
+				res = (res + m - i) % 1000000007;
+				nums[k] = temp[j++];
+			}
+		}
+		return res;
+	}
+}

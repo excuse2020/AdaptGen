@@ -1,0 +1,28 @@
+class Solution {
+	boolean isStackable(int i, int j, int[][] cuboids) {
+		return cuboids[i][0] >= cuboids[j][0] && cuboids[i][1] >= cuboids[j][1] && cuboids[i][2] >= cuboids[j][2];
+	}
+	int maxHeight(int[][] cuboids) {
+		for (int[] list: cuboids) {	
+			Arrays.sort(list);
+		}
+		Arrays.sort(cuboids,new Comparator<>());
+		int[] M = new int[cuboids.length];
+		M[0] = cuboids[0][2];
+		int res = M[0];
+		for (int i = 1; i < cuboids.length; i++) {
+			M[i] = cuboids[i][2];
+			int max = Integer.MIN_VALUE;
+			for (int j = i - 1; j >= 0; j--) {
+				if (isStackable(i,j,cuboids)) {
+					max = Math.max(max,M[j]);
+				}
+			}
+			if (max != Integer.MIN_VALUE) {
+				M[i] += max;
+			}
+			res = Math.max(M[i],res);
+		}
+		return res;
+	}
+}

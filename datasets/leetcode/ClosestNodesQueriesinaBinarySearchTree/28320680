@@ -1,0 +1,59 @@
+class Solution {
+	List<Integer> a = new ArrayList();
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		inorder(root);
+		List<List<Integer>> ans = new ArrayList();
+		for (int i1: queries) {	
+			int left = -1, right = -1;
+			int in = search(i1);
+			if (a.get(in) == i1) {
+				left = a.get(in);
+				right = left;
+			} 
+			else if (a.get(in) > i1) {
+				if (in > 0) {
+					left = a.get(in - 1);
+				}
+				right = a.get(in);
+			} 
+			else if (a.get(in) < i1) {
+				if (in < a.size() - 1) {
+					right = a.get(in + 1);
+				}
+				left = a.get(in);
+			}
+			List<Integer> temp = new ArrayList();
+			temp.add(left);
+			temp.add(right);
+			ans.add(temp);
+		}
+		return ans;
+	}
+	void inorder(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		inorder(root.left);
+		a.add(root.val);
+		inorder(root.right);
+	}
+	int search(int val) {
+		int left = 0, right = a.size() - 1;
+		while (left < right) {
+			int mid = left + (right - left) / 2;
+			if (a.get(mid) == val) {
+				return mid;
+			} 
+			else if (a.get(mid) > val) {
+				right = mid - 1;
+			} 
+			else {
+				left = mid + 1;
+			}
+		}
+		if (right <= 0) {
+			return 0;
+		}
+		return right;
+	}
+}

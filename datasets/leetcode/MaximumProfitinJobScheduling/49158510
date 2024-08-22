@@ -1,0 +1,40 @@
+class Solution {
+	int dfs(int[][] jobs, int ind, int[] dp) {
+		if (ind >= jobs.length || ind == -1) {
+			return 0;
+		}
+		if (dp[ind] >= 0) {
+			return dp[ind];
+		}
+		int nextIndex = nextInd(jobs,jobs[ind][1]);
+		int taken = jobs[ind][2] + dfs(jobs,nextIndex,dp);
+		int not_taken = dfs(jobs,ind + 1,dp);
+		return dp[ind] = Math.max(taken,not_taken);
+	}
+	int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
+		int n = startTime.length;
+		int[][] jobs = new int[n][3];
+		for (int i = 0; i < n; i++) {
+			jobs[i][0] = startTime[i];
+			jobs[i][1] = endTime[i];
+			jobs[i][2] = profit[i];
+		}
+		Arrays.sort(jobs,(a, b) -> {a[0] - b[0]});
+		int dp = new int[n];
+		Arrays.fill(dp,-1);
+		return dfs(jobs,0,dp);
+	}
+	int nextInd(int[][] cal, int val) {
+		int low = 0, high = cal.length - 1;
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			if (cal[mid][0] < val) {
+				low = mid + 1;
+			} 
+			else {
+				high = mid - 1;
+			}
+		}
+		return high + 1;
+	}
+}

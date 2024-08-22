@@ -1,0 +1,30 @@
+class Solution {
+	long sumDigitDifferences(int[] nums) {
+		long res = 0;
+		int n = nums.length;
+		for (int x = 0; x < 10; x++) {
+			ArrayList<Integer> arr = new ArrayList<>();
+			for (int i = 0; i < n; i++) {
+				arr.add(nums[i] % 10);
+				nums[i] /= 10;
+			}
+			Collections.sort(arr,Comparator.reverseOrder());
+			long[] freq = new long[10];
+			for (int i = 0; i < n; i++) {
+				freq[arr.get(i)]++;
+			}
+			long[] postfix = new long[10];
+			int a = 0;
+			for (int i = 9; i >= 0; i--) {
+				postfix[i] = a;
+				a += freq[i];
+			}
+			for (int i = 0; i < 9; i++) {
+				if (freq[i] > 0) {
+					res += freq[i] * postfix[i];
+				}
+			}
+		}
+		return res;
+	}
+}

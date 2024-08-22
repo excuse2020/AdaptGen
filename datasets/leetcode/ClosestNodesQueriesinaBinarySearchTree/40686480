@@ -1,0 +1,33 @@
+class Solution {
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		List<List<Integer>> result = new ArrayList<>();
+		TreeSet<Integer> set = new TreeSet<>();
+		set = preorder(root,set);
+		for (int target: queries) {	
+			List<Integer> closestNode = new ArrayList<>();
+			if (set.floor(target) != null) {
+				closestNode.add(set.floor(target));
+			} 
+			else {
+				closestNode.add(-1);
+			}
+			if (set.ceiling(target) != null) {
+				closestNode.add(set.ceiling(target));
+			} 
+			else {
+				closestNode.add(-1);
+			}
+			result.add(closestNode);
+		}
+		return result;
+	}
+	TreeSet<Integer> preorder(TreeNode root, TreeSet<Integer> set) {
+		if (root == null) {
+			return set;
+		}
+		set = preorder(root.left,set);
+		set.add(root.val);
+		set = preorder(root.right,set);
+		return set;
+	}
+}

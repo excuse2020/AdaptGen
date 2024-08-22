@@ -1,0 +1,36 @@
+class Solution {
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		Map<Integer, Integer> indegrees = new HashMap<>();
+		for (int i = 0; i < numCourses; i++) {
+			indegrees.put(i,0);
+		}
+		for (int[] pre: prerequisites) {	
+			int from = pre[1];
+			int to = pre[0];
+			graph.putIfAbsent(from,new ArrayList<>());
+			graph.get(from).add(to);
+			indegrees.put(to,indegrees.getOrDefault(to,0) + 1);
+		}
+		Queue<Integer> q = new LinkedList<>();
+		int count = 0;
+		for (Map.Entry<Integer, Integer> e: indegrees.entrySet()) {	
+			if (e.getValue() == 0) {
+				q.offer(e.getKey());
+				count++;
+			}
+		}
+		while (q.size() > 0) {
+			int from = q.poll();
+			for (int to: graph.getOrDefault(from,new ArrayList<>())) {	
+				int indegree = indegrees.get(to) - 1;
+				indegrees.put(to,indegree);
+				if (indegree == 0) {
+					q.offer(to);
+					count++;
+				}
+			}
+		}
+		return count == numCourses;
+	}
+}

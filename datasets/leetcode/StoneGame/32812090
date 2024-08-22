@@ -1,0 +1,42 @@
+class Solution {
+	boolean stoneGame(int[] piles) {
+		int[][] dp = new int[piles.length][piles.length];
+		for (int[] row: dp) {	
+			Arrays.fill(row,-1);
+		}
+		return takeTurn(0,piles.length - 1,piles,0,0,true,dp);
+	}
+	boolean takeTurn(int left, int right, int[] arr, int scoreA, int scoreB, boolean turn, int[][] dp) {
+		if (left == arr.length || right < 0) {
+			return false;
+		}
+		if (left == right) {
+			if (scoreA > scoreB) {
+				return true;
+			}
+			return false;
+		}
+		if (dp[left][right] != -1) {
+			if (dp[left][right] == 1) {
+				return true;
+			}
+			return false;
+		}
+		boolean l = false, r = false;
+		if (turn) {
+			l = takeTurn(left + 1,right,arr,scoreA + arr[left],scoreB,!turn,dp);
+			r = takeTurn(left,right - 1,arr,scoreA + arr[right],scoreB,!turn,dp);
+		} 
+		else {
+			l = takeTurn(left + 1,right,arr,scoreA,scoreB + arr[left],!turn,dp);
+			r = takeTurn(left,right - 1,arr,scoreA,scoreB + arr[right],!turn,dp);
+		}
+		if (l || r) {
+			dp[left][right] = 1;
+		} 
+		else {
+			dp[left][right] = 0;
+		}
+		return l || r;
+	}
+}

@@ -1,0 +1,38 @@
+class Solution {
+	int getCount(int same) {
+		return same == 1 ? 1 : same < 10 ? 2 : same < 100 ? 3 : 4;
+	}
+	int getLengthOfOptimalCompression(String s, int K) {
+		int n = s.length();
+		if (K == n) {
+			return 0;
+		}
+		int[][] dp = new int[n + 1][K + 1];
+		for (int i = 0; i <= n; i++) {
+			for (int j = 0; j <= K; j++) {
+				dp[i][j] = n;
+			}
+		}
+		dp[0][0] = 0;
+		for (int i = 1; i <= n; i++) {
+			for (int k = 0; k <= K; k++) {
+				if (k > 0) {
+					dp[i][k] = Math.min(dp[i][k],dp[i - 1][k - 1]);
+				}
+				int same = 0, diff = 0;
+				for (int j = i; j >= 1; j--) {
+					if (s.charAt(i - 1) == s.charAt(j - 1)) {
+						same++;
+					} 
+					else {
+						diff++;
+					}
+					if (k - diff >= 0) {
+						dp[i][k] = Math.min(dp[i][k],dp[j - 1][k - diff] + getCount(same));
+					}
+				}
+			}
+		}
+		return dp[n][K];
+	}
+}

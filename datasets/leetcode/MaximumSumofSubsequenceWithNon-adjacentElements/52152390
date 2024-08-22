@@ -1,0 +1,32 @@
+class Solution {
+	int maximumSumSubsequence(int[] nums, int[][] queries) {
+		long s = 0;
+		for (int[] arr: queries) {	
+			nums[arr[0]] = arr[1];
+			s = (s + sum(nums)) % 1000000007;
+		}
+		return (int) s;
+	}
+	int sum(int nums) {
+		int n = nums.length;
+		int dp = new int[n];
+		Arrays.fill(dp,0);
+		if (n == 1) {
+			return nums[0] >= 0 ? nums[0] : 0;
+		} 
+		else if (n == 2) {
+			int jj = Math.max(nums[0],nums[1]);
+			return jj >= 0 ? jj : 0;
+		} 
+		else {
+			dp[0] = nums[0] >= 0 ? nums[0] : 0;
+			dp[1] = nums[1] >= 0 ? nums[1] : 0;
+			dp[1] = Math.max(dp[0],dp[1]);
+			for (int i = 2; i < n; i++) {
+				nums[i] = nums[i] >= 0 ? nums[i] : 0;
+				dp[i] = Math.max((nums[i] + dp[i - 2]),dp[i - 1]);
+			}
+			return dp[n - 1] % 1000000007;
+		}
+	}
+}

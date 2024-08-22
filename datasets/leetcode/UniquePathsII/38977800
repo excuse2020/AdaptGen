@@ -1,0 +1,31 @@
+class Solution {
+	int COL;
+	int ROW;
+	int[][] grid;
+	int[][] memo;
+	int dfs(int i, int j) {
+		if (!isValid(i,j)) {
+			return 0;
+		}
+		if (i == ROW - 1 && j == COL - 1) {
+			return 1;
+		}
+		if (memo[i][j] != -1) {
+			return memo[i][j];
+		}
+		return memo[i][j] = dfs(i + 1,j) + dfs(i,j + 1);
+	}
+	boolean isValid(int i, int j) {
+		return (i >= 0 && i < ROW && j >= 0 && j < COL && grid[i][j] == 0);
+	}
+	int uniquePathsWithObstacles(int[][] grid) {
+		ROW = grid.length;
+		COL = grid[0].length;
+		this.grid = grid;
+		memo = new int[ROW][COL];
+		for (int i = 0; i < ROW; i++) {
+			Arrays.fill(memo[i],-1);
+		}
+		return dfs(0,0);
+	}
+}

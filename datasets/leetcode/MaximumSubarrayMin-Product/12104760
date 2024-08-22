@@ -1,0 +1,33 @@
+class Solution {
+	int MOD = 1000000007;
+	long FindRange(long[] prefix, int x, int y) {
+		if (x > y) {
+			return 0;
+		}
+		return prefix[y + 1] - prefix[x];
+	}
+	int maxSumMinProduct(int[] nums) {
+		long[] prefix = new long[nums.length + 1];
+		long max = 0;
+		for (int i = 1; i <= nums.length; i++) {
+			prefix[i] = prefix[i - 1] + nums[i - 1];
+		}
+		Stack<Integer> stack = new Stack<Integer>();
+		for (int i = 0; i < nums.length; i++) {
+			while (stack.size() > 0 && nums[stack.peek()] >= nums[i]) {
+				max = Math.max(max,nums[stack.pop()] * FindRange(prefix,stack.size() > 0 ? stack.peek() + 1 : 0,i - 1));
+			}
+			stack.push(i);
+		}
+		while (stack.size() > 0) {
+			int index = stack.pop();
+			if (stack.size() > 0) {
+				max = Math.max(max,nums[index] * (FindRange(prefix,stack.peek() + 1,index - 1) + FindRange(prefix,index,nums.length - 1)));
+			} 
+			else {
+				max = Math.max(max,nums[index] * prefix[nums.length]);
+			}
+		}
+		return (int) (max % MOD);
+	}
+}

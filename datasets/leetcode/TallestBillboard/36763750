@@ -1,0 +1,43 @@
+class Solution {
+	Integer[][] dp;
+	int res1 = 0;
+	void recursion1(int[] rods, int i, int rod1, int rod2) {
+		if (i == rods.length) {
+			if (rod1 == rod2) {
+				res1 = Math.max(res1,rod1);
+			}
+			return;
+		}
+		recursion1(rods,i + 1,rod1 + rods[i],rod2);
+		recursion1(rods,i + 1,rod1,rod2 + rods[i]);
+		recursion1(rods,i + 1,rod1,rod2);
+		return;
+	}
+	int recursion2(int[] rods, int i, int sum) {
+		if (i == rods.length) {
+			if (sum == 0) {
+				return 0;
+			}
+			return Integer.MIN_VALUE / 2;
+		}
+		if (dp[i][sum + 5000] != null) {
+			return dp[i][sum + 5000];
+		}
+		int res = recursion2(rods,i + 1,sum);
+		res = Math.max(res,rods[i] + recursion2(rods,i + 1,sum + rods[i]));
+		res = Math.max(res,recursion2(rods,i + 1,sum - rods[i]));
+		return dp[i][sum + 5000] = res;
+	}
+	int solution1(int[] rods) {
+		recursion1(rods,0,0,0);
+		return res1;
+	}
+	int solution2(int[] rods) {
+		dp = new Integer[rods.length + 1][10001];
+		int res = recursion2(rods,0,0);
+		return res < 0 ? 0 : res;
+	}
+	int tallestBillboard(int[] rods) {
+		return solution2(rods);
+	}
+}

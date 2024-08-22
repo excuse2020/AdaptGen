@@ -1,0 +1,26 @@
+class Solution {
+	int[] getAverages(int[] nums, int k) {
+		if (k <= 0) {
+			return nums;
+		}
+		long currRadiusAvg = 0;
+		int numsSize = nums.length, windowSize = k * 2 + 1;
+		for (int windowIndex = 0; windowIndex < numsSize && windowIndex < windowSize; windowIndex++) {
+			currRadiusAvg += nums[windowIndex];
+		}
+		int[] avgs = new int[numsSize];
+		for (int numIndex = 0; numIndex < numsSize; numIndex++) {
+			if (numIndex < k || numIndex >= numsSize - k) {
+				avgs[numIndex] = -1;
+				continue;
+			}
+			if (numIndex == k) {
+				avgs[numIndex] = (int) (currRadiusAvg / windowSize);
+				continue;
+			}
+			currRadiusAvg = currRadiusAvg - nums[numIndex - k - 1] + nums[numIndex + k];
+			avgs[numIndex] = (int) (currRadiusAvg / windowSize);
+		}
+		return avgs;
+	}
+}

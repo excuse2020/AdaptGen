@@ -1,0 +1,26 @@
+class Solution {
+	int[] queryResults(int limit, int[][] queries) {
+		int[] ans = new int[queries.length];
+		Map<Integer, Integer> map = new HashMap<>();
+		Map<Integer, Integer> valueCount = new HashMap<>();
+		int uniqueCount = 0;
+		for (int i = 0; i < queries.length; i++) {
+			int[] query = queries[i];
+			int x = query[0], y = query[1];
+			if (map.containsKey(x)) {
+				int oldValue = map.get(x);
+				valueCount.put(oldValue,valueCount.get(oldValue) - 1);
+				if (valueCount.get(oldValue) == 0) {
+					uniqueCount--;
+				}
+			}
+			map.put(x,y);
+			valueCount.put(y,valueCount.getOrDefault(y,0) + 1);
+			if (valueCount.get(y) == 1) {
+				uniqueCount++;
+			}
+			ans[i] = uniqueCount;
+		}
+		return ans;
+	}
+}

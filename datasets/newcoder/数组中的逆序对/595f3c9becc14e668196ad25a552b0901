@@ -1,0 +1,48 @@
+class Solution {
+	int sum = 0;
+	int InversePairs(int[] array) {
+		mergeSort(array,0,array.length - 1);
+		return sum;
+	}
+	void merge(int[] array, int start, int mid, int end) {
+		int l = end - start + 1;
+		int[] temp = new int[l];
+		int i = start;
+		int j = mid + 1;
+		int k = 0;
+		while (i <= mid && j <= end) {
+			if (array[i] <= array[j]) {
+				temp[k] = array[i];
+				i++;
+			} 
+			else {
+				temp[k] = array[j];
+				j++;
+				sum = (sum + (mid - i + 1)) % 1000000007;
+			}
+			k++;
+		}
+		while (i <= mid) {
+			temp[k] = array[i];
+			i++;
+			k++;
+		}
+		while (j <= end) {
+			temp[k] = array[j];
+			j++;
+			k++;
+		}
+		for (k = 0; k < l; k++) {
+			array[start + k] = temp[k];
+		}
+	}
+	void mergeSort(int[] array, int start, int end) {
+		if (start >= end) {
+			return;
+		}
+		int mid = (start + end) / 2;
+		mergeSort(array,start,mid);
+		mergeSort(array,mid + 1,end);
+		merge(array,start,mid,end);
+	}
+}

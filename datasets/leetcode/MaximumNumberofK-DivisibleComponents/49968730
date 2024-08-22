@@ -1,0 +1,50 @@
+class Solution {
+	int cnt;
+	long dfs(int node, int parent, int k, int[] values, List<List<Integer>> graph) {
+		if (parent != -1 && graph.get(node).size() == 1) {
+			return values[node];
+		}
+		int childNode;
+		long sum = values[node];
+		for (int i = 0; i < graph.get(node).size(); i++) {
+			childNode = graph.get(node).get(i);
+			if (childNode == parent) {
+				continue;
+			}
+			long childSum = dfs(childNode,node,k,values,graph);
+			if (childSum % k == 0) {
+				cnt++;
+			} 
+			else {
+				sum += childSum;
+			}
+		}
+		return sum;
+	}
+	int maxKDivisibleComponents(int n, int[][] edges, int[] values, int k) {
+		long totalSum = 0;
+		for (int i = 0; i < values.length; i++) {
+			totalSum += values[i];
+		}
+		if (totalSum % k != 0) {
+			return 0;
+		}
+		List<List<Integer>> graph = new ArrayList<List<Integer>>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<Integer>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			int a = edges[i][0];
+			int b = edges[i][1];
+			graph.get(a).add(b);
+			graph.get(b).add(a);
+		}
+		int result = 0;
+		cnt = 0;
+		long sum = dfs(0,-1,k,values,graph);
+		if (sum % k == 0) {
+			result = cnt + 1;
+		}
+		return result;
+	}
+}

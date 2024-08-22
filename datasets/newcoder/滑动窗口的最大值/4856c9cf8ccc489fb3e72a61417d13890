@@ -1,0 +1,30 @@
+class Solution {
+	int findmax(int[] num, int size) {
+		int max = 0;
+		int index = 0;
+		for (int i = 0; i < size; i++) {
+			if (num[i] > max) {
+				max = num[i];
+				index = i;
+			}
+		}
+		return index;
+	}
+	ArrayList<Integer> maxInWindows(int[] num, int size) {
+		ArrayList<Integer> result = new ArrayList<>();
+		int maxindex = findmax(Arrays.copyOfRange(num,0,size),size);
+		int res = num[maxindex];
+		result.add(res);
+		for (int i = size; i < num.length; i++) {
+			if (i - maxindex == size) {
+				maxindex = findmax(Arrays.copyOfRange(num,i - size + 1,i + 1),size) + i - size + 1;
+			}
+			if (num[i] >= num[maxindex]) {
+				maxindex = i;
+			}
+			res = num[maxindex];
+			result.add(res);
+		}
+		return result;
+	}
+}

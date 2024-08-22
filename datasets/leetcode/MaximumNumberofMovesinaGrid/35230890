@@ -1,0 +1,39 @@
+class Solution {
+	int ans = 0;
+	int count(int row, int col, int grid, boolean visited, int m, int n) {
+		if (visited[row][col] == true) {
+			return 0;
+		}
+		visited[row][col] = true;
+		int op1 = 0;
+		if (row - 1 >= 0 && col + 1 < n) {
+			if (grid[row - 1][col + 1] > grid[row][col]) {
+				op1 = 1 + count(row - 1,col + 1,grid,visited,m,n);
+			}
+		}
+		int op2 = 0;
+		if (row < m && col + 1 < n) {
+			if (grid[row][col + 1] > grid[row][col]) {
+				op2 = 1 + count(row,col + 1,grid,visited,m,n);
+			}
+		}
+		int op3 = 0;
+		if (row + 1 < m && col + 1 < n) {
+			if (grid[row + 1][col + 1] > grid[row][col]) {
+				op3 = 1 + count(row + 1,col + 1,grid,visited,m,n);
+			}
+		}
+		return Math.max(op1,Math.max(op2,op3));
+	}
+	int maxMoves(int[][] grid) {
+		int m = grid.length;
+		int n = grid[0].length;
+		for (int i = 0; i < m; i++) {
+			boolean visited = new boolean[m][n];
+			int max = 0;
+			max = count(i,0,grid,visited,m,n);
+			ans = Math.max(ans,max);
+		}
+		return ans;
+	}
+}

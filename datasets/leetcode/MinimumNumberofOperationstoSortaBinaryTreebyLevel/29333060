@@ -1,0 +1,52 @@
+class Solution {
+	int helper(List<Integer> list) {
+		int swaps = 0;
+		int[] sorted = new int[list.size()];
+		for (int i = 0; i < sorted.length; i++) {
+			sorted[i] = list.get(i);
+		}
+		Arrays.sort(sorted);
+		Map<Integer, Integer> ind = new HashMap<>();
+		for (int i = 0; i < list.size(); i++) {
+			ind.put(list.get(i),i);
+		}
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i) != sorted[i]) {
+				swaps++;
+				ind.put(list.get(i),ind.get(sorted[i]));
+				list.set(ind.get(sorted[i]),list.get(i));
+			}
+		}
+		return swaps;
+	}
+	int minimumOperations(TreeNode root) {
+		ArrayDeque<TreeNode> q = new ArrayDeque<>();
+		int count = 0;
+		if ((root.left != null && root.right != null) && (root.left.val > root.right.val)) {
+			count++;
+		}
+		if (root.left != null) {
+			q.add(root.left);
+		}
+		if (root.right != null) {
+			q.add(root.right);
+		}
+		while (!q.isEmpty()) {
+			int size = q.size();
+			List<Integer> al = new ArrayList<>();
+			while (size-- > 0) {
+				TreeNode node = q.poll();
+				if (node.left != null) {
+					al.add(node.left.val);
+					q.add(node.left);
+				}
+				if (node.right != null) {
+					al.add(node.right.val);
+					q.add(node.right);
+				}
+			}
+			count += helper(al);
+		}
+		return count;
+	}
+}

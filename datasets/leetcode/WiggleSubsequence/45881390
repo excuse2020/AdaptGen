@@ -1,0 +1,29 @@
+class Solution {
+	int helper(int prev, int curr, int sign, int len, int[] nums, int[][][] memo) {
+		if (curr == len) {
+			return 0;
+		}
+		if (memo[prev][curr][sign] != -1) {
+			return memo[prev][curr][sign];
+		}
+		int take = 0;
+		if (sign == 0 && nums[curr] - nums[prev] > 0) {
+			take = 1 + helper(curr,curr + 1,1 - sign,len,nums,memo);
+		} 
+		else if (sign == 1 && nums[curr] - nums[prev] < 0) {
+			take = 1 + helper(curr,curr + 1,1 - sign,len,nums,memo);
+		}
+		int notTake = helper(prev,curr + 1,sign,len,nums,memo);
+		return memo[prev][curr][sign] = Math.max(take,notTake);
+	}
+	int wiggleMaxLength(int[] nums) {
+		int len = nums.length;
+		int[][][] memo = new int[len][len][2];
+		for (int[][] tuple: memo) {	
+			for (int[] row: tuple) {	
+				Arrays.fill(row,-1);
+			}
+		}
+		return 1 + Math.max(helper(0,1,0,len,nums,memo),helper(0,1,1,len,nums,memo));
+	}
+}

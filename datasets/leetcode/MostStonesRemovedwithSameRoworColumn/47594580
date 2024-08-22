@@ -1,0 +1,55 @@
+class Solution {
+	ArrayList<Integer> parent = new ArrayList();
+	ArrayList<Integer> size = new ArrayList();
+	int removeStones(int[][] stones) {
+		int maxrow = 0;
+		int maxcol = 0;
+		for (int i = 0; i < stones.length; i++) {
+			maxrow = Math.max(stones[i][0],maxrow);
+			maxcol = Math.max(stones[i][1],maxcol);
+		}
+		for (int i = 0; i <= maxrow + maxcol; i++) {
+			size.add(0);
+			parent.add(i);
+		}
+		HashMap<Integer, Integer> map = new HashMap();
+		for (int i = 0; i < stones.length; i++) {
+			int row = stones[i][0];
+			int col = maxrow + stones[i][1];
+			unionfindbysize(row,col);
+			map.put(row,1);
+			map.put(col,1);
+		}
+		int count = 0;
+		for (Map.Entry<Integer, Integer> entry: map.entrySet()) {	
+			if (ulp(entry.getKey()) == entry.getKey()) {
+				count++;
+			}
+		}
+		return stones.length - count;
+	}
+	int ulp(int current) {
+		if (parent.get(current) == current) {
+			return current;
+		}
+		int ulpValue = ulp(parent.get(current));
+		parent.set(current,ulpValue);
+		return ulpValue;
+	}
+	void unionfindbysize(int a, int b) {
+		int A = ulp(a);
+		int B = ulp(b);
+		if (size.get(A) == size.get(B)) {
+			parent.set(A,B);
+			size.set(A,size.get(A) + 1);
+		} 
+		else if (size.get(A) > size.get(B)) {
+			parent.set(B,A);
+			size.set(A,size.get(A) + 1);
+		} 
+		else {
+			parent.set(A,B);
+			size.set(B,size.get(B) + 1);
+		}
+	}
+}

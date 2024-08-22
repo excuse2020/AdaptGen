@@ -1,0 +1,31 @@
+class Solution {
+	int minLengthAfterRemovals(List<Integer> nums) {
+		Map<Integer, Integer> countMap = new HashMap<>();
+		for (int num: nums) {	
+			countMap.put(num,countMap.getOrDefault(num,0) + 1);
+		}
+		PriorityQueue<int[]> pq = new PriorityQueue<>(new Comparator<int[]>());
+		for (Map.Entry<Integer, Integer> entry: countMap.entrySet()) {	
+			int num = entry.getKey();
+			int count = entry.getValue();
+			pq.offer(new int{num, count});
+		}
+		while (pq.size() > 1) {
+			int[] first = pq.poll();
+			int[] second = pq.poll();
+			first[1]--;
+			second[1]--;
+			if (first[1] > 0) {
+				pq.offer(first);
+			}
+			if (second[1] > 0) {
+				pq.offer(second);
+			}
+		}
+		int ans = 0;
+		while (pq.size() > 0) {
+			ans += pq.poll()[1];
+		}
+		return ans;
+	}
+}

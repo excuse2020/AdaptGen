@@ -1,0 +1,44 @@
+class Solution {
+	Stack<Integer> copyStack(Stack<Integer> originalStack) {
+		Stack<Integer> newStack = new Stack<>();
+		for (int element: originalStack) {	
+			newStack.push(element);
+		}
+		return newStack;
+	}
+	List<Stack<Integer>> getResList(TreeNode root, Stack<Integer> stack, List<Stack<Integer>> resList) {
+		stack.add(root.val);
+		if (root.left == null && root.right == null) {
+			Stack<Integer> temp = copyStack(stack);
+			resList.add(temp);
+			stack.pop();
+			return resList;
+		}
+		if (root.left != null) {
+			getResList(root.left,stack,resList);
+		}
+		if (root.right != null) {
+			getResList(root.right,stack,resList);
+		}
+		stack.pop();
+		return resList;
+	}
+	int sumRootToLeaf(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		List<Stack<Integer>> resList = new ArrayList<>();
+		Stack<Integer> stack = new Stack<>();
+		resList = getResList(root,stack,resList);
+		int totalSum = 0;
+		for (Stack<Integer> s: resList) {	
+			int index = 0;
+			while (!s.isEmpty()) {
+				int no = s.pop();
+				int val = no * ((int) Math.pow(2,index++));
+				totalSum += val;
+			}
+		}
+		return totalSum;
+	}
+}

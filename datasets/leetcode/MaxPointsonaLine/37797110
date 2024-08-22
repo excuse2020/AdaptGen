@@ -1,0 +1,28 @@
+class Solution {
+	double gradient(int[] point1, int[] point2) {
+		if (point1[0] == point2[0]) {
+			return Double.MAX_VALUE;
+		}
+		if (point2[1] - point1[1] == 0) {
+			return 0;
+		}
+		return (double) (point2[1] - point1[1]) / (point2[0] - point1[0]);
+	}
+	int maxPoints(int[][] points) {
+		int max = 1;
+		for (int i = 0; i < points.length; i++) {
+			Map<Double, List<int[]>> g = new HashMap<>();
+			int[] point1 = points[i];
+			for (int j = i + 1; j < points.length; j++) {
+				int[] point2 = points[j];
+				double grad = gradient(point1,point2);
+				g.putIfAbsent(grad,new ArrayList<>());
+				g.get(grad).add(point2);
+			}
+			for (List<int[]> same: g.values()) {	
+				max = Math.max(max,same.size() + 1);
+			}
+		}
+		return max;
+	}
+}

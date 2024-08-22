@@ -1,0 +1,30 @@
+class Solution {
+	boolean isA(int threshold, int row, int col) {
+		int result = 0;
+		while (row > 0) {
+			result += row % 10;
+			row = row / 10;
+		}
+		while (col > 0) {
+			result += col % 10;
+			col = col / 10;
+		}
+		return threshold >= result;
+	}
+	int move(int threshold, int rows, int cols, int row, int col, boolean[][] isVisited) {
+		int result = 0;
+		if (row >= rows || col >= cols) {
+			return 0;
+		}
+		if (isVisited[row][col] || !isA(threshold,row,col)) {
+			return 0;
+		}
+		result = 1 + move(threshold,rows,cols,row + 1,col,isVisited);
+		isVisited[row][col] = true;
+		return result;
+	}
+	int movingCount(int threshold, int rows, int cols) {
+		boolean[][] isVisited = new boolean[rows][cols];
+		return move(threshold,rows,cols,0,0,isVisited);
+	}
+}

@@ -1,0 +1,25 @@
+class Solution {
+	List<List<Integer>> combinationSum2(int[] candidates, int target) {
+		List<List<Integer>> ans = new ArrayList<List<Integer>>();
+		Arrays.sort(candidates);
+		combinationsSumKUniqueSequenceCall(0,candidates,ans,new ArrayList<Integer>(),target);
+		return ans;
+	}
+	void combinationsSumKUniqueSequenceCall(int index, int[] candidates, List<List<Integer>> ans, List<Integer> temp, int target) {
+		if (target == 0) {
+			ans.add(new ArrayList<>(temp));
+			return;
+		}
+		for (int i = index; i < candidates.length; i++) {
+			if (i > index && candidates[i] == candidates[i - 1]) {
+				continue;
+			}
+			if (candidates[i] > target) {
+				break;
+			}
+			temp.add(candidates[i]);
+			combinationsSumKUniqueSequenceCall(i + 1,candidates,ans,temp,target - candidates[i]);
+			temp.remove(temp.size() - 1);
+		}
+	}
+}

@@ -1,0 +1,41 @@
+class Solution {
+	String largestGoodInteger(String num) {
+		String result = "";
+		int count = 1;
+		Stack<Integer> stackNum = new Stack<>();
+		char[] c = num.toCharArray();
+		int prev = Integer.parseInt(String.valueOf(c[0]));
+		for (int i = 1; i < num.length(); i++) {
+			int curr = Integer.parseInt(String.valueOf(c[i]));
+			if (prev == curr) {
+				prev = curr;
+				count++;
+			} 
+			else {
+				prev = curr;
+				count = 1;
+			}
+			if (count == 3) {
+				if (stackNum.empty()) {
+					stackNum.push(curr);
+					prev = curr;
+					count++;
+				} 
+				else {
+					Integer ele = stackNum.pop();
+					if (ele <= curr) {
+						stackNum.push(curr);
+					} 
+					else {
+						stackNum.push(ele);
+					}
+				}
+			}
+		}
+		if (!stackNum.empty()) {
+			int largestEle = stackNum.pop();
+			result = "" + largestEle;
+		}
+		return result;
+	}
+}

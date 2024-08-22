@@ -1,0 +1,33 @@
+class Solution {
+	int cherryPickup(int[][] grid) {
+		int row = grid.length - 1, cols = grid[0].length;
+		int topDP = new int[cols * (cols - 1) / 2], downDP = new int[cols * (cols - 1) / 2], tmp;
+		int lrIdx = 0;
+		for (int rIdx = 0; rIdx < cols; rIdx++) {
+			for (int lIdx = 0; lIdx < rIdx; lIdx++) {
+				topDP[lrIdx++] = grid[row][lIdx] + grid[row][rIdx];
+			}
+		}
+		row--;
+		for (; row >= 0; row--) {
+			lrIdx = 0;
+			for (int rIdx = 0; rIdx < cols; rIdx++) {
+				for (int lIdx = 0; lIdx < rIdx; lIdx++) {
+					downDP[lrIdx] = grid[row][lIdx] + grid[row][rIdx];
+					int mx = 0;
+					for (int rIdxTop = Math.max(0,rIdx - 1); rIdxTop <= Math.min(rIdx + 1,cols - 1); rIdxTop++) {
+						int idxTmp = rIdxTop * (rIdxTop - 1) / 2;
+						for (int lIdxTop = Math.max(0,lIdx - 1); lIdxTop <= Math.min(Math.min(lIdx + 1,rIdxTop - 1),cols - 1); lIdxTop++) {
+							mx = Math.max(mx,topDP[idxTmp + lIdxTop]);
+						}
+					}
+					downDP[lrIdx++] += mx;
+				}
+			}
+			tmp = downDP;
+			downDP = topDP;
+			topDP = tmp;
+		}
+		return topDP[(cols - 1) * (cols - 2) / 2];
+	}
+}

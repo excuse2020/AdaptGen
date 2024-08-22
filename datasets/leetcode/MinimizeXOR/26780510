@@ -1,0 +1,51 @@
+class Solution {
+	int countSet(int num) {
+		int count = 0;
+		for (int n = 31; n >= 0; n--) {
+			if ((num >> n & 1) == 1) {
+				count++;
+			}
+		}
+		return count;
+	}
+	int getZeroAt(int n) {
+		return Integer.MAX_VALUE - (int) Math.pow(2,n);
+	}
+	int minimizeXor(int num1, int num2) {
+		int n1c = countSet(num1);
+		int n2c = countSet(num2);
+		if (n1c == n2c) {
+			return num1;
+		} 
+		else if (n1c < n2c) {
+			return setRemainingIn(num1,n2c - n1c);
+		} 
+		else {
+			return unsetRemainingIn(num1,n1c - n2c);
+		}
+	}
+	void printBin(int num) {
+		for (int n = 31; n >= 0; n--) {
+			System.out.print(num >> n & 1);
+		}
+		System.out.println();
+	}
+	int setRemainingIn(int num, int count) {
+		for (int n = 0; n < 32 && count > 0; n++) {
+			if ((num >> n & 1) == 0) {
+				num = num | (1 << n);
+				count--;
+			}
+		}
+		return num;
+	}
+	int unsetRemainingIn(int num, int count) {
+		for (int n = 0; n < 32 && count > 0; n++) {
+			if ((num >> n & 1) == 1) {
+				num = num & getZeroAt(n);
+				count--;
+			}
+		}
+		return num;
+	}
+}

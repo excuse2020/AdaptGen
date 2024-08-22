@@ -1,0 +1,47 @@
+class Solution {
+	int numBusesToDestination(int[][] routes, int source, int target) {
+		if (source == target) {
+			return 0;
+		}
+		HashMap<Integer, ArrayList<Integer>> mp = new HashMap<>();
+		int n = routes.length, m = routes[0].length;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < routes[i].length; j++) {
+				if (!mp.containsKey(routes[i][j])) {
+					mp.put(routes[i][j],new ArrayList<>());
+				}
+				mp.get(routes[i][j]).add(i);
+			}
+		}
+		Queue<Integer> q = new LinkedList<>();
+		HashSet<Integer> h = new HashSet<>();
+		HashSet<Integer> Id = new HashSet<>();
+		int cntBus = 0;
+		q.add(source);
+		h.add(source);
+		while (!q.isEmpty()) {
+			int size = q.size();
+			for (int i = 0; i < size; i++) {
+				int curr = q.remove();
+				ArrayList<Integer> a = mp.get(curr);
+				for (int j = 0; j < a.size(); j++) {
+					int idx = a.get(j);
+					if (!Id.contains(idx)) {
+						for (int k = 0; k < routes[idx].length; k++) {
+							if (routes[idx][k] == target) {
+								return cntBus + 1;
+							}
+							if (!h.contains(routes[idx][k])) {
+								q.add(routes[idx][k]);
+								h.add(routes[idx][k]);
+							}
+						}
+						Id.add(idx);
+					}
+				}
+			}
+			cntBus++;
+		}
+		return -1;
+	}
+}

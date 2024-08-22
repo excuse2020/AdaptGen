@@ -1,0 +1,37 @@
+class Solution {
+	int getVal(int[][] board, int pos) {
+		int n = board.length;
+		int cells = n * n;
+		pos -= 1;
+		boolean left = (pos / n) % 2 == 0;
+		int row = (cells - pos) / n;
+		int col = left ? pos % n : n - (pos % n);
+		return board[row][col];
+	}
+	int snakesAndLadders(int[][] board) {
+		int n = board.length;
+		int[] distance = new int[n * n + 1];
+		Arrays.fill(distance,-1);
+		LinkedList<Integer> q = new LinkedList();
+		q.offer(1);
+		distance[1] = 0;
+		while (!q.isEmpty()) {
+			int cur = q.pollFirst();
+			int pos = cur;
+			for (int i = cur + 1; i <= Math.min(cur + 6,n * n) && pos != n * n; ++i) {
+				pos = getVal(board,i);
+				if (pos == -1) {
+					pos = i;
+				}
+				if (distance[pos] == -1) {
+					distance[pos] = distance[cur] + 1;
+					q.offer(pos);
+				}
+			}
+			if (pos == n * n) {
+				break;
+			}
+		}
+		return distance[n * n];
+	}
+}

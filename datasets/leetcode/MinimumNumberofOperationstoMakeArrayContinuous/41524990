@@ -1,0 +1,33 @@
+class Solution {
+	int minOperations(int[] nums) {
+		int minOp = nums.length;
+		Arrays.sort(nums);
+		int count = 1;
+		for (int i = 1; i < nums.length; i++) {
+			if (nums[i] != nums[i - 1]) {
+				nums[count++] = nums[i];
+			}
+		}
+		for (int i = 0; i < count; i++) {
+			int target = nums.length - 1 + nums[i];
+			int j = upperBound(nums,i,count,target);
+			int inRange = j - i;
+			minOp = Math.min(minOp,nums.length - inRange);
+		}
+		return minOp;
+	}
+	int upperBound(int[] arr, int start, int end, int target) {
+		int left = start;
+		int right = end;
+		while (left < right) {
+			int mid = left + (right - left) / 2;
+			if (arr[mid] <= target) {
+				left = mid + 1;
+			} 
+			else {
+				right = mid;
+			}
+		}
+		return left;
+	}
+}

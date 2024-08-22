@@ -1,0 +1,57 @@
+class Solution {
+	void dfs(int[][] land, int i, int j, int m, int n, List<Integer> coordinates, boolean[][] visited) {
+		if (i >= m || j >= n || land[i][j] == 0 || visited[i][j]) {
+			return;
+		}
+		visited[i][j] = true;
+		if (i + 1 < m && j + 1 < n && land[i + 1][j] == 0 && land[i][j + 1] == 0) {
+			coordinates.add(i);
+			coordinates.add(j);
+			return;
+		}
+		if (i + 1 == m && j + 1 < n && land[i][j + 1] == 0) {
+			coordinates.add(i);
+			coordinates.add(j);
+			return;
+		}
+		if (i + 1 == m && j + 1 == n) {
+			coordinates.add(i);
+			coordinates.add(j);
+			return;
+		}
+		if (i + 1 < m && j + 1 == n && land[i + 1][j] == 0) {
+			coordinates.add(i);
+			coordinates.add(j);
+			return;
+		}
+		dfs(land,i,j + 1,m,n,coordinates,visited);
+		dfs(land,i + 1,j,m,n,coordinates,visited);
+	}
+	int[][] findFarmland(int[][] land) {
+		List<List<Integer>> farmlands = new ArrayList();
+		int m = land.length;
+		int n = land[0].length;
+		boolean[][] visited = new boolean[m][n];
+		List<Integer> coordinates;
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				if (!visited[i][j] && land[i][j] == 1) {
+					coordinates = new ArrayList();
+					coordinates.add(i);
+					coordinates.add(j);
+					dfs(land,i,j,m,n,coordinates,visited);
+					farmlands.add(new ArrayList(coordinates));
+				}
+			}
+		}
+		int size = farmlands.size();
+		int[][] result = new int[size][4];
+		for (int i = 0; i < size; i++) {
+			result[i][0] = farmlands.get(i).get(0);
+			result[i][1] = farmlands.get(i).get(1);
+			result[i][2] = farmlands.get(i).get(2);
+			result[i][3] = farmlands.get(i).get(3);
+		}
+		return result;
+	}
+}

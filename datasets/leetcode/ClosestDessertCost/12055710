@@ -1,0 +1,69 @@
+class Solution {
+	int closestCost(int[] baseCosts, int[] toppingCosts, int target) {
+		int closestAns = Integer.MAX_VALUE;
+		int toppingSum = 0;
+		int[] newToppingCosts = new int[toppingCosts.length * 2];
+		for (int i = 0; i < toppingCosts.length; i++) {
+			toppingSum += toppingCosts[i];
+			newToppingCosts[2 * i] = toppingCosts[i];
+			newToppingCosts[2 * i + 1] = toppingCosts[i];
+		}
+		toppingSum *= 2;
+		for (int i = 0; i < baseCosts.length; i++) {
+			int newTarget = target - baseCosts[i];
+			if (newTarget < 0) {
+				int curDiff = Math.abs(baseCosts[i] - target);
+				if (curDiff < Math.abs(closestAns - target)) {
+					closestAns = baseCosts[i];
+				}
+				continue;
+			}
+			Set<Integer> canFills = new HashSet<>();
+			boolean[] backpack = new boolean[toppingSum + 1];
+			backpack[0] = true;
+			canFills.add(0);
+			for (int k = 0; k < newToppingCosts.length; k++) {
+				for (int j = toppingSum; j >= 0; j--) {
+					if (j - newToppingCosts[k] >= 0) {
+						backpack[j] = backpack[j] || backpack[j - newToppingCosts[k]];
+						if (backpack[j]) {
+							canFills.add(j);
+						}
+					}
+				}
+			}
+			Integer[] toBeSearched = new Integer[canFills.size()];
+			canFills.toArray(toBeSearched);
+			Arrays.sort(toBeSearched);
+			int searchIdx = Arrays.binarySearch(toBeSearched,newTarget);
+			if (searchIdx < 0) {
+				searchIdx = ~searchIdx;
+			}
+			if (searchIdx < canFills.size()) {
+				int tmpCost = toBeSearched[searchIdx] + baseCosts[i];
+				int curDiff = Math.abs(tmpCost - target);
+				if (curDiff < Math.abs(closestAns - target)) {
+					closestAns = tmpCost;
+				} 
+				else if (curDiff == Math.abs(closestAns - target)) {
+					if (tmpCost < target) {
+						closestAns = tmpCost;
+					}
+				}
+			}
+			if (searchIdx > 0) {
+				int tmpCost = toBeSearched[searchIdx - 1] + baseCosts[i];
+				int curDiff = Math.abs(tmpCost - target);
+				if (curDiff < Math.abs(closestAns - target)) {
+					closestAns = tmpCost;
+				} 
+				else if (curDiff == Math.abs(closestAns - target)) {
+					if (tmpCost < target) {
+						closestAns = tmpCost;
+					}
+				}
+			}
+		}
+		return closestAns;
+	}
+}

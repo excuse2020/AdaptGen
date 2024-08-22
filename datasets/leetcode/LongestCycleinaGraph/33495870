@@ -1,0 +1,28 @@
+class Solution {
+	int longestCycle(int[] edges) {
+		int n = edges.length;
+		int[] pathLens = new int[n];
+		boolean[] visited = new boolean[n];
+		int ans = -1;
+		for (int i = 0; i < n; i++) {
+			int currNode = i;
+			int pathLen = 0;
+			Set<Integer> onPath = new HashSet<>();
+			while (!visited[currNode]) {
+				visited[currNode] = true;
+				onPath.add(currNode);
+				currNode = edges[currNode];
+				if (currNode == -1) {
+					break;
+				}
+				pathLen += 1;
+				int prevPathLen = pathLens[currNode];
+				pathLens[currNode] = pathLen;
+				if (onPath.contains(currNode)) {
+					ans = Math.max(ans,pathLen - prevPathLen);
+				}
+			}
+		}
+		return ans;
+	}
+}

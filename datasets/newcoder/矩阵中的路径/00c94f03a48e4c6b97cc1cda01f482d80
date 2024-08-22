@@ -1,0 +1,39 @@
+class Solution {
+	boolean hasPath(char[][] matrix, String word) {
+		int n = matrix.length;
+		if (0 == n) {
+			return false;
+		}
+		int m = matrix[0].length;
+		if (0 == m) {
+			return false;
+		}
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				char chr = matrix[i][j];
+				if (chr == word.charAt(0)) {
+					if (process(matrix,word,i,j,0)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	boolean process(char[][] matrix, String word, int x, int y, int index) {
+		if (x < 0 || x >= matrix.length || y < 0 || y >= matrix[0].length || index >= word.length() || matrix[x][y] != word.charAt(index)) {
+			return false;
+		}
+		char chr = matrix[x][y];
+		matrix[x][y] = '#';
+		if (index == word.length() - 1) {
+			return true;
+		}
+		boolean u = process(matrix,word,x - 1,y,index + 1);
+		boolean d = process(matrix,word,x + 1,y,index + 1);
+		boolean l = process(matrix,word,x,y - 1,index + 1);
+		boolean r = process(matrix,word,x,y + 1,index + 1);
+		matrix[x][y] = chr;
+		return u || d;
+	}
+}

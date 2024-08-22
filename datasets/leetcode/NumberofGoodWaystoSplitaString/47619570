@@ -1,0 +1,36 @@
+class Solution {
+	int numSplits(String s) {
+		int good = 0;
+		int forcount = 0;
+		int backcount = 0;
+		HashSet<Character> forwardSet = new HashSet<>();
+		HashSet<Character> backwardSet = new HashSet<>();
+		int length = s.length();
+		int[] forwardarr = new int[length];
+		int[] backwardarr = new int[length];
+		Arrays.fill(forwardarr,26);
+		Arrays.fill(backwardarr,26);
+		for (int i = 0; i < length - 1 && forcount < 26; i++) {
+			char c = s.charAt(i);
+			if (!forwardSet.contains(c)) {
+				forcount++;
+				forwardSet.add(c);
+			}
+			forwardarr[i] = forcount;
+		}
+		for (int i = length - 1; i > 0 && backcount < 26; i--) {
+			char c = s.charAt(i);
+			if (!backwardSet.contains(c)) {
+				backcount++;
+				backwardSet.add(c);
+			}
+			backwardarr[i] = backcount;
+		}
+		for (int i = 0; i < length - 1; i++) {
+			if (forwardarr[i] == backwardarr[i + 1]) {
+				good++;
+			}
+		}
+		return good;
+	}
+}

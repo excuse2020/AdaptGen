@@ -1,0 +1,29 @@
+class Solution {
+	boolean carPooling(int[][] trips, int capacity) {
+		PriorityQueue<int[]> routesPq = new PriorityQueue<>((a, b) -> {a[1] - b[1]});
+		PriorityQueue<int[]> busyPq = new PriorityQueue<>((a, b) -> {a[2] - b[2]});
+		for (int[] arr: trips) {	
+			routesPq.add(arr);
+		}
+		int location = 0;
+		while (!routesPq.isEmpty()) {
+			int[] temp = routesPq.poll();
+			location = temp[1];
+			while (!busyPq.isEmpty()) {
+				int[] temp3 = busyPq.peek();
+				if (location >= temp3[2]) {
+					temp3 = busyPq.poll();
+					capacity += temp3[0];
+					continue;
+				}
+				break;
+			}
+			capacity -= temp[0];
+			if (capacity < 0) {
+				return false;
+			}
+			busyPq.add(temp);
+		}
+		return true;
+	}
+}

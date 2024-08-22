@@ -1,0 +1,26 @@
+class Solution {
+	int[] secondGreaterElement(int[] nums) {
+		int[] ans = new int[nums.length];
+		Arrays.fill(ans,-1);
+		Stack<Integer> stack = new Stack<>();
+		PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+		for (int i = 0; i < nums.length; i++) {
+			while (!maxHeap.isEmpty()) {
+				if (nums[i] <= nums[maxHeap.peek()]) {
+					break;
+				}
+				ans[maxHeap.peek()] = nums[i];
+				maxHeap.poll();
+			}
+			while (!stack.empty()) {
+				if (nums[i] <= nums[stack.peek()]) {
+					break;
+				}
+				maxHeap.add(stack.peek());
+				stack.pop();
+			}
+			stack.push(i);
+		}
+		return ans;
+	}
+}

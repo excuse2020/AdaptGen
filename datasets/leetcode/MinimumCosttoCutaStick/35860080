@@ -1,0 +1,22 @@
+class Solution {
+	int minCost(int n, int[] cuts) {
+		Arrays.sort(cuts);
+		return minCost(0,n,cuts,0,new HashMap());
+	}
+	int minCost(int start, int end, int[] cuts, int cutsStartIter, Map<String, Integer> mamo) {
+		int minCuts = Integer.MAX_VALUE, cutsCurIter = cutsStartIter;
+		String mamoKey = "" + start;
+		if (mamo.containsKey(mamoKey)) {
+			return mamo.get(mamoKey);
+		}
+		while (cutsCurIter < cuts.length && cuts[cutsCurIter] < end) {
+			int curCut = cuts[cutsCurIter++];
+			minCuts = Math.min(minCuts,minCost(start,curCut,cuts,cutsStartIter,mamo) + minCost(curCut,end,cuts,cutsCurIter,mamo) - start);
+		}
+		if (minCuts == Integer.MAX_VALUE) {
+			minCuts = 0;
+		}
+		mamo.put(mamoKey,minCuts);
+		return minCuts;
+	}
+}

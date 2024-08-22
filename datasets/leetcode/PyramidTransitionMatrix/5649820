@@ -1,0 +1,49 @@
+class Solution {
+	Map<String, Set<String>> baseTopMap = new HashMap<>();
+	Map<String, Boolean> cache = new HashMap<>();
+	boolean helper(String levelString, String topLevelString) {
+		Boolean cacheResult = cache.get(levelString + " ");
+		if (cacheResult != null) {
+			return cacheResult;
+		}
+		if (levelString.length() == 1 && topLevelString.length() == 0) {
+			return true;
+		}
+		for (int i = 0; i < levelString.length() - 1; i++) {
+			String base = levelString.substring(i,i + 2);
+			Set<String> possibleTop = baseTopMap.get(base);
+			if (possibleTop == null) {
+				return false;
+			}
+			for (String top: possibleTop) {	
+				String nextLevel = topLevelString + top;
+				String remainingBase = levelString.substring(i + 1);
+				boolean possible = false;
+				if (levelString.length() > 2) {
+					possible = helper(remainingBase,nextLevel);
+				} 
+				else {
+					possible = helper(nextLevel,"");
+				}
+				if (possible) {
+					return possible;
+				}
+			}
+		}
+		cache.put(levelString + " ",false);
+		return false;
+	}
+	boolean pyramidTransition(String bottom, List<String> allowed) {
+		for (String allow: allowed) {	
+			String base = allow.substring(0,2);
+			String top = String.valueOf(allow.charAt(2));
+			Set<String> possibleTop = baseTopMap.get(base);
+			if (possibleTop == null) {
+				possibleTop = new HashSet<>();
+				baseTopMap.put(base,possibleTop);
+			}
+			possibleTop.add(top);
+		}
+		return helper(bottom,"");
+	}
+}

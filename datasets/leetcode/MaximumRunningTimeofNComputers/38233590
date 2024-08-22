@@ -1,0 +1,24 @@
+class Solution {
+	long maxRunTime(int n, int[] batteries) {
+		int countOfBatteries = batteries.length;
+		Arrays.sort(batteries);
+		long backup = 0;
+		for (int i = 0; i < countOfBatteries - n; i++) {
+			backup += batteries[i];
+		}
+		int left = countOfBatteries - n;
+		for (int right = left + 1; right < countOfBatteries; right++) {
+			if (backup <= 0) {
+				break;
+			}
+			int count = right - left;
+			long diff = (batteries[right] - batteries[left]);
+			if (diff * count > backup) {
+				diff = backup / count;
+			}
+			batteries[left] += diff;
+			backup -= diff * count;
+		}
+		return batteries[left] + backup / n;
+	}
+}

@@ -1,0 +1,50 @@
+class Solution {
+	int[] LFU(int[][] operators, int k) {
+		ArrayList<Integer> list = new ArrayList<>();
+		HashMap<Integer, int[]> map = new HashMap<>();
+		int counter = 0;
+		for (int[] operator: operators) {	
+			if (operator[0] == 1) {
+				if (!map.containsKey(operator[1])) {
+					if (map.size() == k) {
+						int rm = 0;
+						int min = Integer.MAX_VALUE;
+						for (Map.Entry<Integer, int[]> entry: map.entrySet()) {	
+							if (min > entry.getValue()[1]) {
+								rm = entry.getKey();
+								min = entry.getValue()[1];
+							} 
+							else {
+								if (entry.getValue()[1] == min) {
+									if (entry.getValue()[2] < map.get(rm)[2]) {
+										rm = entry.getKey();
+									}
+								}
+							}
+						}
+						map.remove(rm);
+					}
+					map.put(operator[1],new int{operator[2], 1, counter++});
+				} 
+				else {
+					map.put(operator[1],new int{operator[2], map.get(operator[1])[1] + 1, counter++});
+				}
+			} 
+			else {
+				if (map.containsKey(operator[1])) {
+					list.add(map.get(operator[1])[0]);
+					map.get(operator[1])[1]++;
+					map.get(operator[1])[2] = counter++;
+				} 
+				else {
+					list.add(-1);
+				}
+			}
+		}
+		int[] res = new int[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			res[i] = list.get(i);
+		}
+		return res;
+	}
+}

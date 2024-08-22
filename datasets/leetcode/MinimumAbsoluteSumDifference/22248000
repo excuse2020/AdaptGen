@@ -1,0 +1,44 @@
+class Solution {
+	int leftBound(int[] nums, int val) {
+		int left = 0, right = nums.length;
+		while (left < right) {
+			int mid = left + (right - left) / 2;
+			if (nums[mid] >= val) {
+				right = mid;
+			} 
+			else {
+				left = mid + 1;
+			}
+		}
+		return left;
+	}
+	int minAbsoluteSumDiff(int[] nums1, int[] nums2) {
+		int[] sorted1 = nums1.clone();
+		Arrays.sort(sorted1);
+		long totalDiff = 0;
+		for (int i = 0; i < nums1.length; i++) {
+			totalDiff += Math.abs(nums1[i] - nums2[i]);
+		}
+		long result = totalDiff;
+		for (int i = 0; i < nums2.length; i++) {
+			int leftIndex = leftBound(sorted1,nums2[i]) == nums2.length ? leftBound(sorted1,nums2[i]) - 1 : leftBound(sorted1,nums2[i]);
+			int rightIndex = rightBound(sorted1,nums2[i]) < 0 ? 0 : rightBound(sorted1,nums2[i]);
+			int diff = Math.min(Math.abs(nums2[i] - sorted1[leftIndex]),Math.abs(nums2[i] - sorted1[rightIndex]));
+			result = Math.min(result,totalDiff - Math.abs(nums1[i] - nums2[i]) + diff);
+		}
+		return (int) (result % 1000000007);
+	}
+	int rightBound(int[] nums, int val) {
+		int left = 0, right = nums.length;
+		while (left < right) {
+			int mid = left + (right - left) / 2;
+			if (nums[mid] > val) {
+				right = mid;
+			} 
+			else {
+				left = mid + 1;
+			}
+		}
+		return left - 1;
+	}
+}

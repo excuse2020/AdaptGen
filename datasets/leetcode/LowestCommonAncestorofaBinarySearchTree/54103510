@@ -1,0 +1,34 @@
+class Solution {
+	boolean helper(TreeNode node, TreeNode target, List<TreeNode> ancestors) {
+		if (node == null) {
+			return false;
+		}
+		ancestors.add(node);
+		if (node == target) {
+			return true;
+		}
+		if (helper(node.left,target,ancestors) || helper(node.right,target,ancestors)) {
+			return true;
+		}
+		ancestors.remove(ancestors.size() - 1);
+		return false;
+	}
+	TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+		if (root == null || p == null || q == null) {
+			return null;
+		}
+		ArrayList<TreeNode> aP = new ArrayList<>();
+		ArrayList<TreeNode> aQ = new ArrayList<>();
+		if (!helper(root,p,aP) || !helper(root,q,aQ)) {
+			return null;
+		}
+		TreeNode result = null;
+		for (int i = 0; i < Math.min(aP.size(),aQ.size()); i++) {
+			if (aP.get(i) != aQ.get(i)) {
+				break;
+			}
+			result = aP.get(i);
+		}
+		return result;
+	}
+}

@@ -1,0 +1,52 @@
+class Solution {
+	long dividePlayers(int[] skill) {
+		if (skill.length == 2) {
+			return skill[0] * skill[1];
+		}
+		int sum = 0;
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int x: skill) {	
+			if (map.containsKey(x)) {
+				map.put(x,map.get(x) + 1);
+			} 
+			else {
+				map.put(x,1);
+			}
+			sum += x;
+		}
+		long answer = 0;
+		sum = sum / (skill.length / 2);
+		int count = 0;
+		for (Map.Entry<Integer, Integer> entry: map.entrySet()) {	
+			int key = entry.getKey();
+			int val = entry.getValue();
+			if (map.containsKey(sum - key)) {
+				if (sum - key == key && val % 2 == 1) {
+					return -1;
+				}
+				if (sum - key == key) {
+					answer += (long) ((val / 2) * (long) key);
+				} 
+				else if (map.get(key) >= 1 && map.get(sum - key) >= 1) {
+					if (map.get(key) > map.get(sum - key)) {
+						answer += map.get(sum - key) * key;
+						map.put(key,map.get(key) - map.get(sum - key));
+						map.put(sum - key,0);
+					} 
+					else {
+						answer += map.get(key) * key;
+						map.put(sum - key,map.get(sum - key) - map.get(key));
+						map.put(key,0);
+					}
+				} 
+				else if ((map.get(key) == 0 && map.get(sum - key) >= 1) || (map.get(key) >= 1 && map.get(sum - key) == 0)) {
+					return -1;
+				}
+			} 
+			else {
+				return -1;
+			}
+		}
+		return answer;
+	}
+}

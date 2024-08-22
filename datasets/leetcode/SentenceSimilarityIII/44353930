@@ -1,0 +1,66 @@
+class Solution {
+	boolean areSentencesSimilar(String sentence1, String sentence2) {
+		String[] lesserWords;
+		String[] moreWords;
+		int lesserLength;
+		int largerLength;
+		if (sentence1.length() <= sentence2.length()) {
+			lesserWords = sentence1.split(" ");
+			moreWords = sentence2.split(" ");
+		} 
+		else {
+			moreWords = sentence1.split(" ");
+			lesserWords = sentence2.split(" ");
+		}
+		lesserLength = lesserWords.length;
+		largerLength = moreWords.length;
+		boolean firstWordHit = true;
+		boolean lastWordHit = true;
+		if (!lesserWords[lesserWords.length - 1].equals(moreWords[moreWords.length - 1])) {
+			lastWordHit = false;
+		}
+		if (!lesserWords[0].equals(moreWords[0])) {
+			firstWordHit = false;
+		}
+		if (!lastWordHit && !firstWordHit) {
+			return false;
+		}
+		if (!lastWordHit && firstWordHit) {
+			for (int i = 0; i < lesserLength; i++) {
+				if (!lesserWords[i].equals(moreWords[i])) {
+					return false;
+				}
+				if (i == lesserLength - 1) {
+					return true;
+				}
+			}
+		}
+		if (lastWordHit && !firstWordHit) {
+			for (int i = 0, j = moreWords.length - lesserWords.length; i < lesserLength; i++, j++) {
+				if (!lesserWords[i].equals(moreWords[j])) {
+					return false;
+				}
+				if (i == lesserLength - 1) {
+					return true;
+				}
+			}
+		}
+		if (lastWordHit && firstWordHit) {
+			int startIndex = 1;
+			int endIndex1 = lesserLength - 1;
+			int endIndex2 = largerLength - 1;
+			while (startIndex < lesserLength && lesserWords[startIndex].equals(moreWords[startIndex])) {
+				startIndex++;
+			}
+			while (endIndex1 >= 0 && endIndex2 >= 0 && lesserWords[endIndex1].equals(moreWords[endIndex2])) {
+				endIndex1--;
+				endIndex2--;
+			}
+			if (lesserLength == largerLength) {
+				return startIndex == lesserLength;
+			}
+			return (startIndex > endIndex1);
+		}
+		return false;
+	}
+}

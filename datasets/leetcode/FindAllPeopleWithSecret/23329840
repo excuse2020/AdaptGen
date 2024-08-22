@@ -1,0 +1,48 @@
+class Solution {
+	Map<Integer, TreeMap<Integer, Set<Integer>>> buildMeetings(int[][] meetings) {
+		Map<Integer, TreeMap<Integer, Set<Integer>>> schedule = new HashMap<>();
+		for (int[] meeting: meetings) {	
+			int p1 = meeting[0];
+			int p2 = meeting[1];
+			int time = meeting[2];
+			schedule.putIfAbsent(p1,new TreeMap<>());
+			schedule.putIfAbsent(p2,new TreeMap<>());
+			schedule.get(p1).putIfAbsent(time,new HashSet<>());
+			schedule.get(p2).putIfAbsent(time,new HashSet<>());
+			schedule.get(p1).get(time).add(p2);
+			schedule.get(p2).get(time).add(p1);
+		}
+		return schedule;
+	}
+	List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+		Map<Integer, TreeMap<Integer, Set<Integer>>> schedule = buildMeetings(meetings);
+		Set<Integer> secretOwners = new HashSet<>();
+		PriorityQueue<int[]> q = new PriorityQueue<>((a, b) -> {a[1] - b[1]});
+		q.offer(new int{0, 0});
+		q.offer(new int{firstPerson, 0});
+		while (!q.isEmpty()) {
+			int[] personWithSecret = q.poll();
+			if (secretOwners.contains(personWithSecret[0])) {
+				continue;
+			}
+			secretOwners.add(personWithSecret[0]);
+			Map<Integer, Set<Integer>> candidates = getCandidates(personWithSecret[0],schedule,personWithSecret[1]);
+			for (Map.Entry<Integer, Set<Integer>> entry: candidates.entrySet()) {	
+				for (Integer candidate: entry.getValue()) {	
+					if (secretOwners.contains(candidate)) {
+						continue;
+					}
+					q.offer(new int{candidate, entry.getKey()});
+				}
+			}
+		}
+		return secretOwners.stream().collect(Collectors.toList());
+	}
+	Map<Integer, Set<Integer>> getCandidates(int person, Map<Integer, TreeMap<Integer, Set<Integer>>> schedule, int startTime) {
+		if (!schedule.containsKey(person) || schedule.get(person).isEmpty()) {
+			return Collections.emptyMap();
+		}
+		List<int[]> res = new LinkedList<>();
+		return schedule.get(person).tailMap(startTime);
+	}
+}

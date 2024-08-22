@@ -1,0 +1,60 @@
+class Solution {
+	List<String> fullJustify(String[] words, int maxWidth) {
+		int i = 0;
+		List<String> ans = new ArrayList<>();
+		while (i < words.length) {
+			StringBuilder curr = new StringBuilder("");
+			int s = i;
+			int count = 0;
+			boolean flag = false;
+			while (count < maxWidth && i < words.length) {
+				int st = count;
+				for (int j = 0; j < words[i].length(); j++) {
+					count++;
+					if (count > maxWidth) {
+						flag = true;
+						count = st;
+						break;
+					}
+				}
+				if (flag) {
+					break;
+				}
+				count++;
+				i++;
+			}
+			int avail = maxWidth - (count - 1);
+			int x = 0;
+			int rem = avail;
+			if ((i - s) != 0) {
+				rem = avail % (i - s);
+				x = avail / (i - s);
+			}
+			for (int j = s; j < i; j++) {
+				curr.append(words[j]);
+				if (j != i - 1) {
+					curr.append(" ");
+				}
+				if (i != words.length) {
+					int h = 0;
+					while (h < x && avail > 0) {
+						curr.append(" ");
+						h++;
+						avail--;
+					}
+					if (rem > 0) {
+						curr.append(" ");
+						rem--;
+						avail--;
+					}
+				}
+			}
+			while (avail > 0) {
+				curr.append(" ");
+				avail--;
+			}
+			ans.add(curr.toString());
+		}
+		return ans;
+	}
+}

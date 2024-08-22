@@ -1,0 +1,39 @@
+class Solution {
+	Map<Character, Set<Character>> adj;
+	Map<Character, TreeSet<Character>> setGroup = new HashMap();
+	void initAdj(String s1, String s2) {
+		adj = new HashMap();
+		int i = 0;
+	}
+	void initSetGroup() {
+		for (Character key: adj.keySet()) {	
+			if (!setGroup.containsKey(key)) {
+				Queue<Character> qu = new LinkedList();
+				TreeSet<Character> set = new TreeSet();
+				qu.add(key);
+				set.add(key);
+				while (!qu.isEmpty()) {
+					char t = qu.poll();
+					for (char child: adj.get(t)) {	
+						if (!set.contains(child)) {
+							set.add(child);
+							qu.add(child);
+						}
+					}
+				}
+				for (Character setCh: set) {	
+					setGroup.put(setCh,set);
+				}
+			}
+		}
+	}
+	String smallestEquivalentString(String s1, String s2, String baseStr) {
+		initAdj(s1,s2);
+		initSetGroup();
+		char[] baseSmall = new char[baseStr.length()];
+		for (int i = 0; i < baseStr.length(); i++) {
+			baseSmall[i] = setGroup.get(baseStr.charAt(i)).first();
+		}
+		return new String(baseSmall);
+	}
+}

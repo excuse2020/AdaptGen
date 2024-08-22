@@ -1,0 +1,37 @@
+class Solution {
+	int maxPointsInsideSquare(int[][] points, String s) {
+		Map<Character, PriorityQueue<Integer>> charCounts = new HashMap<>();
+		int length = points.length;
+		int[] truePoints = new int[length];
+		for (int i = 0; i < s.length(); i++) {
+			truePoints[i] = Math.max(Math.abs(points[i][0]),Math.abs(points[i][1]));
+			char ch = s.charAt(i);
+			PriorityQueue<Integer> minValues;
+			if (charCounts.containsKey(ch)) {
+				minValues = charCounts.get(ch);
+				minValues.offer(truePoints[i]);
+				if (minValues.size() > 2) {
+					minValues.poll();
+				}
+			} 
+			else {
+				minValues = new PriorityQueue<>(Collections.reverseOrder());
+				minValues.offer(truePoints[i]);
+			}
+			charCounts.put(s.charAt(i),minValues);
+		}
+		int minValid = Integer.MAX_VALUE;
+		for (Map.Entry<Character, PriorityQueue<Integer>> mapCh: charCounts.entrySet()) {	
+			if (mapCh.getValue().size() > 1) {
+				minValid = Math.min(minValid,mapCh.getValue().poll() - 1);
+			}
+		}
+		int ans = 0;
+		for (int point: truePoints) {	
+			if (Math.abs(point) <= minValid) {
+				ans++;
+			}
+		}
+		return ans;
+	}
+}

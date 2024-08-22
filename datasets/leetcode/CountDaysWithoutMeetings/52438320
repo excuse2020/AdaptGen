@@ -1,0 +1,46 @@
+class Solution {
+	int countDays(int days, int[][] meetings) {
+		Arrays.sort(meetings,new MyComparator<int[]>());
+		for (int i = 0; i < meetings.length; i++) {
+		}
+		int[][] merged = merge(meetings);
+		for (int i = 0; i < merged.length; i++) {
+		}
+		int sum = 0;
+		for (int i = 0; i < merged.length; i++) {
+			if (merged[i][0] != 0 && merged[i][1] != 0) {
+				sum += merged[i][1] - merged[i][0] + 1;
+			}
+		}
+		return days - sum;
+	}
+	int[][] merge(int[][] meetings) {
+		int[][] ans = new int[meetings.length][2];
+		ans[0][0] = meetings[0][0];
+		ans[0][1] = meetings[0][1];
+		int j = 0;
+		for (int i = 1; i < meetings.length; i++) {
+			if (ans[j][0] <= meetings[i][0] && ans[j][1] >= meetings[i][1]) {
+				continue;
+			} 
+			else if (ans[j][1] >= meetings[i][0] && ans[j][1] < meetings[i][1]) {
+				ans[j][1] = meetings[i][1];
+			} 
+			else {
+				j++;
+				ans[j][0] = meetings[i][0];
+				ans[j][1] = meetings[i][1];
+			}
+		}
+		return ans;
+	}
+}
+class MyComparator {
+	int compare(int[] a, int[] b) {
+		int result = Integer.compare(a[0],b[0]);
+		if (result == 0) {
+			result = Integer.compare(b[1],a[1]);
+		}
+		return result;
+	}
+}

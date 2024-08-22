@@ -1,0 +1,25 @@
+class Solution {
+	Map<Integer, Boolean>[] adj;
+	int count = 0;
+	void dfs(int city, int parent) {
+		for (var nbr: adj[city].keySet()) {	
+			Boolean needReorder = adj[city].get(nbr);
+			if (nbr != parent) {
+				if (needReorder) {
+					count++;
+				}
+				dfs(nbr,city);
+			}
+		}
+	}
+	int minReorder(int n, int[][] connections) {
+		adj = new HashMap[n];
+		Arrays.setAll(adj,(map) -> {new HashMap<>()});
+		for (var con: connections) {	
+			adj[con[0]].put(con[1],true);
+			adj[con[1]].put(con[0],false);
+		}
+		dfs(0,-1);
+		return count;
+	}
+}

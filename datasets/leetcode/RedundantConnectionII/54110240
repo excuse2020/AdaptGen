@@ -1,0 +1,73 @@
+class Solution {
+	int find(int x, int[] parent) {
+		if (parent[x] < 0) {
+			return x;
+		}
+		int temp = x;
+		while (parent[temp] >= 0) {
+			temp = parent[temp];
+		}
+		parent[x] = temp;
+		return temp;
+	}
+	int[] findRedundantDirectedConnection(int[][] edges) {
+		int n = edges.length;
+		int[] indegree = new int[n + 1];
+		int critical_index_a = -1;
+		int critical_index_b = -1;
+		Arrays.fill(indegree,-1);
+		for (int i = 0; i < n; i++) {
+			int u = edges[i][0];
+			int v = edges[i][1];
+			if (indegree[v] != -1) {
+				critical_index_a = indegree[v];
+				critical_index_b = i;
+			} 
+			else {
+				indegree[v] = i;
+			}
+		}
+		int[] parent = new int[n + 1];
+		if (critical_index_a == -1) {
+			Arrays.fill(parent,-1);
+			for (int[] edge: edges) {	
+				if (union(edge[0],edge[1],parent)) {
+					return edge;
+				}
+			}
+		} 
+		else {
+			Arrays.fill(parent,-1);
+			for (int i = 0; i < n; i++) {
+				if (i == critical_index_b) {
+					continue;
+				}
+				if (union(edges[i][0],edges[i][1],parent)) {
+					return edges[critical_index_a];
+				}
+			}
+			return edges[critical_index_b];
+		}
+		return null;
+	}
+	boolean union(int x, int y, int[] parent) {
+		int setX = find(x,parent);
+		int setY = find(y,parent);
+		if (setX == setY) {
+			return true;
+		} 
+		else {
+			int rankX = Math.abs(parent[setX]);
+			int rankY = Math.abs(parent[setY]);
+			if (rankY > rankX) {
+				parent[setX] = setY;
+				parent[setY] -= rankX;
+			} 
+			else {
+				parent[setY] = setX;
+				parent[setX] -= rankY;
+			}
+		}
+		return false;
+	}
+}

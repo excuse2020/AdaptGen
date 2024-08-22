@@ -1,0 +1,31 @@
+class Solution {
+	int minimumLengthEncoding(String[] words) {
+		if (words.length == 1) {
+			return words[0].length() + 1;
+		}
+		List<String> strs = new ArrayList<>();
+		for (String word: words) {	
+			StringBuilder sb = new StringBuilder();
+			for (int i = word.length() - 1; i >= 0; i--) {
+				sb.append(word.charAt(i));
+			}
+			strs.add(sb.toString());
+		}
+		Collections.sort(strs);
+		Stack<String> stack = new Stack<>();
+		int count = 0;
+		int len = 0;
+		for (String str: strs) {	
+			stack.push(str);
+		}
+		while (!stack.isEmpty()) {
+			String current = stack.pop();
+			while (!stack.isEmpty() && current.startsWith(stack.peek())) {
+				stack.pop();
+			}
+			count++;
+			len += current.length();
+		}
+		return count + len;
+	}
+}

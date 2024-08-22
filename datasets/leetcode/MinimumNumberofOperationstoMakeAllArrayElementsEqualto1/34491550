@@ -1,0 +1,36 @@
+class Solution {
+	int gcd(int a, int b) {
+		if (a == 0) {
+			return b;
+		}
+		return gcd(b % a,a);
+	}
+	int minOperations(int[] nums) {
+		int n = nums.length;
+		int ele = nums[0], numOpe = 0;
+		for (int i = 0; i < n; i++) {
+			ele = gcd(nums[i],ele);
+			if (nums[i] == 1) {
+				numOpe++;
+			}
+		}
+		if (ele != 1) {
+			return -1;
+		}
+		int notOne = n - numOpe;
+		int finalMinOperationAtleastOne = Integer.MAX_VALUE;
+		for (int i = 0; i < n; i++) {
+			ele = nums[i];
+			int minOpeAtleastOne = 0;
+			for (int j = i + 1; j < n; j++) {
+				ele = gcd(ele,nums[j]);
+				minOpeAtleastOne++;
+				if (ele == 1) {
+					finalMinOperationAtleastOne = Math.min(finalMinOperationAtleastOne,minOpeAtleastOne);
+					break;
+				}
+			}
+		}
+		return finalMinOperationAtleastOne + notOne - 1;
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	int lowestCommonAncestor(TreeNode root, int o1, int o2) {
+		Map<Integer, TreeNode> parents = new HashMap<>();
+		Map<Integer, Boolean> visted = new HashMap<>();
+		List<TreeNode> queue = new ArrayList<>();
+		queue.add(root);
+		while (!queue.isEmpty()) {
+			TreeNode node = queue.remove(0);
+			visted.put(node.val,false);
+			if (node.left != null) {
+				parents.put(node.left.val,node);
+				queue.add(node.left);
+			}
+			if (node.right != null) {
+				parents.put(node.right.val,node);
+				queue.add(node.right);
+			}
+		}
+		TreeNode node = parents.getOrDefault(o1,null);
+		visted.put(o1,true);
+		while (node != null) {
+			visted.put(node.val,true);
+			node = parents.getOrDefault(node.val,null);
+		}
+		Integer val = o2;
+		while (!visted.get(val)) {
+			node = parents.get(val);
+			val = node.val;
+		}
+		return val;
+	}
+}

@@ -1,0 +1,25 @@
+class Solution {
+	int getMoneyAmount(int n) {
+		int[][] dp = new int[n + 1][n + 1];
+		for (int[] row: dp) {	
+			Arrays.fill(row,-1);
+		}
+		return helper(1,n,dp);
+	}
+	int helper(int lower, int upper, int[][] dp) {
+		if (lower >= upper) {
+			return 0;
+		}
+		if (dp[lower][upper] != -1) {
+			return dp[lower][upper];
+		}
+		int res = Integer.MAX_VALUE;
+		for (int i = lower; i <= upper; i++) {
+			int op2 = i + helper(lower,i - 1,dp);
+			int op3 = i + helper(i + 1,upper,dp);
+			int out = Math.max(op2,op3);
+			res = Math.min(out,res);
+		}
+		return dp[lower][upper] = res;
+	}
+}

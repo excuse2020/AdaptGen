@@ -1,0 +1,24 @@
+class Solution {
+	int findMaxSum(int index, int time, int n, int satisfaction, int dp) {
+		if (index >= n) {
+			return 0;
+		}
+		if (dp[index][time] != -1) {
+			return dp[index][time];
+		}
+		int pick = satisfaction[index] * time + findMaxSum(index + 1,time + 1,n,satisfaction,dp);
+		int notpick = 0 + findMaxSum(index + 1,time,n,satisfaction,dp);
+		return dp[index][time] = Math.max(pick,notpick);
+	}
+	int maxSatisfaction(int[] satisfaction) {
+		int n = satisfaction.length;
+		Arrays.sort(satisfaction);
+		int dp = new int[n][n + 1];
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n + 1; j++) {
+				dp[i][j] = -1;
+			}
+		}
+		return findMaxSum(0,1,n,satisfaction,dp);
+	}
+}

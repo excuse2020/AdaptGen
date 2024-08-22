@@ -1,0 +1,49 @@
+class Solution {
+	ArrayList<ArrayList<Integer>> adj;
+	int[] in;
+	int[] low;
+	List<List<Integer>> res = new ArrayList<>();
+	int timer = 0;
+	boolean[] visited;
+	void createAdjacencyList(List<List<Integer>> connections, int n) {
+		adj = new ArrayList<>(n);
+		while (adj.size() < n) {
+			adj.add(new ArrayList<Integer>());
+		}
+		for (List<Integer> connection: connections) {	
+			int a = connection.get(0);
+			int b = connection.get(1);
+			adj.get(a).add(b);
+			adj.get(b).add(a);
+		}
+	}
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		in = new int[n];
+		low = new int[n];
+		visited = new boolean[n];
+		createAdjacencyList(connections,n);
+		dfs(0,-1);
+		return res;
+	}
+	void dfs(int node, int parent) {
+		visited[node] = true;
+		in[node] = timer;
+		low[node] = timer;
+		++timer;
+		for (int child: adj.get(node)) {	
+			if (child == parent) {
+				continue;
+			} 
+			else if (visited[child]) {
+				low[node] = Math.min(low[node],in[child]);
+			} 
+			else {
+				dfs(child,node);
+				low[node] = Math.min(low[node],low[child]);
+				if (low[child] > in[node]) {
+					res.add(Arrays.asList(node,child));
+				}
+			}
+		}
+	}
+}

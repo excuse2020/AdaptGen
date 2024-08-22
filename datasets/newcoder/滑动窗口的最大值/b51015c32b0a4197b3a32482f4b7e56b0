@@ -1,0 +1,53 @@
+class Solution {
+	int[] FindMax(int[] num, int start, int end) {
+		int[] maxIndexAndValue = new int[2];
+		int maxIndex = 0;
+		int maxValue = Integer.MIN_VALUE;
+		for (int i = start; i <= end; i++) {
+			if (num[i] > maxValue) {
+				maxValue = num[i];
+				maxIndex = i;
+			}
+		}
+		maxIndexAndValue[0] = maxIndex;
+		maxIndexAndValue[1] = maxValue;
+		return maxIndexAndValue;
+	}
+	ArrayList<Integer> maxInWindows(int[] num, int size) {
+		ArrayList<Integer> arrayList = new ArrayList<>();
+		int numL = num.length;
+		if (numL < size || 0 == size) {
+			return arrayList;
+		}
+		int start = 0;
+		int end = size - 1;
+		int[] maxIndexAndValue = new int[2];
+		int maxIndex = -1;
+		int maxValue = Integer.MIN_VALUE;
+		while (end < numL) {
+			if (!(start <= maxIndex && maxIndex <= end)) {
+				maxIndexAndValue = FindMax(num,start,end);
+				maxIndex = maxIndexAndValue[0];
+				maxValue = maxIndexAndValue[1];
+				arrayList.add(maxValue);
+				start++;
+				end++;
+			} 
+			else {
+				if (num[end] >= maxValue) {
+					maxValue = num[end];
+					maxIndex = end;
+					arrayList.add(maxValue);
+					start++;
+					end++;
+				} 
+				else {
+					arrayList.add(maxValue);
+					start++;
+					end++;
+				}
+			}
+		}
+		return arrayList;
+	}
+}

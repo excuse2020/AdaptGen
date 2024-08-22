@@ -1,0 +1,46 @@
+class Solution {
+	int[] assignTasks(int[] servers, int[] tasks) {
+		PriorityQueue<int[]> available = new PriorityQueue<>(new Comparator<int[]>());
+		for (int i = 0; i < servers.length; i++) {
+			available.offer(new int{servers[i], i});
+		}
+		HashMap<Long, List<int[]>> occupied = new HashMap<>();
+		Queue<int[]> task_queue = new LinkedList<>();
+		task_queue.offer(new int{tasks[0], 0});
+		int[] ans = new int[tasks.length];
+		long time = 0;
+		int index = 0;
+		PriorityQueue<Long> min_time = new PriorityQueue<>();
+		while (!task_queue.isEmpty()) {
+			if (occupied.containsKey(time)) {
+				for (int[] server: occupied.get(time)) {	
+					available.offer(server);
+				}
+				while (!min_time.isEmpty() && min_time.peek() <= time) {
+					min_time.poll();
+				}
+			}
+			while (!available.isEmpty() && !task_queue.isEmpty()) {
+				int server = available.peek()[0];
+				int server_index = available.poll()[1];
+				int req_time = task_queue.peek()[0];
+				int pos = task_queue.poll()[1];
+				ans[pos] = server_index;
+				occupied.putIfAbsent(time + req_time,new ArrayList<>());
+				occupied.get(time + req_time).add(new int{server, server_index});
+				min_time.offer(time + req_time);
+			}
+			if (available.isEmpty()) {
+				time = min_time.peek();
+			} 
+			else {
+				time++;
+			}
+			while (index < tasks.length - 1 && index < time) {
+				index++;
+				task_queue.offer(new int{tasks[index], index});
+			}
+		}
+		return ans;
+	}
+}

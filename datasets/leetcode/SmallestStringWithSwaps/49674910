@@ -1,0 +1,36 @@
+class Solution {
+	int find(int[] parent, int i) {
+		if (i == parent[i]) {
+			return i;
+		} 
+		else {
+			return find(parent,parent[i]);
+		}
+	}
+	void join(int[] parent, List<Integer> pair) {
+	}
+	String smallestStringWithSwaps(String s, List<List<Integer>> pairs) {
+		Map<Integer, PriorityQueue<Character>> map = new HashMap<>();
+		int len = s.length();
+		int[] parent = new int[len];
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < len; i++) {
+			parent[i] = i;
+		}
+		for (List<Integer> pair: pairs) {	
+			join(parent,pair);
+		}
+		for (int i = 0; i < len; i++) {
+			int grp = find(parent,i);
+			PriorityQueue<Character> pq = map.putIfAbsent(grp,new PriorityQueue<>());
+			pq = map.get(grp);
+			pq.offer(s.charAt(i));
+		}
+		for (int i = 0; i < len; i++) {
+			int grp = find(parent,i);
+			PriorityQueue<Character> pq = map.get(grp);
+			sb.append(pq.poll());
+		}
+		return sb.toString();
+	}
+}

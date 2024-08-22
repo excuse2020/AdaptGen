@@ -1,0 +1,30 @@
+class Solution {
+	TreeNode balanceBST(TreeNode root) {
+		List<TreeNode> nodes = new ArrayList<>();
+		inorder(root,nodes);
+		return createBalancedTree(nodes,0,nodes.size() - 1);
+	}
+	TreeNode createBalancedTree(List<TreeNode> nodes, int l, int r) {
+		if (r == l) {
+			TreeNode n = nodes.get(l);
+			n.left = n.right = null;
+			return n;
+		} 
+		else if (r < l) {
+			return null;
+		}
+		int mid = (l + r) / 2;
+		TreeNode curr = nodes.get(mid);
+		curr.left = createBalancedTree(nodes,l,mid - 1);
+		curr.right = createBalancedTree(nodes,mid + 1,r);
+		return curr;
+	}
+	void inorder(TreeNode root, List<TreeNode> nodes) {
+		if (root == null) {
+			return;
+		}
+		inorder(root.left,nodes);
+		nodes.add(root);
+		inorder(root.right,nodes);
+	}
+}

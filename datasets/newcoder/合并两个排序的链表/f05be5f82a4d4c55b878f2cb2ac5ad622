@@ -1,0 +1,38 @@
+class Solution {
+	ListNode Merge(ListNode list1, ListNode list2) {
+		if (list1 == null) {
+			return list2;
+		}
+		if (list2 == null) {
+			return list1;
+		}
+		ListNode newHead;
+		if (list1.val < list2.val) {
+			newHead = list1;
+		} 
+		else {
+			newHead = list2;
+		}
+		ListNode prevOfInsert = new ListNode(0x80000000);
+		prevOfInsert.next = list1;
+		ListNode nextOfInsert = list1;
+		ListNode toBeInsert;
+		while (list2 != null && nextOfInsert != null) {
+			toBeInsert = list2;
+			if (list2.val <= nextOfInsert.val) {
+				list2 = list2.next;
+				prevOfInsert.next = toBeInsert;
+				toBeInsert.next = nextOfInsert;
+				prevOfInsert = toBeInsert;
+			} 
+			else {
+				nextOfInsert = nextOfInsert.next;
+				prevOfInsert = prevOfInsert.next;
+			}
+		}
+		if (nextOfInsert == null && list2 != null) {
+			prevOfInsert.next = list2;
+		}
+		return newHead;
+	}
+}

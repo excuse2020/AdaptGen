@@ -1,0 +1,54 @@
+class Solution {
+	int[][] dp;
+	boolean isPred(String s1, String s2) {
+		return solve(s1,s2,0,0);
+	}
+	int longestStrChain(String[] words) {
+		Arrays.sort(words,(a, b) -> {a.length() - b.length()});
+		dp = new int[words.length][words.length];
+		for (int[] i: dp) {	
+			Arrays.fill(i,-1);
+		}
+		return solveLis(0,words,-1);
+	}
+	boolean solve(String s1, String s2, int i, int j) {
+		if (i >= s1.length()) {
+			return true;
+		}
+		if (j >= s2.length() && i < s1.length()) {
+			return false;
+		}
+		if (s1.charAt(i) == s2.charAt(j)) {
+			return solve(s1,s2,i + 1,j + 1);
+		} 
+		else {
+			return solve(s1,s2,i,j + 1);
+		}
+	}
+	int solveLis(int idx, String[] words, int prev) {
+		if (idx >= words.length) {
+			return 0;
+		}
+		if (prev != -1) {
+			if (dp[idx][prev] != -1) {
+				return dp[idx][prev];
+			}
+		}
+		int not_taken = solveLis(idx + 1,words,prev);
+		int taken = 0;
+		if (prev == -1 || words[idx].length() - words[prev].length() == 1) {
+			if (prev != -1) {
+				if (isPred(words[prev],words[idx])) {
+					taken = 1 + solveLis(idx + 1,words,idx);
+				}
+			} 
+			else {
+				taken = 1 + solveLis(idx + 1,words,idx);
+			}
+		}
+		if (prev != -1) {
+			return dp[idx][prev] = Math.max(taken,not_taken);
+		}
+		return Math.max(taken,not_taken);
+	}
+}

@@ -1,0 +1,31 @@
+class Solution {
+	int mod = (int) 1e9 + 7;
+	int dfs(int prevIdx, int mask, int[][] dp, int[] nums) {
+		int n = nums.length;
+		if (Integer.bitCount(mask) == n) {
+			return 1;
+		}
+		if (dp[prevIdx][mask] != -1) {
+			return dp[prevIdx][mask];
+		}
+		int res = 0;
+		for (int i = 0; i < nums.length; i++) {
+			if ((mask & 1 << i) != 0) {
+				continue;
+			}
+			if (Integer.bitCount(mask) == 0 || nums[prevIdx] % nums[i] == 0 || nums[i] % nums[prevIdx] == 0) {
+				res += dfs(i,mask | (1 << i),dp,nums);
+				res %= mod;
+			}
+		}
+		return dp[prevIdx][mask] = res;
+	}
+	int specialPerm(int[] nums) {
+		int n = nums.length;
+		int[][] dp = new int[n][1 << n];
+		for (int i = 0; i < n; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		return dfs(0,0,dp,nums);
+	}
+}

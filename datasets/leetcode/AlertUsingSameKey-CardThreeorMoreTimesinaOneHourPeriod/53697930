@@ -1,0 +1,26 @@
+class Solution {
+	List<String> alertNames(String[] keyName, String[] keyTime) {
+		int len = keyName.length;
+		Map<String, ArrayList<String>> map = new HashMap<>();
+		for (int i = 0; i < len; i++) {
+			map.putIfAbsent(keyName[i],new ArrayList<>());
+			map.get(keyName[i]).add(keyTime[i]);
+		}
+		List<String> res = new LinkedList<>();
+		for (String key: map.keySet()) {	
+			ArrayList<String> list = map.get(key);
+			Collections.sort(list);
+			for (int i = 0; i <= list.size() - 3; i++) {
+				String sHour = list.get(i);
+				int targetHour = Integer.parseInt(sHour.substring(0,2)) + 1;
+				String targetTime = (targetHour < 10 ? "0" : "") + String.valueOf(targetHour);
+				if (targetTime.compareTo(list.get(i + 2)) >= 0) {
+					res.add(key);
+					break;
+				}
+			}
+		}
+		Collections.sort(res);
+		return res;
+	}
+}

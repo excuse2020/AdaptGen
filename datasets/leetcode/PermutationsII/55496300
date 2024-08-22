@@ -1,0 +1,48 @@
+class Solution {
+	List<List<Integer>> permuteUnique(int[] nums) {
+		List<List<Integer>> result = new ArrayList<List<Integer>>();
+		if (nums.length == 1) {
+			List<Integer> an = new ArrayList<Integer>();
+			an.add(nums[0]);
+			result.add(an);
+			return result;
+		}
+		Arrays.sort(nums);
+		int count = 1;
+		for (int pos = 0; pos < nums.length; pos++) {
+			count = count * (nums.length - pos);
+		}
+		boolean[] used = new boolean[nums.length];
+		Stack<Integer> ans = new Stack<Integer>();
+		for (int i = 0; i < count; i++) {
+			int number = i;
+			Boolean isDuplicate = false;
+			for (int index = 0; index < nums.length; index++) {
+				int div = nums.length - index;
+				int localIndex = number % div;
+				number = number / div;
+				int pos = -1;
+				while (localIndex > -1) {
+					localIndex--;
+					pos++;
+					while (used[pos]) {
+						pos++;
+					}
+				}
+				if (pos > 0 && nums[pos] == nums[pos - 1] && !used[pos - 1]) {
+					isDuplicate = true;
+					break;
+				}
+				int numm = nums[pos];
+				used[pos] = true;
+				ans.push(numm);
+			}
+			if (!isDuplicate) {
+				result.add(new ArrayList(ans));
+			}
+			ans.clear();
+			Arrays.fill(used,false);
+		}
+		return result;
+	}
+}

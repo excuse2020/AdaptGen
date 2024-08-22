@@ -1,0 +1,37 @@
+class Solution {
+	List<Boolean> hasApple;
+	Map<Integer, List<Integer>> map;
+	boolean[] seen;
+	int dfs(int index) {
+		int totalTime = 0;
+		int localTime = 0;
+		for (int i: map.get(index)) {	
+			if (seen[i]) {
+				continue;
+			}
+			seen[i] = true;
+			localTime = dfs(i);
+			if (localTime > 0 || hasApple.get(i)) {
+				totalTime += localTime + 2;
+			}
+		}
+		return totalTime;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		this.map = new HashMap<>();
+		this.hasApple = hasApple;
+		this.seen = new boolean[n];
+		for (int[] i: edges) {	
+			if (map.get(i[0]) == null) {
+				map.put(i[0],new ArrayList<>());
+			}
+			if (map.get(i[1]) == null) {
+				map.put(i[1],new ArrayList<>());
+			}
+			map.get(i[0]).add(i[1]);
+			map.get(i[1]).add(i[0]);
+		}
+		seen[0] = true;
+		return dfs(0);
+	}
+}

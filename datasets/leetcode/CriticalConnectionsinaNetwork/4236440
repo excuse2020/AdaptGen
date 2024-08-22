@@ -1,0 +1,42 @@
+class Solution {
+	int DFS(List<Integer>[] nodeConnections, List<List<Integer>> answer, boolean[] visited, int[] sequenceList, int[] groupNumber, int sequence, int node, int prev) {
+		visited[node] = true;
+		groupNumber[node] = sequence;
+		sequenceList[node] = sequence;
+		for (int i = 0; i < nodeConnections[node].size(); i++) {
+			int next = nodeConnections[node].get(i);
+			if (next == prev) {
+				continue;
+			}
+			if (!visited[next]) {
+				sequence = DFS(nodeConnections,answer,visited,sequenceList,groupNumber,sequence + 1,next,node);
+				groupNumber[node] = Math.min(groupNumber[node],groupNumber[next]);
+				if (groupNumber[next] > sequenceList[node]) {
+					answer.add(Arrays.asList(next,node));
+				}
+			} 
+			else {
+				groupNumber[node] = Math.min(groupNumber[next],groupNumber[node]);
+			}
+		}
+		return sequence + 1;
+	}
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		List<Integer> nodeConnections = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			nodeConnections[i] = new ArrayList<Integer>();
+		}
+		for (int i = 0; i < connections.size(); i++) {
+			int a = connections.get(i).get(0);
+			int b = connections.get(i).get(1);
+			nodeConnections[a].add(b);
+			nodeConnections[b].add(a);
+		}
+		int[] sequenceList = new int[n];
+		int[] groupNumber = new int[n];
+		List<List<Integer>> answer = new ArrayList<List<Integer>>();
+		boolean[] visited = new boolean[n];
+		DFS(nodeConnections,answer,visited,sequenceList,groupNumber,0,0,0);
+		return answer;
+	}
+}

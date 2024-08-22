@@ -1,0 +1,30 @@
+class Solution {
+	int longestSquareStreak(int[] nums) {
+		int[] target = new int[100001];
+		int[] source = new int[100001];
+		int[] length = new int[100001];
+		int longest = 0;
+		for (int i = 0; i < nums.length; i++) {
+			int curr = nums[i];
+			int next = curr > 316 ? -1 : nums[i] * nums[i];
+			if (target[curr] != 0) {
+				continue;
+			}
+			boolean hasNext = next > 0 && target[next] != 0;
+			target[curr] = hasNext ? target[next] : next;
+			if (target[curr] > 0) {
+				source[target[curr]] = curr;
+			}
+			length[curr] = hasNext ? ++length[next] : 1;
+			if (source[curr] != 0) {
+				target[source[curr]] = target[curr];
+				if (target[curr] > 0) {
+					source[target[curr]] = source[curr];
+				}
+				length[source[curr]] += length[curr];
+			}
+			longest = Math.max(longest,source[curr] == 0 ? length[curr] : length[source[curr]]);
+		}
+		return longest < 2 ? -1 : longest;
+	}
+}

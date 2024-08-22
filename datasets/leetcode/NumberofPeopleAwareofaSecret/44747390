@@ -1,0 +1,19 @@
+class Solution {
+	int peopleAwareOfSecret(int n, int delay, int forget) {
+		long dp = new long[n + 1];
+		long peopleshare = 0, peopleforget = 0, newpeople = 0;
+		long mod = (long) 1e9 + 7;
+		dp[1] = 1;
+		for (int i = 2; i <= n; i++) {
+			peopleforget = dp[Math.max(i - forget,0)];
+			newpeople = dp[Math.max(i - delay,0)];
+			peopleshare += (newpeople - peopleforget + mod) % mod;
+			dp[i] = peopleshare;
+		}
+		long sum = 0;
+		for (int i = n - forget + 1; i <= n; i++) {
+			sum = (sum + dp[i]) % mod;
+		}
+		return (int) sum;
+	}
+}

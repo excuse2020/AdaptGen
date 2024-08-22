@@ -1,0 +1,52 @@
+class Solution {
+	String getBitmap(int[] arr) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 8; i++) {
+			if (arr[i] == 1) {
+				sb.append("1");
+			} 
+			else {
+				sb.append("0");
+			}
+		}
+		return sb.toString();
+	}
+	int[] getFinalState(String bitmap) {
+		int[] cells = new int[8];
+		int i = 0;
+	}
+	int[] getNextState(int[] cells) {
+		int[] ncells = new int[8];
+		for (int i = 1; i < 7; i++) {
+			ncells[i] = cells[i - 1] == cells[i + 1] ? 1 : 0;
+		}
+		return ncells;
+	}
+	int[] prisonAfterNDays(int[] cells, int n) {
+		Map<String, Integer> cells_day = new HashMap<>();
+		Map<Integer, String> day_cells = new HashMap<>();
+		int day, repeatsAfter = -1, prevDay = -1;
+		for (day = 1; day <= n; day++) {
+			int[] ncells = getNextState(cells);
+			String bitmap = getBitmap(ncells);
+			if (cells_day.containsKey(bitmap)) {
+				prevDay = cells_day.get(bitmap);
+				repeatsAfter = day - prevDay;
+				break;
+			} 
+			else {
+				cells_day.put(bitmap,day);
+				day_cells.put(day,bitmap);
+			}
+			cells = ncells;
+		}
+		if (repeatsAfter == -1) {
+			String bitmap = day_cells.get(day - 1);
+			return getFinalState(bitmap);
+		}
+		int remainingDays = n - day;
+		int r = remainingDays % repeatsAfter;
+		String bitmap = day_cells.get(prevDay + r);
+		return getFinalState(bitmap);
+	}
+}

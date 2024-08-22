@@ -1,0 +1,43 @@
+class Solution {
+	int countCompleteComponents(int n, int[][] edges) {
+		int[] indegree = new int[n];
+		int[] set = new int[n];
+		int count = n;
+		Arrays.fill(set,-1);
+		for (int[] edge: edges) {	
+			int u = edge[0], v = edge[1];
+			int r1 = findRoot(set,u);
+			int r2 = findRoot(set,v);
+			indegree[u]++;
+			indegree[v]++;
+			if (r1 != r2) {
+				union(set,r1,r2);
+				count--;
+			}
+		}
+		Set<Integer> seen = new HashSet<>();
+		for (int i = 0; i < n; i++) {
+			int r = findRoot(set,i);
+			if (indegree[i] != Math.abs(set[r]) - 1 && seen.add(r)) {
+				count--;
+			}
+		}
+		return count;
+	}
+	int findRoot(int[] set, int el) {
+		if (set[el] < 0) {
+			return el;
+		}
+		return set[el] = findRoot(set,set[el]);
+	}
+	void union(int[] set, int r1, int r2) {
+		if (set[r1] <= set[r2]) {
+			set[r1] += set[r2];
+			set[r2] = r1;
+		} 
+		else {
+			set[r2] += set[r1];
+			set[r1] = r2;
+		}
+	}
+}

@@ -1,0 +1,23 @@
+class Solution {
+	long maxAlternatingSum(int[] nums) {
+		int n = nums.length;
+		long dp = new long[n + 1][2];
+		for (long ar: dp) {	
+			Arrays.fill(ar,-1);
+		}
+		return solve(nums,dp,0,0);
+	}
+	long solve(int nums, long dp, int index, int state) {
+		if (index == nums.length) {
+			return 0l;
+		}
+		long ans = Long.MIN_VALUE;
+		if (dp[index][state] != -1l) {
+			return dp[index][state];
+		}
+		long op1 = solve(nums,dp,index + 1,state);
+		long op2 = (state == 0 ? 1 : -1) * nums[index] + solve(nums,dp,index + 1,state ^ 1);
+		dp[index][state] = Math.max(op1,op2);
+		return dp[index][state];
+	}
+}

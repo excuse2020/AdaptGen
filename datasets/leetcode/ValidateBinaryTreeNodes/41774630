@@ -1,0 +1,45 @@
+class Solution {
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		Set<Integer> nodes = new HashSet<Integer>();
+		for (int i = 0; i < n; i++) {
+			nodes.add(i);
+		}
+		for (int i = 0; i < n; i++) {
+			if (nodes.contains(leftChild[i])) {
+				nodes.remove(leftChild[i]);
+			}
+			if (nodes.contains(rightChild[i])) {
+				nodes.remove(rightChild[i]);
+			}
+		}
+		if (nodes.size() > 1 || nodes.size() == 0) {
+			return false;
+		}
+		int node = nodes.iterator().next();
+		nodes.clear();
+		Stack<Integer> stack = new Stack<Integer>();
+		stack.push(node);
+		nodes.add(node);
+		while (!stack.isEmpty()) {
+			node = stack.pop();
+			if (leftChild[node] != -1) {
+				if (nodes.contains(leftChild[node])) {
+					return false;
+				}
+				nodes.add(leftChild[node]);
+				stack.push(leftChild[node]);
+			}
+			if (rightChild[node] != -1) {
+				if (nodes.contains(rightChild[node])) {
+					return false;
+				}
+				nodes.add(rightChild[node]);
+				stack.push(rightChild[node]);
+			}
+		}
+		if (nodes.size() != n) {
+			return false;
+		}
+		return true;
+	}
+}

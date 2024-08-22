@@ -1,0 +1,38 @@
+class Solution {
+	void merge(int[] nums, int start, int mid, int end) {
+		int[] temp = new int[end - start + 1];
+		int leftPos = start;
+		int rightPos = mid + 1;
+		int tempPos = 0;
+		while (leftPos <= mid && rightPos <= end) {
+			if (nums[leftPos] <= nums[rightPos]) {
+				temp[tempPos++] = nums[leftPos++];
+			} 
+			else {
+				temp[tempPos++] = nums[rightPos++];
+			}
+		}
+		while (leftPos <= mid) {
+			temp[tempPos++] = nums[leftPos++];
+		}
+		while (rightPos <= end) {
+			temp[tempPos++] = nums[rightPos++];
+		}
+		System.arraycopy(temp,0,nums,start,temp.length);
+	}
+	void mergeSort(int[] nums, int start, int end) {
+		if (start < end) {
+			int mid = start + (end - start) / 2;
+			mergeSort(nums,start,mid);
+			mergeSort(nums,mid + 1,end);
+			merge(nums,start,mid,end);
+		}
+	}
+	int[] sortArray(int[] nums) {
+		if (nums == null || nums.length <= 1) {
+			return nums;
+		}
+		mergeSort(nums,0,nums.length - 1);
+		return nums;
+	}
+}

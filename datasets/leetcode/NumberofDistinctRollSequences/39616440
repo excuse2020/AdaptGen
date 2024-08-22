@@ -1,0 +1,54 @@
+class Solution {
+	long[][][] dp;
+	long mod = (long) Math.pow(10,9) + 7;
+	int distinctSequences(int n) {
+		dp = new long[n + 1][8][8];
+		for (long[][] arr: dp) {	
+			for (long[] brr: arr) {	
+				Arrays.fill(brr,-1);
+			}
+		}
+		long ans = solve(n,7,7);
+		return (int) ans;
+	}
+	int gcd(int a, int b) {
+		if (b == 0) {
+			return a;
+		}
+		return gcd(b,a % b);
+	}
+	long solve(int n, int preva, int prevb) {
+		if (n == 0) {
+			return 1;
+		}
+		if (dp[n][preva][prevb] != -1) {
+			return dp[n][preva][prevb];
+		}
+		long ans = 0;
+		for (int k = 1; k <= 6; k++) {
+			if (k == preva || k == prevb) {
+				continue;
+			}
+			if (preva == 7) {
+				long a = solve(n - 1,k,7);
+				ans = (ans + a) % mod;
+			} 
+			else if (prevb == 7) {
+				int gcda = gcd(k,preva);
+				if (gcda == 1) {
+					long res = solve(n - 1,k,preva);
+					ans = (ans + res) % mod;
+				}
+			} 
+			else {
+				int gcda = gcd(k,preva);
+				if (gcda == 1) {
+					long res = solve(n - 1,k,preva);
+					ans = (ans + res) % mod;
+				}
+			}
+		}
+		dp[n][preva][prevb] = ans;
+		return ans;
+	}
+}

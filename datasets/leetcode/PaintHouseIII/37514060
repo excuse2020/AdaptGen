@@ -1,0 +1,50 @@
+class Solution {
+	int find(int i, int m, int[] houses, int pr, int j, int dp, int target, int cost, int n) {
+		if (i == m) {
+			if (j == target - 1) {
+				return 0;
+			}
+			return 1000000000;
+		}
+		if (j == target) {
+			return 1000000000;
+		}
+		if (dp[i][j][pr] != -1) {
+			return dp[i][j][pr];
+		}
+		if (houses[i] != 0) {
+			if (houses[i] == pr || pr == 0) {
+				return find(i + 1,m,houses,houses[i],j,dp,target,cost,n);
+			} 
+			else {
+				return find(i + 1,m,houses,houses[i],j + 1,dp,target,cost,n);
+			}
+		}
+		int ans = 1000000000;
+		for (int k = 0; k < n; k++) {
+			int f = 0;
+			if (k + 1 == pr || pr == 0) {
+				f = find(i + 1,m,houses,k + 1,j,dp,target,cost,n);
+			} 
+			else {
+				f = find(i + 1,m,houses,k + 1,j + 1,dp,target,cost,n);
+			}
+			f += cost[i][k];
+			ans = Math.min(ans,f);
+		}
+		return dp[i][j][pr] = ans;
+	}
+	int minCost(int[] houses, int[][] cost, int m, int n, int target) {
+		int dp = new int[m][target + 1][n + 1];
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j <= target; j++) {
+				Arrays.fill(dp[i][j],-1);
+			}
+		}
+		int x = find(0,m,houses,0,0,dp,target,cost,n);
+		if (x >= 1000000000) {
+			return -1;
+		}
+		return x;
+	}
+}

@@ -1,0 +1,40 @@
+class Solution {
+	HashMap<Integer, Integer> hm = new HashMap<>();
+	void helper(TreeNode t, int l) {
+		if (t == null) {
+			return;
+		}
+		hm.put(l,hm.getOrDefault(l,0) + t.val);
+		helper(t.left,l + 1);
+		helper(t.right,l + 1);
+	}
+	TreeNode helper1(TreeNode t, int l) {
+		if (t == null) {
+			return null;
+		}
+		TreeNode nt = new TreeNode();
+		nt.val = hm.get(l) - t.val;
+		nt.left = helper1(t.left,l + 1);
+		nt.right = helper1(t.right,l + 1);
+		return nt;
+	}
+	void helper2(TreeNode root, TreeNode t) {
+		if (t == null) {
+			return;
+		}
+		if (t.left != null && t.right != null) {
+			int lef = root.left.val;
+			int rig = root.right.val;
+			t.left.val = t.left.val - rig;
+			t.right.val = t.right.val - lef;
+		}
+		helper2(root.left,t.left);
+		helper2(root.right,t.right);
+	}
+	TreeNode replaceValueInTree(TreeNode root) {
+		helper(root,0);
+		TreeNode r = helper1(root,0);
+		helper2(root,r);
+		return r;
+	}
+}

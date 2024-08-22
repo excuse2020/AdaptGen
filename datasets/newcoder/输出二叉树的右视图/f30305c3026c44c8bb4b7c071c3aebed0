@@ -1,0 +1,44 @@
+class Solution {
+	TreeNode build(int[] preOrdder, int[] inOrder) {
+		int n = preOrdder.length;
+		int m = inOrder.length;
+		if (n == 0 || m == 0) {
+			return null;
+		}
+		TreeNode root = new TreeNode(preOrdder[0]);
+		for (int i = 0; i < inOrder.length; i++) {
+			if (preOrdder[0] == inOrder[i]) {
+				root.left = build(Arrays.copyOfRange(preOrdder,1,i + 1),Arrays.copyOfRange(inOrder,0,i));
+				root.right = build(Arrays.copyOfRange(preOrdder,i + 1,preOrdder.length),Arrays.copyOfRange(inOrder,i + 1,inOrder.length));
+			}
+		}
+		return root;
+	}
+	int[] solve(int[] preOrder, int[] inOrder) {
+		ArrayList<Integer> ret = new ArrayList<>();
+		TreeNode root = build(preOrder,inOrder);
+		TreeNode cur = root;
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(root);
+		while (!q.isEmpty()) {
+			int n = q.size();
+			for (int i = 0; i < n; i++) {
+				TreeNode t = q.poll();
+				if (i == n - 1) {
+					ret.add(t.val);
+				}
+				if (t.left != null) {
+					q.add(t.left);
+				}
+				if (t.right != null) {
+					q.add(t.right);
+				}
+			}
+		}
+		int[] ret2 = new int[ret.size()];
+		for (int i = 0; i < ret.size(); i++) {
+			ret2[i] = ret.get(i);
+		}
+		return ret2;
+	}
+}

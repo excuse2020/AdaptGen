@@ -1,0 +1,45 @@
+class Solution {
+	boolean isPalindrome(String s) {
+		int low = 0;
+		int high = s.length() - 1;
+		while (low <= high) {
+			if (s.charAt(low) != s.charAt(high)) {
+				return false;
+			}
+			low++;
+			high--;
+		}
+		return true;
+	}
+	int longestPalindrome(String[] words) {
+		Map<String, Integer> map = new HashMap<>();
+		int ans = 0;
+		boolean doesMiddlePalindromeExist = false;
+		for (String word: words) {	
+			map.put(word,map.getOrDefault(word,0) + 1);
+		}
+		for (String key: map.keySet()) {	
+			if (isPalindrome(key)) {
+				int count = map.get(key);
+				if (count % 2 != 0) {
+					count--;
+					doesMiddlePalindromeExist = true;
+				}
+				ans += count * 2;
+			} 
+			else if (!isPalindrome(key) && map.containsKey(reverse(key))) {
+				ans += (Math.min(map.get(key),map.get(reverse(key)))) * 4;
+				map.put(key,0);
+			}
+		}
+		if (doesMiddlePalindromeExist) {
+			return ans + 2;
+		}
+		return ans;
+	}
+	String reverse(String s) {
+		StringBuilder sb = new StringBuilder(s);
+		sb.reverse();
+		return sb.toString();
+	}
+}

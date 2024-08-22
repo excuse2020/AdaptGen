@@ -1,0 +1,31 @@
+class Solution {
+	boolean isPossible(int[] time, int trip, long t) {
+		long c = 0L;
+		for (int i: time) {	
+			c += t / (long) i;
+			if (c >= (long) trip) {
+				return true;
+			}
+		}
+		return false;
+	}
+	long minimumTime(int[] time, int totalTrips) {
+		long max = (long) 1e9;
+		for (int i: time) {	
+			max = Math.min(max,i);
+		}
+		max = max * totalTrips;
+		long l = 1L, h = max, ans = h;
+		while (l <= h) {
+			long mid = (h - l) / 2 + l;
+			if (isPossible(time,totalTrips,mid)) {
+				ans = mid;
+				h = mid - 1;
+			} 
+			else {
+				l = mid + 1;
+			}
+		}
+		return ans;
+	}
+}

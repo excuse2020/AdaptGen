@@ -1,0 +1,76 @@
+class Solution {
+	int[][][][][] dp;
+	int getMaxGridHappiness(int m, int n, int intr, int extr) {
+		dp = new int[30][33][33][intr + 1][extr + 1];
+		for (int i = 0; i < 30; i++) {
+			for (int j = 0; j < 33; j++) {
+				for (int k = 0; k < 33; k++) {
+					for (int l = 0; l <= intr; l++) {
+						Arrays.fill(dp[i][j][k][l],-1);
+					}
+				}
+			}
+		}
+		return solve(0,0,m,n,intr,extr,0,0,0);
+	}
+	int solve(int i, int j, int n, int m, int intr, int extr, int prevmaskint, int prevmaskext, int x) {
+		if (i == n) {
+			return 0;
+		}
+		if (j == m) {
+			return solve(i + 1,0,n,m,intr,extr,prevmaskint,prevmaskext,x + 1);
+		}
+		if (dp[x][prevmaskext][prevmaskint][intr][extr] != -1) {
+			return dp[x][prevmaskext][prevmaskint][intr][extr];
+		}
+		int max = 0;
+		int temp1 = (prevmaskint & (1 << j));
+		int temp2 = (prevmaskext & (1 << j));
+		int peeche1 = 0, peeche2 = 0;
+		if (j > 0) {
+			peeche1 = (prevmaskint & (1 << (j - 1)));
+			peeche2 = (prevmaskext & (1 << (j - 1)));
+		}
+		if (extr > 0) {
+			int a = 40;
+			if (temp1 > 0) {
+				a = a - 30;
+				a += 20;
+			}
+			if (peeche1 > 0) {
+				a = a - 30;
+				a += 20;
+			}
+			if (peeche2 > 0) {
+				a += 40;
+			}
+			if (temp2 > 0) {
+				a += 40;
+			}
+			a += solve(i,j + 1,n,m,intr,extr - 1,prevmaskint & (~(1 << j)),prevmaskext | (1 << j),x + 1);
+			max = Math.max(a,max);
+		}
+		if (intr > 0) {
+			int a = 120;
+			if (temp1 > 0) {
+				a = a - 60;
+			}
+			if (peeche1 > 0) {
+				a = a - 60;
+			}
+			if (peeche2 > 0) {
+				a += 20;
+				a -= 30;
+			}
+			if (temp2 > 0) {
+				a -= 30;
+				a += 20;
+			}
+			a += solve(i,j + 1,n,m,intr - 1,extr,prevmaskint | (1 << j),prevmaskext & (~(1 << j)),x + 1);
+			max = Math.max(a,max);
+		}
+		int a = solve(i,j + 1,n,m,intr,extr,prevmaskint & (~(1 << j)),prevmaskext & (~(1 << j)),x + 1);
+		max = Math.max(max,a);
+		return dp[x][prevmaskext][prevmaskint][intr][extr] = max;
+	}
+}

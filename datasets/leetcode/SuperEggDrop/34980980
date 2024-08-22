@@ -1,0 +1,45 @@
+class Solution {
+	int[][] t = new int[101][10001];
+	int solve(int i, int j) {
+		if (j == 0 || j == 1 || i == 1) {
+			return j;
+		}
+		if (t[i][j] != -1) {
+			return t[i][j];
+		}
+		int minValue = Integer.MAX_VALUE;
+		int left, right;
+		int l = 1, r = j;
+		while (l <= r) {
+			int k = (l + r) / 2;
+			if (t[i - 1][k - 1] != -1) {
+				left = t[i - 1][k - 1];
+			} 
+			else {
+				left = solve(i - 1,k - 1);
+				t[i - 1][k - 1] = left;
+			}
+			if (t[i][j - k] != -1) {
+				right = t[i][j - k];
+			} 
+			else {
+				right = solve(i,j - k);
+				t[i][j - k] = right;
+			}
+			if (left < right) {
+				l = k + 1;
+			} 
+			else {
+				r = k - 1;
+			}
+			int temp = 1 + Math.max(left,right);
+			minValue = Math.min(temp,minValue);
+		}
+		t[i][j] = minValue;
+		return t[i][j];
+	}
+	int superEggDrop(int k, int n) {
+		Arrays.stream(t).forEach((a) -> {Arrays.fill(a,-1)});
+		return solve(k,n);
+	}
+}

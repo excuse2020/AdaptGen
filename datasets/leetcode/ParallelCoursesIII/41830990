@@ -1,0 +1,34 @@
+class Solution {
+	List<Integer>[] graph;
+	int[] memo;
+	int helper(int cur, int[] time) {
+		if (memo[cur] != -1) {
+			return memo[cur];
+		}
+		int temp = 0;
+		for (int i: graph[cur]) {	
+			temp = Math.max(temp,helper(i,time));
+		}
+		return memo[cur] = temp + time[cur - 1];
+	}
+	int minimumTime(int n, int[][] relations, int[] time) {
+		graph = new List[n + 1];
+		boolean[] hasPrev = new boolean[n + 1];
+		int ans = 0;
+		for (int i = 1; i <= n; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int[] rel: relations) {	
+			hasPrev[rel[0]] = true;
+			graph[rel[1]].add(rel[0]);
+		}
+		memo = new int[n + 1];
+		Arrays.fill(memo,-1);
+		for (int i = 1; i <= n; i++) {
+			if (!hasPrev[i]) {
+				ans = Math.max(ans,helper(i,time));
+			}
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,37 @@
+class Solution {
+	int maxDepth = 0;
+	TreeNode subRoot = null;
+	int findSubRoot(TreeNode root, int curDepth) {
+		if (root == null) {
+			return curDepth - 1;
+		} 
+		else {
+			int depthL = findSubRoot(root.left,curDepth + 1);
+			int depthR = findSubRoot(root.right,curDepth + 1);
+			if (depthL == maxDepth && depthR == maxDepth) {
+				subRoot = root;
+			}
+			return Math.max(depthL,depthR);
+		}
+	}
+	void getDepths(TreeNode root, int curDepth) {
+		if (root == null) {
+			curDepth--;
+			if (curDepth > maxDepth) {
+				maxDepth = curDepth;
+			}
+		} 
+		else {
+			getDepths(root.left,curDepth + 1);
+			getDepths(root.right,curDepth + 1);
+		}
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		getDepths(root,1);
+		if (maxDepth == 1) {
+			return root;
+		}
+		findSubRoot(root,1);
+		return subRoot;
+	}
+}

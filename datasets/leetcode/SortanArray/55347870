@@ -1,0 +1,62 @@
+class Solution {
+	int medianOfThree(int[] arr, int low, int high) {
+		int mid = low + (high - low) / 2;
+		if (arr[low] > arr[mid]) {
+			swap(arr,low,mid);
+		}
+		if (arr[low] > arr[high]) {
+			swap(arr,low,high);
+		}
+		if (arr[mid] > arr[high]) {
+			swap(arr,mid,high);
+		}
+		return mid;
+	}
+	int partition(int[] arr, int low, int high) {
+		int pivotIndex = medianOfThree(arr,low,high);
+		swap(arr,pivotIndex,high);
+		int pivot = arr[high];
+		int i = low - 1;
+		for (int j = low; j < high; j++) {
+			if (arr[j] < pivot) {
+				i++;
+				swap(arr,i,j);
+			}
+		}
+		swap(arr,i + 1,high);
+		return i + 1;
+	}
+	void quicksort(int[] arr, int low, int high) {
+		int[] stack = new int[high - low + 1];
+		int top = -1;
+		stack[++top] = low;
+		stack[++top] = high;
+		while (top >= 0) {
+			high = stack[top--];
+			low = stack[top--];
+			if (low < high) {
+				int pi = partition(arr,low,high);
+				if (pi - 1 > low) {
+					stack[++top] = low;
+					stack[++top] = pi - 1;
+				}
+				if (pi + 1 < high) {
+					stack[++top] = pi + 1;
+					stack[++top] = high;
+				}
+			}
+		}
+	}
+	int[] sortArray(int[] nums) {
+		if (nums.length <= 1) {
+			return nums;
+		}
+		quicksort(nums,0,nums.length - 1);
+		return nums;
+	}
+	void swap(int[] arr, int i, int j) {
+		int temp = arr[i];
+		arr[i] = arr[j];
+		arr[j] = temp;
+	}
+}

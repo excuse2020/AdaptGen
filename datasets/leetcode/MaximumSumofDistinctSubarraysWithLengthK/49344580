@@ -1,0 +1,63 @@
+class Solution {
+	long maximumSubarraySum(int[] nums, int k) {
+		HashMap<Integer, Integer> mMap = new HashMap<Integer, Integer>();
+		long maxSum = 0;
+		int dupes = 0;
+		Boolean flag = true;
+		Boolean flag2 = false;
+		for (int i = 0; i < k; i++) {
+			if (mMap.get(nums[i]) == null) {
+				mMap.put(nums[i],1);
+				maxSum += nums[i];
+			} 
+			else {
+				mMap.put(nums[i],mMap.get(nums[i]) + 1);
+				maxSum += nums[i];
+				if (mMap.get(nums[i]) == 2) {
+					dupes++;
+				}
+			}
+		}
+		if (dupes == 0) {
+			flag = false;
+		}
+		if (dupes > 0 && maxSum > 0) {
+			flag2 = true;
+		}
+		int leftPtr = 0;
+		int rightPtr = k;
+		long sum = maxSum;
+		for (rightPtr = rightPtr; rightPtr < nums.length; rightPtr++) {
+			if (mMap.get(nums[leftPtr]) == 1) {
+				mMap.remove(nums[leftPtr]);
+			} 
+			else {
+				mMap.put(nums[leftPtr],mMap.get(nums[leftPtr]) - 1);
+				if (mMap.get(nums[leftPtr]) == 1) {
+					dupes--;
+				}
+			}
+			sum -= nums[leftPtr];
+			sum += nums[rightPtr];
+			if (mMap.get(nums[rightPtr]) == null) {
+				mMap.put(nums[rightPtr],1);
+			} 
+			else {
+				mMap.put(nums[rightPtr],mMap.get(nums[rightPtr]) + 1);
+				if (mMap.get(nums[rightPtr]) == 2) {
+					dupes++;
+				}
+			}
+			if ((maxSum < sum && dupes == 0) || (flag2 && dupes == 0)) {
+				maxSum = sum;
+				flag = false;
+				flag2 = false;
+			}
+			leftPtr++;
+		}
+		if (flag) {
+			return 0;
+		}
+		return maxSum;
+	}
+}

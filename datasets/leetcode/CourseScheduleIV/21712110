@@ -1,0 +1,38 @@
+class Solution {
+	List<Boolean> checkIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
+		ArrayList<ArrayList<Integer>> llist = new ArrayList<>();
+		for (int i = 0; i < numCourses; i++) {
+			ArrayList<Integer> list = new ArrayList<>();
+			llist.add(list);
+		}
+		for (int i = 0; i < prerequisites.length; i++) {
+			llist.get(prerequisites[i][1]).add(prerequisites[i][0]);
+		}
+		ArrayList<HashSet<Integer>> ans = new ArrayList<>();
+		for (int i = 0; i < numCourses; i++) {
+			boolean[] visi = new boolean[numCourses];
+			HashSet<Integer> hs = new HashSet<>();
+			dfs(llist,visi,i,hs);
+			ans.add(new HashSet<>(hs));
+		}
+		List<Boolean> res = new ArrayList<>();
+		for (int i = 0; i < queries.length; i++) {
+			if (ans.get(queries[i][1]).contains(queries[i][0])) {
+				res.add(true);
+			} 
+			else {
+				res.add(false);
+			}
+		}
+		return res;
+	}
+	void dfs(ArrayList<ArrayList<Integer>> llist, boolean[] visi, int s, HashSet<Integer> hs) {
+		visi[s] = true;
+		hs.add(s);
+		for (int ele: llist.get(s)) {	
+			if (!visi[ele]) {
+				dfs(llist,visi,ele,hs);
+			}
+		}
+	}
+}

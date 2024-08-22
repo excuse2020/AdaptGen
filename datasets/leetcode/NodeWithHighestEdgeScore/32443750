@@ -1,0 +1,36 @@
+class Solution {
+	int edgeScore(int[] edges) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < edges.length; i++) {
+			adj.add(new ArrayList<Integer>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			adj.get(i).add(edges[i]);
+		}
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < adj.size(); i++) {
+			for (Integer it: adj.get(i)) {	
+				if (map.containsKey(it)) {
+					map.put(it,map.get(it) + i);
+				} 
+				else {
+					map.put(it,i);
+				}
+			}
+		}
+		int ans = 0;
+		int max = 0;
+		for (Map.Entry<Integer, Integer> mapEl: map.entrySet()) {	
+			if (Math.abs(mapEl.getValue()) > max) {
+				max = Math.abs(mapEl.getValue());
+				ans = mapEl.getKey();
+			} 
+			else if (Math.abs(mapEl.getValue()) == max) {
+				if (mapEl.getKey() < ans) {
+					ans = mapEl.getKey();
+				}
+			}
+		}
+		return ans;
+	}
+}

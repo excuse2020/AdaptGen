@@ -1,0 +1,31 @@
+class Solution {
+	void rec(int xS, int xE, int zS, int zE, int level, int[] xianxu, int[] zhongxu, Map<Integer, Integer> hashM, ArrayList<Integer> ans) {
+		if (xS > xE) {
+			return;
+		}
+		int rootVal = xianxu[xS];
+		if (level == ans.size()) {
+			ans.add(rootVal);
+		}
+		if (xS == xE) {
+			return;
+		}
+		int zxRootIdx = hashM.get(rootVal);
+		int rightSubtreeSize = zE - zxRootIdx;
+		int leftSubtreeSize = zxRootIdx - zS;
+		rec(xE - rightSubtreeSize + 1,xE,zxRootIdx + 1,zE,level + 1,xianxu,zhongxu,hashM,ans);
+		rec(xS + 1,xS + leftSubtreeSize,zS,zxRootIdx - 1,level + 1,xianxu,zhongxu,hashM,ans);
+	}
+	int[] solve(int[] xianxu, int[] zhongxu) {
+		if (xianxu.length <= 1) {
+			return xianxu;
+		}
+		int treeSize = xianxu.length;
+		ArrayList<Integer> ans = new ArrayList<>();
+		Map<Integer, Integer> hashM = new HashMap<>();
+		for (int i = 0; i < treeSize; i++) {
+			hashM.put(zhongxu[i],i);
+		}
+		rec(0,treeSize - 1,0,treeSize - 1,0,xianxu,zhongxu,hashM,ans);
+	}
+}

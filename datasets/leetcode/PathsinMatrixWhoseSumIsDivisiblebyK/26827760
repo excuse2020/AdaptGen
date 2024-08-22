@@ -1,0 +1,22 @@
+class Solution {
+	int mod = (int) (1e9 + 7);
+	int numberOfPaths(int[][] grid, int k) {
+		int m = grid.length;
+		int n = grid[0].length;
+		int[][][] dp = new int[m + 1][n + 1][k];
+		for (int i = m - 1; i >= 0; i--) {
+			for (int j = n - 1; j >= 0; j--) {
+				if (i == m - 1 && j == n - 1) {
+					dp[i][j][grid[i][j] % k] = 1;
+					continue;
+				}
+				for (int rem = 0; rem < k; rem++) {
+					int requiredRemainder = ((grid[i][j] % k + rem) % k);
+					dp[i][j][requiredRemainder] = ((dp[i + 1][j][rem] + dp[i][j][requiredRemainder]) % mod);
+					dp[i][j][requiredRemainder] = ((dp[i][j + 1][rem] + dp[i][j][requiredRemainder]) % mod);
+				}
+			}
+		}
+		return dp[0][0][0];
+	}
+}

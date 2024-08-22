@@ -1,0 +1,33 @@
+class Solution {
+	double dp;
+	double helper(int remA, int remB, double currProb) {
+		double res = 0;
+		if (remA <= 0 && remB > 0) {
+			res = currProb;
+		} 
+		else if (remA <= 0 && remB <= 0) {
+			res = currProb / 2;
+		} 
+		else if (remA > 0 && remB > 0) {
+			if (dp[remA / 25][remB / 25] != -1) {
+				return dp[remA / 25][remB / 25];
+			}
+			res = 0.25 * (helper(remA - 100,remB,currProb) + helper(remA - 75,remB - 25,currProb));
+			dp[remA / 25][remB / 25] = res;
+		} 
+		else {
+			return 0;
+		}
+		return res;
+	}
+	double soupServings(int n) {
+		if (n > 4800) {
+			return 1;
+		}
+		dp = new double[n / 25 + 1][n / 25 + 1];
+		for (double dpPart: dp) {	
+			Arrays.fill(dpPart,-1);
+		}
+		return helper(n,n,1);
+	}
+}

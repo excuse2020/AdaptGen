@@ -1,0 +1,35 @@
+class Solution {
+	RandomListNode Clone(RandomListNode pHead) {
+		if (pHead == null) {
+			return null;
+		}
+		RandomListNode newNode = null;
+		RandomListNode retHead = null;
+		Map<Integer, RandomListNode> nodeMap = new HashMap<>();
+		boolean isHead = true;
+		while (pHead != null) {
+			newNode = cloneNode(pHead.label,nodeMap);
+			if (pHead.random != null) {
+				newNode.random = cloneNode(pHead.random.label,nodeMap);
+			}
+			if (pHead.next != null) {
+				newNode.next = cloneNode(pHead.next.label,nodeMap);
+			}
+			if (isHead) {
+				retHead = newNode;
+				isHead = false;
+			}
+			pHead = pHead.next;
+			newNode = newNode.next;
+		}
+		return retHead;
+	}
+	RandomListNode cloneNode(int label, Map<Integer, RandomListNode> map) {
+		RandomListNode node = map.get(label);
+		if (node == null) {
+			node = new RandomListNode(label);
+			map.put(label,node);
+		}
+		return node;
+	}
+}

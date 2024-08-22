@@ -1,0 +1,44 @@
+class Solution {
+	int[] findRedundantConnection(int[][] edges) {
+		ArrayList<Integer> graph = new ArrayList[edges.length + 1];
+		for (int i = 0; i < edges.length + 1; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < edges.length; i++) {
+			int u = edges[i][0];
+			int v = edges[i][1];
+			graph[v].add(u);
+			graph[u].add(v);
+		}
+		for (int i = edges.length - 1; i >= 0; i--) {
+			int u = edges[i][0];
+			int v = edges[i][1];
+			if (isRed(u,v,graph,edges.length + 1)) {
+				return edges[i];
+			}
+		}
+		return new int[2];
+	}
+	boolean isRed(int start, int end, ArrayList<Integer> graph, int n) {
+		Queue<Integer> q = new LinkedList<>();
+		q.offer(start);
+		boolean visited = new boolean[n + 1];
+		Arrays.fill(visited,false);
+		while (!q.isEmpty()) {
+			int x = q.poll();
+			if (x == end) {
+				return true;
+			}
+			for (Integer a: graph[x]) {	
+				if (x == start && a == end) {
+					continue;
+				}
+				if (!visited[a]) {
+					visited[a] = true;
+					q.add(a);
+				}
+			}
+		}
+		return false;
+	}
+}

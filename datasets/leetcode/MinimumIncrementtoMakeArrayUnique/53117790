@@ -1,0 +1,35 @@
+class Solution {
+	int getFirstFree(int[] cnt, int start) {
+		int i;
+		for (i = start; i < cnt.length; i++) {
+			if (cnt[i] == 0) {
+				return i;
+			}
+		}
+		return Math.max(i,start + 1);
+	}
+	int minIncrementForUnique(int[] nums) {
+		int result = 0;
+		int max = 0;
+		for (int num: nums) {	
+			max = Math.max(max,num);
+		}
+		int[] cnt = new int[max + 1];
+		for (int num: nums) {	
+			cnt[num]++;
+		}
+		int free = 0;
+		for (int i = 0; i < cnt.length; i++) {
+			free = Math.max(free,i);
+			while (cnt[i] > 1) {
+				free = getFirstFree(cnt,free);
+				if (free < cnt.length) {
+					cnt[free]++;
+				}
+				result += free - i;
+				cnt[i]--;
+			}
+		}
+		return result;
+	}
+}

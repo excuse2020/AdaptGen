@@ -1,0 +1,60 @@
+class Solution {
+	TreeNode Deserialize(String str) {
+		if ("null".equals(str)) {
+			return null;
+		}
+		String[] strs = str.split(":");
+		String preorderStr = strs[0];
+		String inorderStr = strs[1];
+		String[] preorderRes = preorderStr.split(",");
+		String[] inorderRes = inorderStr.split(",");
+		return buildTree(preorderRes,inorderRes,0,inorderRes.length - 1,0,preorderRes.length - 1);
+	}
+	String Serialize(TreeNode root) {
+		if (root == null) {
+			return "null";
+		}
+		StringBuilder preorderSb = new StringBuilder();
+		StringBuilder inoderSb = new StringBuilder();
+		preorder(preorderSb,root);
+		inorder(inoderSb,root);
+		preorderSb.deleteCharAt(preorderSb.length() - 1);
+		inoderSb.deleteCharAt(inoderSb.length() - 1);
+		return preorderSb.append(":").append(inoderSb).toString();
+	}
+	TreeNode buildTree(String[] preoders, String[] inorders, int inLeft, int inRight, int preStart, int preEnd) {
+		if (preStart > preEnd) {
+			return null;
+		}
+		String current = preoders[preStart];
+		TreeNode root = new TreeNode(Integer.parseInt(current));
+		int leftCnt = 0;
+		for (int i = inLeft; i <= inRight; i++) {
+			if (current.equals(inorders[i])) {
+				break;
+			}
+			leftCnt++;
+		}
+		root.left = buildTree(preoders,inorders,inLeft,inLeft + leftCnt - 1,preStart + 1,preStart + leftCnt);
+		root.right = buildTree(preoders,inorders,inLeft + leftCnt,inRight,preStart + leftCnt,preEnd);
+		return root;
+	}
+	void inorder(StringBuilder sb, TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		inorder(sb,root.left);
+		sb.append(root.val);
+		sb.append(",");
+		inorder(sb,root.right);
+	}
+	void preorder(StringBuilder sb, TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		sb.append(root.val);
+		sb.append(",");
+		preorder(sb,root.left);
+		preorder(sb,root.right);
+	}
+}

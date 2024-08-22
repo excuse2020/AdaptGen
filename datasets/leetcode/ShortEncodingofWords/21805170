@@ -1,0 +1,48 @@
+class Solution {
+	int binarySearch(ArrayList<String> arr, String target) {
+		int low = 0, high = arr.size() - 1;
+		int ans = arr.size();
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			if (target.compareTo(arr.get(mid)) <= 0) {
+				ans = mid;
+				high = mid - 1;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		return ans;
+	}
+	int minimumLengthEncoding(String[] words) {
+		ArrayList<String> arr = new ArrayList<String>();
+		for (String str: words) {	
+			str = reverse(str);
+			int idx = binarySearch(arr,str);
+			if (idx < arr.size() && arr.get(idx).indexOf(str) == 0) {
+				continue;
+			} 
+			else if (idx - 1 >= 0 && str.indexOf(arr.get(idx - 1)) == 0) {
+				arr.set(idx - 1,str);
+			} 
+			else {
+				arr.add(idx,str);
+			}
+		}
+		int ans = 0;
+		for (String str: arr) {	
+			ans += str.length() + 1;
+		}
+		return ans;
+	}
+	String reverse(String s) {
+		char[] arr = s.toCharArray();
+		int n = arr.length;
+		for (int i = 0; i < n / 2; i++) {
+			char temp = arr[i];
+			arr[i] = arr[n - 1 - i];
+			arr[n - 1 - i] = temp;
+		}
+		return new String(arr);
+	}
+}

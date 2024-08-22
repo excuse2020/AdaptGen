@@ -1,0 +1,37 @@
+class Solution {
+	int K;
+	Double[][] memo;
+	int[] nums;
+	double dfs(int index, int k, int curSum, int numOfElements) {
+		if (index == nums.length && k == K) {
+			return 0;
+		}
+		if (index == nums.length || k == K) {
+			return -1.0;
+		}
+		if (memo[index][k] != null) {
+			return memo[index][k];
+		}
+		double maxAvg = 0;
+		for (int j = index; j < nums.length; j++) {
+			curSum = curSum + nums[j];
+			numOfElements++;
+			double curPartitionAverage = 0.0;
+			if (numOfElements != 0) {
+				curPartitionAverage = 1.0 * curSum / numOfElements;
+			}
+			double newPartition = dfs(j + 1,k + 1,0,0);
+			if (newPartition != -1) {
+				maxAvg = Math.max(maxAvg,newPartition + curPartitionAverage);
+			}
+		}
+		memo[index][k] = maxAvg;
+		return maxAvg;
+	}
+	double largestSumOfAverages(int[] nums, int k) {
+		this.nums = nums;
+		memo = new Double[nums.length + 1][k + 1];
+		this.K = k;
+		return dfs(0,0,0,0);
+	}
+}

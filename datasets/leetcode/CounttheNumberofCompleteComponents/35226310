@@ -1,0 +1,57 @@
+class Solution {
+	int conn(List<Integer> list, Map<Integer, List<Integer>> adjList) {
+		int cnt = 0;
+		for (Integer i: list) {	
+			List<Integer> adj = new ArrayList<>(adjList.get(i));
+			adj.add(i);
+			Collections.sort(adj);
+			if (list.equals(adj)) {
+				cnt++;
+			}
+		}
+		return cnt == list.size() ? 1 : 0;
+	}
+	int countCompleteComponents(int n, int[][] edges) {
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int i = 0; i < edges.length; i++) {
+			map.putIfAbsent(edges[i][0],new ArrayList<>());
+			map.get(edges[i][0]).add(edges[i][1]);
+			map.putIfAbsent(edges[i][1],new ArrayList<>());
+			map.get(edges[i][1]).add(edges[i][0]);
+		}
+		for (int i = 0; i < n; i++) {
+			map.putIfAbsent(i,new ArrayList<>());
+		}
+		int[] vis = new int[map.size()];
+		int sum = 0;
+		for (Map.Entry<Integer, List<Integer>> m: map.entrySet()) {	
+			if (vis[m.getKey()] == 0) {
+				List<Integer> list = new ArrayList<>();
+				list = dfs(list,map,m.getKey(),vis);
+				if (list.size() == 1) {
+					sum++;
+				} 
+				else {
+					Collections.sort(list);
+					sum += conn(list,map);
+				}
+			}
+		}
+		return sum;
+	}
+	List<Integer> dfs(List<Integer> list, Map<Integer, List<Integer>> map, int key, int[] vis) {
+		if (vis[key] == 1) {
+			return list;
+		}
+		vis[key] = 1;
+		List<Integer> li = new ArrayList<>(list);
+		li.add(key);
+		for (int i = 0; i < map.get(key).size(); i++) {
+			int adjNode = map.get(key).get(i);
+			if (vis[adjNode] == 0) {
+				li = dfs(li,map,adjNode,vis);
+			}
+		}
+		return li;
+	}
+}

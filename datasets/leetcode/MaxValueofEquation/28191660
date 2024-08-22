@@ -1,0 +1,37 @@
+class Solution {
+	int calcEq(int[][] points, int left, int right) {
+		return points[left][1] + points[right][1];
+	}
+	int findMaxValueOfEquation(int[][] points, int k) {
+		int maxVal = Integer.MIN_VALUE;
+		int right = 1;
+		int left = 0;
+		int max = Integer.MIN_VALUE;
+		while (right < points.length) {
+			while (right < points.length && Math.abs(points[right][0] - points[left][0]) <= k) {
+				right++;
+			}
+			right--;
+			max = Math.max(max,twoPointers(points,left,right));
+			left++;
+			right++;
+		}
+		return max;
+	}
+	int twoPointers(int[][] points, int left, int right) {
+		int max = Integer.MIN_VALUE;
+		while (left < right) {
+			int eq = calcEq(points,left,right);
+			if (eq > max) {
+				max = eq;
+			}
+			if (points[left][1] < points[right][1]) {
+				left++;
+			} 
+			else {
+				right--;
+			}
+		}
+		return max;
+	}
+}

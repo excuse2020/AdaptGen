@@ -1,0 +1,26 @@
+class Solution {
+	int minCost(int n, int[] cuts) {
+		Arrays.sort(cuts);
+		int dp = new int[cuts.length][cuts.length];
+		for (int i = 0; i < dp.length; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		return solve(0,n,0,cuts.length - 1,cuts,dp);
+	}
+	int solve(int rodsi, int rodei, int cutsi, int cutei, int[] cuts, int dp) {
+		if (rodei <= rodsi || cutei < cutsi) {
+			return 0;
+		}
+		int ans = Integer.MAX_VALUE;
+		if (dp[cutsi][cutei] != -1) {
+			return dp[cutsi][cutei];
+		}
+		for (int i = cutsi; i <= cutei; i++) {
+			int left_cost = solve(rodsi,cuts[i],cutsi,i - 1,cuts,dp);
+			int right_cost = solve(cuts[i],rodei,i + 1,cutei,cuts,dp);
+			int cost = (rodei - rodsi) + left_cost;
+			ans = Math.min(cost,ans);
+		}
+		return dp[cutsi][cutei] = ans;
+	}
+}

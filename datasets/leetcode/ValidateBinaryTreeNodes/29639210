@@ -1,0 +1,68 @@
+class Solution {
+	boolean validateBinaryTreeNodes(int n, int[] l, int[] r) {
+		int x = new int[l.length];
+		Arrays.fill(x,-1);
+		for (int i = 0; i < l.length; i++) {
+			if (l[i] != -1) {
+				if (x[l[i]] == -1) {
+					x[l[i]] = i;
+				} 
+				else {
+					return false;
+				}
+			}
+			if (r[i] != -1) {
+				if (x[r[i]] == -1) {
+					x[r[i]] = i;
+				} 
+				else {
+					return false;
+				}
+			}
+		}
+		int ro = -1;
+		for (int i = 0; i < x.length; i++) {
+			if (x[i] == -1) {
+				if (ro == -1) {
+					ro = i;
+				} 
+				else {
+					return false;
+				}
+			}
+		}
+		if (ro == -1) {
+			return false;
+		}
+		HashSet<Integer> h = new HashSet<Integer>();
+		Queue<Integer> q = new LinkedList<>();
+		q.add(ro);
+		h.add(ro);
+		System.out.print(ro);
+		while (!q.isEmpty()) {
+			int e = q.remove();
+			if (l[e] != -1) {
+				if (h.contains(l[e])) {
+					return false;
+				} 
+				else {
+					q.add(l[e]);
+					h.add(l[e]);
+				}
+			}
+			if (r[e] != -1) {
+				if (h.contains(r[e])) {
+					return false;
+				} 
+				else {
+					q.add(r[e]);
+					h.add(r[e]);
+				}
+			}
+		}
+		if (h.size() != n) {
+			return false;
+		}
+		return true;
+	}
+}

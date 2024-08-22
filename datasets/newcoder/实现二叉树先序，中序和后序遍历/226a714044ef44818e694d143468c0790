@@ -1,0 +1,58 @@
+class Solution {
+	List<Integer> inorder(TreeNode root) {
+		List<Integer> res = new ArrayList<>();
+		Stack<TreeNode> stk = new Stack<>();
+		TreeNode cur = root;
+		while (cur != null || !stk.isEmpty()) {
+			while (cur != null) {
+				stk.push(cur);
+				cur = cur.left;
+			}
+			cur = stk.pop();
+			res.add(cur.val);
+			cur = cur.right;
+		}
+		return res;
+	}
+	List<Integer> postorder(TreeNode root) {
+		List<Integer> res = new ArrayList<>();
+		Stack<TreeNode> stk = new Stack<>();
+		TreeNode cur = root;
+		while (cur != null || !stk.isEmpty()) {
+			while (cur != null) {
+				res.add(0,cur.val);
+				stk.push(cur);
+				cur = cur.right;
+			}
+			cur = stk.pop();
+			cur = cur.left;
+		}
+		return res;
+	}
+	List<Integer> preorder(TreeNode root) {
+		List<Integer> res = new ArrayList<>();
+		Stack<TreeNode> stk = new Stack<>();
+		TreeNode cur = root;
+		while (cur != null || !stk.isEmpty()) {
+			while (cur != null) {
+				res.add(cur.val);
+				stk.push(cur);
+				cur = cur.left;
+			}
+			cur = stk.pop();
+			cur = cur.right;
+		}
+		return res;
+	}
+	int[][] threeOrders(TreeNode root) {
+		int[][] res = new int[3];
+		res[0] = toIntArray(preorder(root));
+		res[1] = toIntArray(inorder(root));
+		res[2] = toIntArray(postorder(root));
+		return res;
+	}
+	int[] toIntArray(List<Integer> list) {
+		int[] res = list.stream().mapToInt().toArray();
+		return res;
+	}
+}

@@ -1,0 +1,33 @@
+class Solution {
+	int count = 0;
+	void countEdgesToBeRevered(Map<Integer, List<int[]>> graph, int currNode, int dir, Set<Integer> visited) {
+		if (visited.contains(currNode)) {
+			return;
+		}
+		if (dir == 0) {
+			count++;
+		}
+		visited.add(currNode);
+		for (int[] nextNode: graph.get(currNode)) {	
+			countEdgesToBeRevered(graph,nextNode[0],nextNode[1],visited);
+		}
+		visited.remove(currNode);
+	}
+	Map<Integer, List<int[]>> initializeGraphWithImaginaryEdges(int n, int[][] connections) {
+		Map<Integer, List<int[]>> graph = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			graph.put(i,new ArrayList<>());
+		}
+		for (int[] edge: connections) {	
+			graph.get(edge[0]).add(new int{edge[1], 0});
+			graph.get(edge[1]).add(new int{edge[0], -1});
+		}
+		return graph;
+	}
+	int minReorder(int n, int[][] connections) {
+		Map<Integer, List<int[]>> graph = initializeGraphWithImaginaryEdges(n,connections);
+		Set<Integer> visited = new HashSet<>();
+		countEdgesToBeRevered(graph,0,-1,visited);
+		return count;
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	long countPairs(int n, int[][] edges) {
+		int[] uf = new int[n];
+		for (int i = 0; i < n; i++) {
+			uf[i] = i;
+		}
+		for (int[] edge: edges) {	
+			union(edge[0],edge[1],uf);
+		}
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			int key = find(i,uf);
+			map.put(key,map.getOrDefault(key,0) + 1);
+		}
+		int num = map.size();
+		if (num == 1) {
+			return 0;
+		}
+		long res = (long) n * (n - 1) / 2;
+		List<Integer> val = new ArrayList<Integer>(map.values());
+		for (int i = 0; i < num; i++) {
+			res -= (long) val.get(i) * (val.get(i) - 1) / 2;
+		}
+		return res;
+	}
+	int find(int i, int[] uf) {
+		if (uf[i] != i) {
+			uf[i] = find(uf[i],uf);
+		}
+		return uf[i];
+	}
+	void union(int i, int j, int[] uf) {
+		int p1 = find(i,uf), p2 = find(j,uf);
+		if (p1 == p2) {
+			return;
+		}
+		uf[p1] = p2;
+	}
+}

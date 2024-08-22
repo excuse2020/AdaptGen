@@ -1,0 +1,48 @@
+class Solution {
+	List<Boolean> checkIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
+		Map<Integer, Set<Integer>> next = new HashMap();
+		int[] inDegree = new int[numCourses];
+		Map<Integer, Set<Integer>> preSet = new HashMap();
+		for (int[] pre: prerequisites) {	
+			Set<Integer> set = next.getOrDefault(pre[0],new HashSet());
+			set.add(pre[1]);
+			inDegree[pre[1]]++;
+			next.put(pre[0],set);
+		}
+		Queue<Integer> q = new LinkedList();
+		for (int i = 0; i < numCourses; i++) {
+			Set<Integer> set = preSet.getOrDefault(i,new HashSet());
+			set.add(i);
+			preSet.put(i,set);
+			if (inDegree[i] == 0) {
+				q.add(i);
+			}
+		}
+		while (!q.isEmpty()) {
+			int cur = q.poll();
+			if (next.containsKey(cur)) {
+				for (int course: next.get(cur)) {	
+					for (int preCourse: preSet.get(cur)) {	
+						Set<Integer> set = preSet.getOrDefault(course,new HashSet());
+						set.add(preCourse);
+						preSet.put(course,set);
+					}
+					inDegree[course]--;
+					if (inDegree[course] == 0) {
+						q.add(course);
+					}
+				}
+			}
+		}
+		List<Boolean> rets = new ArrayList();
+		for (int[] query: queries) {	
+			if (preSet.get(query[1]).contains(query[0])) {
+				rets.add(true);
+			} 
+			else {
+				rets.add(false);
+			}
+		}
+		return rets;
+	}
+}

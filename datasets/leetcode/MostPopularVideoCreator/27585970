@@ -1,0 +1,33 @@
+class Solution {
+	List<List<String>> mostPopularCreator(String[] creators, String[] ids, int[] views) {
+		Map<String, long[]> map = new HashMap<>();
+		long maxSum = 0;
+		for (int i = 0; i < creators.length; i++) {
+			String creator = creators[i];
+			if (!map.containsKey(creator)) {
+				map.put(creator,new long[3]);
+				map.get(creator)[0] = views[i];
+				map.get(creator)[1] = views[i];
+				map.get(creator)[2] = i;
+			} 
+			else {
+				long prevMax = map.get(creator)[1];
+				map.get(creator)[0] += views[i];
+				var t = ids[(int)map.get(creator)[2]];
+				if (prevMax < views[i] || prevMax == views[i] && ids[i].compareTo(t) < 0) {
+					map.get(creator)[1] = views[i];
+					map.get(creator)[2] = i;
+				}
+			}
+			maxSum = Math.max(maxSum,map.get(creator)[0]);
+		}
+		List<List<String>> result = new ArrayList<>();
+		for (var item: map.keySet()) {	
+			var obj = map.get(item);
+			if (obj[0] == maxSum) {
+				result.add(new ArrayList<String>(Arrays.asList(item,ids[(int)obj[2]])));
+			}
+		}
+		return result;
+	}
+}

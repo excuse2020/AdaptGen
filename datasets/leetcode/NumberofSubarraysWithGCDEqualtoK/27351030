@@ -1,0 +1,45 @@
+class Solution {
+	int gcd(int a, int b) {
+		if (b == 0) {
+			return a;
+		}
+		return gcd(b,a % b);
+	}
+	int subarrayGCD(int[] nums, int k) {
+		int start = 0, count = 0;
+		int lastGcdIndex = 0;
+		for (int end = 0; end < nums.length; end++) {
+			int num = nums[end];
+			int len = end - start + 1;
+			if (start == end) {
+				if (num == k) {
+					count += 1;
+					lastGcdIndex = end;
+				} 
+				else if (num % k == 0) {
+					lastGcdIndex = end;
+				} 
+				else {
+					start = end + 1;
+				}
+			} 
+			else {
+				if (num == k) {
+					count += len;
+					lastGcdIndex = end;
+				} 
+				else if (gcd(num,nums[end - 1]) == k) {
+					lastGcdIndex = end;
+					count += len - 1;
+				} 
+				else if (num % k == 0) {
+					count += len - (len - lastGcdIndex);
+				} 
+				else {
+					start = end + 1;
+				}
+			}
+		}
+		return count;
+	}
+}

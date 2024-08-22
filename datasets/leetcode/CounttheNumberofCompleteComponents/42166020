@@ -1,0 +1,40 @@
+class Solution {
+	boolean bfs(List<List<Integer>> G, boolean[] visited, int node) {
+		int nodeCount = 0, edgeCount = 0;
+		Queue<Integer> q = new LinkedList<>();
+		q.add(node);
+		while (!q.isEmpty()) {
+			int u = q.poll();
+			if (visited[u]) {
+				continue;
+			}
+			++nodeCount;
+			visited[u] = true;
+			for (int v: G.get(u)) {	
+				if (!visited[v]) {
+					++edgeCount;
+					q.add(v);
+				}
+			}
+		}
+		return ((nodeCount) * (nodeCount - 1)) / 2 == edgeCount;
+	}
+	int countCompleteComponents(int n, int[][] edges) {
+		List<List<Integer>> G = new ArrayList<>();
+		for (int i = 0; i < n; ++i) {
+			G.add(new ArrayList<>());
+		}
+		for (int[] e: edges) {	
+			G.get(e[0]).add(e[1]);
+			G.get(e[1]).add(e[0]);
+		}
+		boolean[] visited = new boolean[n];
+		int ans = 0;
+		for (int i = 0; i < n; ++i) {
+			if (!visited[i] && bfs(G,visited,i)) {
+				++ans;
+			}
+		}
+		return ans;
+	}
+}

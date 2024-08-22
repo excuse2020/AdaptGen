@@ -1,0 +1,28 @@
+class Solution {
+	int countPairs(int[] deliciousness) {
+		return solution(deliciousness);
+	}
+	int solution(int[] arr) {
+		int mod = 1000000007;
+		int max = -1;
+		for (int num: arr) {	
+			max = Math.max(num,max);
+		}
+		Map<Integer, Integer> map = new HashMap<>();
+		int result = 0;
+		for (int num: arr) {	
+			for (int power = 0; power <= 22; power++) {
+				int target = ((1 << power) - num);
+				if (target > max) {
+					break;
+				}
+				if (map.containsKey(target)) {
+					result += map.get(target);
+					result = result % mod;
+				}
+			}
+			map.put(num,map.getOrDefault(num,0) + 1);
+		}
+		return result;
+	}
+}

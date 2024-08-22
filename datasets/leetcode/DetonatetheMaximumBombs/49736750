@@ -1,0 +1,39 @@
+class Solution {
+	int dfs(Map<Integer, List<Integer>> graph, int src, Set<Integer> vis) {
+		if (vis.contains(src)) {
+			return 0;
+		}
+		int ans = 1;
+		vis.add(src);
+		List<Integer> li = graph.get(src);
+		for (int i: li) {	
+			ans += dfs(graph,i,vis);
+		}
+		return ans;
+	}
+	int maximumDetonation(int[][] bombs) {
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		for (int i = 0; i < bombs.length; i++) {
+			graph.put(i,new ArrayList<Integer>());
+		}
+		for (int i = 0; i < bombs.length; i++) {
+			for (int j = 0; j < bombs.length; j++) {
+				if (i == j) {
+					continue;
+				}
+				if (overlap(bombs[i][0],bombs[i][1],bombs[i][2],bombs[j][0],bombs[j][1])) {
+					graph.get(i).add(j);
+				}
+			}
+		}
+		int ans = 0;
+		for (int i: graph.keySet()) {	
+			ans = Math.max(ans,dfs(graph,i,new HashSet<Integer>()));
+		}
+		return ans;
+	}
+	boolean overlap(int xi, int yi, int radius_i, int xj, int yj) {
+		double distance = Math.sqrt(Math.pow(xj - xi,2) + Math.pow(yj - yi,2));
+		return distance <= radius_i;
+	}
+}

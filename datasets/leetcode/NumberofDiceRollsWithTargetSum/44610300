@@ -1,0 +1,27 @@
+class Solution {
+	int mod = (int) Math.pow(10,9) + 7;
+	int numRollsToTarget(int n, int k, int target) {
+		int[][] memo = new int[n + 1][target + 1];
+		for (int i = 0; i < memo.length; i++) {
+			Arrays.fill(memo[i],-1);
+		}
+		return recursion(memo,n,k,target);
+	}
+	int recursion(int[][] memo, int dice_count, int dice_faces, int target) {
+		if (target == 0 && dice_count == 0) {
+			return 1;
+		}
+		if (dice_count == 0 || target <= 0) {
+			return 0;
+		}
+		if (memo[dice_count][target] != -1) {
+			return memo[dice_count][target];
+		}
+		int ways = 0;
+		for (int i = 1; i <= dice_faces; i++) {
+			ways = (ways + recursion(memo,dice_count - 1,dice_faces,target - i)) % mod;
+		}
+		memo[dice_count][target] = ways;
+		return memo[dice_count][target];
+	}
+}

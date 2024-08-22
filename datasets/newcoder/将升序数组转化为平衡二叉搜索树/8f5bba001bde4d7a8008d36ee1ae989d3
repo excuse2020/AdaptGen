@@ -1,0 +1,33 @@
+class Solution {
+	TreeNode sortedArrayToBST(int[] num) {
+		if (num == null || num.length == 0) {
+			return null;
+		}
+		Stack<TreeNode> res = new Stack<>();
+		Stack<Integer> stack = new Stack<>();
+		TreeNode root = new TreeNode(0);
+		res.push(root);
+		stack.push(0);
+		stack.push(num.length - 1);
+		while (res.size() > 0) {
+			int right = stack.pop();
+			int left = stack.pop();
+			int mid = left + ((right - left + 1) >> 1);
+			TreeNode node = res.pop();
+			node.val = num[mid];
+			if (left <= mid - 1) {
+				node.left = new TreeNode(0);
+				res.push(node.left);
+				stack.push(left);
+				stack.push(mid - 1);
+			}
+			if (right >= mid + 1) {
+				node.right = new TreeNode(0);
+				res.push(node.right);
+				stack.push(mid + 1);
+				stack.push(right);
+			}
+		}
+		return root;
+	}
+}

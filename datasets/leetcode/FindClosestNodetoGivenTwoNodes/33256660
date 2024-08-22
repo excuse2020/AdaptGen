@@ -1,0 +1,47 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		int[] visited = new int[edges.length];
+		while (node1 != -1 && node2 != -1) {
+			visited[node1] |= 1;
+			visited[node2] |= 2;
+			if (visited[node1] == 3 && visited[node2] == 3) {
+				return Math.min(node1,node2);
+			} 
+			else if (visited[node1] == 3) {
+				return node1;
+			} 
+			else if (visited[node2] == 3) {
+				return node2;
+			}
+			node1 = edges[node1];
+			node2 = edges[node2];
+			if (node1 != -1 && visited[node1] == 1) {
+				node1 = -1;
+			}
+			if (node2 != -1 && visited[node2] == 2) {
+				node2 = -1;
+			}
+		}
+		while (node1 != -1) {
+			visited[node1] |= 1;
+			if (visited[node1] == 3) {
+				return node1;
+			}
+			node1 = edges[node1];
+			if (node1 != -1 && visited[node1] == 1) {
+				node1 = -1;
+			}
+		}
+		while (node2 != -1) {
+			visited[node2] |= 2;
+			if (visited[node2] == 3) {
+				return node2;
+			}
+			node2 = edges[node2];
+			if (node2 != -1 && visited[node2] == 2) {
+				node2 = -1;
+			}
+		}
+		return -1;
+	}
+}

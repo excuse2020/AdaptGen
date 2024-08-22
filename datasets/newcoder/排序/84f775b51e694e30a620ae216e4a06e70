@@ -1,0 +1,52 @@
+class Solution {
+	int[] MySort(int[] arr) {
+		if (arr.length < 2) {
+			return arr;
+		}
+		quickSort(arr,0,arr.length - 1);
+		return arr;
+	}
+	void insertSort(int[] arr) {
+		int i, j;
+		for (i = 1; i < arr.length; i++) {
+			if (arr[i - 1] > arr[i]) {
+				int temp = arr[i];
+				for (j = i - 1; j >= 0 && arr[j] > temp; j--) {
+					arr[j + 1] = arr[j];
+				}
+				arr[j + 1] = temp;
+			}
+		}
+	}
+	void quickSort(int[] array, int low, int high) {
+		if (high - low <= 500) {
+			insertSort(array);
+			return;
+		}
+		Random random = new Random();
+		int index = random.nextInt(array.length);
+		int pivot = array[index];
+		array[index] = array[low];
+		int cur_low = low;
+		int cur_high = high;
+		while (cur_low < cur_high) {
+			while (cur_low < cur_high && array[cur_high] >= pivot) {
+				cur_high--;
+			}
+			if (cur_low < cur_high) {
+				array[cur_low] = array[cur_high];
+				cur_low++;
+			}
+			while (cur_low < cur_high && array[cur_low] <= pivot) {
+				cur_low++;
+			}
+			if (cur_low < cur_high) {
+				array[cur_high] = array[cur_low];
+				cur_high--;
+			}
+		}
+		array[cur_low] = pivot;
+		quickSort(array,low,cur_low - 1);
+		quickSort(array,cur_low + 1,high);
+	}
+}

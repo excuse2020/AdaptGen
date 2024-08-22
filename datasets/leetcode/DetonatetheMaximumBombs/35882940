@@ -1,0 +1,43 @@
+class Solution {
+	int bfs(int ii, ArrayList<ArrayList<Integer>> a, boolean visited) {
+		int c = 1;
+		Queue<Integer> queue = new LinkedList<>();
+		visited[ii] = true;
+		queue.add(ii);
+		while (!queue.isEmpty()) {
+			int j = queue.poll();
+			for (int i = 0; i < a.get(j).size(); i++) {
+				if (!visited[a.get(j).get(i)]) {
+					visited[a.get(j).get(i)] = true;
+					queue.add(a.get(j).get(i));
+					c++;
+				}
+			}
+		}
+		return c;
+	}
+	int maximumDetonation(int[][] bombs) {
+		ArrayList<ArrayList<Integer>> a = new ArrayList<>();
+		int n = bombs.length;
+		for (int i = 0; i < n; i++) {
+			a.add(new ArrayList<Integer>());
+			for (int j = 0; j < n; j++) {
+				if (i == j) {
+					continue;
+				}
+				int xi = bombs[i][0], yi = bombs[i][1], ri = bombs[i][2];
+				int xj = bombs[j][0], yj = bombs[j][1];
+				if ((long) ri * ri >= (long) (xi - xj) * (xi - xj) + (long) (yi - yj) * (yi - yj)) {
+					a.get(i).add(j);
+				}
+			}
+		}
+		int ans = -1000;
+		for (int i = 0; i < n; i++) {
+			boolean visited = new boolean[n];
+			int c = bfs(i,a,visited);
+			ans = Math.max(c,ans);
+		}
+		return ans;
+	}
+}

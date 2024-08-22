@@ -1,0 +1,31 @@
+class Solution {
+	String evaluate(String s, List<List<String>> knowledge) {
+		Map<String, String> map = new HashMap<>();
+		for (List<String> l: knowledge) {	
+			map.put(l.get(0),l.get(1));
+		}
+		StringBuffer sb = new StringBuffer();
+		String[] srr = s.split("");
+		int len = srr.length;
+		int firstOpenIndex = -1;
+		int firstClosedIndex = -1;
+		for (int i = 0; i < len; i++) {
+			if (srr[i].equals("(")) {
+				firstOpenIndex = i;
+			}
+			if (srr[i].equals(")")) {
+				firstClosedIndex = i;
+			}
+			if (firstOpenIndex == -1 && firstClosedIndex == -1) {
+				sb.append(srr[i]);
+			}
+			if (firstOpenIndex != -1 && firstClosedIndex != -1) {
+				String sub = s.substring(firstOpenIndex + 1,firstClosedIndex);
+				sb.append(map.getOrDefault(sub,"?"));
+				firstOpenIndex = -1;
+				firstClosedIndex = -1;
+			}
+		}
+		return sb.toString();
+	}
+}

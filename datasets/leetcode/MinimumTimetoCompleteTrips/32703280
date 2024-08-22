@@ -1,0 +1,35 @@
+class Solution {
+	long minimumTime(int[] time, int totalTrips) {
+		long givenTime = 1;
+		long givenTimeUpperBound = Long.MAX_VALUE;
+		long givenTimeLowerBound = 0;
+		while (givenTimeUpperBound != givenTimeLowerBound && givenTimeUpperBound - 1 != givenTimeLowerBound) {
+			int trips = totalTrips(time,givenTime);
+			if (trips < totalTrips) {
+				givenTimeLowerBound = givenTime;
+				givenTime = Math.min(givenTime * 2,givenTimeUpperBound);
+			} 
+			else {
+				givenTimeUpperBound = givenTime;
+				givenTime = Math.max(((givenTimeUpperBound - givenTimeLowerBound) / 2 + givenTimeLowerBound),givenTimeLowerBound);
+			}
+		}
+		if (givenTimeUpperBound - 1 == givenTimeLowerBound) {
+			int trips = totalTrips(time,givenTimeLowerBound);
+			if (trips >= totalTrips) {
+				givenTime = givenTimeLowerBound;
+			} 
+			else {
+				givenTime = givenTimeUpperBound;
+			}
+		}
+		return givenTime;
+	}
+	int totalTrips(int[] time, long givenTime) {
+		int sum = 0;
+		for (int i = 0; i < time.length; i++) {
+			sum += givenTime / time[i];
+		}
+		return sum;
+	}
+}

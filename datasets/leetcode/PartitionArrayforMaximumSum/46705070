@@ -1,0 +1,29 @@
+class Solution {
+	int dp(int[] A, int k, int n, int index, Map<Integer, Integer> cache) {
+		if (cache.containsKey(index)) {
+			return cache.get(index);
+		} 
+		else if (index > n) {
+			return 0;
+		}
+		int ans = 0;
+		for (int i = 0; i < k; i++) {
+			if (index + i <= n) {
+				int max = getMax(A,index,index + i);
+				ans = Math.max(ans,((max * (i + 1) + dp(A,k,n,index + i,cache))));
+			}
+		}
+		cache.put(index,ans);
+		return cache.get(index);
+	}
+	int getMax(int[] A, int start, int end) {
+		int max = A[start];
+		for (int i = start; i <= end; i++) {
+			max = Math.max(A[i],max);
+		}
+		return max;
+	}
+	int maxSumAfterPartitioning(int[] arr, int k) {
+		return dp(arr,k,arr.length - 1,0,new HashMap<>());
+	}
+}

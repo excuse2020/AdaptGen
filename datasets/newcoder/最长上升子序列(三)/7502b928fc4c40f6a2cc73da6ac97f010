@@ -1,0 +1,42 @@
+class Solution {
+	int[] LIS(int[] arr) {
+		if (arr.length == 0) {
+			return new int[0];
+		}
+		int n = arr.length;
+		int[] ls = new int[n];
+		int[] dp = new int[n];
+		ls[0] = arr[0];
+		dp[0] = 1;
+		int l = 1;
+		for (int i = 1; i < arr.length; i++) {
+			if (ls[l - 1] < arr[i]) {
+				ls[l++] = arr[i];
+				dp[i] = l;
+			} 
+			else {
+				int j = 0, k = l - 1;
+				int idx = 0;
+				while (j <= k) {
+					int m = j + (k - j) / 2;
+					if (ls[m] >= arr[i]) {
+						idx = m;
+						k = m - 1;
+					} 
+					else {
+						j = m + 1;
+					}
+				}
+				ls[idx] = arr[i];
+				dp[i] = idx + 1;
+			}
+		}
+		int[] res = new int[l];
+		for (int i = n - 1, j = l; i >= 0; i--) {
+			if (dp[i] == j) {
+				res[--j] = arr[i];
+			}
+		}
+		return res;
+	}
+}

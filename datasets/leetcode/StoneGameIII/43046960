@@ -1,0 +1,30 @@
+class Solution {
+	int solveRecMemo(int[] stoneValue, int n, int idx, Integer[] dp) {
+		if (idx == n) {
+			return 0;
+		}
+		if (dp[idx] != null) {
+			return dp[idx];
+		}
+		int res = stoneValue[idx] - solveRecMemo(stoneValue,n,idx + 1,dp);
+		if (idx + 2 <= n) {
+			res = Math.max(res,stoneValue[idx] + stoneValue[idx + 1] - solveRecMemo(stoneValue,n,idx + 2,dp));
+		}
+		if (idx + 3 <= n) {
+			res = Math.max(res,stoneValue[idx] + stoneValue[idx + 1] - solveRecMemo(stoneValue,n,idx + 3,dp));
+		}
+		dp[idx] = res;
+		return res;
+	}
+	String stoneGameIII(int[] stoneValue) {
+		Integer[] dp = new Integer[stoneValue.length];
+		int diff = solveRecMemo(stoneValue,stoneValue.length,0,dp);
+		if (diff > 0) {
+			return "Alice";
+		} 
+		else if (diff < 0) {
+			return "Bob";
+		}
+		return "Tie";
+	}
+}

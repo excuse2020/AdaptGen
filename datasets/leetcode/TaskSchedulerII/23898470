@@ -1,0 +1,41 @@
+class Solution {
+	long taskSchedulerII(int[] tasks, int space) {
+		Map<Integer, Integer> tm = new TreeMap<>();
+		for (int task: tasks) {	
+			tm.put(task,tm.getOrDefault(task,0) + 1);
+		}
+		List<Integer> days = new ArrayList<>();
+		List<Integer> unallowed = new ArrayList<>();
+		boolean finished = false;
+		while (finished == false) {
+			finished = true;
+			boolean exhausted = true;
+			for (int num: tm.keySet()) {	
+				int freq = tm.get(num);
+				if (freq > 0) {
+					finished = false;
+					int size = days.size();
+					if (!unallowed.contains(num)) {
+						days.add(num);
+						System.out.println("we gonna do " + num);
+						exhausted = false;
+						tm.put(num,freq - 1);
+						unallowed.add(num);
+						if (unallowed.size() > space) {
+							unallowed.remove(0);
+						}
+					}
+				}
+			}
+			if (exhausted && finished == false) {
+				System.out.println("we gonna rest for " + (days.size() + 1));
+				days.add(0);
+				unallowed.add(0);
+				if (unallowed.size() > space) {
+					unallowed.remove(0);
+				}
+			}
+		}
+		return days.size();
+	}
+}

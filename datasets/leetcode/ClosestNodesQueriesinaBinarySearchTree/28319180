@@ -1,0 +1,46 @@
+class Solution {
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		List<Integer> list = new ArrayList<>();
+		Stack<TreeNode> stack = new Stack<>();
+		TreeNode node = root;
+		while (true) {
+			if (node != null) {
+				stack.push(node);
+				node = node.left;
+			} 
+			else {
+				if (stack.isEmpty()) {
+					break;
+				}
+				node = stack.pop();
+				list.add(node.val);
+				node = node.right;
+			}
+		}
+		List<List<Integer>> ans = new ArrayList<>();
+		for (int n: queries) {	
+			ans.add(getFloorCeil(list,n));
+		}
+		return ans;
+	}
+	List<Integer> getFloorCeil(List<Integer> nums, int target) {
+		int lo = 0, hi = nums.size() - 1;
+		int floor = -1, ceil = -1;
+		while (lo <= hi) {
+			int mid = lo + (hi - lo) / 2;
+			int midEle = nums.get(mid);
+			if (midEle == target) {
+				return Arrays.asList(midEle,midEle);
+			} 
+			else if (target < midEle) {
+				ceil = midEle;
+				hi = mid - 1;
+			} 
+			else {
+				floor = midEle;
+				lo = mid + 1;
+			}
+		}
+		return Arrays.asList(floor,ceil);
+	}
+}

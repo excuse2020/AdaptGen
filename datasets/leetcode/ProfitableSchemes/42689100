@@ -1,0 +1,27 @@
+class Solution {
+	int modulo = 1000000007;
+	int profitableSchemes(int n, int minProfit, int[] group, int[] profit) {
+		int sum = Arrays.stream(profit).sum();
+		int[][][] memo = new int[group.length][n + 1][sum + 1];
+		for (int[][] m: memo) {	
+			for (int[] row: m) {	
+				Arrays.fill(row,-1);
+			}
+		}
+		return slv(0,0,n,minProfit,group,profit,memo);
+	}
+	int slv(int n, int currProfit, int person, int minProfit, int[] group, int[] profit, int[][][] memo) {
+		if (person < 0) {
+			return 0;
+		}
+		if (person == 0 || n >= group.length) {
+			return currProfit >= minProfit ? 1 : 0;
+		}
+		if (memo[n][person][currProfit] != -1) {
+			return memo[n][person][currProfit];
+		}
+		int pass = slv(n + 1,currProfit,person,minProfit,group,profit,memo) % modulo;
+		int kill = slv(n + 1,currProfit + profit[n],person - group[n],minProfit,group,profit,memo) % modulo;
+		return memo[n][person][currProfit] = (pass + kill) % modulo;
+	}
+}

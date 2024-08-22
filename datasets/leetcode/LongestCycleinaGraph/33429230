@@ -1,0 +1,43 @@
+class Solution {
+	int dfs(int[] edges, int[] vis, int cur, int start, int[] loop) {
+		if (edges[cur] == -1) {
+			vis[cur] = start;
+			return -1;
+		}
+		if (vis[cur] != -1) {
+			if (vis[cur] == start) {
+				loop[0] = cur;
+				return 1;
+			} 
+			else {
+				return -1;
+			}
+		}
+		vis[cur] = start;
+		int res = dfs(edges,vis,edges[cur],start,loop);
+		if (loop[0] == -1) {
+			return res;
+		} 
+		else if (loop[1] == 1) {
+			return res;
+		} 
+		else if (loop[0] == cur) {
+			loop[1] = 1;
+			return res;
+		} 
+		else {
+			return res + 1;
+		}
+	}
+	int longestCycle(int[] edges) {
+		int n = edges.length, res = -1;
+		int[] vis = new int[n];
+		Arrays.fill(vis,-1);
+		for (int i = 0; i < n; i++) {
+			if (vis[i] == -1) {
+				res = Math.max(res,dfs(edges,vis,i,i,new int{-1, 0}));
+			}
+		}
+		return res;
+	}
+}

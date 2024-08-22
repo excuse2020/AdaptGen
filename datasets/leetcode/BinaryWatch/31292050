@@ -1,0 +1,49 @@
+class Solution {
+	int countOne(int[] nums) {
+		int count = 0;
+		for (int num: nums) {	
+			if (num == 1) {
+				count++;
+			}
+		}
+		return count;
+	}
+	void helper(int[] nums, int targetNum, List<String> res, int index) {
+		if (countOne(nums) == targetNum) {
+			StringBuilder sb = new StringBuilder();
+			int hour = 0;
+			int minute = 0;
+			for (int i = 0; i < nums.length; i++) {
+				if (i < 6) {
+					minute += nums[i] << i;
+				} 
+				else {
+					hour += nums[i] << (i - 6);
+				}
+			}
+			if (hour > 11 || minute > 59) {
+				return;
+			}
+			sb.append(hour + ":");
+			if (minute < 10) {
+				sb.append("0" + minute);
+			} 
+			else {
+				sb.append(minute);
+			}
+			res.add(sb.toString());
+			return;
+		}
+		for (int i = index; i < nums.length; i++) {
+			nums[i] = 1;
+			helper(nums,targetNum,res,i + 1);
+			nums[i] = 0;
+		}
+	}
+	List<String> readBinaryWatch(int turnedOn) {
+		int[] nums = new int[10];
+		List<String> res = new ArrayList<>();
+		helper(nums,turnedOn,res,0);
+		return res;
+	}
+}

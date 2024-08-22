@@ -1,0 +1,48 @@
+class Solution {
+	void remove(ListNode start, ListNode end, HashSet<ListNode> nodes) {
+		while (start != end) {
+			nodes.remove(start);
+			start = start.next;
+		}
+		nodes.remove(start);
+	}
+	ListNode removeZeroSumSublists(ListNode head) {
+		HashMap<Integer, ListNode> sumMap = new HashMap<>();
+		HashSet<ListNode> nodes = new HashSet<>();
+		ListNode curr = head;
+		int sum = 0;
+		while (curr != null) {
+			nodes.add(curr);
+			sum += curr.val;
+			if (sumMap.containsKey(sum)) {
+				ListNode sumNode = sumMap.get(sum);
+				if (nodes.contains(sumNode)) {
+					ListNode start = sumMap.get(sum).next;
+					ListNode end = curr;
+					remove(start,end,nodes);
+					sumMap.get(sum).next = curr.next;
+					curr = curr.next;
+				} 
+				else {
+					sumMap.put(sum,curr);
+					curr = curr.next;
+				}
+			} 
+			else {
+				if (sum == 0) {
+					ListNode temp = curr;
+					curr = curr.next;
+					temp.next = null;
+					head = curr;
+					sumMap = new HashMap<>();
+					nodes = new HashSet<>();
+				} 
+				else {
+					sumMap.put(sum,curr);
+					curr = curr.next;
+				}
+			}
+		}
+		return head;
+	}
+}

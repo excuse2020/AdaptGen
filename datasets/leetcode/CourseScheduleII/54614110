@@ -1,0 +1,44 @@
+class Solution {
+	int[] findOrder(int numCourses, int[][] prerequisites) {
+		ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+		int[] indegree = new int[numCourses];
+		for (int i = 0; i < numCourses; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int[] goof: prerequisites) {	
+			int u = goof[0];
+			int v = goof[1];
+			graph.get(v).add(u);
+		}
+		for (int i = 0; i < numCourses; i++) {
+			for (int neighbor: graph.get(i)) {	
+				indegree[neighbor]++;
+			}
+		}
+		Queue<Integer> queue = new LinkedList<>();
+		List<Integer> result = new ArrayList<>();
+		for (int i = 0; i < numCourses; i++) {
+			if (indegree[i] == 0) {
+				queue.add(i);
+			}
+		}
+		while (!queue.isEmpty()) {
+			int node = queue.poll();
+			result.add(node);
+			for (int neighbor: graph.get(node)) {	
+				indegree[neighbor]--;
+				if (indegree[neighbor] == 0) {
+					queue.add(neighbor);
+				}
+			}
+		}
+		if (result.size() != numCourses) {
+			return new int[0];
+		}
+		int[] resultArray = new int[result.size()];
+		for (int i = 0; i < result.size(); i++) {
+			resultArray[i] = result.get(i);
+		}
+		return resultArray;
+	}
+}

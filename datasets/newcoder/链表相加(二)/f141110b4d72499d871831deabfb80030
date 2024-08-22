@@ -1,0 +1,39 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		HashMap<Integer, ListNode> map1 = new HashMap<>();
+		HashMap<Integer, ListNode> map2 = new HashMap<>();
+		int index1 = -1, index2 = -1;
+		ListNode dummy1 = new ListNode(0);
+		ListNode dummy2 = new ListNode(0);
+		dummy1.next = head1;
+		dummy2.next = head2;
+		while (dummy1 != null) {
+			map1.put(index1++,dummy1);
+			dummy1 = dummy1.next;
+		}
+		while (dummy2 != null) {
+			map2.put(index2++,dummy2);
+			dummy2 = dummy2.next;
+		}
+		int count = Math.min(index1,index2);
+		int indexHelp = Math.max(index1,index2);
+		HashMap<Integer, ListNode> mapHelp = index1 > index2 ? map1 : map2;
+		int jinWei = 0;
+		for (int i = 1; i <= count; i++) {
+			ListNode tmp1 = map1.get(index1 - i);
+			ListNode tmp2 = map2.get(index2 - i);
+			int plus = jinWei + tmp1.val;
+			jinWei = plus / 10;
+			mapHelp.get(indexHelp - i).val = plus % 10;
+		}
+		int j = 1;
+		while (jinWei == 1) {
+			ListNode tmp = mapHelp.get(indexHelp - count);
+			int plus = tmp.val + 1;
+			jinWei = plus / 10;
+			tmp.val = plus % 10;
+			j++;
+		}
+		return mapHelp.get(-1).val == 0 ? mapHelp.get(0) : mapHelp.get(-1);
+	}
+}

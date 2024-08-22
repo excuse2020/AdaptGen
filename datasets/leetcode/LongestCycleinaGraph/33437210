@@ -1,0 +1,32 @@
+class Solution {
+	int check(int[] edges, int[][] trav, int start, int path) {
+		int counter = 1;
+		while (edges[start] != -1) {
+			if (trav[start][1] != 0) {
+				if (trav[start][0] == path) {
+					return counter - trav[start][1];
+				} 
+				else {
+					break;
+				}
+			}
+			trav[start][0] = path;
+			trav[start][1] = counter;
+			counter++;
+			start = edges[start];
+		}
+		return -1;
+	}
+	int longestCycle(int[] edges) {
+		int res = -1;
+		int[][] trav = new int[edges.length][2];
+		int path = 1;
+		for (int i = 0; i < edges.length; i++) {
+			if (trav[i][0] == 0) {
+				res = Math.max(check(edges,trav,i,path),res);
+				path++;
+			}
+		}
+		return res;
+	}
+}

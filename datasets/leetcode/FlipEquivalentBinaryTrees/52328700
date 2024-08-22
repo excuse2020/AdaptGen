@@ -1,0 +1,51 @@
+class Solution {
+	int count1 = 0;
+	int count2 = 0;
+	boolean isValid = true;
+	Map<Integer, Set<Integer>> map = new HashMap();
+	void compareTree2(TreeNode node) {
+		if (node == null || !isValid) {
+			return;
+		}
+		count2++;
+		if (!map.containsKey(node.val)) {
+			isValid = false;
+			return;
+		}
+		Set<Integer> set = map.get(node.val);
+		if (node.left != null) {
+			if (!set.contains(node.left.val)) {
+				isValid = false;
+				return;
+			}
+		}
+		if (node.right != null) {
+			if (!set.contains(node.right.val)) {
+				isValid = false;
+				return;
+			}
+		}
+		compareTree2(node.left);
+		compareTree2(node.right);
+	}
+	boolean flipEquiv(TreeNode root1, TreeNode root2) {
+		readTree1(root1);
+		compareTree2(root2);
+		return isValid && count1 == count2;
+	}
+	void readTree1(TreeNode node) {
+		if (node == null) {
+			return;
+		}
+		map.put(node.val,new HashSet<Integer>());
+		count1++;
+		if (node.left != null) {
+			map.get(node.val).add(node.left.val);
+			readTree1(node.left);
+		}
+		if (node.right != null) {
+			map.get(node.val).add(node.right.val);
+			readTree1(node.right);
+		}
+	}
+}

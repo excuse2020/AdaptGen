@@ -1,0 +1,39 @@
+class Solution {
+	ListNode Merge(ListNode pHead1, ListNode pHead2) {
+		ListNode dummynode = new ListNode(-1);
+		dummynode.next = pHead1;
+		ListNode pre = dummynode;
+		while (pHead1 != null && pHead2 != null) {
+			if (pHead2.val < pHead1.val) {
+				ListNode next = pHead2.next;
+				pHead2.next = pHead1;
+				pre.next = pHead2;
+				pHead2 = next;
+				pre = pre.next;
+			} 
+			else {
+				pre = pHead1;
+				pHead1 = pHead1.next;
+			}
+		}
+		if (pHead1 == null) {
+			pre.next = pHead2;
+		}
+		return dummynode.next;
+	}
+	ListNode mergeKLists(ArrayList<ListNode> lists) {
+		if (lists == null || lists.size() == 0) {
+			return null;
+		} 
+		else {
+			return mergeKLists(lists,0,lists.size() - 1);
+		}
+	}
+	ListNode mergeKLists(ArrayList<ListNode> lists, int left, int right) {
+		if (left == right) {
+			return lists.get(left);
+		}
+		int mid = (left + right) / 2;
+		return Merge(mergeKLists(lists,left,mid),mergeKLists(lists,mid + 1,right));
+	}
+}

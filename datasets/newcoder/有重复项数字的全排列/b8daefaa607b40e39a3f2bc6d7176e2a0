@@ -1,0 +1,69 @@
+class Solution {
+	void doWork(ArrayList<ArrayList<Integer>> res, int[] num, int index) {
+		if (index == num.length - 1) {
+			ArrayList<Integer> list = new ArrayList<>();
+			for (int i = 0; i < num.length; i++) {
+				list.add(num[i]);
+			}
+			if (!res.contains(list)) {
+				res.add(list);
+			}
+		} 
+		else {
+			for (int i = index; i < num.length; i++) {
+				if (i != index && num[index] == num[i]) {
+					continue;
+				}
+				swap(num,index,i);
+				int[] afterOrder = new int[num.length];
+				for (int j = 0; j < num.length; j++) {
+					afterOrder[j] = num[j];
+				}
+				quickOrder(afterOrder,index + 1,afterOrder.length - 1);
+				doWork(res,afterOrder,index + 1);
+				swap(num,i,index);
+			}
+		}
+	}
+	ArrayList<ArrayList<Integer>> permuteUnique(int[] num) {
+		ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+		if (num == null || num.length == 0) {
+			return res;
+		}
+		Arrays.sort(num);
+		doWork(res,num,0);
+		return res;
+	}
+	void quickOrder(int[] num, int begin, int end) {
+		if (begin >= end) {
+			return;
+		}
+		int left = begin;
+		int right = end;
+		int res = num[left];
+		while (left < right) {
+			while (left < right && num[right] > res) {
+				right--;
+			}
+			if (left < right) {
+				num[left] = num[right];
+				left++;
+			}
+			while (left < right && num[left] < res) {
+				left++;
+			}
+			if (left < right) {
+				num[right] = num[left];
+				right--;
+			}
+		}
+		num[left] = res;
+		quickOrder(num,begin,left - 1);
+		quickOrder(num,left + 1,end);
+	}
+	void swap(int[] num, int index, int i) {
+		int temp = num[i];
+		num[i] = num[index];
+		num[index] = temp;
+	}
+}

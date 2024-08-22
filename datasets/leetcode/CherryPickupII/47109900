@@ -1,0 +1,47 @@
+class Solution {
+	int[][][] dp;
+	int m;
+	int n;
+	int cherryPickup(int[][] grid) {
+		m = grid.length;
+		n = grid[0].length;
+		dp = new int[m][n][n];
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				Arrays.fill(dp[i][j],-1);
+			}
+		}
+		return grid[0][0] + grid[0][n - 1];
+	}
+	int dp(int[][] grid, int r, int c1, int c2) {
+		if (!inBounds(c1) || !inBounds(c2)) {
+			return 0;
+		}
+		if (r >= m - 1) {
+			return 0;
+		}
+		if (dp[r][c1][c2] != -1) {
+			return dp[r][c2][c1] = dp[r][c1][c2];
+		}
+		if (dp[r][c2][c1] != -1) {
+			return dp[r][c1][c2] = dp[r][c2][c1];
+		}
+		int res = 0;
+		for (int i = -1; i <= 1; i++) {
+			if (!inBounds(c1 + i)) {
+				continue;
+			}
+			for (int j = -1; j <= 1; j++) {
+				if (!inBounds(c2 + j)) {
+					continue;
+				}
+				int candidateRes = dp(grid,r + 1,c1 + i,c2 + j) + grid[r + 1][c1 + i];
+				res = Math.max(res,candidateRes);
+			}
+		}
+		return dp[r][c1][c2] = dp[r][c2][c1] = res;
+	}
+	boolean inBounds(int c) {
+		return c >= 0 && c < n;
+	}
+}

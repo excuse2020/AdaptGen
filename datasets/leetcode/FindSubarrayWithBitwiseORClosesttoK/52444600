@@ -1,0 +1,26 @@
+class Solution {
+	int minimumDifference(int[] nums, int k) {
+		int n = nums.length, m = 30;
+		int mink = (1 << m) - 1;
+		int[] closest0 = new int[m];
+		Arrays.fill(closest0,mink);
+		for (int num: nums) {	
+			mink = Math.min(Math.abs(num - k),mink);
+			for (int x: closest0) {	
+				mink = Math.min(Math.abs((x & num) - k),mink);
+			}
+			if (mink == 0) {
+				return 0;
+			}
+			for (int i = 0; i < m; i++) {
+				if ((num & (1 << i)) == 0) {
+					closest0[i] = num;
+				} 
+				else {
+					closest0[i] &= num;
+				}
+			}
+		}
+		return mink;
+	}
+}

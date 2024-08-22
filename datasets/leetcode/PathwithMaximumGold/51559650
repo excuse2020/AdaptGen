@@ -1,0 +1,44 @@
+class Solution {
+	boolean vis;
+	int getMaximumGold(int[][] grid) {
+		int n = grid.length, m = grid[0].length;
+		int count = gridWithNoZeros(grid,n,m);
+		if (count != -1) {
+			return count;
+		}
+		vis = new boolean[n][m];
+		int res = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				res = Math.max(res,rec(grid,i,j,n,m));
+			}
+		}
+		return res;
+	}
+	int gridWithNoZeros(int[][] grid, int n, int m) {
+		int count = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				if (grid[i][j] == 0) {
+					return -1;
+				} 
+				else {
+					count += grid[i][j];
+				}
+			}
+		}
+		return count;
+	}
+	int rec(int grid, int i, int j, int n, int m) {
+		if (i < 0 || j < 0 || i >= n || j >= m || grid[i][j] == 0 || vis[i][j]) {
+			return 0;
+		}
+		vis[i][j] = true;
+		int top = rec(grid,i - 1,j,n,m);
+		int down = rec(grid,i + 1,j,n,m);
+		int left = rec(grid,i,j - 1,n,m);
+		int right = rec(grid,i,j + 1,n,m);
+		vis[i][j] = false;
+		return grid[i][j] + Math.max(top,Math.max(down,Math.max(left,right)));
+	}
+}

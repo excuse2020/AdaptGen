@@ -1,0 +1,50 @@
+class Solution {
+	int findInMountainArray(int target, MountainArray mountainArr) {
+		int n = mountainArr.length();
+		int peak = findPeakElement(mountainArr,n);
+		int index = orderAgnosticBS(mountainArr,target,0,peak,true);
+		if (index != -1) {
+			return index;
+		}
+		return orderAgnosticBS(mountainArr,target,peak + 1,n - 1,false);
+	}
+	int findPeakElement(MountainArray mountainArr, int n) {
+		int start = 0, end = n - 1;
+		while (start < end) {
+			int mid = start + (end - start) / 2;
+			if (mountainArr.get(mid) > mountainArr.get(mid + 1)) {
+				end = mid;
+			} 
+			else {
+				start = mid + 1;
+			}
+		}
+		return start;
+	}
+	int orderAgnosticBS(MountainArray mountainArr, int target, int start, int end, boolean isAsc) {
+		while (start <= end) {
+			int mid = start + (end - start) / 2;
+			int midValue = mountainArr.get(mid);
+			if (midValue == target) {
+				return mid;
+			}
+			if (isAsc) {
+				if (target < midValue) {
+					end = mid - 1;
+				} 
+				else {
+					start = mid + 1;
+				}
+			} 
+			else {
+				if (target > midValue) {
+					end = mid - 1;
+				} 
+				else {
+					start = mid + 1;
+				}
+			}
+		}
+		return -1;
+	}
+}

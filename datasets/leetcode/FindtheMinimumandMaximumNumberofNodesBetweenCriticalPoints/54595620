@@ -1,0 +1,43 @@
+class Solution {
+	void helper(List<Integer> l, ListNode head) {
+		ListNode temp = head;
+		while (temp != null) {
+			l.add(temp.val);
+			temp = temp.next;
+		}
+	}
+	int[] nodesBetweenCriticalPoints(ListNode head) {
+		List<Integer> l = new ArrayList<>();
+		helper(l,head);
+		List<Integer> distances = new ArrayList<>();
+		for (int i = 1; i < l.size() - 1; i++) {
+			if (l.get(i) > l.get(i + 1) && l.get(i) > l.get(i - 1)) {
+				distances.add(i);
+			} 
+			else if (l.get(i) < l.get(i + 1) && l.get(i) < l.get(i - 1)) {
+				distances.add(i);
+			}
+		}
+		int min = Integer.MAX_VALUE;
+		int max = Integer.MIN_VALUE;
+		Collections.sort(distances);
+		int[] ans = new int[2];
+		if (l.size() <= 2) {
+			ans[0] = -1;
+			ans[1] = -1;
+			return ans;
+		}
+		if (distances.size() <= 1) {
+			ans[0] = -1;
+			ans[1] = -1;
+			return ans;
+		}
+		for (int i = 1; i < distances.size(); i++) {
+			min = Math.min(min,distances.get(i) - distances.get(i - 1));
+		}
+		max = Math.max(max,distances.get(distances.size() - 1) - distances.get(0));
+		ans[0] = min;
+		ans[1] = max;
+		return ans;
+	}
+}

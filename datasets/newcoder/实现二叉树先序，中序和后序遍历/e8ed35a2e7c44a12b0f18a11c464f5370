@@ -1,0 +1,58 @@
+class Solution {
+	int[][] threeOrders(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		List<Integer> list = new ArrayList<>();
+		Stack<TreeNode> stack = new Stack<>();
+		stack.push(root);
+		while (!stack.isEmpty()) {
+			TreeNode node = stack.pop();
+			if (node != null) {
+				list.add(node.val);
+				stack.push(node.right);
+				stack.push(node.left);
+			}
+		}
+		int[] pre = new int[list.size()];
+		for (int i = 0; i < pre.length; i++) {
+			pre[i] = list.get(i);
+		}
+		list.clear();
+		TreeNode curr = root;
+		while (!stack.isEmpty() || curr != null) {
+			if (curr == null) {
+				curr = stack.pop();
+				list.add(curr.val);
+				curr = curr.right;
+			} 
+			else {
+				stack.push(curr);
+				curr = curr.left;
+			}
+		}
+		int[] mid = new int[list.size()];
+		for (int i = 0; i < mid.length; i++) {
+			mid[i] = list.get(i);
+		}
+		list.clear();
+		stack.push(root);
+		while (!stack.isEmpty()) {
+			TreeNode node = stack.pop();
+			if (node != null) {
+				list.add(node.val);
+				stack.push(node.left);
+				stack.push(node.right);
+			}
+		}
+		int[] pos = new int[list.size()];
+		for (int i = 0, j = pos.length - 1; i < pos.length; i++, j--) {
+			pos[i] = list.get(j);
+		}
+		int[][] ans = new int[3];
+		ans[0] = pre;
+		ans[1] = mid;
+		ans[2] = pos;
+		return ans;
+	}
+}

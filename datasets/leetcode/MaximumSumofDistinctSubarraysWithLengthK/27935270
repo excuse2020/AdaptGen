@@ -1,0 +1,29 @@
+class Solution {
+	long maximumSubarraySum(int[] nums, int k) {
+		if (nums.length < k) {
+			return 0;
+		}
+		long answer = 0;
+		boolean[] fnd = new boolean[100001];
+		int start = 0, end = 0;
+		long currSum = 0;
+		while (end < nums.length) {
+			if (fnd[nums[end]]) {
+				fnd[nums[start]] = false;
+				currSum -= nums[start];
+				start++;
+				continue;
+			}
+			fnd[nums[end]] = true;
+			currSum += nums[end];
+			if (end - start + 1 == k) {
+				answer = Math.max(answer,currSum);
+				fnd[nums[start]] = false;
+				currSum -= nums[start];
+				start++;
+			}
+			end++;
+		}
+		return answer == 0 ? 0 : answer;
+	}
+}

@@ -1,0 +1,35 @@
+class Solution {
+	int[] avoidFlood(int[] rains) {
+		HashMap<Integer, Integer> map = new HashMap<>();
+		TreeSet<Integer> set = new TreeSet<>();
+		int[] ans = new int[rains.length];
+		for (int j = 0; j < ans.length; j++) {
+			ans[j] = 1;
+		}
+		for (int i = 0; i < rains.length; i++) {
+			int x = rains[i];
+			if (x == 0) {
+				set.add(i);
+				continue;
+			}
+			if (map.containsKey(x)) {
+				int rainDay = map.get(x);
+				Integer afterRainDay = set.higher(rainDay);
+				if (afterRainDay == null) {
+					return new int[0];
+				} 
+				else {
+					ans[afterRainDay] = x;
+					map.put(x,i);
+					set.remove(afterRainDay);
+					ans[i] = -1;
+				}
+			} 
+			else {
+				map.put(x,i);
+				ans[i] = -1;
+			}
+		}
+		return ans;
+	}
+}

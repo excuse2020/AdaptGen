@@ -1,0 +1,51 @@
+class Solution {
+	ListNode merge(ListNode a, ListNode b) {
+		ListNode c = new ListNode(-1);
+		ListNode tempC = c;
+		while (a != null && b != null) {
+			if (a.val <= b.val) {
+				tempC.next = a;
+				a = a.next;
+			} 
+			else {
+				tempC.next = b;
+				b = b.next;
+			}
+			tempC = tempC.next;
+		}
+		if (a != null) {
+			tempC.next = a;
+		}
+		if (b != null) {
+			tempC.next = b;
+		}
+		return c.next;
+	}
+	ListNode mergesort(ListNode head, int size) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode temp = head;
+		ListNode a = head;
+		temp = head;
+		for (int i = 0; i < size / 2 - 1; i++) {
+			temp = temp.next;
+		}
+		ListNode b = temp.next;
+		temp.next = null;
+		int sizea = size / 2;
+		int sizeb = size - size / 2;
+		ListNode SortedA = mergesort(a,sizea);
+		ListNode SortedB = mergesort(b,sizeb);
+		return merge(SortedA,SortedB);
+	}
+	ListNode sortList(ListNode head) {
+		ListNode temp = head;
+		int n = 0;
+		while (temp != null) {
+			n++;
+			temp = temp.next;
+		}
+		return mergesort(head,n);
+	}
+}

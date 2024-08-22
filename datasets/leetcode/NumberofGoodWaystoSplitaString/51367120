@@ -1,0 +1,35 @@
+class Solution {
+	int numSplits(String s) {
+		HashMap<Character, Integer> leftHm = new HashMap<>();
+		HashMap<Character, Integer> rightHm = new HashMap<>();
+		if (s.length() == 1) {
+			return 0;
+		}
+		for (int i = 0; i < s.length(); i++) {
+			if (!rightHm.containsKey(s.charAt(i))) {
+				rightHm.put(s.charAt(i),1);
+			} 
+			else {
+				rightHm.put(s.charAt(i),rightHm.get(s.charAt(i)) + 1);
+			}
+		}
+		int goodSplits = 0;
+		for (int i = 0; i < s.length(); i++) {
+			char currentChar = s.charAt(i);
+			if (!leftHm.containsKey(currentChar)) {
+				leftHm.put(currentChar,1);
+			} 
+			else {
+				leftHm.put(currentChar,leftHm.get(currentChar) + 1);
+			}
+			rightHm.put(currentChar,rightHm.get(currentChar) - 1);
+			if (rightHm.get(currentChar) <= 0) {
+				rightHm.remove(currentChar);
+			}
+			if (rightHm.size() == leftHm.size()) {
+				goodSplits++;
+			}
+		}
+		return goodSplits;
+	}
+}

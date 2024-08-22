@@ -1,0 +1,31 @@
+class Solution {
+	int[][] differenceOfDistinctValues(int[][] grid) {
+		int m = grid.length;
+		int n = grid[0].length;
+		int[][] result = new int[m][n];
+		boolean[] count = new boolean[50];
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				for (int k = 1; i - k >= 0 && j - k >= 0; k++) {
+					count[grid[i - k][j - k] - 1] = true;
+				}
+				int value = distinct(count);
+				for (int k = 1; i + k < m && j + k < n; k++) {
+					count[grid[i + k][j + k] - 1] = true;
+				}
+				result[i][j] = Math.abs(value - distinct(count));
+			}
+		}
+		return result;
+	}
+	int distinct(boolean[] count) {
+		int unique = 0;
+		for (int i = 0; i < 50; i++) {
+			if (count[i]) {
+				unique++;
+				count[i] = false;
+			}
+		}
+		return unique;
+	}
+}

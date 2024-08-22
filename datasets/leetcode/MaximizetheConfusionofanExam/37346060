@@ -1,0 +1,25 @@
+class Solution {
+	Map<Character, Integer> mapping;
+	int maxConsecutiveAnswers(String answerKey, int k) {
+		int right = 0, left = 0;
+		int[] count = new int[2];
+		int maxLength = -1;
+		while (right < answerKey.length()) {
+			count[mapping.get(answerKey.charAt(right++))]++;
+			if (replaceable(count,k)) {
+				maxLength = Math.max(maxLength,right - left);
+				continue;
+			}
+			while (!replaceable(count,k)) {
+				count[mapping.get(answerKey.charAt(left++))]--;
+			}
+		}
+		return maxLength;
+	}
+	boolean replaceable(int[] count, int k) {
+		if (Math.min(count[0],count[1]) > k) {
+			return false;
+		}
+		return true;
+	}
+}

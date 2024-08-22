@@ -1,0 +1,34 @@
+class Solution {
+	int cherryPickup(int[][] grid) {
+		int rows = grid.length;
+		int cols = grid[0].length;
+		Integer[][][] dp = new Integer[rows][cols][cols];
+		dp[0][0][cols - 1] = grid[0][0] + grid[0][cols - 1];
+		for (int i = 0; i < rows - 1; i++) {
+			for (int j1 = 0; j1 < cols; j1++) {
+				for (int j2 = 0; j2 < cols; j2++) {
+					if (dp[i][j1][j2] != null) {
+						int newRow = i + 1;
+						for (int k = j1 - 1; k <= j1 + 1; k++) {
+							for (int l = j2 - 1; l <= j2 + 1; l++) {
+								if (k < l && k >= 0 && l >= 0 && k < cols && l < cols) {
+									int newCherries = grid[newRow][k] + grid[newRow][l];
+									dp[newRow][k][l] = dp[newRow][k][l] == null ? newCherries : Math.max(newCherries,dp[newRow][k][l]);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		int ans = 0;
+		for (int i = 0; i < cols; i++) {
+			for (int j = 0; j < cols; j++) {
+				if (dp[rows - 1][i][j] != null) {
+					ans = Math.max(ans,dp[rows - 1][i][j]);
+				}
+			}
+		}
+		return ans;
+	}
+}

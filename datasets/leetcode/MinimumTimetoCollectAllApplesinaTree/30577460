@@ -1,0 +1,32 @@
+class Solution {
+	int ans;
+	void dfs(ArrayList<ArrayList<Integer>> adj, Boolean vis, int node, List<Boolean> hasApple) {
+		vis[node] = true;
+		for (int ele: adj.get(node)) {	
+			if (vis[ele] == false) {
+				dfs(adj,vis,ele,hasApple);
+				if (hasApple.get(ele)) {
+					ans += 2;
+					hasApple.set(node,true);
+				}
+			}
+		}
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		ans = 0;
+		ArrayList<ArrayList<Integer>> al = new ArrayList<>();
+		Boolean vis = new Boolean[n];
+		for (int i = 0; i < n; i++) {
+			vis[i] = false;
+		}
+		for (int i = 0; i < n; i++) {
+			al.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			al.get(edges[i][0]).add(edges[i][1]);
+			al.get(edges[i][1]).add(edges[i][0]);
+		}
+		dfs(al,vis,0,hasApple);
+		return ans;
+	}
+}

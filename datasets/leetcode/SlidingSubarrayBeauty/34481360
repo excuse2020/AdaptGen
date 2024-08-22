@@ -1,0 +1,45 @@
+class Solution {
+	int[] getSubarrayBeauty(int[] nums, int k, int x) {
+		int neg = 0;
+		int[] map = new int[51];
+		for (int i = 0; i < k - 1; i++) {
+			if (nums[i] < 0) {
+				map[nums[i] + 50]++;
+				neg++;
+			}
+		}
+		int[] ans = new int[nums.length - k + 1];
+		int index = 0;
+		for (int i = k - 1; i < nums.length; i++) {
+			if (nums[i] < 0) {
+				map[nums[i] + 50]++;
+				neg++;
+			}
+			if (neg >= x) {
+				ans[index] = xthSmallest(map,x);
+			}
+			if (nums[index] < 0) {
+				map[nums[index] + 50]--;
+				neg--;
+			}
+			index++;
+		}
+		return ans;
+	}
+	int xthSmallest(int[] map, int x) {
+		int j = 0;
+		while (x != 0 && j < map.length) {
+			if (map[j] == 0) {
+				j++;
+			}
+			if (map[j] < x) {
+				x -= map[j];
+				j++;
+			} 
+			else {
+				return j - 50;
+			}
+		}
+		return -1;
+	}
+}

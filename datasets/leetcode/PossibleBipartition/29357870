@@ -1,0 +1,33 @@
+class Solution {
+	Map<Integer, Integer> color;
+	ArrayList<Integer>[] g;
+	boolean dfs(int node, int c) {
+		if (color.containsKey(node)) {
+			return color.get(node) == c;
+		}
+		color.put(node,c);
+		for (int n: g[node]) {	
+			if (!dfs(n,c ^ 1)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		g = new ArrayList[n + 1];
+		color = new HashMap<>();
+		for (int i = 1; i <= n; i++) {
+			g[i] = new ArrayList();
+		}
+		for (int[] e: dislikes) {	
+			g[e[0]].add(e[1]);
+			g[e[1]].add(e[0]);
+		}
+		for (int j = 1; j <= n; j++) {
+			if (!color.containsKey(j) && !dfs(j,0)) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

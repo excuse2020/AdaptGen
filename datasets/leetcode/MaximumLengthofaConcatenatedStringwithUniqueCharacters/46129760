@@ -1,0 +1,43 @@
+class Solution {
+	boolean canConcat(String s, Set<Character> set) {
+		for (char c: s.toCharArray()) {	
+			if (set.contains(c)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	void dfs(List<String> arr, int i, Set<Character> set, int[] ans) {
+		if (i >= arr.size()) {
+			return;
+		}
+		dfs(arr,i + 1,set,ans);
+		String s = arr.get(i);
+		if (isUnique(s) && canConcat(s,set)) {
+			for (char c: s.toCharArray()) {	
+				set.add(c);
+			}
+			ans[0] = Math.max(ans[0],set.size());
+			dfs(arr,i + 1,set,ans);
+			for (char c: s.toCharArray()) {	
+				set.remove(c);
+			}
+		}
+	}
+	boolean isUnique(String s) {
+		Set<Character> newSet = new HashSet<>();
+		for (char c: s.toCharArray()) {	
+			if (newSet.contains(c)) {
+				return false;
+			}
+			newSet.add(c);
+		}
+		return true;
+	}
+	int maxLength(List<String> arr) {
+		Set<Character> set = new HashSet<>();
+		int[] ans = new int[1];
+		dfs(arr,0,set,ans);
+		return ans[0];
+	}
+}

@@ -1,0 +1,50 @@
+class Solution {
+	HashMap<Integer, Integer> map = new HashMap<>();
+	TreeNode build(int[] xianxu, int pstart, int pend, int[] zhongxu, int istart, int iend) {
+		if (istart == iend) {
+			return null;
+		}
+		int val = xianxu[pstart];
+		TreeNode root = new TreeNode(val);
+		int index = map.get(val);
+		int leftNum = index - istart;
+		root.left = build(xianxu,pstart + 1,pstart + leftNum,zhongxu,istart,index);
+		root.right = build(xianxu,pstart + leftNum,pend,zhongxu,index + 1,iend);
+		return root;
+	}
+	List<Integer> rightView(TreeNode root) {
+		List<Integer> res = new ArrayList<>();
+		Deque<TreeNode> queue = new ArrayDeque<>();
+		if (root != null) {
+			queue.offer(root);
+		}
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				TreeNode node = queue.poll();
+				if (i == size - 1) {
+					res.add(node.val);
+				}
+				if (node.left != null) {
+					queue.offer(node.left);
+				}
+				if (node.right != null) {
+					queue.offer(node.right);
+				}
+			}
+		}
+		return res;
+	}
+	int[] solve(int[] xianxu, int[] zhongxu) {
+		for (int i = 0; i < zhongxu.length; i++) {
+			map.put(zhongxu[i],i);
+		}
+		TreeNode treeNode = build(xianxu,0,xianxu.length,zhongxu,0,zhongxu.length);
+		List<Integer> res = rightView(treeNode);
+		int[] array = new int[res.size()];
+		for (int i = 0; i < res.size(); i++) {
+			array[i] = res.get(i);
+		}
+		return array;
+	}
+}

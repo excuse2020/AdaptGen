@@ -1,0 +1,40 @@
+class Solution {
+	long calc(int num, int k) {
+		long ans = num;
+		for (int i = 0; i < k; i++) {
+			ans *= 2;
+		}
+		return ans;
+	}
+	long maximumOr(int[] nums, int k) {
+		int n = nums.length;
+		int pfL = new int[n];
+		int pfR = new int[n];
+		for (int i = 0, j = n - 1; i < n; i++, j--) {
+			if (i == 0) {
+				pfL[i] = 0;
+				pfR[j] = 0;
+			} 
+			else {
+				pfL[i] = pfL[i - 1] | nums[i - 1];
+				pfR[j] = pfR[j + 1] | nums[j + 1];
+			}
+		}
+		long max = Integer.MIN_VALUE;
+		for (int i = 0; i < n; i++) {
+			long temp = calc(nums[i],k);
+			long res = 0;
+			if (i == 0) {
+				res = temp | pfR[i];
+			} 
+			else if (i == n - 1) {
+				res = temp | pfL[i];
+			} 
+			else {
+				res = pfL[i] | temp;
+			}
+			max = Math.max(max,res);
+		}
+		return max;
+	}
+}

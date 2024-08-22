@@ -1,0 +1,38 @@
+class Solution {
+	int[] decrypt(int[] code, int k) {
+		int[] output = new int[code.length];
+		if (k > 0) {
+			output = find(code,k);
+		} 
+		else if (k < 0) {
+			reverse(code);
+			output = find(code,-1 * k);
+			reverse(output);
+		}
+		return output;
+	}
+	int[] find(int[] code, int k) {
+		int n = code.length;
+		int[] output = new int[n];
+		int sum = 0;
+		int i = 0, j = 1;
+		while (i < n) {
+			if (j - i <= k) {
+				sum += code[j % n];
+				++j;
+			} 
+			else {
+				output[i++] = sum;
+				sum -= code[i % n];
+			}
+		}
+		return output;
+	}
+	void reverse(int[] arr) {
+		for (int i = 0, j = arr.length - 1; i < j; ++i, --j) {
+			int temp = arr[i];
+			arr[i] = arr[j];
+			arr[j] = temp;
+		}
+	}
+}

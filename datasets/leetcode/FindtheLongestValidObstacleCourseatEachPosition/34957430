@@ -1,0 +1,34 @@
+class Solution {
+	int[] longestObstacleCourseAtEachPosition(int[] obs) {
+		int n = obs.length;
+		int[] ans = new int[n];
+		int[] maxH = new int[n];
+		int l = 0;
+		for (int i = 0; i < n; i++) {
+			if (l == 0 || maxH[l - 1] <= obs[i]) {
+				maxH[l++] = obs[i];
+			} 
+			else {
+				maxH[upperBound(maxH,0,l - 1,obs[i])] = obs[i];
+			}
+			ans[i] = upperBound(maxH,0,l - 1,obs[i]);
+		}
+		return ans;
+	}
+	int upperBound(int[] arr, int low, int high, int X) {
+		int mid;
+		while (low < high) {
+			mid = low + (high - low) / 2;
+			if (X >= arr[mid]) {
+				low = mid + 1;
+			} 
+			else {
+				high = mid;
+			}
+		}
+		if (arr[low] <= X) {
+			low++;
+		}
+		return low;
+	}
+}

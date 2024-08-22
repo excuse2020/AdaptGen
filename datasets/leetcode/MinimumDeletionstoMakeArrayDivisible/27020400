@@ -1,0 +1,29 @@
+class Solution {
+	boolean isDividesAll(int divisor, Set<Integer> uniqueNumsDivideVals) {
+		for (int val: uniqueNumsDivideVals) {	
+			if (val % divisor != 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int minOperations(int[] nums, int[] numsDivide) {
+		Map<Integer, Integer> freq = new HashMap<>();
+		for (int val: nums) {	
+			freq.put(val,freq.getOrDefault(val,0) + 1);
+		}
+		PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+		minHeap.addAll(freq.keySet());
+		Set<Integer> uniqueNumsDivideVals = new HashSet<>(IntStream.of(numsDivide).boxed().collect(Collectors.toSet()));
+		int deletes = 0;
+		while (!minHeap.isEmpty()) {
+			int minNumVal = minHeap.poll();
+			if (isDividesAll(minNumVal,uniqueNumsDivideVals)) {
+				return deletes;
+			}
+			deletes += freq.get(minNumVal);
+			freq.remove(minNumVal);
+		}
+		return -1;
+	}
+}

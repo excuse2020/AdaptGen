@@ -1,0 +1,43 @@
+class Solution {
+	int[] findOrder(int numCourses, int[][] prerequisites) {
+		List<Integer> graph = new ArrayList[numCourses];
+		for (int i = 0; i < numCourses; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int[] pre: prerequisites) {	
+			graph[pre[1]].add(pre[0]);
+		}
+		boolean[] visited = new boolean[numCourses];
+		boolean[] visiting = new boolean[numCourses];
+		Stack<Integer> stack = new Stack<>();
+		int[] trop_order = new int[numCourses];
+		for (int i = 0; i < numCourses; i++) {
+			if (!visited[i] && hasCycle(graph,visited,visiting,stack,i)) {
+				return new int[0];
+			}
+		}
+		int i = 0;
+		while (!stack.isEmpty()) {
+			trop_order[i++] = stack.pop();
+		}
+		return trop_order;
+	}
+	boolean hasCycle(List<Integer> graph, boolean[] visited, boolean[] visiting, Stack<Integer> stack, int curr) {
+		if (visiting[curr]) {
+			return true;
+		}
+		if (visited[curr]) {
+			return false;
+		}
+		visiting[curr] = true;
+		for (int i = 0; i < graph[curr].size(); i++) {
+			if (hasCycle(graph,visited,visiting,stack,graph[curr].get(i))) {
+				return true;
+			}
+		}
+		visiting[curr] = false;
+		visited[curr] = true;
+		stack.push(curr);
+		return false;
+	}
+}

@@ -1,0 +1,58 @@
+class Solution {
+	int twoCitySchedCost(int[][] costs) {
+		int[][] arr = new int[costs.length][2];
+		int i = 0;
+		int total = 0;
+		int count1 = 0;
+		int count2 = 0;
+		while (i < costs.length) {
+			if (costs[i][0] >= costs[i][1]) {
+				arr[i][0] = 2;
+				arr[i][1] = (Math.abs(costs[i][0] - costs[i][1]));
+				total += costs[i][1];
+				count2++;
+			} 
+			else {
+				arr[i][0] = 1;
+				arr[i][1] = (Math.abs(costs[i][0] - costs[i][1]));
+				total += costs[i][0];
+				count1++;
+			}
+			i++;
+		}
+		int k = 0;
+		int p = 0;
+		int com = total;
+		while (count1 < (costs.length / 2)) {
+			if (arr[k][0] == 2 && com > arr[k][1]) {
+				com = arr[k][1];
+				p = k;
+			}
+			k++;
+			if (k == costs.length) {
+				count1++;
+				count2--;
+				total += arr[p][1];
+				com = total;
+				arr[p][1] = total;
+				k = 0;
+			}
+		}
+		while (count2 < (costs.length / 2)) {
+			if (arr[k][0] == 1 && com > arr[k][1]) {
+				com = arr[k][1];
+				p = k;
+			}
+			k++;
+			if (k == costs.length) {
+				count2++;
+				count1--;
+				total += arr[p][1];
+				com = total;
+				arr[p][1] = total;
+				k = 0;
+			}
+		}
+		return total;
+	}
+}

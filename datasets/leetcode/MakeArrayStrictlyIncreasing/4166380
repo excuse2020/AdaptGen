@@ -1,0 +1,66 @@
+class Solution {
+	int makeArrayIncreasing(int[] a, int[] b) {
+		if (a == null || b == null || a.length == 0) {
+			return -1;
+		}
+		b = sortDedup(b);
+		int n = a.length, m = b.length;
+		int[][] swap = new int[n][m];
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				swap[i][j] = kInf;
+			}
+		}
+		for (int j = 0; j < m; j++) {
+			swap[0][j] = 1;
+		}
+		int[] keep = new int[n];
+		for (int i = 0; i < n; i++) {
+			keep[i] = Integer.MAX_VALUE;
+		}
+		keep[0] = 0;
+		for (int i = 1; i < n; i++) {
+			int minKeep = Integer.MAX_VALUE;
+			int minSwap = Integer.MAX_VALUE;
+			for (int j = 0; j < m; j++) {
+				if (j > 0) {
+					minSwap = Math.min(minSwap,swap[i - 1][j - 1] + 1);
+				}
+				if (a[i] > b[j]) {
+					minKeep = Math.min(minKeep,swap[i - 1][j]);
+				}
+				if (a[i] > a[i - 1]) {
+					keep[i] = keep[i - 1];
+				}
+				if (b[j] > a[i - 1]) {
+					swap[i][j] = keep[i - 1] + 1;
+				}
+				System.out.println("localMinSwap: " + minSwap);
+				System.out.println("localMinKeep: " + minKeep);
+				swap[i][j] = Math.min(swap[i][j],minSwap);
+				keep[i] = Math.min(keep[i],minKeep);
+			}
+		}
+		int minSwap = Integer.MAX_VALUE;
+		for (int i = 0; i < m; i++) {
+			minSwap = Math.min(minSwap,swap[n - 1][i]);
+		}
+		int minKeep = keep[n - 1];
+		System.out.println("minSwap " + minSwap);
+		System.out.println("minKeep " + minKeep);
+		int result = Math.min(minSwap,minKeep);
+		return result == Integer.MAX_VALUE ? -1 : result;
+	}
+	int[] sortDedup(int[] nums) {
+		Arrays.sort(nums);
+		int slow = 1, fast = 1;
+		while (fast < nums.length) {
+			if (nums[fast] != nums[fast - 1]) {
+				nums[slow++] = nums[fast];
+			}
+			fast++;
+		}
+		nums = Arrays.copyOfRange(nums,0,slow);
+		return nums;
+	}
+}

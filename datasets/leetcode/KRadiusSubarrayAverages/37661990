@@ -1,0 +1,24 @@
+class Solution {
+	int[] getAverages(int[] nums, int k) {
+		int[] averages = new int[nums.length];
+		Arrays.fill(averages,-1);
+		if (k == 0) {
+			return nums;
+		}
+		if (2 * k + 1 > nums.length) {
+			return averages;
+		}
+		long[] prefix = new long[nums.length];
+		prefix[0] = nums[0];
+		for (int i = 1; i < nums.length; i++) {
+			prefix[i] = prefix[i - 1] + nums[i];
+		}
+		for (int i = k; i < (nums.length - k); i++) {
+			int left = i - k, right = i + k;
+			long subArrSum = left == -1 ? prefix[right] : prefix[right] - prefix[left];
+			int avg = (int) (subArrSum / (2 * k + 1));
+			averages[i] = avg;
+		}
+		return averages;
+	}
+}

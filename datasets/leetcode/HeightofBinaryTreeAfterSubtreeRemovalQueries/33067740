@@ -1,0 +1,42 @@
+class Solution {
+	Map<Integer, List<Integer>> d2h = new HashMap();
+	int[] depth = new int[100005];
+	int[] height = new int[100005];
+	int dfsHeight(TreeNode node, int d) {
+		if (node == null) {
+			return -1;
+		}
+		int h = Math.max(dfsHeight(node.left,d + 1),dfsHeight(node.right,d + 1)) + 1;
+		depth[node.val] = d;
+		height[node.val] = h;
+		List<Integer> tmp = d2h.getOrDefault(d,new ArrayList());
+		tmp.add(h);
+		d2h.put(d,tmp);
+		return h;
+	}
+	int[] treeQueries(TreeNode root, int[] queries) {
+		dfsHeight(root,0);
+		for (var entry: d2h.entrySet()) {	
+			List<Integer> tmp = entry.getValue();
+			Collections.sort(tmp,Collections.reverseOrder());
+			d2h.put(entry.getKey(),tmp);
+		}
+		int[] rets = new int[queries.length];
+		int id = 0;
+		for (int query: queries) {	
+			int h = height[query];
+			int d = depth[query];
+			if (d2h.get(d).size() == 1) {
+				rets[id] = d - 1;
+			} 
+			else if (d2h.get(d).get(0) == h) {
+				rets[id] = d2h.get(d).get(1) + d;
+			} 
+			else if (d2h.get(d).get(0) != h) {
+				rets[id] = d2h.get(d).get(0) + d;
+			}
+			id++;
+		}
+		return rets;
+	}
+}

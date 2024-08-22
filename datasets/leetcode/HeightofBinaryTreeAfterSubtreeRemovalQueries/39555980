@@ -1,0 +1,85 @@
+class Solution {
+	int fillAndGetHeight(TreeNode root, int[] height) {
+		if (root == null) {
+			return -1;
+		}
+		int lHeight = fillAndGetHeight(root.left,height);
+		int rHeight = fillAndGetHeight(root.right,height);
+		height[root.val] = Math.max(lHeight,rHeight) + 1;
+		return height[root.val];
+	}
+	boolean getHeightPath(TreeNode root, int height, Stack<Integer> stack) {
+		if (root == null) {
+			return false;
+		}
+		stack.push(root.val);
+		if (stack.size() == height + 1) {
+			return true;
+		}
+		if (getHeightPath(root.left,height,stack) || getHeightPath(root.right,height,stack)) {
+			return true;
+		}
+		stack.pop();
+		return false;
+	}
+	int getNumberOfNodes(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		return getNumberOfNodes(root.left) + getNumberOfNodes(root.right);
+	}
+	int[] treeQueries(TreeNode root, int[] queries) {
+		int n = getNumberOfNodes(root);
+		int[] height = new int[n + 1];
+		int[] heightAfterRemove = new int[n + 1];
+		int[] output = new int[queries.length];
+		int rootHeight = fillAndGetHeight(root,height);
+		int index = 0;
+		Stack<Integer> maxPath = new Stack<>();
+		boolean hasPath = getHeightPath(root,rootHeight,maxPath);
+		Set<Integer> maxPathValues = new HashSet<>();
+		while (!maxPath.isEmpty()) {
+			maxPathValues.add(maxPath.pop());
+		}
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(root);
+		int depth = -1;
+		while (!queue.isEmpty()) {
+			int maxHeight = depth;
+			int sMaxHeight = depth;
+			int size = queue.size();
+			List<TreeNode> levelNodes = new ArrayList<>();
+			++depth;
+			for (int i = 0; i < size; ++i) {
+				TreeNode front = queue.poll();
+				levelNodes.add(front);
+				if (front.left != null) {
+					queue.offer(front.left);
+				}
+				if (front.right != null) {
+					queue.offer(front.right);
+				}
+				int temp = height[front.val] + depth;
+				if (temp >= maxHeight) {
+					sMaxHeight = maxHeight;
+					maxHeight = temp;
+				} 
+				else if (temp >= sMaxHeight) {
+					sMaxHeight = temp;
+				}
+			}
+			for (TreeNode node: levelNodes) {	
+				if (maxPathValues.contains(node.val)) {
+					heightAfterRemove[node.val] = sMaxHeight;
+				} 
+				else {
+					heightAfterRemove[node.val] = maxHeight;
+				}
+			}
+		}
+		for (int q: queries) {	
+			output[index++] = heightAfterRemove[q];
+		}
+		return output;
+	}
+}

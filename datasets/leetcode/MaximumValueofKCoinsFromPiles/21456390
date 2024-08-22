@@ -1,0 +1,35 @@
+class Solution {
+	int maxValueOfCoins(List<List<Integer>> piles, int k) {
+		for (int i = 0; i < piles.size(); i++) {
+			int n = 0;
+			for (int j = 0; j < piles.get(i).size(); j++) {
+				n += piles.get(i).get(j);
+				piles.get(i).set(j,n);
+			}
+		}
+		int dp = new int[piles.size()][k + 1];
+		for (int[] arr: dp) {	
+			Arrays.fill(arr,-1);
+		}
+		return solve(piles,dp,0,k);
+	}
+	int solve(List<List<Integer>> piles, int dp, int i, int k) {
+		if (i >= piles.size()) {
+			return 0;
+		}
+		if (dp[i][k] != -1) {
+			return dp[i][k];
+		}
+		int maxa = 0;
+		maxa = Math.max(maxa,solve(piles,dp,i + 1,k));
+		for (int j = 0; j < piles.get(i).size(); j++) {
+			if (j + 1 <= k) {
+				maxa = Math.max(maxa,piles.get(i).get(j) + solve(piles,dp,i + 1,k - j));
+			} 
+			else {
+				break;
+			}
+		}
+		return dp[i][k] = maxa;
+	}
+}

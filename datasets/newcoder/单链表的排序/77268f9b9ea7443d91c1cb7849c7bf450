@@ -1,0 +1,51 @@
+class Solution {
+	void sort(Integer[] arr, int left, int right) {
+		int keepLeft = left;
+		int keepRight = right;
+		if (left >= right) {
+			return;
+		}
+		Integer base = arr[left];
+		Integer slot = left;
+		while (left < right) {
+			while (left < right) {
+				if (arr[right] < base) {
+					arr[slot] = arr[right];
+					slot = right;
+					break;
+				}
+				right--;
+			}
+			while (left < right) {
+				if (arr[left] > base) {
+					arr[slot] = arr[left];
+					slot = left;
+					break;
+				}
+				left++;
+			}
+		}
+		arr[slot] = base;
+		sort(arr,keepLeft,slot - 1);
+		sort(arr,slot + 1,keepRight);
+	}
+	ListNode sortInList(ListNode head) {
+		if (head == null) {
+			return null;
+		}
+		List<Integer> list = new ArrayList<>();
+		ListNode loop = head;
+		while (loop != null) {
+			list.add(loop.val);
+			loop = loop.next;
+		}
+		ListNode loop2 = head;
+		Integer[] arr = list.toArray(new Integer[0]);
+		sort(arr,0,arr.length - 1);
+		for (int i = 0; i < arr.length; i++) {
+			loop2.val = arr[i];
+			loop2 = loop2.next;
+		}
+		return head;
+	}
+}

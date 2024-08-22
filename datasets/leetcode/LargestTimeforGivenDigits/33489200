@@ -1,0 +1,33 @@
+class Solution {
+	void helper(String s, TreeSet<String> set, String t) {
+		if (t.length() == 4) {
+			set.add(t);
+			return;
+		}
+		for (int i = 0; i < s.length(); i++) {
+			char c = s.charAt(i);
+			String r = s.substring(0,i) + s.substring(i + 1);
+			helper(r,set,t + c);
+		}
+	}
+	String largestTimeFromDigits(int[] arr) {
+		Arrays.sort(arr);
+		String s = "";
+		for (int i = 0; i < 4; i++) {
+			s += Integer.toString(arr[i]);
+		}
+		TreeSet<String> set = new TreeSet<>();
+		helper(s,set,"");
+		TreeSet<String> seter = new TreeSet<>();
+		for (String x: set) {	
+			if (x.substring(0,2).compareTo("24") < 0 && x.substring(2).compareTo("60") < 0) {
+				seter.add(x);
+			}
+		}
+		if (seter.size() == 0) {
+			return "";
+		}
+		String r = seter.last().substring(0,2) + ":";
+		return r;
+	}
+}

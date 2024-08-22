@@ -1,0 +1,34 @@
+class Solution {
+	int minReorder(int n, int[][] connections) {
+		HashSet<String> set = new HashSet<>();
+		HashMap<Integer, Set<Integer>> map = new HashMap<>();
+		Queue<Integer> queue = new LinkedList<>();
+		boolean[] visited = new boolean[n];
+		visited[0] = true;
+		queue.add(0);
+		int count = 0;
+		for (int[] con: connections) {	
+			int first = con[0];
+			int second = con[1];
+			set.add(first + ",");
+			map.computeIfAbsent(first,(k) -> {new HashSet<>()});
+			map.computeIfAbsent(second,(k) -> {new HashSet<>()});
+			map.get(first).add(second);
+			map.get(second).add(first);
+		}
+		while (!queue.isEmpty()) {
+			int queueFront = queue.poll();
+			for (Integer val: map.get(queueFront)) {	
+				if (visited[val]) {
+					continue;
+				}
+				visited[val] = true;
+				if (set.contains(queueFront + ",")) {
+					count++;
+				}
+				queue.offer(val);
+			}
+		}
+		return count;
+	}
+}

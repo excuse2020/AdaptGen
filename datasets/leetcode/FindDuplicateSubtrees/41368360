@@ -1,0 +1,46 @@
+class Solution {
+	Map<Integer, List<TreeNode>> nodes;
+	int fill(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		int size = 1;
+		size += fill(root.left) + fill(root.right);
+		nodes.putIfAbsent(size,new ArrayList<>());
+		nodes.get(size).add(root);
+		return size;
+	}
+	List<TreeNode> findDuplicateSubtrees(TreeNode root) {
+		nodes = new HashMap<>();
+		List<TreeNode> ans = new ArrayList<>();
+		fill(root);
+		for (List<TreeNode> a: nodes.values()) {	
+			int n = a.size();
+			for (int i = 0; i < n; i++) {
+				if (a.get(i) == null) {
+					continue;
+				}
+				byte f = 0;
+				for (int j = i + 1; j < n; j++) {
+					if (isEqual(a.get(i),a.get(j))) {
+						f = 1;
+						a.set(j,null);
+					}
+				}
+				if (f == 1) {
+					ans.add(a.get(i));
+				}
+			}
+		}
+		return ans;
+	}
+	boolean isEqual(TreeNode a, TreeNode b) {
+		if (a == null && b == null) {
+			return true;
+		} 
+		else if (a == null || b == null) {
+			return false;
+		}
+		return a.val == b.val && isEqual(a.left,b.left) && isEqual(a.right,b.right);
+	}
+}

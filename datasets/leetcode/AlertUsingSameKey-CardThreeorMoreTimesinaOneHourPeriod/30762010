@@ -1,0 +1,38 @@
+class Solution {
+	List<String> alertNames(String[] keyName, String[] keyTime) {
+		Map<String, List<String>> keySwipes = new HashMap<>();
+		List<String> ans = new ArrayList<>();
+		int n = keyName.length;
+		for (int i = 0; i < n; i++) {
+			keySwipes.putIfAbsent(keyName[i],new ArrayList<>());
+			keySwipes.get(keyName[i]).add(keyTime[i]);
+		}
+		for (String name: keySwipes.keySet()) {	
+			List<String> swipes = keySwipes.get(name);
+			int len = swipes.size();
+			if (len < 3) {
+				continue;
+			}
+			Collections.sort(swipes);
+			for (int i = 2; i < len; i++) {
+				if (getDiff(swipes.get(i - 2),swipes.get(i))) {
+					ans.add(name);
+					break;
+				}
+			}
+		}
+		Collections.sort(ans);
+		return ans;
+	}
+	boolean getDiff(String time1, String time2) {
+		int hour = Integer.parseInt(time1.substring(0,2));
+		hour += 1;
+		if (hour < 10) {
+			time1 = "0" + hour;
+		} 
+		else {
+			time1 = hour + time1.substring(2,5);
+		}
+		return time1.compareTo(time2) >= 0;
+	}
+}

@@ -1,0 +1,38 @@
+class Solution {
+	int dp;
+	int mod = 1000000007;
+	int numOfArrays(int n, int m, int k) {
+		dp = new int[k + 1][n + 1][m + 2];
+		for (int i = 0; i < k + 1; i++) {
+			for (int j = 0; j < n + 1; j++) {
+				Arrays.fill(dp[i][j],-1);
+			}
+		}
+		return solver(n,0,m,k,-1);
+	}
+	int solver(int len, int index, int maxval, int k, int maxtillnow) {
+		if (index == len) {
+			if (k == 0) {
+				return 1;
+			}
+			return 0;
+		}
+		if (k < 0) {
+			return 0;
+		}
+		if (dp[k][index][maxtillnow + 1] != -1) {
+			return dp[k][index][maxtillnow + 1];
+		}
+		int ans = 0;
+		for (int i = 1; i <= maxval; i++) {
+			if (maxtillnow < i) {
+				ans += solver(len,index + 1,maxval,k - 1,i);
+			} 
+			else {
+				ans += solver(len,index + 1,maxval,k,maxtillnow);
+			}
+			ans %= mod;
+		}
+		return dp[k][index][maxtillnow + 1] = ans;
+	}
+}

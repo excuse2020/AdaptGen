@@ -1,0 +1,37 @@
+class Solution {
+	List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+		Map<Integer, List<int[]>> map = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			map.put(i,new ArrayList<int[]>());
+		}
+		for (int[] i: meetings) {	
+			map.get(i[0]).add(new int{i[1], i[2]});
+			map.get(i[1]).add(new int{i[0], i[2]});
+		}
+		Queue<int[]> pq = new PriorityQueue<>((a, b) -> {Integer.compare(a[1],b[1])});
+		pq.add(new int{0, 0});
+		pq.add(new int{firstPerson, 0});
+		Set<Integer> set = new HashSet<>();
+		while (!pq.isEmpty()) {
+			int[] curr = pq.poll();
+			int person = curr[0];
+			int time = curr[1];
+			if (set.contains(person)) {
+				continue;
+			}
+			set.add(person);
+			for (int[] neighbour: map.get(person)) {	
+				int nPerson = neighbour[0];
+				int nTime = neighbour[1];
+				if (nTime >= time && !set.contains(nPerson)) {
+					pq.add(neighbour);
+				}
+			}
+		}
+		List<Integer> ans = new ArrayList<>();
+		for (int i: set) {	
+			ans.add(i);
+		}
+		return ans;
+	}
+}

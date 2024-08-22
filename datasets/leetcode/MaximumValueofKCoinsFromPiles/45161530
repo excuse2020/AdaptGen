@@ -1,0 +1,24 @@
+class Solution {
+	int getMaxVal(List<List<Integer>> piles, int N, int k, int[][] cache) {
+		if (N < 0 || k == 0) {
+			return 0;
+		}
+		if (cache[N][k] != 0) {
+			return cache[N][k];
+		}
+		int without = getMaxVal(piles,N - 1,k,cache);
+		int max = without;
+		int with = 0;
+		int maxCountFromCurrPile = Math.min(k,piles.get(N).size());
+		for (int i = 0; i < maxCountFromCurrPile; i++) {
+			with += piles.get(N).get(i);
+			max = Math.max(max,with + getMaxVal(piles,N - 1,k - i,cache));
+		}
+		cache[N][k] = max;
+		return max;
+	}
+	int maxValueOfCoins(List<List<Integer>> piles, int k) {
+		int N = piles.size();
+		return getMaxVal(piles,N - 1,k,new int[N + 1][k + 1]);
+	}
+}

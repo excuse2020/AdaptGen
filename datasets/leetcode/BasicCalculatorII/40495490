@@ -1,0 +1,54 @@
+class Solution {
+	int calculate(String s) {
+		String trimmedString = s.replaceAll(" ","");
+		ArrayList<String> numbers = new ArrayList<>(Arrays.asList(trimmedString.split("[-+/*]")));
+		ArrayList<String> operators = new ArrayList<>();
+		char[] characters = trimmedString.toCharArray();
+		for (int i = 0; i < characters.length; i++) {
+			if (!Character.isDigit(characters[i])) {
+				operators.add(Character.toString(characters[i]));
+			}
+		}
+		int operatorsSize = operators.size();
+		for (int i = 0; i < operatorsSize; ) {
+			String operator = operators.get(i);
+			if (hasPriority(operator)) {
+				int result = calculate(Integer.parseInt(numbers.get(i)),Integer.parseInt(numbers.get(i + 1)),operator);
+				numbers.set(i,Integer.toString(result));
+				numbers.remove(i + 1);
+				operators.remove(i);
+				i = 0;
+				operatorsSize = operators.size();
+				continue;
+			}
+			i++;
+		}
+		while (operatorsSize != 0) {
+			String operator = operators.get(0);
+			int result = calculate(Integer.parseInt(numbers.get(0)),Integer.parseInt(numbers.get(1)),operator);
+			numbers.set(0,Integer.toString(result));
+			numbers.remove(1);
+			operators.remove(0);
+			operatorsSize = operators.size();
+		}
+		return Integer.parseInt(numbers.get(0));
+	}
+	int calculate(int a, int b, String operator) {
+		if (operator.equals("+")) {
+			return a + b;
+		} 
+		else if (operator.equals("-")) {
+			return a - b;
+		} 
+		else if (operator.equals("*")) {
+			return a * b;
+		} 
+		else if (operator.equals("/")) {
+			return a / b;
+		}
+		return -1;
+	}
+	boolean hasPriority(String operation) {
+		return operation.equals("*") || operation.equals("/");
+	}
+}

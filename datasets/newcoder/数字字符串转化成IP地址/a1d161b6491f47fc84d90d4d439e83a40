@@ -1,0 +1,44 @@
+class Solution {
+	ArrayList<String> ans = new ArrayList<>();
+	void doRestoreIpAddresses(StringBuilder s, int m) {
+		String[] nums = s.toString().split("\\.");
+		if (nums.length > 4) {
+			return;
+		}
+		if (validateIPv4(s.toString())) {
+			ans.add(String.copyValueOf(s.toString().toCharArray()));
+			return;
+		}
+		for (int i = m; i < s.length(); i++) {
+			s.insert(i,".");
+			doRestoreIpAddresses(s,i + 2);
+			s.replace(i,i + 1,"");
+		}
+	}
+	ArrayList<String> restoreIpAddresses(String s) {
+		if (s.length() > 12) {
+			return null;
+		}
+		StringBuilder sb = new StringBuilder(s);
+		doRestoreIpAddresses(sb,1);
+		return ans;
+	}
+	boolean validateIPv4(String IP) {
+		String[] nums = IP.split("\\.");
+		if (nums.length != 4) {
+			return false;
+		}
+		for (String x: nums) {	
+			if (x.length() == 0 || x.length() > 3) {
+				return false;
+			}
+			if (x.charAt(0) == '0' && x.length() != 1) {
+				return false;
+			}
+			if (Integer.parseInt(x) > 255) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

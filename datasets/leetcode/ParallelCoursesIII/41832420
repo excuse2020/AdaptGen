@@ -1,0 +1,36 @@
+class Solution {
+	int minimumTime(int n, int[][] relations, int[] time) {
+		HashMap<Integer, List<Integer>> adj = new HashMap<>();
+		int[] indegree = new int[n];
+		int[] max = new int[n];
+		for (int[] nodes: relations) {	
+			int u = nodes[0] - 1;
+			int v = nodes[1] - 1;
+			adj.computeIfAbsent(u,(k) -> {new ArrayList<>()}).add(v);
+			indegree[v]++;
+		}
+		Queue<Integer> queue = new LinkedList<>();
+		for (int i = 0; i < n; i++) {
+			if (indegree[i] == 0) {
+				queue.add(i);
+				max[i] = time[i];
+			}
+		}
+		while (!queue.isEmpty()) {
+			int u = queue.poll();
+			List<Integer> neighbours = adj.getOrDefault(u,new ArrayList<>());
+			for (int no: neighbours) {	
+				max[no] = Math.max(max[no],max[u] + time[no]);
+				indegree[no]--;
+				if (indegree[no] == 0) {
+					queue.add(no);
+				}
+			}
+		}
+		int result = 0;
+		for (int i = 0; i < n; i++) {
+			result = Math.max(result,max[i]);
+		}
+		return result;
+	}
+}

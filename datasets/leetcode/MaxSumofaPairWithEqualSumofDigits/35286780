@@ -1,0 +1,35 @@
+class Solution {
+	int getSumOfDigits(int num) {
+		int sum = 0;
+		while (num > 0) {
+			sum += num % 10;
+			num = num / 10;
+		}
+		return sum;
+	}
+	int[][] mapSumOfDigits(int[] nums) {
+		int[][] sumOfDigits = new int[82][2];
+		int digitsSum;
+		for (int num: nums) {	
+			digitsSum = getSumOfDigits(num);
+			if (num >= sumOfDigits[digitsSum][1]) {
+				sumOfDigits[digitsSum][0] = sumOfDigits[digitsSum][1];
+				sumOfDigits[digitsSum][1] = num;
+			} 
+			else if (num > sumOfDigits[digitsSum][0]) {
+				sumOfDigits[digitsSum][0] = num;
+			}
+		}
+		return sumOfDigits;
+	}
+	int maximumSum(int[] nums) {
+		int[][] sumOfDigits = mapSumOfDigits(nums);
+		int max = -1;
+		for (int[] digitSum: sumOfDigits) {	
+			if (digitSum[0] != 0) {
+				max = Math.max(max,digitSum[0] + digitSum[1]);
+			}
+		}
+		return max;
+	}
+}

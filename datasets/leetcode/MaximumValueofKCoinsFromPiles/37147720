@@ -1,0 +1,31 @@
+class Solution {
+	List<List<Integer>> newPiles = new ArrayList<>();
+	int dfs(int k, int idx, Integer[][] memo) {
+		if (k == 0 || idx == newPiles.size()) {
+			return 0;
+		}
+		if (memo[k][idx] != null) {
+			return memo[k][idx];
+		}
+		int len = newPiles.get(idx).size();
+		int maxCost = 0;
+		for (int i = 0; i < len; i++) {
+			if (i + 1 <= k) {
+				maxCost = Math.max(dfs(k,idx + 1,memo),Math.max(maxCost,newPiles.get(idx).get(i) + dfs(k - (i + 1),idx + 1,memo)));
+			}
+		}
+		return memo[k][idx] = maxCost;
+	}
+	int maxValueOfCoins(List<List<Integer>> piles, int k) {
+		List<List<Integer>> newPiles = new ArrayList<>();
+		for (List<Integer> lst: piles) {	
+			List<Integer> newlst = new ArrayList<>();
+			newlst.add(lst.get(0));
+			for (int i = 1; i < lst.size(); i++) {
+				newlst.add(newlst.get(i - 1) + lst.get(i));
+			}
+			this.newPiles.add(newlst);
+		}
+		return dfs(k,0,new Integer[k + 1][piles.size()]);
+	}
+}

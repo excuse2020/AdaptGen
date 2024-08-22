@@ -1,0 +1,47 @@
+class Solution {
+	int[][] foundMonotoneStack(int[] nums) {
+		if (nums.length < 1) {
+			return null;
+		}
+		int[] left = new int[nums.length];
+		int[] right = new int[nums.length];
+		int[][] val = new int[nums.length][2];
+		left[0] = nums[0];
+		right[nums.length - 1] = nums[nums.length - 1];
+		for (int i = 1; i < nums.length; i++) {
+			left[i] = Math.min(nums[i],left[i - 1]);
+		}
+		for (int j = nums.length - 2; j >= 0; j--) {
+			right[j] = Math.min(nums[j],right[j + 1]);
+		}
+		for (int i = 0; i < nums.length; i++) {
+			if (nums[i] <= right[i]) {
+				val[i][1] = -1;
+			} 
+			else {
+				int j = i + 1;
+				for (; ; j++) {
+					if (nums[i] > nums[j]) {
+						break;
+					}
+				}
+				val[i][1] = j;
+			}
+		}
+		for (int i = 0; i < nums.length; i++) {
+			if (nums[i] <= left[i]) {
+				val[i][0] = -1;
+			} 
+			else {
+				int j = i - 1;
+				for (; ; j--) {
+					if (nums[i] > nums[j]) {
+						break;
+					}
+				}
+				val[i][0] = j;
+			}
+		}
+		return val;
+	}
+}

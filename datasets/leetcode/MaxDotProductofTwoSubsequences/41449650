@@ -1,0 +1,22 @@
+class Solution {
+	int f(int i, int j, int[] nums1, int[] nums2, int[][] dp) {
+		if (i >= nums1.length || j >= nums2.length) {
+			return Integer.MIN_VALUE;
+		}
+		if (dp[i][j] != -1) {
+			return dp[i][j];
+		}
+		int not = f(i + 1,j + 1,nums1,nums2,dp);
+		int not1 = f(i,j + 1,nums1,nums2,dp);
+		int not2 = f(i + 1,j,nums1,nums2,dp);
+		int take = (nums1[i] * nums2[j]) + Math.max(0,f(i + 1,j + 1,nums1,nums2,dp));
+		return dp[i][j] = Math.max(take,Math.max(not,Math.max(not1,not2)));
+	}
+	int maxDotProduct(int[] nums1, int[] nums2) {
+		int[][] dp = new int[nums1.length + 1][nums2.length + 1];
+		for (int[] row: dp) {	
+			Arrays.fill(row,-1);
+		}
+		return f(0,0,nums1,nums2,dp);
+	}
+}

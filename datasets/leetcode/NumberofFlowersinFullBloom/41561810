@@ -1,0 +1,64 @@
+class Solution {
+	int[] fullBloomFlowers(int[][] flowers, int[] people) {
+		HashMap<Integer, Integer> hm = new HashMap<>();
+		int dpeop = new int[people.length];
+		for (int i = 0; i < dpeop.length; i++) {
+			dpeop[i] = people[i];
+		}
+		int ans = new int[people.length];
+		Arrays.sort(people);
+		int add = new int[people.length];
+		int sub = new int[people.length];
+		for (int i: flowers) {	
+			int st = i[0];
+			int en = i[1];
+			int low = indexOf(people,st);
+			int high = indexOfM(people,en);
+			if (low > high || st > people[people.length - 1] || en < people[0]) {
+				continue;
+			}
+			sub[low]--;
+			add[high]++;
+		}
+		ans[people.length - 1] = add[people.length - 1];
+		hm.put(people[people.length - 1],add[people.length - 1]);
+		for (int i = people.length - 2; i >= 0; i--) {
+			ans[i] = ans[i + 1] + add[i];
+			hm.put(people[i],ans[i]);
+		}
+		for (int i = 0; i < people.length; i++) {
+			ans[i] = hm.get(dpeop[i]);
+		}
+		return ans;
+	}
+	int indexOf(int[] arr, int target) {
+		int low = 0;
+		int high = arr.length - 1;
+		int ans = 0;
+		while (low <= high) {
+			int mid = high - (high - low) / 2;
+			if (arr[mid] < target) {
+				low = mid + 1;
+			} 
+			else {
+				ans = mid;
+				high = mid - 1;
+			}
+		}
+		return ans;
+	}
+	int indexOfM(int[] arr, int target) {
+		int low = 0;
+		int high = arr.length - 1;
+		while (low < high) {
+			int mid = high - (high - low) / 2;
+			if (arr[mid] <= target) {
+				low = mid;
+			} 
+			else {
+				high = mid - 1;
+			}
+		}
+		return low;
+	}
+}

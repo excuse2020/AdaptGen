@@ -1,0 +1,32 @@
+class Solution {
+	int dfs(int i, Map<Integer, Set<Integer>> graph, Map<Integer, Integer> visited, int[] time) {
+		if (visited.containsKey(i)) {
+			return visited.get(i);
+		}
+		Set<Integer> d = graph.get(i);
+		int max = 0;
+		if (d != null) {
+			for (Integer n: d) {	
+				int t = dfs(n,graph,visited,time);
+				max = Math.max(max,t);
+			}
+		}
+		visited.put(i,max + time[i - 1]);
+		return max + time[i - 1];
+	}
+	int minimumTime(int n, int[][] relations, int[] time) {
+		Map<Integer, Set<Integer>> graph = new HashMap<>();
+		Map<Integer, Integer> visited = new HashMap<>();
+		int max = 0;
+		for (int i = 0; i < relations.length; i++) {
+			Set<Integer> d = graph.getOrDefault(relations[i][1],new HashSet<>());
+			d.add(relations[i][0]);
+			graph.put(relations[i][1],d);
+		}
+		for (int i = 1; i <= n; i++) {
+			int t = dfs(i,graph,visited,time);
+			max = Math.max(max,t);
+		}
+		return max;
+	}
+}

@@ -1,0 +1,42 @@
+class Solution {
+	int networkBecomesIdle(int[][] edges, int[] patience) {
+		HashMap<Integer, HashSet<Integer>> graph = new HashMap<>();
+		int lastServer = -1, noPack = 0, copPack = 0, lastBusy = Integer.MIN_VALUE;
+		int distance = 0, count = 1, nextCount = 0;
+		for (int[] e: edges) {	
+			graph.computeIfAbsent(e[0],(k) -> {new HashSet<Integer>()});
+			graph.computeIfAbsent(e[1],(k) -> {new HashSet<Integer>()});
+			graph.get(e[0]).add(e[1]);
+			graph.get(e[1]).add(e[0]);
+			lastServer = Math.max(lastServer,Math.max(e[0],e[1]));
+		}
+		int[] map = new int[lastServer + 1];
+		Queue<Integer> q = new LinkedList<>();
+		HashSet<Integer> visited = new HashSet<>();
+		q.add(0);
+		visited.add(0);
+		while (count > 0) {
+			distance++;
+			while (count-- > 0) {
+				int temp = q.poll();
+				for (int neighbour: graph.get(temp)) {	
+					if (!visited.contains(neighbour)) {
+						visited.add(neighbour);
+						q.add(neighbour);
+						nextCount++;
+						map[neighbour] = distance * 2;
+					}
+				}
+			}
+			count = nextCount;
+			nextCount = 0;
+		}
+		for (int i = 1; i <= lastServer; i++) {
+			noPack = (map[i] % patience[i]) == 0 ? map[i] / patience[i] : map[i] / patience[i] + 1;
+			copPack = noPack - 1;
+			int currBusy = (copPack * patience[i]) + map[i];
+			lastBusy = Math.max(lastBusy,currBusy);
+		}
+		return lastBusy + 1;
+	}
+}

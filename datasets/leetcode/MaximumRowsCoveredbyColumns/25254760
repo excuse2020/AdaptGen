@@ -1,0 +1,30 @@
+class Solution {
+	int backtrack(int c, int cols, boolean[] cleared, int[][] mat) {
+		if (cols == 0 || c == mat[0].length) {
+			return count(cleared,mat);
+		}
+		cleared[c] = true;
+		var include = backtrack(c + 1,cols - 1,cleared,mat);
+		cleared[c] = false;
+		var exclude = backtrack(c + 1,cols,cleared,mat);
+		return Math.max(include,exclude);
+	}
+	int count(boolean[] cleared, int[][] mat) {
+		var res = 0;
+		for (int r = 0; r < mat.length; r++) {
+			var valid = true;
+			for (int c = 0; c < mat[r].length && valid; c++) {
+				if (mat[r][c] == 1 && !cleared[c]) {
+					valid = false;
+				}
+			}
+			if (valid) {
+				res++;
+			}
+		}
+		return res;
+	}
+	int maximumRows(int[][] mat, int cols) {
+		return backtrack(0,cols,new boolean[mat[0].length],mat);
+	}
+}

@@ -1,0 +1,21 @@
+class Solution {
+	Integer calcProfit(int prices, int idx, int trsRem, int buyAllowed, Integer dp) {
+		if (trsRem == 0 || idx == prices.length) {
+			return 0;
+		}
+		if (dp[idx][buyAllowed][trsRem] != null) {
+			return dp[idx][buyAllowed][trsRem];
+		}
+		if (buyAllowed == 1) {
+			dp[idx][buyAllowed][trsRem] = Math.max(-prices[idx] + calcProfit(prices,idx + 1,trsRem,0,dp),calcProfit(prices,idx + 1,trsRem,1,dp));
+		} 
+		else if (buyAllowed == 0) {
+			dp[idx][buyAllowed][trsRem] = Math.max(prices[idx] + calcProfit(prices,idx + 1,trsRem - 1,1,dp),calcProfit(prices,idx + 1,trsRem,0,dp));
+		}
+		return dp[idx][buyAllowed][trsRem];
+	}
+	int maxProfit(int[] prices) {
+		Integer dp = new Integer[prices.length + 1][2][3];
+		return calcProfit(prices,0,2,1,dp);
+	}
+}

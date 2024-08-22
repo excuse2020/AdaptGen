@@ -1,0 +1,27 @@
+class Solution {
+	int countSubarraysGivenTarget(int[] arr, int tar) {
+		HashMap<Integer, Integer> map = new HashMap<>();
+		map.put(0,1);
+		int count = 0, sum = 0;
+		for (int ele: arr) {	
+			sum += ele;
+			count += map.getOrDefault(sum - tar,0);
+			map.put(sum,map.getOrDefault(sum,0) + 1);
+		}
+		return count;
+	}
+	int numSubmatrixSumTarget(int[][] arr, int tar) {
+		int n = arr.length, m = arr[0].length;
+		int count = 0;
+		for (int fixedRow = 0; fixedRow < n; fixedRow++) {
+			int[] prefixColArray = new int[m];
+			for (int row = fixedRow; row < n; row++) {
+				for (int col = 0; col < m; col++) {
+					prefixColArray[col] += arr[row][col];
+				}
+				count += countSubarraysGivenTarget(prefixColArray,tar);
+			}
+		}
+		return count;
+	}
+}

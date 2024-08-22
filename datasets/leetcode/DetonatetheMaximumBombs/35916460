@@ -1,0 +1,33 @@
+class Solution {
+	boolean attachable(int[][] bombs, int i, int j) {
+		int[] source = bombs[i];
+		int[] target = bombs[j];
+		long disqu = (long) (Math.pow(source[0] - target[0],2) + Math.pow(source[1] - target[1],2));
+		return disqu <= (long) Math.pow(source[2],2);
+	}
+	int dfs(int start, int[][] bombs, boolean[] visited, boolean[] globalVisited) {
+		int attached = 1;
+		visited[start] = true;
+		for (int i = 0; i < bombs.length; ++i) {
+			if (!visited[i]) {
+				if (attachable(bombs,start,i)) {
+					globalVisited[i] = true;
+					attached += dfs(i,bombs,visited,globalVisited);
+				}
+			}
+		}
+		return attached;
+	}
+	int maximumDetonation(int[][] bombs) {
+		int res = 1;
+		boolean[] globalVisited = new boolean[bombs.length];
+		for (int i = 0; i < bombs.length; ++i) {
+			if (!globalVisited[i]) {
+				globalVisited[i] = true;
+				int bombed = dfs(i,bombs,new boolean[bombs.length],globalVisited);
+				res = Math.max(res,bombed);
+			}
+		}
+		return res;
+	}
+}

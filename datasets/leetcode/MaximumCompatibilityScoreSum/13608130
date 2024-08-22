@@ -1,0 +1,33 @@
+class Solution {
+	int res = 0;
+	void backTrack(int[][] students, int[][] mentors, boolean[] mas, int used, int asf) {
+		int n = mas.length;
+		if (used == n) {
+			res = Math.max(asf,res);
+			return;
+		}
+		for (int i = 0; i < n; i++) {
+			if (mas[i]) {
+				continue;
+			}
+			int score = getScore(students,mentors,used,i);
+			mas[i] = true;
+			backTrack(students,mentors,mas,used + 1,asf + score);
+			mas[i] = false;
+		}
+	}
+	int getScore(int[][] students, int[][] mentors, int s, int m) {
+		int score = 0;
+		for (int j = 0; j < students[s].length; j++) {
+			if (students[s][j] == mentors[m][j]) {
+				score++;
+			}
+		}
+		return score;
+	}
+	int maxCompatibilitySum(int[][] students, int[][] mentors) {
+		boolean[] mas = new boolean[mentors.length];
+		backTrack(students,mentors,mas,0,0);
+		return res;
+	}
+}

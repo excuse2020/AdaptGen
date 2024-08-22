@@ -1,0 +1,69 @@
+class Solution {
+	long maxPoints(int[][] points) {
+		if (points.length == 0) {
+			return 0;
+		}
+		if (points.length == 1) {
+			return Arrays.stream(points[0]).max().getAsInt();
+		}
+		long prev = new long[points[0].length];
+		for (int col = 0; col < points[0].length; col++) {
+			prev[col] = points[0][col];
+		}
+		for (int row = 1; row < points.length; row++) {
+			long leftMax = new long[points[0].length];
+			long rightMax = new long[points[0].length];
+			long curr = new long[points[0].length];
+			leftMax[0] = prev[0];
+			for (int col = 1; col < points[0].length; col++) {
+				leftMax[col] = Math.max(leftMax[col - 1] - 1,prev[col]);
+			}
+			rightMax[points[0].length - 1] = prev[points[0].length - 1];
+			for (int col = points[0].length - 2; col >= 0; col--) {
+				rightMax[col] = Math.max(rightMax[col + 1] - 1,prev[col]);
+			}
+			for (int col = 0; col < points[0].length; col++) {
+				curr[col] = points[row][col] + Math.max(rightMax[col],leftMax[col]);
+			}
+			prev = curr;
+		}
+		long sum = 0L;
+		for (int col = 0; col < points[0].length; col++) {
+			sum = Math.max(sum,prev[col]);
+		}
+		return sum;
+	}
+	long maxPoints1(int[][] points) {
+		Long[][] dp = new Long[points.length][points[0].length];
+		if (points.length == 0) {
+			return 0;
+		}
+		if (points.length == 1) {
+			return Arrays.stream(points[0]).max().getAsInt();
+		}
+		long totalSum = 0L;
+		for (int col = 0; col < points[0].length; col++) {
+			long sum = pickValuesForRowAndCol(0,col,dp,points);
+			totalSum = Math.max(totalSum,sum);
+		}
+		return totalSum;
+	}
+	long pickValuesForRowAndCol(int row, int col, Long[][] dp, int[][] points) {
+		long totalSum = 0L;
+		if (dp[row][col] != null) {
+			return dp[row][col];
+		}
+		if (row == points.length - 1) {
+			return (long) points[row][col];
+		}
+		for (int nextCol = 0; nextCol < points[0].length; nextCol++) {
+			long nextSum = (long) points[row][col];
+			nextSum += pickValuesForRowAndCol(row + 1,nextCol,dp,points);
+			nextSum -= (long) Math.abs(col - nextCol);
+			totalSum = Math.max(totalSum,nextSum);
+		}
+		dp[row][col] = totalSum;
+		System.out.println("test");
+		return totalSum;
+	}
+}

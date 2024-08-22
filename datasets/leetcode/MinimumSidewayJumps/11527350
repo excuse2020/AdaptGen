@@ -1,0 +1,27 @@
+class Solution {
+	Integer memory;
+	int minSideJumps(int[] obstacle) {
+		int n = obstacle.length;
+		memory = new Integer[n][4];
+		return minSideJumps(obstacle,0,2);
+	}
+	int minSideJumps(int[] obstacle, int i, int curr_lane) {
+		if (i == obstacle.length - 1) {
+			return 0;
+		}
+		if (memory[i][curr_lane] != null) {
+			return memory[i][curr_lane];
+		}
+		int min = 100000000;
+		for (int lane = 1; lane <= 3; lane++) {
+			if (curr_lane == lane && obstacle[i + 1] != curr_lane) {
+				min = Math.min(minSideJumps(obstacle,i + 1,curr_lane),min);
+			} 
+			else if (obstacle[i] != lane && obstacle[i + 1] != lane) {
+				min = Math.min(1 + minSideJumps(obstacle,i + 1,lane),min);
+			}
+		}
+		memory[i][curr_lane] = min;
+		return min;
+	}
+}

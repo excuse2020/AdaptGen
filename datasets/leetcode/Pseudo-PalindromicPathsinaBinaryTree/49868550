@@ -1,0 +1,46 @@
+class Solution {
+	int findPahts(TreeNode node, Map<Integer, Integer> frequencies) {
+		int paths = 0;
+		frequencies.merge(node.val,1,);
+		if (node.left == null && node.right == null) {
+			boolean oddAllowed = true;
+			boolean pathAllowed = true;
+			for (Integer count: frequencies.values()) {	
+				if (count % 2 != 0) {
+					if (oddAllowed) {
+						oddAllowed = false;
+					} 
+					else {
+						pathAllowed = false;
+						break;
+					}
+				}
+			}
+			if (pathAllowed) {
+				return 1;
+			}
+		}
+		if (node.left != null) {
+			paths += findPahts(node.left,frequencies);
+			remove(frequencies,node.left.val);
+		}
+		if (node.right != null) {
+			paths += findPahts(node.right,frequencies);
+			remove(frequencies,node.right.val);
+		}
+		return paths;
+	}
+	int pseudoPalindromicPaths(TreeNode root) {
+		Map<Integer, Integer> frequencies = new HashMap<>();
+		return findPahts(root,frequencies);
+	}
+	void remove(Map<Integer, Integer> map, Integer key) {
+		Integer frequency = map.getOrDefault(key,0);
+		if (frequency > 1) {
+			map.put(key,frequency - 1);
+		} 
+		else {
+			map.remove(key);
+		}
+	}
+}

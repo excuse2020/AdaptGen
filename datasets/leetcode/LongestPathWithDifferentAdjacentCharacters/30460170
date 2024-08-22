@@ -1,0 +1,28 @@
+class Solution {
+	int ans;
+	int dist;
+	void dfs(int src, String s, Map<Integer, List<Integer>> adj) {
+		dist[src] = 1;
+		if (!adj.containsKey(src)) {
+			return;
+		}
+		for (int node: adj.get(src)) {	
+			dfs(node,s,adj);
+			if (s.charAt(src) != s.charAt(node)) {
+				ans = Math.max(ans,dist[src] + dist[node]);
+				dist[src] = Math.max(dist[src],dist[node] + 1);
+			}
+		}
+	}
+	int longestPath(int[] parent, String s) {
+		ans = 1;
+		dist = new int[parent.length + 1];
+		Map<Integer, List<Integer>> adj = new HashMap<>();
+		for (int i = 1; i < parent.length; i++) {
+			adj.putIfAbsent(parent[i],new ArrayList<>());
+			adj.get(parent[i]).add(i);
+		}
+		dfs(0,s,adj);
+		return ans;
+	}
+}

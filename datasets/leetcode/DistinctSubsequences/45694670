@@ -1,0 +1,30 @@
+class Solution {
+	int memo;
+	int fun(String s, String t, int si, int ti) {
+		if (memo[si][ti] != -1) {
+			return (memo[si][ti]);
+		}
+		if (ti == t.length()) {
+			return (1);
+		}
+		if (si == s.length()) {
+			return (0);
+		}
+		int res = 0;
+		if (si < s.length() && s.charAt(si) == t.charAt(ti)) {
+			memo[si + 1][ti + 1] = fun(s,t,si + 1,ti + 1);
+			res = res + memo[si + 1][ti + 1];
+		}
+		memo[si + 1][ti] = fun(s,t,si + 1,ti);
+		res = res + memo[si + 1][ti];
+		return (res);
+	}
+	int numDistinct(String s, String t) {
+		memo = new int[s.length() + 1][t.length() + 1];
+		for (int i = 0; i < s.length() + 1; i++) {
+			Arrays.fill(memo[i],-1);
+		}
+		int res = fun(s,t,0,0);
+		return (res);
+	}
+}

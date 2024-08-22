@@ -1,0 +1,35 @@
+class Solution {
+	List<List<Integer>> getAncestors(int n, int[][] edges) {
+		List<List<Integer>> ans = new ArrayList<>();
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int i = 0; i < edges.length; i++) {
+			int x = edges[i][1];
+			int y = edges[i][0];
+			if (map.containsKey(x)) {
+				map.get(x).add(y);
+			} 
+			else {
+				map.put(x,new ArrayList<>(Arrays.asList(y)));
+			}
+		}
+		int i = 0;
+		while (i < n) {
+			boolean[] vis = new boolean[n];
+			Queue<Integer> queue = new LinkedList<>();
+			Set<Integer> set = new HashSet<>();
+			queue.addAll(map.getOrDefault(i,new ArrayList<>()));
+			vis[i] = true;
+			while (!queue.isEmpty()) {
+				int val = queue.poll();
+				if (vis[val] == false) {
+					queue.addAll(map.getOrDefault(val,new ArrayList<>()));
+					vis[val] = true;
+					set.add(val);
+				}
+			}
+			ans.add(set.stream().sorted().collect(Collectors.toList()));
+			i++;
+		}
+		return ans;
+	}
+}

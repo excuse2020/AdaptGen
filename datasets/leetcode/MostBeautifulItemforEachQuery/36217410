@@ -1,0 +1,43 @@
+class Solution {
+	int[] maximumBeauty(int[][] items, int[] queries) {
+		Arrays.sort(items,new CustomComparator());
+		int ans = new int[queries.length];
+		int max = new int[items.length];
+		int maxTillNow = items[0][1];
+		for (int i = 0; i < items.length; i++) {
+			maxTillNow = Math.max(maxTillNow,items[i][1]);
+			max[i] = maxTillNow;
+		}
+		for (int i = 0; i < queries.length; i++) {
+			if (queries[i] < items[0][0]) {
+				ans[i] = 0;
+				continue;
+			}
+			int index = search(items,0,items.length - 1,queries[i]);
+			ans[i] = max[index];
+		}
+		return ans;
+	}
+	int search(int[][] items, int start, int end, int val) {
+		if (start <= end) {
+			int mid = start + (end - start) / 2;
+			if (val >= items[mid][0]) {
+				return search(items,mid + 1,end,val);
+			} 
+			else {
+				return search(items,start,mid - 1,val);
+			}
+		} 
+		else {
+			return end;
+		}
+	}
+	class CustomComparator {
+		int compare(int[] a, int[] b) {
+			if (a[0] != b[0]) {
+				return a[0] - b[0];
+			}
+			return a[1] - b[1];
+		}
+	}
+}

@@ -1,0 +1,29 @@
+class Solution {
+	int helper(int[] rewards, int i, int sum, HashMap<Integer, Integer> mem) {
+		if (i == rewards.length) {
+			return 0;
+		}
+		if (mem.containsKey(sum)) {
+			return mem.get(sum);
+		}
+		if (rewards[i] > sum) {
+			var ans = Math.max(helper(rewards,i + 1,sum + rewards[i],mem) + rewards[i],helper(rewards,i + 1,sum,mem));
+			mem.put(sum,ans);
+			return ans;
+		} 
+		else {
+			var ans = helper(rewards,i + 1,sum,mem);
+			mem.put(sum,ans);
+			return ans;
+		}
+	}
+	int maxTotalReward(int[] rewardValues) {
+		var mem = new HashMap<Integer, Integer>();
+		Arrays.sort(rewardValues);
+		int sum = 0;
+		for (var r: rewardValues) {	
+			sum += r;
+		}
+		return helper(rewardValues,0,0,mem);
+	}
+}

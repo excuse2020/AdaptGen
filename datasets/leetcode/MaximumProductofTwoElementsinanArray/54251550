@@ -1,0 +1,47 @@
+class Solution {
+	int getLeftChildIndex(int parentIdx, int lastIdx) {
+		int leftIdx = parentIdx * 2 + 1;
+		return leftIdx > lastIdx ? -1 : leftIdx;
+	}
+	int getRightChildIndex(int parentIdx, int lastIdx) {
+		int rightIdx = parentIdx * 2 + 2;
+		return rightIdx > lastIdx ? -1 : rightIdx;
+	}
+	void heapify(int[] nums) {
+		int lastIdx = nums.length - 1;
+		for (int i = lastIdx / 2; i >= 0; i--) {
+			moveDown(nums,i,lastIdx);
+		}
+	}
+	int maxProduct(int[] nums) {
+		heapify(nums);
+		return nums.length >= 3 ? (nums[0] - 1) * (Math.max(nums[1],nums[2]) - 1) : (nums[0] - 1) * (nums[1] - 1);
+	}
+	void moveDown(int[] nums, int idx, int lastIdx) {
+		int leftIdx = getLeftChildIndex(idx,lastIdx);
+		int rightIdx = getRightChildIndex(idx,lastIdx);
+		int largest = idx;
+		if (leftIdx != -1 && nums[leftIdx] > nums[largest]) {
+			largest = leftIdx;
+		}
+		if (rightIdx != -1 && nums[rightIdx] > nums[largest]) {
+			largest = rightIdx;
+		}
+		if (largest != idx) {
+			swap(nums,largest,idx);
+			moveDown(nums,largest,lastIdx);
+		}
+	}
+	void print(int[] nums) {
+		StringJoiner sb = new StringJoiner(", ");
+		for (int i = 0; i < nums.length; i++) {
+			sb.add(String.valueOf(nums[i]));
+		}
+		System.out.println(sb.toString());
+	}
+	void swap(int[] nums, int idx1, int idx2) {
+		int temp = nums[idx1];
+		nums[idx1] = nums[idx2];
+		nums[idx2] = temp;
+	}
+}

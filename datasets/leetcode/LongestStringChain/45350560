@@ -1,0 +1,40 @@
+class Solution {
+	int longestStrChain(String[] words) {
+		Arrays.sort(words,Comparator.comparingInt());
+		int[][] memo = new int[words.length][words.length + 1];
+		for (int[] row: memo) {	
+			Arrays.fill(row,-1);
+		}
+		return slv(0,-1,words,memo);
+	}
+	int slv(int n, int prev, String[] words, int[][] memo) {
+		if (n >= words.length) {
+			return 0;
+		}
+		if (memo[n][prev + 1] != -1) {
+			return memo[n][prev + 1];
+		}
+		int longest = 0;
+		for (int i = n; i < words.length; i++) {
+			if (prev != -1 && words[i].length() > words[prev].length() + 1) {
+				break;
+			}
+			if (prev == -1 || words[prev].length() + 1 == words[i].length()) {
+				int p1 = 0, p2 = 0, len = words[i].length(), count = 0;
+				while (p1 < len - 1 && p2 < len && prev != -1) {
+					if (words[prev].charAt(p1) == words[i].charAt(p2)) {
+						p1++;
+					} 
+					else {
+						count++;
+					}
+					p2++;
+				}
+				if (prev == -1 || count <= 1) {
+					longest = Math.max(longest,Math.max(1 + slv(i + 1,i,words,memo),slv(i + 1,prev,words,memo)));
+				}
+			}
+		}
+		return memo[n][prev + 1] = longest;
+	}
+}

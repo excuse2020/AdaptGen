@@ -1,0 +1,30 @@
+class Solution {
+	int count = 0;
+	int max = 0;
+	int dfs(int i, int n, int sum, int cost) {
+		sum += cost[i - 1];
+		if (i * 2 >= n) {
+			max = Math.max(max,sum);
+			return sum;
+		}
+		int left = dfs(i * 2,n,sum,cost);
+		int right = dfs(i * 2 + 1,n,sum,cost);
+		if (left == max || right == max) {
+			count += Math.abs(left - max);
+			count += Math.abs(right - max);
+			return max;
+		} 
+		else {
+			int sub = Math.max(left,right);
+			count += Math.abs(left - right);
+			return sub;
+		}
+	}
+	int minIncrements(int n, int[] cost) {
+		if (n == 1) {
+			return 0;
+		}
+		dfs(1,n,0,cost);
+		return count;
+	}
+}

@@ -1,0 +1,47 @@
+class Solution {
+	int[] findRedundantConnection(int[][] edges) {
+		int[] arr = new int[2];
+		int n = edges.length + 1;
+		List<Integer> parent = new ArrayList<>();
+		List<Integer> size = new ArrayList<>();
+		for (int i = 0; i <= n; i++) {
+			parent.add(i);
+			size.add(1);
+		}
+		for (int i = 0; i < edges.length; i++) {
+			int u = edges[i][0];
+			int v = edges[i][1];
+			if (findpar(parent,u) == findpar(parent,v)) {
+				arr[0] = u;
+				arr[1] = v;
+			} 
+			else {
+				union(parent,size,u,v);
+			}
+		}
+		return arr;
+	}
+	int findpar(List<Integer> parent, int node) {
+		if (parent.get(node) == node) {
+			return node;
+		}
+		int par = findpar(parent,parent.get(node));
+		parent.set(node,par);
+		return parent.get(node);
+	}
+	void union(List<Integer> parent, List<Integer> size, int u, int v) {
+		int pu = findpar(parent,u);
+		int pv = findpar(parent,v);
+		if (pu == pv) {
+			return;
+		}
+		if (size.get(pu) > size.get(pv)) {
+			parent.set(pv,pu);
+			size.set(pu,size.get(pu) + size.get(pv));
+		} 
+		else {
+			parent.set(pu,pv);
+			size.set(pv,size.get(pu) + size.get(pv));
+		}
+	}
+}

@@ -1,0 +1,40 @@
+class Solution {
+	long maximumSum(List<Integer> nums) {
+		HashMap<String, Long> hm = new HashMap<>();
+		long ans = 0l;
+		for (int i = 0; i < nums.size(); i++) {
+			long v = (i + 1) * 1l;
+			StringBuilder sb = new StringBuilder();
+			sb.append("$");
+			ArrayList<Long> al = new ArrayList<>();
+			for (int j = 2; j * j <= (v); j++) {
+				if (v % j == 0) {
+					int cnt = 0;
+					while (v % j == 0) {
+						cnt++;
+						v /= j;
+					}
+					if (cnt % 2 == 1) {
+						sb.append(j);
+						sb.append("$");
+					}
+				}
+			}
+			if (v > 1) {
+				sb.append(v);
+				sb.append("$");
+			}
+			String v1 = sb.toString();
+			if (hm.containsKey(v1)) {
+				long xx = hm.get(v1);
+				ans = Math.max(ans,xx + nums.get(i));
+				hm.put(v1,xx + 1l * nums.get(i));
+			} 
+			else {
+				ans = Math.max(ans,nums.get(i));
+				hm.put(v1,1l * nums.get(i));
+			}
+		}
+		return ans;
+	}
+}

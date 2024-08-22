@@ -1,0 +1,33 @@
+class Solution {
+	void computeLevelSum(TreeNode root, int i, int[] arr) {
+		if (root == null) {
+			return;
+		}
+		arr[i] += root.val;
+		computeLevelSum(root.left,i + 1,arr);
+		computeLevelSum(root.right,i + 1,arr);
+	}
+	int depth(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		return Math.max(depth(root.left),depth(root.right)) + 1;
+	}
+	TreeNode replaceValueInTree(TreeNode root) {
+		int levels = depth(root);
+		int[] arr = new int[levels];
+		computeLevelSum(root,0,arr);
+		updateNodes(root,0,0,arr);
+		return root;
+	}
+	void updateNodes(TreeNode root, int siblingVal, int i, int[] arr) {
+		if (root == null) {
+			return;
+		}
+		int leftValue = root.left != null ? root.left.val : 0;
+		int rightValue = root.right != null ? root.right.val : 0;
+		updateNodes(root.left,rightValue,i + 1,arr);
+		updateNodes(root.right,leftValue,i + 1,arr);
+		root.val = arr[i] - root.val;
+	}
+}

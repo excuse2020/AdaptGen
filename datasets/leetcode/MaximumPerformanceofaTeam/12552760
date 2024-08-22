@@ -1,0 +1,23 @@
+class Solution {
+	int maxPerformance(int n, int[] speed, int[] efficiency, int k) {
+		int engineers = new int[n][2];
+		for (int i = 0; i < n; i++) {
+			engineers[i][0] = efficiency[i];
+			engineers[i][1] = speed[i];
+		}
+		Arrays.sort(engineers,(a, b) -> {b[0] - a[0]});
+		PriorityQueue<Integer> currentTeamPQ = new PriorityQueue<>((a, b) -> {a - b});
+		long currentTeamSpeed = 0;
+		long maxPerformance = Long.MIN_VALUE;
+		for (int i = 0; i < n; i++) {
+			if (currentTeamPQ.size() == k) {
+				currentTeamSpeed = currentTeamSpeed - currentTeamPQ.poll();
+			}
+			currentTeamPQ.add(engineers[i][1]);
+			currentTeamSpeed = currentTeamSpeed + engineers[i][1];
+			long performanceWithNewEngineer = currentTeamSpeed * engineers[i][0];
+			maxPerformance = Math.max(maxPerformance,performanceWithNewEngineer);
+		}
+		return (int) (maxPerformance % (long) (Math.pow(10,9) + 7));
+	}
+}

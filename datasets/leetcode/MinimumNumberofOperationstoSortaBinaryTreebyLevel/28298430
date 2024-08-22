@@ -1,0 +1,40 @@
+class Solution {
+	int f(ArrayList<Integer> al) {
+		HashMap<Integer, Integer> hm = new HashMap<>();
+		ArrayList<Integer> temp = new ArrayList<>(al);
+		Collections.sort(temp);
+		for (int i = 0; i < temp.size(); i++) {
+			hm.put(temp.get(i),i);
+		}
+		int swap = 0;
+		for (int i = 0; i < al.size(); i++) {
+			while (al.get(i) != temp.get(i)) {
+				int t1 = i, t2 = hm.get(al.get(i));
+				Collections.swap(al,t1,t2);
+				swap++;
+			}
+		}
+		return swap;
+	}
+	int minimumOperations(TreeNode root) {
+		Queue<TreeNode> q = new LinkedList<>();
+		q.offer(root);
+		int res = 0;
+		while (!q.isEmpty()) {
+			int n = q.size();
+			ArrayList<Integer> al = new ArrayList<>();
+			for (int i = 0; i < n; i++) {
+				TreeNode curr = q.poll();
+				al.add(curr.val);
+				if (curr.left != null) {
+					q.offer(curr.left);
+				}
+				if (curr.right != null) {
+					q.offer(curr.right);
+				}
+			}
+			res += f(al);
+		}
+		return res;
+	}
+}

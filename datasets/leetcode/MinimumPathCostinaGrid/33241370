@@ -1,0 +1,26 @@
+class Solution {
+	int minPathCost(int[][] grid, int[][] moveCost) {
+		int m = grid.length;
+		int n = grid[0].length;
+		int minCost = Integer.MAX_VALUE;
+		int dp = new int[m][n];
+		for (int i = 0; i < n; i++) {
+			dp[m - 1][i] = grid[m - 1][i];
+		}
+		for (int x = m - 2; x >= 0; x--) {
+			for (int y = 0; y < n; y++) {
+				int currNode = grid[x][y];
+				int cost = Integer.MAX_VALUE;
+				for (int nextNode = 0; nextNode < n; nextNode++) {
+					int weight = moveCost[currNode][nextNode];
+					cost = Math.min(cost,weight + dp[x + 1][nextNode]);
+				}
+				dp[x][y] = currNode + cost;
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			minCost = Math.min(dp[0][i],minCost);
+		}
+		return minCost;
+	}
+}

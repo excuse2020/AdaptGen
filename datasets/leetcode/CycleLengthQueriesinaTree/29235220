@@ -1,0 +1,46 @@
+class Solution {
+	int[] cycleLengthQueries(int n, int[][] queries) {
+		int[] ans = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			int x = queries[i][0];
+			int y = queries[i][1];
+			HashSet<Integer> hs = new HashSet<>();
+			int count1 = 1;
+			while (x > 1) {
+				hs.add(x);
+				count1++;
+				if (x % 2 == 1) {
+					x--;
+				}
+				x /= 2;
+			}
+			int flag = -1;
+			int count2 = 1;
+			while (y > 1) {
+				if (flag == -1) {
+					if (hs.contains(y)) {
+						flag = y;
+					}
+				}
+				count2++;
+				if (y % 2 == 1) {
+					y--;
+				}
+				y /= 2;
+			}
+			int minus = 1;
+			if (flag != -1) {
+				while (flag > 1) {
+					minus++;
+					if (flag % 2 == 1) {
+						flag--;
+					}
+					flag /= 2;
+				}
+				minus = minus * 2 - 1;
+			}
+			ans[i] = count1 + count2 - minus;
+		}
+		return ans;
+	}
+}

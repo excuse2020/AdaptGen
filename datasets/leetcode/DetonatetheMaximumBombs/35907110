@@ -1,0 +1,40 @@
+class Solution {
+	int bfs(int[][] bombs, int source) {
+		int n = bombs.length;
+		Queue<int[]> q = new ArrayDeque<>();
+		boolean[] vis = new boolean[bombs.length];
+		q.add(bombs[source]);
+		vis[source] = true;
+		int cur = 1;
+		while (q.size() > 0) {
+			int[] a = q.remove();
+			for (int i = 0; i < n; i++) {
+				int x2 = bombs[i][0];
+				int y2 = bombs[i][1];
+				if (vis[i]) {
+					continue;
+				}
+				boolean dist = euclidiean(a[0],a[1],x2,y2,a[2]);
+				if (dist) {
+					cur++;
+					vis[i] = true;
+					q.add(bombs[i]);
+				}
+			}
+		}
+		return cur;
+	}
+	boolean euclidiean(long x1, long y1, long x2, long y2, long r) {
+		long dist = ((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2));
+		return dist <= r * r;
+	}
+	int maximumDetonation(int[][] bombs) {
+		int n = bombs.length;
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			int cur = bfs(bombs,i);
+			ans = Math.max(ans,cur);
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,60 @@
+class Solution {
+	boolean isPossible(int n, List<List<Integer>> edges) {
+		int l = edges.size();
+		int[] in = new int[n + 1];
+		HashSet<Integer>[] graph = new HashSet[n + 1];
+		for (int i = 0; i <= n; i++) {
+			graph[i] = new HashSet<>();
+		}
+		for (List<Integer> a: edges) {	
+			int first = a.get(0);
+			int second = a.get(1);
+			in[first] += 1;
+			in[second] += 1;
+			graph[first].add(second);
+			graph[second].add(first);
+		}
+		int count = 0;
+		List<Integer> odds = new ArrayList<>();
+		for (int i = 1; i <= n; i++) {
+			if (in[i] % 2 != 0) {
+				odds.add(i);
+				count++;
+			}
+		}
+		if (count == 0) {
+			return true;
+		}
+		if (count % 2 != 0 || count >= 5) {
+			return false;
+		}
+		if (count == 2) {
+			int first = odds.get(0);
+			int second = odds.get(1);
+			if (!graph[first].contains(second)) {
+				return true;
+			}
+			HashSet<Integer> firsts = new HashSet<>();
+			HashSet<Integer> seconds = new HashSet<>();
+			for (int i = 1; i <= n; i++) {
+				if (!graph[first].contains(i) && !graph[second].contains(i) && i != second) {
+					return true;
+				}
+			}
+			return false;
+		} 
+		else {
+			int first = odds.get(0), second = odds.get(1), third = odds.get(2), fourth = odds.get(3);
+			if (!graph[first].contains(second) && !graph[third].contains(fourth)) {
+				return true;
+			}
+			if (!graph[first].contains(third) && !graph[second].contains(fourth)) {
+				return true;
+			}
+			if (!graph[first].contains(fourth) && !graph[second].contains(third)) {
+				return true;
+			}
+			return false;
+		}
+	}
+}

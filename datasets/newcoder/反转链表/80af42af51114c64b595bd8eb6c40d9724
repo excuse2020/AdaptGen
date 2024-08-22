@@ -1,0 +1,36 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		Stack<ListNode> stack1 = new Stack<>();
+		Stack<ListNode> stack2 = new Stack<>();
+		while (head1 != null) {
+			stack1.push(head1);
+			head1 = head1.next;
+		}
+		while (head2 != null) {
+			stack2.push(head2);
+			head2 = head2.next;
+		}
+		int carryOver = 0;
+		Stack<ListNode> minStack;
+		Stack<ListNode> maxStack;
+		maxStack = stack1.size() > stack2.size() ? stack1 : stack2;
+		minStack = stack1.size() > stack2.size() ? stack2 : stack1;
+		ListNode maxNode = null;
+		while (!minStack.isEmpty() || !maxStack.isEmpty()) {
+			int minValue = 0;
+			maxNode = maxStack.pop();
+			if (!minStack.isEmpty()) {
+				minValue = minStack.pop().val;
+			}
+			int sum = maxNode.val + minValue;
+			carryOver = (sum - (sum % 10)) / 10;
+			maxNode.val = sum % 10;
+		}
+		if (carryOver != 0) {
+			ListNode root = new ListNode(carryOver);
+			root.next = maxNode;
+			return root;
+		}
+		return maxNode;
+	}
+}

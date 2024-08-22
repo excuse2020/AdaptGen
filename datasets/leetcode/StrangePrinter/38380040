@@ -1,0 +1,28 @@
+class Solution {
+	int helper(int i, int j, char[] schar, int[][] dp) {
+		if (i > j) {
+			return 0;
+		}
+		if (dp[i][j] != -1) {
+			return dp[i][j];
+		}
+		int firstletter = schar[i];
+		int answer = 1 + helper(i + 1,j,schar,dp);
+		for (int k = i + 1; k <= j; k++) {
+			if (schar[k] == firstletter) {
+				int betteranswer = helper(i,k - 1,schar,dp) + helper(k + 1,j,schar,dp);
+				answer = Math.min(answer,betteranswer);
+			}
+		}
+		return dp[i][j] = answer;
+	}
+	int strangePrinter(String s) {
+		int n = s.length();
+		char[] schar = s.toCharArray();
+		int[][] dp = new int[n][n];
+		for (int[] in: dp) {	
+			Arrays.fill(in,-1);
+		}
+		return helper(0,n - 1,schar,dp);
+	}
+}

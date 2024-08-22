@@ -1,0 +1,52 @@
+class Solution {
+	int bfs(int i, List<Integer>[] graph) {
+		boolean[] detonated = new boolean[graph.length];
+		int count = 0;
+		Deque<Integer> que = new ArrayDeque<>();
+		que.add(i);
+		detonated[i] = true;
+		while (!que.isEmpty()) {
+			int cur = que.poll();
+			count += 1;
+			for (int next: graph[cur]) {	
+				if (detonated[next]) {
+					continue;
+				}
+				que.add(next);
+				detonated[next] = true;
+			}
+		}
+		return count;
+	}
+	List<Integer>[] buildGraph(int[][] bombs) {
+		List<Integer>[] graph = new List[bombs.length];
+		for (int i = 0; i < bombs.length; i++) {
+			if (graph[i] == null) {
+				graph[i] = new ArrayList<>();
+			}
+			int[] cur = bombs[i];
+			for (int j = i + 1; j < bombs.length; j++) {
+				if (graph[j] == null) {
+					graph[j] = new ArrayList<>();
+				}
+				int[] next = bombs[j];
+				long distSqr = (long) (cur[0] - next[0]) * (cur[0] - next[0]) + (long) (cur[1] - next[1]) * (cur[1] - next[1]);
+				if (distSqr <= (long) cur[2] * cur[2]) {
+					graph[i].add(j);
+				}
+				if (distSqr <= (long) next[2] * next[2]) {
+					graph[j].add(i);
+				}
+			}
+		}
+		return graph;
+	}
+	int maximumDetonation(int[][] bombs) {
+		List<Integer>[] graph = buildGraph(bombs);
+		int max = 0;
+		for (int i = 0; i < graph.length; i++) {
+			max = Math.max(max,bfs(i,graph));
+		}
+		return max;
+	}
+}

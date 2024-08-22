@@ -1,0 +1,49 @@
+class Solution {
+	List<Integer> spc;
+	boolean dfs(int u, String rep, int sta, int sumsofar) {
+		if (sta == rep.length() && u == sumsofar) {
+			return true;
+		}
+		if (sta >= rep.length()) {
+			return false;
+		}
+		if (sumsofar > u) {
+			return false;
+		}
+		boolean rtn = false;
+		for (int i = sta + 1; i <= rep.length(); i++) {
+			int val = Integer.parseInt(rep.substring(sta,i));
+			sumsofar += val;
+			if (dfs(u,rep,i,sumsofar)) {
+				return true;
+			}
+			sumsofar -= val;
+		}
+		return false;
+	}
+	boolean isSpecial(int u) {
+		if (u == 1 || u == 10) {
+			return true;
+		}
+		int cand = u * u;
+		String rep = String.valueOf(cand);
+		int len = rep.length();
+		if (dfs(u,rep,0,0)) {
+			return true;
+		}
+		return false;
+	}
+	int punishmentNumber(int n) {
+		spc = new ArrayList<>();
+		for (int i = 1; i <= n; i++) {
+			if (isSpecial(i)) {
+				spc.add(i);
+			}
+		}
+		int rslt = 0;
+		for (int i = 0; i < spc.size(); i++) {
+			rslt += spc.get(i) * spc.get(i);
+		}
+		return rslt;
+	}
+}

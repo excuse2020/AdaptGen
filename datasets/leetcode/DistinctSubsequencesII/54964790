@@ -1,0 +1,18 @@
+class Solution {
+	int distinctSubseqII(String s) {
+		long mod = 1000000007;
+		long[] dp = new long[s.length() + 1];
+		dp[0] = 1;
+		HashMap<Character, Integer> hm = new HashMap<>();
+		for (int i = 1; i < dp.length; i++) {
+			dp[i] = (dp[i - 1] * 2) % mod;
+			char ch = s.charAt(i - 1);
+			if (hm.containsKey(ch)) {
+				int last = hm.get(ch);
+				dp[i] = (dp[i] - dp[last - 1] + mod) % mod;
+			}
+			hm.put(ch,i);
+		}
+		return (int) ((dp[s.length()] - 1 + mod) % mod);
+	}
+}

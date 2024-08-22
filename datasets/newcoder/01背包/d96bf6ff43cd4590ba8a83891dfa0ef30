@@ -1,0 +1,36 @@
+class Solution {
+	int dp(int[][] vw, int V) {
+		if (V < 0 || vw.length <= 0) {
+			return 0;
+		}
+		int[][] dp = new int[vw.length + 1][V + 1];
+		for (int i = vw.length - 1; i >= 0; i--) {
+			for (int j = 0; j <= V; j++) {
+				int w1 = 0;
+				if (j >= vw[i][0]) {
+					w1 = dp[i + 1][j - vw[i][0]] + vw[i][1];
+				}
+				int w2 = dp[i + 1][j];
+				dp[i][j] = Math.max(w1,w2);
+			}
+		}
+		return dp[0][V];
+	}
+	int knapsack(int V, int n, int[][] vw) {
+		return dp(vw,V);
+	}
+	int maxW(int[][] vw, int index, int leftV) {
+		if (index == vw.length) {
+			return 0;
+		}
+		if (leftV < 0) {
+			return 0;
+		}
+		int w1 = 0;
+		if (leftV >= vw[index][0]) {
+			w1 = maxW(vw,index + 1,leftV - vw[index][0]) + vw[index][1];
+		}
+		int w2 = maxW(vw,index + 1,leftV);
+		return Math.max(w1,w2);
+	}
+}

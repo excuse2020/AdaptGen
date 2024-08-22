@@ -1,0 +1,32 @@
+class Solution {
+	boolean araAllZero(int[] counts) {
+		for (int count: counts) {	
+			if (count != 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+	ArrayList<Integer> findWord(String s, String p) {
+		if (s.length() < p.length()) {
+			return null;
+		}
+		int[] counts = new int[26];
+		ArrayList<Integer> res = new ArrayList<>();
+		for (int i = 0; i < p.length(); i++) {
+			counts[p.charAt(i) - 'a'] += 1;
+			counts[s.charAt(i) - 'a'] -= 1;
+		}
+		if (araAllZero(counts)) {
+			res.add(0);
+		}
+		for (int j = p.length(); j < s.length(); j++) {
+			counts[s.charAt(j) - 'a'] -= 1;
+			counts[s.charAt(j - p.length()) - 'a'] += 1;
+			if (araAllZero(counts)) {
+				res.add(j - p.length() + 1);
+			}
+		}
+		return res;
+	}
+}

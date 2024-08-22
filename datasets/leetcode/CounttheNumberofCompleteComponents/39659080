@@ -1,0 +1,46 @@
+class Solution {
+	int bfs(int indx, ArrayList<ArrayList<Integer>> adj, boolean[] vis, int[] con) {
+		int count = 0;
+		int num = 0;
+		Queue<Integer> q = new LinkedList<>();
+		q.add(indx);
+		while (!q.isEmpty()) {
+			int curr = q.poll();
+			if (vis[curr] == false) {
+				num++;
+				vis[curr] = true;
+				count += con[curr];
+				for (int i: adj.get(curr)) {	
+					q.add(i);
+				}
+			}
+		}
+		if (count == (num * (num - 1))) {
+			return 1;
+		}
+		return 0;
+	}
+	int countCompleteComponents(int n, int[][] edges) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		int[] con = new int[n];
+		boolean[] vis = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<Integer>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			int x = edges[i][0];
+			int y = edges[i][1];
+			adj.get(x).add(y);
+			adj.get(y).add(x);
+			con[x]++;
+			con[y]++;
+		}
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			if (vis[i] == false) {
+				ans += bfs(i,adj,vis,con);
+			}
+		}
+		return ans;
+	}
+}

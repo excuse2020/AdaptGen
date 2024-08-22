@@ -1,0 +1,72 @@
+class Solution {
+	List<Integer> l = new ArrayList<>();
+	void help(TreeNode root) {
+		Queue<TreeNode> q = new ArrayDeque<>();
+		q.add(root);
+		while (!q.isEmpty()) {
+			int size = q.size();
+			int sum = 0;
+			while (size-- > 0) {
+				TreeNode curr = q.remove();
+				sum += curr.val;
+				if (curr.left != null) {
+					q.add(curr.left);
+				}
+				if (curr.right != null) {
+					q.add(curr.right);
+				}
+			}
+			l.add(sum);
+		}
+	}
+	TreeNode help2(TreeNode root) {
+		Queue<TreeNode> q = new ArrayDeque<>();
+		q.add(root);
+		while (!q.isEmpty()) {
+			int size = q.size();
+			while (size-- > 0) {
+				TreeNode curr = q.remove();
+				int chsum = 0;
+				if (curr.left != null) {
+					chsum += curr.left.val;
+				}
+				if (curr.right != null) {
+					chsum += curr.right.val;
+				}
+				if (curr.left != null) {
+					curr.left.val = chsum;
+					q.add(curr.left);
+				}
+				if (curr.right != null) {
+					curr.right.val = chsum;
+					q.add(curr.right);
+				}
+			}
+		}
+		return root;
+	}
+	TreeNode help3(TreeNode root, int k) {
+		if (root == null) {
+			return null;
+		}
+		if (k == 0 || k == 1) {
+			root.val = 0;
+		} 
+		else {
+			int sumval = l.get(k);
+			int changeval = root.val;
+			root.val = sumval - changeval;
+		}
+		root.left = help3(root.left,k + 1);
+		root.right = help3(root.right,k + 1);
+		return root;
+	}
+	TreeNode replaceValueInTree(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		help(root);
+		root = help2(root);
+		return help3(root,0);
+	}
+}

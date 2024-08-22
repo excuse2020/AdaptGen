@@ -1,0 +1,45 @@
+class Solution {
+	boolean checkIfNotPossible(int[] arr, int mid, int length) {
+		int curr_index = arr.length - 1;
+		long currIndexValue = -1, previousIndexValue = -1;
+		while (curr_index >= 0) {
+			if (arr[curr_index] > mid) {
+				currIndexValue = arr[curr_index];
+				break;
+			}
+			curr_index--;
+		}
+		while (curr_index >= 0) {
+			if (curr_index == 0) {
+				if (currIndexValue > mid) {
+					return true;
+				} 
+				else {
+					break;
+				}
+			}
+			previousIndexValue = arr[curr_index - 1];
+			if (currIndexValue > mid) {
+				long diff = currIndexValue - mid;
+				currIndexValue = mid;
+				previousIndexValue += diff;
+			}
+			currIndexValue = previousIndexValue;
+			curr_index--;
+		}
+		return false;
+	}
+	int minimizeArrayValue(int[] nums) {
+		int low = 0, high = Arrays.stream(nums).max().getAsInt(), mid;
+		while (low <= high) {
+			mid = (low + high) / 2;
+			if (checkIfNotPossible(nums,mid,nums.length)) {
+				low = mid + 1;
+			} 
+			else {
+				high = mid - 1;
+			}
+		}
+		return low;
+	}
+}

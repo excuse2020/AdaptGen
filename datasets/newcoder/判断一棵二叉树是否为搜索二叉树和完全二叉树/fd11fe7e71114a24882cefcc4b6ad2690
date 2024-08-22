@@ -1,0 +1,45 @@
+class Solution {
+	boolean isFullTree(TreeNode root) {
+		if (root == null) {
+			return false;
+		}
+		LinkedList<TreeNode> queue = new LinkedList();
+		queue.offer(root);
+		while (!queue.isEmpty()) {
+			TreeNode temp = queue.poll();
+			if (temp != null) {
+				queue.offer(temp.left);
+				queue.offer(temp.right);
+			} 
+			else {
+				while (!queue.isEmpty()) {
+					TreeNode leafNode = queue.poll();
+					if (leafNode != null) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+	boolean isTwoSearchTree(TreeNode root, Integer min, Integer max) {
+		if (root == null) {
+			return true;
+		}
+		if (min != null && root.val <= min) {
+			return false;
+		}
+		if (max != null && root.val >= max) {
+			return false;
+		}
+		boolean leftFlg = isTwoSearchTree(root.left,min,root.val);
+		boolean rightFlg = isTwoSearchTree(root.right,root.val,max);
+		return leftFlg && rightFlg;
+	}
+	boolean[] judgeIt(TreeNode root) {
+		boolean[] result = new boolean[2];
+		result[0] = isTwoSearchTree(root,null,null);
+		result[1] = isFullTree(root);
+		return result;
+	}
+}

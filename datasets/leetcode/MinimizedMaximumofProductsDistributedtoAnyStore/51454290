@@ -1,0 +1,25 @@
+class Solution {
+	boolean canDistribute(int amount, int n, int[] quantities) {
+		int countOfStoresGotDistribution = 0;
+		for (int quantity: quantities) {	
+			countOfStoresGotDistribution += (int) Math.ceil((double) quantity / (double) amount);
+		}
+		return countOfStoresGotDistribution <= n;
+	}
+	int minimizedMaximum(int n, int[] quantities) {
+		int left = 1;
+		int right = Arrays.stream(quantities).max().getAsInt();
+		int result = -1;
+		while (left <= right) {
+			int mid = left + (right - left) / 2;
+			if (canDistribute(mid,n,quantities)) {
+				result = mid;
+				right = mid - 1;
+			} 
+			else {
+				left = mid + 1;
+			}
+		}
+		return result;
+	}
+}

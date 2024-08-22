@@ -1,0 +1,42 @@
+class Solution {
+	boolean compute(String prevBottom, String currBottom, Map<String, List<Character>> map) {
+		if (prevBottom.length() == 1) {
+			return true;
+		}
+		int currLen = currBottom.length();
+		if (currLen == prevBottom.length() - 1) {
+			return compute(currBottom,"",map);
+		}
+		String base = prevBottom.substring(currLen,currLen + 2);
+		if (!map.containsKey(base)) {
+			return false;
+		}
+		List<Character> validCell = map.get(base);
+		for (int ind = 0; ind < validCell.size(); ind++) {
+			Character currCell = validCell.get(ind);
+			String newBottom = currBottom + currCell;
+			boolean res = compute(prevBottom,newBottom,map);
+			if (res) {
+				return true;
+			}
+		}
+		return false;
+	}
+	boolean pyramidTransition(String bottom, List<String> allowed) {
+		Map<String, List<Character>> map = new HashMap();
+		for (int ind = 0; ind < allowed.size(); ind++) {
+			String key = allowed.get(ind).substring(0,2);
+			Character val = allowed.get(ind).charAt(2);
+			if (map.containsKey(key)) {
+				List<Character> currList = map.get(key);
+				currList.add(val);
+			} 
+			else {
+				List<Character> currList = new ArrayList();
+				currList.add(val);
+				map.put(key,currList);
+			}
+		}
+		return compute(bottom,"",map);
+	}
+}

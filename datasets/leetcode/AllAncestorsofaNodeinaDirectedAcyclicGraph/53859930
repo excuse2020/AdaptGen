@@ -1,0 +1,28 @@
+class Solution {
+	void dfs(int curr, List<Integer>[] adj, List<List<Integer>> ancestors, int ancestor, boolean[] visited) {
+		for (int i: adj[curr]) {	
+			if (!visited[i]) {
+				visited[i] = true;
+				ancestors.get(i).add(ancestor);
+				dfs(i,adj,ancestors,ancestor,visited);
+			}
+		}
+	}
+	List<List<Integer>> getAncestors(int n, int[][] edges) {
+		List<Integer>[] adjacency = new ArrayList[n];
+		List<List<Integer>> ancestors = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adjacency[i] = new ArrayList<>();
+			ancestors.add(new ArrayList<>());
+		}
+		int m = edges.length;
+		for (int i = 0; i < m; i++) {
+			adjacency[edges[i][0]].add(edges[i][1]);
+		}
+		for (int i = 0; i < n; i++) {
+			boolean[] visited = new boolean[n];
+			dfs(i,adjacency,ancestors,i,visited);
+		}
+		return ancestors;
+	}
+}

@@ -1,0 +1,45 @@
+class Solution {
+	int findMinPath(int[][] mat, int r, int c, int[][] dp) {
+		if (r == mat.length - 1) {
+			return mat[r][c];
+		}
+		if (dp[r][c] != -1) {
+			return dp[r][c];
+		}
+		int left = Integer.MAX_VALUE;
+		int middle = findMinPath(mat,r + 1,c,dp);
+		int right = Integer.MAX_VALUE;
+		if (c > 0) {
+			left = findMinPath(mat,r + 1,c - 1,dp);
+		}
+		if (c < mat.length - 1) {
+			right = findMinPath(mat,r + 1,c + 1,dp);
+		}
+		return dp[r][c] = mat[r][c] + Math.min(left,Math.min(middle,right));
+	}
+	int minFallingPathSum(int[][] mat) {
+		int n = mat.length;
+		int[] curr = new int[n];
+		int[] prev = new int[n];
+		int minSum = Integer.MAX_VALUE;
+		for (int r = n - 1; r >= 0; r--) {
+			for (int c = 0; c < n; c++) {
+				int left = Integer.MAX_VALUE;
+				int middle = prev[c];
+				int right = Integer.MAX_VALUE;
+				if (c > 0) {
+					left = prev[c - 1];
+				}
+				if (c < mat.length - 1) {
+					right = prev[c + 1];
+				}
+				curr[c] = mat[r][c] + Math.min(left,Math.min(middle,right));
+			}
+			prev = curr.clone();
+		}
+		for (int i = 0; i < n; i++) {
+			minSum = Math.min(minSum,prev[i]);
+		}
+		return minSum;
+	}
+}

@@ -1,0 +1,65 @@
+class Solution {
+	boolean isRectangleCover(int[][] rectangles) {
+		int X1 = Integer.MAX_VALUE, Y1 = Integer.MAX_VALUE;
+		int X2 = Integer.MIN_VALUE, Y2 = Integer.MIN_VALUE;
+		int totalArea = 0;
+		HashSet<String> vertices = new HashSet<>();
+		for (int[] rectangle: rectangles) {	
+			String x1y1 = String.valueOf(rectangle[0]) + String.valueOf(rectangle[1]);
+			String x2y2 = String.valueOf(rectangle[2]) + String.valueOf(rectangle[3]);
+			String x1y2 = String.valueOf(rectangle[0]) + String.valueOf(rectangle[3]);
+			String x2y1 = String.valueOf(rectangle[2]) + String.valueOf(rectangle[1]);
+			if (!vertices.contains(x1y1)) {
+				vertices.add(x1y1);
+			} 
+			else {
+				vertices.remove(x1y1);
+			}
+			if (!vertices.contains(x2y2)) {
+				vertices.add(x2y2);
+			} 
+			else {
+				vertices.remove(x2y2);
+			}
+			if (!vertices.contains(x1y2)) {
+				vertices.add(x1y2);
+			} 
+			else {
+				vertices.remove(x1y2);
+			}
+			if (!vertices.contains(x2y1)) {
+				vertices.add(x2y1);
+			} 
+			else {
+				vertices.remove(x2y1);
+			}
+			X1 = Math.min(X1,rectangle[0]);
+			Y1 = Math.min(Y1,rectangle[1]);
+			X2 = Math.max(X2,rectangle[2]);
+			Y2 = Math.max(Y2,rectangle[3]);
+			totalArea += (rectangle[2] - rectangle[0]) * (rectangle[3] - rectangle[1]);
+		}
+		System.out.println(X1);
+		System.out.println(Y1);
+		System.out.println(X2);
+		System.out.println(Y2);
+		System.out.println(vertices.size());
+		String x1y1 = String.valueOf(X1) + String.valueOf(Y1);
+		if (!vertices.contains(x1y1)) {
+			return false;
+		}
+		String x2y2 = String.valueOf(X2) + String.valueOf(Y2);
+		if (!vertices.contains(x2y2)) {
+			return false;
+		}
+		String x1y2 = String.valueOf(X1) + String.valueOf(Y2);
+		if (!vertices.contains(x1y2)) {
+			return false;
+		}
+		String x2y1 = String.valueOf(X2) + String.valueOf(Y1);
+		if (!vertices.contains(x2y1)) {
+			return false;
+		}
+		return vertices.size() == 4 && (X2 - X1) * (Y2 - Y1) == totalArea;
+	}
+}

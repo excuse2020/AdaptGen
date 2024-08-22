@@ -1,0 +1,37 @@
+class Solution {
+	int helper(TreeNode root, int freq) {
+		if (root == null) {
+			return 0;
+		}
+		freq[root.val]++;
+		if (root.left == null && root.right == null) {
+			int digitExists = 0, oddFreq = 0, evenFreq = 0;
+			for (int i = 1; i < 10; i++) {
+				if (freq[i] != 0) {
+					digitExists += freq[i];
+					if (freq[i] % 2 != 0) {
+						oddFreq++;
+					} 
+					else {
+						evenFreq++;
+					}
+				}
+			}
+			freq[root.val]--;
+			if ((digitExists % 2 == 0 && oddFreq == 0) || (digitExists % 2 != 0 && oddFreq == 1)) {
+				return 1;
+			} 
+			else {
+				return 0;
+			}
+		}
+		int ans1 = helper(root.left,freq);
+		int ans2 = helper(root.right,freq);
+		freq[root.val]--;
+		return ans1 + ans2;
+	}
+	int pseudoPalindromicPaths(TreeNode root) {
+		int freq = new int[10];
+		return helper(root,freq);
+	}
+}

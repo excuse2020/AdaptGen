@@ -1,0 +1,37 @@
+class Solution {
+	int getRes(ArrayList<Integer> num, int m, int left, int right) {
+		int target = (left + right) / 2;
+		int sum_sub = 0;
+		int count = 1;
+		int sum_max = 0;
+		for (int i = 0; i < num.size(); i++) {
+			if (sum_sub + num.get(i) <= target) {
+				sum_sub += num.get(i);
+			} 
+			else {
+				sum_sub = num.get(i);
+				count++;
+			}
+			sum_max = Math.max(sum_max,sum_sub);
+		}
+		System.out.println("target=" + target);
+		if (count > m) {
+			return getRes(num,m,target,right);
+		} 
+		else if (left < right - 1) {
+			return getRes(num,m,left,target);
+		} 
+		else {
+			return sum_max;
+		}
+	}
+	int splitMin(ArrayList<Integer> num, int m) {
+		int sum = 0;
+		int max = num.get(0);
+		for (int n: num) {	
+			sum += n;
+			max = max > n ? max : n;
+		}
+		return getRes(num,m,max,sum);
+	}
+}

@@ -1,0 +1,45 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		int[][] visited = new int[2][edges.length];
+		Arrays.fill(visited[0],-1);
+		Arrays.fill(visited[1],-1);
+		Queue<Pair> q = new LinkedList<>();
+		q.add(new Pair(0, node1));
+		q.add(new Pair(1, node2));
+		q.add(null);
+		int moves = 0;
+		while (!q.isEmpty()) {
+			Pair<Integer, Integer> current = q.poll();
+			if (current == null) {
+				if (!q.isEmpty()) {
+					q.add(null);
+					moves++;
+				}
+			} 
+			else {
+				if (visited[current.getKey()][current.getValue()] != -1) {
+					continue;
+				}
+				visited[current.getKey()][current.getValue()] = moves;
+				int next = edges[current.getValue()];
+				if (next != -1) {
+					q.add(new Pair(current.getKey(), edges[current.getValue()]));
+				}
+			}
+		}
+		Integer maxMin = null;
+		int index = -1;
+		for (int i = 0; i < visited[0].length; i++) {
+			int num1 = visited[0][i];
+			int num2 = visited[1][i];
+			if (num1 != -1 && num2 != -1) {
+				int current = Math.max(num1,num2);
+				if (maxMin == null || current < maxMin) {
+					maxMin = current;
+					index = i;
+				}
+			}
+		}
+		return maxMin == null ? -1 : index;
+	}
+}

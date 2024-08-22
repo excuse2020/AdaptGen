@@ -1,0 +1,41 @@
+class Solution {
+	List<Integer> topStudents(String[] positive_feedback, String[] negative_feedback, String[] report, int[] student_id, int k) {
+		Set<String> positive, negative;
+		positive = new HashSet<>();
+		negative = new HashSet<>();
+		for (String s: positive_feedback) {	
+			positive.add(s);
+		}
+		for (String s: negative_feedback) {	
+			negative.add(s);
+		}
+		PriorityQueue<int[]> pq = new PriorityQueue<>(new Compare());
+		String[] str;
+		int feedback;
+		for (int i = 0; i < report.length; i++) {
+			str = report[i].split(" ");
+			feedback = 0;
+			for (String s: str) {	
+				if (positive.contains(s)) {
+					feedback += 3;
+				}
+				if (negative.contains(s)) {
+					feedback -= 1;
+				}
+			}
+			pq.add(new int{student_id[i], feedback});
+		}
+		List<Integer> res = new ArrayList<>();
+		int i = 0;
+		while (i < k) {
+			res.add(pq.remove()[0]);
+			i++;
+		}
+		return res;
+	}
+	class Compare {
+		int compare(int[] o, int[] p) {
+			return o[1] < p[1] ? 1 : o[1] > p[1] ? -1 : o[0] - p[0];
+		}
+	}
+}

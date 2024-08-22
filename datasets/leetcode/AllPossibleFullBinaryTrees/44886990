@@ -1,0 +1,47 @@
+class Solution {
+	List<TreeNode> allPossibleFBT1(int n) {
+		Map<Integer, List<TreeNode>> treeMap = new HashMap<Integer, List<TreeNode>>();
+		List<TreeNode> trees = new ArrayList<TreeNode>();
+		if (0 == n % 2) {
+			return trees;
+		}
+		if (1 == n) {
+			trees.add(new TreeNode(0, null, null));
+			return trees;
+		}
+		if (treeMap.containsKey(n)) {
+			return treeMap.get(n);
+		}
+		for (int i = 1; i < n; i += 2) {
+			List<TreeNode> leftTrees = allPossibleFBT(i);
+			List<TreeNode> rightTrees = allPossibleFBT(n - i);
+			for (TreeNode leftTree: leftTrees) {	
+				for (TreeNode rightTree: rightTrees) {	
+					TreeNode root = new TreeNode(0, leftTree, rightTree);
+					trees.add(root);
+				}
+			}
+		}
+		treeMap.put(n,trees);
+		return trees;
+	}
+	List<TreeNode> allPossibleFBT_iterative(int n) {
+		List<List<TreeNode>> dp = new ArrayList<List<TreeNode>>(n + 1);
+		for (int i = 0; i <= n; i++) {
+			dp.add(new ArrayList<>());
+		}
+		dp.get(1).add(new TreeNode(0));
+		for (int nodeCount = 3; nodeCount <= n; nodeCount += 2) {
+			for (int leftCount = 1; leftCount < nodeCount - 1; leftCount += 2) {
+				int rightCount = nodeCount - leftCount;
+				for (TreeNode left: dp.get(leftCount)) {	
+					for (TreeNode right: dp.get(rightCount)) {	
+						TreeNode root = new TreeNode(0, left, right);
+						dp.get(nodeCount).add(root);
+					}
+				}
+			}
+		}
+		return dp.get(n);
+	}
+}

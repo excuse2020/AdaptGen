@@ -1,0 +1,19 @@
+class Solution {
+	RandomListNode Clone(RandomListNode pHead) {
+		Map<RandomListNode, RandomListNode> oldToNew = new HashMap<>();
+		Map<RandomListNode, RandomListNode> newToOld = new HashMap<>();
+		RandomListNode newList = new RandomListNode(-1);
+		RandomListNode oldNode = pHead, newPre = newList;
+		while (oldNode != null) {
+			newPre.next = new RandomListNode(oldNode.label);
+			newPre = newPre.next;
+			oldToNew.put(oldNode,newPre);
+			newToOld.put(newPre,oldNode);
+			oldNode = oldNode.next;
+		}
+		for (RandomListNode newNode: newToOld.keySet()) {	
+			newNode.random = oldToNew.get(newToOld.get(newNode).random);
+		}
+		return newList.next;
+	}
+}

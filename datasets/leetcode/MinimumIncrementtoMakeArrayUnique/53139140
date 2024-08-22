@@ -1,0 +1,43 @@
+class Solution {
+	int allocateValueFromAvaialble(int val, TreeSet<Integer> availSet) {
+		Integer next = availSet.higher(val);
+		if (next != null) {
+			availSet.remove(next);
+			return next;
+		} 
+		else {
+			return -1;
+		}
+	}
+	int minIncrementForUnique(int[] nums) {
+		int n = nums.length;
+		int moves = 0;
+		Arrays.sort(nums);
+		List<Integer> swapList = new ArrayList<>();
+		TreeSet<Integer> availSet = new TreeSet<>();
+		for (int i = 1; i < n; i++) {
+			if (nums[i - 1] == nums[i]) {
+				swapList.add(nums[i]);
+			} 
+			else if (nums[i - 1] + 1 != nums[i]) {
+				int c = nums[i - 1] + 1;
+				while (c < nums[i]) {
+					availSet.add(c);
+					c++;
+				}
+			}
+		}
+		int cMax = nums[n - 1] + 1;
+		for (Integer val: swapList) {	
+			int allocatedVal = allocateValueFromAvaialble(val,availSet);
+			if (allocatedVal >= 0) {
+				moves += (allocatedVal - val);
+			} 
+			else {
+				moves += (cMax - val);
+				cMax++;
+			}
+		}
+		return moves;
+	}
+}

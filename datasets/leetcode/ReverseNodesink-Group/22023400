@@ -1,0 +1,25 @@
+class Solution {
+	void reverse(ListNode head, int k) {
+		if (k == 1) {
+			return;
+		}
+		reverse(head.next,k - 1);
+		head.next.next = head;
+		head.next = null;
+	}
+	ListNode reverseKGroup(ListNode head, int k) {
+		ListNode fast = head;
+		int current = k;
+		while (fast != null && current > 1) {
+			fast = fast.next;
+			current--;
+		}
+		if (current == 1 && fast != null) {
+			ListNode nextGroup = reverseKGroup(fast.next,k);
+			reverse(head,k);
+			head.next = nextGroup;
+			head = fast;
+		}
+		return head;
+	}
+}

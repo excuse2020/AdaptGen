@@ -1,0 +1,33 @@
+class Solution {
+	ArrayList<String> res = new ArrayList<>();
+	void func(int index, int cur, String s, ArrayList<Integer> templist) {
+		if (index == s.length()) {
+			if (templist.size() == 4) {
+				String str = "";
+				for (int i = 0; i < templist.size(); ++i) {
+					if (templist.size() - 1 != i) {
+						str += templist.get(i) + ".";
+					} 
+					else {
+						str += templist.get(i);
+					}
+				}
+				if (str.length() != s.length() + 3) {
+					return;
+				}
+				res.add(str);
+			}
+			return;
+		}
+		int temp = cur * 10 + s.charAt(index) - '0';
+		if (temp >= 0 && temp <= 255) {
+			func(index + 1,temp,s,new ArrayList<Integer>(templist));
+			templist.add(temp);
+			func(index + 1,0,s,new ArrayList<Integer>(templist));
+		}
+	}
+	ArrayList<String> restoreIpAddresses(String s) {
+		func(0,0,s,new ArrayList<Integer>());
+		return res;
+	}
+}

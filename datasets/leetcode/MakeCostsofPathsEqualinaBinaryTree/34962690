@@ -1,0 +1,40 @@
+class Solution {
+	int calculateAns(int l, int r, int n, int[] st, int max) {
+		if (l > r) {
+			return 0;
+		}
+		int cmax = Integer.MIN_VALUE;
+		for (int i = l; i <= r; i++) {
+			cmax = Math.max(cmax,st[i]);
+		}
+		int res = max - cmax;
+		for (int i = l; i <= r; i++) {
+			st[i] += max - cmax;
+		}
+		if (l != r) {
+			int m = (l + r) / 2;
+			res += calculateAns(l,m,n,st,max);
+			res += calculateAns(m + 1,r,n,st,max);
+		}
+		return res;
+	}
+	void calculateStep(int p, int v, int n, int[] cost, int[] st) {
+		if (p >= n) {
+			return;
+		}
+		st[p] = v + cost[p];
+		calculateStep(2 * p + 1,st[p],n,cost,st);
+		calculateStep(2 * p + 2,st[p],n,cost,st);
+	}
+	int minIncrements(int n, int[] cost) {
+		int[] st = new int[n];
+		calculateStep(0,0,n,cost,st);
+		int maxInd = n / 2;
+		int maxVal = Integer.MIN_VALUE;
+		for (int i = maxInd; i < n; i++) {
+			maxVal = Math.max(maxVal,st[i]);
+		}
+		int res = calculateAns(maxInd,n - 1,n,st,maxVal);
+		return res;
+	}
+}

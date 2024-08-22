@@ -1,0 +1,25 @@
+class Solution {
+	int[] getMaxProperties(int[][] properties) {
+		int[] maxProperty = new int[100_003];
+		int maxAttack = 0, minAttack = 100_001;
+		for (int[] property: properties) {	
+			maxProperty[property[0]] = Math.max(property[1],maxProperty[property[0]]);
+			maxAttack = Math.max(maxAttack,property[0]);
+			minAttack = Math.min(minAttack,property[0]);
+		}
+		for (int j = maxAttack; j >= minAttack; j--) {
+			maxProperty[j + 1] = Math.max(maxProperty[j + 1],maxProperty[j + 2]);
+		}
+		return maxProperty;
+	}
+	int numberOfWeakCharacters(int[][] properties) {
+		int weakCharacters = 0, max = 0;
+		int[] maxProperties = getMaxProperties(properties);
+		for (int[] property: properties) {	
+			if (property[1] < maxProperties[property[0] + 1]) {
+				weakCharacters++;
+			}
+		}
+		return weakCharacters;
+	}
+}

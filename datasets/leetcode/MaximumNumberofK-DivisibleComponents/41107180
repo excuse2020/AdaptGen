@@ -1,0 +1,41 @@
+class Solution {
+	long[] sum;
+	long total;
+	void dfs1(int node, int par, List<List<Integer>> graph, int[] values) {
+		sum[node] = values[node];
+		for (int nei: graph.get(node)) {	
+			if (nei != par) {
+				dfs1(nei,node,graph,values);
+				sum[node] += sum[nei];
+			}
+		}
+	}
+	int dfs2(int node, int par, List<List<Integer>> graph, int k) {
+		int val = 0;
+		for (int nei: graph.get(node)) {	
+			if (nei != par) {
+				val += dfs2(nei,node,graph,k);
+				long s1 = total - sum[nei], s2 = sum[nei];
+				if (s1 % k == 0 && s2 % k == 0) {
+					val++;
+				}
+			}
+		}
+		return val;
+	}
+	int maxKDivisibleComponents(int n, int[][] edges, int[] values, int k) {
+		List<List<Integer>> graph = new ArrayList<>();
+		sum = new long[n + 1];
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			int u = edge[0], v = edge[1];
+			graph.get(u).add(v);
+			graph.get(v).add(u);
+		}
+		dfs1(0,-1,graph,values);
+		total = sum[0];
+		return dfs2(0,-1,graph,k) + 1;
+	}
+}

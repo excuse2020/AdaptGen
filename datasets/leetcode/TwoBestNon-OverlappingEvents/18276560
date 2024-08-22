@@ -1,0 +1,38 @@
+class Solution {
+	int findPrevPosIndex(int index, int[][] events) {
+		if (index == -1) {
+			return -1;
+		}
+		int ans = -1;
+		int limit = events[index + 1][0];
+		int s = 0;
+		int e = index;
+		while (s <= e) {
+			int m = s + (e - s) / 2;
+			if (events[m][1] < limit) {
+				ans = m;
+				s = m + 1;
+			} 
+			else {
+				e = m - 1;
+			}
+		}
+		return ans;
+	}
+	int maxTwoEvents(int[][] events) {
+		Arrays.sort(events,(a, b) -> {a[1] == b[1] ? Integer.compare(a[0],b[0]) : Integer.compare(a[1],b[1])});
+		int ans = 0;
+		int n = events.length;
+		int[] dp = new int[n];
+		for (int i = 0; i < n; i++) {
+			dp[i] = events[i][2];
+			ans = Math.max(ans,events[i][2]);
+			int prevPosIndex = findPrevPosIndex(i - 1,events);
+			if (prevPosIndex != -1) {
+				ans = Math.max(ans,dp[i] + dp[prevPosIndex]);
+			}
+			dp[i] = Math.max(dp[i],i >= 1 ? dp[i - 1] : 0);
+		}
+		return ans;
+	}
+}

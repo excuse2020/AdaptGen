@@ -1,0 +1,34 @@
+class Solution {
+	int calculateScore(int[] stoneValue, int index, int[] dp) {
+		if (index >= stoneValue.length) {
+			return 0;
+		}
+		if (dp[index] != Integer.MIN_VALUE) {
+			return dp[index];
+		}
+		int maxScore = Integer.MIN_VALUE;
+		int currentSum = 0;
+		for (int i = 0; i < 3 && index + i < stoneValue.length; i++) {
+			currentSum += stoneValue[index + i];
+			int opponentScore = calculateScore(stoneValue,index + i,dp);
+			int scoreDiff = currentSum - opponentScore;
+			maxScore = Math.max(maxScore,scoreDiff);
+		}
+		dp[index] = maxScore;
+		return maxScore;
+	}
+	String stoneGameIII(int[] stoneValue) {
+		int[] dp = new int[stoneValue.length];
+		Arrays.fill(dp,Integer.MIN_VALUE);
+		int result = calculateScore(stoneValue,0,dp);
+		if (result > 0) {
+			return "Alice";
+		} 
+		else if (result < 0) {
+			return "Bob";
+		} 
+		else {
+			return "Tie";
+		}
+	}
+}

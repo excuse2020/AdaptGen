@@ -1,0 +1,58 @@
+class Solution {
+	int bfs(MountainArray mountainArr, int target, int end) {
+		int s = 0;
+		int e = end;
+		while (s <= e) {
+			int m = s + (e - s) / 2;
+			if (target < mountainArr.get(m)) {
+				e = m - 1;
+			} 
+			else if (target > mountainArr.get(m)) {
+				s = m + 1;
+			} 
+			else {
+				return m;
+			}
+		}
+		return -1;
+	}
+	int dfs(MountainArray mountainArr, int target, int end) {
+		int s = end;
+		int e = mountainArr.length() - 1;
+		while (s <= e) {
+			int m = s + (e - s) / 2;
+			if (target < mountainArr.get(m)) {
+				s = m + 1;
+			} 
+			else if (target > mountainArr.get(m)) {
+				e = m - 1;
+			} 
+			else {
+				return m;
+			}
+		}
+		return -1;
+	}
+	int findInMountainArray(int target, MountainArray mountainArr) {
+		int peak = peak(mountainArr);
+		int ans = bfs(mountainArr,target,peak);
+		if (ans != -1) {
+			return ans;
+		}
+		return dfs(mountainArr,target,peak);
+	}
+	int peak(MountainArray mountainArr) {
+		int s = 0;
+		int e = mountainArr.length() - 1;
+		while (s < e) {
+			int m = s + (e - s) / 2;
+			if (mountainArr.get(m) > mountainArr.get(m + 1)) {
+				e = m;
+			} 
+			else {
+				s = m + 1;
+			}
+		}
+		return e;
+	}
+}

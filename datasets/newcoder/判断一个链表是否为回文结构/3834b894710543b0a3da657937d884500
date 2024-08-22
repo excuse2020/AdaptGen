@@ -1,0 +1,45 @@
+class Solution {
+	ListNode getMid(ListNode head) {
+		if (head == null) {
+			return null;
+		}
+		ListNode fake_head = new ListNode(-1);
+		fake_head.next = head;
+		ListNode pre = fake_head, slow = head, fast = head;
+		while (fast != null) {
+			fast = fast.next;
+			slow = slow.next;
+			pre = pre.next;
+			if (fast != null) {
+				fast = fast.next;
+			}
+		}
+		pre.next = null;
+		return slow;
+	}
+	boolean isPail(ListNode head) {
+		if (head == null || head.next == null) {
+			return true;
+		}
+		ListNode mid = getMid(head);
+		mid = reverse(mid);
+		while (mid != null) {
+			if (mid.val != head.val) {
+				return false;
+			}
+			mid = mid.next;
+			head = head.next;
+		}
+		return true;
+	}
+	ListNode reverse(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode next = head.next;
+		ListNode reHead = reverse(head.next);
+		next.next = head;
+		head.next = null;
+		return reHead;
+	}
+}

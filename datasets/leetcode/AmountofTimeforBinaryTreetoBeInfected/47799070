@@ -1,0 +1,78 @@
+class Solution {
+	int amountOfTime = 0;
+	int amountOfTime(TreeNode root, int start) {
+		if (root == null) {
+			return 0;
+		}
+		Map<TreeNode, TreeNode> nodeToParent = new HashMap<>();
+		createNodeToParentMapping(root,nodeToParent);
+		Set<TreeNode> isNodeVisted = new HashSet<>();
+		Queue<TreeNode> trackingQueue = new LinkedList<>();
+		findStartNode(root,start,trackingQueue);
+		isNodeVisted.add(trackingQueue.peek());
+		findAmountOfTimeToBurn(isNodeVisted,trackingQueue,nodeToParent);
+		return amountOfTime;
+	}
+	void createNodeToParentMapping(TreeNode root, Map<TreeNode, TreeNode> nodeToParent) {
+		nodeToParent.put(root,null);
+		Queue<TreeNode> que = new LinkedList<>();
+		que.add(root);
+		while (!que.isEmpty()) {
+			TreeNode node = que.poll();
+			if (node.left != null) {
+				nodeToParent.put(node.left,node);
+				que.add(node.left);
+			}
+			if (node.right != null) {
+				nodeToParent.put(node.right,node);
+				que.add(node.right);
+			}
+		}
+	}
+	void findAmountOfTimeToBurn(Set<TreeNode> isNodeVisted, Queue<TreeNode> trackingQueue, Map<TreeNode, TreeNode> nodeToParent) {
+		int counter = 1;
+		int nodeAddedAtATime = 0;
+		while (!trackingQueue.isEmpty()) {
+			Boolean trackingQueueUpdated = false;
+			while (counter > 0) {
+				counter--;
+				TreeNode node = trackingQueue.poll();
+				if (node.left != null && !isNodeVisted.contains(node.left)) {
+					isNodeVisted.add(node.left);
+					trackingQueue.add(node.left);
+					trackingQueueUpdated = true;
+					nodeAddedAtATime++;
+				}
+				if (node.right != null && !isNodeVisted.contains(node.right)) {
+					isNodeVisted.add(node.right);
+					trackingQueue.add(node.right);
+					trackingQueueUpdated = true;
+					nodeAddedAtATime++;
+				}
+				TreeNode parentNode = nodeToParent.get(node);
+				if (parentNode != null && !isNodeVisted.contains(parentNode)) {
+					isNodeVisted.add(parentNode);
+					trackingQueue.add(parentNode);
+					trackingQueueUpdated = true;
+					nodeAddedAtATime++;
+				}
+			}
+			counter = nodeAddedAtATime;
+			nodeAddedAtATime = 0;
+			if (trackingQueueUpdated) {
+				amountOfTime++;
+			}
+		}
+	}
+	void findStartNode(TreeNode root, int start, Queue<TreeNode> trackingQueue) {
+		if (root == null) {
+			return;
+		}
+		if (root.val == start) {
+			trackingQueue.add(root);
+			return;
+		}
+		findStartNode(root.left,start,trackingQueue);
+		findStartNode(root.right,start,trackingQueue);
+	}
+}

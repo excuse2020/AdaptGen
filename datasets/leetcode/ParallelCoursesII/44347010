@@ -1,0 +1,64 @@
+class Solution {
+	void dfs(List<Integer> neis, List<Integer> canTake, int index, int k, int state) {
+		if (k == 0) {
+			neis.add(state);
+			return;
+		}
+		if (index >= canTake.size()) {
+			return;
+		}
+		dfs(neis,canTake,index + 1,k,state);
+		dfs(neis,canTake,index + 1,k - 1,state | (1 << canTake.get(index)));
+	}
+	List<Integer> getNeighbours(int state, int[] pre, int k, int n) {
+		List<Integer> neis = new ArrayList<>();
+		List<Integer> canTake = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			if ((state & (1 << i)) == 0) {
+				if ((state & pre[i]) == pre[i]) {
+					canTake.add(i);
+				}
+			}
+		}
+		if (canTake.size() <= k) {
+			for (int can: canTake) {	
+				state |= 1 << can;
+			}
+			return Arrays.asList(state);
+		} 
+		else {
+			dfs(neis,canTake,0,k,state);
+			return neis;
+		}
+	}
+	int minNumberOfSemesters(int n, int[][] relations, int k) {
+		int[] pres = new int[n];
+		int[] dp = new int[1 << n];
+		for (int[] r: relations) {	
+			int pre = r[0] - 1;
+			int next = r[1] - 1;
+			pres[next] |= 1 << pre;
+		}
+		Queue<Integer> states = new LinkedList<>();
+		states.add(0);
+		int sem = 0;
+		while (!states.isEmpty()) {
+			int size = states.size();
+			while (size-- > 0) {
+				int state = states.poll();
+				if (state == ((1 << n) - 1)) {
+					return sem;
+				}
+				List<Integer> neis = getNeighbours(state,pres,k,n);
+				for (int nei: neis) {	
+					if (dp[nei] == 0) {
+						dp[nei] = dp[state] + 1;
+						states.add(nei);
+					}
+				}
+			}
+			sem++;
+		}
+		return sem;
+	}
+}

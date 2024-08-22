@@ -1,0 +1,31 @@
+class Solution {
+	int numSplits(String s) {
+		Map<Character, Integer> map1 = new HashMap<>();
+		Map<Character, Integer> map2 = new HashMap<>();
+		for (int i = 0; i < s.length(); i++) {
+			if (i == 0) {
+				map1.put(s.charAt(i),1);
+				continue;
+			}
+			int freq = map2.getOrDefault(s.charAt(i),0) + 1;
+			map2.put(s.charAt(i),freq);
+		}
+		int split = 1;
+		int res = map1.size() == map2.size() ? 1 : 0;
+		while (split < s.length()) {
+			char cur = s.charAt(split);
+			int freq = map1.getOrDefault(cur,0) + 1;
+			map1.put(cur,freq);
+			freq = map2.get(cur) - 1;
+			if (freq == 0) {
+				map2.remove(cur);
+			} 
+			else {
+				map2.put(cur,freq);
+			}
+			res += map1.size() == map2.size() ? 1 : 0;
+			split++;
+		}
+		return res;
+	}
+}

@@ -1,0 +1,27 @@
+class Solution {
+	int helper(int[] arr, int idx, int cur) {
+		if (cur == arr.length) {
+			return 0;
+		}
+		int ans = Integer.MIN_VALUE;
+		ans = Math.max(ans,Math.max(idx * arr[cur] + helper(arr,idx + 1,cur + 1),helper(arr,idx,cur + 1)));
+		return ans;
+	}
+	int helperMem(int[] arr, int idx, int cur, int[][] dp) {
+		if (cur == arr.length) {
+			return 0;
+		}
+		if (dp[idx][cur] != 0) {
+			return dp[idx][cur];
+		}
+		int ans = Integer.MIN_VALUE;
+		ans = Math.max(ans,Math.max(idx * arr[cur] + helperMem(arr,idx + 1,cur + 1,dp),helperMem(arr,idx,cur + 1,dp)));
+		dp[idx][cur] = ans;
+		return ans;
+	}
+	int maxSatisfaction(int[] satisfaction) {
+		Arrays.sort(satisfaction);
+		int[][] dp = new int[satisfaction.length + 1][satisfaction.length + 1];
+		return helperMem(satisfaction,1,0,dp);
+	}
+}

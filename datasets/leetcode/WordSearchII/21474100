@@ -1,0 +1,70 @@
+class Solution {
+	char[][] board;
+	Trie root = new Trie();
+	boolean[][] visited;
+	List<String> words = new ArrayList();
+	void backtrack(int row, int col, Trie t, StringBuilder sb) {
+		if (t == null) {
+			return;
+		}
+		if (t.isEnd) {
+			words.add(sb.toString());
+			root.removeWord(sb.toString(),0);
+		}
+		if (row < 0 || row == visited.length || col < 0 || col == visited[0].length) {
+			return;
+		}
+		if (visited[row][col]) {
+			return;
+		}
+		visited[row][col] = true;
+		sb.append(board[row][col]);
+		Trie next = t.tries.get(board[row][col]);
+		if (next != null) {
+			backtrack(row + 1,col,next,sb);
+			backtrack(row - 1,col,next,sb);
+			backtrack(row,col + 1,next,sb);
+			backtrack(row,col - 1,next,sb);
+		}
+		sb.deleteCharAt(sb.length() - 1);
+		visited[row][col] = false;
+	}
+	List<String> findWords(char[][] _board, String[] _words) {
+		board = _board;
+		visited = new boolean[board.length][board[0].length];
+		for (String w: _words) {	
+			root.addWord(w);
+		}
+		for (int row = 0; row < board.length; row++) {
+			for (int col = 0; col < board[row].length; col++) {
+				backtrack(row,col,root,new StringBuilder());
+			}
+		}
+		return words;
+	}
+}
+class Trie {
+	boolean isEnd = false;
+	Map<Character, Trie> tries = new HashMap();
+	void addWord(String w) {
+		Trie t = this;
+		for (char c: w.toCharArray()) {	
+			if (!t.tries.containsKey(c)) {
+				t.tries.put(c,new Trie());
+			}
+			t = t.tries.get(c);
+		}
+		t.isEnd = true;
+	}
+	void removeWord(String w, int i) {
+		if (i == w.length()) {
+			isEnd = false;
+		} 
+		else {
+			tries.get(w.charAt(i)).removeWord(w,i + 1);
+			if (tries.get(w.charAt(i)).tries.size() == 0 && !tries.get(w.charAt(i)).isEnd) {
+				tries.remove(w.charAt(i));
+			}
+		}
+	}
+}

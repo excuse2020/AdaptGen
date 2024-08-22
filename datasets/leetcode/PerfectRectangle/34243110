@@ -1,0 +1,79 @@
+class Solution {
+	boolean isRectangleCover(int[][] rectangles) {
+		HashMap corners = new HashMap<String, Integer>();
+		int[] topRight = rectangles[0];
+		int[] btLeft = rectangles[0];
+		int area = 0;
+		for (int[] rect: rectangles) {	
+			if (rect[0] < btLeft[0]) {
+				btLeft = rect;
+			}
+			if (rect[0] == btLeft[0] && rect[1] < btLeft[1]) {
+				btLeft = rect;
+			}
+			if (rect[2] > topRight[2]) {
+				topRight = rect;
+			}
+			if (rect[2] == topRight[2] && rect[3] > topRight[3]) {
+				topRight = rect;
+			}
+			String corner1 = "" + rect[0];
+			String corner2 = "" + rect[2];
+			String corner3 = "" + rect[0];
+			String corner4 = "" + rect[2];
+			if (corners.containsKey(corner1)) {
+				corners.put(corner1,(int) (corners.get(corner1)) + 1);
+			} 
+			else {
+				corners.put(corner1,1);
+			}
+			if (corners.containsKey(corner2)) {
+				corners.put(corner2,(int) (corners.get(corner2)) + 1);
+			} 
+			else {
+				corners.put(corner2,1);
+			}
+			if (corners.containsKey(corner3)) {
+				corners.put(corner3,(int) (corners.get(corner3)) + 1);
+			} 
+			else {
+				corners.put(corner3,1);
+			}
+			if (corners.containsKey(corner4)) {
+				corners.put(corner4,(int) (corners.get(corner4)) + 1);
+			} 
+			else {
+				corners.put(corner4,1);
+			}
+			area += (rect[2] - rect[0]) * (rect[3] - rect[1]);
+		}
+		for (int[] rect: rectangles) {	
+			if (rect[1] < btLeft[1]) {
+				return false;
+			}
+			if (rect[3] > topRight[3]) {
+				return false;
+			}
+		}
+		String corner1 = "" + btLeft[0];
+		String corner2 = "" + topRight[2];
+		String corner3 = "" + btLeft[0];
+		String corner4 = "" + topRight[2];
+		if (!corners.containsKey(corner1) || !corners.containsKey(corner2)) {
+			return false;
+		}
+		corners.put(corner1,(int) (corners.get(corner1)) + 1);
+		corners.put(corner2,(int) (corners.get(corner2)) + 1);
+		corners.put(corner3,(int) (corners.get(corner3)) + 1);
+		corners.put(corner4,(int) (corners.get(corner4)) + 1);
+		for (Object num: corners.values()) {	
+			if ((int) num != 2 && (int) num != 4) {
+				return false;
+			}
+		}
+		if (area != (topRight[2] - btLeft[0]) * (topRight[3] - btLeft[1])) {
+			return false;
+		}
+		return true;
+	}
+}

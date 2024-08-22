@@ -1,0 +1,53 @@
+class Solution {
+	int[][] dp;
+	int helper(int ind, int[] val, int turn) {
+		if (ind >= val.length) {
+			return 0;
+		}
+		if (dp[ind][turn] != Integer.MAX_VALUE) {
+			return dp[ind][turn];
+		}
+		if (turn == 1) {
+			int one = Integer.MIN_VALUE, two = Integer.MIN_VALUE, three = Integer.MIN_VALUE;
+			if (ind < val.length) {
+				one = val[ind] + helper(ind + 1,val,0);
+			}
+			if (ind + 1 < val.length) {
+				two = val[ind] + val[ind + 1];
+			}
+			if (ind + 2 < val.length) {
+				three = val[ind] + val[ind + 1];
+			}
+			return dp[ind][turn] = Math.max(one,Math.max(two,three));
+		} 
+		else {
+			int one = Integer.MAX_VALUE, two = Integer.MAX_VALUE, three = Integer.MAX_VALUE;
+			one = helper(ind + 1,val,1);
+			two = helper(ind + 2,val,1);
+			three = helper(ind + 3,val,1);
+			return dp[ind][turn] = Math.min(one,Math.min(two,three));
+		}
+	}
+	String stoneGameIII(int[] stoneValue) {
+		int n = stoneValue.length;
+		dp = new int[n][2];
+		for (int[] arr: dp) {	
+			Arrays.fill(arr,Integer.MAX_VALUE);
+		}
+		int aliceScore = helper(0,stoneValue,1);
+		int sum = 0;
+		for (int i = 0; i < n; i++) {
+			sum += stoneValue[i];
+		}
+		int bobScore = sum - aliceScore;
+		if (aliceScore > bobScore) {
+			return "Alice";
+		} 
+		else if (aliceScore < bobScore) {
+			return "Bob";
+		} 
+		else {
+			return "Tie";
+		}
+	}
+}

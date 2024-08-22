@@ -1,0 +1,73 @@
+class Solution {
+	String arrangeLine(String line, boolean lastLine, int maxWidth) {
+		if (lastLine) {
+			if (line.length() == maxWidth) {
+				return line;
+			} 
+			else {
+				StringBuilder adjustedLine = new StringBuilder(line);
+				for (int i = 0; i < maxWidth - line.length(); i++) {
+					adjustedLine.append(" ");
+				}
+				return adjustedLine.toString();
+			}
+		} 
+		else {
+			if (line.length() == maxWidth) {
+				return line;
+			}
+			int totalSpaceCharCount = maxWidth - line.length();
+			String[] splittedWords = line.split(" ");
+			int spaceCountBetweenWordsIfEqual;
+			int numberOfWordsToContainOneMoreSpace;
+			boolean thereIsSingleWord = false;
+			if (splittedWords.length == 1) {
+				spaceCountBetweenWordsIfEqual = totalSpaceCharCount - 1;
+				numberOfWordsToContainOneMoreSpace = 0;
+				thereIsSingleWord = true;
+			} 
+			else {
+				spaceCountBetweenWordsIfEqual = totalSpaceCharCount / (splittedWords.length - 1);
+				numberOfWordsToContainOneMoreSpace = totalSpaceCharCount % (splittedWords.length - 1);
+			}
+			StringBuilder adjustedLine = new StringBuilder();
+			for (int i = 0; i < splittedWords.length; i++) {
+				adjustedLine.append(splittedWords[i]);
+				for (int j = 0; j < spaceCountBetweenWordsIfEqual + 1; j++) {
+					boolean notLastWord = (i != splittedWords.length - 1);
+					if (thereIsSingleWord || notLastWord) {
+						adjustedLine.append(" ");
+					}
+				}
+				if (i < numberOfWordsToContainOneMoreSpace) {
+					adjustedLine.append(" ");
+				}
+			}
+			return adjustedLine.toString();
+		}
+	}
+	List<String> fullJustify(String[] words, int maxWidth) {
+		List<String> lines = new ArrayList<>(words.length);
+		StringBuilder lineBuilder = new StringBuilder();
+		for (int i = 0; i < words.length; i++) {
+			boolean lastLine = (i == (words.length - 1));
+			if (lineBuilder.length() + words[i].length() > maxWidth) {
+				lines.add(arrangeLine(lineBuilder.toString().trim(),false,maxWidth));
+				lineBuilder.setLength(0);
+				lineBuilder.append(words[i]).append(" ");
+			} 
+			else if (lineBuilder.length() + words[i].length() == maxWidth) {
+				lineBuilder.append(words[i]);
+				lines.add(lineBuilder.toString());
+				lineBuilder.setLength(0);
+			} 
+			else {
+				lineBuilder.append(words[i]).append(" ");
+			}
+			if (lastLine && lineBuilder.length() != 0) {
+				lines.add(arrangeLine(lineBuilder.toString().trim(),true,maxWidth));
+			}
+		}
+		return lines;
+	}
+}

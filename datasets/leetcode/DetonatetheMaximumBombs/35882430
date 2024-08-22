@@ -1,0 +1,45 @@
+class Solution {
+	int countNumberOfNodes(int start, List<List<Integer>> graph) {
+		Queue<Integer> queue = new LinkedList<>();
+		int[] visited = new int[graph.size()];
+		queue.add(start);
+		int count = 1;
+		visited[start] = 1;
+		while (!queue.isEmpty()) {
+			int temp = queue.poll();
+			for (int i = 0; i < graph.get(temp).size(); i++) {
+				if (visited[graph.get(temp).get(i)] == 0) {
+					queue.add(graph.get(temp).get(i));
+					count++;
+					visited[graph.get(temp).get(i)] = 1;
+				}
+			}
+		}
+		return count;
+	}
+	int maximumDetonation(int[][] bombs) {
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < bombs.length; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int i = 0; i < bombs.length; i++) {
+			for (int j = 0; j < bombs.length; j++) {
+				if (i != j) {
+					long point = bombs[i][2] * 1L;
+					long rad = point * point;
+					long r = Math.abs(bombs[i][0] - bombs[j][0]) * 1L;
+					long c = Math.abs(bombs[i][1] - bombs[j][1]) * 1L;
+					long dist = r * r + c * c;
+					if (dist <= rad) {
+						graph.get(i).add(j);
+					}
+				}
+			}
+		}
+		int result = 0;
+		for (int i = 0; i < bombs.length; i++) {
+			result = Integer.max(result,countNumberOfNodes(i,graph));
+		}
+		return result;
+	}
+}

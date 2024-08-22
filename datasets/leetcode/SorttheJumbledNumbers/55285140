@@ -1,0 +1,25 @@
+class Solution {
+	int convert(int[] mapping, int num) {
+		if (num == 0) {
+			return 0;
+		}
+		int c = mapping[num % 10];
+		return c + convert(mapping,num / 10) * 10;
+	}
+	int[] sortJumbled(int[] mapping, int[] nums) {
+		int[][] mapped = new int[nums.length][2];
+		int ind = 0;
+		for (int n: nums) {	
+			mapped[ind][0] = n == 0 ? mapping[0] : convert(mapping,n);
+			mapped[ind][1] = ind;
+			ind++;
+		}
+		Arrays.sort(mapped,(a, b) -> {a[0] - b[0]});
+		int[] result = new int[nums.length];
+		for (int i = 0; i < nums.length; i++) {
+			int numindex = mapped[i][1];
+			result[i] = nums[numindex];
+		}
+		return result;
+	}
+}

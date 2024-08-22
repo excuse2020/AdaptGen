@@ -1,0 +1,35 @@
+class Solution {
+	int minimumCost(int[] start, int[] target, int[][] specialRoads) {
+		return myWay(start,target,specialRoads);
+	}
+	int myWay(int[] start, int[] target, int[][] special) {
+		HashMap<String, Integer> visited = new HashMap<>();
+		Queue<int[]> queue = new ArrayDeque<>();
+		queue.add(new int{start[0], start[1], 0});
+		visited.put(start[0] + "-",0);
+		int minCost = Integer.MAX_VALUE;
+		while (queue.isEmpty() == false) {
+			int[] curr = queue.poll();
+			if (curr[2] >= minCost) {
+				continue;
+			}
+			int costTillTarget = curr[2] + Math.abs(target[0] - curr[0]);
+			minCost = Math.min(minCost,costTillTarget);
+			for (int i = 0; i < special.length; i++) {
+				int x1 = special[i][0];
+				int y1 = special[i][1];
+				int x2 = special[i][2];
+				int y2 = special[i][3];
+				int cost = special[i][4];
+				int costTillx2y2 = curr[2] + Math.abs(curr[0] - x1);
+				String pos = x2 + " and ";
+				if (visited.containsKey(pos) && visited.get(pos) <= costTillx2y2) {
+					continue;
+				}
+				visited.put(pos,costTillx2y2);
+				queue.offer(new int{x2, y2, costTillx2y2});
+			}
+		}
+		return minCost;
+	}
+}

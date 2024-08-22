@@ -1,0 +1,24 @@
+class Solution {
+	int mod = 1000000000 + 7;
+	int numMusicPlaylists(int n, int goal, int k) {
+		int[][] dp = new int[n + 1][goal + 1];
+		for (int[] d: dp) {	
+			Arrays.fill(d,-1);
+		}
+		return (int) playlist(n,goal,k,dp);
+	}
+	long playlist(int n, int goal, int k, int[][] dp) {
+		if (n == 0 && goal == 0) {
+			return 1;
+		}
+		if (n == 0 || goal == 0) {
+			return 0;
+		}
+		if (dp[n][goal] != -1) {
+			return dp[n][goal];
+		}
+		long x = playlist(n - 1,goal - 1,k,dp) * n;
+		long y = playlist(n,goal - 1,k,dp) * Math.max(n - k,0);
+		return dp[n][goal] = (int) (x % mod + y % mod) % mod;
+	}
+}

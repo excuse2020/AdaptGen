@@ -1,0 +1,39 @@
+class Solution {
+	HashMap<Integer, HashSet<Integer>> adj;
+	String labels;
+	int[] result;
+	int[] countSubTrees(int n, int[][] edges, String labels) {
+		this.labels = labels;
+		adj = new HashMap();
+		for (int[] edge: edges) {	
+			if (!adj.containsKey(edge[0])) {
+				adj.put(edge[0],new HashSet());
+			}
+			if (!adj.containsKey(edge[1])) {
+				adj.put(edge[1],new HashSet());
+			}
+			adj.get(edge[0]).add(edge[1]);
+			adj.get(edge[1]).add(edge[0]);
+		}
+		result = new int[n];
+		getFrequency(0,0);
+		return result;
+	}
+	HashMap<Character, Integer> getFrequency(int currentNode, int parent) {
+		HashMap<Character, Integer> result = new HashMap();
+		result.put(labels.charAt(currentNode),1);
+		for (int child: adj.get(currentNode)) {	
+			if (child == parent) {
+				continue;
+			}
+			HashMap<Character, Integer> subTreeMap = getFrequency(child,currentNode);
+			for (Character key: subTreeMap.keySet()) {	
+				int newFrequency = result.getOrDefault(key,0) + subTreeMap.get(key);
+				result.put(key,newFrequency);
+			}
+		}
+		int frequencyOfCurrentNode = result.get(labels.charAt(currentNode));
+		this.result[currentNode] = frequencyOfCurrentNode;
+		return result;
+	}
+}

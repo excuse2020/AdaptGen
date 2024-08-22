@@ -1,0 +1,44 @@
+class Solution {
+	boolean checkBit(int A, int pos) {
+		if ((A >> (pos - 1) & 1) == 1) {
+			return true;
+		}
+		return false;
+	}
+	int getSetBits(int A) {
+		int count = 0;
+		for (int i = 0; i < 31; i++) {
+			if ((A & 1) == 1) {
+				count++;
+			}
+			A = A >> 1;
+		}
+		return count;
+	}
+	int minimizeXor(int A, int B) {
+		int orgB = B;
+		int x = A;
+		int setBitsA = getSetBits(A);
+		B = getSetBits(B);
+		int count;
+		if (setBitsA > B) {
+			count = setBitsA - B;
+			for (int i = 1; count != 0; i++) {
+				if (checkBit(x,i)) {
+					x = (1 << (i - 1)) ^ x;
+					count--;
+				}
+			}
+		} 
+		else {
+			count = B - setBitsA;
+			for (int i = 1; count != 0; i++) {
+				if (checkBit(x,i) == false) {
+					x = (1 << (i - 1)) ^ x;
+					count--;
+				}
+			}
+		}
+		return x;
+	}
+}

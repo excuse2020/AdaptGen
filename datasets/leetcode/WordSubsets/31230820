@@ -1,0 +1,49 @@
+class Solution {
+	HashMap<Character, Integer> check(String s) {
+		HashMap<Character, Integer> m = new HashMap<>();
+		for (char i: s.toCharArray()) {	
+			m.put(i,m.getOrDefault(i,0) + 1);
+		}
+		return m;
+	}
+	List<String> wordSubsets(String[] words1, String[] words2) {
+		HashMap<Character, Integer> map = new HashMap<>();
+		for (String k: words2) {	
+			Map<Character, Integer> newmap = new HashMap<>();
+			for (int j = 0; j < k.length(); j++) {
+				newmap.put(k.charAt(j),newmap.getOrDefault(k.charAt(j),0) + 1);
+			}
+			for (char i: newmap.keySet()) {	
+				if (!map.containsKey(i)) {
+					map.put(i,newmap.get(i));
+				} 
+				else {
+					System.out.println(map.get(i) + " ");
+					int m = Math.max(map.get(i),newmap.get(i));
+					map.put(i,m);
+				}
+			}
+		}
+		List<String> li = new ArrayList<>();
+		for (String i: words1) {	
+			HashMap<Character, Integer> mp = check(i);
+			System.out.println(mp);
+			System.out.println(map);
+			int flag = 1;
+			for (char j: map.keySet()) {	
+				if (!mp.containsKey(j)) {
+					flag = 0;
+					break;
+				} 
+				else if (map.get(j) > mp.get(j)) {
+					flag = 0;
+					break;
+				}
+			}
+			if (flag == 1) {
+				li.add(i);
+			}
+		}
+		return li;
+	}
+}

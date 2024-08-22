@@ -1,0 +1,32 @@
+class Solution {
+	List<Boolean> checkIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < numCourses; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int[] pre: prerequisites) {	
+			adj.get(pre[0]).add(pre[1]);
+		}
+		boolean[][] mat = new boolean[numCourses][numCourses];
+		for (int i = 0; i < numCourses; i++) {
+			mat[i][i] = true;
+		}
+		for (int i = 0; i < numCourses; i++) {
+			for (int course: adj.get(i)) {	
+				mat[i][course] = true;
+			}
+		}
+		for (int k = 0; k < numCourses; k++) {
+			for (int i = 0; i < numCourses; i++) {
+				for (int j = 0; j < numCourses; j++) {
+					mat[i][j] = mat[i][j] || (mat[i][k] && mat[k][j]);
+				}
+			}
+		}
+		List<Boolean> res = new ArrayList<>();
+		for (int[] query: queries) {	
+			res.add(mat[query[0]][query[1]]);
+		}
+		return res;
+	}
+}

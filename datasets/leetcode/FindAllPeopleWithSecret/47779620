@@ -1,0 +1,57 @@
+class Solution {
+	List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+		boolean[] knowSecret = new boolean[n];
+		Arrays.fill(knowSecret,false);
+		knowSecret[0] = true;
+		knowSecret[firstPerson] = true;
+		Map<Integer, Set<Set<Integer>>> meetingTimeMap = new TreeMap<>();
+		for (int[] meetingPart: meetings) {	
+			boolean alreadyExist = false;
+			Set<Set<Integer>> setOfMeetingAtCurrentTime;
+			if (meetingTimeMap.containsKey(meetingPart[2])) {
+				setOfMeetingAtCurrentTime = meetingTimeMap.get(meetingPart[2]);
+				for (Set<Integer> personMeetingSet: setOfMeetingAtCurrentTime) {	
+					if (personMeetingSet.contains(meetingPart[0]) || personMeetingSet.contains(meetingPart[1])) {
+						alreadyExist = true;
+						personMeetingSet.add(meetingPart[0]);
+						personMeetingSet.add(meetingPart[1]);
+						break;
+					}
+				}
+			} 
+			else {
+				setOfMeetingAtCurrentTime = new HashSet<>();
+			}
+			if (!alreadyExist) {
+				Set<Integer> personMeetingSet = new HashSet<>();
+				personMeetingSet.add(meetingPart[0]);
+				personMeetingSet.add(meetingPart[1]);
+				setOfMeetingAtCurrentTime.add(personMeetingSet);
+				meetingTimeMap.put(meetingPart[2],setOfMeetingAtCurrentTime);
+			}
+		}
+		for (Map.Entry<Integer, Set<Set<Integer>>> entry: meetingTimeMap.entrySet()) {	
+			for (Set<Integer> personMeetingSet: entry.getValue()) {	
+				boolean someOneKnowTheSecret = false;
+				for (int person: personMeetingSet) {	
+					if (knowSecret[person]) {
+						someOneKnowTheSecret = true;
+						break;
+					}
+				}
+				if (someOneKnowTheSecret) {
+					for (int person: personMeetingSet) {	
+						knowSecret[person] = true;
+					}
+				}
+			}
+		}
+		List<Integer> output = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			if (knowSecret[i]) {
+				output.add(i);
+			}
+		}
+		return output;
+	}
+}

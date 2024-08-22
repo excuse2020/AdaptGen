@@ -1,0 +1,34 @@
+class Solution {
+	boolean carPooling(int[][] trips, int cap) {
+		PriorityQueue<List<Integer>> minheap = new PriorityQueue<>((a, b) -> {a.get(1) - b.get(1)});
+		int i;
+		for (i = 0; i < trips.length; i++) {
+			minheap.offer(new ArrayList<Integer>(Arrays.asList(trips[i][0],trips[i][1],trips[i][2])));
+		}
+		List<Integer> l = new ArrayList<>();
+		i = 0;
+		while (!minheap.isEmpty()) {
+			System.out.print(minheap.peek());
+			l = minheap.poll();
+			trips[i][0] = l.get(0);
+			trips[i][1] = l.get(1);
+			trips[i][2] = l.get(2);
+			i++;
+		}
+		l.clear();
+		int c = 0;
+		minheap = new PriorityQueue<>((a, b) -> {a.get(2) - b.get(2)});
+		for (i = 0; i < trips.length; i++) {
+			while (!minheap.isEmpty() && (minheap.peek()).get(2) <= trips[i][1]) {
+				c = c - (minheap.peek()).get(0);
+				minheap.poll();
+			}
+			minheap.offer(new ArrayList<Integer>(Arrays.asList(trips[i][0],trips[i][1],trips[i][2])));
+			c = c + trips[i][0];
+			if (c > cap) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

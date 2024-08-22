@@ -1,0 +1,22 @@
+class Solution {
+	ArrayList<Integer> maxInWindows(int[] nums, int size) {
+		if (nums.length == 0 || size == 0) {
+			return new ArrayList();
+		}
+		ArrayList<Integer> res = new ArrayList<>();
+		Deque<Integer> deque = new LinkedList<>();
+		for (int j = 0, i = 1 - size; j < nums.length; i++, j++) {
+			if (i > 0 && deque.peekFirst() == nums[i - 1]) {
+				deque.removeFirst();
+			}
+			while (!deque.isEmpty() && deque.peekLast() < nums[j]) {
+				deque.removeLast();
+			}
+			deque.addLast(nums[j]);
+			if (i >= 0) {
+				res.add(deque.peekFirst());
+			}
+		}
+		return res;
+	}
+}

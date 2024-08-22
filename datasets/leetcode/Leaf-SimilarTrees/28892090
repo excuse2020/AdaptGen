@@ -1,0 +1,33 @@
+class Solution {
+	Stack<Integer> st = new Stack();
+	boolean leafSimilar(TreeNode root1, TreeNode root2) {
+		order(root1);
+		remov(root2);
+		return st.size() == 0;
+	}
+	void order(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		order(root.left);
+		if (root.left == null && root.right == null) {
+			st.add(root.val);
+		}
+		order(root.right);
+	}
+	void remov(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		remov(root.right);
+		if (root.left == null && root.right == null) {
+			if (st.size() > 0 && root.val == st.peek()) {
+				st.pop();
+			} 
+			else {
+				st.add(0,root.val);
+			}
+		}
+		remov(root.left);
+	}
+}

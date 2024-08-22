@@ -1,0 +1,40 @@
+class Solution {
+	int bfs(List<Integer>[] adjList, int[] informTime, int start) {
+		Queue<int[]> q = new LinkedList<>();
+		q.add(new int{start, 0});
+		int maxTime = 0;
+		while (!q.isEmpty()) {
+			int[] curr = q.poll();
+			int currEmp = curr[0];
+			int timeTillCurrEmp = curr[1];
+			maxTime = Math.max(maxTime,timeTillCurrEmp);
+			for (int nei: adjList[currEmp]) {	
+				q.offer(new int{nei, timeTillCurrEmp + informTime[currEmp]});
+			}
+		}
+		return maxTime;
+	}
+	int dfs(List<Integer>[] adjList, int[] informTime, int curr) {
+		if (adjList[curr].isEmpty()) {
+			return 0;
+		}
+		int maxTime = 0;
+		for (int neighbour: adjList[curr]) {	
+			maxTime = Math.max(maxTime,informTime[curr] + dfs(adjList,informTime,neighbour));
+		}
+		return maxTime;
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		List<Integer>[] adjList = new List[n];
+		for (int i = 0; i < n; i++) {
+			adjList[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < manager.length; i++) {
+			if (manager[i] == -1) {
+				continue;
+			}
+			adjList[manager[i]].add(i);
+		}
+		return bfs(adjList,informTime,headID);
+	}
+}

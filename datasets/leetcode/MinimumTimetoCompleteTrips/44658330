@@ -1,0 +1,31 @@
+class Solution {
+	long getMinTime(int[] time, int totalTrips, long low, long high) {
+		if (low + 1 == high) {
+			if (isValid(time,totalTrips,low)) {
+				return low;
+			} 
+			else {
+				return high;
+			}
+		}
+		long mid = (low + high) / 2;
+		if (isValid(time,totalTrips,mid)) {
+			return getMinTime(time,totalTrips,low,mid);
+		} 
+		else {
+			return getMinTime(time,totalTrips,mid,high);
+		}
+	}
+	boolean isValid(int[] time, int totalTrips, long k) {
+		long sum = 0;
+		for (int i = 0; i < time.length; i++) {
+			sum += Math.floor((double) k / time[i]);
+		}
+		return sum >= (long) totalTrips;
+	}
+	long minimumTime(int[] time, int totalTrips) {
+		long max = Arrays.stream(time).min().orElse(0);
+		max = max * totalTrips;
+		return getMinTime(time,totalTrips,0,max);
+	}
+}

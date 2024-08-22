@@ -1,0 +1,24 @@
+class Solution {
+	int dfs(int from, boolean[] visited, Map<Integer, List<Integer>> adjacents) {
+		int change = 0;
+		visited[from] = true;
+		for (int to: adjacents.get(from)) {	
+			int value = Math.abs(to);
+			if (!visited[value]) {
+				change += dfs(value,visited,adjacents) + (to > 0 ? 1 : 0);
+			}
+		}
+		return change;
+	}
+	int minReorder(int n, int[][] connections) {
+		Map<Integer, List<Integer>> adjacents = new HashMap<>();
+		boolean[] visited = new boolean[n];
+		for (int[] road: connections) {	
+			int from = road[0];
+			int to = road[1];
+			adjacents.computeIfAbsent(from,(k) -> {new ArrayList<>()}).add(to);
+			adjacents.computeIfAbsent(to,(k) -> {new ArrayList<>()}).add(-from);
+		}
+		return dfs(0,visited,adjacents);
+	}
+}

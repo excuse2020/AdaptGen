@@ -1,0 +1,53 @@
+class Solution {
+	void add(List<List<Integer>> ans, int x, int height) {
+		List<Integer> newEntry = List.of(x,height);
+		if (ans.isEmpty()) {
+			ans.add(newEntry);
+			return;
+		}
+		List<Integer> lastEntry = ans.get(ans.size() - 1);
+		if (lastEntry.get(0) != x) {
+			ans.add(newEntry);
+		} 
+		else if (lastEntry.get(1) != height) {
+			ans.set(ans.size() - 1,newEntry);
+			if (ans.size() > 1 && ans.get(ans.size() - 2).get(1) == height) {
+				ans.remove(ans.size() - 1);
+			}
+		}
+	}
+	List<List<Integer>> getSkyline(int[][] buildings) {
+		List<List<Integer>> ans = new ArrayList<>();
+		Queue<int[]> active = new PriorityQueue<>((b1, b2) -> {-Integer.compare(b1[2],b2[2])});
+		for (int i = 0, buildingsLength = buildings.length; i <= buildingsLength; i++) {
+			int left = i == buildingsLength ? Integer.MAX_VALUE : buildings[i][0];
+			int[] current = null;
+			while (true) {
+				int[] peek = active.peek();
+				if (peek == null || peek[1] > left) {
+					break;
+				}
+				active.remove();
+				if (current == null || peek[2] == current[2] && current[1] < peek[1]) {
+					current = peek;
+				}
+				int[] newPeek = active.peek();
+				if (newPeek == null || newPeek[2] < current[2] && current[1] <= newPeek[1]) {
+					add(ans,current[1],newPeek == null ? 0 : newPeek[2]);
+					current = newPeek;
+				}
+			}
+			if (i < buildingsLength) {
+				active.add(buildings[i]);
+				int height = buildings[i][2];
+				if (height > lastHeight(ans)) {
+					add(ans,buildings[i][0],height);
+				}
+			}
+		}
+		return ans;
+	}
+	int lastHeight(List<List<Integer>> ans) {
+		return ans.isEmpty() ? 0 : ans.get(ans.size() - 1).get(1);
+	}
+}

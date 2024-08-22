@@ -1,0 +1,46 @@
+class Solution {
+	int calPoints(String[] operations) {
+		if (operations.length == 0) {
+			return -1;
+		}
+		Stack<Integer> st = new Stack<>();
+		int pop = 0;
+		for (int i = 0; i < operations.length; i++) {
+			if (operations[i].equals("C") && st.size() != 0) {
+				pop = st.pop();
+			} 
+			else if (operations[i].equals("+") && st.size() != 0) {
+				if (st.size() > 1) {
+					int pop1 = st.pop();
+					int pop2 = st.peek();
+					st.push(pop1);
+					st.push(pop1 + pop2);
+				} 
+				else {
+					int val = st.peek();
+					st.push(val + pop);
+				}
+			} 
+			else if (operations[i].equals("D") && st.size() != 0) {
+				if (st.size() > 1) {
+					int pop1 = st.peek();
+					pop1 = 2 * pop1;
+					st.push(pop1);
+				} 
+				else {
+					int val = st.peek();
+					val = 2 * val;
+					st.push(val);
+				}
+			} 
+			else {
+				st.push(Integer.parseInt(operations[i]));
+			}
+		}
+		int ans = 0;
+		while (st.size() != 0) {
+			ans += st.pop();
+		}
+		return ans;
+	}
+}

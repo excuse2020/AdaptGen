@@ -1,0 +1,38 @@
+class Solution {
+	String LCS(String text1, String text2) {
+		char[] str1 = text1.toCharArray();
+		char[] str2 = text2.toCharArray();
+		int N = str1.length;
+		int M = str2.length;
+		int[][] dp = new int[N + 1][M + 1];
+		for (int i = 1; i <= N; i++) {
+			for (int j = 1; j <= M; j++) {
+				if (str1[i - 1] == str2[j - 1]) {
+					dp[i][j] = dp[i - 1][j - 1] + 1;
+				} 
+				else {
+					dp[i][j] = Math.max(dp[i - 1][j],dp[i][j - 1]);
+				}
+			}
+		}
+		int i = N, j = M;
+		StringBuilder sb = new StringBuilder();
+		while (i > 0 && j > 0) {
+			if (str1[i - 1] == str2[j - 1]) {
+				sb.append(str1[i - 1]);
+				i--;
+				j--;
+			} 
+			else {
+				if (dp[i - 1][j] >= dp[i][j - 1]) {
+					i--;
+				} 
+				else {
+					j--;
+				}
+			}
+		}
+		String ans = sb.reverse().toString();
+		return ans.equals("") ? "-1" : ans;
+	}
+}

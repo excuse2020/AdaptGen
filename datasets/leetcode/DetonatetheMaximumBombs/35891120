@@ -1,0 +1,41 @@
+class Solution {
+	Map<int[], List<int[]>> creategraph(int[][] bombs) {
+		Map<int[], List<int[]>> g = new HashMap<>();
+		for (int i = 0; i < bombs.length; i++) {
+			g.putIfAbsent(bombs[i],new ArrayList<>());
+			for (int j = 0; j < bombs.length; j++) {
+				if (i != j && distance(bombs[i],bombs[j]) <= Double.parseDouble(Integer.toString(bombs[i][2]))) {
+					g.get(bombs[i]).add(bombs[j]);
+				}
+			}
+		}
+		return g;
+	}
+	double distance(int[] b1, int[] b2) {
+		return Math.pow((Math.pow(b2[0] - b1[0],2) + Math.pow(b2[1] - b1[1],2)),0.5);
+	}
+	int maximumDetonation(int[][] bombs) {
+		int max = Integer.MIN_VALUE;
+		Map<int[], List<int[]>> g = creategraph(bombs);
+		for (int i = 0; i < bombs.length; i++) {
+			Set<int[]> visit = new HashSet();
+			Stack<int[]> s = new Stack<>();
+			s.push(bombs[i]);
+			while (!s.isEmpty()) {
+				visit.add(s.peek());
+				for (int[] a: g.get(s.pop())) {	
+					if (!visit.contains(a)) {
+						s.push(a);
+					}
+				}
+			}
+			if (visit.size() > max) {
+				max = visit.size();
+			}
+			if (max == bombs.length) {
+				break;
+			}
+		}
+		return max;
+	}
+}

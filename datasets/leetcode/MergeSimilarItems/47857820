@@ -1,0 +1,37 @@
+class Solution {
+	List<List<Integer>> mergeSimilarItems(int[][] items1, int[][] items2) {
+		HashMap<Integer, Integer> map1 = new HashMap<>();
+		for (int[] item: items1) {	
+			map1.put(item[0],item[1]);
+		}
+		HashMap<Integer, Integer> map2 = new HashMap<>();
+		for (int[] item: items2) {	
+			map2.put(item[0],item[1]);
+		}
+		for (int key: map1.keySet()) {	
+			if (map2.containsKey(key)) {
+				map1.put(key,map1.get(key) + map2.get(key));
+			}
+		}
+		List<List<Integer>> lists = new ArrayList<>();
+		for (Map.Entry<Integer, Integer> entry: map1.entrySet()) {	
+			List<Integer> list = new ArrayList<>();
+			list.add(entry.getKey());
+			list.add(entry.getValue());
+			lists.add(list);
+		}
+		for (Map.Entry<Integer, Integer> entry: map2.entrySet()) {	
+			List<Integer> list = new ArrayList<>();
+			if (map1.containsKey(entry.getKey())) {
+				continue;
+			} 
+			else {
+				list.add(entry.getKey());
+				list.add(entry.getValue());
+				lists.add(list);
+			}
+		}
+		lists.sort(Comparator.comparingInt((list) -> {list.get(0)}));
+		return lists;
+	}
+}

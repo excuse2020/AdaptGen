@@ -1,0 +1,42 @@
+class Solution {
+	int mod = (int) 1e9 + 7;
+	int findWays(int idx, int flag, int nums, int dp) {
+		if (idx == nums.length) {
+			return flag;
+		}
+		if (dp[idx][flag] != -1) {
+			return dp[idx][flag];
+		}
+		int take = 0;
+		int nottake = 0;
+		if (flag == 1) {
+			if (nums[idx] == 1) {
+				return 0;
+			} 
+			else {
+				take = findWays(idx + 1,0,nums,dp);
+				nottake = findWays(idx + 1,1,nums,dp);
+				return dp[idx][flag] = (take % mod + nottake % mod) % mod;
+			}
+		} 
+		else {
+			if (nums[idx] == 1) {
+				take = findWays(idx + 1,0,nums,dp);
+				nottake = findWays(idx + 1,1,nums,dp);
+				return dp[idx][flag] = (take % mod + nottake % mod) % mod;
+			} 
+			else {
+				nottake = findWays(idx + 1,0,nums,dp);
+				return dp[idx][flag] = nottake % mod;
+			}
+		}
+	}
+	int numberOfGoodSubarraySplits(int[] nums) {
+		int n = nums.length;
+		int dp = new int[n][2];
+		for (int rows: dp) {	
+			Arrays.fill(rows,-1);
+		}
+		return findWays(0,0,nums,dp);
+	}
+}

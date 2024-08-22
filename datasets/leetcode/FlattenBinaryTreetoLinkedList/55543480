@@ -1,0 +1,42 @@
+class Solution {
+	void flatten(TreeNode root) {
+		if (root != null) {
+			TreeNode temp = root.right;
+			root.right = null;
+			TreeNode tip = root.left;
+			if (tip != null) {
+				while (tip.right != null) {
+					tip = tip.right;
+				}
+				tip.right = temp;
+			} 
+			else {
+				root.left = temp;
+			}
+			traverse(root);
+		}
+	}
+	void traverse(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		if (root.left == null && root.right == null) {
+			return;
+		}
+		traverse(root.left);
+		traverse(root.right);
+		if (root.right == null) {
+			root.right = root.left;
+			root.left = null;
+		} 
+		else if (root.left != null) {
+			TreeNode tip = root.left;
+			while (tip.right != null) {
+				tip = tip.right;
+			}
+			tip.right = root.right;
+			root.right = root.left;
+			root.left = null;
+		}
+	}
+}

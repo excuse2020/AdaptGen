@@ -1,0 +1,59 @@
+class Solution {
+	int count = 0;
+	List<Integer> checkPairs(TreeNode root, int dis) {
+		if (root == null) {
+			return new ArrayList<Integer>();
+		}
+		if (root.left == null && root.right == null) {
+			List<Integer> output = new ArrayList<Integer>();
+			output.add(1);
+			return output;
+		} 
+		else {
+			List<Integer> outputl = checkPairs(root.left,dis);
+			List<Integer> outputr = checkPairs(root.right,dis);
+			if (outputl.size() > 0 && outputr.size() > 0) {
+				for (int i = 0; i < outputl.size(); i++) {
+					int index = findIndex(outputr,dis - outputl.get(i));
+					count = count + index;
+				}
+			}
+			List<Integer> output = new ArrayList<>();
+			int i = 0, j = 0;
+			while (i < outputl.size() && j < outputr.size()) {
+				if (outputl.get(i) > outputr.get(j)) {
+					output.add(1 + outputr.get(j++));
+				} 
+				else {
+					output.add(1 + outputl.get(i++));
+				}
+			}
+			while (i < outputl.size()) {
+				output.add(1 + outputl.get(i++));
+			}
+			while (j < outputr.size()) {
+				output.add(1 + outputr.get(j++));
+			}
+			return output;
+		}
+	}
+	int countPairs(TreeNode root, int distance) {
+		checkPairs(root,distance);
+		return count;
+	}
+	int findIndex(List<Integer> outputr, int dis) {
+		int left = 0, right = outputr.size() - 1;
+		int mid = (left + right) / 2;
+		int ans = -1;
+		while (left <= right) {
+			mid = (left + right) / 2;
+			if (outputr.get(mid) > dis) {
+				right = mid - 1;
+			} 
+			else {
+				left = mid + 1;
+			}
+		}
+		return left - 1;
+	}
+}

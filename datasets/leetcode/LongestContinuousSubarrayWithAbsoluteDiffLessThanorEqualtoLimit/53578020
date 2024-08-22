@@ -1,0 +1,28 @@
+class Solution {
+	int longestSubarray(int[] nums, int limit) {
+		int l = 0;
+		int ans = -1;
+		int n = nums.length;
+		PriorityQueue<Integer> pqMin = new PriorityQueue<>();
+		PriorityQueue<Integer> pqMax = new PriorityQueue<>(Collections.reverseOrder());
+		int maxi = Integer.MIN_VALUE;
+		int mini = Integer.MAX_VALUE;
+		for (int r = 0; r < n; r++) {
+			pqMin.add(nums[r]);
+			pqMax.add(nums[r]);
+			mini = pqMin.peek();
+			maxi = pqMax.peek();
+			while (l <= r && maxi - mini > limit) {
+				pqMin.remove(nums[l]);
+				pqMax.remove(nums[l]);
+				l++;
+				mini = pqMin.isEmpty() ? Integer.MAX_VALUE : pqMin.peek();
+				maxi = pqMax.isEmpty() ? Integer.MIN_VALUE : pqMax.peek();
+			}
+			if (maxi - mini <= limit) {
+				ans = Math.max(ans,r - l + 1);
+			}
+		}
+		return ans;
+	}
+}

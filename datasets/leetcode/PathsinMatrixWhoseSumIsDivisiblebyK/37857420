@@ -1,0 +1,36 @@
+class Solution {
+	int findPaths(int[][] grid, int k, int i, int j, int sum, int m, int n, int[][][] dp) {
+		if (i == m - 1 && j == n - 1) {
+			sum += grid[i][j];
+			if (sum % k == 0) {
+				return 1;
+			} 
+			else {
+				return 0;
+			}
+		}
+		if (i >= m || j >= n) {
+			return 0;
+		}
+		if (dp[i][j][sum % k] != -1) {
+			return dp[i][j][sum % k];
+		}
+		int leftSum = 0;
+		int rightSum = 0;
+		leftSum = findPaths(grid,k,i,j + 1,grid[i][j] + sum,m,n,dp);
+		rightSum = findPaths(grid,k,i + 1,j,grid[i][j] + sum,m,n,dp);
+		dp[i][j][sum % k] = (leftSum + rightSum) % 1000000007;
+		return dp[i][j][sum % k];
+	}
+	int numberOfPaths(int[][] grid, int k) {
+		int[][][] dp = new int[grid.length][grid[0].length][k];
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				for (int l = 0; l < k; l++) {
+					dp[i][j][l] = -1;
+				}
+			}
+		}
+		return findPaths(grid,k,0,0,0,grid.length,grid[0].length,dp);
+	}
+}

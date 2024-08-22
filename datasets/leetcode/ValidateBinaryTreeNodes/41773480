@@ -1,0 +1,67 @@
+class Solution {
+	boolean checkGrandParent(int[] parents, int n) {
+		int cnt = 0;
+		for (int k: parents) {	
+			if (k == -2) {
+				cnt++;
+			}
+			if (cnt > 1) {
+				return false;
+			}
+		}
+		return cnt == 1;
+	}
+	void dfs(int src, Map<Integer, int[]> m, int[] visited, int n) {
+		visited[src]++;
+		for (int k: m.getOrDefault(src,new int{})) {	
+			if (visited[k] < 1) {
+				dfs(k,m,visited,n);
+			} 
+			else {
+				visited[k]++;
+				continue;
+			}
+		}
+	}
+	int getRoot(int[] parents, int n) {
+		for (int i = 0; i < n; i++) {
+			if (parents[i] == -2) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		int[] parent = new int[n];
+		Arrays.fill(parent,-2);
+		Map<Integer, int[]> m = new HashMap<>();
+		int[] visited = new int[n];
+		for (int i = 0; i < n; i++) {
+			if (leftChild[i] != -1 && rightChild[i] != -1) {
+				parent[leftChild[i]] = i;
+				parent[rightChild[i]] = i;
+				m.put(i,new int{leftChild[i], rightChild[i]});
+			} 
+			else if (leftChild[i] != -1) {
+				parent[leftChild[i]] = i;
+				m.put(i,new int{leftChild[i]});
+			} 
+			else if (rightChild[i] != -1) {
+				parent[rightChild[i]] = i;
+				m.put(i,new int{rightChild[i]});
+			}
+		}
+		boolean hasOneGrandParent = checkGrandParent(parent,n);
+		if (!hasOneGrandParent) {
+			return false;
+		}
+		int root = getRoot(parent,n);
+		dfs(root,m,visited,n);
+		for (int i = 0; i < n; i++) {
+			if (visited[i] != 1) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

@@ -1,0 +1,24 @@
+class Solution {
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		List<Integer>[] adjList = new List[n];
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			adjList[i] = new LinkedList();
+		}
+		for (int i = 0; i < n; i++) {
+			if (manager[i] != -1) {
+				adjList[manager[i]].add(i);
+			}
+		}
+		Queue<int[]> q = new LinkedList();
+		q.add(new int{headID, 0});
+		while (!q.isEmpty()) {
+			int temp = q.poll();
+			ans = Math.max(ans,temp[1]);
+			for (int child: adjList[temp[0]]) {	
+				q.add(new int{child, temp[1] + informTime[temp[0]]});
+			}
+		}
+		return ans;
+	}
+}

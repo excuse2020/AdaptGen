@@ -1,0 +1,37 @@
+class Solution {
+	boolean dfs(int m, int n, boolean[][] vis, char[][] matrix, int k, String word) {
+		if (m < 0 || n < 0 || m >= matrix.length || n >= matrix[0].length || vis[m][n] == true) {
+			return false;
+		}
+		if (word.charAt(word.length() - 1) == matrix[m][n] && (k == word.length() - 1)) {
+			return true;
+		}
+		if (word.charAt(k) == matrix[m][n]) {
+			vis[m][n] = true;
+			if (dfs(m + 1,n,vis,matrix,k + 1,word) || dfs(m,n + 1,vis,matrix,k + 1,word)) {
+				return true;
+			} 
+			else {
+				vis[m][n] = false;
+				return false;
+			}
+		} 
+		else {
+			vis[m][n] = false;
+			return false;
+		}
+	}
+	boolean hasPath(char[][] matrix, String word) {
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix[0].length; j++) {
+				if (matrix[i][j] == word.charAt(0)) {
+					boolean vis = new boolean[matrix.length][matrix[0].length];
+					if (dfs(i,j,vis,matrix,0,word) == true) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+}

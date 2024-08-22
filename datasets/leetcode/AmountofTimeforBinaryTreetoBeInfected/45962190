@@ -1,0 +1,49 @@
+class Solution {
+	void TreetoGraph(TreeNode current, int parent, Map<Integer, Set<Integer>> map) {
+		if (current != null) {
+			Set<Integer> al = new HashSet<>();
+			if (!map.containsKey(current.val)) {
+				map.put(current.val,al);
+			}
+			if (parent != 0) {
+				al.add(parent);
+			}
+			if (current.left != null) {
+				al.add(current.left.val);
+			}
+			if (current.right != null) {
+				al.add(current.right.val);
+			}
+		}
+		if (current.left != null) {
+			TreetoGraph(current.left,current.val,map);
+		}
+		if (current.right != null) {
+			TreetoGraph(current.right,current.val,map);
+		}
+	}
+	int amountOfTime(TreeNode root, int start) {
+		Map<Integer, Set<Integer>> map = new HashMap<>();
+		TreetoGraph(root,0,map);
+		Queue<Integer> queue = new LinkedList<>();
+		queue.add(start);
+		Set<Integer> visited = new HashSet<>();
+		visited.add(start);
+		int minutes = 0;
+		while (!queue.isEmpty()) {
+			int lengthOfQueue = queue.size();
+			while (lengthOfQueue > 0) {
+				int current = queue.poll();
+				for (int num: map.get(current)) {	
+					if (!visited.contains(num)) {
+						visited.add(num);
+						queue.add(num);
+					}
+				}
+				lengthOfQueue--;
+			}
+			minutes++;
+		}
+		return minutes - 1;
+	}
+}

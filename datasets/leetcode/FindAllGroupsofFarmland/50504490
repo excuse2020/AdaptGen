@@ -1,0 +1,37 @@
+class Solution {
+	int m, n, x, y;
+	void dfs(int[][] land, int i, int j) {
+		if (i < 0 || i >= m || j < 0 || j >= n || land[i][j] == 0) {
+			return;
+		}
+		if (i > x) {
+			x = i;
+		}
+		if (j > y) {
+			y = j;
+		}
+		land[i][j] = 0;
+		dfs(land,i,j + 1);
+		dfs(land,i + 1,j);
+	}
+	int[][] findFarmland(int[][] land) {
+		m = land.length;
+		n = land[0].length;
+		ArrayList<int[]> list = new ArrayList();
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				if (land[i][j] == 1) {
+					x = -1;
+					y = -1;
+					dfs(land,i,j);
+					list.add(new int{i, j, x, y});
+				}
+			}
+		}
+		int[][] ans = new int[list.size()][4];
+		for (int i = 0; i < list.size(); i++) {
+			ans[i] = list.get(i);
+		}
+		return ans;
+	}
+}

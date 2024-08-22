@@ -1,0 +1,68 @@
+class Solution {
+	String LCS(String str1, String str2) {
+		String regex = "[" + str2;
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(str1);
+		String result = "";
+		while (matcher.find()) {
+			String newResult = matcher.group();
+			if (newResult.length() > result.length()) {
+				result = newResult;
+			}
+		}
+		return result.length() != 0 ? result : "-1";
+	}
+	String LCS(String str1, String str2) {
+		if (isEmpty(str1) || isEmpty(str2)) {
+			return "-1";
+		}
+		int rowLen = str1.length() + 1;
+		int colLen = str2.length() + 1;
+		int[][] dp = new int[rowLen][colLen];
+		int maxIndex = 0;
+		int maxLength = 0;
+		for (int i = 1; i < rowLen; ++i) {
+			for (int j = 1; j < colLen; ++j) {
+				if (str1.charAt(i - 1) == str2.charAt(j - 1)) {
+					dp[i][j] = dp[i - 1][j - 1] + 1;
+					if (dp[i][j] > maxLength) {
+						maxIndex = i;
+						maxLength = dp[i][j];
+					}
+				}
+			}
+		}
+		return str1.substring(maxIndex - maxLength,maxIndex);
+	}
+	String LCS(String str1, String str2) {
+		int max = 0;
+		String res = "";
+		int rowLen = str1.length();
+		int colLen = str2.length();
+		String[][] dp = new String[rowLen + 1][colLen + 1];
+		init(dp);
+		for (int i = 1; i < rowLen + 1; ++i) {
+			for (int j = 1; j < colLen + 1; ++j) {
+				char cur = str2.charAt(j - 1);
+				if (str1.charAt(i - 1) == cur) {
+					dp[i][j] = dp[i - 1][j - 1] + String.valueOf(cur);
+					if (max < dp[i][j].length()) {
+						max = dp[i][j].length();
+						res = dp[i][j];
+					}
+				}
+			}
+		}
+		return res;
+	}
+	void init(String[][] arr) {
+		for (int i = 0; i < arr.length; ++i) {
+			for (int j = 0; j < arr[0].length; ++j) {
+				arr[i][j] = "";
+			}
+		}
+	}
+	boolean isEmpty(String str) {
+		return str == null || str.length() == 0;
+	}
+}

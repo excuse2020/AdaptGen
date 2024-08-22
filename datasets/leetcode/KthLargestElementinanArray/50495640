@@ -1,0 +1,66 @@
+class Solution {
+	int enter = 1;
+	int heap;
+	void downheap(int heap, int j, int k) {
+		if (j > k || j > enter) {
+			return;
+		}
+		int left = getVal(heap,2 * j,k);
+		int right = getVal(heap,2 * j + 1,k);
+		if (left == right) {
+			if (left == Integer.MAX_VALUE) {
+				return;
+			}
+			if (heap[j] > left) {
+				swap(heap,j,2 * j);
+				downheap(heap,2 * j,k);
+			}
+		}
+		if (left < right && heap[j] > left) {
+			swap(heap,2 * j,j);
+			downheap(heap,2 * j,k);
+		}
+		if (right < left && heap[j] > right) {
+			swap(heap,2 * j + 1,j);
+			downheap(heap,2 * j + 1,k);
+		}
+	}
+	int findKthLargest(int[] nums, int k) {
+		heap = new int[k + 1];
+		for (int i = 0; i < nums.length; i++) {
+			if (i < k || nums[i] > heap[1]) {
+				if (enter <= k) {
+					heap[enter] = nums[i];
+					upheap(heap,enter);
+					enter++;
+				} 
+				else {
+					heap[1] = nums[i];
+					downheap(heap,1,k);
+				}
+			}
+		}
+		return heap[1];
+	}
+	int getVal(int arr, int m, int k) {
+		if (m > k || m > enter) {
+			return Integer.MAX_VALUE;
+		}
+		return arr[m];
+	}
+	void swap(int arr, int i, int j) {
+		int temp = arr[i];
+		arr[i] = arr[j];
+		arr[j] = temp;
+	}
+	void upheap(int heap, int index) {
+		if (index <= 1) {
+			return;
+		}
+		int parent = heap[index / 2];
+		if (parent > heap[index]) {
+			swap(heap,index,index / 2);
+			upheap(heap,index / 2);
+		}
+	}
+}

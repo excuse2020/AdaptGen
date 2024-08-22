@@ -1,0 +1,33 @@
+class Solution {
+	int ans;
+	int dfs(int u, ArrayList<int[]>[] adj, int[] map, int[] values, int ssf, int maxTime) {
+		if (maxTime < 0) {
+			return Integer.MIN_VALUE;
+		}
+		int mr = Integer.MIN_VALUE;
+		if (u == 0) {
+			ans = Math.max(ans,ssf);
+		}
+		for (int[] v: adj[u]) {	
+			map[v[0]]++;
+			mr = Math.max(mr,dfs(v[0],adj,map,values,ssf + (map[v[0]] == 1 ? values[v[0]] : 0),maxTime - v[1]));
+			map[v[0]]--;
+		}
+		return mr;
+	}
+	int maximalPathQuality(int[] values, int[][] edges, int maxTime) {
+		int n = values.length;
+		ArrayList<int[]>[] adj = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			adj[i] = new ArrayList<>();
+		}
+		for (int[] edge: edges) {	
+			int u = edge[0], v = edge[1], w = edge[2];
+			adj[u].add(new int{v, w});
+			adj[v].add(new int{u, w});
+		}
+		ans = values[0];
+		dfs(0,adj,new int[n],values,0,maxTime);
+		return ans;
+	}
+}

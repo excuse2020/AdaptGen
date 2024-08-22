@@ -1,0 +1,38 @@
+class Solution {
+	ListNode addNode(ListNode rst, ListNode tgt) {
+		ListNode now = new ListNode(-1001);
+		now.next = tgt;
+		ListNode node;
+		ListNode nur = new ListNode(-1001);
+		nur = rst;
+		while (now.next != null) {
+			node = now.next;
+			now.next = node.next;
+			node.next = null;
+			while (nur.next != null && node.val > nur.next.val) {
+				nur = nur.next;
+			}
+			if (nur.next != null) {
+				node.next = nur.next;
+				nur.next = node;
+			} 
+			else {
+				nur.next = node;
+				node.next = now.next;
+				break;
+			}
+		}
+		return rst;
+	}
+	ListNode mergeKLists(ArrayList<ListNode> lists) {
+		ListNode rst = new ListNode(-1001);
+		if (lists.size() == 0) {
+			return null;
+		}
+		rst.next = lists.get(0);
+		for (int i = 1; i < lists.size(); i++) {
+			rst = addNode(rst,lists.get(i));
+		}
+		return rst.next;
+	}
+}

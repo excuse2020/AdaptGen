@@ -1,0 +1,33 @@
+class Solution {
+	int maxSumMinProduct(int[] nums) {
+		long[] prefixsum = new long[nums.length];
+		prefixsum[0] = nums[0];
+		for (int i = 1; i < nums.length; i++) {
+			prefixsum[i] = prefixsum[i - 1] + nums[i];
+		}
+		LinkedList<Integer> stack = new LinkedList<>();
+		long[] leftsum = new long[nums.length];
+		for (int i = 0; i < nums.length; i++) {
+			while (!stack.isEmpty() && nums[i] <= nums[stack.peek()]) {
+				stack.pop();
+			}
+			leftsum[i] = prefixsum[i];
+			if (!stack.isEmpty()) {
+				leftsum[i] -= prefixsum[stack.peek()];
+			}
+			stack.push(i);
+		}
+		stack.clear();
+		long max = 0;
+		for (int i = nums.length - 1; i >= 0; i--) {
+			while (!stack.isEmpty() && nums[i] <= nums[stack.peek()]) {
+				stack.pop();
+			}
+			int prev = stack.isEmpty() ? nums.length : stack.peek();
+			leftsum[i] += (prefixsum[prev - 1] - prefixsum[i]);
+			max = Math.max(max,leftsum[i] * nums[i]);
+			stack.push(i);
+		}
+		return (int) (max % 1000000007);
+	}
+}

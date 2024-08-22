@@ -1,0 +1,34 @@
+class Solution {
+	long mod = (long) 1e9 + 7;
+	long Combination(int n, int k) {
+		if (k > n / 2) {
+			k = n - k;
+		}
+		BigInteger res = BigInteger.valueOf(1);
+		for (int i = 1; i <= k; i++) {
+			res = res.multiply(BigInteger.valueOf(n + 1 - i)).divide(BigInteger.valueOf(i));
+		}
+		return res.mod(BigInteger.valueOf(mod)).longValue();
+	}
+	void backtracking(long[] dp, int cur, int size, int max) {
+		++size;
+		++dp[size];
+		for (int i = 2; i * cur <= max; i++) {
+			backtracking(dp,cur * i,size,max);
+		}
+	}
+	int idealArrays(int n, int maxValue) {
+		long[] dp = new long[maxValue + 1];
+		for (int i = 1; i <= maxValue; i++) {
+			backtracking(dp,i,0,maxValue);
+		}
+		long res = 0;
+		for (int i = 1; i <= Math.min(n,maxValue); i++) {
+			if (dp[i] == 0) {
+				break;
+			}
+			res = (res + dp[i] * Combination(n - 1,i - 1)) % mod;
+		}
+		return (int) res;
+	}
+}

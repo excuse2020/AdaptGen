@@ -1,0 +1,31 @@
+class Solution {
+	Map<Integer, List<TreeNode>> cache = new HashMap<>();
+	List<TreeNode> allPossibleFBT(int n) {
+		List<TreeNode> list = new ArrayList<>();
+		if (n % 2 == 0) {
+			return list;
+		}
+		if (cache.containsKey(n)) {
+			return cache.get(n);
+		}
+		if (n == 1) {
+			list.add(new TreeNode(0));
+			return list;
+		}
+		n -= 1;
+		for (int l = 1; l <= n; l += 2) {
+			List<TreeNode> left = allPossibleFBT(l);
+			List<TreeNode> right = allPossibleFBT(n - l);
+			for (TreeNode lbt: left) {	
+				for (TreeNode rbt: right) {	
+					TreeNode temp = new TreeNode(0);
+					temp.left = lbt;
+					temp.right = rbt;
+					list.add(temp);
+				}
+			}
+		}
+		cache.put(n + 1,list);
+		return list;
+	}
+}

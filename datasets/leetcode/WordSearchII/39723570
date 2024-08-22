@@ -1,0 +1,53 @@
+class Solution {
+	char[][] board;
+	HashSet<String> res;
+	HashSet<String> set;
+	HashMap<String, HashSet<Character>> trie;
+	String[] words;
+	void DFS(int r, int c, String curr, char trieChar) {
+		if (r < 0 || c < 0 || r >= board.length || c >= board[0].length) {
+			return;
+		}
+		String updatedString = curr + trieChar;
+		if (set.contains(updatedString)) {
+			res.add(updatedString);
+		}
+	}
+	void buildTrie() {
+		this.trie = new HashMap<String, HashSet<Character>>();
+		for (int i = 0; i < words.length; i++) {
+			String word = words[i];
+			String key = "" + word.charAt(0);
+			for (int j = 1; j < word.length(); j++) {
+				HashSet<Character> paths = trie.getOrDefault(key,new HashSet<Character>());
+				paths.add(word.charAt(j));
+				trie.put(key,paths);
+				key = key + word.charAt(j);
+			}
+		}
+	}
+	List<String> findWords(char[][] board, String[] words) {
+		this.board = board;
+		this.words = words;
+		buildTrie();
+		this.set = new HashSet<String>();
+		this.res = new HashSet<String>();
+		HashSet<Character> startPos = new HashSet<Character>();
+		for (int i = 0; i < words.length; i++) {
+			set.add(words[i]);
+			startPos.add(words[i].charAt(0));
+		}
+		List<String> result = new ArrayList<String>();
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				if (startPos.contains(board[i][j])) {
+					DFS(i,j,"",board[i][j]);
+				}
+			}
+		}
+		for (String s: res) {	
+			result.add(s);
+		}
+		return result;
+	}
+}

@@ -1,0 +1,37 @@
+class Solution {
+	int findXth(int frqs, int x) {
+		int counter = 0;
+		for (int i = 0; i < 51; i++) {
+			counter += frqs[i];
+			if (counter >= x) {
+				return i - 50;
+			}
+		}
+		return 777;
+	}
+	int[] getSubarrayBeauty(int[] nums, int k, int x) {
+		int negs = 0, n = nums.length;
+		int[] sol = new int[n - k + 1], frqs = new int[101];
+		for (int i = 0; i < k; i++) {
+			frqs[nums[i] + 50]++;
+			if (nums[i] < 0) {
+				negs++;
+			}
+		}
+		for (int i = 0; i < n - k + 1; i++) {
+			sol[i] = (negs < x) ? 0 : findXth(frqs,x);
+			if (i == n - k) {
+				break;
+			}
+			frqs[nums[i] + 50]--;
+			if (nums[i] < 0) {
+				negs--;
+			}
+			frqs[nums[i + k] + 50]++;
+			if (nums[i + k] < 0) {
+				negs++;
+			}
+		}
+		return sol;
+	}
+}

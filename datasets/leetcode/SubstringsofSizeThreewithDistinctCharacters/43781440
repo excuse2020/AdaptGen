@@ -1,0 +1,38 @@
+class Solution {
+	int countGoodSubstrings(String s) {
+		Map<Character, Integer> frequencyMap = new HashMap<>();
+		int result = 0;
+		if (s.length() < 3) {
+			return 0;
+		}
+		for (int i = 0; i < 3; i++) {
+			if (frequencyMap.containsKey(s.charAt(i))) {
+				frequencyMap.put(s.charAt(i),frequencyMap.get(s.charAt(i)) + 1);
+			} 
+			else {
+				frequencyMap.put(s.charAt(i),1);
+			}
+		}
+		if (frequencyMap.size() == 3) {
+			result++;
+		}
+		for (int i = 3; i < s.length(); i++) {
+			if (frequencyMap.get(s.charAt(i - 3)) == 1) {
+				frequencyMap.remove(s.charAt(i - 3));
+			} 
+			else {
+				frequencyMap.put(s.charAt(i - 3),frequencyMap.get(s.charAt(i - 3)) - 1);
+			}
+			if (frequencyMap.containsKey(s.charAt(i))) {
+				frequencyMap.put(s.charAt(i),frequencyMap.get(s.charAt(i)) + 1);
+			} 
+			else {
+				frequencyMap.put(s.charAt(i),1);
+			}
+			if (frequencyMap.size() == 3) {
+				result++;
+			}
+		}
+		return result;
+	}
+}

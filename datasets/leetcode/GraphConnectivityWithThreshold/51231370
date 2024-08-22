@@ -1,0 +1,45 @@
+class Solution {
+	List<Boolean> areConnected(int n, int threshold, int[][] queries) {
+		int[] parent = new int[n + 1];
+		for (int i = 0; i <= n; i++) {
+			parent[i] = i;
+		}
+		for (int i = threshold + 1; i <= n; i++) {
+			if (parent[i] == i) {
+				int multiple = i;
+				while (multiple <= n) {
+					setParent(parent,multiple,i);
+					multiple += i;
+				}
+			}
+		}
+		List<Boolean> ans = new ArrayList<>();
+		for (int[] q: queries) {	
+			int a = q[0];
+			int b = q[1];
+			if (getParent(parent,a) == getParent(parent,b)) {
+				ans.add(true);
+			} 
+			else {
+				ans.add(false);
+			}
+		}
+		return ans;
+	}
+	int getParent(int[] parent, int x) {
+		if (parent[x] == x) {
+			return x;
+		} 
+		else {
+			int p = getParent(parent,parent[x]);
+			parent[x] = p;
+			return p;
+		}
+	}
+	void setParent(int[] parent, int x, int y) {
+		if (parent[x] != x) {
+			setParent(parent,parent[x],y);
+		}
+		parent[x] = y;
+	}
+}

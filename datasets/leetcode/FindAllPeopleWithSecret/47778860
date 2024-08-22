@@ -1,0 +1,36 @@
+class Solution {
+	List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+		Set<Integer> set = new HashSet<>();
+		set.add(0);
+		set.add(firstPerson);
+		List<List<Pair<Integer, Integer>>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<Pair<Integer, Integer>>());
+		}
+		for (int i = 0; i < meetings.length; i++) {
+			adj.get(meetings[i][0]).add(new Pair<>(meetings[i][1], meetings[i][2]));
+			adj.get(meetings[i][1]).add(new Pair<>(meetings[i][0], meetings[i][2]));
+		}
+		PriorityQueue<Pair<Integer, Integer>> pq = new PriorityQueue<>((a, b) -> {a.getValue() - b.getValue()});
+		for (Pair<Integer, Integer> zeroNodeCon: adj.get(0)) {	
+			pq.offer(zeroNodeCon);
+		}
+		for (Pair<Integer, Integer> firstPersonCon: adj.get(firstPerson)) {	
+			pq.offer(firstPersonCon);
+		}
+		while (!pq.isEmpty()) {
+			Pair<Integer, Integer> node = pq.poll();
+			int person = node.getKey();
+			if (set.contains(person)) {
+				continue;
+			}
+			set.add(person);
+			for (Pair<Integer, Integer> childNode: adj.get(person)) {	
+				if (node.getValue() <= childNode.getValue()) {
+					pq.offer(childNode);
+				}
+			}
+		}
+		return new ArrayList<>(set);
+	}
+}

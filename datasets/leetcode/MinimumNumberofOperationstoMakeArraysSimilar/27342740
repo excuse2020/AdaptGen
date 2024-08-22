@@ -1,0 +1,51 @@
+class Solution {
+	long makeSimilar(int[] nums, int[] target) {
+		int[] cnt1 = new int[1000001];
+		int[] cnt2 = new int[1000001];
+		for (int n: nums) {	
+			cnt1[n]++;
+		}
+		for (int n: target) {	
+			cnt2[n]++;
+		}
+		for (int i = 1; i <= 1000000; i++) {
+			int min = Math.min(cnt1[i],cnt2[i]);
+			cnt1[i] -= min;
+			cnt2[i] -= min;
+		}
+		ArrayList<Integer> lst1Even = new ArrayList<>();
+		ArrayList<Integer> lst1Odd = new ArrayList<>();
+		ArrayList<Integer> lst2Even = new ArrayList<>();
+		ArrayList<Integer> lst2Odd = new ArrayList<>();
+		for (int i = 1; i <= 1000000; i++) {
+			while (cnt1[i] > 0) {
+				if (i % 2 == 0) {
+					lst1Even.add(i);
+				} 
+				else {
+					lst1Odd.add(i);
+				}
+				cnt1[i]--;
+			}
+			while (cnt2[i] > 0) {
+				if (i % 2 == 0) {
+					lst2Even.add(i);
+				} 
+				else {
+					lst2Odd.add(i);
+				}
+				cnt2[i]--;
+			}
+		}
+		long diff = 0;
+		for (int i = 0; i < lst1Even.size(); i++) {
+			diff += Math.abs(lst1Even.get(i) - lst2Even.get(i));
+		}
+		for (int i = 0; i < lst1Odd.size(); i++) {
+			diff += Math.abs(lst1Odd.get(i) - lst2Odd.get(i));
+		}
+		double tmp = (double) diff;
+		double ans = tmp / 4;
+		return (long) ans;
+	}
+}

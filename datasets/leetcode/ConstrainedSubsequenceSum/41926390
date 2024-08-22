@@ -1,0 +1,26 @@
+class Solution {
+	int constrainedSubsetSum(int[] nums, int k) {
+		int n = nums.length, ans = nums[0];
+		int dp = new int[n];
+		TreeMap<Integer, Integer> pq = new TreeMap<>();
+		dp[0] = nums[0];
+		pq.put(nums[0],1);
+		for (int i = 1; i < k; i++) {
+			int max = pq.lastKey();
+			dp[i] = Math.max(nums[i],nums[i] + max);
+			ans = Math.max(ans,dp[i]);
+			pq.put(dp[i],pq.getOrDefault(dp[i],0) + 1);
+		}
+		for (int i = k; i < n; i++) {
+			int max = pq.lastKey();
+			dp[i] = Math.max(nums[i],nums[i] + max);
+			ans = Math.max(ans,dp[i]);
+			pq.put(dp[i],pq.getOrDefault(dp[i],0) + 1);
+			pq.put(dp[i - k],pq.get(dp[i - k]) - 1);
+			if (pq.get(dp[i - k]) == 0) {
+				pq.remove(dp[i - k]);
+			}
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,55 @@
+class Solution {
+	boolean dfsdist(int src, int time, int dest, boolean[] visited, ArrayList<Integer>[] graph, HashMap<Integer, Integer> map) {
+		visited[src] = true;
+		map.put(src,time);
+		if (src == dest) {
+			return true;
+		}
+		for (Integer adj: graph[src]) {	
+			if (!visited[adj]) {
+				if (dfsdist(adj,time + 1,dest,visited,graph,map)) {
+					return true;
+				}
+			}
+		}
+		map.remove(src);
+		return false;
+	}
+	void maxSum(int src, int time, ArrayList<Integer>[] graph, boolean[] visited, HashMap<Integer, Integer> map, int netincome, int income, int[] amount) {
+		visited[src] = true;
+		if (map.get(src) == null || time < map.get(src)) {
+			income += amount[src];
+		} 
+		else if (time == map.get(src)) {
+			income += amount[src] / 2;
+		}
+		if (src != 0 && graph[src].size() == 1) {
+			netincome[0] = Math.max(netincome[0],income);
+		}
+		for (int v: graph[src]) {	
+			if (!visited[v]) {
+				maxSum(v,time + 1,graph,visited,map,netincome,income,amount);
+			}
+		}
+	}
+	int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+		int n = edges.length + 1;
+		ArrayList<Integer>[] graph = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new ArrayList<Integer>();
+		}
+		for (int[] e: edges) {	
+			graph[e[0]].add(e[1]);
+			graph[e[1]].add(e[0]);
+		}
+		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+		boolean[] visited = new boolean[n];
+		dfsdist(bob,0,0,visited,graph,map);
+		int netincome = new int[1];
+		netincome[0] = Integer.MIN_VALUE;
+		int income = 0;
+		visited = new boolean[n];
+		maxSum(0,0,graph,visited,map,netincome,income,amount);
+		return netincome[0];
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	int[] id;
+	void connect(int a, int b) {
+		int i = root(a);
+		int j = root(b);
+		id[i] = j;
+	}
+	int[] findRedundantConnection(int[][] edges) {
+		int n = edges.length;
+		id = new int[n + 1];
+		for (int i = 1; i <= n; i++) {
+			id[i] = i;
+		}
+		for (int[] pair: edges) {	
+			if (isConnected(pair[0],pair[1])) {
+				return pair;
+			}
+			connect(pair[0],pair[1]);
+		}
+		return new int[0];
+	}
+	boolean isConnected(int a, int b) {
+		return root(a) == root(b);
+	}
+	int root(int num) {
+		while (id[num] != num) {
+			id[num] = id[id[num]];
+			num = id[num];
+		}
+		return num;
+	}
+}

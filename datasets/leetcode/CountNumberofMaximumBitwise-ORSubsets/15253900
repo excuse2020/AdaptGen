@@ -1,0 +1,30 @@
+class Solution {
+	int maxOR;
+	int[] nums;
+	int result = 0;
+	void backtracking(int existingOR, int index) {
+		if (existingOR == maxOR) {
+			int remainingElementsNum = index + 1;
+			result += Math.pow(2,remainingElementsNum);
+			return;
+		}
+		for (int i = index; i >= 0; i--) {
+			backtracking(existingOR | nums[i],i - 1);
+		}
+	}
+	int countMaxOrSubsets(int[] nums) {
+		if (nums.length == 1) {
+			return 1;
+		}
+		this.nums = nums;
+		maxOR = nums[0];
+		for (int i = 1; i < nums.length; i++) {
+			maxOR = maxOR | nums[i];
+		}
+		Arrays.sort(nums);
+		for (int i = nums.length - 1; i >= 0; i--) {
+			backtracking(nums[i],i - 1);
+		}
+		return result;
+	}
+}

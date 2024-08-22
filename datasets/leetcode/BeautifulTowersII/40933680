@@ -1,0 +1,42 @@
+class Solution {
+	long maximumSumOfHeights(List<Integer> maxHeights) {
+		long res = 0;
+		int N = maxHeights.size();
+		Deque<Integer> dq = new ArrayDeque<>();
+		long[] sumToFront = new long[N];
+		long[] sumToBack = new long[N];
+		for (int i = N - 1; i >= 0; i--) {
+			long h = 1L * maxHeights.get(i);
+			int j = i;
+			while (!dq.isEmpty() && maxHeights.get(dq.peek()) > h) {
+				j = dq.pop();
+			}
+			if (dq.isEmpty()) {
+				sumToFront[i] = 1L * ((N - i) * h);
+			} 
+			else {
+				sumToFront[i] = sumToFront[dq.peek()] + 1L * (dq.peek() - i);
+			}
+			dq.push(i);
+		}
+		dq = new ArrayDeque<>();
+		for (int i = 0; i < N; i++) {
+			long h = 1L * maxHeights.get(i);
+			int j = i;
+			while (!dq.isEmpty() && maxHeights.get(dq.peek()) > h) {
+				j = dq.pop();
+			}
+			if (dq.isEmpty()) {
+				sumToBack[i] = 1L * ((i + 1) * h);
+			} 
+			else {
+				sumToBack[i] = sumToBack[dq.peek()] + 1L * (i - dq.peek());
+			}
+			dq.push(i);
+		}
+		for (int i = 0; i < N; i++) {
+			res = Math.max(res,sumToFront[i] + sumToBack[i] - 1L * (maxHeights.get(i)));
+		}
+		return res;
+	}
+}

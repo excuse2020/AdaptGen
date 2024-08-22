@@ -1,0 +1,35 @@
+class Solution {
+	int[][] mergeArrays(int[][] nums1, int[][] nums2) {
+		int i = 0, j = 0;
+		int[][] answer = new int[nums1.length + nums2.length][2];
+		int insertIndex = 0;
+		while (i < nums1.length && j < nums2.length) {
+			if (nums1[i][0] == nums2[j][0]) {
+				answer[insertIndex][0] = nums1[i][0];
+				answer[insertIndex][1] = nums1[i][1] + nums2[j][1];
+				i++;
+				j++;
+			} 
+			else if (nums1[i][0] < nums2[j][0]) {
+				answer[insertIndex][0] = nums1[i][0];
+				answer[insertIndex][1] = nums1[i][1];
+				i++;
+			} 
+			else {
+				answer[insertIndex][0] = nums2[j][0];
+				answer[insertIndex][1] = nums2[j][1];
+				j++;
+			}
+			insertIndex++;
+		}
+		if (i != nums1.length || j != nums2.length) {
+			int[][] remainingArray = i == nums1.length ? nums2 : nums1;
+			int k = remainingArray == nums1 ? i : j;
+			while (k < remainingArray.length) {
+				answer[insertIndex][0] = remainingArray[k][0];
+				answer[insertIndex++][1] = remainingArray[k++][1];
+			}
+		}
+		return Arrays.copyOf(answer,insertIndex);
+	}
+}

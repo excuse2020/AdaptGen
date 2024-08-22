@@ -1,0 +1,74 @@
+class Solution {
+	ListNode endPointer = new ListNode();
+	ListNode list = new ListNode();
+	int getFrequency(ListNode head) {
+		int count = 0;
+		ListNode ptr = head;
+		while (ptr != null) {
+			ptr = ptr.next;
+			count++;
+		}
+		return count;
+	}
+	void merge(ListNode list1, ListNode list2) {
+		ListNode dummyHead = new ListNode();
+		ListNode newTail = dummyHead;
+		while (list1 != null && list2 != null) {
+			if (list1.val < list2.val) {
+				newTail.next = list1;
+				list1 = list1.next;
+				newTail = newTail.next;
+			} 
+			else {
+				newTail.next = list2;
+				list2 = list2.next;
+				newTail = newTail.next;
+			}
+		}
+		newTail.next = (list1 != null) ? list1 : list2;
+		while (newTail.next != null) {
+			newTail = newTail.next;
+		}
+		endPointer.next = dummyHead.next;
+		endPointer = newTail;
+	}
+	ListNode sortList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		int n = getFrequency(head);
+		ListNode start = head;
+		ListNode currentPointer = new ListNode();
+		for (int size = 1; size < n; size = size * 2) {
+			endPointer = currentPointer;
+			while (start != null) {
+				if (start.next == null) {
+					endPointer.next = start;
+					break;
+				}
+				ListNode mid = split(start,size);
+				merge(start,mid);
+				start = list;
+			}
+			start = currentPointer.next;
+		}
+		return currentPointer.next;
+	}
+	ListNode split(ListNode start, int size) {
+		ListNode midPrev = start;
+		ListNode end = start.next;
+		for (int index = 1; index < size && (midPrev.next != null || end.next != null); index++) {
+			if (end.next != null) {
+				end = (end.next.next != null) ? end.next.next : end.next;
+			}
+			if (midPrev.next != null) {
+				midPrev = midPrev.next;
+			}
+		}
+		ListNode mid = midPrev.next;
+		midPrev.next = null;
+		list = end.next;
+		end.next = null;
+		return mid;
+	}
+}

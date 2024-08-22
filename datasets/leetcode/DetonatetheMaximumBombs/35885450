@@ -1,0 +1,36 @@
+class Solution {
+	int maximumDetonation(int[][] bombs) {
+		Map<Integer, List<Integer>> adjBombs = new HashMap<>();
+		int n = bombs.length;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (i != j) {
+					double distance = Math.sqrt(Math.pow(bombs[i][0] - bombs[j][0],2) + Math.pow(bombs[i][1] - bombs[j][1],2));
+					if (bombs[i][2] >= distance) {
+						adjBombs.computeIfAbsent(i,(f) -> {new ArrayList<Integer>()}).add(j);
+					}
+					if (bombs[j][2] >= distance) {
+						adjBombs.computeIfAbsent(j,(f) -> {new ArrayList<Integer>()}).add(i);
+					}
+				}
+			}
+		}
+		int maxDetonation = 0;
+		for (int i = 0; i < n; i++) {
+			boolean[] detonated = new boolean[n];
+			int counter = maximumDetonationDfs(i,adjBombs,detonated);
+			maxDetonation = Math.max(maxDetonation,counter);
+		}
+		return maxDetonation;
+	}
+	int maximumDetonationDfs(int b, Map<Integer, List<Integer>> adjBomb, boolean[] detonated) {
+		int counter = 1;
+		detonated[b] = true;
+		for (int bomb: adjBomb.getOrDefault(b,new ArrayList<>())) {	
+			if (!detonated[bomb]) {
+				counter += maximumDetonationDfs(bomb,adjBomb,detonated);
+			}
+		}
+		return counter;
+	}
+}

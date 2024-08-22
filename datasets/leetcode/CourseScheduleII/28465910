@@ -1,0 +1,48 @@
+class Solution {
+	boolean dfs(int node, int V, int[][] prerequisites, boolean[] vis, Stack<Integer> stack, boolean[] path) {
+		vis[node] = true;
+		path[node] = true;
+		for (int i = 0; i < prerequisites.length; i++) {
+			if (prerequisites[i][1] == node) {
+				if (!vis[prerequisites[i][0]]) {
+					if (!dfs(prerequisites[i][0],V,prerequisites,vis,stack,path)) {
+						stack.push(prerequisites[i][0]);
+					} 
+					else {
+						return true;
+					}
+				} 
+				else if (path[prerequisites[i][0]]) {
+					return true;
+				}
+			}
+		}
+		path[node] = false;
+		return false;
+	}
+	int[] findOrder(int numCourses, int[][] prerequisites) {
+		Stack<Integer> stack = new Stack<>();
+		boolean vis = new boolean[numCourses];
+		boolean[] path = new boolean[numCourses];
+		for (int i = 0; i < numCourses; i++) {
+			if (!vis[i]) {
+				if (!dfs(i,numCourses,prerequisites,vis,stack,path)) {
+					stack.push(i);
+				} 
+				else {
+					return new int[0];
+				}
+			}
+		}
+		if (stack.isEmpty()) {
+			return new int[0];
+		}
+		int[] ans = new int[numCourses];
+		int i = 0;
+		while (!stack.isEmpty()) {
+			ans[i++] = stack.peek();
+			stack.pop();
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,60 @@
+class Solution {
+	int f(int[][] arr, int[][] visited, int[][] dp, int row, int col) {
+		if (col == arr[0].length - 1) {
+			return 0;
+		}
+		if (dp[row][col] != -1) {
+			return dp[row][col];
+		}
+		int moved_right = Integer.MAX_VALUE;
+		int moved_one_step_down = Integer.MAX_VALUE;
+		int moved_two_step_down = Integer.MAX_VALUE;
+		if (arr[row][col + 1] != 1) {
+			moved_right = Math.min(moved_right,f(arr,visited,dp,row,col + 1));
+		}
+		if (arr[(row + 1) % 3][col] != 1 && visited[(row + 1) % 3][col] == 0) {
+			visited[row][col] = 1;
+			int temp = f(arr,visited,dp,(row + 1) % 3,col);
+			if (temp != Integer.MAX_VALUE) {
+				moved_one_step_down = Math.min(moved_one_step_down,1 + temp);
+			}
+			visited[row][col] = 0;
+		}
+		if (arr[(row + 2) % 3][col] != 1 && visited[(row + 2) % 3][col] == 0) {
+			visited[row][col] = 1;
+			int temp = f(arr,visited,dp,(row + 2) % 3,col);
+			if (temp != Integer.MAX_VALUE) {
+				moved_two_step_down = Math.min(moved_two_step_down,1 + temp);
+			}
+			visited[row][col] = 0;
+		}
+		int answer = Math.min(moved_right,Math.min(moved_one_step_down,moved_two_step_down));
+		return dp[row][col] = answer;
+	}
+	int minSideJumps(int[] obstacles) {
+		int[][] arr = new int[3][obstacles.length];
+		int[][] visited = new int[3][obstacles.length];
+		int[][] dp = new int[3][obstacles.length];
+		for (int[] array: visited) {	
+			Arrays.fill(array,0);
+		}
+		for (int[] array: arr) {	
+			Arrays.fill(array,0);
+		}
+		for (int[] array: dp) {	
+			Arrays.fill(array,-1);
+		}
+		for (int i = 0; i != obstacles.length; ++i) {
+			int col = i;
+			int row = obstacles[i] - 1;
+			if (obstacles[i] != 0) {
+				arr[row][col] = 1;
+			}
+		}
+		int answer = f(arr,visited,dp,1,0);
+		if (answer != Integer.MAX_VALUE) {
+			return answer;
+		}
+		return 0;
+	}
+}

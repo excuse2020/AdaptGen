@@ -1,0 +1,49 @@
+class Solution {
+	int reachableNodes(int[][] edges, int maxMoves, int n) {
+		List<List<int[]>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<int[]>());
+		}
+		for (int[] edge: edges) {	
+			int u = edge[0], v = edge[1], w = edge[2];
+			graph.get(u).add(new int{v, w + 1});
+			graph.get(v).add(new int{u, w + 1});
+		}
+		int[] distance = new int[n];
+		Arrays.fill(distance,Integer.MAX_VALUE);
+		distance[0] = 0;
+		boolean[] visited = new boolean[n];
+		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {a[1] - b[1]});
+		pq.offer(new int{0, 0});
+		int total = 0;
+		while (!pq.isEmpty()) {
+			int[] cur = pq.poll();
+			if (visited[cur[0]]) {
+				continue;
+			}
+			if (distance[cur[0]] <= maxMoves) {
+				total++;
+			}
+			visited[cur[0]] = true;
+			for (int[] neighbour: graph.get(cur[0])) {	
+				int next = neighbour[0], nextWeight = neighbour[1];
+				if (!visited[next] && distance[next] > distance[cur[0]] + nextWeight) {
+					distance[next] = distance[cur[0]] + nextWeight;
+					pq.offer(new int{next, distance[next]});
+				}
+			}
+		}
+		for (int[] edge: edges) {	
+			int u = edge[0], v = edge[1], count = edge[2];
+			int temp = 0;
+			if (distance[u] < maxMoves) {
+				temp += Math.min(maxMoves - distance[u],count);
+			}
+			if (distance[v] < maxMoves) {
+				temp += Math.min(maxMoves - distance[v],count);
+			}
+			total += Math.min(temp,count);
+		}
+		return total;
+	}
+}

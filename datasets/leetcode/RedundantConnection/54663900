@@ -1,0 +1,33 @@
+class Solution {
+	int findParent(int[] parentNode, int node) {
+		if (parentNode[node] == node) {
+			return node;
+		}
+		parentNode[node] = findParent(parentNode,parentNode[node]);
+		return parentNode[node];
+	}
+	int[] findRedundantConnection(int[][] edges) {
+		int n = edges.length;
+		int[] parentNode = new int[n + 1];
+		for (int i = 1; i <= n; i++) {
+			parentNode[i] = i;
+		}
+		for (int[] e: edges) {	
+			if (findParent(parentNode,e[0]) == findParent(parentNode,e[1])) {
+				return e;
+			}
+			union(parentNode,e[0],e[1]);
+		}
+		return new int[2];
+	}
+	void union(int[] parentNode, int node1, int node2) {
+		int parent1 = findParent(parentNode,node1);
+		int parent2 = findParent(parentNode,node2);
+		if (parent1 < parent2) {
+			parentNode[parent2] = parent1;
+		} 
+		else {
+			parentNode[parent1] = parent2;
+		}
+	}
+}

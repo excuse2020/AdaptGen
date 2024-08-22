@@ -1,0 +1,31 @@
+class Solution {
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		int n = queries.size();
+		NavigableSet<Integer> numbers = new TreeSet<>();
+		inorder(root,numbers);
+		List<List<Integer>> ans = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			List<Integer> res = new ArrayList<>();
+			if (numbers.contains(queries.get(i))) {
+				res.add(queries.get(i));
+				res.add(queries.get(i));
+			} 
+			else {
+				Integer lower = numbers.lower(queries.get(i));
+				Integer higher = numbers.higher(queries.get(i));
+				res.add(lower != null ? lower : -1);
+				res.add(higher != null ? higher : -1);
+			}
+			ans.add(res);
+		}
+		return ans;
+	}
+	void inorder(TreeNode root, NavigableSet<Integer> numbers) {
+		if (root == null) {
+			return;
+		}
+		inorder(root.left,numbers);
+		numbers.add(root.val);
+		inorder(root.right,numbers);
+	}
+}

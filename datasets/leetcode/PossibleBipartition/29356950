@@ -1,0 +1,33 @@
+class Solution {
+	boolean dfs(Map<Integer, List<Integer>> graph, int color, int node, int flag) {
+		color[node] = flag;
+		for (int neighbor: graph.get(node)) {	
+			if (color[neighbor] == -1) {
+				if (!dfs(graph,color,neighbor,1 - flag)) {
+					return false;
+				}
+			} 
+			else if (color[node] == color[neighbor]) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		for (int i = 1; i <= n; i++) {
+			graph.put(i,new ArrayList<>());
+		}
+		for (int[] dislike: dislikes) {	
+			graph.get(dislike[0]).add(dislike[1]);
+		}
+		for (int start = 1; start <= n; start++) {
+			int color = new int[n + 1];
+			Arrays.fill(color,-1);
+			if (!dfs(graph,color,start,0)) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

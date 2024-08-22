@@ -1,0 +1,47 @@
+class Solution {
+	int numBusesToDestination(int[][] routes, int source, int target) {
+		if (source == target) {
+			return 0;
+		}
+		int[] bv = new int[routes.length];
+		int m = 0;
+		List<HashSet<Integer>> buses = new ArrayList<>();
+		for (int i = 0; i < routes.length; i++) {
+			for (int j = 0; j < routes[i].length; j++) {
+				m = Math.max(m,routes[i][j]);
+			}
+		}
+		int[] v = new int[m + 1];
+		for (int i = 0; i <= m; i++) {
+			buses.add(new HashSet<>());
+		}
+		for (int i = 0; i < routes.length; i++) {
+			for (int j = 0; j < routes[i].length; j++) {
+				buses.get(routes[i][j]).add(i);
+			}
+		}
+		LinkedList<int[]> q = new LinkedList<>();
+		for (int i: buses.get(source)) {	
+			q.offer(new int{i, 1});
+			bv[i] = 1;
+		}
+		v[source] = 1;
+		while (!q.isEmpty()) {
+			int[] d = q.poll();
+			for (int i: routes[d[0]]) {	
+				if (i == target) {
+					return d[1];
+				}
+				if (v[i] == 0) {
+					for (int j: buses.get(i)) {	
+						if (bv[j] == 0) {
+							q.offer(new int{j, d[1] + 1});
+							bv[j] = 1;
+						}
+					}
+				}
+			}
+		}
+		return -1;
+	}
+}

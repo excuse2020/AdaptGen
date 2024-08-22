@@ -1,0 +1,51 @@
+class Solution {
+	int Inside = 0;
+	int maxPointsInsideSquare(int[][] points, String s) {
+		int low = 0;
+		int high = (int) Math.pow(10,9);
+		int ans = 0;
+		while (low <= high) {
+			int mid = (low + high) / 2;
+			boolean possible = valid(points,s,mid);
+			if (possible) {
+				ans = Math.max(ans,Inside);
+				Inside = 0;
+				low = mid + 1;
+			} 
+			else {
+				high = mid - 1;
+			}
+		}
+		return ans;
+	}
+	boolean valid(int points, String s, int side) {
+		Map<Character, List<Integer>> k = new HashMap();
+		List<Character> li = new ArrayList();
+		for (int i = 0; i < s.length(); i++) {
+			int mx = Math.max(Math.abs(points[i][0]),Math.abs(points[i][1]));
+			char ch = s.charAt(i);
+			if (mx <= side) {
+				li.add(ch);
+				if (!k.containsKey(ch)) {
+					k.put(ch,new ArrayList());
+					k.get(ch).add(mx);
+				} 
+				else {
+					k.get(ch).add(mx);
+				}
+			}
+		}
+		boolean check = true;
+		int curpoints = 0;
+		for (int i = 0; i < li.size(); i++) {
+			if (k.get(li.get(i)).size() > 1) {
+				check = false;
+			}
+			curpoints += k.get(li.get(i)).size();
+		}
+		if (check) {
+			Inside = curpoints;
+		}
+		return check;
+	}
+}

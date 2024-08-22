@@ -1,0 +1,29 @@
+class Solution {
+	Map<Integer, Integer> inorderIndexMap = new HashMap<>();
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		for (int i = 0; i < inorder.length; i++) {
+			inorderIndexMap.put(inorder[i],i);
+		}
+		int postStart = 0, postEnd = postorder.length - 1, inStart = 0, inEnd = inorder.length - 1;
+		return buildTreeRecursive(postorder,postStart,postEnd,inStart,inEnd);
+	}
+	TreeNode buildTreeRecursive(int[] postorder, int postStart, int postEnd, int inStart, int inEnd) {
+		if (postStart > postEnd) {
+			return null;
+		}
+		int rootValue = postorder[postEnd];
+		TreeNode root = new TreeNode(rootValue);
+		int inIndex = inorderIndexMap.get(rootValue);
+		int leftpostStart = postStart;
+		int leftpostEnd = postStart + inIndex - inStart - 1;
+		int leftInStart = inStart;
+		int leftInEnd = inIndex - 1;
+		root.left = buildTreeRecursive(postorder,leftpostStart,leftpostEnd,leftInStart,leftInEnd);
+		int rightpostStart = postStart + inIndex - inStart;
+		int rightpostEnd = postEnd - 1;
+		int rightInStart = inIndex + 1;
+		int rightInEnd = inEnd;
+		root.right = buildTreeRecursive(postorder,rightpostStart,rightpostEnd,rightInStart,rightInEnd);
+		return root;
+	}
+}

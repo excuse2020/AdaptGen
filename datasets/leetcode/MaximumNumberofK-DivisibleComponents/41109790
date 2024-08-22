@@ -1,0 +1,44 @@
+class Solution {
+	int maxKDivisibleComponents(int n, int[][] edges, int[] values, int k) {
+		List<Set<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new HashSet<>());
+		}
+		for (int[] e: edges) {	
+			adj.get(e[0]).add(e[1]);
+			adj.get(e[1]).add(e[0]);
+		}
+		Queue<Integer> q = new LinkedList<>();
+		for (int i = 0; i < n; i++) {
+			if (adj.get(i).size() <= 1) {
+				q.add(i);
+			}
+		}
+		int count = 0;
+		while (!q.isEmpty()) {
+			int curr = q.remove();
+			if (values[curr] % k == 0) {
+				count++;
+			} 
+			else {
+				int par = -1;
+				for (int val: adj.get(curr)) {	
+					par = val;
+				}
+				values[par] += values[curr];
+			}
+			if (adj.get(curr).size() == 0) {
+				continue;
+			}
+			int par = -1;
+			for (int val: adj.get(curr)) {	
+				par = val;
+			}
+			adj.get(par).remove(curr);
+			if (adj.get(par).size() == 1) {
+				q.add(par);
+			}
+		}
+		return count;
+	}
+}

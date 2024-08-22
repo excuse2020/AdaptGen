@@ -1,0 +1,63 @@
+class Solution {
+	int[][] mergeArrays(int[][] nums1, int[][] nums2) {
+		int[][] output = new int[nums1.length][2];
+		int[][] new_output = null;
+		int i_key = -1;
+		int idx = 0;
+		if (nums1.length >= 1 && nums2.length <= 200) {
+			for (int i = 0; i < nums1.length; i++) {
+				if (nums1[i].length != 2) {
+					continue;
+				}
+				int id_i = nums1[i][0];
+				int val_i = nums1[i][1];
+				if (id_i < 1 || val_i > 1000) {
+					continue;
+				}
+				if (i_key != id_i) {
+					output[idx][0] = id_i;
+					output[idx][1] = val_i;
+					idx++;
+				} 
+				else {
+					output[idx][0] = id_i;
+					output[idx][1] = val_i + output[idx][1];
+				}
+				i_key = id_i;
+			}
+			int j_key = -1;
+			for (int j = 0; j < nums2.length; j++) {
+				if (nums2[j].length != 2) {
+					continue;
+				}
+				int id_j = nums2[j][0];
+				int val_j = nums2[j][1];
+				if (id_j < 1 || val_j > 1000) {
+					continue;
+				}
+				boolean added = false;
+				for (int k = 0; k < output.length; k++) {
+					if (output[k][0] == id_j) {
+						output[k][0] = id_j;
+						output[k][1] = val_j + output[k][1];
+						added = true;
+						break;
+					}
+				}
+				if (!added) {
+					if (idx >= output.length) {
+						new_output = new int[output.length + 1][2];
+						System.arraycopy(output,0,new_output,0,output.length);
+						output = new int[new_output.length][2];
+						System.arraycopy(new_output,0,output,0,new_output.length);
+					}
+					output[idx][0] = id_j;
+					output[idx][1] = val_j;
+					idx++;
+				}
+			}
+		}
+		Arrays.sort(output,(a, b) -> {Integer.compare(a[0],b[0])});
+		return output;
+	}
+}

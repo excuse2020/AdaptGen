@@ -1,0 +1,22 @@
+class Solution {
+	int equalSubstring(String s, String t, int maxCost) {
+		int l = 0, r = 0, n = s.length(), curCost = 0, maxWindow = 0;
+		int[] costs = IntStream.range(0,n).map((i) -> {Math.abs(s.charAt(i) - t.charAt(i))}).toArray();
+		while (r < n) {
+			maxWindow = Math.max(r - l,maxWindow);
+			if (costs[r] > maxCost) {
+				l = ++r;
+				curCost = 0;
+			} 
+			else if (curCost + costs[r] <= maxCost) {
+				curCost += costs[r++];
+			} 
+			else {
+				while (l < r && curCost + costs[r] > maxCost) {
+					curCost -= costs[l++];
+				}
+			}
+		}
+		return Math.max(r - l,maxWindow);
+	}
+}

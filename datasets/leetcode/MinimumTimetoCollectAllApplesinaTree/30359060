@@ -1,0 +1,26 @@
+class Solution {
+	int dfs(List<Integer>[] graph, int c, int n, List<Boolean> hasApple, boolean[] visited) {
+		visited[c] = true;
+		int totalPath = 0;
+		for (int i: graph[c]) {	
+			if (!visited[i]) {
+				totalPath += dfs(graph,i,n,hasApple,visited);
+			}
+		}
+		if (c != 0 && (hasApple.get(c) || totalPath > 0)) {
+			totalPath += 2;
+		}
+		return totalPath;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		List<Integer>[] graph = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new ArrayList();
+		}
+		for (int i = 0; i < edges.length; i++) {
+			graph[edges[i][0]].add(edges[i][1]);
+			graph[edges[i][1]].add(edges[i][0]);
+		}
+		return dfs(graph,0,n,hasApple,new boolean[n]);
+	}
+}

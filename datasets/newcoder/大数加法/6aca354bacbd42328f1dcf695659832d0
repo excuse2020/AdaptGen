@@ -1,0 +1,55 @@
+class Solution {
+	String solve(String s, String t) {
+		int carry = 0;
+		String longer = s;
+		String shorter = t;
+		boolean isDiff = true;
+		StringBuilder res = new StringBuilder();
+		if (s.length() > t.length()) {
+			longer = s;
+			shorter = t;
+		} 
+		else if (s.length() < t.length()) {
+			longer = t;
+			shorter = s;
+		} 
+		else if (s.length() == t.length()) {
+			longer = t;
+			shorter = s;
+			isDiff = false;
+		}
+		int i, j;
+		for (i = shorter.length() - 1, j = longer.length() - 1; i >= 0; i--, j--) {
+			int c1 = shorter.charAt(i) - '0';
+			int c2 = longer.charAt(j) - '0';
+			int cur = c1 + c2;
+			if (cur > 9) {
+				carry = 1;
+				cur = cur - 10;
+			} 
+			else {
+				carry = 0;
+			}
+			res.insert(0,cur);
+		}
+		if (isDiff) {
+			while (j >= 0) {
+				int temp = longer.charAt(j) - '0';
+				int cur = temp + carry;
+				if (cur > 9) {
+					carry = 1;
+					cur = cur - 10;
+				} 
+				else {
+					carry = 0;
+				}
+				res.insert(0,cur);
+				j--;
+			}
+		}
+		if (carry == 1) {
+			res.insert(0,1);
+		}
+		return res.toString();
+	}
+}

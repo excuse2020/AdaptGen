@@ -1,0 +1,28 @@
+class Solution {
+	int sumSubarrayMins(int[] arr) {
+		int n = arr.length;
+		Stack<Integer> lf = new Stack<>();
+		Stack<Integer> rf = new Stack<>();
+		long[] left = new long[n];
+		long[] right = new long[n];
+		for (int i = 0; i < n; i++) {
+			while (!lf.isEmpty() && arr[lf.peek()] > arr[i]) {
+				lf.pop();
+			}
+			left[i] = (lf.isEmpty()) ? i + 1 : i - lf.peek();
+			lf.push(i);
+		}
+		for (int i = n - 1; i >= 0; i--) {
+			while (!rf.isEmpty() && arr[rf.peek()] >= arr[i]) {
+				rf.pop();
+			}
+			right[i] = (rf.isEmpty()) ? n - i : rf.peek() - i;
+			rf.push(i);
+		}
+		long ans = 0;
+		for (int i = 0; i < n; i++) {
+			ans = (ans + arr[i] * left[i]) % 1000000007;
+		}
+		return (int) ans;
+	}
+}

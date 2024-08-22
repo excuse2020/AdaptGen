@@ -1,0 +1,36 @@
+class Solution {
+	boolean isSameOrder(String p, String s) {
+		int n = p.length(), m = s.length();
+		if (n + 1 != m) {
+			return false;
+		}
+		int i = 0, j = 0;
+		while (i < n && j < m) {
+			if (p.charAt(i) == s.charAt(j)) {
+				i++;
+				j++;
+			} 
+			else {
+				j++;
+			}
+		}
+		return i == n;
+	}
+	int longestStrChain(String[] words) {
+		Arrays.sort(words,(s1, s2) -> {s1.length() - s2.length()});
+		int n = words.length;
+		int[] cnt = new int[n];
+		int max = -1;
+		for (int i = 0; i < n; i++) {
+			cnt[i] = 1;
+			int len = words[i].length();
+			for (int j = i - 1; j >= 0; j--) {
+				if (isSameOrder(words[j],words[i]) && cnt[i] < (cnt[j] + 1)) {
+					cnt[i] = cnt[j] + 1;
+				}
+			}
+			max = Math.max(max,cnt[i]);
+		}
+		return max;
+	}
+}

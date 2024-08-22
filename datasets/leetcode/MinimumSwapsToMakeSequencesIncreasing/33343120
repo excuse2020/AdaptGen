@@ -1,0 +1,23 @@
+class Solution {
+	Integer dp;
+	int helper(int[] a, int[] b, int i, int swapped) {
+		if (i == 0) {
+			return swapped;
+		}
+		if (dp[i][swapped] != null) {
+			return dp[i][swapped];
+		}
+		int ans = Integer.MAX_VALUE;
+		if (a[i] > a[i - 1] && b[i] > b[i - 1]) {
+			ans = helper(a,b,i - 1,swapped);
+		}
+		if (a[i] > b[i - 1] && b[i] > a[i - 1]) {
+			ans = Math.min(ans,helper(a,b,i - 1,1 - swapped));
+		}
+		return dp[i][swapped] = ((swapped == 0) ? ans : ans + 1);
+	}
+	int minSwap(int[] nums1, int[] nums2) {
+		dp = new Integer[nums1.length + 1][2];
+		return Math.min(helper(nums1,nums2,nums1.length - 1,0),helper(nums1,nums2,nums1.length - 1,1));
+	}
+}

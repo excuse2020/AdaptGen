@@ -1,0 +1,36 @@
+class Solution {
+	int minimumRounds(int[] tasks) {
+		int count = 0;
+		HashMap<Integer, Integer> mp = new HashMap<>();
+		for (int i = 0; i < tasks.length; i++) {
+			if (!mp.containsKey(tasks[i])) {
+				mp.put(tasks[i],1);
+			} 
+			else {
+				mp.put(tasks[i],mp.get(tasks[i]) + 1);
+			}
+		}
+		ArrayList<Integer> arr = new ArrayList<>();
+		for (int m: mp.keySet()) {	
+			arr.add(m);
+		}
+		Collections.sort(arr);
+		for (int i = 0; i < arr.size(); ) {
+			if (mp.get(arr.get(i)) < 2) {
+				return -1;
+			}
+			if (mp.get(arr.get(i)) % 2 == 0 && mp.get(arr.get(i)) % 3 != 0) {
+				mp.put(arr.get(i),mp.get(arr.get(i)) - 2);
+				count++;
+			} 
+			else if (mp.get(arr.get(i)) >= 3) {
+				mp.put(arr.get(i),mp.get(arr.get(i)) - 3);
+				count++;
+			}
+			if (mp.get(arr.get(i)) == 0) {
+				i++;
+			}
+		}
+		return count;
+	}
+}

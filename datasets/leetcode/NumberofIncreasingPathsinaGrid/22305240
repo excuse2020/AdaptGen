@@ -1,0 +1,46 @@
+class Solution {
+	int[][] dp;
+	int mod = 1000000007;
+	int n = 0, m = 0;
+	int allPosible(int i, int j, int[][] grid) {
+		if (i < 0 || j < 0 || i >= n || j >= m) {
+			return 0;
+		}
+		if (dp[i][j] != -1) {
+			return dp[i][j];
+		}
+		long ans = 0;
+		if (i < n - 1 && grid[i][j] < grid[i + 1][j]) {
+			ans += 1 + allPosible(i + 1,j,grid);
+		}
+		if (i > 0 && grid[i][j] < grid[i - 1][j]) {
+			ans += 1 + allPosible(i - 1,j,grid);
+		}
+		if (j < m - 1 && grid[i][j] < grid[i][j + 1]) {
+			ans += 1 + allPosible(i,j + 1,grid);
+		}
+		if (j > 0 && grid[i][j] < grid[i][j - 1]) {
+			ans += 1 + allPosible(i,j - 1,grid);
+		}
+		ans = ans % mod;
+		return dp[i][j] = (int) ans;
+	}
+	int countPaths(int[][] grid) {
+		n = grid.length;
+		m = grid[0].length;
+		dp = new int[n][m];
+		for (int i = 0; i < n; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		long ans = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				ans += allPosible(i,j,grid);
+				ans = ans % mod;
+			}
+		}
+		ans += n * m;
+		ans = ans % mod;
+		return (int) ans;
+	}
+}

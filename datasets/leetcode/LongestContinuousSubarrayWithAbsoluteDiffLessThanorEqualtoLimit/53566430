@@ -1,0 +1,33 @@
+class Solution {
+	int longestSubarray(int[] nums, int limit) {
+		Queue<Integer> pqMax = new PriorityQueue<>(new Comparator<Integer>());
+		Queue<Integer> pqMin = new PriorityQueue<>(new Comparator<Integer>());
+		int n = nums.length;
+		int p1 = 0, p2 = 0, ans = 0;
+		while (p2 >= p1 && p2 < n) {
+			int currLength = p2 - p1 + 1;
+			pqMin.add(p2);
+			pqMax.add(p2);
+			int currMaxIndex = pqMax.peek();
+			int currMinIndex = pqMin.peek();
+			while (pqMin.isEmpty() == false && (currMinIndex < p1 || currMinIndex > p2)) {
+				pqMin.poll();
+				currMinIndex = pqMin.peek();
+			}
+			while (pqMax.isEmpty() == false && (currMaxIndex < p1 || currMaxIndex > p2)) {
+				pqMax.poll();
+				currMaxIndex = pqMax.peek();
+			}
+			int currMax = nums[pqMax.peek()];
+			int currMin = nums[pqMin.peek()];
+			if (currMax - currMin > limit) {
+				p1++;
+			} 
+			else {
+				ans = Math.max(ans,p2 - p1 + 1);
+				p2++;
+			}
+		}
+		return ans;
+	}
+}

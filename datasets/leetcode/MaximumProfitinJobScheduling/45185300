@@ -1,0 +1,32 @@
+class Solution {
+	record Jobs(int startTime, int endTime, int profit) {
+	}
+	int getPreviousNonOverLappingJob(Jobs[] jobs, int endIndex, int targetTime) {
+		int low = 0;
+		int high = endIndex;
+		while (low < high) {
+			int mid = (low + high) / 2;
+			if (jobs[mid].endTime <= targetTime) {
+				low = mid + 1;
+			} 
+			else {
+				high = mid;
+			}
+		}
+		return low;
+	}
+	int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
+		int noOfJobs = startTime.length;
+		var jobs = new Jobs[noOfJobs];
+		for (int i = 0; i < noOfJobs; i++) {
+			jobs[i] = new Jobs(startTime[i], endTime[i], profit[i]);
+		}
+		Arrays.sort(jobs,Comparator.comparingInt((job) -> {job.endTime}));
+		var dp = new int[noOfJobs + 1];
+		for (int i = 0; i < noOfJobs; i++) {
+			int prevJob = getPreviousNonOverLappingJob(jobs,i,jobs[i].startTime);
+			dp[i + 1] = Math.max(dp[i],dp[prevJob] + jobs[i].profit);
+		}
+		return dp[noOfJobs];
+	}
+}

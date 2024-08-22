@@ -1,0 +1,64 @@
+class Solution {
+	List<List<String>> mostPopularCreator(String[] creators, String[] ids, int[] views) {
+		Map<String, Integer> totalViews = new HashMap<>();
+		for (int i = 0; i < creators.length; i++) {
+			String creator = creators[i];
+			String id = ids[i];
+			int viewsForId = views[i];
+			totalViews.put(creator,totalViews.getOrDefault(creator,0) + viewsForId);
+		}
+		int maxViews = Integer.MIN_VALUE;
+		for (Map.Entry<String, Integer> entry: totalViews.entrySet()) {	
+			String creator = entry.getKey();
+			int totalViewsForCreator = entry.getValue();
+			if (totalViewsForCreator > maxViews) {
+				maxViews = totalViewsForCreator;
+			}
+		}
+		List<String> creatorsWithMaxViews = new ArrayList<>();
+		for (Map.Entry<String, Integer> entry: totalViews.entrySet()) {	
+			String creator = entry.getKey();
+			int totalViewsForCreator = entry.getValue();
+			if (totalViewsForCreator == maxViews) {
+				creatorsWithMaxViews.add(creator);
+			}
+		}
+		Map<String, TreeMap<Integer, TreeSet<String>>> map = new HashMap<>();
+		for (int i = 0; i < creators.length; i++) {
+			String creator = creators[i];
+			String id = ids[i];
+			int viewsForId = views[i];
+			if (map.containsKey(creator)) {
+				TreeMap<Integer, TreeSet<String>> treeMap = map.get(creator);
+				if (treeMap.containsKey(viewsForId)) {
+					TreeSet<String> treeSet = treeMap.get(viewsForId);
+					treeSet.add(id);
+					treeMap.put(viewsForId,treeSet);
+				} 
+				else {
+					TreeSet<String> treeSet = new TreeSet<>();
+					treeSet.add(id);
+					treeMap.put(viewsForId,treeSet);
+				}
+				map.put(creator,treeMap);
+			} 
+			else {
+				TreeMap<Integer, TreeSet<String>> treeMap = new TreeMap<>();
+				TreeSet<String> treeSet = new TreeSet<>();
+				treeSet.add(id);
+				treeMap.put(viewsForId,treeSet);
+				map.put(creator,treeMap);
+			}
+		}
+		List<List<String>> result = new ArrayList<>();
+		for (int i = 0; i < creatorsWithMaxViews.size(); i++) {
+			String creatorWithMaxViews = creatorsWithMaxViews.get(i);
+			String maxId = map.get(creatorWithMaxViews).lastEntry().getValue().first();
+			List<String> creatorResult = new ArrayList<>();
+			creatorResult.add(creatorWithMaxViews);
+			creatorResult.add(maxId);
+			result.add(creatorResult);
+		}
+		return result;
+	}
+}

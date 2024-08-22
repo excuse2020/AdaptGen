@@ -1,0 +1,32 @@
+class Solution {
+	int helper(int leftOvers, Map<String, Integer> memo, int batchSize, int gr, int[] lack) {
+		if (gr-- == 0) {
+			return 0;
+		}
+		String s = leftOvers + Arrays.toString(lack);
+		if (memo.containsKey(s)) {
+			return memo.get(s);
+		}
+		int max = 0;
+		for (int i = 1; i < lack.length; i++) {
+			if (lack[i] == 0) {
+				continue;
+			}
+			lack[i]--;
+			max = Math.max(max,helper((leftOvers - i + batchSize) % batchSize,memo,batchSize,gr,lack));
+			lack[i]++;
+		}
+		if (leftOvers == 0) {
+			max++;
+		}
+		memo.put(s,max);
+		return max;
+	}
+	int maxHappyGroups(int batchSize, int[] groups) {
+		int[] lack = new int[9];
+		for (int i = 0; i < groups.length; i++) {
+			lack[groups[i] % batchSize]++;
+		}
+		return helper(0,new HashMap<>(),batchSize,groups.length - lack[0],lack) + lack[0];
+	}
+}

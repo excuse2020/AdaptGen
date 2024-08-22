@@ -1,0 +1,28 @@
+class Solution {
+	boolean isPossible(int[] target) {
+		PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> {b - a});
+		long totalSum = 0L;
+		for (int el: target) {	
+			pq.add(el);
+			totalSum += el;
+		}
+		while (!pq.isEmpty()) {
+			int max = pq.poll();
+			long remainingSum = totalSum - max;
+			if (max == 1 || remainingSum == 1) {
+				return true;
+			}
+			if (remainingSum == 0 || remainingSum > max) {
+				return false;
+			}
+			int update = (int) (max % remainingSum);
+			if (update == 0) {
+				return false;
+			}
+			max = update;
+			pq.offer(max);
+			totalSum = remainingSum + update;
+		}
+		return true;
+	}
+}

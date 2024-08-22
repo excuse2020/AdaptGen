@@ -1,0 +1,36 @@
+class Solution {
+	boolean dfs(List<List<Integer>> adj, int color, int people, int paint) {
+		color[people] = paint;
+		for (int neigh: adj.get(people)) {	
+			if (color[neigh] == -1) {
+				if (!dfs(adj,color,neigh,paint ^ 1)) {
+					return false;
+				}
+			} 
+			else if (color[neigh] == color[people]) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i <= n; i++) {
+			adj.add(new ArrayList<Integer>());
+		}
+		for (int i = 0; i < dislikes.length; i++) {
+			adj.get(dislikes[i][0]).add(dislikes[i][1]);
+			adj.get(dislikes[i][1]).add(dislikes[i][0]);
+		}
+		int color = new int[n + 1];
+		Arrays.fill(color,-1);
+		for (int people = 1; people <= n; people++) {
+			if (color[people] == -1) {
+				if (!dfs(adj,color,people,0)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

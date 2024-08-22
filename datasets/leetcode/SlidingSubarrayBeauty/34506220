@@ -1,0 +1,36 @@
+class Solution {
+	int[] getSubarrayBeauty(int[] nums, int k, int x) {
+		int[] res = new int[nums.length - k + 1];
+		int[] q = new int[50];
+		for (int i = 0; i < k; i++) {
+			if (nums[i] < 0) {
+				q[50 + nums[i]]++;
+			}
+		}
+		for (int i = 0; i < nums.length - k + 1; i++) {
+			res[i] = getXthSmallest(q,x);
+			if (i + k > nums.length - 1) {
+				break;
+			}
+			if (nums[i] < 0) {
+				q[50 + nums[i]]--;
+			}
+			if (nums[i + k] < 0) {
+				q[50 + nums[i + k]]++;
+			}
+		}
+		return res;
+	}
+	int getXthSmallest(int[] q, int x) {
+		int count = 0;
+		int res = 0;
+		for (int j = 0; j < 50; j++) {
+			count += q[j];
+			if (count >= x) {
+				res = j - 50;
+				break;
+			}
+		}
+		return res;
+	}
+}

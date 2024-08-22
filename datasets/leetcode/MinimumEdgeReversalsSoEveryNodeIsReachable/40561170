@@ -1,0 +1,54 @@
+class Solution {
+	HashMap<String, Integer> map;
+	int Solve(int parent, int node, int n, List<List<Integer>> Graph, List<List<Integer>> ReverseGraph, int[] ans) {
+		String f = node + ",";
+		if (map.containsKey(f)) {
+			return map.get(f);
+		}
+		int res = 0;
+		for (int nbr: Graph.get(node)) {	
+			if (nbr != parent) {
+				int reversals = Solve(node,nbr,n,Graph,ReverseGraph,ans);
+				res += reversals;
+			}
+		}
+		for (int nbr: ReverseGraph.get(node)) {	
+			if (nbr != parent) {
+				int reversals = 1 + Solve(node,nbr,n,Graph,ReverseGraph,ans);
+				res += reversals;
+			}
+		}
+		map.put(f,res);
+		return res;
+	}
+	int[] minEdgeReversals(int n, int[][] edges) {
+		List<List<Integer>> Graph = new ArrayList<>();
+		List<List<Integer>> ReverseGraph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			Graph.add(new ArrayList<>());
+			ReverseGraph.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			int u = edges[i][0];
+			int v = edges[i][1];
+			Graph.get(u).add(v);
+			ReverseGraph.get(v).add(u);
+		}
+		int[] ans = new int[n];
+		map = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			Solve(n,i,n,Graph,ReverseGraph,ans);
+		}
+		for (int i = 0; i < n; i++) {
+			for (int nbr: Graph.get(i)) {	
+				String f = nbr + ",";
+				ans[i] += map.get(f);
+			}
+			for (int nbr: ReverseGraph.get(i)) {	
+				String f = nbr + ",";
+				ans[i] += (1 + map.get(f));
+			}
+		}
+		return ans;
+	}
+}

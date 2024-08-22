@@ -1,0 +1,26 @@
+class Solution {
+	int dfs(List<int[]>[] adj, boolean[] visited, int current) {
+		visited[current] = true;
+		int count = 0;
+		for (int[] arr: adj[current]) {	
+			if (!visited[arr[0]]) {
+				count += arr[1] + dfs(adj,visited,arr[0]);
+			}
+		}
+		return count;
+	}
+	int minReorder(int n, int[][] connections) {
+		List<int[]>[] adj = new ArrayList[n];
+		boolean[] visited = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			adj[i] = new ArrayList();
+		}
+		for (int[] c: connections) {	
+			int u = c[0];
+			int v = c[1];
+			adj[u].add(new int{v, 1});
+			adj[v].add(new int{u, 0});
+		}
+		return dfs(adj,visited,0);
+	}
+}

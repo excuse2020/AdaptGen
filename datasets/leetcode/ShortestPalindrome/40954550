@@ -1,0 +1,26 @@
+class Solution {
+	String shortestPalindrome(String s) {
+		String t = s + "#";
+		int incr = 1, KMP = new int[t.length()];
+		KMP[0] = 0;
+		for (int j = 1; j < t.length(); j++) {
+			if (t.charAt(KMP[j - 1]) == t.charAt(j)) {
+				KMP[j] = KMP[j - 1] + 1;
+			} 
+			else {
+				int k = KMP[j - 1];
+				while (k >= 1 && t.charAt(j) != t.charAt(k)) {
+					k = KMP[k - 1];
+				}
+				if (t.charAt(j) == t.charAt(k)) {
+					KMP[j] = k + 1;
+				} 
+				else {
+					KMP[j] = k;
+				}
+			}
+		}
+		int p = KMP[KMP.length - 1];
+		return new StringBuilder(s.substring(p)).reverse().toString() + s;
+	}
+}

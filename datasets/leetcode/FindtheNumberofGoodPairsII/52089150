@@ -1,0 +1,28 @@
+class Solution {
+	long numberOfPairs(int[] nums1, int[] nums2, int k) {
+		Map<Integer, Integer> map1 = new HashMap<>();
+		for (int num: nums1) {	
+			if (num % k == 0) {
+				map1.merge(num / k,1,);
+			}
+		}
+		Map<Integer, Integer> map2 = new HashMap<>();
+		for (int num: nums2) {	
+			map2.merge(num,1,);
+		}
+		long count = 0;
+		for (Map.Entry<Integer, Integer> entry1: map1.entrySet()) {	
+			int key = entry1.getKey();
+			int value = entry1.getValue();
+			for (int i = 1; i * i <= key; i++) {
+				if (key % i == 0) {
+					count += (long) value * map2.getOrDefault(i,0);
+					if (i * i != key) {
+						count += (long) value * map2.getOrDefault(key / i,0);
+					}
+				}
+			}
+		}
+		return count;
+	}
+}

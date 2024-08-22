@@ -1,0 +1,35 @@
+class Solution {
+	int sumSubarrayMins(int[] arr) {
+		int MOD = 1000000007;
+		Stack<Integer> stack = new Stack<Integer>();
+		List<Integer> minList = new ArrayList<Integer>();
+		int stackSum = 0;
+		for (int i = 0; i < arr.length; i++) {
+			if (!stack.isEmpty() && arr[stack.peek()] >= arr[i]) {
+				while (!stack.isEmpty() && arr[stack.peek()] >= arr[i]) {
+					int idx = stack.pop();
+					int val = arr[idx];
+					int cnt = 1;
+					if (!stack.isEmpty()) {
+						cnt = idx - stack.peek();
+					} 
+					else {
+						cnt = idx - 0 + 1;
+					}
+					stackSum -= (val * cnt) % MOD;
+					stackSum += (arr[i] * cnt) % MOD;
+				}
+			}
+			stack.add(i);
+			stackSum += arr[i];
+			stackSum %= MOD;
+			minList.add(stackSum);
+		}
+		int sum = 0;
+		for (int i = 0; i < minList.size(); i++) {
+			sum += minList.get(i);
+			sum %= MOD;
+		}
+		return sum;
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	int dfs(int[][] events, int idx, int choose, int n, int k, Integer[][] dp) {
+		if (idx >= n) {
+			return 0;
+		}
+		if (choose >= k) {
+			return 0;
+		}
+		if (dp[idx][choose] != null) {
+			return dp[idx][choose];
+		}
+		int nextIdx = findNext(events,idx,n);
+		int pick = events[idx][2] + dfs(events,nextIdx,choose + 1,n,k,dp);
+		int notPick = dfs(events,idx + 1,choose,n,k,dp);
+		return dp[idx][choose] = Math.max(pick,notPick);
+	}
+	int findNext(int[][] events, int idx, int n) {
+		int ans = n;
+		int l = idx + 1;
+		int r = n - 1;
+		while (l <= r) {
+			int mid = l + (r - l) / 2;
+			if (events[idx][1] < events[mid][0]) {
+				ans = mid;
+				r = mid - 1;
+			} 
+			else {
+				l = mid + 1;
+			}
+		}
+		return ans;
+	}
+	int maxValue(int[][] events, int k) {
+		int n = events.length;
+		Arrays.sort(events,(a, b) -> {Integer.compare(a[0],b[0])});
+		Integer[][] dp = new Integer[n][k];
+		return dfs(events,0,0,n,k,dp);
+	}
+}

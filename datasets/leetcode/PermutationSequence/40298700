@@ -1,0 +1,33 @@
+class Solution {
+	String getPermutation(int n, int k) {
+		int arr = new int[n];
+		for (int i = 0; i < n; i++) {
+			arr[i] = i + 1;
+		}
+		List<List<Integer>> ans = new ArrayList<>();
+		List<Integer> ds = new ArrayList<>();
+		boolean[] freq = new boolean[n];
+		recurPerm(arr,ans,ds,freq);
+		Object res = ans.get(k - 1).toArray();
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < res.length; i++) {
+			sb.append(res[i]);
+		}
+		return sb.toString();
+	}
+	void recurPerm(int[] arr, List<List<Integer>> ans, List<Integer> ds, boolean[] freq) {
+		if (ds.size() == arr.length) {
+			ans.add(new ArrayList(ds));
+			return;
+		}
+		for (int i = 0; i < arr.length; i++) {
+			if (!freq[i]) {
+				freq[i] = true;
+				ds.add(arr[i]);
+				recurPerm(arr,ans,ds,freq);
+				ds.remove(ds.size() - 1);
+				freq[i] = false;
+			}
+		}
+	}
+}

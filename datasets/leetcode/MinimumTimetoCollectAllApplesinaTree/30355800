@@ -1,0 +1,33 @@
+class Solution {
+	int time;
+	boolean dfs(List<List<Integer>> adj, List<Boolean> hasApple, int vertex, boolean[] vis) {
+		vis[vertex] = true;
+		boolean isAppleInSubtree = false;
+		for (int neigh: adj.get(vertex)) {	
+			if (!vis[neigh]) {
+				time++;
+				isAppleInSubtree |= dfs(adj,hasApple,neigh,vis);
+			}
+		}
+		if (hasApple.get(vertex) || isAppleInSubtree) {
+			time++;
+			return true;
+		}
+		time--;
+		return false;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			adj.get(edge[0]).add(edge[1]);
+			adj.get(edge[1]).add(edge[0]);
+		}
+		time = 0;
+		boolean[] vis = new boolean[n];
+		boolean treeHasApple = dfs(adj,hasApple,0,vis);
+		return treeHasApple ? time - 1 : time + 1;
+	}
+}

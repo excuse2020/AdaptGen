@@ -1,0 +1,46 @@
+class Solution {
+	int countPairs(TreeNode root, int distance) {
+		Map<TreeNode, List<TreeNode>> adj = new HashMap<>();
+		List<TreeNode> leaf = new ArrayList<>();
+		int count = 0;
+		makeGraph(root,null,adj,leaf);
+		for (TreeNode l: leaf) {	
+			Queue<TreeNode> q = new LinkedList<>();
+			Set<TreeNode> visited = new HashSet<>();
+			q.add(l);
+			visited.add(l);
+			int d = 0;
+			while (!q.isEmpty() && d <= distance) {
+				int size = q.size();
+				for (int i = 0; i < size; i++) {
+					TreeNode curr = q.poll();
+					if (curr != l && leaf.contains(curr)) {
+						count++;
+					}
+					for (TreeNode neighbor: adj.getOrDefault(curr,new ArrayList<>())) {	
+						if (!visited.contains(neighbor)) {
+							q.add(neighbor);
+							visited.add(neighbor);
+						}
+					}
+				}
+				d++;
+			}
+		}
+		return count / 2;
+	}
+	void makeGraph(TreeNode root, TreeNode prev, Map<TreeNode, List<TreeNode>> adj, List<TreeNode> leaf) {
+		if (root == null) {
+			return;
+		}
+		if (root.left == null && root.right == null) {
+			leaf.add(root);
+		}
+		if (prev != null) {
+			adj.computeIfAbsent(root,(k) -> {new ArrayList<>()}).add(prev);
+			adj.computeIfAbsent(prev,(k) -> {new ArrayList<>()}).add(root);
+		}
+		makeGraph(root.left,root,adj,leaf);
+		makeGraph(root.right,root,adj,leaf);
+	}
+}

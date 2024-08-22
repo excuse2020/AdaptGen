@@ -1,0 +1,38 @@
+class Solution {
+	int findKth(int[] a, int n, int K) {
+		return quick_search(a,0,n - 1,K,n);
+	}
+	int quick_search(int[] a, int low, int high, int K, int n) {
+		int left = low;
+		int right = high;
+		if (left > right) {
+			return -1;
+		}
+		int base = left;
+		int temp = a[base];
+		while (left < right) {
+			while (left < right && a[right] >= temp) {
+				right--;
+			}
+			while (left < right && a[left] <= temp) {
+				left++;
+			}
+			if (left < right) {
+				int b = a[left];
+				a[left] = a[right];
+				a[right] = b;
+			}
+		}
+		a[base] = a[left];
+		a[left] = temp;
+		if (left == (n - K)) {
+			return temp;
+		} 
+		else if (left < (n - K)) {
+			return quick_search(a,left + 1,high,K,n);
+		} 
+		else {
+			return quick_search(a,low,left - 1,K,n);
+		}
+	}
+}

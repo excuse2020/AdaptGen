@@ -1,0 +1,76 @@
+class Solution {
+	int getMediumValueIndex(int[] nums, int head, int tail) {
+		int mid = head + (tail - head) / 2;
+		int l = nums[head];
+		int m = nums[mid];
+		int r = nums[tail];
+		if (l > m) {
+			if (m > r) {
+				return mid;
+			} 
+			else if (r > l) {
+				return head;
+			} 
+			else {
+				return tail;
+			}
+		} 
+		else {
+			if (r > m) {
+				return mid;
+			} 
+			else if (l > r) {
+				return head;
+			} 
+			else {
+				return tail;
+			}
+		}
+	}
+	int partition(int[] nums, int head, int tail) {
+		int p_index = this.getMediumValueIndex(nums,head,tail);
+		int pivot = nums[p_index];
+		nums[p_index] = nums[tail];
+		nums[tail] = pivot;
+		p_index = tail;
+		int i = head - 1;
+		for (int j = head; j < tail; ++j) {
+			if (nums[j] <= pivot) {
+				i++;
+				int temp = nums[i];
+				nums[i] = nums[j];
+				nums[j] = temp;
+			}
+		}
+		int temp = nums[i + 1];
+		nums[i + 1] = nums[tail];
+		nums[tail] = temp;
+		return i + 1;
+	}
+	int[] quickIterative(int[] nums, int l, int h) {
+		if (l >= h) {
+			return nums;
+		}
+		int[] stack = new int[h - l + 1];
+		int top = 0;
+		stack[top++] = l;
+		stack[top++] = h;
+		while (top > 0) {
+			h = stack[--top];
+			l = stack[--top];
+			int p = this.partition(nums,l,h);
+			if (p - 1 > l) {
+				stack[top++] = l;
+				stack[top++] = p - 1;
+			}
+			if (p + 1 < h) {
+				stack[top++] = p + 1;
+				stack[top++] = h;
+			}
+		}
+		return nums;
+	}
+	int[] sortArray(int[] nums) {
+		return quickIterative(nums,0,nums.length - 1);
+	}
+}

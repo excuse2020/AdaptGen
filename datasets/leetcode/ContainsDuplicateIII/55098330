@@ -1,0 +1,21 @@
+class Solution {
+	boolean containsNearbyAlmostDuplicate(int[] nums, int indexDiff, int valueDiff) {
+		TreeSet<Long> ts = new TreeSet<>();
+		for (int i = 0; i < nums.length; i++) {
+			Long num = Long.valueOf(nums[i]);
+			Long floorVal = ts.floor(num);
+			Long ceilVal = ts.ceiling(num);
+			if (floorVal != null && Math.abs(floorVal - num) <= valueDiff) {
+				return true;
+			}
+			if (ceilVal != null && Math.abs(ceilVal - num) <= valueDiff) {
+				return true;
+			}
+			ts.add(num);
+			if (ts.size() > indexDiff) {
+				ts.remove(Long.valueOf(nums[i - indexDiff]));
+			}
+		}
+		return false;
+	}
+}

@@ -1,0 +1,40 @@
+class Solution {
+	long maxRunTime(int n, int[] batteries) {
+		long sum = 0;
+		for (int i = 0; i < batteries.length; i++) {
+			sum += batteries[i];
+		}
+		long high = (sum / n);
+		Arrays.sort(batteries);
+		long low = batteries[batteries.length - n];
+		long ans = 0;
+		while (low <= high) {
+			long mid = low + (high - low) / 2;
+			int k = batteries.length - 1;
+			int len = n;
+			while (len != 0 && k >= 0) {
+				if (batteries[k] >= mid) {
+					k--;
+					len--;
+				} 
+				else {
+					break;
+				}
+			}
+			long remBatteryReq = len * mid;
+			long remBatteryHave = 0;
+			while (k >= 0) {
+				remBatteryHave += batteries[k];
+				k--;
+			}
+			if (remBatteryReq <= remBatteryHave) {
+				ans = mid;
+				low = mid + 1;
+			} 
+			else {
+				high = mid - 1;
+			}
+		}
+		return ans;
+	}
+}

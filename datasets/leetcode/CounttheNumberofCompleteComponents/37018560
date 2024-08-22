@@ -1,0 +1,45 @@
+class Solution {
+	HashMap<Integer, List<Integer>> BuildGraph(int[][] edges) {
+		HashMap<Integer, List<Integer>> graph = new HashMap<>();
+		for (int[] edge: edges) {	
+			int a = edge[0], b = edge[1];
+			graph.computeIfAbsent(a,(val) -> {new ArrayList<>()}).add(b);
+			graph.computeIfAbsent(b,(val) -> {new ArrayList<>()}).add(a);
+		}
+		return graph;
+	}
+	int countCompleteComponents(int n, int[][] edges) {
+		HashMap<Integer, List<Integer>> graph = new HashMap<>();
+		HashSet<Integer> visited = new HashSet<>();
+		graph = BuildGraph(edges);
+		for (int i = 0; i < n; i++) {
+			if (!graph.containsKey(i)) {
+				graph.put(i,new ArrayList<>());
+			}
+		}
+		int count = 0;
+		for (int k: graph.keySet()) {	
+			int[] arr = new int[2];
+			if (explore(graph,k,visited,arr)) {
+				int ns = arr[1];
+				int e = arr[0] / 2;
+				if (e == ns * (ns - 1) / 2) {
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+	boolean explore(HashMap<Integer, List<Integer>> graph, int curr, HashSet<Integer> visited, int[] arr) {
+		if (visited.contains(curr)) {
+			return false;
+		}
+		visited.add(curr);
+		arr[1]++;
+		for (int neighbour: graph.get(curr)) {	
+			arr[0]++;
+			explore(graph,neighbour,visited,arr);
+		}
+		return true;
+	}
+}

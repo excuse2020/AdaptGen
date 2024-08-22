@@ -1,0 +1,75 @@
+class Solution {
+	int[] arr;
+	int d;
+	int[] lefts;
+	int[] rights;
+	int[] stepAt;
+	int maxJumps(int[] arr, int d) {
+		this.arr = arr;
+		this.d = d;
+		stepAt = new int[arr.length];
+		for (int i = 0; i < arr.length; i++) {
+			stepAt[i] = -1;
+		}
+		int left, right, foot;
+		Deque<Integer> s = new LinkedList<Integer>();
+		lefts = new int[arr.length];
+		rights = new int[arr.length];
+		for (int i = arr.length - 1; i >= 0; i--) {
+			right = (i + d < arr.length) ? (i + d) : (arr.length - 1);
+			while (!s.isEmpty() && (arr[i] > arr[s.peekLast()])) {
+				s.pollLast();
+			}
+			if (s.isEmpty()) {
+				rights[i] = right;
+			} 
+			else {
+				foot = s.peekLast() - 1;
+				rights[i] = (foot < right) ? foot : right;
+			}
+			s.offerLast(i);
+		}
+		s.clear();
+		for (int i = 0; i < arr.length; i++) {
+			left = (i - d > 0) ? (i - d) : 0;
+			while (!s.isEmpty() && (arr[i] > arr[s.peekLast()])) {
+				s.pollLast();
+			}
+			if (s.isEmpty()) {
+				lefts[i] = left;
+			} 
+			else {
+				foot = s.peekLast() + 1;
+				lefts[i] = (foot > left) ? foot : left;
+			}
+			s.offerLast(i);
+		}
+		int maxStep = 0;
+		for (int i = 0; i < arr.length; i++) {
+			maxStep = (maxStep > maxJumpsKernel(i)) ? maxStep : maxJumpsKernel(i);
+		}
+		return maxStep;
+	}
+	int maxJumpsKernel(int start) {
+		if (stepAt[start] != -1) {
+			return stepAt[start];
+		}
+		int left, right;
+		left = lefts[start];
+		right = rights[start];
+		if (left == start && right == start) {
+			stepAt[start] = 1;
+			return 1;
+		}
+		int maxStep, curStep;
+		maxStep = 0;
+		for (int i = left; i <= right; i++) {
+			if (i != start) {
+				curStep = 1 + maxJumpsKernel(i);
+				maxStep = (maxStep > curStep) ? maxStep : curStep;
+			}
+		}
+		stepAt[start] = maxStep;
+		return maxStep;
+	}
+}

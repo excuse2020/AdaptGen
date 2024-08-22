@@ -1,0 +1,36 @@
+class Solution {
+	int minCost(int n, int[] cuts) {
+		Arrays.sort(cuts);
+		List<Integer> stickList = new ArrayList<Integer>();
+		int before = 0;
+		for (int i = 0; i < cuts.length; i++) {
+			stickList.add(cuts[i] - before);
+			before = cuts[i];
+		}
+		stickList.add(n - before);
+		int memo = new int[stickList.size()][stickList.size()];
+		for (int i = 0; i < memo.length; i++) {
+			int sum = 0;
+			for (int j = i; j < memo.length; j++) {
+				sum += stickList.get(j);
+				memo[i][j] = sum;
+			}
+		}
+		int dp = new int[stickList.size()][stickList.size()];
+		for (int i = 0; i < dp.length; i++) {
+			Arrays.fill(dp[i],Integer.MAX_VALUE);
+		}
+		dp[0][0] = 0;
+		for (int i = 1; i < dp.length; i++) {
+			dp[i][i] = 0;
+			dp[i - 1][i] = memo[i - 1][i];
+			for (int j = i - 1; j >= 0; j--) {
+				for (int a = j; a < i; a++) {
+					int val = dp[j][a] + dp[a + 1][i];
+					dp[j][i] = Math.min(dp[j][i],val);
+				}
+			}
+		}
+		return dp[0][stickList.size() - 1];
+	}
+}

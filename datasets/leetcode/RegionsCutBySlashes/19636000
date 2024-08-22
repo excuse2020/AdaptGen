@@ -1,0 +1,66 @@
+class Solution {
+	int[] parent;
+	int[] size;
+	int find(int ele) {
+		int root = ele;
+		while (parent[root] != -1) {
+			root = parent[root];
+		}
+		int p = ele;
+		while (p != root) {
+			int next = parent[p];
+			parent[p] = root;
+			p = next;
+		}
+		return root;
+	}
+	int regionsBySlashes(String[] grid) {
+		int sz = grid.length;
+		parent = new int[(sz + 1) * (sz + 1)];
+		size = new int[(sz + 1) * (sz + 1)];
+		for (int i = 0; i < parent.length; i++) {
+			parent[i] = -1;
+			size[i] = 1;
+		}
+		int row = -1;
+		int num = 1;
+		int n = 0;
+		int i = 0;
+		int j = 0;
+		char c = grid[i].charAt(j);
+		int top = num + row;
+		int rt = top + 1;
+		int bot = top + sz;
+		int rb = bot + 1;
+		if (i == 0) {
+			boolean ans = union(top,rt);
+			if (ans == false) {
+				n++;
+			}
+		}
+		if (j == grid.length - 1) {
+			boolean ans = union(rt,rb);
+			if (ans == false) {
+				n++;
+			}
+		}
+	}
+	boolean union(int ele1, int ele2) {
+		int root1 = find(ele1);
+		int root2 = find(ele2);
+		if (root1 == root2) {
+			return false;
+		} 
+		else {
+			if (size[root1] > size[root2]) {
+				size[root1] += size[root2];
+				parent[root2] = root1;
+			} 
+			else {
+				size[root2] += size[root1];
+				parent[root1] = root2;
+			}
+			return true;
+		}
+	}
+}

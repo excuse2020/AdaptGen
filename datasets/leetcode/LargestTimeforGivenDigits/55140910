@@ -1,0 +1,37 @@
+class Solution {
+	int time = -1;
+	void backtrack(int[] arr, int index) {
+		if (index == arr.length) {
+			build(arr);
+			return;
+		}
+		for (int i = index; i < arr.length; i++) {
+			swap(arr,i,index);
+			backtrack(arr,index + 1);
+			swap(arr,i,index);
+		}
+	}
+	void build(int[] arr) {
+		int hour = arr[0] * 10 + arr[1];
+		int minute = arr[2] * 10 + arr[3];
+		if (hour < 24 && minute < 60) {
+			time = Math.max(time,hour * 60 + minute);
+		}
+	}
+	String largestTimeFromDigits(int[] arr) {
+		backtrack(arr,0);
+		if (time == -1) {
+			return "";
+		} 
+		else {
+			return String.format("%02d:%02d",time / 60,time % 60);
+		}
+	}
+	void swap(int[] arr, int i, int j) {
+		if (i != j) {
+			int temp = arr[i];
+			arr[i] = arr[j];
+			arr[j] = temp;
+		}
+	}
+}

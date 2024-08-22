@@ -1,0 +1,43 @@
+class Solution {
+	String shortestPalindrome(String s) {
+		int n = s.length();
+		int i = 1;
+		int prevLps = 0;
+		int[] lps = new int[n];
+		while (i < n) {
+			if (s.charAt(i) == s.charAt(prevLps)) {
+				prevLps++;
+				lps[i++] = prevLps;
+			} 
+			else {
+				if (prevLps == 0) {
+					lps[i] = 0;
+					i++;
+				} 
+				else {
+					prevLps = lps[prevLps - 1];
+				}
+			}
+		}
+		StringBuilder sb = new StringBuilder(s);
+		sb.reverse();
+		i = 0;
+		int j = 0;
+		while (i < n && j < n) {
+			if (sb.charAt(i) == s.charAt(j)) {
+				i++;
+				j++;
+			} 
+			else {
+				if (j == 0) {
+					i++;
+				} 
+				else {
+					j = lps[j - 1];
+				}
+			}
+		}
+		String left = sb.substring(0,n - j);
+		return left + s;
+	}
+}

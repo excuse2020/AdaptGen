@@ -1,0 +1,27 @@
+class Solution {
+	int ans = 0;
+	int averageOfSubtree(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		combined(root,0,0);
+		return ans;
+	}
+	Pair<Integer, Integer> combined(TreeNode root, int count, int sum) {
+		if (root == null) {
+			return new Pair<>(0, 0);
+		}
+		if (root.left == null && root.right == null) {
+			++ans;
+			return new Pair<>(1, root.val);
+		}
+		Pair<Integer, Integer> left = combined(root.left,count + 1,sum);
+		Pair<Integer, Integer> right = combined(root.right,count + 1,sum);
+		int totalCount = left.getKey() + right.getKey();
+		int totalSum = left.getValue() + right.getValue();
+		if (totalSum / totalCount == root.val) {
+			++ans;
+		}
+		return new Pair<>(totalCount, totalSum);
+	}
+}

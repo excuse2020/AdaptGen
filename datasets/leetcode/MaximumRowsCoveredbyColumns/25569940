@@ -1,0 +1,38 @@
+class Solution {
+	int max;
+	int checkResult(int[] cols, int[][] matrix, int numSelect) {
+		int res = 0;
+		for (int i = 0; i < matrix.length; i++) {
+			int cnt = 0;
+			for (int j = 0; j < matrix[0].length; j++) {
+				if (matrix[i][j] == 1 && cols[j] == 0) {
+					cnt++;
+				}
+			}
+			if (cnt == 0) {
+				res++;
+			}
+		}
+		return res;
+	}
+	int maximumRows(int[][] matrix, int numSelect) {
+		int m = matrix[0].length;
+		int[] cols = new int[m];
+		max = Integer.MIN_VALUE;
+		selection(cols,0,numSelect,0,matrix);
+		return max;
+	}
+	void selection(int[] cols, int curr, int numSelect, int idx, int[][] matrix) {
+		if (idx == cols.length) {
+			if (curr == numSelect) {
+				int ans = checkResult(cols,matrix,numSelect);
+				max = Math.max(ans,max);
+			}
+			return;
+		}
+		cols[idx] = 1;
+		selection(cols,curr + 1,numSelect,idx + 1,matrix);
+		cols[idx] = 0;
+		selection(cols,curr,numSelect,idx + 1,matrix);
+	}
+}

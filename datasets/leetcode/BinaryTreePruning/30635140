@@ -1,0 +1,33 @@
+class Solution {
+	Map<TreeNode, Boolean> map = new HashMap<TreeNode, Boolean>();
+	TreeNode postOrderTraversal(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		root.left = postOrderTraversal(root.left);
+		root.right = postOrderTraversal(root.right);
+		if (root.left == null && root.right == null) {
+			if (root.val == 0) {
+				map.put(root,false);
+				return null;
+			} 
+			else {
+				map.put(root,true);
+				return root;
+			}
+		} 
+		else {
+			if (map.getOrDefault(root.left,false) || map.getOrDefault(root.right,false) == true) {
+				map.put(root,true);
+				return root;
+			} 
+			else {
+				map.put(root,false);
+				return null;
+			}
+		}
+	}
+	TreeNode pruneTree(TreeNode root) {
+		return postOrderTraversal(root);
+	}
+}

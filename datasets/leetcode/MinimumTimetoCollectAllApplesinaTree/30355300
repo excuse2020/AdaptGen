@@ -1,0 +1,30 @@
+class Solution {
+	List<Boolean> isApple;
+	List<List<Integer>> tree;
+	int collectApples(int currentNode, int parentNode) {
+		int time = 0;
+		List<Integer> children = tree.get(currentNode);
+		for (int child: children) {	
+			if (child != parentNode) {
+				time += collectApples(child,currentNode);
+			}
+		}
+		if (currentNode != 0 && (isApple.get(currentNode) || time > 0)) {
+			time += 2;
+		}
+		return time;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		isApple = hasApple;
+		tree = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			tree.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			int parent = edge[0], child = edge[1];
+			tree.get(parent).add(child);
+			tree.get(child).add(parent);
+		}
+		return collectApples(0,0);
+	}
+}

@@ -1,0 +1,29 @@
+class Solution {
+	int maxNumberOfAlloys(int n, int k, int budget, List<List<Integer>> comp, List<Integer> stock, List<Integer> cost) {
+		long lo = 0, hi = (long) 1e9;
+		long ans = 0;
+		while (lo <= hi) {
+			long mid = (lo + hi) / 2;
+			if (sol(mid,comp,stock,cost,n,k,budget)) {
+				ans = mid;
+				lo = mid + 1;
+			} 
+			else {
+				hi = mid - 1;
+			}
+		}
+		return (int) ans;
+	}
+	boolean sol(long mid, List<List<Integer>> comp, List<Integer> stock, List<Integer> cost, int n, int k, int b) {
+		for (int i = 0; i < k; ++i) {
+			long p = 0;
+			for (int j = 0; j < n; ++j) {
+				p += Math.max(comp.get(i).get(j) * mid - stock.get(j),0) * cost.get(j);
+			}
+			if (p <= b) {
+				return true;
+			}
+		}
+		return false;
+	}
+}

@@ -1,0 +1,50 @@
+class Solution {
+	int finder(int arr, int row, int col, int dp) {
+		if (row < 0 || col < 0 || row >= arr.length || col >= arr.length) {
+			return Integer.MAX_VALUE;
+		}
+		if (row == 0) {
+			return dp[row][col] = arr[row][col];
+		}
+		if (dp[row][col] != -1) {
+			return dp[row][col];
+		}
+		int right = finder(arr,row - 1,col - 1,dp);
+		int left = finder(arr,row - 1,col + 1,dp);
+		int down = finder(arr,row - 1,col,dp);
+		if (right != Integer.MAX_VALUE) {
+			right += arr[row][col];
+		}
+		if (left != Integer.MAX_VALUE) {
+			left += arr[row][col];
+		}
+		if (down != Integer.MAX_VALUE) {
+			down += arr[row][col];
+		}
+		return dp[row][col] = Math.min(left,Math.min(right,down));
+	}
+	int minFallingPathSum(int[][] matrix) {
+		int min = Integer.MAX_VALUE;
+		int m = matrix.length, n = matrix.length;
+		return tabu(matrix);
+	}
+	int tabu(int arr) {
+		int dp = new int[arr.length][arr.length];
+		for (int i = 0; i < arr.length; i++) {
+			dp[0][i] = arr[0][i];
+		}
+		for (int row = 1; row < arr.length; row++) {
+			for (int col = 0; col < arr.length; col++) {
+				int down = arr[row][col] + dp[row - 1][col];
+				int left = col - 1 >= 0 ? arr[row][col] + dp[row - 1][col - 1] : Integer.MAX_VALUE;
+				int right = col + 1 < arr.length ? arr[row][col] + dp[row - 1][col + 1] : Integer.MAX_VALUE;
+				dp[row][col] = Math.min(down,Math.min(left,right));
+			}
+		}
+		int min = Integer.MAX_VALUE;
+		for (int i = 0; i < arr.length; i++) {
+			min = Math.min(min,dp[arr.length - 1][i]);
+		}
+		return min;
+	}
+}

@@ -1,0 +1,37 @@
+class Solution {
+	int maximumDetonation(int[][] bombs) {
+		int n = bombs.length;
+		List<List<Integer>> edj = new ArrayList<>(n);
+		for (int i = 0; i < n; i++) {
+			long x = bombs[i][0];
+			long y = bombs[i][1];
+			long r = (long) bombs[i][2] * bombs[i][2];
+			edj.add(new ArrayList<>());
+			for (int j = 0; j < n; j++) {
+				if ((x - bombs[j][0]) * (x - bombs[j][0]) + (y - bombs[j][1]) * (y - bombs[j][1]) <= r) {
+					edj.get(i).add(j);
+				}
+			}
+		}
+		int maxi = 0, cnt = 0;
+		for (int i = 0; i < n; ++i) {
+			Queue<Integer> q = new LinkedList<>();
+			q.offer(i);
+			int vis = new int[n + 1];
+			cnt = 0;
+			while (!q.isEmpty()) {
+				int bmb = q.poll();
+				vis[i] = 1;
+				cnt++;
+				for (int it: edj.get(bmb)) {	
+					if (vis[it] == 0) {
+						q.offer(it);
+						vis[it] = 1;
+					}
+				}
+			}
+			maxi = Math.max(maxi,cnt);
+		}
+		return maxi;
+	}
+}

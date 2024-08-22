@@ -1,0 +1,29 @@
+class Solution {
+	boolean[][] cache;
+	boolean checkPartitioning(String s) {
+		int length = s.length();
+		this.cache = new boolean[length][length];
+		for (int i = 0; i < length; i++) {
+			expandAroundCenter(s,i,i);
+			if (i < length - 1) {
+				expandAroundCenter(s,i,i + 1);
+			}
+		}
+		boolean[][] dp = new boolean[length][3];
+		for (int i = length - 1; i >= 0; i--) {
+			dp[i][0] = cache[i][length - 1];
+			for (int j = length - 2; j >= i; j--) {
+				if (cache[i][j]) {
+					dp[i][1] = dp[i][1] | dp[j + 1][0];
+					dp[i][2] = dp[i][2] | dp[j + 1][1];
+				}
+			}
+		}
+		return dp[0][2];
+	}
+	void expandAroundCenter(String s, int start, int end) {
+		while (start >= 0 && end < s.length() && s.charAt(start) == s.charAt(end)) {
+			this.cache[start--][end++] = true;
+		}
+	}
+}

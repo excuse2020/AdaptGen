@@ -1,0 +1,34 @@
+class Solution {
+	void dfs(int[] nums, ArrayList<ArrayList<Integer>> ret, int k) {
+		if (k == nums.length) {
+			ArrayList<Integer> list = new ArrayList<>();
+			for (int i = 0; i < nums.length; i++) {
+				list.add(nums[i]);
+			}
+			ret.add(list);
+			return;
+		}
+		List<Integer> tempList = new ArrayList<>();
+		for (int i = k; i < nums.length; i++) {
+			if (i != k && nums[i] == nums[k] || tempList.contains(nums[i])) {
+				continue;
+			}
+			swap(nums,k,i);
+			dfs(nums,ret,k + 1);
+			swap(nums,k,i);
+			tempList.add(nums[i]);
+		}
+	}
+	ArrayList<ArrayList<Integer>> permuteUnique(int[] num) {
+		ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
+		int len = num.length;
+		dfs(num,ret,0);
+		Collections.sort(ret,new Comparator<ArrayList<Integer>>());
+		return ret;
+	}
+	void swap(int[] nums, int i, int j) {
+		int temp = nums[i];
+		nums[i] = nums[j];
+		nums[j] = temp;
+	}
+}

@@ -1,0 +1,46 @@
+class Solution {
+	void addVertices(List<List<Integer>> adjMatrix, int u, int v) {
+		adjMatrix.get(u).add(v);
+		adjMatrix.get(v).add(u);
+	}
+	boolean bfs(List<List<Integer>> graph, int id, int[] color) {
+		color[id] = 0;
+		Stack<Integer> q = new Stack<>();
+		q.add(id);
+		while (!q.isEmpty()) {
+			int k = q.pop();
+			for (int i = 0; i < graph.get(k).size(); i++) {
+				if (color[graph.get(k).get(i)] == -1) {
+					color[graph.get(k).get(i)] = 1 - color[k];
+					q.push(graph.get(k).get(i));
+				} 
+				else if (color[graph.get(k).get(i)] == color[k]) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	boolean isBipartite(List<List<Integer>> graph) {
+		int[] color = new int[graph.size()];
+		Arrays.fill(color,-1);
+		for (int i = 0; i < graph.size(); i++) {
+			if (color[i] == -1) {
+				if (!bfs(graph,i,color)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		List<List<Integer>> adjMatrix = new ArrayList<>();
+		for (int i = 0; i <= n; i++) {
+			adjMatrix.add(new ArrayList<Integer>());
+		}
+		for (int[] dislike: dislikes) {	
+			addVertices(adjMatrix,dislike[0],dislike[1]);
+		}
+		return isBipartite(adjMatrix);
+	}
+}

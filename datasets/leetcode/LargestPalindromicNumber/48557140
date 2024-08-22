@@ -1,0 +1,37 @@
+class Solution {
+	String largestPalindromic(String num) {
+		Map<Integer, Integer> counts = new HashMap<>();
+		for (char ch: num.toCharArray()) {	
+			int number = (int) ch;
+			counts.put(number,counts.getOrDefault(number,0) + 1);
+		}
+		Queue<Integer> descendingQueue = new PriorityQueue<>(Collections.reverseOrder());
+		int max = -1;
+		for (int key: counts.keySet()) {	
+			int count = counts.get(key);
+			int times = count / 2;
+			int remainder = count % 2;
+			if (remainder != 0) {
+				max = Math.max(max,key);
+			}
+			if (times != 0) {
+				for (int i = 0; i < times; i++) {
+					descendingQueue.offer(key);
+				}
+			}
+		}
+		StringBuilder sb = new StringBuilder();
+		while (!descendingQueue.isEmpty()) {
+			int number = descendingQueue.poll();
+			if (sb.isEmpty() && number == 48) {
+				continue;
+			}
+			sb.append((char) number);
+		}
+		StringBuilder reversedStr = new StringBuilder(sb.toString()).reverse();
+		if (max != -1) {
+			sb.append((char) max);
+		}
+		sb.append(reversedStr);
+	}
+}

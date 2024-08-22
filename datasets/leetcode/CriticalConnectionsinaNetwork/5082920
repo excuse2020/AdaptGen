@@ -1,0 +1,65 @@
+class Solution {
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		Stack<Integer>[] graph = new Stack[n];
+		for (List<Integer> conn: connections) {	
+			if (graph[conn.get(0)] == null) {
+				graph[conn.get(0)] = new Stack<Integer>();
+			}
+			if (graph[conn.get(1)] == null) {
+				graph[conn.get(1)] = new Stack<Integer>();
+			}
+			graph[conn.get(0)].push(conn.get(1));
+			graph[conn.get(1)].push(conn.get(0));
+		}
+		List<List<Integer>> ret = new ArrayList<>();
+		int count = 1;
+		int[] low = new int[n];
+		int[] disc = new int[n];
+		int[] parents = new int[n];
+		boolean[] visited = new boolean[n];
+		int root = connections.get(0).get(0);
+		Stack<Integer> stack = new Stack<>();
+		stack.push(root);
+		visited[root] = true;
+		disc[root] = count;
+		low[root] = count;
+		parents[root] = -1;
+		while (!stack.isEmpty()) {
+			int node = stack.peek();
+			if (!visited[node]) {
+				disc[node] = ++count;
+				low[node] = count;
+				visited[node] = true;
+			}
+			Stack<Integer> neighbors = graph[node];
+			boolean nodeIsDone = neighbors.isEmpty() || neighbors.size() == 1 && neighbors.peek() == parents[node];
+			if (nodeIsDone) {
+				stack.pop();
+				if (stack.isEmpty()) {
+					break;
+				}
+				int parent = parents[node];
+				if (low[node] > disc[parent]) {
+					ret.add(Arrays.asList(node,parent));
+				} 
+				else {
+					low[parent] = Math.min(low[parent],low[node]);
+				}
+			} 
+			else {
+				int child = neighbors.pop();
+				if (parents[node] == child) {
+					child = neighbors.pop();
+				}
+				if (visited[child]) {
+					low[node] = Math.min(low[node],low[child]);
+				} 
+				else {
+					parents[child] = node;
+					stack.push(child);
+				}
+			}
+		}
+		return ret;
+	}
+}

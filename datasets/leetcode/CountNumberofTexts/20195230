@@ -1,0 +1,62 @@
+class Solution {
+	HashMap<Integer, Integer> map;
+	int mod = 1000000007;
+	int countTexts(String pressedKeys) {
+		HashSet<String> set = new HashSet<>();
+		set.add("2");
+		set.add("22");
+		set.add("222");
+		set.add("3");
+		set.add("33");
+		set.add("333");
+		set.add("4");
+		set.add("44");
+		set.add("444");
+		set.add("5");
+		set.add("55");
+		set.add("555");
+		set.add("6");
+		set.add("66");
+		set.add("666");
+		set.add("7");
+		set.add("77");
+		set.add("7777");
+		set.add("777");
+		set.add("8");
+		set.add("88");
+		set.add("888");
+		set.add("9");
+		set.add("99");
+		set.add("9999");
+		set.add("999");
+		map = new HashMap<>();
+		return solver(pressedKeys,set,pressedKeys.length(),0);
+	}
+	int solver(String str, HashSet<String> set, int n, int i) {
+		if (i == n) {
+			map.put(n,1);
+			return 1;
+		}
+		if (map.containsKey(i)) {
+			return map.get(i);
+		}
+		int ans = 0;
+		for (int j = i + 1; j <= n; j++) {
+			String pre = str.substring(i,j);
+			if (set.contains(pre)) {
+				if (map.containsKey(j)) {
+					ans += map.get(j);
+				} 
+				else {
+					ans += solver(str,set,n,j);
+				}
+				ans %= mod;
+			} 
+			else {
+				break;
+			}
+		}
+		map.put(i,ans);
+		return ans;
+	}
+}

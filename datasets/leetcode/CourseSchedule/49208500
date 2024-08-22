@@ -1,0 +1,32 @@
+class Solution {
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int[] i: prerequisites) {	
+			map.computeIfAbsent(i[0],(v) -> {new ArrayList<>()}).add(i[1]);
+		}
+		int[] visit = new int[numCourses];
+		for (int i = 0; i < numCourses; i++) {
+			if (visit[i] == 0) {
+				if (!dfs(i,visit,map)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	boolean dfs(int s, int[] visit, Map<Integer, List<Integer>> map) {
+		visit[s] = 1;
+		for (int next: map.getOrDefault(s,Collections.emptyList())) {	
+			if (visit[next] == 1) {
+				return false;
+			}
+			if (visit[next] == 0) {
+				if (!dfs(next,visit,map)) {
+					return false;
+				}
+			}
+		}
+		visit[s] = 2;
+		return true;
+	}
+}

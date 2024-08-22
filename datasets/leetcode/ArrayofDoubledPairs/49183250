@@ -1,0 +1,28 @@
+class Solution {
+	boolean canReorderDoubled(int[] arr) {
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int i: arr) {	
+			map.put(i,map.getOrDefault(i,0) + 1);
+		}
+		int ans = 0;
+		for (Map.Entry<Integer, Integer> entry: map.entrySet()) {	
+			int k = entry.getKey();
+			int v = entry.getValue();
+			if (k == 0) {
+				ans += v / 2;
+				continue;
+			}
+			if (k % 2 != 0) {
+				continue;
+			}
+			if (map.containsKey(k / 2)) {
+				int v2 = map.get(k / 2);
+				int low = Math.min(v,v2);
+				map.put(k,v - low);
+				map.put(k / 2,v2 - low);
+				ans += low;
+			}
+		}
+		return ans == arr.length / 2;
+	}
+}

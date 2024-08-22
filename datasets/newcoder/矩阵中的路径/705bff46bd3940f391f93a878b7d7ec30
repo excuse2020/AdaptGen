@@ -1,0 +1,97 @@
+class Solution {
+	boolean findNext(boolean[][] used, char[][] matrix, int i, int j, char[] target, int index) {
+		char res = target[index];
+		if (i - 1 >= 0) {
+			if (used[i - 1][j] != true && matrix[i - 1][j] == res) {
+				if (index == target.length - 1) {
+					return true;
+				} 
+				else {
+					used[i - 1][j] = true;
+					boolean success = findNext(used,matrix,i - 1,j,target,index + 1);
+					if (success) {
+						return true;
+					} 
+					else {
+						used[i - 1][j] = false;
+					}
+				}
+			}
+		}
+		if (j - 1 >= 0) {
+			if (used[i][j - 1] != true && matrix[i][j - 1] == res) {
+				if (index == target.length - 1) {
+					return true;
+				} 
+				else {
+					used[i][j - 1] = true;
+					boolean success = findNext(used,matrix,i,j - 1,target,index + 1);
+					if (success) {
+						return true;
+					} 
+					else {
+						used[i][j - 1] = false;
+					}
+				}
+			}
+		}
+		if (i + 1 < matrix.length) {
+			if (used[i + 1][j] != true && matrix[i + 1][j] == res) {
+				if (index == target.length - 1) {
+					return true;
+				} 
+				else {
+					used[i + 1][j] = true;
+					boolean success = findNext(used,matrix,i + 1,j,target,index + 1);
+					if (success) {
+						return true;
+					} 
+					else {
+						used[i + 1][j] = false;
+					}
+				}
+			}
+		}
+		if (j + 1 < matrix[i].length) {
+			if (used[i][j + 1] != true && matrix[i][j + 1] == res) {
+				if (index == target.length - 1) {
+					return true;
+				} 
+				else {
+					used[i][j + 1] = true;
+					boolean success = findNext(used,matrix,i,j + 1,target,index + 1);
+					if (success) {
+						return true;
+					} 
+					else {
+						used[i][j + 1] = false;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	boolean hasPath(char[][] matrix, String word) {
+		char[] target = word.toCharArray();
+		int index = 0;
+		boolean[][] used = new boolean[matrix.length][matrix[0].length];
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix[i].length; j++) {
+				if (used[i][j] != true && matrix[i][j] == target[index]) {
+					used[i][j] = true;
+					if (index + 1 == target.length) {
+						return true;
+					}
+					boolean success = findNext(used,matrix,i,j,target,index + 1);
+					if (success) {
+						return true;
+					} 
+					else {
+						used[i][j] = false;
+					}
+				}
+			}
+		}
+		return false;
+	}
+}

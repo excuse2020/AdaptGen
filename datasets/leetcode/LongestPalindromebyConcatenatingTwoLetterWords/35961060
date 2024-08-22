@@ -1,0 +1,39 @@
+class Solution {
+	int char_to_int(char c) {
+		return (int) c - 97;
+	}
+	int longestPalindrome(String[] words) {
+		int char_count = 26;
+		int[][] count = new int[char_count][char_count];
+		Arrays.stream(count).forEach((x) -> {Arrays.fill(x,0)});
+		for (int i = 0; i < words.length; i++) {
+			String s = words[i];
+			int first = char_to_int(s.charAt(0));
+			int second = char_to_int(s.charAt(1));
+			count[first][second]++;
+		}
+		int ans_not_eqaual = 0;
+		int ans_eqaual = 0;
+		int odd = 0;
+		for (int i = 0; i < char_count; i++) {
+			for (int j = 0; j < char_count; j++) {
+				int current = count[i][j];
+				int transpose = count[j][i];
+				if (i == j) {
+					if (current % 2 == 0) {
+						ans_eqaual += (current * 2);
+					} 
+					else {
+						ans_eqaual += ((current - 1) * 2);
+						odd = 2;
+					}
+				} 
+				else {
+					int min = Math.min(count[i][j],transpose);
+					ans_not_eqaual += (2 * min);
+				}
+			}
+		}
+		return ans_eqaual + ans_not_eqaual;
+	}
+}

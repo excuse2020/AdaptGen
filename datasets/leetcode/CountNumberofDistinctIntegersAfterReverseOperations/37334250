@@ -1,0 +1,28 @@
+class Solution {
+	int countDistinctIntegers(int[] nums) {
+		int[] arr = new int[2 * nums.length];
+		for (int i = 0; i < nums.length; i++) {
+			arr[i] = nums[i];
+		}
+		for (int i = nums.length; i < arr.length; i++) {
+			int j = nums[i % nums.length];
+			int digit = (int) Math.log10(j) + 1;
+			int reverse = 0;
+			while (j > 0) {
+				int last = j % 10;
+				reverse = reverse + last * (int) Math.pow(10,digit - 1);
+				digit--;
+				j = j / 10;
+			}
+			arr[i] = reverse;
+		}
+		Arrays.sort(arr);
+		int count = 1;
+		for (int i = 0; i < arr.length - 1; i++) {
+			if (arr[i] != arr[i + 1]) {
+				count++;
+			}
+		}
+		return count;
+	}
+}

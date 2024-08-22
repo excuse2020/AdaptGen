@@ -1,0 +1,97 @@
+class Solution {
+	int calculate(int a, int b, String op) {
+		if ("+".equals(op)) {
+			return a + b;
+		} 
+		else if ("-".equals(op)) {
+			return a - b;
+		} 
+		else if ("*".equals(op)) {
+			return a * b;
+		} 
+		else if ("/".equals(op)) {
+			return a / b;
+		}
+		return -1;
+	}
+	int evalRPN(String[] tokens) {
+		int[] stack = new int[tokens.length];
+		int i = -1;
+		for (String s: tokens) {	
+			if ("+-*/".contains(s)) {
+				int b = stack[i--];
+				int a = stack[i--];
+				stack[++i] = calculate(a,b,s);
+			} 
+			else {
+				stack[++i] = Integer.parseInt(s);
+			}
+		}
+		return stack[i];
+	}
+	int solve(String s) {
+		return evalRPN(toSuffix(s));
+	}
+	String[] toSuffix(String s) {
+		HashMap<Character, Integer> map = new HashMap<>();
+		map.put('(',0);
+		map.put('+',1);
+		map.put('-',1);
+		map.put('*',2);
+		map.put('/',2);
+		LinkedList<String> queue = new LinkedList<>();
+		LinkedList<Character> stack = new LinkedList<>();
+		char[] cs = s.trim().toCharArray();
+		String standard = "+-*/()";
+		char ch;
+		int len = 0;
+		for (int i = 0; i < cs.length; i++) {
+			ch = cs[i];
+			if (Character.isDigit(ch) || Character.isLetter(ch)) {
+				len++;
+			} 
+			else if (Character.isSpaceChar(ch)) {
+				if (len > 0) {
+					queue.add(String.valueOf(Arrays.copyOfRange(cs,i - len,i)));
+					len = 0;
+				}
+				continue;
+			} 
+			else if (standard.contains(String.valueOf(ch))) {
+				if (len > 0) {
+					queue.add(String.valueOf(Arrays.copyOfRange(cs,i - len,i)));
+					len = 0;
+				}
+				if (ch == '(') {
+					stack.push(ch);
+					continue;
+				}
+				if (!stack.isEmpty()) {
+					boolean flag = false;
+					while (!stack.isEmpty() && ch == ')' && stack.peek() != '(') {
+						queue.add(String.valueOf(stack.pop()));
+						flag = true;
+					}
+					while (!stack.isEmpty() && !flag) {
+						queue.add(String.valueOf(stack.pop()));
+					}
+				}
+				if (ch != ')') {
+					stack.push(ch);
+				} 
+				else {
+					stack.pop();
+				}
+			}
+			if (i == cs.length - 1) {
+				if (len > 0) {
+					queue.add(String.valueOf(Arrays.copyOfRange(cs,i - len + 1,i + 1)));
+				}
+				while (!stack.isEmpty()) {
+					queue.add(String.valueOf(stack.pop()));
+				}
+			}
+		}
+		return queue.toArray(new String[0]);
+	}
+}

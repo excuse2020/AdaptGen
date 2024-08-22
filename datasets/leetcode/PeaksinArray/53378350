@@ -1,0 +1,61 @@
+class Solution {
+	int n;
+	int[] segTree;
+	void buildTree(int[] nums, int curr, int start, int end) {
+		if (start == end) {
+			if (start - 1 >= 0 && start + 1 < nums.length && nums[start - 1] < nums[start] && nums[start + 1] < nums[start]) {
+				segTree[curr] = 1;
+			}
+		} 
+		else {
+			int mid = (end - start) / 2 + start;
+			buildTree(nums,2 * curr + 1,start,mid);
+			buildTree(nums,2 * curr + 2,mid + 1,end);
+			segTree[curr] = segTree[2 * curr + 1] + segTree[2 * curr + 2];
+		}
+	}
+	List<Integer> countOfPeaks(int[] nums, int[][] queries) {
+		n = nums.length;
+		segTree = new int[4 * n];
+		buildTree(nums,0,0,n - 1);
+		List<Integer> res = new ArrayList<>();
+		for (int[] q: queries) {	
+			if (q[0] == 2) {
+				nums[q[1]] = q[2];
+				update(nums,0,0,n - 1,q[1] - 1);
+				update(nums,0,0,n - 1,q[1]);
+				update(nums,0,0,n - 1,q[1] + 1);
+			} 
+			else {
+				res.add(query(0,0,n - 1,q[1] + 1,q[2] - 1));
+			}
+		}
+		return res;
+	}
+	int query(int curr, int start, int end, int l, int r) {
+		if (r < start || l > end) {
+			return 0;
+		}
+		if (l <= start && r >= end) {
+			return segTree[curr];
+		}
+		int mid = (end - start) / 2 + start;
+		return query(2 * curr + 1,start,mid,l,r) + query(2 * curr + 2,mid + 1,end,l,r);
+	}
+	void update(int[] nums, int curr, int start, int end, int updateIndex) {
+		if (start == end && start == updateIndex) {
+			if (start - 1 >= 0 && start + 1 < nums.length && nums[start - 1] < nums[start] && nums[start + 1] < nums[start]) {
+				segTree[curr] = 1;
+			} 
+			else {
+				segTree[curr] = 0;
+			}
+		} 
+		else if (start <= updateIndex && end >= updateIndex) {
+			int mid = (end - start) / 2 + start;
+			update(nums,2 * curr + 1,start,mid,updateIndex);
+			update(nums,2 * curr + 2,mid + 1,end,updateIndex);
+			segTree[curr] = segTree[2 * curr + 1] + segTree[2 * curr + 2];
+		}
+	}
+}

@@ -1,0 +1,61 @@
+class Solution {
+	boolean isPossible(int n, List<List<Integer>> edges) {
+		int[] indegree = new int[n + 1];
+		ArrayList<HashSet<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i <= n; i++) {
+			adj.add(new HashSet<>());
+		}
+		for (int i = 0; i < edges.size(); i++) {
+			int u = edges.get(i).get(0);
+			int v = edges.get(i).get(1);
+			indegree[u]++;
+			indegree[v]++;
+			adj.get(u).add(v);
+			adj.get(v).add(u);
+		}
+		ArrayList<Integer> lst = new ArrayList<>();
+		for (int i = 1; i <= n; i++) {
+			if (indegree[i] % 2 != 0) {
+				lst.add(i);
+			}
+		}
+		if (lst.size() > 4 || lst.size() % 2 != 0) {
+			return false;
+		}
+		int cnt = lst.size();
+		if (cnt == 0) {
+			return true;
+		} 
+		else if (cnt == 2) {
+			int a = lst.get(0);
+			int b = lst.get(1);
+			if (!adj.get(a).contains(b) && !adj.get(b).contains(a)) {
+				return true;
+			}
+			for (int i = 1; i <= n; i++) {
+				if (!adj.get(a).contains(i) && !adj.get(b).contains(i) && b != i) {
+					return true;
+				}
+			}
+			return false;
+		} 
+		else {
+			int a = lst.get(0);
+			int b = lst.get(1);
+			int c = lst.get(2);
+			int d = lst.get(3);
+			if (!adj.get(a).contains(b) && !adj.get(c).contains(d)) {
+				return true;
+			} 
+			else if (!adj.get(a).contains(c) && !adj.get(b).contains(d)) {
+				return true;
+			} 
+			else if (!adj.get(a).contains(d) && !adj.get(c).contains(b)) {
+				return true;
+			} 
+			else {
+				return false;
+			}
+		}
+	}
+}

@@ -1,0 +1,27 @@
+class Solution {
+	int maxPoints(int[][] points) {
+		Map<Double, Set<Integer>> slopeMap = new HashMap<>();
+		Map<Integer, Set<Integer>> infinitySlopeMap = new HashMap<>();
+		int result = 1;
+		for (int i = 0; i < points.length; i++) {
+			for (int j = 0; j < points.length; j++) {
+				if (points[i][0] != points[j][0]) {
+					double slope = ((points[j][1] - points[i][1]) * 1.0) / (points[j][0] - points[i][0]);
+					slopeMap.computeIfAbsent(slope,(K) -> {new HashSet<>()});
+					slopeMap.get(slope).add(i);
+					slopeMap.get(slope).add(j);
+					result = Math.max(result,slopeMap.get(slope).size());
+				} 
+				else {
+					infinitySlopeMap.computeIfAbsent(points[i][0],(k) -> {new HashSet<>()});
+					infinitySlopeMap.get(points[i][0]).add(points[i][1]);
+					infinitySlopeMap.get(points[i][0]).add(points[j][1]);
+					result = Math.max(result,infinitySlopeMap.get(points[i][0]).size());
+				}
+			}
+			slopeMap.clear();
+			infinitySlopeMap.clear();
+		}
+		return result;
+	}
+}

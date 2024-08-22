@@ -1,0 +1,37 @@
+class Solution {
+	TreeNode Convert(TreeNode pRootOfTree) {
+		if (pRootOfTree == null) {
+			return null;
+		}
+		return ConvertSubTree(pRootOfTree,false);
+	}
+	TreeNode ConvertSubTree(TreeNode root, boolean isLeft) {
+		if (root.left == null && root.right == null) {
+			return root;
+		}
+		if (root.left != null) {
+			TreeNode leftSubTreeRightHead = ConvertSubTree(root.left,true);
+			leftSubTreeRightHead.right = root;
+			root.left = leftSubTreeRightHead;
+		}
+		if (root.right != null) {
+			TreeNode rightSubTreeLeftHead = ConvertSubTree(root.right,false);
+			rightSubTreeLeftHead.left = root;
+			root.right = rightSubTreeLeftHead;
+		}
+		TreeNode pre = root;
+		if (isLeft == true) {
+			while (root != null) {
+				pre = root;
+				root = root.right;
+			}
+		} 
+		else {
+			while (root != null) {
+				pre = root;
+				root = root.left;
+			}
+		}
+		return pre;
+	}
+}

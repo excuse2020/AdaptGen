@@ -1,0 +1,26 @@
+class Solution {
+	int max = 0;
+	int countMaxOrSubsets(int[] nums) {
+		HashMap<Integer, Integer> hash = new HashMap<>();
+		fun(0,nums,-1,hash);
+		return hash.get(max) == null ? 0 : hash.get(max);
+	}
+	void fun(int i, int[] nums, int curr, HashMap<Integer, Integer> hash) {
+		if (i == nums.length) {
+			if (curr != -1) {
+				max = Math.max(max,curr);
+				hash.put(curr,hash.getOrDefault(curr,0) + 1);
+			}
+			return;
+		}
+		int now = 0;
+		if (curr == -1) {
+			now = nums[i];
+		} 
+		else {
+			now = curr | nums[i];
+		}
+		fun(i + 1,nums,now,hash);
+		fun(i + 1,nums,curr,hash);
+	}
+}

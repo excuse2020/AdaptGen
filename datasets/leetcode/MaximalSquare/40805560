@@ -1,0 +1,32 @@
+class Solution {
+	boolean isOneSquare(char[][] matrix, int topLeftRow, int topLeftColumn, int bottomRightRow, int bottomRightColumn) {
+		int row = topLeftRow;
+		int column = topLeftColumn;
+	}
+	int maximalSquare(char[][] matrix) {
+		var maxSquareSize = Math.min(matrix.length,matrix[0].length);
+		var smallestSquareSize = 1;
+		var squareArea = 0;
+		while (smallestSquareSize <= maxSquareSize) {
+			var squareSize = (smallestSquareSize + maxSquareSize) / 2;
+			var found = false;
+			for (int topLeftRow = 0; topLeftRow <= (matrix.length - squareSize); topLeftRow++) {
+				for (int topLeftColumn = 0; topLeftColumn <= (matrix[0].length - squareSize); topLeftColumn++) {
+					if (!found) {
+						var bottomRightRow = topLeftRow + squareSize - 1;
+						var bottomRightColumn = topLeftColumn + squareSize - 1;
+						if (isOneSquare(matrix,topLeftRow,topLeftColumn,bottomRightRow,bottomRightColumn)) {
+							found = true;
+							squareArea = squareSize * squareSize;
+							smallestSquareSize = squareSize + 1;
+						}
+					}
+				}
+			}
+			if (!found) {
+				maxSquareSize = squareSize - 1;
+			}
+		}
+		return squareArea;
+	}
+}

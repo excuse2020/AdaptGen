@@ -1,0 +1,41 @@
+class Solution {
+	int countSubstr(String sub, String t) {
+		int n = t.length();
+		int s = sub.length();
+		int count = 0;
+		for (int i = 0; i <= n - s; i++) {
+			if (isValid(sub,t.substring(i,i + s))) {
+				++count;
+			}
+		}
+		return count;
+	}
+	int countSubstrings(String s, String t) {
+		Map<String, Integer> memo = new HashMap<>();
+		int n = s.length();
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = i; j < n; j++) {
+				String sub = s.substring(i,j + 1);
+				if (!memo.containsKey(sub)) {
+					memo.put(sub,countSubstr(sub,t));
+				}
+				ans += memo.get(sub);
+			}
+		}
+		return ans;
+	}
+	boolean isValid(String s, String t) {
+		int diff = 0;
+		int n = t.length();
+		for (int i = 0; i < n; i++) {
+			if (s.charAt(i) != t.charAt(i)) {
+				if (diff > 0) {
+					return false;
+				}
+				diff++;
+			}
+		}
+		return diff == 1;
+	}
+}

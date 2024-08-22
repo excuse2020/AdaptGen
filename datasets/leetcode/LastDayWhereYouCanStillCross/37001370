@@ -1,0 +1,61 @@
+class Solution {
+	int m, n;
+	int[] parents;
+	int[] rank;
+	int latestDayToCross(int row, int col, int[][] cells) {
+		m = row + 2;
+		n = col;
+		parents = new int[m * n];
+		rank = new int[m * n];
+		boolean[] land = new boolean[m * n];
+		for (int i = 0; i < parents.length; i++) {
+			parents[i] = i;
+		}
+		for (int i = 0; i < n; i++) {
+			uf(0,i);
+			uf((m - 1) * n + 0,(m - 1) * n + i);
+		}
+		for (int i = cells.length - 1; i > -1; i--) {
+			int cel = cells[i], x = cel[0], y = cel[1] - 1;
+			land[x * n + y] = true;
+			if (x == 1 || land[(x - 1) * n + y]) {
+				uf((x - 1) * n + y,x * n + y);
+			}
+			if (y > 0 && land[x * n + y - 1]) {
+				uf(x * n + y - 1,x * n + y);
+			}
+			if (y < n - 1 && land[x * n + y + 1]) {
+				uf(x * n + y + 1,x * n + y);
+			}
+			if (x == m - 2 || land[(x + 1) * n + y]) {
+				uf((x + 1) * n + y,x * n + y);
+			}
+			if (parent(0) == parent((m - 1) * n + 0)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	int parent(int a) {
+		int pa = parents[a];
+		if (pa != a) {
+			parents[a] = pa = parent(pa);
+		}
+		return pa;
+	}
+	boolean uf(int a, int b) {
+		int pa = parent(a), pb = parent(b);
+		if (pa == pb) {
+			return false;
+		}
+		if (rank[pa] >= rank[pb]) {
+			rank[pa] += rank[pb] + 1;
+			parents[pb] = pa;
+		} 
+		else {
+			rank[pb] += rank[pa] + 1;
+			parents[pa] = pb;
+		}
+		return true;
+	}
+}

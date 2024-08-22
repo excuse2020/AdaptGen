@@ -1,0 +1,29 @@
+class Solution {
+	long gcd(long a, long b) {
+		if (a % b == 0) {
+			return b;
+		} 
+		else {
+			return gcd(b,a % b);
+		}
+	}
+	int minimizeSet(long div1, long div2, long c1, long c2) {
+		long l = 1, h = Integer.MAX_VALUE, ans = 0, a, b, c;
+		long g = gcd(Math.max(div1,div2),Math.min(div1,div2));
+		long lcm = (div1 * div2) / g;
+		while (l < h) {
+			long mid = l + (h - l) / 2;
+			a = mid - (mid / div1);
+			b = mid - (mid / div2);
+			c = mid - (mid / div1) + (mid / lcm);
+			if (a >= c1 && b >= c2 && a + b - c >= c1 + c2) {
+				ans = mid;
+				h = mid;
+			} 
+			else {
+				l = mid + 1;
+			}
+		}
+		return (int) ans;
+	}
+}

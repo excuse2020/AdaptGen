@@ -1,0 +1,34 @@
+class Solution {
+	int f(int Grid, int i, int j, int ways) {
+		if (Grid[i][j] == 1) {
+			return 0;
+		}
+		if (i == 0 && j == 0) {
+			return 1;
+		}
+		if (ways[i][j] != -1) {
+			return ways[i][j];
+		}
+		int up = 0;
+		int left = 0;
+		if (i > 0) {
+			up = f(Grid,i - 1,j,ways);
+		}
+		if (j > 0) {
+			left = f(Grid,i,j - 1,ways);
+		}
+		return ways[i][j] = left + up;
+	}
+	int uniquePathsWithObstacles(int[][] obstacleGrid) {
+		int row = obstacleGrid.length;
+		int col = obstacleGrid[0].length;
+		int ways = new int[row][col];
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < col; j++) {
+				ways[i][j] = -1;
+			}
+		}
+		int res = f(obstacleGrid,row - 1,col - 1,ways);
+		return res;
+	}
+}

@@ -1,0 +1,44 @@
+class Solution {
+	boolean dfs(TreeNode node, List<String> path, int target) {
+		if (node == null) {
+			return false;
+		}
+		if (node.val == target) {
+			return true;
+		}
+		path.add("L");
+		boolean resLeft = dfs(node.left,path,target);
+		if (resLeft) {
+			return true;
+		}
+		path.remove(path.size() - 1);
+		path.add("R");
+		boolean resRight = dfs(node.right,path,target);
+		if (resRight) {
+			return true;
+		}
+		path.remove(path.size() - 1);
+		return false;
+	}
+	String getDirections(TreeNode root, int startValue, int destValue) {
+		List<String> start = new ArrayList<>();
+		dfs(root,start,startValue);
+		List<String> end = new ArrayList<>();
+		dfs(root,end,destValue);
+		int i = 0;
+		String res = "";
+		while (i < Math.min(start.size(),end.size())) {
+			if (start.get(i) != end.get(i)) {
+				break;
+			}
+			i += 1;
+		}
+		for (int j = i; j < start.size(); j++) {
+			res += "U";
+		}
+		for (int j = i; j < end.size(); j++) {
+			res += end.get(j);
+		}
+		return res;
+	}
+}

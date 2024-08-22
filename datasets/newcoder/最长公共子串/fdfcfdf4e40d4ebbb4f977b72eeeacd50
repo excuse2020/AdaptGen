@@ -1,0 +1,39 @@
+class Solution {
+	String LCS(String str1, String str2) {
+		if (1 == str1.length() && 1 == str2.length()) {
+			return str1.equals(str2) ? str1 : "";
+		}
+		if (str1.equals(str2)) {
+			return str1;
+		}
+		int sl1 = str1.length();
+		int sl2 = str2.length();
+		int minl = sl1 < sl2 ? sl1 : sl2;
+		int maxl = sl1 >= sl2 ? sl1 : sl2;
+		String minStr = sl1 < sl2 ? str1 : str2;
+		String maxStr = sl1 >= sl2 ? str1 : str2;
+		int[] dp = new int[minl];
+		int val = 0;
+		int p = 0;
+		for (int i = 0; i < minl; i++) {
+			for (int j = 0; j < maxl; j++) {
+				while (i + p < minl && j + p < maxl && maxStr.charAt(j + p) == minStr.charAt(i + p)) {
+					p++;
+					val++;
+				}
+				p = 0;
+				dp[i] = Math.max(dp[i],val);
+				val = 0;
+			}
+		}
+		int index = 0;
+		int maxv = Integer.MIN_VALUE;
+		for (int i = 0; i < dp.length; i++) {
+			if (maxv < dp[i]) {
+				maxv = dp[i];
+				index = i;
+			}
+		}
+		return minStr.substring(index,index + dp[index]);
+	}
+}

@@ -1,0 +1,34 @@
+class Solution {
+	ListNode reverse(ListNode header) {
+		ListNode preNode = null;
+		ListNode curNode = header;
+		while (curNode != null) {
+			ListNode nextNode = curNode.next;
+			curNode.next = preNode;
+			preNode = curNode;
+			curNode = nextNode;
+		}
+		return preNode;
+	}
+	ListNode reverseBetween(ListNode head, int m, int n) {
+		if (head == null) {
+			return null;
+		}
+		ListNode vHead = new ListNode(-1);
+		vHead.next = head;
+		ListNode preMNode = vHead;
+		for (int i = 0; i < m - 1; i++) {
+			preMNode = preMNode.next;
+		}
+		ListNode mNode = preMNode.next;
+		ListNode nNode = mNode;
+		for (int j = 0; j < n - m; j++) {
+			nNode = nNode.next;
+		}
+		ListNode nextNNode = nNode.next;
+		nNode.next = null;
+		preMNode.next = reverse(mNode);
+		mNode.next = nextNNode;
+		return vHead.next;
+	}
+}

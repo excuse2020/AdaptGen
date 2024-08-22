@@ -1,0 +1,54 @@
+class Solution {
+	List<List<String>> mostPopularCreator(String[] creators, String[] ids, int[] views) {
+		Map<String, Long> hmC = new HashMap<String, Long>();
+		long maxView = 0;
+		for (int i = 0; i < creators.length; i++) {
+			if (!hmC.containsKey(creators[i])) {
+				hmC.put(creators[i],(long) views[i]);
+				if (maxView < views[i]) {
+					maxView = views[i];
+				}
+			} 
+			else {
+				long view = (hmC.get(creators[i]) + (long) views[i]);
+				if (maxView < view) {
+					maxView = view;
+				}
+				hmC.put(creators[i],view);
+			}
+		}
+		Set<String> topCreators = new HashSet<String>();
+		for (String c: hmC.keySet()) {	
+			if (hmC.get(c) == maxView) {
+				topCreators.add(c);
+			}
+		}
+		Map<String, Integer> res = new HashMap<String, Integer>();
+		Map<String, String> vid = new HashMap<String, String>();
+		for (int i = 0; i < creators.length; i++) {
+			if (topCreators.contains(creators[i])) {
+				if (!res.containsKey(creators[i])) {
+					res.put(creators[i],views[i]);
+					vid.put(creators[i],ids[i]);
+				} 
+				else if (res.get(creators[i]) < views[i]) {
+					res.put(creators[i],views[i]);
+					vid.put(creators[i],ids[i]);
+				} 
+				else if (res.get(creators[i]) == views[i]) {
+					if (ids[i] != "" && ids[i].compareTo(vid.get(creators[i])) < 0) {
+						vid.put(creators[i],ids[i]);
+					}
+				}
+			}
+		}
+		List<List<String>> result = new ArrayList<>();
+		for (String c: vid.keySet()) {	
+			List<String> temp = new ArrayList<String>();
+			temp.add(c);
+			temp.add(vid.get(c));
+			result.add(temp);
+		}
+		return result;
+	}
+}

@@ -1,0 +1,40 @@
+class Solution {
+	int[] cycleLengthQueries(int n, int[][] queries) {
+		int[] res = new int[queries.length];
+		int i = 0;
+		for (int[] q: queries) {	
+			List<int[]> parent1 = parentList(q[0]);
+			List<int[]> parent2 = parentList(q[1]);
+			res[i++] = getCycleLength(parent1,parent2);
+		}
+		return res;
+	}
+	int getCycleLength(List<int[]> p1, List<int[]> p2) {
+		int i = 0, j = 0;
+		while (i < p1.size() && j < p2.size()) {
+			if (p1.get(i)[1] > p2.get(j)[1]) {
+				i++;
+			} 
+			else if (p1.get(i)[1] < p2.get(j)[1]) {
+				j++;
+			} 
+			else if (p1.get(i)[0] == p2.get(j)[0]) {
+				return p1.get(0)[1] - p1.get(i)[1] + p2.get(0)[1] - p2.get(j)[1] + 1;
+			} 
+			else {
+				i++;
+				j++;
+			}
+		}
+		return 0;
+	}
+	List<int[]> parentList(int n) {
+		List<int[]> list = new ArrayList<>();
+		int i = (int) Math.ceil(Math.log(n + 1) / Math.log(2));
+		while (n > 0) {
+			list.add(new int{n, i--});
+			n /= 2;
+		}
+		return list;
+	}
+}

@@ -1,0 +1,45 @@
+class Solution {
+	boolean findCycle(int ind, ArrayList<ArrayList<Integer>> adj, boolean vis, boolean path, ArrayList<Integer> ans) {
+		if (vis[ind] == false) {
+			vis[ind] = true;
+			path[ind] = true;
+			for (Integer it: adj.get(ind)) {	
+				if (vis[it] == false) {
+					if (findCycle(it,adj,vis,path,ans)) {
+						return true;
+					}
+				} 
+				else if (path[it] == true) {
+					return true;
+				}
+			}
+			ans.add(ind);
+		}
+		path[ind] = false;
+		return false;
+	}
+	int[] findOrder(int numCourses, int[][] prerequisites) {
+		int V = numCourses;
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < V; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < prerequisites.length; i++) {
+			int[] sub = prerequisites[i];
+			adj.get(sub[0]).add(sub[1]);
+		}
+		boolean vis = new boolean[V];
+		boolean path = new boolean[V];
+		ArrayList<Integer> ans = new ArrayList<>();
+		for (int i = 0; i < V; i++) {
+			if (findCycle(i,adj,vis,path,ans)) {
+				return new int[0];
+			}
+		}
+		int[] res = new int[V];
+		for (int i = 0; i < V; i++) {
+			res[i] = ans.get(i);
+		}
+		return res;
+	}
+}

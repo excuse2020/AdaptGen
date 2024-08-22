@@ -1,0 +1,37 @@
+class Solution {
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		Map<Integer, List<Integer>> preMap = new HashMap<>();
+		for (int i = 0; i < numCourses; i++) {
+			preMap.put(i,new ArrayList<>());
+		}
+		for (int[] element: prerequisites) {	
+			int course = element[0];
+			int preReq = element[1];
+			preMap.get(course).add(preReq);
+		}
+		boolean[] visitedSet = new boolean[numCourses];
+		for (int i = 0; i < numCourses; i++) {
+			if (!dfs(i,preMap,visitedSet)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean dfs(int course, Map<Integer, List<Integer>> preMap, boolean[] visitedSet) {
+		if (visitedSet[course]) {
+			return false;
+		}
+		if (preMap.get(course).size() == 0) {
+			return true;
+		}
+		visitedSet[course] = true;
+		for (Integer pre: preMap.get(course)) {	
+			if (!dfs(pre,preMap,visitedSet)) {
+				return false;
+			}
+		}
+		visitedSet[course] = false;
+		preMap.get(course).clear();
+		return true;
+	}
+}

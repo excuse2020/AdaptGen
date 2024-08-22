@@ -1,0 +1,46 @@
+class Solution {
+	int maxJump(int[] stones) {
+		int n = stones.length;
+		int i = stones[0], j = 2 * Math.abs(stones[n - 1] - stones[0]);
+		int ans = 0;
+		while (i < j) {
+			int mid = (i + j) / 2;
+			if (possible(stones,mid)) {
+				ans = mid;
+				j = mid;
+			} 
+			else {
+				i = mid + 1;
+			}
+		}
+		return ans;
+	}
+	boolean possible(int[] stones, int mid) {
+		int n = stones.length;
+		boolean[] visited = new boolean[n];
+		int last = 0;
+		for (int i = 1; i < n; i++) {
+			if (stones[i] - stones[last] > mid) {
+				if (visited[i - 1] == false) {
+					visited[i - 1] = true;
+					last = i - 1;
+					i--;
+				}
+			} 
+			else if (i == n - 1 && stones[i] - stones[last] > mid) {
+				return false;
+			}
+		}
+		last = n - 1;
+		for (int i = n - 2; i >= 0; i--) {
+			if (stones[last] - stones[i] <= mid && visited[i] == false) {
+				last = i;
+				visited[i] = false;
+			} 
+			else if (stones[last] - stones[i] > mid) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

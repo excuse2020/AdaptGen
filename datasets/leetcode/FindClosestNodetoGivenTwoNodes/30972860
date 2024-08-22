@@ -1,0 +1,39 @@
+class Solution {
+	void bfs(int edges, int dist, int node) {
+		int n = edges.length;
+		boolean vis = new boolean[n];
+		Queue<Integer> q = new LinkedList<>();
+		q.offer(node);
+		dist[node] = 0;
+		while (!q.isEmpty()) {
+			int currnode = q.poll();
+			if (vis[currnode]) {
+				continue;
+			}
+			vis[currnode] = true;
+			int neighbour = edges[currnode];
+			if (neighbour != -1 && !vis[neighbour]) {
+				dist[neighbour] = 1 + dist[currnode];
+				q.offer(neighbour);
+			}
+		}
+	}
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		int n = edges.length;
+		int dist1 = new int[n];
+		int dist2 = new int[n];
+		Arrays.fill(dist1,Integer.MAX_VALUE);
+		Arrays.fill(dist2,Integer.MAX_VALUE);
+		bfs(edges,dist1,node1);
+		bfs(edges,dist2,node2);
+		int mindisttillnow = Integer.MAX_VALUE;
+		int ans = -1;
+		for (int i = 0; i < n; i++) {
+			if (mindisttillnow > Math.max(dist1[i],dist2[i])) {
+				ans = i;
+				mindisttillnow = Math.max(dist1[i],dist2[i]);
+			}
+		}
+		return ans;
+	}
+}

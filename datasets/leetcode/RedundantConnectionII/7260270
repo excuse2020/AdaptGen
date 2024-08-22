@@ -1,0 +1,57 @@
+class Solution {
+	int count;
+	void DFS(ArrayList<ArrayList<Integer>> a, int V, boolean visited) {
+		if (visited[V] == true) {
+			return;
+		}
+		visited[V] = true;
+		for (int i = 0; i < a.get(V).size(); i++) {
+			DFS(a,a.get(V).get(i),visited);
+		}
+		return;
+	}
+	boolean connectionFindingDFS(ArrayList<ArrayList<Integer>> a, int V, int from, int to, boolean visited) {
+		if (visited[V] == true) {
+			return false;
+		}
+		count += 1;
+		if (count == a.size()) {
+			return true;
+		}
+		visited[V] = true;
+		boolean ans = false;
+		for (int i = 0; i < a.get(V).size(); i++) {
+			if (V == from && a.get(V).get(i) == to) {
+				continue;
+			}
+			ans |= connectionFindingDFS(a,a.get(V).get(i),from,to,visited);
+		}
+		return ans;
+	}
+	int[] findRedundantDirectedConnection(int[][] edges) {
+		int lastAns = 0;
+		ArrayList<ArrayList<Integer>> a = new ArrayList<>();
+		for (int i = 0; i < edges.length; i++) {
+			a.add(new ArrayList<Integer>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			a.get(edges[i][0] - 1).add(edges[i][1] - 1);
+		}
+		int motherVertex = 0;
+		boolean visited = new boolean[a.size()];
+		for (int i = 0; i < a.size(); i++) {
+			if (visited[i] == false) {
+				DFS(a,i,visited);
+				motherVertex = i;
+			}
+		}
+		for (int i = 0; i < edges.length; i++) {
+			count = 0;
+			visited = new boolean[a.size()];
+			if (connectionFindingDFS(a,motherVertex,edges[i][0] - 1,edges[i][1] - 1,visited)) {
+				lastAns = i;
+			}
+		}
+		return edges[lastAns];
+	}
+}

@@ -1,0 +1,28 @@
+class Solution {
+	int[] queryResults(int limit, int[][] q) {
+		int n = q.length;
+		Map<Integer, Integer> map1 = new HashMap<>();
+		Map<Integer, Integer> map2 = new HashMap<>();
+		int[] ans = new int[n];
+		for (int i = 0; i < n; ++i) {
+			if (map1.containsKey(q[i][0])) {
+				Integer value = map1.get(q[i][0]);
+				int count = map2.get(value) - 1;
+				if (count == 0) {
+					map2.remove(value);
+				} 
+				else {
+					map2.put(value,count);
+				}
+				map1.put(q[i][0],q[i][1]);
+				map2.put(q[i][1],map2.getOrDefault(q[i][1],0) + 1);
+			} 
+			else {
+				map1.put(q[i][0],q[i][1]);
+				map2.put(q[i][1],map2.getOrDefault(q[i][1],0) + 1);
+			}
+			ans[i] = map2.size();
+		}
+		return ans;
+	}
+}

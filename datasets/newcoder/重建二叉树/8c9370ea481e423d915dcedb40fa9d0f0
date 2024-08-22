@@ -1,0 +1,21 @@
+class Solution {
+	Map<Integer, Integer> map = new HashMap<>();
+	TreeNode build(int[] preOrder, int preBegin, int preEnd, int[] vinOrder, int vinBegin, int vinEnd) {
+		if (preBegin >= preEnd || vinBegin >= vinEnd) {
+			return null;
+		}
+		int rootVal = preOrder[preBegin];
+		int rootIdx = map.get(rootVal);
+		int leftTreeLen = rootIdx - vinBegin;
+		TreeNode root = new TreeNode(rootVal);
+		root.left = build(preOrder,preBegin + 1,preBegin + 1,vinOrder,vinBegin,rootIdx);
+		root.right = build(preOrder,preBegin + 1,preEnd,vinOrder,rootIdx + 1,vinEnd);
+		return root;
+	}
+	TreeNode reConstructBinaryTree(int[] preOrder, int[] vinOrder) {
+		for (int i = 0; i < vinOrder.length; i++) {
+			map.put(vinOrder[i],i);
+		}
+		return build(preOrder,0,preOrder.length,vinOrder,0,vinOrder.length);
+	}
+}

@@ -1,0 +1,65 @@
+class Solution {
+	int n = 0;
+	int delete(int arr) {
+		int first = arr[0];
+		int last = arr[n - 1];
+		arr[0] = last;
+		n--;
+		deleteUpdate(arr,0);
+		return first;
+	}
+	void deleteUpdate(int[] arr, int i) {
+		int l = 2 * i + 1;
+		int r = 2 * i + 2;
+		int lar = i;
+		if (l < n && arr[l] > arr[lar]) {
+			lar = l;
+		}
+		if (r < n && arr[r] > arr[lar]) {
+			lar = r;
+		}
+		if (i != lar) {
+			int tmp = arr[i];
+			arr[i] = arr[lar];
+			arr[lar] = tmp;
+			deleteUpdate(arr,lar);
+		}
+	}
+	void insert(int[] arr, int val, int i) {
+		arr[i] = val;
+		insertUpdate(arr,i);
+		n++;
+	}
+	void insertUpdate(int[] arr, int i) {
+		int par = (i - 1) / 2;
+		if (i != 0) {
+			if (arr[i] > arr[par]) {
+				int tmp = arr[i];
+				arr[i] = arr[par];
+				arr[par] = tmp;
+				insertUpdate(arr,par);
+			}
+		}
+	}
+	int lastStoneWeight(int[] stones) {
+		int[] arr = new int[stones.length];
+		for (int i = 0; i < stones.length; i++) {
+			insert(arr,stones[i],i);
+		}
+		int ind = n;
+		if (n == 1) {
+			return arr[0];
+		}
+		while (n > 1) {
+			int first = delete(arr);
+			if (n == 1) {
+				return first - arr[0];
+			}
+			int sec = delete(arr);
+			if (first != sec) {
+				insert(arr,first - sec,n);
+			}
+		}
+		return arr[0];
+	}
+}

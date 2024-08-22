@@ -1,0 +1,38 @@
+class Solution {
+	int[] cycleLengthQueries(int n, int[][] queries) {
+		int m = queries.length;
+		int[] ans = new int[m];
+		int bit = 1 << (n - 1);
+		for (int i = 0; i < m; i++) {
+			int level = bit;
+			int A = queries[i][0];
+			int B = queries[i][1];
+			int pathA = 0;
+			int pathB = 0;
+			boolean shiftA = false;
+			boolean shiftB = false;
+			while (bit > 0) {
+				if (A == B) {
+					break;
+				}
+				if (shiftA) {
+					A >>= 1;
+					pathA++;
+				}
+				if (shiftB) {
+					B >>= 1;
+					pathB++;
+				}
+				if (!shiftA) {
+					shiftA = (A & level) > 0;
+				}
+				if (!shiftB) {
+					shiftB = (B & level) > 0;
+				}
+				level >>= 1;
+			}
+			ans[i] = pathA + pathB;
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,34 @@
+class Solution {
+	int cnt = 0;
+	HashMap<String, Integer> cntMap = new HashMap<>();
+	int dfs(int k, int jump, boolean isLastOp1) {
+		int ans = 0;
+		if (k == 1 && isLastOp1 == false && jump == 1) {
+			return 1;
+		}
+		if (k < 0 || jump == 0) {
+			return 0;
+		}
+		String hashKey = String.format("%d_%d_%b",k,jump,isLastOp1);
+		if (cntMap.containsKey(hashKey)) {
+			return cntMap.get(hashKey);
+		}
+		if (isLastOp1) {
+			ans += dfs(k + 1,jump,false);
+		} 
+		else {
+			ans += dfs(k - jump / 2,jump / 2,false);
+			ans += dfs(k - jump / 2,jump / 2,true);
+		}
+		cntMap.put(hashKey,ans);
+		return ans;
+	}
+	int waysToReachStair(int k) {
+		int ans = 0;
+		for (int jump = 1; jump <= 1e9; jump *= 2) {
+			ans += dfs(k,jump,false);
+			ans += dfs(k,jump,true);
+		}
+		return ans;
+	}
+}

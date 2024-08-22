@@ -1,0 +1,30 @@
+class Solution {
+	int MOD = 1_000_000_007;
+	int gcd(int a, int b) {
+		if (a % b == 0) {
+			return b;
+		}
+		return gcd(b,a % b);
+	}
+	int nthMagicalNumber(int n, int a, int b) {
+		int g = gcd(a,b);
+		int lcm = a * b / g;
+		int ma = lcm / a - 1;
+		int mb = lcm / b - 1;
+		List<Integer> list = new ArrayList<>();
+		for (int i = 1; i <= ma; i++) {
+			list.add(a * i);
+		}
+		for (int i = 1; i <= mb; i++) {
+			list.add(b * i);
+		}
+		list.add(lcm);
+		list.sort(null);
+		long reps = n / list.size();
+		long ans = reps * lcm % MOD;
+		if (n % list.size() > 0) {
+			ans = (ans + list.get(n % list.size() - 1)) % MOD;
+		}
+		return (int) ans;
+	}
+}

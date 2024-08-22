@@ -1,0 +1,32 @@
+class Solution {
+	long[][] dp;
+	int mod = 1_000_000_007;
+	int totalSongs, k, goalSongs;
+	int numMusicPlaylists(int n, int goal, int k) {
+		this.k = k;
+		this.totalSongs = n;
+		this.goalSongs = goal;
+		dp = new long[goal + 1][n + 1];
+		for (long[] row: dp) {	
+			Arrays.fill(row,-1);
+		}
+		return (int) numPlayLists(0,0);
+	}
+	long numPlayLists(int goal, int usedSongs) {
+		if (goal == goalSongs && usedSongs == totalSongs) {
+			return 1;
+		}
+		if (goal == goalSongs || usedSongs > totalSongs) {
+			return 0;
+		}
+		if (dp[goal][usedSongs] != -1) {
+			return dp[goal][usedSongs];
+		}
+		long newSong = (totalSongs - usedSongs) * numPlayLists(goal + 1,usedSongs + 1);
+		long repeat = 0;
+		if (usedSongs > k) {
+			repeat = (usedSongs - k) * numPlayLists(goal + 1,usedSongs);
+		}
+		return dp[goal][usedSongs] = ((newSong % mod) + (repeat % mod)) % mod;
+	}
+}

@@ -1,0 +1,20 @@
+class Solution {
+	int[] successfulPairs(int[] spells, int[] potions, long success) {
+		int maxP = 0;
+		for (int p: potions) {	
+			maxP = Math.max(maxP,p);
+		}
+		int[] suf = new int[maxP + 1];
+		for (int p: potions) {	
+			suf[p]++;
+		}
+		for (int i = suf.length - 2; i >= 0; i--) {
+			suf[i] += suf[i + 1];
+		}
+		for (int i = 0; i < spells.length; i++) {
+			long v = (success + spells[i] - 1) / spells[i];
+			spells[i] = v > maxP ? 0 : suf[(int)v];
+		}
+		return spells;
+	}
+}

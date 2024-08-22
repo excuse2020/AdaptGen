@@ -1,0 +1,56 @@
+class Solution {
+	int BinaryDecreasing(MountainArray mountain, int target, int start, int end) {
+		while (start <= end) {
+			int mid = start + (end - start) / 2;
+			int midElement = mountain.get(mid);
+			if (midElement == target) {
+				return mid;
+			} 
+			else if (target < midElement) {
+				start = mid + 1;
+			} 
+			else {
+				end = mid - 1;
+			}
+		}
+		return -1;
+	}
+	int BinaryIncreasing(MountainArray mountain, int target, int start, int end) {
+		while (start <= end) {
+			int mid = start + (end - start) / 2;
+			int midElement = mountain.get(mid);
+			if (midElement == target) {
+				return mid;
+			} 
+			else if (target < midElement) {
+				end = mid - 1;
+			} 
+			else {
+				start = mid + 1;
+			}
+		}
+		return -1;
+	}
+	int findInMountainArray(int target, MountainArray mountainArr) {
+		int peakIndex = findPeak(mountainArr);
+		int startAns = BinaryIncreasing(mountainArr,target,0,peakIndex);
+		if (startAns != -1) {
+			return startAns;
+		}
+		return BinaryDecreasing(mountainArr,target,peakIndex + 1,mountainArr.length() - 1);
+	}
+	int findPeak(MountainArray mountain) {
+		int start = 0;
+		int end = mountain.length() - 1;
+		while (start < end) {
+			int mid = start + (end - start) / 2;
+			if (mountain.get(mid) < mountain.get(mid + 1)) {
+				start = mid + 1;
+			} 
+			else {
+				end = mid - 1;
+			}
+		}
+		return start;
+	}
+}

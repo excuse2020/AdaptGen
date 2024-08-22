@@ -1,0 +1,67 @@
+class Solution {
+	boolean btreeGameWinningMove(TreeNode root, int n, int x) {
+		TreeNode parent = findParent(root,null,x);
+		TreeNode curNode = findNode(root,x);
+		int half = n / 2;
+		if (parent != null) {
+			if (parent.left == curNode) {
+				parent.left = null;
+				int count = countNode(root);
+				if (count > half) {
+					parent.left = curNode;
+					return true;
+				}
+			} 
+			else if (parent.right == curNode) {
+				parent.right = null;
+				int count = countNode(root);
+				if (count > half) {
+					parent.right = curNode;
+					return true;
+				}
+			}
+		}
+		if (countNode(curNode.left) > half || countNode(curNode.right) > half) {
+			return true;
+		}
+		return false;
+	}
+	int countNode(TreeNode root) {
+		if (root != null) {
+			int left = countNode(root.left);
+			int right = countNode(root.right);
+			return left + right;
+		} 
+		else {
+			return 0;
+		}
+	}
+	TreeNode findNode(TreeNode root, int x) {
+		if (root == null) {
+			return null;
+		}
+		if (root.val == x) {
+			return root;
+		}
+		TreeNode left = findNode(root.left,x);
+		if (left != null) {
+			return left;
+		}
+		return findNode(root.right,x);
+	}
+	TreeNode findParent(TreeNode root, TreeNode parent, int x) {
+		if (root != null) {
+			if (root.val == x) {
+				return parent;
+			}
+			TreeNode left = findParent(root.left,root,x);
+			if (left != null) {
+				return left;
+			}
+			return findParent(root.right,root,x);
+		} 
+		else {
+			return null;
+		}
+	}
+}

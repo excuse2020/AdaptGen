@@ -1,0 +1,29 @@
+class Solution {
+	int minimumRounds(int[] arr) {
+		Arrays.sort(arr);
+		if (1 == arr.length) {
+			return -1;
+		}
+		int dp = new int[arr.length + 2];
+		Arrays.fill(dp,-1);
+		int ans = recursion(0,arr,dp);
+		return (ans == 1000000) ? -1 : ans;
+	}
+	int recursion(int i, int arr, int dp) {
+		int n = arr.length;
+		if (i >= arr.length) {
+			return 0;
+		}
+		if (dp[i] != -1) {
+			return dp[i];
+		}
+		int ans = 1000000;
+		if (i + 2 < n && arr[i] == arr[i + 1] && arr[i + 1] == arr[i + 2]) {
+			ans = Math.min(ans,1 + recursion(i + 3,arr,dp));
+		}
+		if (i + 1 < n && arr[i] == arr[i + 1]) {
+			ans = Math.min(ans,1 + recursion(i + 2,arr,dp));
+		}
+		return dp[i] = ans;
+	}
+}

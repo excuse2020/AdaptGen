@@ -1,0 +1,45 @@
+class Solution {
+	ArrayList<Integer>[] adj;
+	Map<String, Integer> map;
+	int max = -1;
+	int[] vis;
+	int maximalPathQuality(int[] values, int[][] edges, int maxTime) {
+		adj = new ArrayList[1001];
+		for (int i = 0; i < 1001; i++) {
+			adj[i] = new ArrayList<>();
+		}
+		map = new HashMap<>();
+		for (int[] edge: edges) {	
+			int u = edge[0];
+			int v = edge[1];
+			adj[u].add(v);
+			adj[v].add(u);
+			int time = edge[2];
+			String s = u + "->";
+			map.put(s,time);
+			s = v + "->";
+			map.put(s,time);
+		}
+		vis = new int[1001];
+		max = -1;
+		solve(0,maxTime,0,values);
+		return max;
+	}
+	void solve(int node, int time, int sum, int[] values) {
+		if (time < 0) {
+			return;
+		}
+		if (vis[node] == 0) {
+			sum += values[node];
+		}
+		vis[node]++;
+		if (node == 0) {
+			max = Math.max(max,sum);
+		}
+		for (int child: adj[node]) {	
+			int t = map.get(node + "->");
+			solve(child,time - t,sum,values);
+		}
+		vis[node]--;
+	}
+}

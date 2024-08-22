@@ -1,0 +1,66 @@
+class Solution {
+	int numBusesToDestination(int[][] routes, int source, int target) {
+		if (source == target) {
+			return 0;
+		}
+		int n = routes.length;
+		HashMap<Integer, ArrayList<Integer>> h = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < routes[i].length; j++) {
+				if (!h.containsKey(routes[i][j])) {
+					ArrayList<Integer> temp = new ArrayList<>();
+					temp.add(i);
+					h.put(routes[i][j],temp);
+				} 
+				else {
+					ArrayList<Integer> temp = new ArrayList<>();
+					temp = h.get(routes[i][j]);
+					temp.add(i);
+					h.put(routes[i][j],temp);
+				}
+			}
+		}
+		boolean[] vis = new boolean[n];
+		int level = 1, level_nodes = 0;
+		if (!h.containsKey(target) || h.get(target).isEmpty()) {
+			return -1;
+		}
+		for (int i = 0; i < h.get(target).size(); i++) {
+			for (int j = 0; j < h.get(source).size(); j++) {
+				if (h.get(source).get(j) == h.get(target).get(i)) {
+					return 1;
+				}
+			}
+		}
+		Queue<Integer> q = new LinkedList<>();
+		for (int j = 0; j < h.get(source).size(); j++) {
+			int bus = h.get(source).get(j);
+			for (int i = 0; i < routes[bus].length; i++) {
+				q.offer(routes[bus][i]);
+			}
+			vis[h.get(source).get(j)] = true;
+		}
+		level_nodes = q.size();
+		while (!q.isEmpty()) {
+			if (level_nodes == 0) {
+				level++;
+				level_nodes = q.size();
+			}
+			int stop = q.poll();
+			if (stop == target) {
+				return level;
+			}
+			for (int i = 0; i < h.get(stop).size(); i++) {
+				int x = h.get(stop).get(i);
+				if (!vis[x]) {
+					for (int j = 0; j < routes[x].length; j++) {
+						q.offer(routes[x][j]);
+					}
+					vis[x] = true;
+				}
+			}
+			level_nodes--;
+		}
+		return -1;
+	}
+}

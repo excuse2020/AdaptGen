@@ -1,0 +1,42 @@
+class Solution {
+	Map<Integer, Integer> map;
+	Set<String> set = new HashSet<>();
+	int deleteString(String s) {
+		boolean flag = true;
+		for (int i = 1; i < s.length(); i++) {
+			if (s.charAt(i - 1) != s.charAt(i)) {
+				flag = false;
+			}
+		}
+		if (flag) {
+			return s.length();
+		}
+		map = new HashMap<>();
+		return rec(s);
+	}
+	int rec(String s) {
+		if (s.length() == 0) {
+			return 0;
+		}
+		if (map.containsKey(s.length())) {
+			return map.get(s.length());
+		}
+		int max = 1;
+		for (int i = 1; i <= s.length() / 2; i++) {
+			String s1 = s.substring(0,i);
+			String s2 = s.substring(i,2 * i);
+			set.add(s1);
+			if (set.contains(s2)) {
+				if (map.containsKey(s.substring(i).length())) {
+					max = Math.max(max,map.get(s.substring(i).length()));
+				} 
+				else {
+					max = Math.max(max,1 + rec(s.substring(i)));
+				}
+			}
+			set.clear();
+		}
+		map.put(s.length(),max);
+		return max;
+	}
+}

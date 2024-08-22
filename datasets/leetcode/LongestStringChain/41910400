@@ -1,0 +1,35 @@
+class Solution {
+	int dfs(int index, Map<String, Integer> map, Map<Integer, Integer> dpMap, String[] words) {
+		if (dpMap.containsKey(index)) {
+			return dpMap.get(index);
+		}
+		int res = 1;
+		String w = words[index];
+		for (int i = 0; i < w.length(); i++) {
+			String pred = w.substring(0,i) + w.substring(i + 1);
+			if (map.containsKey(pred)) {
+				res = Math.max(res,1 + dfs(map.get(pred),map,dpMap,words));
+			}
+		}
+		dpMap.put(index,res);
+		return res;
+	}
+	int longestStrChain(String[] words) {
+		Arrays.sort(words,(String a, String b) -> {a.length() - b.length()});
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		for (int i = 0; i < words.length; i++) {
+			map.put(words[i],i);
+		}
+		Map<Integer, Integer> dpMap = new HashMap<Integer, Integer>();
+		for (int i = 0; i < words.length; i++) {
+			dfs(i,map,dpMap,words);
+		}
+		int max = 0;
+		for (Map.Entry<Integer, Integer> s: dpMap.entrySet()) {	
+			if (s.getValue() > max) {
+				max = s.getValue();
+			}
+		}
+		return max;
+	}
+}

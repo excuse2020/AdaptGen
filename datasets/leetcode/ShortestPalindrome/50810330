@@ -1,0 +1,36 @@
+class Solution {
+	int LPS(String s) {
+		int[] lps = new int[s.length()];
+		int pre = 0, suf = 1;
+		while (suf < s.length()) {
+			if (s.charAt(pre) == s.charAt(suf)) {
+				lps[suf] = pre + 1;
+				pre++;
+				suf++;
+			} 
+			else {
+				if (pre == 0) {
+					lps[suf] = 0;
+					suf++;
+				} 
+				else {
+					pre = lps[pre - 1];
+				}
+			}
+		}
+		return lps[s.length() - 1];
+	}
+	String minChar(String str) {
+		String sb = str + "#";
+		int MinCharlength = LPS(sb.toString());
+		String palindrome = str.substring(MinCharlength);
+		StringBuilder ans = new StringBuilder();
+		return ans.append(palindrome.toString()).reverse().append(str.toString()).toString();
+	}
+	String shortestPalindrome(String s) {
+		if (s.length() == 0 || s == null) {
+			return s;
+		}
+		return minChar(s);
+	}
+}

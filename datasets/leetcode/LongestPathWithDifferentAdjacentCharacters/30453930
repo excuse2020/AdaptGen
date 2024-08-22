@@ -1,0 +1,43 @@
+class Solution {
+	List<List<Integer>> createAdjListFromParentArray(int[] parent) {
+		List<List<Integer>> adjList = new ArrayList<>();
+		for (int i = 0; i < parent.length; i++) {
+			adjList.add(new ArrayList<>());
+		}
+		for (int i = 1; i < parent.length; i++) {
+			adjList.get(parent[i]).add(i);
+			adjList.get(i).add(parent[i]);
+		}
+		return adjList;
+	}
+	int dfs(List<List<Integer>> adjList, int start, boolean[] visited, String chars, int[] a) {
+		visited[start] = true;
+		int maxLength = 0;
+		int secondMaxLength = 0;
+		for (int child: adjList.get(start)) {	
+			if (!visited[child] && chars.charAt(child) != chars.charAt(start)) {
+				int longestPathWithChild = dfs(adjList,child,visited,chars,a);
+				if (longestPathWithChild > maxLength) {
+					secondMaxLength = maxLength;
+					maxLength = longestPathWithChild;
+				} 
+				else if (longestPathWithChild > secondMaxLength) {
+					secondMaxLength = longestPathWithChild;
+				}
+			}
+		}
+		a[0] = Math.max(a[0],maxLength + secondMaxLength);
+		return maxLength + 1;
+	}
+	int longestPath(int[] parent, String s) {
+		List<List<Integer>> adjList = createAdjListFromParentArray(parent);
+		boolean[] visited = new boolean[parent.length];
+		int[] answer = new int[1];
+		for (int i = 0; i < parent.length; i++) {
+			if (!visited[i]) {
+				dfs(adjList,i,visited,s,answer);
+			}
+		}
+		return answer[0];
+	}
+}

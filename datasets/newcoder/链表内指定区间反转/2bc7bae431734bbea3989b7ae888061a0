@@ -1,0 +1,66 @@
+class Solution {
+	ListNode res_head = new ListNode(1001);
+	ListNode fun1(ListNode cur, int length) {
+		if (length == 1) {
+			return cur;
+		}
+		if (length == 2) {
+			ListNode head = cur.next;
+			cur.next.next = cur;
+			cur.next = null;
+			return head;
+		}
+		fun2(cur,cur.next);
+		return res_head;
+	}
+	void fun2(ListNode node1, ListNode node2) {
+		if (node2.next != null) {
+			fun2(node2,node2.next);
+		}
+		if (res_head.val == 1001) {
+			res_head = node2;
+		}
+		node2.next = node1;
+		node1.next = null;
+	}
+	ListNode reverseBetween(ListNode head, int m, int n) {
+		ListNode cur = head;
+		ListNode head1 = head;
+		ListNode tail1 = head;
+		ListNode tail2 = null;
+		ListNode head3 = null;
+		int i = 1;
+		if (head.next == null) {
+			return head;
+		}
+		if (m == n) {
+			return head;
+		}
+		while (cur != null) {
+			if (i + 1 == m) {
+				tail2 = cur;
+				head1 = cur.next;
+			}
+			if (i == n) {
+				tail1 = cur;
+				head3 = cur.next;
+				tail1.next = null;
+			}
+			cur = cur.next;
+			i++;
+		}
+		head1 = fun1(head1,n - m + 1);
+		if (tail2 == null) {
+			head = head1;
+		} 
+		else {
+			tail2.next = head1;
+		}
+		cur = head1;
+		while (cur.next != null) {
+			cur = cur.next;
+		}
+		cur.next = head3;
+		return head;
+	}
+}

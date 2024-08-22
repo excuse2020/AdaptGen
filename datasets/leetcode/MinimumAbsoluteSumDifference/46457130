@@ -1,0 +1,26 @@
+class Solution {
+	int MOD = 1_000_000_007;
+	int minAbsoluteSumDiff(int[] nums1, int[] nums2) {
+		int result = 0;
+		int maxReduction = 0;
+		TreeSet<Integer> numSet = new TreeSet<>();
+		for (int num: nums1) {	
+			numSet.add(num);
+		}
+		for (int i = 0; i < nums1.length; i++) {
+			int num1 = nums1[i];
+			int num2 = nums2[i];
+			int currentDiff = Math.abs(num1 - num2);
+			result = (result + currentDiff) % MOD;
+			Integer lowerBound = numSet.floor(num2);
+			if (lowerBound != null) {
+				maxReduction = Math.max(maxReduction,currentDiff - Math.abs(lowerBound - num2));
+			}
+			Integer upperBound = numSet.ceiling(num2);
+			if (upperBound != null) {
+				maxReduction = Math.max(maxReduction,currentDiff - Math.abs(upperBound - num2));
+			}
+		}
+		return (result - maxReduction + MOD) % MOD;
+	}
+}

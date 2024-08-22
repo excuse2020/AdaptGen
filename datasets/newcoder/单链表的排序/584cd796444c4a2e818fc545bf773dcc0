@@ -1,0 +1,44 @@
+class Solution {
+	ListNode merge(ListNode list1, ListNode list2) {
+		if (list1 == null) {
+			return list2;
+		} 
+		else if (list2 == null) {
+			return list1;
+		} 
+		else if (list1.val < list2.val) {
+			list1.next = merge(list1.next,list2);
+			return list1;
+		} 
+		else {
+			list2.next = merge(list1,list2.next);
+			return list2;
+		}
+	}
+	ListNode sortInList(ListNode head) {
+		return sortInList(head,null);
+	}
+	ListNode sortInList(ListNode head, ListNode tail) {
+		if (head == null) {
+			return head;
+		}
+		if (head.next == tail) {
+			head.next = null;
+			return head;
+		}
+		ListNode slow = head;
+		ListNode fast = head;
+		while (fast != tail) {
+			slow = slow.next;
+			fast = fast.next;
+			if (fast != tail) {
+				fast = fast.next;
+			}
+		}
+		ListNode mid = slow;
+		ListNode list1 = sortInList(head,mid);
+		ListNode list2 = sortInList(mid,tail);
+		ListNode sorted = merge(list1,list2);
+		return sorted;
+	}
+}

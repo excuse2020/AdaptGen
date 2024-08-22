@@ -1,0 +1,39 @@
+class Solution {
+	int[] getDigitCount(int n) {
+		int digitCount = new int[10];
+		while (n != 0) {
+			digitCount[n % 10]++;
+			n /= 10;
+		}
+		return digitCount;
+	}
+	boolean reorderedPowerOf2(int n) {
+		int digitCount = getDigitCount(n);
+		int totalDigits = 0;
+		for (int count: digitCount) {	
+			totalDigits += count;
+		}
+		int max = (int) Math.pow(10,totalDigits);
+		int min = (int) Math.pow(10,totalDigits - 1);
+		int powTwo = 1;
+		while (powTwo < min) {
+			powTwo <<= 1;
+		}
+		boolean same = true;
+		while (powTwo < max) {
+			int[] powTwoDigitCount = getDigitCount(powTwo);
+			same = true;
+			for (int i = 0; i < digitCount.length; i++) {
+				if (digitCount[i] != powTwoDigitCount[i]) {
+					same = false;
+					break;
+				}
+			}
+			if (same) {
+				break;
+			}
+			powTwo <<= 1;
+		}
+		return same;
+	}
+}

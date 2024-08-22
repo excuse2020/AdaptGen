@@ -1,0 +1,25 @@
+class Solution {
+	int gcd(int a, int b) {
+		return b == 0 ? a : gcd(b,a % b);
+	}
+	int minimizeSet(int divisor1, int divisor2, int uniqueCnt1, int uniqueCnt2) {
+		long low = 2;
+		long high = (int) (1e10);
+		long ans = (int) 1e10;
+		long lcm = ((long) divisor1 * (long) divisor2) / gcd(divisor1,divisor2);
+		while (low <= high) {
+			long mid = low + (high - low) / 2;
+			int a = (int) (mid - (mid / divisor1));
+			int b = (int) (mid - (mid / divisor2));
+			int c = (int) (mid - (mid / lcm));
+			if (a < uniqueCnt1 || b < uniqueCnt2 || c < uniqueCnt1 + uniqueCnt2) {
+				low = mid + 1;
+			} 
+			else {
+				ans = mid;
+				high = mid - 1;
+			}
+		}
+		return (int) ans;
+	}
+}

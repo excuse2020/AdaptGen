@@ -1,0 +1,68 @@
+class Solution {
+	Set<TreeNode> leaves = new HashSet<>();
+	Map<TreeNode, TreeNode> map = new HashMap<>();
+	int bfs(TreeNode root, int distance) {
+		if (root == null) {
+			return 0;
+		}
+		ArrayDeque<TreeNode> q = new ArrayDeque<>();
+		Set<TreeNode> seen = new HashSet<>();
+		q.offer(root);
+		int d = 0, ans = 0;
+		while (!q.isEmpty()) {
+			if (d > distance) {
+				break;
+			}
+			int s = q.size();
+			while (s > 0) {
+				TreeNode node = q.poll();
+				TreeNode parent = map.get(node);
+				TreeNode left = node.left;
+				TreeNode right = node.right;
+				seen.add(node);
+				if (leaves.contains(node) && d > 0) {
+					ans += 1;
+				}
+				if (parent != null && !seen.contains(parent)) {
+					q.offer(parent);
+				}
+				if (left != null && !seen.contains(left)) {
+					q.offer(left);
+				}
+				if (right != null && !seen.contains(right)) {
+					q.offer(right);
+				}
+				s--;
+			}
+			d++;
+		}
+		return ans;
+	}
+	int countPairs(TreeNode root, int distance) {
+		fillLeaves(root);
+		fillMap(root,null);
+		int ans = 0;
+		for (TreeNode leaf: leaves) {	
+			ans += bfs(leaf,distance);
+		}
+		return ans / 2;
+	}
+	void fillLeaves(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		if (root.left == null && root.right == null) {
+			leaves.add(root);
+		}
+		fillLeaves(root.left);
+		fillLeaves(root.right);
+	}
+	void fillMap(TreeNode root, TreeNode parent) {
+		if (root == null) {
+			return;
+		}
+		map.put(root,parent);
+		fillMap(root.left,root);
+		fillMap(root.right,root);
+	}
+}

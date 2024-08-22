@@ -1,0 +1,52 @@
+class Solution {
+	int[] parent;
+	int[] rank;
+	boolean Union(int a, int b) {
+		int pA = find(a);
+		int pB = find(b);
+		if (pA == pB) {
+			return false;
+		}
+		if (rank[a] > rank[b]) {
+			parent[pB] = pA;
+		} 
+		else if (rank[a] < rank[b]) {
+			parent[pA] = pB;
+		} 
+		else {
+			parent[pB] = pA;
+			rank[pA]++;
+		}
+		return true;
+	}
+	int find(int a) {
+		if (parent[a] == a) {
+			return a;
+		}
+		return parent[a] = find(parent[a]);
+	}
+	int regionsBySlashes(String[] grid) {
+		int n = grid.length;
+		int dots = n + 1;
+		parent = new int[dots * dots];
+		rank = new int[dots * dots];
+		for (int i = 0; i < parent.length; i++) {
+			parent[i] = i;
+			rank[i] = 1;
+		}
+		for (int i = 0; i < dots; i++) {
+			for (int j = 0; j < dots; j++) {
+				if (i == 0 || j == 0 || i == dots - 1 || j == dots - 1) {
+					int cell = i * dots + j;
+					if (cell != 0) {
+						Union(cell,0);
+					}
+				}
+			}
+		}
+		int count = 1;
+		int i = 0;
+		char[] charArr = grid[i].toCharArray();
+		int j = 0;
+	}
+}

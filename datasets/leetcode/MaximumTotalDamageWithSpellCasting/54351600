@@ -1,0 +1,41 @@
+class Solution {
+	long[] dp;
+	HashMap<Integer, int[]> hm;
+	long maximumTotalDamage(int[] power) {
+		Arrays.sort(power);
+		dp = new long[power.length + 1];
+		Arrays.fill(dp,-1);
+		hm = new HashMap<>();
+		for (int i = 0; i < power.length; ) {
+			int j = i;
+			while (j != power.length && power[j] == power[i]) {
+				j = j + 1;
+			}
+			hm.put(power[i],new int{i, j - 1});
+			i = j;
+		}
+		return solve(power,0);
+	}
+	long solve(int[] p, int i) {
+		if (i == p.length) {
+			return 0;
+		}
+		if (dp[i] != -1) {
+			return dp[i];
+		}
+		long ps = (long) hm.get(p[i])[0];
+		long pe = (long) hm.get(p[i])[1];
+		long curp = (pe - ps + 1) * p[i];
+		int j = (int) pe + 1;
+		while (j < p.length) {
+			int t = p[j];
+			if (t != p[i] + 1 && t != p[i] + 2) {
+				break;
+			} 
+			else {
+				j = hm.get(t)[1] + 1;
+			}
+		}
+		return dp[i] = Math.max(curp + solve(p,j),solve(p,(int) pe + 1));
+	}
+}

@@ -1,0 +1,51 @@
+class Solution {
+	int[][] buildMatrix(int k, int[][] rowConditions, int[][] colConditions) {
+		int[] rowOrder = topologicalSort(k,rowConditions);
+		int[] colOrder = topologicalSort(k,colConditions);
+		if (rowOrder == null || colOrder == null) {
+			return new int[0][0];
+		}
+		int[][] matrix = new int[k][k];
+		int[] rowPos = new int[k + 1];
+		int[] colPos = new int[k + 1];
+		for (int i = 0; i < k; i++) {
+			rowPos[rowOrder[i]] = i;
+			colPos[colOrder[i]] = i;
+		}
+		for (int i = 1; i <= k; i++) {
+			matrix[rowPos[i]][colPos[i]] = i;
+		}
+		return matrix;
+	}
+	int[] topologicalSort(int k, int[][] conditions) {
+		List<Integer>[] graph = new ArrayList[k + 1];
+		int[] indegree = new int[k + 1];
+		for (int i = 0; i <= k; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int[] condition: conditions) {	
+			int u = condition[0];
+			int v = condition[1];
+			graph[u].add(v);
+			indegree[v]++;
+		}
+		Queue<Integer> queue = new LinkedList<>();
+		for (int i = 1; i <= k; i++) {
+			if (indegree[i] == 0) {
+				queue.add(i);
+			}
+		}
+		int[] order = new int[k];
+		int index = 0;
+		while (!queue.isEmpty()) {
+			int node = queue.poll();
+			order[index++] = node;
+			for (int neighbor: graph[node]) {	
+				if (--indegree[neighbor] == 0) {
+					queue.add(neighbor);
+				}
+			}
+		}
+		return index == k ? order : null;
+	}
+}

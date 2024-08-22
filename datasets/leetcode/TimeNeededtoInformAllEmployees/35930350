@@ -1,0 +1,27 @@
+class Solution {
+	int helper(int i, List<Integer>[] tree, int[] times) {
+		int mins = times[i];
+		int maxSubMins = 0;
+		for (int next: tree[i]) {	
+			maxSubMins = Math.max(maxSubMins,helper(next,tree,times));
+		}
+		return mins + maxSubMins;
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		List<Integer>[] tree = new List[n];
+		for (int i = 0; i < n; i++) {
+			if (tree[i] == null) {
+				tree[i] = new ArrayList<>();
+			}
+			int m = manager[i];
+			if (m == -1) {
+				continue;
+			}
+			if (tree[m] == null) {
+				tree[m] = new ArrayList<>();
+			}
+			tree[m].add(i);
+		}
+		return helper(headID,tree,informTime);
+	}
+}

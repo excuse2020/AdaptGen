@@ -1,0 +1,49 @@
+class Solution {
+	int getCeilingIndex(int[] arr, int target, int left) {
+		int ans = -1, right = arr.length - 2;
+		while (left <= right) {
+			int mid = left + (right - left) / 2;
+			if (arr[mid] >= target) {
+				ans = mid;
+				right = mid - 1;
+			} 
+			else {
+				left = mid + 1;
+			}
+		}
+		return ans;
+	}
+	int getFloorIndex(int[] arr, int target, int left) {
+		int ans = -1, right = arr.length - 2;
+		while (left <= right) {
+			int mid = left + (right - left) / 2;
+			if (arr[mid] <= target) {
+				ans = mid;
+				left = mid + 1;
+			} 
+			else {
+				right = mid - 1;
+			}
+		}
+		return ans;
+	}
+	int waysToSplit(int[] nums) {
+		for (int i = 1; i < nums.length; i++) {
+			nums[i] += nums[i - 1];
+		}
+		int totalSum = nums[nums.length - 1];
+		long count = 0l;
+		for (int i = 0; i <= nums.length - 3; i++) {
+			int midRangeLeft = nums[i] * 2;
+			int midRangeRight = nums[i] + ((totalSum - nums[i]) / 2);
+			if (midRangeLeft <= midRangeRight) {
+				long leftIndex = getCeilingIndex(nums,midRangeLeft,i + 1);
+				long rightIndex = getFloorIndex(nums,midRangeRight,i + 1);
+				if (leftIndex != -1 && rightIndex != -1) {
+					count = (count + (rightIndex - leftIndex + 1)) % 1_000_000_007l;
+				}
+			}
+		}
+		return (int) count;
+	}
+}

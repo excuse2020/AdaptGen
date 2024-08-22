@@ -1,0 +1,23 @@
+class Solution {
+	int maxFreq(String s, int maxLetters, int minSize, int maxSize) {
+		Map<String, Integer> freq = new HashMap<>();
+		Map<Character, Integer> map = new HashMap<>();
+		int head = 0;
+		int tail = 0;
+		while (head < s.length()) {
+			map.put(s.charAt(head),map.getOrDefault(s.charAt(head),0) + 1);
+			while (head - tail + 1 > minSize) {
+				map.put(s.charAt(tail),map.get(s.charAt(tail)) - 1);
+				if (map.get(s.charAt(tail)) == 0) {
+					map.remove(s.charAt(tail));
+				}
+				tail++;
+			}
+			if (head - tail + 1 >= minSize && head - tail + 1 <= maxSize && map.size() <= maxLetters) {
+				freq.put(s.substring(tail,head + 1),freq.getOrDefault(s.substring(tail,head + 1),0) + 1);
+			}
+			head++;
+		}
+		return freq.entrySet().stream().map().max(Comparator.naturalOrder()).orElse(0);
+	}
+}

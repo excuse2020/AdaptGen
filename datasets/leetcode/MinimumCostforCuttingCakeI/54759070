@@ -1,0 +1,41 @@
+class Solution {
+	int m = 0, n = 0;
+	int minCost = 0;
+	int minimumCost(int m, int n, int[] horizontalCut, int[] verticalCut) {
+		this.m = m;
+		this.n = n;
+		solve(horizontalCut,verticalCut,0,m - 1,0,n - 1);
+		return minCost;
+	}
+	void solve(int[] horizontalCut, int[] verticalCut, int start_m, int end_m, int start_n, int end_n) {
+		if (start_m >= end_m && start_n >= end_n) {
+			return;
+		}
+		int maxHorizonatalCost = 0;
+		int m_i = start_m;
+		for (int i = start_m; i < end_m && i < horizontalCut.length; i++) {
+			if (horizontalCut[i] > maxHorizonatalCost) {
+				maxHorizonatalCost = horizontalCut[i];
+				m_i = i;
+			}
+		}
+		int maxVerticalCost = 0;
+		int n_j = start_n;
+		for (int i = start_n; i < end_n && i < verticalCut.length; i++) {
+			if (maxVerticalCost < verticalCut[i]) {
+				maxVerticalCost = verticalCut[i];
+				n_j = i;
+			}
+		}
+		if (maxHorizonatalCost >= maxVerticalCost) {
+			minCost += maxHorizonatalCost;
+			solve(horizontalCut,verticalCut,start_m,m_i,start_n,end_n);
+			solve(horizontalCut,verticalCut,m_i + 1,end_m,start_n,end_n);
+		} 
+		else {
+			minCost += maxVerticalCost;
+			solve(horizontalCut,verticalCut,start_m,end_m,start_n,n_j);
+			solve(horizontalCut,verticalCut,start_m,end_m,n_j + 1,end_n);
+		}
+	}
+}

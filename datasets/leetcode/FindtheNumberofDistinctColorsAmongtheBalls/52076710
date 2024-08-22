@@ -1,0 +1,29 @@
+class Solution {
+	int[] queryResults(int limit, int[][] queries) {
+		HashMap<Integer, ArrayList<Integer>> c_to_b = new HashMap<>();
+		HashMap<Integer, Integer> b_to_c = new HashMap<>();
+		int[] ans = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			int ball = queries[i][0];
+			int color = queries[i][1];
+			if (b_to_c.containsKey(ball)) {
+				int prev_color = b_to_c.get(ball);
+				c_to_b.get(prev_color).remove((Integer) ball);
+				if (c_to_b.get(prev_color).isEmpty()) {
+					c_to_b.remove(prev_color);
+				}
+			}
+			if (c_to_b.containsKey(color)) {
+				c_to_b.get(color).add(ball);
+			} 
+			else {
+				ArrayList<Integer> list = new ArrayList<>();
+				list.add(ball);
+				c_to_b.put(color,list);
+			}
+			b_to_c.put(ball,color);
+			ans[i] = c_to_b.size();
+		}
+		return ans;
+	}
+}

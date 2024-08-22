@@ -1,0 +1,54 @@
+class Solution {
+	int[] A;
+	int[] B;
+	int kthSum(int k) {
+		int l = 0, r = A[A.length - 1];
+		while (l < r) {
+			int mid = (l + r) >> 1;
+			int noOfSumsLessThanOrEqualToMid = noOfSumsLessThanOrEqualTo(mid);
+			if (k == noOfSumsLessThanOrEqualToMid) {
+				return mid;
+			}
+			if (k < noOfSumsLessThanOrEqualToMid) {
+				r = mid;
+			} 
+			else {
+				l = mid + 1;
+			}
+		}
+		return l;
+	}
+	int noOfSumsLessThanOrEqualTo(int sum) {
+		int count = 0;
+		int l = 0;
+		for (int r = 1; r < A.length; r++) {
+			while ((A[r] - A[l]) > sum) {
+				l++;
+			}
+			count += r - l;
+		}
+		return count;
+	}
+	int rangeSum(int[] nums, int n, int left, int right) {
+		int mod = (int) 1e9 + 7;
+		A = new int[n + 1];
+		B = new int[n + 1];
+		for (int i = 1; i <= n; i++) {
+			A[i] = A[i - 1] + nums[i - 1];
+			B[i] = B[i - 1] + A[i];
+		}
+		return (int) ((sumOfFirstKSums(right) - sumOfFirstKSums(left - 1)) % mod);
+	}
+	long sumOfFirstKSums(int k) {
+		int kthSum = kthSum(k);
+		long sumOfFirstKSums = 0;
+		int l = 0;
+		for (int r = 1; r < A.length; r++) {
+			while ((A[r] - A[l]) > kthSum) {
+				l++;
+			}
+			sumOfFirstKSums += A[r] * (r - l) - (B[r - 1] - (l > 0 ? B[l - 1] : 0));
+		}
+		return sumOfFirstKSums - (noOfSumsLessThanOrEqualTo(kthSum) - k) * kthSum;
+	}
+}

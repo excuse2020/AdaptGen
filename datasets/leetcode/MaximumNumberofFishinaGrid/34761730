@@ -1,0 +1,40 @@
+class Solution {
+	int findMaxFish(int[][] grid) {
+		int y = grid.length, Y = grid.length - 1, x = grid[0].length, X = grid[0].length - 1, answer = 0;
+		for (int ty = 0; ty != y; ty++) {
+			for (int tx = 0; tx != x; tx++) {
+				if (grid[ty][tx] == 0) {
+					continue;
+				}
+				int tmp = 0;
+				LinkedList<int[]> q = new LinkedList<>();
+				q.add(new int{ty, tx});
+				while (!q.isEmpty()) {
+					int[] coord = q.poll();
+					int cy = coord[0], cx = coord[1];
+					if (grid[cy][cx] == 0) {
+						continue;
+					}
+					tmp += grid[cy][cx];
+					grid[cy][cx] = 0;
+					if (cy != 0 && grid[cy - 1][cx] != 0) {
+						q.add(new int{cy - 1, cx});
+					}
+					if (cy != Y && grid[cy + 1][cx] != 0) {
+						q.add(new int{cy + 1, cx});
+					}
+					if (cx != 0 && grid[cy][cx - 1] != 0) {
+						q.add(new int{cy, cx - 1});
+					}
+					if (cx != X && grid[cy][cx + 1] != 0) {
+						q.add(new int{cy, cx + 1});
+					}
+				}
+				if (tmp > answer) {
+					answer = tmp;
+				}
+			}
+		}
+		return answer;
+	}
+}

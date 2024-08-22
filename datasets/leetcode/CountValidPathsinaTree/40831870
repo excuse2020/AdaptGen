@@ -1,0 +1,54 @@
+class Solution {
+	long countPaths(int n, int[][] edges) {
+		long dp = new long[n + 1][3];
+		ArrayList<ArrayList<Integer>> child = new ArrayList<>();
+		for (int i = 0; i <= n; i++) {
+			child.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n - 1; i++) {
+			int par = edges[i][0];
+			int c = edges[i][1];
+			child.get(par).add(c);
+			child.get(c).add(par);
+		}
+		HashSet<Integer> set = new HashSet<>();
+		sieveOfEratosthenes(set);
+		solve(1,0,child,dp,set);
+		return dp[1][2];
+	}
+	void sieveOfEratosthenes(HashSet<Integer> set) {
+		boolean[] flag = new boolean[100000];
+		for (int i = 2; i < flag.length; i++) {
+			if (!flag[i]) {
+				set.add(i);
+				for (int j = i; j < flag.length; j += i) {
+					flag[j] = true;
+				}
+			}
+		}
+	}
+	void solve(int src, int par, ArrayList<ArrayList<Integer>> child, long dp, HashSet<Integer> set) {
+		if (set.contains(src)) {
+			dp[src][1] = 1;
+			dp[src][0] = 0;
+		} 
+		else {
+			dp[src][0] = 1;
+			dp[src][1] = 0;
+		}
+		for (int next: child.get(src)) {	
+			if (next == par) {
+				continue;
+			}
+			solve(next,src,child,dp,set);
+			dp[src][2] = dp[src][2] + dp[next][2] + dp[src][1] * dp[next][0];
+			if (set.contains(src)) {
+				dp[src][1] += dp[next][0];
+			} 
+			else {
+				dp[src][0] += dp[next][0];
+				dp[src][1] += dp[next][1];
+			}
+		}
+	}
+}

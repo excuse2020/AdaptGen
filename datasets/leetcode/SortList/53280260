@@ -1,0 +1,65 @@
+class Solution {
+	ListNode sortList(ListNode head) {
+		ArrayList<Integer> arr = new ArrayList<>();
+		ListNode temp = head;
+		while (temp != null) {
+			arr.add(temp.val);
+			temp = temp.next;
+		}
+		Collections.sort(arr);
+		ListNode dummy = new ListNode(-100);
+		ListNode tail = dummy;
+		for (int value: arr) {	
+			tail.next = new ListNode(value);
+			tail = tail.next;
+		}
+		return dummy.next;
+	}
+}
+class Solution {
+	ListNode findmiddle(ListNode head) {
+		ListNode slow = head;
+		ListNode fast = head;
+		while (fast.next != null && fast.next.next != null) {
+			slow = slow.next;
+			fast = fast.next.next;
+		}
+		return slow;
+	}
+	ListNode mergeTwolists(ListNode list1, ListNode list2) {
+		ListNode dummy = new ListNode(-1);
+		ListNode temp = dummy;
+		while (list1 != null && list2 != null) {
+			if (list1.val < list2.val) {
+				temp.next = list1;
+				temp = list1;
+				list1 = list1.next;
+			} 
+			else {
+				temp.next = list2;
+				temp = list2;
+				list2 = list2.next;
+			}
+			if (list1 != null) {
+				temp.next = list1;
+			} 
+			else {
+				temp.next = list2;
+			}
+			temp = temp.next;
+		}
+		return dummy.next;
+	}
+	ListNode sortList(ListNode head) {
+		if (head == null && head.next == null) {
+			return head;
+		}
+		ListNode middle = findmiddle(head);
+		ListNode right = middle.next;
+		middle = null;
+		ListNode left = head;
+		left = sortList(left);
+		right = sortList(right);
+		return mergeTwolists(left,right);
+	}
+}

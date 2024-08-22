@@ -1,0 +1,42 @@
+class Solution {
+	int max1 = 0, max2 = 0;
+	TreeNode r1, r2;
+	TreeNode LCS(TreeNode root) {
+		if (root == null) {
+			return root;
+		}
+		if (root == r1 || root == r2) {
+			return root;
+		}
+		TreeNode le = LCS(root.left);
+		TreeNode ri = LCS(root.right);
+		if (le != null && ri != null) {
+			return root;
+		} 
+		else if (le == null) {
+			return ri;
+		}
+		return le;
+	}
+	void finddeepestNode(TreeNode root, int h) {
+		if (root == null) {
+			return;
+		}
+		if (max1 < h) {
+			max1 = h;
+			r1 = root;
+		}
+		if (max1 <= h) {
+			max1 = h;
+			r2 = root;
+		}
+		finddeepestNode(root.left,h + 1);
+		finddeepestNode(root.right,h + 1);
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		r1 = root;
+		r2 = root;
+		finddeepestNode(root,0);
+		return LCS(root);
+	}
+}

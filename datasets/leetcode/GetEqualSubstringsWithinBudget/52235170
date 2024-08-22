@@ -1,0 +1,33 @@
+class Solution {
+	int equalSubstring(String s, String t, int maxCost) {
+		int n = s.length();
+		char[] sArr = s.toCharArray();
+		char[] tArr = t.toCharArray();
+		int[] costs = new int[n];
+		for (int i = 0; i < n; i++) {
+			costs[i] = Math.abs(tArr[i] - sArr[i]);
+		}
+		int cost = costs[0];
+		int longest = cost > maxCost ? 0 : 1;
+		int l = 0;
+		int r = 0;
+		while (r < n - 1 && l + longest < n) {
+			if (cost + costs[r + 1] <= maxCost) {
+				r++;
+				cost += costs[r];
+				longest++;
+			} 
+			else {
+				r++;
+				if (r < n) {
+					cost += costs[r] - costs[l];
+				}
+				l++;
+				if (cost <= maxCost && longest == 0) {
+					longest = 1;
+				}
+			}
+		}
+		return longest;
+	}
+}

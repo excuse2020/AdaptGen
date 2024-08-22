@@ -1,0 +1,35 @@
+class Solution {
+	boolean valid = false;
+	void dfs(String query, String word, int index, int countLeft) {
+		if (index == word.length()) {
+			valid = true;
+			return;
+		}
+		if (index >= word.length() || index >= query.length()) {
+			return;
+		}
+		if (query.charAt(index) == word.charAt(index)) {
+			dfs(query,word,index + 1,countLeft);
+		} 
+		else {
+			if (countLeft <= 0) {
+				return;
+			}
+			dfs(query,word,index + 1,countLeft - 1);
+		}
+	}
+	List<String> twoEditWords(String[] queries, String[] dictionary) {
+		List<String> res = new ArrayList();
+		for (String query: queries) {	
+			for (String word: dictionary) {	
+				dfs(query,word,0,2);
+				if (valid == true) {
+					res.add(query);
+					break;
+				}
+			}
+			valid = false;
+		}
+		return res;
+	}
+}

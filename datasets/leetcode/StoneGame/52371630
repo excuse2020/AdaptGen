@@ -1,0 +1,33 @@
+class Solution {
+	boolean nextTurn(int piles, int i, int j, int turn, int sumA, int sumB, Boolean dp) {
+		if (i > j) {
+			if (sumA > sumB) {
+				return true;
+			} 
+			else {
+				return false;
+			}
+		}
+		if (dp[i][j] != null) {
+			return dp[i][j];
+		}
+		int valAti = piles[i];
+		int valAtj = piles[j];
+		boolean result = true;
+		if (turn == 1) {
+			boolean takei = nextTurn(piles,i + 1,j,-turn,sumA + piles[i],sumB,dp);
+			boolean takej = nextTurn(piles,i,j - 1,-turn,sumA + piles[j],sumB,dp);
+			result = takei | takej;
+		} 
+		else {
+			boolean takei = nextTurn(piles,i + 1,j,-turn,sumA,sumB + piles[i],dp);
+			boolean takej = nextTurn(piles,i,j - 1,-turn,sumA,sumB + piles[j],dp);
+			result = takei | takej;
+		}
+		return dp[i][j] = result;
+	}
+	boolean stoneGame(int[] piles) {
+		Boolean dp = new Boolean[piles.length][piles.length];
+		return nextTurn(piles,0,piles.length - 1,1,0,0,dp);
+	}
+}

@@ -1,0 +1,27 @@
+class Solution {
+	String stoneGameIII(int[] stoneValue) {
+		int n = stoneValue.length;
+		int[] suffix = new int[n];
+		int dp = new int[n];
+		suffix[n - 1] = stoneValue[n - 1];
+		for (int i = n - 2; i >= 0; i--) {
+			suffix[i] = stoneValue[i] + suffix[i + 1];
+		}
+		double totalSum = suffix[0];
+		int ans = winner(0,suffix,stoneValue,dp);
+		return ans > totalSum / 2 ? "Alice" : ans < totalSum / 2 ? "Bob" : "Tie";
+	}
+	int winner(int index, int[] suffix, int[] stoneValue, int[] dp) {
+		if (index >= stoneValue.length) {
+			return 0;
+		}
+		if (dp[index] != 0) {
+			return dp[index];
+		}
+		int result = Integer.MIN_VALUE;
+		for (int x = 1; x <= 3; x++) {
+			result = Math.max(result,suffix[index] - winner(index + x,suffix,stoneValue,dp));
+		}
+		return dp[index] = result;
+	}
+}

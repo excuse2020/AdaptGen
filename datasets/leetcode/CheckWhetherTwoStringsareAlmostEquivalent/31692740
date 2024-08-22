@@ -1,0 +1,35 @@
+class Solution {
+	boolean checkAlmostEquivalent(String word1, String word2) {
+		Map<Character, Integer> m1 = new HashMap<>();
+		Map<Character, Integer> m2 = new HashMap<>();
+		for (int i = 0; i < word1.length() || i < word2.length(); ++i) {
+			if (i < word1.length()) {
+				m1.put(word1.charAt(i),m1.getOrDefault(word1.charAt(i),0) + 1);
+			}
+			if (i < word2.length()) {
+				m2.put(word2.charAt(i),m2.getOrDefault(word2.charAt(i),0) + 1);
+			}
+		}
+		for (Map.Entry<Character, Integer> en: m1.entrySet()) {	
+			if (m2.containsKey(en.getKey())) {
+				if (Math.abs(en.getValue() - m2.get(en.getKey())) > 3) {
+					return false;
+				}
+			}
+			if (!m2.containsKey(en.getKey()) && en.getValue() > 3) {
+				return false;
+			}
+		}
+		for (Map.Entry<Character, Integer> en: m2.entrySet()) {	
+			if (m1.containsKey(en.getKey())) {
+				if (Math.abs(en.getValue() - m1.get(en.getKey())) > 3) {
+					return false;
+				}
+			}
+			if (!m1.containsKey(en.getKey()) && en.getValue() > 3) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

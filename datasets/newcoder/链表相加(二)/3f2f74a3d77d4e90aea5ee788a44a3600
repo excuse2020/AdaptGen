@@ -1,0 +1,37 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		Stack<ListNode> stack1 = new Stack<ListNode>();
+		Stack<ListNode> stack2 = new Stack<ListNode>();
+		ListNode dummy = new ListNode(0);
+		ListNode head = dummy.next;
+		int carry = 0, number = 0;
+		while (head1 != null) {
+			stack1.push(head1);
+			head1 = head1.next;
+		}
+		while (head2 != null) {
+			stack2.push(head2);
+			head2 = head2.next;
+		}
+		while (!stack1.isEmpty() || !stack2.isEmpty()) {
+			int temp = carry;
+			if (!stack1.isEmpty()) {
+				temp += stack1.pop().val;
+			}
+			if (!stack2.isEmpty()) {
+				temp += stack2.pop().val;
+			}
+			carry = temp / 10;
+			number = temp % 10;
+			ListNode node = new ListNode(number);
+			node.next = head;
+			head = node;
+		}
+		if (carry > 0) {
+			ListNode node = new ListNode(carry);
+			node.next = head;
+			head = node;
+		}
+		return head;
+	}
+}

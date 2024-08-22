@@ -1,0 +1,47 @@
+class Solution {
+	int binarySearchFirstGreaterThanLeftBorder(int leftBorder, int[][] points) {
+		int l = 0, h = points.length;
+		int m = (l + h) / 2;
+		while (l < h) {
+			if (leftBorder <= points[m][0]) {
+				if (m == 0 || points[m - 1][0] < leftBorder) {
+					break;
+				} 
+				else {
+					h = m;
+				}
+			} 
+			else {
+				l = m + 1;
+			}
+			m = (l + h) / 2;
+		}
+		return m;
+	}
+	int[] countPoints(int[][] points, int[][] queries) {
+		int n = points.length;
+		int m = queries.length;
+		int[] answer = new int[m];
+		Arrays.sort(points,(p1, p2) -> {p1[0] - p2[0]});
+		for (int i = 0; i < m; i++) {
+			int xi = queries[i][0], yi = queries[i][1], ri = queries[i][2];
+			int low = binarySearchFirstGreaterThanLeftBorder(xi - ri,points);
+			for (int j = low; j < n; j++) {
+				int xj = points[j][0], yj = points[j][1];
+				if (crossedRightBorder(xi + ri,xj)) {
+					break;
+				}
+				if (inCircle(xj,yj,xi,yi,ri)) {
+					answer[i]++;
+				}
+			}
+		}
+		return answer;
+	}
+	boolean crossedRightBorder(int rightBorder, int x) {
+		return rightBorder < x;
+	}
+	boolean inCircle(int x, int y, int xCenter, int yCenter, int r) {
+		return Math.sqrt((xCenter - x) * (xCenter - x) + (yCenter - y) * (yCenter - y)) <= r;
+	}
+}

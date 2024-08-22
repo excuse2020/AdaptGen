@@ -1,0 +1,37 @@
+class Solution {
+	boolean check(int[] price, int x, int k) {
+		int count = 1;
+		int previousValue = price[0];
+		for (int i = 1; i < price.length; i++) {
+			int diff = price[i] - previousValue;
+			if (diff >= x) {
+				count++;
+				previousValue = price[i];
+			}
+		}
+		if (count >= k) {
+			return true;
+		} 
+		else {
+			return false;
+		}
+	}
+	int maximumTastiness(int[] price, int k) {
+		Arrays.sort(price);
+		int startIndex = 0;
+		int endIndex = price[price.length - 1];
+		int maximumTaste = 0;
+		while (startIndex <= endIndex) {
+			int midIndex = startIndex + (endIndex - startIndex) / 2;
+			boolean result = check(price,midIndex,k);
+			if (result) {
+				startIndex = midIndex + 1;
+				maximumTaste = Math.max(maximumTaste,midIndex);
+			} 
+			else {
+				endIndex = midIndex - 1;
+			}
+		}
+		return maximumTaste;
+	}
+}

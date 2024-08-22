@@ -1,0 +1,58 @@
+class Solution {
+	List<String> wordSubsets(String[] words1, String[] words2) {
+		int i, j, k;
+		int n1 = words1.length;
+		int n2 = words2.length;
+		List<String> ans = new ArrayList<>();
+		HashMap<Character, Integer> count = new HashMap<>();
+		for (i = 0; i < n2; i++) {
+			String b = words2[i];
+			HashMap<Character, Integer> temp = new HashMap<>();
+			for (j = 0; j < b.length(); j++) {
+				if (temp.containsKey(b.charAt(j)) == false) {
+					temp.put(b.charAt(j),1);
+				} 
+				else {
+					temp.put(b.charAt(j),temp.get(b.charAt(j)) + 1);
+				}
+			}
+			for (Map.Entry<Character, Integer> e: temp.entrySet()) {	
+				if (count.containsKey(e.getKey())) {
+					count.put(e.getKey(),Math.max(e.getValue(),count.get(e.getKey())));
+				} 
+				else {
+					count.put(e.getKey(),e.getValue());
+				}
+			}
+		}
+		for (i = 0; i < n1; i++) {
+			String a = words1[i];
+			boolean universal = true;
+			HashMap<Character, Integer> countA = new HashMap<>();
+			for (j = 0; j < a.length(); j++) {
+				if (countA.containsKey(a.charAt(j)) == false) {
+					countA.put(a.charAt(j),1);
+				} 
+				else {
+					countA.put(a.charAt(j),countA.get(a.charAt(j)) + 1);
+				}
+			}
+			for (Map.Entry<Character, Integer> e: count.entrySet()) {	
+				if (countA.containsKey(e.getKey()) == false) {
+					universal = false;
+					break;
+				} 
+				else {
+					if (e.getValue() > countA.get(e.getKey())) {
+						universal = false;
+						break;
+					}
+				}
+			}
+			if (universal) {
+				ans.add(a);
+			}
+		}
+		return ans;
+	}
+}

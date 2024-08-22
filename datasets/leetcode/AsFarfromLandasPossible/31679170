@@ -1,0 +1,38 @@
+class Solution {
+	int maxDistance(int[][] grid) {
+		int n = grid.length;
+		int[][] dp = new int[n][n];
+		for (int i = 0; i < n; i++) {
+			Arrays.fill(dp[i],200);
+			if (grid[i][0] == 1) {
+				dp[i][0] = 0;
+			}
+			for (int j = 1; j < n; j++) {
+				if (grid[i][j] == 1) {
+					dp[i][j] = 0;
+				} 
+				else {
+					dp[i][j] = Math.min(dp[i][j],dp[i][j - 1] + 1);
+				}
+			}
+			for (int j = n - 2; j >= 0; j--) {
+				dp[i][j] = Math.min(dp[i][j],dp[i][j + 1] + 1);
+			}
+		}
+		int res = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = 1; j < n; j++) {
+				dp[j][i] = Math.min(dp[j][i],dp[j - 1][i] + 1);
+			}
+			res = Math.max(res,dp[n - 1][i]);
+			for (int j = n - 2; j >= 0; j--) {
+				dp[j][i] = Math.min(dp[j][i],dp[j + 1][i] + 1);
+				res = Math.max(res,dp[j][i]);
+			}
+		}
+		if (res == 0 || res >= 200) {
+			return -1;
+		}
+		return res;
+	}
+}

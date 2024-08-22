@@ -1,0 +1,24 @@
+class Solution {
+	int smallestChair(int[][] times, int targetFriend) {
+		int N = times.length;
+		PriorityQueue<int[]> AQ = new PriorityQueue<>((a, b) -> {a[0] - b[0]});
+		PriorityQueue<int[]> DQ = new PriorityQueue<>((a, b) -> {a[1] - b[1]});
+		PriorityQueue<Integer> CQ = new PriorityQueue<>();
+		for (int i = 0; i < N; i++) {
+			AQ.add(new int{times[i][0], times[i][1], i});
+			CQ.add(i);
+		}
+		while (AQ.size() > 0) {
+			int[] friend = AQ.poll();
+			while (DQ.size() > 0 && DQ.peek()[1] <= friend[0]) {
+				System.out.println(Arrays.toString(DQ.peek()));
+				CQ.add(DQ.poll()[2]);
+			}
+			if (friend[2] == targetFriend) {
+				return CQ.poll();
+			}
+			DQ.add(new int{friend[0], friend[1], CQ.poll()});
+		}
+		return -1;
+	}
+}

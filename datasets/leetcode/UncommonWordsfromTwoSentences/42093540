@@ -1,0 +1,45 @@
+class Solution {
+	String[] uncommonFromSentences(String s1, String s2) {
+		String[] arr1 = s1.split(" ");
+		String[] arr2 = s2.split(" ");
+		Map<String, Integer> map1 = new HashMap<>();
+		Map<String, Integer> map2 = new HashMap<>();
+		for (String str: arr1) {	
+			if (map1.containsKey(str)) {
+				map1.put(str,map1.get(str) + 1);
+			} 
+			else {
+				map1.putIfAbsent(str,1);
+			}
+		}
+		for (String str: arr2) {	
+			if (map2.containsKey(str)) {
+				map2.put(str,map2.get(str) + 1);
+			} 
+			else {
+				map2.putIfAbsent(str,1);
+			}
+		}
+		List<String> uncommonWordsList = new ArrayList<>();
+		for (Entry<String, Integer> entry: map1.entrySet()) {	
+			if (entry.getValue().intValue() == 1) {
+				if (!map2.containsKey(entry.getKey())) {
+					uncommonWordsList.add(entry.getKey());
+				}
+			}
+		}
+		for (Entry<String, Integer> entry: map2.entrySet()) {	
+			if (entry.getValue().intValue() == 1) {
+				if (!map1.containsKey(entry.getKey())) {
+					uncommonWordsList.add(entry.getKey());
+				}
+			}
+		}
+		int index = 0;
+		String[] toReturn = new String[uncommonWordsList.size()];
+		for (String str: uncommonWordsList) {	
+			toReturn[index++] = str;
+		}
+		return toReturn;
+	}
+}

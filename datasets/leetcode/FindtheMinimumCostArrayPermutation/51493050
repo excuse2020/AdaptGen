@@ -1,0 +1,39 @@
+class Solution {
+	List<Integer> ans = new ArrayList<>();
+	int min = (int) 1e9;
+	int[] visited;
+	int[] findPermutation(int[] nums) {
+		visited = new int[nums.length];
+		List<Integer> perm = new ArrayList<>();
+		perm.add(0);
+		visited[0] = 1;
+		helper(perm,0,nums);
+		int[] res = new int[nums.length];
+		for (int i = 0; i < ans.size(); i++) {
+			res[i] = ans.get(i);
+		}
+		return res;
+	}
+	void helper(List<Integer> perm, int sum, int[] nums) {
+		if (sum > min) {
+			return;
+		}
+		if (perm.size() == nums.length) {
+			sum += Math.abs(perm.get(perm.size() - 1) - nums[perm.get(0)]);
+			if (sum < min) {
+				ans = List.copyOf(perm);
+				min = sum;
+			}
+			return;
+		}
+		for (int i = 0; i < nums.length; i++) {
+			if (visited[i] != 1) {
+				visited[i] = 1;
+				perm.add(i);
+				helper(perm,sum + Math.abs(perm.get(perm.size() - 2) - nums[perm.get(perm.size() - 1)]),nums);
+				perm.remove(perm.size() - 1);
+				visited[i] = 0;
+			}
+		}
+	}
+}

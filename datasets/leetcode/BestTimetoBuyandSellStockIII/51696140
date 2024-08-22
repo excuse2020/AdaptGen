@@ -1,0 +1,26 @@
+class Solution {
+	int maxProfit(int[] prices) {
+		int[][][] dp = new int[prices.length][2][3];
+		for (int i = 0; i < prices.length; i++) {
+			for (int j = 0; j < 2; j++) {
+				Arrays.fill(dp[i][j],-1);
+			}
+		}
+		return rec(prices,0,2,1,dp);
+	}
+	int rec(int[] nums, int idx, int cap, int buy, int[][][] dp) {
+		if (cap == 0 || idx == nums.length) {
+			return 0;
+		}
+		if (dp[idx][buy][cap] != -1) {
+			return dp[idx][buy][cap];
+		}
+		if (buy == 1) {
+			dp[idx][buy][cap] = Math.max(-nums[idx] + rec(nums,idx + 1,cap,0,dp),rec(nums,idx + 1,cap,1,dp));
+		} 
+		else {
+			dp[idx][buy][cap] = Math.max(nums[idx] + rec(nums,idx + 1,cap - 1,1,dp),rec(nums,idx + 1,cap,0,dp));
+		}
+		return dp[idx][buy][cap];
+	}
+}

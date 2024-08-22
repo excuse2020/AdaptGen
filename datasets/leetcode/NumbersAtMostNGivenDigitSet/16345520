@@ -1,0 +1,44 @@
+class Solution {
+	int atMostNGivenDigitSet(String[] digits, int n) {
+		int l = digits.length;
+		int d = new int[l];
+		for (int i = 0; i < l; i++) {
+			d[i] = Integer.parseInt(digits[i]);
+		}
+		int ans = 0;
+		ArrayList<Integer> dig = digits(n);
+		int numOfDigit = dig.size();
+		if (l == 1) {
+			ans += (numOfDigit - 1);
+		} 
+		else {
+			int sumOfGp = (l * ((int) Math.pow(l,numOfDigit - 1) - 1)) / (l - 1);
+			ans += sumOfGp;
+		}
+		int i = numOfDigit;
+		for (i = numOfDigit - 1; i >= 0; i--) {
+			int target = dig.get(i);
+			int index = Arrays.binarySearch(d,target);
+			if (index < 0) {
+				int lessDigit = -(index) - 1;
+				ans += (lessDigit) * (int) Math.pow(l,i);
+				break;
+			} 
+			else {
+				ans += (index) * (int) Math.pow(l,i);
+			}
+		}
+		if (i < 0) {
+			ans++;
+		}
+		return ans;
+	}
+	ArrayList<Integer> digits(int n) {
+		ArrayList<Integer> ans = new ArrayList<>();
+		while (n != 0) {
+			ans.add(n % 10);
+			n = n / 10;
+		}
+		return ans;
+	}
+}

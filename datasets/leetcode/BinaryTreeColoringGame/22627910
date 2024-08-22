@@ -1,0 +1,34 @@
+class Solution {
+	boolean btreeGameWinningMove(TreeNode root, int n, int x) {
+		TreeNode red = getNode(root,x);
+		int countPar = getCount(root,red);
+		int countLeft = getCount(red.left,red);
+		int countRight = getCount(red.right,red);
+		return countPar > n / 2 || countLeft > n / 2 || countRight > n / 2;
+	}
+	int getCount(TreeNode node, TreeNode block) {
+		if (node == null || node == block) {
+			return 0;
+		}
+		int left = getCount(node.left,block);
+		int right = getCount(node.right,block);
+		return left + right;
+	}
+	TreeNode getNode(TreeNode root, int x) {
+		if (root == null) {
+			return null;
+		}
+		TreeNode left = getNode(root.left,x);
+		TreeNode right = getNode(root.right,x);
+		if (left != null && left.val == x) {
+			return left;
+		}
+		if (right != null && right.val == x) {
+			return right;
+		}
+		if (root.val == x) {
+			return root;
+		}
+		return null;
+	}
+}

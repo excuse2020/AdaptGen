@@ -1,0 +1,32 @@
+class Solution {
+	List<Integer> findSubstring(String s, String[] words) {
+		HashMap<String, Integer> map = new HashMap<>();
+		for (int i = 0; i < words.length; i++) {
+			map.put(words[i],map.getOrDefault(words[i],0) + 1);
+		}
+		List<Integer> ans = new ArrayList<>();
+		int slideLen = (words[0].length() * words.length) - 1;
+		for (int i = 0; i < s.length() - slideLen; i++) {
+			String subS = s.substring(i,i + slideLen);
+			HashMap<String, Integer> cMap = new HashMap<>();
+			int smallSlide = words[0].length() - 1;
+			int j = 0;
+			while (j < subS.length()) {
+				String sDiv = subS.substring(j,j + smallSlide);
+				cMap.put(sDiv,cMap.getOrDefault(sDiv,0) + 1);
+				j = j + smallSlide;
+			}
+			boolean got = true;
+			for (int k = 0; k < words.length; k++) {
+				if ((map.get(words[k])) != (int) (cMap.getOrDefault(words[k],0))) {
+					got = false;
+					break;
+				}
+			}
+			if (got) {
+				ans.add(i);
+			}
+		}
+		return ans;
+	}
+}

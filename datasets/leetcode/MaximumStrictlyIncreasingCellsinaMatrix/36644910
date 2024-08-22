@@ -1,0 +1,38 @@
+class Solution {
+	int maxIncreasingCells(int[][] mat) {
+		int n = mat.length;
+		int m = mat[0].length;
+		int[] rMax = new int[n];
+		int[] cMax = new int[m];
+		TreeMap<Integer, List<int[]>> map = new TreeMap<>();
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				int val = mat[i][j];
+				map.putIfAbsent(val,new ArrayList<>());
+				map.get(val).add(new int{i, j});
+			}
+		}
+		int[][] dp = new int[n][m];
+		for (int value: map.keySet()) {	
+			List<int[]> positions = map.get(value);
+			for (int[] pos: positions) {	
+				int row = pos[0];
+				int col = pos[1];
+				dp[row][col] = Math.max(rMax[row],cMax[col]) + 1;
+			}
+			for (int[] pos: positions) {	
+				int row = pos[0];
+				int col = pos[1];
+				rMax[row] = Math.max(rMax[row],dp[row][col]);
+				cMax[col] = Math.max(cMax[col],dp[row][col]);
+			}
+		}
+		int maxCells = 0;
+		for (int[] row: dp) {	
+			for (int cells: row) {	
+				maxCells = Math.max(maxCells,cells);
+			}
+		}
+		return maxCells;
+	}
+}

@@ -1,0 +1,42 @@
+class Solution {
+	int findWinningPlayer(int[] skills, int k) {
+		ArrayDeque<Integer> dq = new ArrayDeque<>();
+		int prev = -1, cnt = 0, n = skills.length, ele1 = 0, ele2 = 0, mx = 0;
+		for (int i = 0; i < n; i++) {
+			dq.addLast(i);
+			mx = skills[mx] > skills[i] ? mx : i;
+		}
+		if (k >= n) {
+			return mx;
+		}
+		while (true) {
+			ele1 = dq.poll();
+			ele2 = dq.poll();
+			if (skills[ele1] > skills[ele2]) {
+				if (prev != ele1) {
+					cnt = 1;
+					prev = ele1;
+				} 
+				else {
+					cnt++;
+				}
+				dq.addFirst(ele1);
+				dq.addLast(ele2);
+			} 
+			else {
+				if (prev != ele2) {
+					cnt = 1;
+					prev = ele2;
+				} 
+				else {
+					cnt++;
+				}
+				dq.addFirst(ele2);
+				dq.addLast(ele1);
+			}
+			if (cnt == k) {
+				return prev;
+			}
+		}
+	}
+}

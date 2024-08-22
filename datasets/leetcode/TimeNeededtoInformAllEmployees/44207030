@@ -1,0 +1,23 @@
+class Solution {
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		if (n == 1) {
+			return 0;
+		}
+		int[] timeToInformAllSubs = new int[n];
+		for (int i = 0; i < n; i++) {
+			if (informTime[i] == 0) {
+				int child = i;
+				int directManager = manager[child];
+				while (directManager != headID && (timeToInformAllSubs[child] + informTime[directManager]) > timeToInformAllSubs[directManager]) {
+					timeToInformAllSubs[directManager] = timeToInformAllSubs[child] + informTime[directManager];
+					child = directManager;
+					directManager = manager[directManager];
+				}
+				if (directManager == headID) {
+					timeToInformAllSubs[headID] = Math.max(timeToInformAllSubs[headID],timeToInformAllSubs[child] + informTime[headID]);
+				}
+			}
+		}
+		return timeToInformAllSubs[headID];
+	}
+}

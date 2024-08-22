@@ -1,0 +1,54 @@
+class Solution {
+	long subArrayRanges(int[] nums) {
+		int n = nums.length;
+		long[] PSE = new long[n];
+		long[] NSE = new long[n];
+		long[] PGE = new long[n];
+		long[] NGE = new long[n];
+		Stack<Integer> stack = new Stack<>();
+		for (int i = 0; i < n; i++) {
+			while (!stack.isEmpty() && nums[stack.peek()] >= nums[i]) {
+				stack.pop();
+			}
+			PSE[i] = (stack.isEmpty()) ? -1 : stack.peek();
+			stack.push(i);
+		}
+		stack.clear();
+		for (int i = n - 1; i >= 0; i--) {
+			while (!stack.isEmpty() && nums[stack.peek()] > nums[i]) {
+				stack.pop();
+			}
+			NSE[i] = (stack.isEmpty()) ? n : stack.peek();
+			stack.push(i);
+		}
+		stack.clear();
+		for (int i = 0; i < n; i++) {
+			while (!stack.isEmpty() && nums[stack.peek()] <= nums[i]) {
+				stack.pop();
+			}
+			PGE[i] = (stack.isEmpty()) ? -1 : stack.peek();
+			stack.push(i);
+		}
+		stack.clear();
+		for (int i = n - 1; i >= 0; i--) {
+			while (!stack.isEmpty() && nums[stack.peek()] < nums[i]) {
+				stack.pop();
+			}
+			NGE[i] = (stack.isEmpty()) ? n : stack.peek();
+			stack.push(i);
+		}
+		long minSum = 0;
+		for (int i = 0; i < n; i++) {
+			long leftCount = i - PSE[i];
+			long rightCount = NSE[i] - i;
+			minSum += nums[i] * leftCount;
+		}
+		long maxSum = 0;
+		for (int i = 0; i < n; i++) {
+			long leftCount = i - PGE[i];
+			long rightCount = NGE[i] - i;
+			maxSum += nums[i] * leftCount;
+		}
+		return maxSum - minSum;
+	}
+}

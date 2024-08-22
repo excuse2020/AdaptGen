@@ -1,0 +1,29 @@
+class Solution {
+	int[] countSubTrees(int n, int[][] edges, String labels) {
+		List<Integer>[] graph = new List[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int[] edge: edges) {	
+			int a = edge[0];
+			int b = edge[1];
+			graph[a].add(b);
+			graph[b].add(a);
+		}
+		Map<Character, Integer> labelCount = new HashMap<>();
+		int[] nodeLabelCounts = new int[n];
+		dfs(graph,0,-1,labels,labelCount,nodeLabelCounts);
+		return nodeLabelCounts;
+	}
+	void dfs(List<Integer>[] graph, int node, int parentNode, String label, Map<Character, Integer> labelCount, int[] nodeLabels) {
+		int initialCount = labelCount.getOrDefault(label.charAt(node),0);
+		for (int child: graph[node]) {	
+			if (child != parentNode) {
+				dfs(graph,child,node,label,labelCount,nodeLabels);
+			}
+		}
+		labelCount.put(label.charAt(node),labelCount.getOrDefault(label.charAt(node),0) + 1);
+		int afterChildAndSelfCount = labelCount.get(label.charAt(node));
+		nodeLabels[node] = afterChildAndSelfCount - initialCount;
+	}
+}

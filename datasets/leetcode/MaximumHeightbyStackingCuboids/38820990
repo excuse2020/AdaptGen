@@ -1,0 +1,30 @@
+class Solution {
+	long[][] dp;
+	int maxHeight(int[][] cuboids) {
+		int n = cuboids.length;
+		dp = new long[n][n];
+		for (int i = 0; i < n; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		Arrays.sort(cuboids,new Comparator<int[]>());
+		long ans = cuboids[0][0];
+		for (int i = 0; i < n - 1; i++) {
+			ans = Math.max(ans,cuboids[i][2] + solve(i + 1,i,cuboids));
+		}
+		return (int) ans;
+	}
+	long solve(int i, int prev, int[][] cuboids) {
+		if (i == cuboids.length) {
+			return 0;
+		}
+		if (dp[i][prev] != -1) {
+			return dp[i][prev];
+		}
+		long ans = 0;
+		if (cuboids[i][0] <= cuboids[prev][0] && cuboids[i][1] <= cuboids[prev][1] && cuboids[i][2] <= cuboids[prev][2]) {
+			ans = cuboids[i][2] + solve(i + 1,i,cuboids);
+		}
+		ans = Math.max(ans,solve(i + 1,prev,cuboids));
+		return dp[i][prev] = ans;
+	}
+}

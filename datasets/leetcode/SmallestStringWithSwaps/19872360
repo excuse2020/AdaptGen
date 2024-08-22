@@ -1,0 +1,55 @@
+class Solution {
+	void dfs(String s, boolean[] vis, HashMap<Integer, HashSet<Integer>> map, int root, ArrayList<Integer> indarr, ArrayList<Character> chars) {
+		if (vis[root]) {
+			return;
+		}
+		vis[root] = true;
+		indarr.add(root);
+		chars.add(s.charAt(root));
+		for (Integer ind: map.get(root)) {	
+			dfs(s,vis,map,ind,indarr,chars);
+		}
+	}
+	String smallestStringWithSwaps(String s, List<List<Integer>> pairs) {
+		if (pairs.size() == 0) {
+			return s;
+		}
+		HashMap<Integer, HashSet<Integer>> map = new HashMap();
+		for (List<Integer> p: pairs) {	
+			HashSet<Integer> h = map.getOrDefault(p.get(0),new HashSet());
+			h.add(p.get(1));
+			map.put(p.get(0),h);
+			HashSet<Integer> h1 = map.getOrDefault(p.get(1),new HashSet());
+			h1.add(p.get(0));
+			map.put(p.get(1),h1);
+		}
+		boolean[] vis = new boolean[s.length()];
+		ArrayList<ArrayList<Character>> chars = new ArrayList();
+		ArrayList<ArrayList<Integer>> ind = new ArrayList();
+		for (Integer key: map.keySet()) {	
+			if (!vis[key]) {
+				ArrayList<Integer> indx = new ArrayList();
+				ArrayList<Character> chrs = new ArrayList();
+				dfs(s,vis,map,key,indx,chrs);
+				chars.add(chrs);
+				ind.add(indx);
+			}
+		}
+		for (int i = 0; i < chars.size(); i++) {
+			Collections.sort(chars.get(i));
+			Collections.sort(ind.get(i));
+		}
+		char[] res = new char[s.length()];
+		for (int i = 0; i < chars.size(); i++) {
+			for (int j = 0; j < chars.get(i).size(); j++) {
+				res[ind.get(i).get(j)] = chars.get(i).get(j);
+			}
+		}
+		for (int i = 0; i < res.length; i++) {
+			if (res[i] == Character.MIN_VALUE) {
+				res[i] = s.charAt(i);
+			}
+		}
+		return String.valueOf(res);
+	}
+}

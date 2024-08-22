@@ -1,0 +1,26 @@
+class Solution {
+	long dividePlayers(int[] skill) {
+		int sum = Arrays.stream(skill).sum();
+		int pairs = skill.length / 2;
+		int pairSum = sum / pairs;
+		Map<Integer, Integer> element_counts = new HashMap<>();
+		for (int level: skill) {	
+			element_counts.put(level,element_counts.getOrDefault(level,0) + 1);
+		}
+		long totalChem = 0;
+		for (int level: skill) {	
+			int element1 = level;
+			if (element_counts.get(element1) == 0) {
+				continue;
+			}
+			int element2 = pairSum - element1;
+			if (element_counts.get(element2) == null || element_counts.get(element2) == 0) {
+				return -1;
+			}
+			element_counts.put(element1,element_counts.get(element1) - 1);
+			element_counts.put(element2,element_counts.get(element2) - 1);
+			totalChem += 1L * element1;
+		}
+		return totalChem;
+	}
+}

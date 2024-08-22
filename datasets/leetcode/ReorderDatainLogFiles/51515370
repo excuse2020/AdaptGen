@@ -1,0 +1,39 @@
+class Solution {
+	boolean isDigitLog(String log) {
+		return Character.isDigit(log.split(" ")[1].charAt(0));
+	}
+	boolean isLetterLog(String log) {
+		return Character.isLetter(log.split(" ")[1].charAt(0));
+	}
+	String[] reorderLogFiles(String[] logs) {
+		PriorityQueue<String> pq = new PriorityQueue<>(new LogLineComparator());
+		List<String> digitLogs = new ArrayList<>();
+		for (int i = 0; i < logs.length; i++) {
+			if (isDigitLog(logs[i])) {
+				digitLogs.add(logs[i]);
+			} 
+			else {
+				pq.add(logs[i]);
+			}
+		}
+		int index = 0;
+		while (!pq.isEmpty()) {
+			logs[index++] = pq.remove();
+		}
+		for (String log: digitLogs) {	
+			logs[index++] = log;
+		}
+		return logs;
+	}
+	class LogLineComparator {
+		int compare(String s1, String s2) {
+			int result = s1.substring(s1.indexOf(" ")).compareTo(s2.substring(s2.indexOf(" ")));
+			if (result == 0) {
+				return s1.substring(0,s1.indexOf(" ")).compareTo(s2.substring(0,s2.indexOf(" ")));
+			} 
+			else {
+				return result;
+			}
+		}
+	}
+}

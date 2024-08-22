@@ -1,0 +1,40 @@
+class Solution {
+	int minDifference(int[] nums) {
+		if (nums.length <= 4) {
+			return 0;
+		}
+		PriorityQueue<Integer> minHeap = new PriorityQueue<>(4);
+		PriorityQueue<Integer> maxHeap = new PriorityQueue<>(4, (a, b) -> {b - a});
+		for (int num: nums) {	
+			if (minHeap.size() < 4) {
+				minHeap.offer(num);
+			} 
+			else if (minHeap.peek() < num) {
+				minHeap.poll();
+				minHeap.offer(num);
+			}
+			if (maxHeap.size() < 4) {
+				maxHeap.offer(num);
+			} 
+			else if (maxHeap.peek() > num) {
+				maxHeap.poll();
+				maxHeap.offer(num);
+			}
+		}
+		int[] minArray = new int[4];
+		int itr = 0;
+		int[] maxArray = new int[4];
+		while (!minHeap.isEmpty()) {
+			maxArray[itr++] = minHeap.poll();
+		}
+		itr = 3;
+		while (!maxHeap.isEmpty()) {
+			minArray[itr--] = maxHeap.poll();
+		}
+		int minItr = 0, maxItr = 0, ans = Integer.MAX_VALUE;
+		for (itr = 0; itr < 4; itr++) {
+			ans = Math.min(ans,maxArray[itr] - minArray[itr]);
+		}
+		return ans;
+	}
+}

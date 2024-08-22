@@ -1,0 +1,32 @@
+class Solution {
+	int findPreviousPower(int value) {
+		while ((value & value - 1) != 0) {
+			value = value & value - 1;
+		}
+		return value;
+	}
+	int[] productQueries(int n, int[][] queries) {
+		List<Integer> list = new ArrayList<>();
+		int sum = n;
+		int value = 0;
+		while (sum > 0) {
+			value = findPreviousPower(sum);
+			sum = sum - value;
+			list.add(value);
+		}
+		Collections.reverse(list);
+		int[] result = new int[queries.length];
+		int index = 0;
+		for (int[] query: queries) {	
+			int start = query[0];
+			int end = query[1];
+			long queryResult = 1;
+			for (int i = start; i <= end; i++) {
+				queryResult = (queryResult * list.get(i) % (long) (Math.pow(10,9) + 7));
+			}
+			result[index] = (int) queryResult;
+			index++;
+		}
+		return result;
+	}
+}

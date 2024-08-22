@@ -1,0 +1,45 @@
+class Solution {
+	long[][] dp;
+	long mod;
+	long[][] ncrDp;
+	int idealArrays(int n, int maxVal) {
+		long sum = 0;
+		mod = 1000000007;
+		ncrDp = new long[n + 1][16];
+		dp = new long[maxVal + 1][15];
+		for (int i = 0; i <= maxVal; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		for (int i = 1; i <= maxVal; i++) {
+			long a = solve(i,n,maxVal,1);
+			sum = (sum + a) % mod;
+		}
+		return (int) sum;
+	}
+	long nCr(int n, int k) {
+		if (k > n) {
+			return 0;
+		}
+		if (k == 0 || k == n) {
+			return 1;
+		}
+		if (ncrDp[n][k] != 0) {
+			return ncrDp[n][k];
+		}
+		return ncrDp[n][k] = (nCr(n - 1,k - 1) % mod + nCr(n - 1,k) % mod) % mod;
+	}
+	long solve(int i, int n, int maxVal, int ind) {
+		if (ind == n) {
+			return 1;
+		}
+		if (dp[i][ind] != -1) {
+			return dp[i][ind];
+		}
+		long sum = 0;
+		for (int j = 2; j * i <= maxVal; j++) {
+			sum = (sum + solve(j * i,n,maxVal,ind + 1) % mod) % mod;
+		}
+		sum = (sum + nCr(n - 1,ind - 1) % mod) % mod;
+		return dp[i][ind] = sum;
+	}
+}

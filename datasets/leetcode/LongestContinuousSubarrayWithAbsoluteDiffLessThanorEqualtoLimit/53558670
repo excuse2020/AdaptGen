@@ -1,0 +1,25 @@
+class Solution {
+	int longestSubarray(int[] nums, int limit) {
+		Deque<Integer> maxQueue = new LinkedList<>();
+		Deque<Integer> minQueue = new LinkedList<>();
+		int ans = 0;
+		for (int l = 0, r = 0; r < nums.length; r++) {
+			while (!maxQueue.isEmpty() && Math.abs(nums[r] - nums[maxQueue.peekFirst()]) > limit) {
+				l = Math.max(l,maxQueue.pollFirst() + 1);
+			}
+			while (!minQueue.isEmpty() && Math.abs(nums[r] - nums[minQueue.peekFirst()]) > limit) {
+				l = Math.max(l,minQueue.pollFirst() + 1);
+			}
+			while (!maxQueue.isEmpty() && nums[r] >= nums[maxQueue.peekLast()]) {
+				maxQueue.pollLast();
+			}
+			while (!minQueue.isEmpty() && nums[r] <= nums[minQueue.peekLast()]) {
+				minQueue.pollLast();
+			}
+			maxQueue.offerLast(r);
+			minQueue.offerLast(r);
+			ans = Math.max(ans,r - l + 1);
+		}
+		return ans;
+	}
+}

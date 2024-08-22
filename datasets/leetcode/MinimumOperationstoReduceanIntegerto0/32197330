@@ -1,0 +1,39 @@
+class Solution {
+	int getPowerIndex(int[] power, int n) {
+		int left = 0, right = power.length - 1;
+		int pivot;
+		while (left <= right) {
+			pivot = left + (right - left) / 2;
+			if (power[pivot] == n) {
+				return pivot;
+			} 
+			else if (power[pivot] > n) {
+				right = pivot - 1;
+			} 
+			else {
+				left = pivot + 1;
+			}
+		}
+		return left;
+	}
+	int[] getPowerOfTwo() {
+		int[] power = new int[18];
+		power[0] = 1;
+		for (int i = 1; i < power.length; i++) {
+			power[i] = 2 * power[i - 1];
+		}
+		return power;
+	}
+	int getStepsToZero(int[] powerOfTwo, int n) {
+		int nextPower = getPowerIndex(powerOfTwo,n);
+		int steps = 1;
+		if (powerOfTwo[nextPower] != n) {
+			steps += getStepsToZero(powerOfTwo,Math.min(powerOfTwo[nextPower] - n,n - powerOfTwo[nextPower - 1]));
+		}
+		return steps;
+	}
+	int minOperations(int n) {
+		int[] powerOfTwo = getPowerOfTwo();
+		return getStepsToZero(powerOfTwo,n);
+	}
+}

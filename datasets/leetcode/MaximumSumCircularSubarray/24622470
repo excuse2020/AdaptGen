@@ -1,0 +1,39 @@
+class Solution {
+	int kadane(int[] nums, int n) {
+		int maxsum = Integer.MIN_VALUE;
+		int currsum = 0;
+		for (int i = 0; i < n; i++) {
+			currsum += nums[i];
+			maxsum = Math.max(currsum,maxsum);
+			if (currsum < 0) {
+				currsum = 0;
+			}
+		}
+		return maxsum;
+	}
+	int maxSubarraySumCircular(int[] nums) {
+		int n = nums.length;
+		int noncircularsum = kadane(nums,n);
+		int arraysum = 0;
+		for (int i = 0; i < nums.length; i++) {
+			arraysum += nums[i];
+		}
+		int circularsum = arraysum - minkadane(nums,n);
+		if (circularsum == 0) {
+			return noncircularsum;
+		}
+		return Math.max(circularsum,noncircularsum);
+	}
+	int minkadane(int[] nums, int n) {
+		int minsum = Integer.MAX_VALUE;
+		int currsum = 0;
+		for (int i = 0; i < n; i++) {
+			currsum += nums[i];
+			minsum = Math.min(currsum,minsum);
+			if (currsum > 0) {
+				currsum = 0;
+			}
+		}
+		return minsum;
+	}
+}

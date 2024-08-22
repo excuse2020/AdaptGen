@@ -1,0 +1,30 @@
+class Solution {
+	int[][][][] memo;
+	char[] s;
+	int dfs(int i, int p, int g, int k) {
+		if (k < 0) {
+			return Integer.MAX_VALUE - 2;
+		}
+		if (i == s.length) {
+			return g <= 1 ? g : (g + "").length() + 1;
+		}
+		if (k >= s.length - i) {
+			return g <= 1 ? g : (g + "").length() + 1;
+		}
+		if (memo[i][p][g][k] != 0) {
+			return memo[i][p][g][k];
+		}
+		int resp = dfs(i + 1,p,g,k - 1);
+	}
+	int getLengthOfOptimalCompression(String s, int k) {
+		if (s.length() == 1 && k == 0) {
+			return 1;
+		}
+		if (k >= s.length()) {
+			return 0;
+		}
+		this.s = s.toCharArray();
+		this.memo = new int[s.length()][27][s.length()][k + 1];
+		return dfs(0,(char) 26,0,k);
+	}
+}

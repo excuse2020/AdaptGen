@@ -1,0 +1,35 @@
+class Solution {
+	int firstCompleteIndex(int[] arr, int[][] mat) {
+		HashSet<Integer> setRow = new HashSet<>();
+		HashSet<Integer> setCol = new HashSet<>();
+		for (int i = 0; i < mat.length; i++) {
+			setRow.add(i);
+		}
+		for (int i = 0; i < mat[0].length; i++) {
+			setCol.add(i);
+		}
+		HashMap<Integer, int[]> map = new HashMap<>();
+		for (int i = 0; i < mat.length; i++) {
+			for (int j = 0; j < mat[0].length; j++) {
+				map.put(mat[i][j],new int{i, j});
+			}
+		}
+		int res = -1;
+		for (int i = arr.length - 1; i >= 0; i--) {
+			if ((setRow.size() == 1 && setCol.size() == 0) || (setRow.size() == 0 && setCol.size() == 1)) {
+				res = i;
+			}
+			if (setRow.size() == 1 && setCol.size() == 1) {
+				res = i;
+			}
+			int[] coord = map.get(arr[i]);
+			if (setRow.contains(coord[0])) {
+				setRow.remove(coord[0]);
+			}
+			if (setCol.contains(coord[1])) {
+				setCol.remove(coord[1]);
+			}
+		}
+		return res;
+	}
+}

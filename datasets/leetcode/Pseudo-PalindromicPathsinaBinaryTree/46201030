@@ -1,0 +1,40 @@
+class Solution {
+	int pseudoPalindromes;
+	void dfs(int[] freq, TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		if (root.left == null && root.right == null) {
+			freq[root.val - 1]++;
+			int even = 0;
+			int odd = 0;
+			for (int i = 0; i < freq.length; i++) {
+				if (freq[i] % 2 == 0) {
+					even++;
+				} 
+				else {
+					odd++;
+					if (odd > 1) {
+						freq[root.val - 1]--;
+						return;
+					}
+				}
+			}
+			freq[root.val - 1]--;
+			pseudoPalindromes++;
+			return;
+		}
+		freq[root.val - 1]++;
+		dfs(freq,root.left);
+		dfs(freq,root.right);
+		freq[root.val - 1]--;
+	}
+	int pseudoPalindromicPaths(TreeNode root) {
+		int[] freq = new int[9];
+		if (root == null) {
+			return -1;
+		}
+		dfs(freq,root);
+		return pseudoPalindromes;
+	}
+}

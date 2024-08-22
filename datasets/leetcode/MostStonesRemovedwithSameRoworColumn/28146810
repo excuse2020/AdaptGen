@@ -1,0 +1,49 @@
+class Solution {
+	HashMap<Integer, List<Integer>> map = new HashMap<>();
+	void buildConnectedMap(int[][] stones) {
+		for (int[] p: stones) {	
+			mapInsert(p[0],p[1],false);
+			mapInsert(p[1],p[0],true);
+		}
+	}
+	int dfs(int node, HashMap<Integer, Boolean> visited) {
+		if (visited.getOrDefault(node,false)) {
+			return 0;
+		}
+		visited.put(node,true);
+		List<Integer> ls = map.get(node);
+		int r = 0;
+		for (Integer i: ls) {	
+			r = Math.max(r,dfs(i,visited));
+		}
+		return r + 1;
+	}
+	void mapInsert(int x, int y, boolean pad) {
+		if (pad) {
+			x += 10000;
+		} 
+		else {
+			y += 10000;
+		}
+		List<Integer> l = map.get(x);
+		if (l == null) {
+			l = new ArrayList<>();
+		}
+		l.add(y);
+		map.put(x,l);
+	}
+	int removeStones(int[][] stones) {
+		buildConnectedMap(stones);
+		int ans = 0;
+		HashMap<Integer, Boolean> visited = new HashMap<>();
+		int island = 0;
+		for (int[] pair: stones) {	
+			int n = pair[0];
+			if (!visited.containsKey(n)) {
+				island++;
+				int tr = dfs(n,visited);
+			}
+		}
+		return stones.length - island;
+	}
+}

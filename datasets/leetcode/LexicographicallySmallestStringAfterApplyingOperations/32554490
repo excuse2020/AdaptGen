@@ -1,0 +1,38 @@
+class Solution {
+	String ans;
+	Set<String> set = new HashSet<>();
+	String add(String s, int a) {
+		StringBuilder sb = new StringBuilder(s);
+		for (int i = 0; i < s.length(); i++) {
+			if (i % 2 == 1) {
+				int aa = Integer.parseInt(Character.toString(sb.charAt(i)));
+				aa = (aa + a) % 10;
+				char x = Integer.toString(aa).charAt(0);
+				sb.setCharAt(i,x);
+			}
+		}
+		return sb.toString();
+	}
+	void dfs(String s, int a, int b) {
+		if (set.contains(s)) {
+			return;
+		}
+		set.add(s);
+		if (ans.compareTo(s) > 0) {
+			ans = s;
+		}
+		dfs(rot(s,b),a,b);
+		dfs(add(s,a),a,b);
+	}
+	String findLexSmallestString(String s, int a, int b) {
+		ans = s;
+		dfs(s,a,b);
+		return ans;
+	}
+	String rot(String s, int b) {
+		int l = s.length();
+		String a = s.substring(0,b);
+		String c = s.substring(b);
+		return c + a;
+	}
+}

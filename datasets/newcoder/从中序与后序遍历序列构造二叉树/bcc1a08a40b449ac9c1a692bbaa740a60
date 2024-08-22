@@ -1,0 +1,25 @@
+class Solution {
+	TreeNode buildNode(int[] inorder, int inLeft, int inRight, int[] postorder, int postLeft, int postRight) {
+		if (inRight - inLeft < 1) {
+			return null;
+		}
+		if (inRight - inLeft == 1) {
+			return new TreeNode(inorder[inLeft]);
+		}
+		int rootVal = postorder[postRight - 1];
+		TreeNode rootNode = new TreeNode(rootVal);
+		int rootIndex = 0;
+		for (int i = inLeft; i < inRight; i++) {
+			if (inorder[i] == rootVal) {
+				rootIndex = i;
+				break;
+			}
+		}
+		rootNode.left = buildNode(inorder,inLeft,rootIndex,postorder,postLeft,postLeft + (rootIndex - inLeft));
+		rootNode.right = buildNode(inorder,rootIndex + 1,inRight,postorder,postLeft + (rootIndex - inLeft),postRight - 1);
+		return rootNode;
+	}
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		return buildNode(inorder,0,inorder.length,postorder,0,postorder.length);
+	}
+}

@@ -1,0 +1,45 @@
+class Solution {
+	boolean dfs(ArrayList<ArrayList<Integer>> graph, boolean[] visited, boolean[] path, int curr, Stack<Integer> stack) {
+		visited[curr] = true;
+		path[curr] = true;
+		for (int i = 0; i < graph.get(curr).size(); i++) {
+			int next = graph.get(curr).get(i);
+			if (!visited[next]) {
+				if (dfs(graph,visited,path,next,stack)) {
+					return true;
+				}
+			} 
+			else if (path[next]) {
+				return true;
+			}
+		}
+		path[curr] = false;
+		stack.push(curr);
+		return false;
+	}
+	int[] findOrder(int numCourses, int[][] prerequisites) {
+		ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+		boolean[] visited = new boolean[numCourses];
+		boolean[] path = new boolean[numCourses];
+		Stack<Integer> stack = new Stack<>();
+		int[] ans = new int[numCourses];
+		for (int i = 0; i < numCourses; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int i = 0; i < prerequisites.length; i++) {
+			graph.get(prerequisites[i][1]).add(prerequisites[i][0]);
+		}
+		for (int i = 0; i < numCourses; i++) {
+			if (!visited[i]) {
+				if (dfs(graph,visited,path,i,stack)) {
+					return new int[0];
+				}
+			}
+		}
+		int i = 0;
+		while (!stack.isEmpty()) {
+			ans[i++] = stack.pop();
+		}
+		return ans;
+	}
+}

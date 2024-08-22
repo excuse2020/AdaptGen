@@ -1,0 +1,23 @@
+class Solution {
+	Integer[][][] dp;
+	int rob(int[] nums) {
+		dp = new Integer[nums.length][2][2];
+		return solve(nums,nums.length - 1,0,0);
+	}
+	int solve(int[] nums, int pos, int prev, int origin) {
+		if (pos < 0) {
+			return 0;
+		}
+		if (dp[pos][prev][origin] != null) {
+			return dp[pos][prev][origin];
+		}
+		if (prev != 1 && !(pos == 0 && origin == 1)) {
+			int c1 = nums[pos] + solve(nums,pos - 1,1,pos == nums.length - 1 ? 1 : origin);
+			int c2 = solve(nums,pos - 1,0,pos == nums.length - 1 ? 0 : origin);
+			return dp[pos][prev][origin] = Math.max(c1,c2);
+		} 
+		else {
+			return dp[pos][prev][origin] = solve(nums,pos - 1,0,pos == nums.length - 1 ? 0 : origin);
+		}
+	}
+}

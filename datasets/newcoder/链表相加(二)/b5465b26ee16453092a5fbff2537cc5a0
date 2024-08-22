@@ -1,0 +1,45 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		StringBuilder s1 = new StringBuilder();
+		StringBuilder s2 = new StringBuilder();
+		ListNode p = head1;
+		while (p != null) {
+			s1.append(p.val);
+			p = p.next;
+		}
+		p = head2;
+		while (p != null) {
+			s2.append(p.val);
+			p = p.next;
+		}
+		s1.reverse();
+		s2.reverse();
+		while (s1.length() > s2.length()) {
+			s2.append('0');
+		}
+		while (s2.length() > s1.length()) {
+			s1.append('0');
+		}
+		int nextAdd = 0;
+		for (int i = 0; i < s1.length(); ++i) {
+			int temp = s1.charAt(i) - '0' + s2.charAt(i) - '0' + nextAdd;
+			nextAdd = 0;
+			s1.setCharAt(i,(char) (temp % 10 + 48));
+			if (temp >= 10) {
+				nextAdd = 1;
+			}
+		}
+		if (nextAdd == 1) {
+			s1.append('1');
+		}
+		s1.reverse();
+		int i = 0;
+		ListNode res = new ListNode(s1.charAt(i++) - '0');
+		p = res;
+		for (i = 1; i < s1.length(); ++i) {
+			p.next = new ListNode(s1.charAt(i) - '0');
+			p = p.next;
+		}
+		return res;
+	}
+}

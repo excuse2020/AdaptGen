@@ -1,0 +1,46 @@
+class Solution {
+	int calDigitSum(int x) {
+		if (x == 0) {
+			return 0;
+		}
+		return x % 10 + calDigitSum(x / 10);
+	}
+	void enqueueNum(PriorityQueue<Integer> currQueue, int x) {
+		if (currQueue.size() < 2) {
+			currQueue.offer(x);
+		} 
+		else {
+			int top = currQueue.poll();
+			if (top < x) {
+				currQueue.offer(x);
+			} 
+			else {
+				currQueue.offer(top);
+			}
+		}
+	}
+	int maximumSum(int[] nums) {
+		int len = nums.length;
+		if (len < 2) {
+			return -1;
+		}
+		Map<Integer, PriorityQueue<Integer>> map = new HashMap<>();
+		int max = -1;
+		for (int x: nums) {	
+			int digitSum = calDigitSum(x);
+			if (!map.containsKey(digitSum)) {
+				map.put(digitSum,new PriorityQueue<Integer>());
+			}
+			PriorityQueue<Integer> currQueue = map.get(digitSum);
+			enqueueNum(currQueue,x);
+			if (currQueue.size() == 2) {
+				int first = currQueue.poll();
+				int second = currQueue.poll();
+				max = Math.max(first + second,max);
+				currQueue.offer(first);
+				currQueue.offer(second);
+			}
+		}
+		return max;
+	}
+}

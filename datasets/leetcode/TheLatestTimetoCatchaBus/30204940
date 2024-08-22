@@ -1,0 +1,22 @@
+class Solution {
+	int latestTimeCatchTheBus(int[] buses, int[] passengers, int capacity) {
+		Arrays.sort(buses);
+		Arrays.sort(passengers);
+		int idx = 0, latestArrivalTime = 0, lastOnboarded = 0;
+		for (int i = 0; i < buses.length; ++i) {
+			int onboarded = 0;
+			while (idx < passengers.length && passengers[idx] <= buses[i] && onboarded < capacity) {
+				if (lastOnboarded < passengers[idx] - 1) {
+					latestArrivalTime = passengers[idx] - 1;
+				}
+				onboarded++;
+				lastOnboarded = passengers[idx];
+				++idx;
+			}
+			if (onboarded < capacity && lastOnboarded != buses[i]) {
+				latestArrivalTime = buses[i];
+			}
+		}
+		return latestArrivalTime;
+	}
+}

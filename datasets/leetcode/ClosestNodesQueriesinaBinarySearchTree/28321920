@@ -1,0 +1,39 @@
+class Solution {
+	List<Integer> binarysearch(int target, List<Integer> list) {
+		int left = 0;
+		int right = list.size() - 1;
+		while (left <= right) {
+			int mid = left + (right - left) / 2;
+			if (list.get(mid) == target) {
+				return List.of(target,target);
+			} 
+			else if (list.get(mid) > target) {
+				right = mid - 1;
+			} 
+			else {
+				left = mid + 1;
+			}
+		}
+		int smallres = right == -1 ? -1 : list.get(right);
+		int largeres = left == list.size() ? -1 : list.get(left);
+		return List.of(smallres,largeres);
+	}
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		List<List<Integer>> res = new ArrayList<>();
+		List<Integer> listinorder = new ArrayList<>();
+		inorder(root,listinorder);
+		for (int target: queries) {	
+			List<Integer> cur = binarysearch(target,listinorder);
+			res.add(cur);
+		}
+		return res;
+	}
+	void inorder(TreeNode node, List<Integer> listinorder) {
+		if (node == null) {
+			return;
+		}
+		inorder(node.left,listinorder);
+		listinorder.add(node.val);
+		inorder(node.right,listinorder);
+	}
+}

@@ -1,0 +1,59 @@
+class Solution {
+	int BFS(TreeNode start, Map<TreeNode, List<TreeNode>> map, Set<TreeNode> leafSet, int distance) {
+		int res = 0;
+		Queue<Pair<TreeNode, Integer>> q = new LinkedList();
+		Set<TreeNode> visited = new HashSet<>();
+		q.add(new Pair<>(start, 0));
+		while (!q.isEmpty()) {
+			Pair<TreeNode, Integer> curPair = q.poll();
+			TreeNode curNode = curPair.getKey();
+			int count = curPair.getValue();
+			if (visited.contains(curNode)) {
+				continue;
+			}
+			if (count > distance) {
+				continue;
+			}
+			if (curNode != start && leafSet.contains(curNode)) {
+				++res;
+				continue;
+			}
+			visited.add(curNode);
+			List<TreeNode> list = map.getOrDefault(curNode,new ArrayList<>());
+			for (TreeNode node: list) {	
+				q.add(new Pair<>(node, count + 1));
+			}
+		}
+		return res;
+	}
+	int countPairs(TreeNode root, int distance) {
+		Map<TreeNode, List<TreeNode>> map = new HashMap<>();
+		Set<TreeNode> leafSet = new HashSet<>();
+		traverse(root,null,map,leafSet);
+		int res = 0;
+		for (TreeNode leaf: leafSet) {	
+			res += BFS(leaf,map,leafSet,distance);
+		}
+		return res / 2;
+	}
+	void traverse(TreeNode root, TreeNode parent, Map<TreeNode, List<TreeNode>> map, Set<TreeNode> set) {
+		if (root == null) {
+			return;
+		}
+		map.putIfAbsent(root,new ArrayList<>());
+		if (parent != null) {
+			map.get(root).add(parent);
+		}
+		if (root.left != null) {
+			map.get(root).add(root.left);
+		}
+		if (root.right != null) {
+			map.get(root).add(root.right);
+		}
+		if (root.left == null && root.right == null) {
+			set.add(root);
+		}
+		traverse(root.left,root,map,set);
+		traverse(root.right,root,map,set);
+	}
+}

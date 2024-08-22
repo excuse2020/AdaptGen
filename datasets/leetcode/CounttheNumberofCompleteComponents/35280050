@@ -1,0 +1,54 @@
+class Solution {
+	int count;
+	boolean yes = true;
+	void checkCompleteness(int i, ArrayList<Integer>[] graph, boolean[] visited) {
+		if (visited[i]) {
+			return;
+		}
+		if (graph[i].size() != count - 1) {
+			yes = false;
+		}
+		visited[i] = true;
+		for (int a: graph[i]) {	
+			if (!visited[a]) {
+				checkCompleteness(a,graph,visited);
+			}
+		}
+	}
+	int countCompleteComponents(int n, int[][] edges) {
+		ArrayList<Integer>[] graph = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		count = 0;
+		for (int[] edge: edges) {	
+			graph[edge[0]].add(edge[1]);
+			graph[edge[1]].add(edge[0]);
+		}
+		int ans = 0;
+		boolean[] visited = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			dfs(i,graph,visited);
+			boolean visi = new boolean[n];
+			checkCompleteness(i,graph,visi);
+			if (yes) {
+				ans++;
+			}
+			yes = true;
+			count = 0;
+		}
+		return ans;
+	}
+	void dfs(int i, ArrayList<Integer>[] graph, boolean[] visited) {
+		if (visited[i]) {
+			return;
+		}
+		count++;
+		visited[i] = true;
+		for (int a: graph[i]) {	
+			if (!visited[a]) {
+				dfs(a,graph,visited);
+			}
+		}
+	}
+}

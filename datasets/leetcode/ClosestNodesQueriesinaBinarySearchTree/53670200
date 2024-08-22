@@ -1,0 +1,60 @@
+class Solution {
+	List<Integer> sortedList = new ArrayList<>();
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		inorder(root);
+		List<List<Integer>> ans = new ArrayList<>();
+		for (int i: queries) {	
+			int min = minIndex(i);
+			int max = maxIndex(i);
+			List<Integer> temp = new ArrayList<>();
+			temp.add(max);
+			temp.add(min);
+			ans.add(temp);
+		}
+		return ans;
+	}
+	void inorder(TreeNode node) {
+		if (node == null) {
+			return;
+		}
+		inorder(node.left);
+		sortedList.add(node.val);
+		inorder(node.right);
+	}
+	int maxIndex(int curr) {
+		int ans = -1;
+		int s = 0, e = sortedList.size() - 1;
+		while (s <= e) {
+			int mid = (s + e) / 2;
+			if (sortedList.get(mid) == curr) {
+				return curr;
+			} 
+			else if (sortedList.get(mid) < curr) {
+				s = mid + 1;
+				ans = sortedList.get(mid);
+			} 
+			else {
+				e = mid - 1;
+			}
+		}
+		return ans;
+	}
+	int minIndex(int curr) {
+		int ans = -1;
+		int s = 0, e = sortedList.size() - 1;
+		while (s <= e) {
+			int mid = (s + e) / 2;
+			if (sortedList.get(mid) == curr) {
+				return curr;
+			} 
+			else if (sortedList.get(mid) > curr) {
+				e = mid - 1;
+				ans = sortedList.get(mid);
+			} 
+			else {
+				s = mid + 1;
+			}
+		}
+		return ans;
+	}
+}

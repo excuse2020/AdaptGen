@@ -1,0 +1,24 @@
+class Solution {
+	int dp = new int[21][10001];
+	int help(int i, int arr, int diff) {
+		if (i >= arr.length) {
+			if (diff == 0) {
+				return 0;
+			}
+			return Integer.MIN_VALUE;
+		}
+		if (dp[i][diff + 5000] != -1) {
+			return dp[i][diff + 5000];
+		}
+		int a1 = arr[i] + help(i + 1,arr,diff + arr[i]);
+		int a2 = arr[i] + help(i + 1,arr,diff - arr[i]);
+		int a3 = help(i + 1,arr,diff);
+		return dp[i][diff + 5000] = Math.max(a1,Math.max(a2,a3));
+	}
+	int tallestBillboard(int[] rods) {
+		for (int i: dp) {	
+			Arrays.fill(i,-1);
+		}
+		return help(0,rods,0) / 2;
+	}
+}

@@ -1,0 +1,48 @@
+class Solution {
+	int minSizeSubarray(int[] nums, int target) {
+		int sum = Arrays.stream(nums).sum();
+		int n = nums.length;
+		int[] pre = new int[n];
+		pre[0] = nums[0];
+		int ansFinal = 0;
+		for (int i = 1; i < n; i++) {
+			pre[i] = pre[i - 1] + nums[i];
+		}
+		System.out.println(n);
+		if (target > sum) {
+			int factor = target / sum;
+			ansFinal = n * (factor);
+			target = target - (factor) * sum;
+		}
+		System.out.println(sum + " ");
+		int ans = 3 * n + 1;
+		List<Integer> list = new ArrayList<>();
+		for (int i: nums) {	
+			list.add(i);
+		}
+		for (int i: nums) {	
+			list.add(i);
+		}
+		for (int i: nums) {	
+			list.add(i);
+		}
+		List<Long> preList = new ArrayList<>();
+		preList.add((long) list.get(0));
+		Map<Long, Integer> map = new HashMap<>();
+		map.put(preList.get(0),0);
+		for (int i = 1; i < 3 * n; i++) {
+			preList.add(preList.get(i - 1) + (long) list.get(i));
+			map.put(preList.get(i),i);
+		}
+		for (int i = 0; i < 3 * n; i++) {
+			long curr = preList.get(i);
+			if (curr == target) {
+				ans = Math.min(ans,i + 1);
+			}
+			if (map.containsKey(curr + target)) {
+				ans = Math.min(ans,map.get((long) curr + target) - i);
+			}
+		}
+		return ans > 3 * n ? -1 : ans + ansFinal;
+	}
+}

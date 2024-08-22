@@ -1,0 +1,26 @@
+class Solution {
+	long numberOfPairs(int[] nums1, int[] nums2, int k) {
+		Map<Integer, Integer> freq = new HashMap<>();
+		for (int num: nums2) {	
+			freq.put(num,freq.getOrDefault(num,0) + 1);
+		}
+		long answer = 0;
+		for (int num1: nums1) {	
+			if (num1 % k != 0) {
+				continue;
+			}
+			int reqDivisor = num1 / k;
+			for (int j = 1; j * j <= reqDivisor; j++) {
+				if (reqDivisor % j == 0) {
+					if (freq.containsKey(j)) {
+						answer += freq.get(j);
+					}
+					if (j != reqDivisor / j && freq.containsKey(reqDivisor / j)) {
+						answer += freq.get(reqDivisor / j);
+					}
+				}
+			}
+		}
+		return answer;
+	}
+}

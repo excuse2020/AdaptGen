@@ -1,0 +1,25 @@
+class Solution {
+	int check(List<List<Integer>> graph, boolean[] visited, int v) {
+		int min = 0;
+		visited[v] = true;
+		List<Integer> edges = graph.get(v);
+		for (Integer edge: edges) {	
+			if (!visited[Math.abs(edge)]) {
+				min += check(graph,visited,Math.abs(edge)) + (edge > 0 ? 1 : 0);
+			}
+		}
+		return min;
+	}
+	int minReorder(int n, int[][] connections) {
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new LinkedList<>());
+		}
+		for (int[] con: connections) {	
+			graph.get(con[0]).add(con[1]);
+			graph.get(con[1]).add(-con[0]);
+		}
+		boolean[] visited = new boolean[n];
+		return check(graph,visited,0);
+	}
+}

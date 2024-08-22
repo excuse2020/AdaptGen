@@ -1,0 +1,37 @@
+class Solution {
+	int e = 0;
+	int v = 0;
+	int countCompleteComponents(int n, int[][] edges) {
+		List<List<Integer>> adjList = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adjList.add(new ArrayList<Integer>());
+		}
+		for (int[] edge: edges) {	
+			adjList.get(edge[0]).add(edge[1]);
+			adjList.get(edge[1]).add(edge[0]);
+		}
+		boolean[] visited = new boolean[n];
+		int count = 0;
+		for (int i = 0; i < n; i++) {
+			if (!visited[i]) {
+				dfs(i,adjList,visited);
+				if (e / 2 == (v * (v - 1)) / 2) {
+					count++;
+				}
+			}
+			e = 0;
+			v = 0;
+		}
+		return count;
+	}
+	void dfs(int u, List<List<Integer>> adjList, boolean[] visited) {
+		visited[u] = true;
+		v++;
+		for (int v: adjList.get(u)) {	
+			e++;
+			if (!visited[v]) {
+				dfs(v,adjList,visited);
+			}
+		}
+	}
+}

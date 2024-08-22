@@ -1,0 +1,35 @@
+class Solution {
+	int reachableNodes(int n, int[][] edges, int[] restricted) {
+		boolean visited = new boolean[n];
+		Set<Integer> restrictedSet = new HashSet<>();
+		for (int i = 0; i < restricted.length; i++) {
+			restrictedSet.add(restricted[i]);
+		}
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			adj.get(edges[i][0]).add(edges[i][1]);
+			adj.get(edges[i][1]).add(edges[i][0]);
+		}
+		traverseNodes(0,adj,visited,restrictedSet);
+		int res = 0;
+		for (int i = 0; i < n; i++) {
+			if (visited[i]) {
+				res++;
+			}
+		}
+		return res;
+	}
+	void traverseNodes(int curr, List<List<Integer>> adj, boolean[] visited, Set<Integer> restrictedSet) {
+		if (visited[curr] || restrictedSet.contains(curr)) {
+			return;
+		}
+		visited[curr] = true;
+		for (int i = 0; i < adj.get(curr).size(); i++) {
+			traverseNodes(adj.get(curr).get(i),adj,visited,restrictedSet);
+		}
+		return;
+	}
+}

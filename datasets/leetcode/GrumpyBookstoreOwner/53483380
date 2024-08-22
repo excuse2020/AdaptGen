@@ -1,0 +1,23 @@
+class Solution {
+	int maxSatisfied(int[] customers, int[] grumpy, int minutes) {
+		int n = customers.length;
+		int maxG = 0;
+		int sum = 0;
+		for (int i = 0; i < minutes; i++) {
+			sum += (grumpy[i] == 1) ? customers[i] : 0;
+			maxG = Math.max(maxG,sum);
+		}
+		for (int i = minutes; i < n; i++) {
+			sum += (grumpy[i] == 1) ? customers[i] : 0;
+			sum -= (grumpy[i - minutes] == 1) ? customers[i - minutes] : 0;
+			maxG = Math.max(maxG,sum);
+		}
+		int satisfied = 0;
+		for (int i = 0; i < n; i++) {
+			if (grumpy[i] == 0) {
+				satisfied += customers[i];
+			}
+		}
+		return maxG + satisfied;
+	}
+}

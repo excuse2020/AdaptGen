@@ -1,0 +1,33 @@
+class Solution {
+	boolean validPath(int n, int[][] edges, int source, int destination) {
+		int[] dist = new int[n];
+		Arrays.fill(dist,(int) 1e9);
+		dist[source] = 0;
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			ArrayList<Integer> temp = new ArrayList<>();
+			adj.add(temp);
+		}
+		for (int i = 0; i < edges.length; i++) {
+			int u = edges[i][0];
+			int v = edges[i][1];
+			adj.get(u).add(v);
+			adj.get(v).add(u);
+		}
+		Queue<Integer> q = new LinkedList<>();
+		q.add(source);
+		while (!q.isEmpty()) {
+			int node = q.poll();
+			for (Integer p: adj.get(node)) {	
+				if (dist[node] + 1 < dist[p]) {
+					dist[p] = dist[node] + 1;
+					q.add(p);
+				}
+			}
+		}
+		if (dist[destination] == (int) 1e9) {
+			return false;
+		}
+		return true;
+	}
+}

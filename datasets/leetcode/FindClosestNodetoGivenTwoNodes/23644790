@@ -1,0 +1,26 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		Map<Integer, Integer> map1 = new HashMap<>();
+		Map<Integer, Integer> map2 = new HashMap<>();
+		makePath(edges,node1,0,map1);
+		makePath(edges,node2,0,map2);
+		int min = Integer.MAX_VALUE;
+		int ans = -1;
+		for (int key: map1.keySet()) {	
+			if (map2.containsKey(key)) {
+				int cm = Math.max(map1.get(key),map2.get(key));
+				if (min > cm || (min == cm && ans > key)) {
+					min = cm;
+					ans = key;
+				}
+			}
+		}
+		return ans;
+	}
+	void makePath(int[] arr, int i, int dist, Map<Integer, Integer> map) {
+		map.put(i,dist);
+		if (!map.containsKey(arr[i]) && arr[i] != -1) {
+			makePath(arr,arr[i],dist + 1,map);
+		}
+	}
+}

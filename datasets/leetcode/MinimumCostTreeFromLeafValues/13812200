@@ -1,0 +1,27 @@
+class Solution {
+	HashMap<Integer, Pair<Integer, Integer>> dp;
+	int mctFromLeafValues(int[] arr) {
+		dp = new HashMap();
+		return solve(0,arr.length - 1,arr).getValue();
+	}
+	Pair<Integer, Integer> solve(int start, int end, int[] arr) {
+		if (start == end) {
+			return new Pair<Integer, Integer>(arr[start], 0);
+		}
+		int val = Integer.MAX_VALUE, max = 0, n = arr.length;
+		if (dp.containsKey(start * n + end)) {
+			return dp.get(start * n + end);
+		}
+		for (int index = start; index < end; index++) {
+			Pair<Integer, Integer> left = solve(start,index,arr);
+			Pair<Integer, Integer> right = solve(index + 1,end,arr);
+			int curr_val = left.getKey() * right.getKey() + left.getValue() + right.getValue();
+			if (curr_val < val) {
+				val = curr_val;
+				max = Math.max(left.getKey(),right.getKey());
+			}
+		}
+		dp.put(start * n + end,new Pair<Integer, Integer>(max, val));
+		return dp.get(start * n + end);
+	}
+}

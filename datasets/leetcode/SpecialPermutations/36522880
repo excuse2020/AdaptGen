@@ -1,0 +1,44 @@
+class Solution {
+	int dfs(ArrayList<ArrayList<Integer>> adj, int[][] visited, int src, int v, int c) {
+		if (c == adj.size() - 1) {
+			return 1;
+		}
+		if (visited[src][v] != -1) {
+			return visited[src][v];
+		}
+		int noOfWays = 0;
+		ArrayList<Integer> arr = adj.get(src);
+		for (int u: arr) {	
+			int x = v & (1 << u);
+			if (x != 0) {
+				continue;
+			}
+			noOfWays = (noOfWays + dfs(adj,visited,u,((1 << u) | v),c + 1)) % 1000000007;
+		}
+		return visited[src][v] = noOfWays;
+	}
+	int specialPerm(int[] nums) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		int n = nums.length;
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<Integer>());
+		}
+		for (int i = 0; i < n; i++) {
+			for (int j = i + 1; j < n; j++) {
+				if (nums[i] % nums[j] == 0 || nums[j] % nums[i] == 0) {
+					adj.get(i).add(j);
+					adj.get(j).add(i);
+				}
+			}
+		}
+		int[][] visited = new int[n][1 << n];
+		for (int[] arr: visited) {	
+			Arrays.fill(arr,-1);
+		}
+		int res = 0;
+		for (int i = 0; i < n; i++) {
+			res = (res + dfs(adj,visited,i,1 << i,0)) % 1000000007;
+		}
+		return res;
+	}
+}

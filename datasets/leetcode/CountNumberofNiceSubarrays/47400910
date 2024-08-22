@@ -1,0 +1,27 @@
+class Solution {
+	int numberOfSubarrays(int[] nums, int k) {
+		HashMap<Integer, Integer> prefixSumCountMap = new HashMap<>();
+		int[] oddEvenArray = new int[nums.length];
+		for (int i = 0; i < nums.length; i++) {
+			if (nums[i] % 2 != 0) {
+				oddEvenArray[i] = 1;
+			} 
+			else {
+				oddEvenArray[i] = 0;
+			}
+		}
+		int prefixSum = 0;
+		int countOfSubarrays = 0;
+		for (int i = 0; i < oddEvenArray.length; i++) {
+			prefixSum += oddEvenArray[i];
+			if (prefixSum == k) {
+				countOfSubarrays++;
+			}
+			if (prefixSumCountMap.containsKey(prefixSum - k)) {
+				countOfSubarrays += prefixSumCountMap.get(prefixSum - k);
+			}
+			prefixSumCountMap.put(prefixSum,prefixSumCountMap.getOrDefault(prefixSum,0) + 1);
+		}
+		return countOfSubarrays;
+	}
+}

@@ -1,0 +1,37 @@
+class Solution {
+	int MOD = (int) 1e9 + 7;
+	int[][][] dp;
+	int m;
+	int n;
+	int countWays(int ind, int maxVal, int k) {
+		if (ind == n) {
+			return k == 0 ? 1 : 0;
+		}
+		if (k < 0) {
+			return 0;
+		}
+		if (dp[ind][maxVal][k] != -1) {
+			return dp[ind][maxVal][k];
+		}
+		int ways = 0;
+		for (int i = 1; i <= maxVal; i++) {
+			ways = (ways + countWays(ind + 1,maxVal,k)) % MOD;
+		}
+		for (int i = maxVal + 1; i <= m; i++) {
+			ways = (ways + countWays(ind + 1,i,k - 1)) % MOD;
+		}
+		dp[ind][maxVal][k] = ways;
+		return ways;
+	}
+	int numOfArrays(int n, int m, int k) {
+		dp = new int[n + 1][m + 1][k + 1];
+		for (int i = 0; i <= n; i++) {
+			for (int j = 0; j <= m; j++) {
+				Arrays.fill(dp[i][j],-1);
+			}
+		}
+		this.n = n;
+		this.m = m;
+		return countWays(0,0,k);
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	int getKthMin(int[] nums1, int[] nums2, int k) {
+		int l1 = 0, l2 = 0;
+		int m = nums1.length, n = nums2.length;
+		while (true) {
+			if (l1 == m) {
+				return nums2[l2 + k - 1];
+			}
+			if (l2 == n) {
+				return nums1[l1 + k - 1];
+			}
+			if (k == 1) {
+				return Math.min(nums1[l1],nums2[l2]);
+			}
+			int pivotKey1 = Math.min(l1 + k / 2 - 1,m - 1);
+			int pivotKey2 = Math.min(l2 + k / 2 - 1,n - 1);
+			if (nums1[pivotKey1] <= nums2[pivotKey2]) {
+				k -= pivotKey1 - l1 + 1;
+				l1 = pivotKey1 + 1;
+			} 
+			else {
+				k -= pivotKey2 - l2 + 1;
+				l2 = pivotKey2 + 1;
+			}
+		}
+	}
+	int getUpMedian(int[] arr1, int[] arr2) {
+		int m = arr1.length, n = arr2.length;
+		int k = (m + n) / 2;
+		return getKthMin(arr1,arr2,k);
+	}
+}

@@ -1,0 +1,63 @@
+class Solution {
+	void dfs(int[] finalRes, int step, int[] secondOrderUnpickable, int totalUnpickable, int[] combinationsCount, int res, boolean picked) {
+		if (step == 31) {
+			finalRes[0] += res;
+			finalRes[0] %= 1000000007;
+			return;
+		}
+		if (combinationsCount[step] == 0 || (((totalUnpickable >> step) & 1) == 1)) {
+			dfs(finalRes,step + 1,secondOrderUnpickable,totalUnpickable,combinationsCount,res,picked);
+			return;
+		}
+		dfs(finalRes,step + 1,secondOrderUnpickable,totalUnpickable,combinationsCount,res,picked);
+		if (picked) {
+			dfs(finalRes,step + 1,secondOrderUnpickable,totalUnpickable | secondOrderUnpickable[step],combinationsCount,(int) (((long) res * combinationsCount[step]) % 1000000007),true);
+		} 
+		else {
+			dfs(finalRes,step + 1,secondOrderUnpickable,totalUnpickable | secondOrderUnpickable[step],combinationsCount,combinationsCount[step] % 1000000007,true);
+		}
+	}
+	int squareFreeSubsets(int[] nums) {
+		int[] count = new int[31];
+		int[] secondOrderUnpickable = new int[31];
+		int totalUnpickable = 0;
+		totalUnpickable = totalUnpickable | 1 << 4;
+		totalUnpickable = totalUnpickable | 1 << 8;
+		totalUnpickable = totalUnpickable | 1 << 9;
+		totalUnpickable = totalUnpickable | 1 << 12;
+		totalUnpickable = totalUnpickable | 1 << 16;
+		totalUnpickable = totalUnpickable | 1 << 18;
+		totalUnpickable = totalUnpickable | 1 << 20;
+		totalUnpickable = totalUnpickable | 1 << 24;
+		totalUnpickable = totalUnpickable | 1 << 25;
+		totalUnpickable = totalUnpickable | 1 << 27;
+		totalUnpickable = totalUnpickable | 1 << 28;
+		for (int i = 2; i <= 30; i++) {
+			int n = i;
+			while (n <= 30) {
+				secondOrderUnpickable[i] = secondOrderUnpickable[i] | 1 << n;
+				n += i;
+			}
+			for (int j = 2; j < i; j++) {
+				if (i % j == 0) {
+					secondOrderUnpickable[i] = secondOrderUnpickable[i] | secondOrderUnpickable[j];
+				}
+			}
+		}
+		int[] finalRes = new int[1];
+		finalRes[0] = 0;
+		for (int num: nums) {	
+			count[num]++;
+		}
+		dfs(finalRes,2,secondOrderUnpickable,totalUnpickable,count,0,false);
+		int oneCombinationsCount = 1;
+		int i = 0;
+		while (i < count[1]) {
+			oneCombinationsCount = oneCombinationsCount << 1;
+			oneCombinationsCount %= 1000000007;
+			i++;
+		}
+		oneCombinationsCount--;
+		return ((int) ((long) finalRes[0] * oneCombinationsCount % 1000000007) + finalRes[0] % 1000000007 + oneCombinationsCount % 1000000007) % 1000000007;
+	}
+}

@@ -1,0 +1,54 @@
+class Solution {
+	List<Integer> list = new ArrayList<>();
+	void postMorris(TreeNode root) {
+		TreeNode node = reverseList(root);
+		TreeNode cur = node;
+		while (cur != null) {
+			list.add(cur.val);
+			cur = cur.right;
+		}
+		reverseList(node);
+	}
+	int[] postorderTraversal(TreeNode root) {
+		TreeNode node = root;
+		while (node != null) {
+			if (node.left != null) {
+				TreeNode cur = node.left;
+				while (cur.right != null && cur.right != node) {
+					cur = cur.right;
+				}
+				if (cur.right != node) {
+					cur.right = node;
+					node = node.left;
+				} 
+				else {
+					cur.right = null;
+					postMorris(node.left);
+					node = node.right;
+				}
+			} 
+			else {
+				postMorris(node.left);
+				node = node.right;
+			}
+		}
+		postMorris(root);
+		int[] arrays = new int[list.size()];
+		int i = 0;
+		for (int l: list) {	
+			arrays[i++] = l;
+		}
+		return arrays;
+	}
+	TreeNode reverseList(TreeNode root) {
+		TreeNode cur = root;
+		TreeNode pre = null;
+		while (cur != null) {
+			TreeNode node = cur.right;
+			cur.right = pre;
+			pre = cur;
+			cur = node;
+		}
+		return pre;
+	}
+}

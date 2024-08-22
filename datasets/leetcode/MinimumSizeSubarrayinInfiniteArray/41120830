@@ -1,0 +1,42 @@
+class Solution {
+	int minLinearArr(int[] nums, int target) {
+		int sum = 0;
+		int len = nums.length;
+		int presum = 0;
+		int res = len + 1;
+		Map<Integer, Integer> map = new HashMap<>();
+		map.put(0,-1);
+		for (int i = 0; i < len; i++) {
+			presum += nums[i];
+			if (map.containsKey(presum - target)) {
+				res = Math.min(res,i - map.get(presum - target));
+			}
+			map.put(presum,i);
+		}
+		return res == len + 1 ? -1 : res;
+	}
+	int minSizeSubarray(int[] nums, int target) {
+		int presum = 0;
+		int len = nums.length;
+		for (int num: nums) {	
+			presum += num;
+		}
+		int[] arr = new int[len * 2];
+		for (int i = 0; i < arr.length; i++) {
+			arr[i] = nums[i % len];
+		}
+		if (target <= presum) {
+			return minLinearArr(arr,target);
+		}
+		int n = target / presum;
+		target %= presum;
+		if (target == 0) {
+			return n * len;
+		}
+		int remain = minLinearArr(arr,target);
+		if (remain == -1) {
+			return -1;
+		}
+		return n * len + minLinearArr(arr,target);
+	}
+}

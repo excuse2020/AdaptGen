@@ -1,0 +1,28 @@
+class Solution {
+	record Pair(long val, int i, int j) {
+	}
+	long minimumCost(int m, int n, int[] H, int[] V) {
+		long hSum = 0l, vSum = 0, cost = 0l;
+		PriorityQueue<Pair> pq = new PriorityQueue<>((i, j) -> {Long.compare(j.val,i.val)});
+		for (int i = 0; i < m - 1; i++) {
+			hSum += H[i];
+			pq.add(new Pair(H[i], 0, i));
+		}
+		for (int i = 0; i < n - 1; i++) {
+			vSum += V[i];
+			pq.add(new Pair(V[i], 1, i));
+		}
+		for (int i = 0; i < m + n - 2; i++) {
+			Pair res = pq.poll();
+			if (res.i == 0) {
+				cost += res.val + vSum;
+				hSum -= H[res.j];
+			} 
+			else {
+				cost += res.val + hSum;
+				vSum -= V[res.j];
+			}
+		}
+		return cost;
+	}
+}

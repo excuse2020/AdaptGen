@@ -1,0 +1,35 @@
+class Solution {
+	int count = 0;
+	void dfs(TreeNode curr, int[] freqCount) {
+		if (curr == null) {
+			return;
+		}
+		freqCount[curr.val]++;
+		if (curr.left == null && curr.right == null) {
+			if (isPalindrome(freqCount)) {
+				count++;
+			}
+			freqCount[curr.val]--;
+			return;
+		}
+		dfs(curr.left,freqCount);
+		dfs(curr.right,freqCount);
+		freqCount[curr.val]--;
+	}
+	boolean isPalindrome(int[] freqCount) {
+		int oddCount = 0;
+		for (int i: freqCount) {	
+			if (i % 2 != 0) {
+				oddCount++;
+			}
+			if (oddCount >= 2) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int pseudoPalindromicPaths(TreeNode root) {
+		dfs(root,new int[10]);
+		return count;
+	}
+}

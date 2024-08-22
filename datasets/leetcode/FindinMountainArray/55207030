@@ -1,0 +1,51 @@
+class Solution {
+	int binarySearchInRange(MountainArray mountainArr, int target, int start, int end) {
+		boolean isAsc = (mountainArr.get(start) < mountainArr.get(end));
+		while (start <= end) {
+			int middle = start + (end - start) / 2;
+			if (target == mountainArr.get(middle)) {
+				return middle;
+			}
+			if (isAsc) {
+				if (target < mountainArr.get(middle)) {
+					end = middle - 1;
+				} 
+				else {
+					start = middle + 1;
+				}
+			} 
+			else {
+				if (target > mountainArr.get(middle)) {
+					end = middle - 1;
+				} 
+				else {
+					start = middle + 1;
+				}
+			}
+		}
+		return -1;
+	}
+	int findInMountainArray(int target, MountainArray mountainArr) {
+		int index = peakIndexInMountainArray(mountainArr);
+		int ans = binarySearchInRange(mountainArr,target,0,index);
+		if (ans == -1) {
+			ans = binarySearchInRange(mountainArr,target,index,mountainArr.length() - 1);
+		}
+		return ans;
+	}
+	int peakIndexInMountainArray(MountainArray mountainArr) {
+		int start = 0;
+		int end = mountainArr.length() - 1;
+		while (start < end) {
+			int middle = start + (end - start) / 2;
+			int middlePOne = middle + 1;
+			if ((mountainArr.get(middle)) > (mountainArr.get(middlePOne))) {
+				end = middle;
+			} 
+			else {
+				start = middle + 1;
+			}
+		}
+		return start;
+	}
+}

@@ -1,0 +1,48 @@
+class Solution {
+	int calculate(String s) {
+		return solution(s);
+	}
+	int solution(String mathStr) {
+		Stack<Integer> stack = new Stack<>();
+		int len = mathStr.length();
+		char[] chars = mathStr.toCharArray();
+		char sign = '+';
+		int number = 0;
+		for (int i = 0; i < len; i++) {
+			char aChar = chars[i];
+			if (Character.isDigit(aChar)) {
+				number = number * 10 + aChar - '0';
+			}
+			if (aChar == '(') {
+				int j = i + 1;
+				int count = 1;
+				while (count > 0) {
+					if (chars[j] == ')') {
+						count--;
+					}
+					if (chars[j] == '(') {
+						count++;
+					}
+					j++;
+				}
+				number = solution(mathStr.substring(i + 1,j - 1));
+				i = j - 1;
+			}
+			if (!Character.isDigit(aChar) || i == len - 1) {
+				if (sign == '+') {
+					stack.push(number);
+				} 
+				else if (sign == '-') {
+					stack.push(-1 * number);
+				}
+				sign = aChar;
+				number = 0;
+			}
+		}
+		int ans = 0;
+		while (!stack.isEmpty()) {
+			ans += stack.pop();
+		}
+		return ans;
+	}
+}

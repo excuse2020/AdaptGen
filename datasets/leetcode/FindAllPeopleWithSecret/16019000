@@ -1,0 +1,50 @@
+class Solution {
+	Map<Integer, Map<Integer, List<Integer>>> g = new HashMap<>();
+	List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+		int[] notified = new int[n];
+		Arrays.fill(notified,-1);
+		for (int i = 0; i < n; i++) {
+			g.put(i,new HashMap<>());
+		}
+		for (int[] m: meetings) {	
+			getMeetingTimes(m[0],m[1]).add(m[2]);
+		}
+		List<Integer> res = new ArrayList<>();
+		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {a[1] - b[1]});
+		pq.offer(new int{0, 0});
+		pq.offer(new int{firstPerson, 0});
+		while (!pq.isEmpty()) {
+			int[] cur = pq.poll();
+			int u = cur[0];
+			if (notified[u] > -1) {
+				continue;
+			}
+			notified[u] = cur[1];
+			res.add(u);
+			for (Map.Entry<Integer, List<Integer>> entry: g.get(u).entrySet()) {	
+				int v = entry.getKey();
+				if (notified[v] > -1) {
+					continue;
+				}
+				Collections.sort(entry.getValue());
+				for (int time: entry.getValue()) {	
+					if (time >= notified[u]) {
+						pq.offer(new int{v, time});
+						break;
+					}
+				}
+			}
+			g.remove(u);
+		}
+		return res;
+	}
+	List<Integer> getMeetingTimes(int u, int v) {
+		List<Integer> times = g.get(u).get(v);
+		if (times == null) {
+			times = new ArrayList<>();
+			g.get(u).put(v,times);
+			g.get(v).put(u,times);
+		}
+		return times;
+	}
+}

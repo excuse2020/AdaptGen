@@ -1,0 +1,70 @@
+class Solution {
+	List<List<Integer>> graph;
+	int n;
+	List<Integer> findPath(int start, int target) {
+		List<Integer> path = new ArrayList<>();
+		visit(start,target,path,new boolean[n]);
+		Collections.reverse(path);
+		return path;
+	}
+	int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+		n = edges.length + 1;
+		graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			graph.get(edge[0]).add(edge[1]);
+			graph.get(edge[1]).add(edge[0]);
+		}
+		List<Integer> bobPath = findPath(bob,0);
+		Deque<int[]> queue = new ArrayDeque<>();
+		queue.offer(new int[2]);
+		boolean[] visited = new boolean[n];
+		visited[0] = true;
+		int maxIncome = Integer.MIN_VALUE;
+		int time = 0;
+		while (!queue.isEmpty()) {
+			if (time < bobPath.size()) {
+				amount[bobPath.get(time)] /= 2;
+			}
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				int[] entry = queue.poll();
+				int node = entry[0];
+				int money = entry[1];
+				money += amount[node];
+				int childCount = 0;
+				for (int child: graph.get(node)) {	
+					if (!visited[child]) {
+						queue.offer(new int{child, money});
+						visited[child] = true;
+						childCount++;
+					}
+				}
+				if (childCount == 0) {
+					maxIncome = Math.max(maxIncome,money);
+				}
+			}
+			if (time < bobPath.size()) {
+				amount[bobPath.get(time)] = 0;
+			}
+			time++;
+		}
+		return maxIncome;
+	}
+	boolean visit(int node, int target, List<Integer> path, boolean[] visited) {
+		if (node == target) {
+			path.add(node);
+			return true;
+		}
+		visited[node] = true;
+		for (int child: graph.get(node)) {	
+			if (!visited[child] && visit(child,target,path,visited)) {
+				path.add(node);
+				return true;
+			}
+		}
+		return false;
+	}
+}

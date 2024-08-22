@@ -1,0 +1,34 @@
+class Solution {
+	boolean dfsPrune(TreeNode node) {
+		boolean leftExists = node.left != null;
+		boolean rightExists = node.right != null;
+		if (!leftExists && !rightExists) {
+			return node.val == 1;
+		}
+		boolean leftValid = false;
+		boolean rightValid = false;
+		if (leftExists) {
+			if (dfsPrune(node.left)) {
+				leftValid = true;
+			} 
+			else {
+				node.left = null;
+			}
+		}
+		if (rightExists) {
+			if (dfsPrune(node.right)) {
+				rightValid = true;
+			} 
+			else {
+				node.right = null;
+			}
+		}
+		return leftValid || rightValid;
+	}
+	TreeNode pruneTree(TreeNode root) {
+		if (!dfsPrune(root)) {
+			return null;
+		}
+		return root;
+	}
+}

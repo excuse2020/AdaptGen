@@ -1,0 +1,28 @@
+class Solution {
+	int minCost(int[] houses, int[][] cost, int m, int n, int target) {
+		int ans = solve(0,-1,target,houses,cost,new Integer[m][n + 2][target + 1]);
+		return ans == 100000 ? -1 : ans;
+	}
+	int solve(int pos, int prevHouse, int target, int[] houses, int[][] cost, Integer[][][] dp) {
+		if (pos >= houses.length) {
+			if (target == 0) {
+				return 0;
+			}
+			return 100000;
+		}
+		if (target < 0) {
+			return 100000;
+		}
+		if (dp[pos][prevHouse + 1][target] != null) {
+			return dp[pos][prevHouse + 1][target];
+		}
+		int min = 100000;
+		if (houses[pos] == 0) {
+			for (int j = 0; j < cost[pos].length; j++) {
+				min = Math.min(min,cost[pos][j] + solve(pos + 1,j + 1,prevHouse != j + 1 ? target - 1 : target,houses,cost,dp));
+			}
+			return dp[pos][prevHouse + 1][target] = min;
+		}
+		return dp[pos][prevHouse + 1][target] = solve(pos + 1,houses[pos],prevHouse != houses[pos] ? target - 1 : target,houses,cost,dp);
+	}
+}

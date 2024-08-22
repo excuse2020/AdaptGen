@@ -1,0 +1,62 @@
+class Solution {
+	boolean isPossible(int n, List<List<Integer>> edges) {
+		List<Integer> oddVertices = new ArrayList<>();
+		Map<Integer, Set<Integer>> graph = new HashMap<>();
+		for (int i = 0; i < edges.size(); i++) {
+			List<Integer> edge = edges.get(i);
+			int start = edge.get(0);
+			int end = edge.get(1);
+			Set<Integer> startList;
+			if (graph.containsKey(start)) {
+				startList = graph.get(start);
+			} 
+			else {
+				startList = new HashSet<>();
+			}
+			startList.add(end);
+			graph.put(start,startList);
+			Set<Integer> endList;
+			if (graph.containsKey(end)) {
+				endList = graph.get(end);
+			} 
+			else {
+				endList = new HashSet<>();
+			}
+			endList.add(start);
+			graph.put(end,endList);
+		}
+		for (Map.Entry<Integer, Set<Integer>> entry: graph.entrySet()) {	
+			int node = entry.getKey();
+			Set<Integer> neighbors = entry.getValue();
+			if (neighbors.size() % 2 == 1) {
+				oddVertices.add(node);
+			}
+		}
+		if (oddVertices.size() == 0) {
+			return true;
+		}
+		if (oddVertices.size() == 2) {
+			int node1 = oddVertices.get(0);
+			int node2 = oddVertices.get(1);
+			for (int i = 1; i <= n; i++) {
+				if (!graph.get(node1).contains(i) && !graph.get(node2).contains(i)) {
+					return true;
+				}
+			}
+			return false;
+		}
+		if (oddVertices.size() == 4) {
+			int node1 = oddVertices.get(0);
+			int node2 = oddVertices.get(1);
+			int node3 = oddVertices.get(2);
+			int node4 = oddVertices.get(3);
+			if ((!graph.get(node1).contains(node2) && !graph.get(node3).contains(node4)) || (!graph.get(node1).contains(node3) && !graph.get(node2).contains(node4))) {
+				return true;
+			} 
+			else {
+				return false;
+			}
+		}
+		return false;
+	}
+}

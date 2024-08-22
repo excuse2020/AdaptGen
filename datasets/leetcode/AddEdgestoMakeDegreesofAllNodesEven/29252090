@@ -1,0 +1,64 @@
+class Solution {
+	boolean isPossible(int n, List<List<Integer>> edges) {
+		List<Set<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new HashSet<>());
+		}
+		for (List<Integer> edge: edges) {	
+			int start = edge.get(0) - 1, end = edge.get(1) - 1;
+			graph.get(start).add(end);
+			graph.get(end).add(start);
+		}
+		return solve(n,graph);
+	}
+	boolean solve(int n, List<Set<Integer>> graph) {
+		List<Integer> nodes = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			if (graph.get(i).size() % 2 == 1) {
+				nodes.add(i);
+			}
+		}
+		int x = nodes.size(), count = 0;
+		if (x == 0) {
+			return true;
+		}
+		if (x > 4 || x == 1) {
+			return false;
+		}
+		if (x == 2) {
+			int node1 = nodes.get(0);
+			int node2 = nodes.get(1);
+			for (int i = 0; i < n; i++) {
+				if (!graph.get(i).contains(node1) && !graph.get(i).contains(node2)) {
+					return true;
+				}
+			}
+			return false;
+		}
+		for (int i = 0; i < x; i++) {
+			for (int j = 0; j < x; j++) {
+				if (i != j) {
+					int node1 = nodes.get(i);
+					int node2 = nodes.get(j);
+					if (graph.get(node1).size() % 2 != 0 && graph.get(node2).size() % 2 != 0) {
+						if (graph.get(node1).contains(node2)) {
+							continue;
+						}
+						graph.get(node1).add(node2);
+						graph.get(node2).add(node1);
+						count++;
+					}
+				}
+			}
+		}
+		if (count > 2) {
+			return false;
+		}
+		for (int i = 0; i < n; i++) {
+			if (graph.get(i).size() % 2 == 1) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

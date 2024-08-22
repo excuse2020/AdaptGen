@@ -1,0 +1,50 @@
+class Solution {
+	int[][] findFarmland(int[][] land) {
+		int n = land.length;
+		int m = land[0].length;
+		List<List<Integer>> ans = new ArrayList<>();
+		boolean[][] visited = new boolean[n][m];
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				if (land[i][j] == 1 && !visited[i][j]) {
+					List<Integer> list = new ArrayList<>();
+					if (helper(land,i,j,list,visited)) {
+						ans.add(Arrays.asList(i,j,list.get(0),list.get(1)));
+					}
+				}
+			}
+		}
+		int[][] res = new int[ans.size()][4];
+		for (int i = 0; i < ans.size(); i++) {
+			for (int j = 0; j < 4; j++) {
+				res[i][j] = ans.get(i).get(j);
+			}
+		}
+		return res;
+	}
+	boolean helper(int[][] land, int i, int j, List<Integer> list, boolean[][] visited) {
+		visited[i][j] = true;
+		if (isLast(land,i,j)) {
+			list.add(i);
+			list.add(j);
+			return true;
+		}
+		if (isValid(land,i,j + 1,visited) && helper(land,i,j + 1,list,visited)) {
+			return true;
+		}
+		if (isValid(land,i + 1,j,visited) && helper(land,i + 1,j,list,visited)) {
+			return true;
+		}
+		return false;
+	}
+	boolean isLast(int[][] land, int i, int j) {
+		int n = land.length;
+		int m = land[0].length;
+		return (i + 1 == n || (i + 1 < n && land[i + 1][j] == 0)) && (j + 1 == m || (j + 1 < m && land[i][j + 1] == 0));
+	}
+	boolean isValid(int[][] land, int i, int j, boolean[][] visited) {
+		int n = land.length;
+		int m = land[0].length;
+		return i < n && j < m && land[i][j] == 1 && !visited[i][j];
+	}
+}

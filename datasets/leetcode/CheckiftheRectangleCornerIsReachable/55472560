@@ -1,0 +1,63 @@
+class Solution {
+	boolean bfs(int s, int e, HashMap<Integer, List<Integer>> map) {
+		Queue<Integer> q = new LinkedList<>();
+		HashSet<Integer> vis = new HashSet<>();
+		q.add(s);
+		vis.add(s);
+		while (!q.isEmpty()) {
+			int x = q.poll();
+			if (x == e) {
+				return true;
+			}
+			List<Integer> li = map.getOrDefault(x,new ArrayList<>());
+			for (int neigh: li) {	
+				if (!vis.contains(neigh)) {
+					q.add(neigh);
+					vis.add(neigh);
+				}
+			}
+		}
+		return false;
+	}
+	boolean canReachCorner(int X, int Y, int[][] circles) {
+		HashMap<Integer, List<Integer>> map = new HashMap<>();
+		int[][] arr = circles;
+		int n = arr.length;
+		for (int i = 0; i < n; i++) {
+			map.put(i,map.getOrDefault(i,new ArrayList<>()));
+			for (int j = i + 1; j < n; j++) {
+				int del_x = arr[i][0] - arr[j][0];
+				int del_y = arr[i][1] - arr[j][1];
+				int R = arr[i][2] + arr[j][2];
+				double dis = Math.pow(del_x * del_x + del_y * del_y,0.5);
+				if (dis <= R) {
+					map.get(i).add(j);
+					List<Integer> li = map.getOrDefault(j,new ArrayList<>());
+					li.add(i);
+					map.put(j,li);
+				}
+			}
+			if (arr[i][0] <= arr[i][2]) {
+				map.get(i).add(n);
+				map.put(n,map.getOrDefault(n,new ArrayList<>()));
+				map.get(n).add(i);
+			}
+			if (Y - arr[i][1] <= arr[i][2]) {
+				map.get(i).add(n + 1);
+				map.put(n + 1,map.getOrDefault(n + 1,new ArrayList<>()));
+				map.get(n + 1).add(i);
+			}
+			if (X - arr[i][0] <= arr[i][2]) {
+				map.get(i).add(n + 2);
+				map.put(n + 2,map.getOrDefault(n + 2,new ArrayList<>()));
+				map.get(n + 2).add(i);
+			}
+			if (arr[i][1] <= arr[i][2]) {
+				map.get(i).add(n + 3);
+				map.put(n + 3,map.getOrDefault(n + 3,new ArrayList<>()));
+				map.get(n + 3).add(i);
+			}
+		}
+		return !(bfs(n,n + 2,map) || bfs(n + 1,n + 3,map) || bfs(n,n + 3,map)|| bfs(n + 1,n + 2,map));
+	}
+}

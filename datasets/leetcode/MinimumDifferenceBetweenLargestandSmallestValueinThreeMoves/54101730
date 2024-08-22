@@ -1,0 +1,57 @@
+class Solution {
+	int minDifference(int[] nums) {
+		int cc = -1;
+		HashMap<Integer, Integer> s2 = new HashMap<>();
+		HashSet<Integer> s3 = new HashSet<>();
+		for (int r = 0; r < nums.length; r++) {
+			int ele = nums[r];
+			s3.add(ele);
+			if (s2.containsKey(ele)) {
+				s2.put(ele,s2.get(ele) + 1);
+			} 
+			else {
+				s2.put(ele,1);
+			}
+		}
+		List<Integer> s1 = new ArrayList<>(s3);
+		Collections.sort(s1);
+		if (nums.length <= 4) {
+			cc = 0;
+		} 
+		else if (nums.length > 4) {
+			int ans = Integer.MAX_VALUE;
+			if (s1.size() > 1) {
+				for (int d = 1; d < s1.size(); d++) {
+					int e1 = s1.get(d);
+					int e2 = s1.get(d - 1);
+					if (s2.containsKey(e1) && s2.containsKey(e2)) {
+						int rt = s2.get(e1);
+						int tr = s2.get(e2);
+						int diff = nums.length - (rt + tr);
+						if (diff <= 3) {
+							int ee = e1 - e2;
+							ans = Math.min(ee,ans);
+						}
+					}
+				}
+				if (ans != Integer.MAX_VALUE) {
+					cc = ans;
+				} 
+				else {
+					Arrays.sort(nums);
+					int dif = nums[3];
+					int tg = nums[nums.length - 1];
+					int delif = nums[nums.length - 4];
+					int gt = nums[0];
+					cc = Math.min(tg - dif,delif - gt);
+					cc = Math.min(cc,nums[nums.length - 3] - nums[1]);
+					cc = Math.min(cc,nums[nums.length - 2] - nums[2]);
+				}
+			} 
+			else {
+				cc = 0;
+			}
+		}
+		return cc;
+	}
+}

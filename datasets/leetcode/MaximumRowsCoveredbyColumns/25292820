@@ -1,0 +1,43 @@
+class Solution {
+	int choosen;
+	int table;
+	int CountOnes5(int n) {
+		n -= (n >> 1) & 0x55555555;
+		n = ((n >> 2) & 0x33333333) + (n & 0x33333333);
+		n = ((((n >> 4) + n) & 0x0F0F0F0F) * 0x01010101) >> 24;
+		return n;
+	}
+	boolean dfs(int n, int val, int id, int cols) {
+		if (n == 0) {
+			return CountOnes5(val) <= cols;
+		}
+		for (; id != choosen.length; id++) {
+			if (choosen[id] == 0) {
+				choosen[id] = 1;
+				if (dfs(n - 1,val | table[id],id + 1,cols)) {
+					return true;
+				}
+				choosen[id] = 0;
+			}
+		}
+		return false;
+	}
+	void fillTable(int[][] mat) {
+		table = new int[mat.length];
+		for (int i = 0; i != mat.length; i++) {
+			for (int j = 0; j != mat[0].length; j++) {
+				table[i] = (table[i] << 1) | mat[i][j];
+			}
+		}
+	}
+	int maximumRows(int[][] mat, int cols) {
+		fillTable(mat);
+		choosen = new int[mat.length];
+		for (int n = mat.length; n != 0; n--) {
+			if (dfs(n,0,0,cols)) {
+				return n;
+			}
+		}
+		return 0;
+	}
+}

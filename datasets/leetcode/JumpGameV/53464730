@@ -1,0 +1,36 @@
+class Solution {
+	int calculateMax(int[] arr, int d, int[] dp, int x) {
+		boolean passLeft = false, passRight = false;
+		if (dp[x] != Integer.MIN_VALUE) {
+			return dp[x];
+		}
+		for (int i = 1; i <= d; i++) {
+			if (x + i < arr.length && arr[x + i] < arr[x] && passRight == false) {
+				dp[x] = Math.max(1 + calculateMax(arr,d,dp,x + i),dp[x]);
+			}
+			if (x + i < arr.length && arr[x + i] >= arr[x]) {
+				passRight = true;
+			}
+			if (x - i >= 0 && arr[x - i] < arr[x] && passLeft == false) {
+				dp[x] = Math.max(1 + calculateMax(arr,d,dp,x - i),dp[x]);
+			}
+			if (x - i >= 0 && arr[x - i] >= arr[x]) {
+				passLeft = true;
+			}
+			if (passLeft && passRight) {
+				break;
+			}
+		}
+		dp[x] = dp[x] == Integer.MIN_VALUE ? 1 : dp[x];
+		return dp[x];
+	}
+	int maxJumps(int[] arr, int d) {
+		int[] dp = new int[arr.length];
+		Arrays.fill(dp,Integer.MIN_VALUE);
+		for (int x = 0; x < arr.length; x++) {
+			dp[x] = calculateMax(arr,d,dp,x);
+		}
+		Arrays.sort(dp);
+		return dp[arr.length - 1];
+	}
+}

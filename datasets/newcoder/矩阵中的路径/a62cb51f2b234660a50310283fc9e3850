@@ -1,0 +1,36 @@
+class Solution {
+	boolean dfs(char[][] m, String s, int i, int j, boolean[][] visit, int cur) {
+		if (i < 0 || j < 0 || i >= m.length || j >= m[0].length || m[i][j] != s.charAt(cur)) {
+			return false;
+		}
+		if (visit[i][j]) {
+			return false;
+		}
+		if (cur == s.length() - 1) {
+			return true;
+		}
+		visit[i][j] = true;
+		cur++;
+		if (dfs(m,s,i - 1,j,visit,cur) || dfs(m,s,i + 1,j,visit,cur)) {
+			return true;
+		}
+		visit[i][j] = false;
+		return false;
+	}
+	boolean hasPath(char[][] matrix, String word) {
+		if (matrix == null || word == null) {
+			return false;
+		}
+		int row = matrix.length;
+		int col = matrix[0].length;
+		boolean[][] visit = new boolean[row][col];
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < col; j++) {
+				if (dfs(matrix,word,i,j,visit,0)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+}

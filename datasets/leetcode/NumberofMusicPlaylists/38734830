@@ -1,0 +1,22 @@
+class Solution {
+	int mod = 1000000007;
+	int numMusicPlaylists(int n, int goal, int k) {
+		return (int) playlists(0,0,n,goal,k);
+	}
+	long playlists(int countSongs, int countUnique, int n, int goal, int k) {
+		if (countSongs == goal && countUnique == n) {
+			return 1;
+		}
+		if (countSongs == goal || countUnique > n) {
+			return 0;
+		}
+		long ans = 0;
+		if (countUnique < n) {
+			ans += ((n % mod - countUnique % mod) % mod) * (playlists(countSongs + 1,countUnique + 1,n,goal,k) % mod);
+		}
+		if (countUnique > k) {
+			ans += ((countUnique % mod - k % mod) % mod) * (playlists(countSongs + 1,countUnique,n,goal,k) % mod);
+		}
+		return ans % mod;
+	}
+}

@@ -1,0 +1,69 @@
+class Solution {
+	int minimumArea(int[][] grid, int stRow, int endRow, int stCol, int endCol) {
+		int minRow = 1001, minCol = 10001, maxRow = -1, maxCol = -1;
+		for (int i = stRow; i <= endRow; i++) {
+			for (int j = stCol; j <= endCol; j++) {
+				if (grid[i][j] == 1) {
+					minRow = Math.min(i,minRow);
+					maxRow = Math.max(maxRow,i);
+					minCol = Math.min(minCol,j);
+					maxCol = Math.max(maxCol,j);
+				}
+			}
+		}
+		int ans = (maxRow - minRow + 1) * (maxCol - minCol + 1);
+		return ans;
+	}
+	int minimumSum(int[][] grid) {
+		int m = grid.length, n = grid[0].length, ans = Integer.MAX_VALUE, one, two, three;
+		for (int i = 0; i < m; i++) {
+			one = minimumArea(grid,0,i,0,n - 1);
+			for (int j = 0; j < n; j++) {
+				two = minimumArea(grid,i + 1,m - 1,0,j);
+				three = minimumArea(grid,i + 1,m - 1,j + 1,n - 1);
+				ans = Math.min(ans,one + two);
+			}
+		}
+		for (int j = 0; j < n; j++) {
+			one = minimumArea(grid,0,m - 1,0,j);
+			for (int i = 0; i < m; i++) {
+				two = minimumArea(grid,0,i,j + 1,n - 1);
+				three = minimumArea(grid,i + 1,m - 1,j + 1,n - 1);
+				ans = Math.min(ans,one + two);
+			}
+		}
+		for (int j = n - 1; j >= 0; j--) {
+			one = minimumArea(grid,0,m - 1,j + 1,n - 1);
+			for (int i = 0; i < m; i++) {
+				two = minimumArea(grid,0,i,0,j);
+				three = minimumArea(grid,i + 1,m - 1,0,j);
+				ans = Math.min(ans,one + two);
+			}
+		}
+		for (int i = m - 1; i >= 0; i--) {
+			one = minimumArea(grid,i + 1,m - 1,0,n - 1);
+			for (int j = 0; j < n; j++) {
+				two = minimumArea(grid,0,i,0,j);
+				three = minimumArea(grid,0,i,j + 1,n - 1);
+				ans = Math.min(ans,one + two);
+			}
+		}
+		for (int i = 0; i < m; i++) {
+			one = minimumArea(grid,0,i,0,n - 1);
+			for (int j = i + 1; j < m; j++) {
+				two = minimumArea(grid,i + 1,j,0,n - 1);
+				three = minimumArea(grid,j + 1,m - 1,0,n - 1);
+				ans = Math.min(ans,one + two);
+			}
+		}
+		for (int j = 0; j < n; j++) {
+			one = minimumArea(grid,0,m - 1,0,j);
+			for (int i = j + 1; i < n; i++) {
+				two = minimumArea(grid,0,m - 1,j + 1,i);
+				three = minimumArea(grid,0,m - 1,i + 1,n - 1);
+				ans = Math.min(ans,one + two);
+			}
+		}
+		return ans;
+	}
+}

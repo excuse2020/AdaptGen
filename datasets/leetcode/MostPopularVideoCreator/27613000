@@ -1,0 +1,53 @@
+class Solution {
+	Map<String, Integer> matchingIdMap = new HashMap<String, Integer>();
+	Map<String, Long> mostViewMap = new HashMap<String, Long>();
+	List<List<String>> res = new ArrayList<>();
+	List<List<String>> mostPopularCreator(String[] creators, String[] ids, int[] views) {
+		List<String> mostViewCreators = new ArrayList<>();
+		long maxView = -1;
+		for (int i = 0; i < creators.length; i++) {
+			String creator = creators[i];
+			String id = ids[i];
+			long view = views[i];
+			if (mostViewMap.containsKey(creator)) {
+				long curView = mostViewMap.get(creator) + view;
+				mostViewMap.put(creator,curView);
+			} 
+			else {
+				mostViewMap.put(creator,view);
+			}
+			long updatedView = mostViewMap.get(creator);
+			if (updatedView > maxView) {
+				mostViewCreators.clear();
+				mostViewCreators.add(creator);
+				maxView = updatedView;
+			} 
+			else if (updatedView == maxView) {
+				mostViewCreators.add(creator);
+			}
+			if (matchingIdMap.containsKey(creator)) {
+				int matchingIDIndex = matchingIdMap.get(creator);
+				int matchingView = views[matchingIDIndex];
+				if (matchingView < view) {
+					matchingIdMap.put(creator,i);
+				} 
+				else if (matchingView == view) {
+					String matchingId = ids[matchingIDIndex];
+					String curId = id;
+					if (curId.compareTo(matchingId) < 0) {
+						matchingIdMap.put(creator,i);
+					}
+				}
+			} 
+			else {
+				matchingIdMap.put(creator,i);
+			}
+		}
+		for (String creator: mostViewCreators) {	
+			int index = matchingIdMap.get(creator);
+			String id = ids[index];
+			res.add(Arrays.asList(creator,id));
+		}
+		return res;
+	}
+}

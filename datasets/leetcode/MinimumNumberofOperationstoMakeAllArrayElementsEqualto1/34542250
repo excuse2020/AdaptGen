@@ -1,0 +1,34 @@
+class Solution {
+	int gcd(int a, int b) {
+		if (b == 0) {
+			return a;
+		}
+		return gcd(b,a % b);
+	}
+	int minOperations(int[] nums) {
+		int count = 0;
+		int gc = nums[0];
+		for (int i = 0; i < nums.length; i++) {
+			if (nums[i] == 1) {
+				count++;
+			}
+		}
+		if (count > 0) {
+			return nums.length - count;
+		}
+		int sub = Integer.MAX_VALUE;
+		for (int i = 0; i < nums.length; i++) {
+			int g = nums[i];
+			for (int j = i + 1; j < nums.length; j++) {
+				g = gcd(g,nums[j]);
+				if (g == 1) {
+					sub = Math.min(sub,j - i);
+				}
+			}
+		}
+		if (sub == Integer.MAX_VALUE) {
+			return -1;
+		}
+		return sub + nums.length - 1;
+	}
+}

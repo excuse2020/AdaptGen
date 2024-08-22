@@ -1,0 +1,56 @@
+class Solution {
+	int amountOfTime(TreeNode root, int start) {
+		if (root == null) {
+			return 0;
+		}
+		Map<TreeNode, TreeNode> parents = new HashMap<>();
+		getParent(root,parents);
+		TreeNode target = null;
+		for (TreeNode n: parents.keySet()) {	
+			if (n.val == start) {
+				target = n;
+			}
+		}
+		HashMap<TreeNode, Boolean> visited = new HashMap<>();
+		int time = -1;
+		Deque<TreeNode> queue = new ArrayDeque<>();
+		queue.push(target);
+		visited.put(target,true);
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			time++;
+			for (int i = 0; i < size; i++) {
+				TreeNode cur = queue.poll();
+				if (cur.left != null && visited.get(cur.left) == null) {
+					queue.add(cur.left);
+					visited.put(cur.left,true);
+				}
+				if (cur.riht != null && visited.get(cur.right) == null) {
+					queue.add(cur.right);
+					visited.put(cur.right,true);
+				}
+				if (parents.get(cur) != null && visited.get(parents.get(cur)) == null) {
+					queue.add(parents.get(cur));
+					visited.put(parents.get(cur),true);
+				}
+			}
+		}
+		return time;
+	}
+	void getParent(TreeNode root, Map<TreeNode, TreeNode> map) {
+		Deque<TreeNode> stack = new ArrayDeque<>();
+		stack.push(root);
+		map.put(root,null);
+		while (!stack.isEmpty()) {
+			TreeNode temp = stack.pop();
+			if (temp.right != null) {
+				stack.push(temp.right);
+				map.put(temp.right,temp);
+			}
+			if (temp.left != null) {
+				stack.push(temp.left);
+				map.put(temp.left,temp);
+			}
+		}
+	}
+}

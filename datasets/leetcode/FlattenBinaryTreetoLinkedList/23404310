@@ -1,0 +1,29 @@
+class Solution {
+	void flatten(TreeNode root) {
+		flattenSubtree(root);
+	}
+	TreeNode flattenSubtree(TreeNode root) {
+		if (root == null) {
+			return null;
+		} 
+		else {
+			if (root.left == null && root.right == null) {
+				return root;
+			}
+			TreeNode rightMost = flattenSubtree(root.right);
+			if (root.left != null) {
+				TreeNode rightMostLeftSubtree = flattenSubtree(root.left);
+				TreeNode right = root.right;
+				root.right = root.left;
+				root.left = null;
+				if (rightMostLeftSubtree != null) {
+					rightMostLeftSubtree.right = right;
+				}
+				if (rightMost == null) {
+					rightMost = rightMostLeftSubtree;
+				}
+			}
+			return rightMost;
+		}
+	}
+}

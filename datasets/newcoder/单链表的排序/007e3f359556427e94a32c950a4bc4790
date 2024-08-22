@@ -1,0 +1,54 @@
+class Solution {
+	ListNode merge(ListNode list1, ListNode list2) {
+		if (list1 == null && list2 == null) {
+			return null;
+		}
+		Queue<Integer> queue1 = new LinkedList<>();
+		Queue<Integer> queue2 = new LinkedList<>();
+		while (list1 != null) {
+			queue1.add(list1.val);
+			list1 = list1.next;
+		}
+		while (list2 != null) {
+			queue2.add(list2.val);
+			list2 = list2.next;
+		}
+		ListNode head = new ListNode(-1);
+		ListNode flagNode = head;
+		while (!queue1.isEmpty() && !queue2.isEmpty()) {
+			if (queue1.peek() < queue2.peek()) {
+				flagNode.next = new ListNode(queue1.poll());
+			} 
+			else {
+				flagNode.next = new ListNode(queue2.poll());
+			}
+			flagNode = flagNode.next;
+		}
+		while (!queue1.isEmpty()) {
+			flagNode.next = new ListNode(queue1.poll());
+			flagNode = flagNode.next;
+		}
+		while (!queue2.isEmpty()) {
+			flagNode.next = new ListNode(queue2.poll());
+			flagNode = flagNode.next;
+		}
+		return head.next;
+	}
+	ListNode sortInList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode fast = head.next.next;
+		ListNode slow = head.next;
+		ListNode temp = head;
+		while (fast != null && fast.next != null) {
+			fast = fast.next.next;
+			slow = slow.next;
+			temp = temp.next;
+		}
+		temp.next = null;
+		ListNode list1 = sortInList(head);
+		ListNode list2 = sortInList(slow);
+		return merge(list1,list2);
+	}
+}

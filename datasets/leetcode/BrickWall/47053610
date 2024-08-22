@@ -1,0 +1,30 @@
+class Solution {
+	int leastBricks(List<List<Integer>> wall) {
+		if (wall.size() == 0) {
+			return 0;
+		}
+		int boundaries = 0;
+		for (int i = 0; i < wall.get(0).size(); i++) {
+			boundaries += wall.get(0).get(i);
+		}
+		if (boundaries - 1 == 0) {
+			return wall.size();
+		}
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < wall.size(); i++) {
+			List<Integer> wallRow = new ArrayList<>(wall.get(i));
+			int sum = 0;
+			for (int j = 0; j < wallRow.size(); j++) {
+				sum += wallRow.get(j);
+				if (sum < boundaries) {
+					map.put(sum,map.getOrDefault(sum,0) + 1);
+				}
+			}
+		}
+		int max = 0;
+		for (Integer key: map.keySet()) {	
+			max = Math.max(max,map.get(key));
+		}
+		return wall.size() - max;
+	}
+}

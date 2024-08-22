@@ -1,0 +1,31 @@
+class Solution {
+	boolean isValidString(String s) {
+		Stack<Integer> parenthesisStack = new Stack<>();
+		Stack<Integer> starStack = new Stack<>();
+		for (int i = 0; i < s.length(); i++) {
+			if (s.charAt(i) == '(') {
+				parenthesisStack.push(i);
+			} 
+			else if (s.charAt(i) == '*') {
+				starStack.push(i);
+			} 
+			else {
+				if (!parenthesisStack.isEmpty()) {
+					parenthesisStack.pop();
+				} 
+				else if (!starStack.isEmpty()) {
+					starStack.pop();
+				} 
+				else {
+					return false;
+				}
+			}
+		}
+		while (!parenthesisStack.isEmpty() && !starStack.isEmpty()) {
+			if (starStack.pop() < parenthesisStack.pop()) {
+				return false;
+			}
+		}
+		return parenthesisStack.isEmpty();
+	}
+}

@@ -1,0 +1,30 @@
+class Solution {
+	int mod = (int) 1e9 + 7;
+	int getNum(int n, int k, int t, Integer[][] cache) {
+		if (n == 1) {
+			if (t <= k) {
+				return 1;
+			}
+			return 0;
+		}
+		if (n > t || n * k < t) {
+			return 0;
+		}
+		if (cache[n][t] != null) {
+			return cache[n][t];
+		}
+		int res = 0;
+		for (int i = 1; i <= k; i++) {
+			if (t - i <= 0) {
+				break;
+			}
+			res += getNum(n - 1,k,t - i,cache);
+			res %= mod;
+		}
+		cache[n][t] = res;
+		return res;
+	}
+	int numRollsToTarget(int n, int k, int target) {
+		return getNum(n,k,target,new Integer[n + 1][target + 1]);
+	}
+}

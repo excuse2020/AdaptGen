@@ -1,0 +1,54 @@
+class Solution {
+	int networkBecomesIdle(int[][] edges, int[] patience) {
+		int n = patience.length;
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			List<Integer> toAdd = new ArrayList<>();
+			adj.add(toAdd);
+		}
+		for (int i = 0; i < edges.length; i++) {
+			adj.get(edges[i][0]).add(edges[i][1]);
+			adj.get(edges[i][1]).add(edges[i][0]);
+		}
+		int dist = new int[n];
+		Arrays.fill(dist,-1);
+		dist[0] = 0;
+		Queue<Integer> queue = new LinkedList<>();
+		queue.offer(0);
+		while (!queue.isEmpty()) {
+			int curr = queue.poll();
+			List<Integer> neigh = adj.get(curr);
+			if (neigh.isEmpty()) {
+				continue;
+			}
+			for (int i = 0; i < neigh.size(); i++) {
+				if (dist[neigh.get(i)] != -1) {
+					continue;
+				}
+				dist[neigh.get(i)] = dist[curr] + 1;
+				queue.offer(neigh.get(i));
+			}
+		}
+		int max = new int[n];
+		for (int i = 1; i < n; i++) {
+			int totalTime = dist[i] * 2;
+			if (patience[i] >= totalTime) {
+				max[i] = totalTime;
+			} 
+			else {
+				int totalExtraMessage = totalTime / patience[i];
+				if (totalTime % patience[i] == 0) {
+					totalExtraMessage--;
+				}
+				int timeOfSendingLatMsg = (totalExtraMessage * patience[i]);
+				int time = timeOfSendingLatMsg + totalTime;
+				max[i] = time;
+			}
+		}
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			ans = Math.max(ans,max[i]);
+		}
+		return ans + 1;
+	}
+}

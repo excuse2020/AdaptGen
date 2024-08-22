@@ -1,0 +1,49 @@
+class Solution {
+	int time;
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		int low = new int[n];
+		int disc = new int[n];
+		int parent = new int[n];
+		Arrays.fill(parent,-1);
+		Arrays.fill(disc,-1);
+		Arrays.fill(low,Integer.MAX_VALUE);
+		time = 0;
+		List<List<Integer>> bridges = new ArrayList<>();
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			ArrayList<Integer> out = new ArrayList<>();
+			adj.add(out);
+		}
+		for (int i = 0; i < connections.size(); i++) {
+			adj.get(connections.get(i).get(0)).add(connections.get(i).get(1));
+			adj.get(connections.get(i).get(1)).add(connections.get(i).get(0));
+		}
+		for (int i = 0; i < n; i++) {
+			if (disc[i] == -1) {
+				low[i] = dfs(i,-1,adj,bridges,low,disc,parent);
+			}
+		}
+		return bridges;
+	}
+	int dfs(int i, int parentI, List<List<Integer>> connections, List<List<Integer>> bridges, int[] low, int[] disc, int[] parent) {
+		if (disc[i] != -1) {
+			return low[i];
+		}
+		parent[i] = parentI;
+		disc[i] = time++;
+		low[i] = disc[i];
+		for (int v: connections.get(i)) {	
+			if (v != parentI) {
+				int lowV = dfs(v,i,connections,bridges,low,disc,parent);
+				low[i] = Math.min(lowV,low[i]);
+			}
+			if (disc[i] < low[v]) {
+				ArrayList<Integer> out = new ArrayList<>();
+				out.add(i);
+				out.add(v);
+				bridges.add(out);
+			}
+		}
+		return low[i];
+	}
+}

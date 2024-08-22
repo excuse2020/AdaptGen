@@ -1,0 +1,46 @@
+class Solution {
+	ArrayList<Integer> GetLeastNumbers_Solution(int[] input, int k) {
+		ArrayList<Integer> arr = new ArrayList<Integer>();
+		if (input.length == 0 || k == 0) {
+			return arr;
+		}
+		int[] heap = new int[k];
+		for (int i = 0; i < k; i++) {
+			heap[i] = input[i];
+		}
+		int low = (k - 2) / 2;
+		for (int i = low; i >= 0; i--) {
+			sift(heap,i,k - 1);
+		}
+		for (int i = k; i < input.length; i++) {
+			if (heap[0] > input[i]) {
+				heap[0] = input[i];
+				sift(heap,0,k - 1);
+			}
+		}
+		for (int i = 0; i < k; i++) {
+			arr.add(heap[i]);
+		}
+		return arr;
+	}
+	void sift(int[] arr, int low, int high) {
+		int i = low;
+		int j = low * 2 + 1;
+		int temp = arr[low];
+		while (j <= high) {
+			if (j + 1 <= high && arr[j] < arr[j + 1]) {
+				j = j + 1;
+			}
+			if (arr[j] > temp) {
+				arr[i] = arr[j];
+				i = j;
+				j = i * 2 + 1;
+			} 
+			else {
+				arr[i] = temp;
+				break;
+			}
+		}
+		arr[i] = temp;
+	}
+}

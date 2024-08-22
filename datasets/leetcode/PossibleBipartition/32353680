@@ -1,0 +1,58 @@
+class Solution {
+	int BLUE = 1;
+	int NO_COLOR = -1;
+	int RED = 0;
+	boolean bfs(int[] colors, int node, List<Integer>[] neighbors) {
+		Queue<Integer> nodeQ = new LinkedList<>();
+		nodeQ.add(node);
+		while (!nodeQ.isEmpty()) {
+			int currNode = nodeQ.poll();
+			for (int nextNode: neighbors[currNode]) {	
+				if (colors[currNode] == colors[nextNode]) {
+					return false;
+				}
+				if (colors[nextNode] == NO_COLOR) {
+					colors[nextNode] = colors[currNode] == RED ? BLUE : RED;
+					nodeQ.add(nextNode);
+				}
+			}
+		}
+		return true;
+	}
+	boolean dfs(int[] colors, int currNode, List<Integer>[] neighbors) {
+		for (int nextNode: neighbors[currNode]) {	
+			if (colors[nextNode] == colors[currNode]) {
+				return false;
+			}
+			if (colors[nextNode] == NO_COLOR) {
+				colors[nextNode] = colors[currNode] == RED ? BLUE : RED;
+				if (!dfs(colors,nextNode,neighbors)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		List<Integer>[] neighbors = new List[n + 1];
+		for (int i = 1; i <= n; i++) {
+			neighbors[i] = new ArrayList<>();
+		}
+		for (int[] dislike: dislikes) {	
+			neighbors[dislike[0]].add(dislike[1]);
+			neighbors[dislike[1]].add(dislike[0]);
+		}
+		int[] colors = new int[n + 1];
+		Arrays.fill(colors,NO_COLOR);
+		for (int i = 1; i < colors.length; i++) {
+			if (colors[i] != NO_COLOR) {
+				continue;
+			}
+			colors[i] = RED;
+			if (!dfs(colors,i,neighbors)) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

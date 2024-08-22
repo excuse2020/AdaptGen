@@ -1,0 +1,33 @@
+class Solution {
+	int[] countSubTrees(int n, int[][] edges, String labels) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			adj.get(edges[i][0]).add(edges[i][1]);
+			adj.get(edges[i][1]).add(edges[i][0]);
+		}
+		int[] sol = new int[n];
+		traverse(0,-1,adj,labels,sol);
+		return sol;
+	}
+	int[] traverse(int curr, int parent, ArrayList<ArrayList<Integer>> adj, String labels, int[] sol) {
+		int[] primary = null;
+		for (int i = 0; i < adj.get(curr).size(); i++) {
+			if (adj.get(curr).get(i) != parent) {
+				int[] mp = traverse(adj.get(curr).get(i),curr,adj,labels,sol);
+				if (primary == null && mp != null) {
+					primary = mp;
+				} 
+				else if (mp != null) {
+					for (int j = 0; j < 26; j++) {
+						primary[j] += mp[j];
+					}
+				}
+			}
+		}
+		sol[curr] = 1;
+		int[] arr = new int[26];
+	}
+}

@@ -1,0 +1,35 @@
+class Solution {
+	int brute(String[] words, String chars) {
+		Map<Character, Integer> mp = new HashMap<>();
+		for (char ch: chars.toCharArray()) {	
+			mp.put(ch,mp.getOrDefault(ch,0) + 1);
+		}
+		int ans = 0;
+		for (String word: words) {	
+			Map<Character, Integer> cpy = new HashMap<>(mp);
+			if (word.length() > chars.length()) {
+				continue;
+			}
+			int i = 0;
+			for (; i < word.length(); i++) {
+				char ch = word.charAt(i);
+				if (!cpy.containsKey(ch)) {
+					break;
+				} 
+				else {
+					cpy.put(ch,cpy.get(ch) - 1);
+					if (cpy.get(ch) == 0) {
+						cpy.remove(ch);
+					}
+				}
+			}
+			if (i == word.length()) {
+				ans += word.length();
+			}
+		}
+		return ans;
+	}
+	int countCharacters(String[] words, String chars) {
+		return brute(words,chars);
+	}
+}

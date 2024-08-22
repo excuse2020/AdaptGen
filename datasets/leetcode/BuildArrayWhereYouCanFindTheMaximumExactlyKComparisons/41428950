@@ -1,0 +1,35 @@
+class Solution {
+	long MOD = 1000000007;
+	int numOfArrays(int n, int m, int k) {
+		long[][][] t = new long[51][101][51];
+		for (long[][] cols: t) {	
+			for (long[] rows: cols) {	
+				Arrays.fill(rows,-1);
+			}
+		}
+		return (int) numOfArrays(n,m,k,0,0,0,t);
+	}
+	long numOfArrays(int n, int m, int k, int searchCost, int idx, int max, long[][][] t) {
+		if (idx == n) {
+			if (searchCost == k) {
+				return 1;
+			} 
+			else {
+				return 0;
+			}
+		}
+		if (t[idx][max][searchCost] != -1) {
+			return t[idx][max][searchCost];
+		}
+		long res = 0;
+		for (int i = 1; i <= m; i++) {
+			if (i > max) {
+				res = (res + numOfArrays(n,m,k,searchCost + 1,idx + 1,i,t)) % MOD;
+			} 
+			else {
+				res = (res + numOfArrays(n,m,k,searchCost,idx + 1,max,t)) % MOD;
+			}
+		}
+		return t[idx][max][searchCost] = res;
+	}
+}

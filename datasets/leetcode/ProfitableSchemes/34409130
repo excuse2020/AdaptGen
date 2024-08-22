@@ -1,0 +1,36 @@
+class Solution {
+	int[] group;
+	int[][][] memo;
+	int minProfit;
+	int[] profit;
+	int dfs(int rem, int p, int i) {
+		if (i == group.length) {
+			return 0;
+		}
+		if (rem - group[i] < 0) {
+			return dfs(rem,p,i + 1);
+		}
+		if (memo[rem][p][i] != -1) {
+			return memo[rem][p][i];
+		}
+		int nextProfit = Math.min(minProfit,p + profit[i]);
+		int curr = nextProfit >= minProfit ? 1 : 0;
+		memo[rem][p][i] = (curr + dfs(rem - group[i],nextProfit,i + 1)) % 1000000007;
+		return memo[rem][p][i];
+	}
+	int profitableSchemes(int n, int minProfit, int[] group, int[] profit) {
+		if (minProfit == 0) {
+			return group.length;
+		}
+		this.group = group;
+		this.profit = profit;
+		this.minProfit = minProfit;
+		memo = new int[n + 1][minProfit + 1][group.length];
+		for (int i = 0; i < n + 1; i++) {
+			for (int j = 0; j < minProfit + 1; j++) {
+				Arrays.fill(memo[i][j],-1);
+			}
+		}
+		return dfs(n,0,0);
+	}
+}

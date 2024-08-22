@@ -1,0 +1,28 @@
+class Solution {
+	boolean validPath(int n, int[][] edges, int source, int destination) {
+		ArrayList<ArrayList<Integer>> n2e = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			n2e.add(new ArrayList<>());
+		}
+		for (int[] e: edges) {	
+			n2e.get(e[0]).add(e[1]);
+			n2e.get(e[1]).add(e[0]);
+		}
+		Deque<Integer> nodes = new ArrayDeque<Integer>();
+		nodes.offerLast(source);
+		BitSet visited = new BitSet();
+		while (nodes.size() > 0) {
+			int cur = nodes.pollFirst();
+			if (cur == destination) {
+				return true;
+			}
+			for (int next: n2e.get(cur)) {	
+				if (!visited.get(next)) {
+					visited.set(next);
+					nodes.offerLast(next);
+				}
+			}
+		}
+		return false;
+	}
+}

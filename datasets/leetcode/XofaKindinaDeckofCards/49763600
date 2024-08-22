@@ -1,0 +1,41 @@
+class Solution {
+	int findCommonFactors(int num1, int num2) {
+		int minNum = Math.min(num1,num2);
+		int temp = 0;
+		for (int i = 1; i <= minNum; i++) {
+			if (num1 % i == 0 && num2 % i == 0) {
+				temp++;
+			}
+		}
+		return temp;
+	}
+	boolean hasGroupsSizeX(int[] deck) {
+		ArrayList<Integer> list = new ArrayList<>();
+		if (deck.length == 0 || deck.length == 1) {
+			return false;
+		}
+		Arrays.sort(deck);
+		int j = 0;
+		int k = 0;
+		while (j < deck.length) {
+			if (j > 0 && deck[j] != deck[j - 1]) {
+				list.add(j - k);
+				k = j;
+			}
+			j++;
+		}
+		list.add(j - k);
+		for (int t = 0; t < list.size(); t++) {
+			int x = list.get(t);
+			int i = t + 1;
+			while (i < list.size()) {
+				int temp = findCommonFactors(x,list.get(i));
+				if (temp == 1) {
+					return false;
+				}
+				i++;
+			}
+		}
+		return true;
+	}
+}

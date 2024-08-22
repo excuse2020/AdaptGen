@@ -1,0 +1,99 @@
+class Solution {
+	void midIteOrders(TreeNode root, List<Integer> midList) {
+		if (root == null) {
+			return;
+		}
+		TreeNode cur = root;
+		Stack<TreeNode> stack = new Stack<>();
+		while (cur != null || !stack.isEmpty()) {
+			while (cur != null) {
+				stack.push(cur);
+				cur = cur.left;
+			}
+			cur = stack.pop();
+			midList.add(cur.val);
+			cur = cur.right;
+		}
+	}
+	void midOrders(TreeNode root, List<Integer> midList) {
+		if (root == null) {
+			return;
+		}
+		midOrders(root.left,midList);
+		midList.add(root.val);
+		midOrders(root.right,midList);
+	}
+	void postIteOrders(TreeNode root, List<Integer> postList) {
+		if (root == null) {
+			return;
+		}
+		Stack<TreeNode> stack1 = new Stack<>();
+		Stack<TreeNode> stack2 = new Stack<>();
+		stack1.push(root);
+		while (!stack1.isEmpty()) {
+			TreeNode node = stack1.pop();
+			stack2.push(node);
+			if (node.left != null) {
+				stack1.push(node.left);
+			}
+			if (node.right != null) {
+				stack1.push(node.right);
+			}
+		}
+		while (!stack2.isEmpty()) {
+			postList.add(stack2.pop().val);
+		}
+	}
+	void postOrders(TreeNode root, List<Integer> postList) {
+		if (root == null) {
+			return;
+		}
+		postOrders(root.left,postList);
+		postOrders(root.right,postList);
+		postList.add(root.val);
+	}
+	void preIteOrders(TreeNode root, List<Integer> preList) {
+		if (root == null) {
+			return;
+		}
+		Stack<TreeNode> stack = new Stack<>();
+		stack.push(root);
+		while (!stack.isEmpty()) {
+			TreeNode node = stack.pop();
+			preList.add(node.val);
+			if (node.right != null) {
+				stack.push(node.right);
+			}
+			if (node.left != null) {
+				stack.push(node.left);
+			}
+		}
+	}
+	void preOrders(TreeNode root, List<Integer> preList) {
+		if (root == null) {
+			return;
+		}
+		preList.add(root.val);
+		preOrders(root.left,preList);
+		preOrders(root.right,preList);
+	}
+	int[][] threeOrders(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		List<Integer> preList = new ArrayList<>();
+		List<Integer> midList = new ArrayList<>();
+		List<Integer> postList = new ArrayList<>();
+		preIteOrders(root,preList);
+		midIteOrders(root,midList);
+		postIteOrders(root,postList);
+		int size = preList.size();
+		int[][] result = new int[3][size];
+		for (int i = 0; i < size; i++) {
+			result[0][i] = preList.get(i);
+			result[1][i] = midList.get(i);
+			result[2][i] = postList.get(i);
+		}
+		return result;
+	}
+}

@@ -1,0 +1,45 @@
+class Solution {
+	List<List<String>> mostPopularCreator(String[] cre, String[] ids, int[] views) {
+		TreeMap<String, Long> hm = new TreeMap();
+		HashMap<String, Integer> hm2 = new HashMap();
+		int n = ids.length;
+		long maxViews = -1;
+		for (int i = 0; i < n; i++) {
+			hm.put(cre[i],hm.getOrDefault(cre[i],(long) 0) + (long) views[i]);
+			maxViews = Math.max(maxViews,hm.get(cre[i]));
+			if (hm2.containsKey(cre[i])) {
+				int id = hm2.get(cre[i]);
+				if (views[i] > views[id]) {
+					hm2.put(cre[i],i);
+				}
+				if (views[i] == views[id]) {
+					String s = ids[i];
+					String t = ids[id];
+					if (s.compareTo(t) < 0) {
+						hm2.put(cre[i],i);
+					}
+				}
+			} 
+			else {
+				hm2.put(cre[i],i);
+			}
+		}
+		List<String> maxCre = new ArrayList();
+		for (Map.Entry<String, Long> mapElement: hm.entrySet()) {	
+			String key = mapElement.getKey();
+			long value = (mapElement.getValue());
+			if (value == maxViews) {
+				maxCre.add(key);
+			}
+		}
+		List<List<String>> res = new ArrayList();
+		for (int i = 0; i < maxCre.size(); i++) {
+			int id = hm2.get(maxCre.get(i));
+			List<String> in = new ArrayList();
+			in.add(maxCre.get(i));
+			in.add(ids[id]);
+			res.add(in);
+		}
+		return res;
+	}
+}

@@ -1,0 +1,15 @@
+class Solution {
+	int maxTotalReward(int[] rewardValues) {
+		var dp = BigInteger.ONE;
+		var set = new TreeSet<Integer>();
+		for (int reward: rewardValues) {	
+			set.add(reward);
+		}
+		for (int val: set) {	
+			var mask = BigInteger.ONE.shiftLeft(val).subtract(BigInteger.ONE);
+			var prevSum = dp.and(mask);
+			dp = dp.or(prevSum.shiftLeft(val));
+		}
+		return dp.bitLength() - 1;
+	}
+}

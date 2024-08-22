@@ -1,0 +1,55 @@
+class Solution {
+	int TARGET;
+	int[][] cost;
+	int[][][] dp;
+	int[] houses;
+	int totalC;
+	int totalH;
+	int minCost(int[] houses, int[][] cost, int m, int n, int target) {
+		this.houses = houses;
+		this.cost = cost;
+		totalH = m;
+		totalC = n;
+		TARGET = target;
+		dp = new int[totalH][totalC + 1][TARGET + 1];
+		int min = paintMinCost(0,0,0);
+		return min == Integer.MAX_VALUE / 2 ? -1 : min;
+	}
+	int paintMinCost(int hIndex, int currColor, int currTarget) {
+		if (currTarget > TARGET) {
+			return Integer.MAX_VALUE / 2;
+		}
+		if (hIndex == totalH) {
+			if (currTarget == TARGET) {
+				return 0;
+			} 
+			else {
+				return Integer.MAX_VALUE / 2;
+			}
+		}
+		if (dp[hIndex][currColor][currTarget] != 0) {
+			return dp[hIndex][currColor][currTarget];
+		}
+		int min = Integer.MAX_VALUE / 2;
+		if (houses[hIndex] == 0) {
+			for (int cIndex = 0; cIndex < totalC; cIndex++) {
+				if (currColor == cIndex + 1) {
+					min = Math.min(min,cost[hIndex][cIndex] + paintMinCost(hIndex + 1,currColor,currTarget));
+				} 
+				else {
+					min = Math.min(min,cost[hIndex][cIndex] + paintMinCost(hIndex + 1,cIndex + 1,currTarget + 1));
+				}
+			}
+		} 
+		else {
+			if (currColor == houses[hIndex]) {
+				min = Math.min(min,paintMinCost(hIndex + 1,houses[hIndex],currTarget));
+			} 
+			else {
+				min = Math.min(min,paintMinCost(hIndex + 1,houses[hIndex],currTarget + 1));
+			}
+		}
+		dp[hIndex][currColor][currTarget] = min;
+		return min;
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	long distinctNames(String[] ideas) {
+		Map<Character, Set<String>> map = new HashMap<>();
+		for (String idea: ideas) {	
+			char c = idea.charAt(0);
+			if (!map.containsKey(c)) {
+				map.put(c,new HashSet<>());
+			}
+			map.get(c).add(idea.substring(1,idea.length()));
+		}
+		long result = 0;
+		for (Map.Entry<Character, Set<String>> key1: map.entrySet()) {	
+			Set<String> group1 = key1.getValue();
+			for (Map.Entry<Character, Set<String>> key2: map.entrySet()) {	
+				if (key1 == key2) {
+					continue;
+				}
+				int commonSuffixes = 0;
+				Set<String> group2 = key2.getValue();
+				for (String suffix: group1) {	
+					if (group2.contains(suffix)) {
+						commonSuffixes++;
+					}
+				}
+				int validSuffixes1 = group1.size() - commonSuffixes;
+				int validSuffixes2 = group2.size() - commonSuffixes;
+				result += (validSuffixes1 * validSuffixes2);
+			}
+		}
+		return result;
+	}
+}

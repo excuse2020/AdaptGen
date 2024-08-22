@@ -1,0 +1,29 @@
+class Solution {
+	Map<String, Integer> cache = new HashMap<>();
+	int busyStudent(int[] startTime, int[] endTime, int queryTime) {
+		if (startTime.length == 0 || endTime.length == 0) {
+			return -1;
+		}
+		String cacheKey = generateCacheKey(startTime,endTime,queryTime);
+		if (cache.containsKey(cacheKey)) {
+			return cache.get(cacheKey);
+		}
+		ArrayList<Integer> validStartTimes = new ArrayList<>();
+		for (int i = 0; i < startTime.length; i++) {
+			if (startTime[i] <= queryTime && endTime[i] >= queryTime) {
+				validStartTimes.add(startTime[i]);
+			}
+		}
+		int result = validStartTimes.size();
+		cache.put(cacheKey,result);
+		return result;
+	}
+	String generateCacheKey(int[] startTime, int[] endTime, int queryTime) {
+		StringBuilder keyBuilder = new StringBuilder();
+		keyBuilder.append(queryTime).append(":");
+		for (int i = 0; i < startTime.length; i++) {
+			keyBuilder.append(startTime[i]).append(",").append(endTime[i]).append(":");
+		}
+		return keyBuilder.toString();
+	}
+}

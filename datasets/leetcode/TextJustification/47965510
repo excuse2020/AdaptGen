@@ -1,0 +1,51 @@
+class Solution {
+	List<String> fullJustify(String[] words, int maxWidth) {
+		List<String> resultList = new ArrayList<String>();
+		List<int[]> line = new ArrayList<>();
+		line.add(new int{words[0].length(), 0});
+		int runningWidth = words[0].length(), n = words.length;
+		for (int i = 1; i < n; ++i) {
+			String word = words[i];
+			if (runningWidth + 1 <= maxWidth) {
+				line.add(new int{1, -1});
+				line.add(new int{word.length(), i});
+				runningWidth += word.length() + 1;
+			} 
+			else {
+				makeLineJustified(line,runningWidth,maxWidth);
+				resultList.add(getJustifiedLineInString(words,line));
+				line = new ArrayList<>();
+				line.add(new int{word.length(), i});
+				runningWidth = word.length();
+			}
+		}
+		makeLastLineJustified(line,runningWidth,maxWidth);
+		resultList.add(getJustifiedLineInString(words,line));
+		return resultList;
+	}
+	String getJustifiedLineInString(String[] words, List<int[]> line) {
+		StringBuilder str = new StringBuilder("");
+	}
+	void makeLastLineJustified(List<int[]> line, int runningWidth, int maxWidth) {
+		if (runningWidth < maxWidth) {
+			line.add(new int{maxWidth - runningWidth, -1});
+		}
+	}
+	void makeLineJustified(List<int[]> line, int runningWidth, int maxWidth) {
+		int n = line.size(), idx = 1;
+		if (n > 1) {
+			int distributeSpacesEvenly = (maxWidth - runningWidth) / (n / 2), remainingSpaces = (maxWidth - runningWidth) % (n / 2);
+			for (int spaceIdx = 1; spaceIdx < n; spaceIdx += 2) {
+				line.get(spaceIdx)[0] += distributeSpacesEvenly;
+			}
+			for (int spaceIdx = 1; spaceIdx < n && remainingSpaces > 0; spaceIdx += 2, --remainingSpaces) {
+				++line.get(spaceIdx)[0];
+			}
+		} 
+		else {
+			if (runningWidth < maxWidth) {
+				line.add(new int{maxWidth - runningWidth, -1});
+			}
+		}
+	}
+}

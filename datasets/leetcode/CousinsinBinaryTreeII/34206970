@@ -1,0 +1,40 @@
+class Solution {
+	TreeNode replaceValueInTree(TreeNode root) {
+		TreeNode ans = root;
+		ans.val = 0;
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(root);
+		int curLevel = 1;
+		while (q.size() != 0) {
+			int nextLevel = 0;
+			Map<TreeNode, Integer> parentChildSum = new HashMap<>();
+			int levelTotal = 0;
+			while (curLevel-- > 0) {
+				TreeNode cur = q.poll();
+				int childSum = 0;
+				if (cur.left != null) {
+					q.add(cur.left);
+					childSum += cur.left.val;
+					nextLevel++;
+				}
+				if (cur.right != null) {
+					q.add(cur.right);
+					childSum += cur.right.val;
+					nextLevel++;
+				}
+				levelTotal += childSum;
+				parentChildSum.put(cur,childSum);
+			}
+			curLevel = nextLevel;
+			for (TreeNode node: parentChildSum.keySet()) {	
+				if (node.left != null) {
+					node.left.val = (levelTotal - parentChildSum.get(node));
+				}
+				if (node.right != null) {
+					node.right.val = (levelTotal - parentChildSum.get(node));
+				}
+			}
+		}
+		return ans;
+	}
+}

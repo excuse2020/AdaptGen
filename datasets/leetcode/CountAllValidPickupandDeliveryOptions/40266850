@@ -1,0 +1,48 @@
+class Solution {
+	int MOD = (int) (1e9 + 7);
+	int countOrders(int n) {
+		long twoNFact = factorial(2 * n) % MOD;
+		long twoPowN = modPow(2,n,MOD);
+		return (int) ((twoNFact * modInverse(twoPowN,MOD)) % MOD);
+	}
+	long factorial(int num) {
+		long result = 1;
+		for (int i = 1; i <= num; i++) {
+			result = (result * i) % MOD;
+		}
+		return result;
+	}
+	long modInverse(long a, long mod) {
+		long m0 = mod;
+		long x0 = 0;
+		long x1 = 1;
+		while (a > 1) {
+			long q = a / mod;
+			long t = mod;
+			mod = a % mod;
+			a = t;
+			t = x0;
+			x0 = x1 - q * x0;
+			x1 = t;
+		}
+		if (x1 < 0) {
+			x1 += m0;
+		}
+		return x1;
+	}
+	long modPow(long base, int exponent, int mod) {
+		if (exponent == 0) {
+			return 1;
+		}
+		long result = 1;
+		base %= mod;
+		while (exponent > 0) {
+			if (exponent % 2 == 1) {
+				result = (result * base) % mod;
+			}
+			base = (base * base) % mod;
+			exponent /= 2;
+		}
+		return result;
+	}
+}

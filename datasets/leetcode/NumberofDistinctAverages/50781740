@@ -1,0 +1,31 @@
+class Solution {
+	int distinctAverages(int[] nums) {
+		int freq = new int[101];
+		int start = Integer.MAX_VALUE, end = nums.length - 1;
+		for (int i: nums) {	
+			freq[i]++;
+			end = Math.max(end,i);
+			start = Math.min(start,i);
+		}
+		Set<Double> unqiueAvgSet = new HashSet<>();
+		while (start <= end) {
+			if (freq[start] > 0 && freq[end] > 0) {
+				double avg = (double) (start + end) / 2;
+				unqiueAvgSet.add(avg);
+				freq[start]--;
+				freq[end]--;
+			} 
+			else if (freq[start] == 0 && freq[end] == 0) {
+				start++;
+				end--;
+			} 
+			else if (freq[start] == 0) {
+				start++;
+			} 
+			else {
+				end--;
+			}
+		}
+		return unqiueAvgSet.size();
+	}
+}

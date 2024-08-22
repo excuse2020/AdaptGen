@@ -1,0 +1,45 @@
+class Solution {
+	int[] decrypt(int[] code, int k) {
+		int[] ans = new int[code.length];
+		int code_length = code.length;
+		int sum;
+		int index;
+		int count;
+		if (k > 0) {
+			index = 0;
+			while (index < code_length) {
+				sum = 0;
+				count = 0;
+				int i = (index + 1) % code_length;
+				while (count < k) {
+					sum = sum + code[i];
+					i = (i + 1) % code_length;
+					count++;
+				}
+				ans[index] = sum;
+				index++;
+			}
+		} 
+		else if (k < 0) {
+			int[] new_array = reverse_array(code);
+			ans = decrypt(new_array,k * -1);
+			ans = reverse_array(ans);
+		} 
+		else {
+			return ans;
+		}
+		return ans;
+	}
+	int[] reverse_array(int[] array) {
+		int first = 0;
+		int last = array.length - 1;
+		while (first < last) {
+			array[first] = array[first] + array[last];
+			array[last] = array[first] - array[last];
+			array[first] = array[first] - array[last];
+			first++;
+			last--;
+		}
+		return array;
+	}
+}

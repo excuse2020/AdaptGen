@@ -1,0 +1,35 @@
+class Solution {
+	int superEggDrop(int k, int n) {
+		int[][] dp = new int[k + 1][n + 1];
+		for (int eggs = 0; eggs < dp.length; eggs++) {
+			for (int floors = 0; floors < dp[eggs].length; floors++) {
+				if (eggs == 0) {
+					dp[eggs][floors] = 0;
+				} 
+				else if (floors == 0 || floors == 1 || eggs == 1) {
+					dp[eggs][floors] = floors;
+				} 
+				else {
+					int low = 1;
+					int high = floors;
+					int res = Integer.MAX_VALUE;
+					while (low <= high) {
+						int mid = (low + high) / 2;
+						int survive = dp[eggs][floors - mid];
+						int broke = dp[eggs - 1][mid - 1];
+						int max = 1 + Math.max(survive,broke);
+						res = Math.min(res,max);
+						if (survive <= broke) {
+							high = mid - 1;
+						} 
+						else {
+							low = mid + 1;
+						}
+					}
+					dp[eggs][floors] = res;
+				}
+			}
+		}
+		return dp[k][n];
+	}
+}

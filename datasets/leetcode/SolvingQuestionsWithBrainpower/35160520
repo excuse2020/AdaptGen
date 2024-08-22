@@ -1,0 +1,23 @@
+class Solution {
+	long maxPoints(int[][] questions, int index, int n) {
+		if (index >= n) {
+			return 0;
+		}
+		long pick = questions[index][0] + maxPoints(questions,index + questions[index][1],n);
+		long notPick = maxPoints(questions,index + 1,n);
+		return Math.max(pick,notPick);
+	}
+	long mostPoints(int[][] questions) {
+		int n = questions.length;
+		long dp = new long[n + 1];
+		for (int i = n - 1; i >= 0; i--) {
+			long pick = questions[i][0];
+			if (i + questions[i][1] <= n) {
+				pick += dp[i + questions[i][1] + 1];
+			}
+			long notPick = dp[i + 1];
+			dp[i] = Math.max(pick,notPick);
+		}
+		return dp[0];
+	}
+}

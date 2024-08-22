@@ -1,0 +1,29 @@
+class Solution {
+	int[] sum;
+	void calc(TreeNode node, int lv) {
+		int x = sum[lv + 1] - (node.left == null ? 0 : node.left.val);
+		if (node.left != null) {
+			node.left.val = x;
+			calc(node.left,lv + 1);
+		}
+		if (node.right != null) {
+			node.right.val = x;
+			calc(node.right,lv + 1);
+		}
+	}
+	TreeNode replaceValueInTree(TreeNode root) {
+		sum = new int[100_001];
+		travel(root,0);
+		root.val = 0;
+		calc(root,0);
+		return root;
+	}
+	void travel(TreeNode node, int lv) {
+		if (node == null) {
+			return;
+		}
+		sum[lv] += node.val;
+		travel(node.left,lv + 1);
+		travel(node.right,lv + 1);
+	}
+}

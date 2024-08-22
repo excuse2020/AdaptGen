@@ -1,0 +1,41 @@
+class Solution {
+	boolean dfs(ArrayList<ArrayList<Integer>> adj, int vist, int s, int color) {
+		vist[s] = color;
+		for (int i = 0; i < adj.get(s).size(); i++) {
+			int node = adj.get(s).get(i);
+			if (vist[node] == 0) {
+				if (dfs(adj,vist,node,-color) == false) {
+					return false;
+				}
+			} 
+			else if (vist[node] == color) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean isBipartite(int V, ArrayList<ArrayList<Integer>> adj, int[] vist) {
+		for (int i = 1; i <= V; i++) {
+			if (vist[i] == 0) {
+				if (!dfs(adj,vist,i,1)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		int vist = new int[n + 1];
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i <= n; i++) {
+			adj.add(new ArrayList<Integer>());
+		}
+		for (int i = 0; i < dislikes.length; i++) {
+			int x = dislikes[i][0];
+			int y = dislikes[i][1];
+			adj.get(x).add(y);
+			adj.get(y).add(x);
+		}
+		return isBipartite(n,adj,vist);
+	}
+}

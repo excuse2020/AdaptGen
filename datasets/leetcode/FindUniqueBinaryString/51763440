@@ -1,0 +1,34 @@
+class Solution {
+	String res = "";
+	Set<String> set = new HashSet<>();
+	boolean backtrack(StringBuilder sb, int len) {
+		if (sb.length() == len) {
+			if (!set.contains(sb.toString())) {
+				res = sb.toString();
+				return true;
+			}
+			return false;
+		}
+		sb.append("0");
+		if (backtrack(sb,len)) {
+			return true;
+		}
+		sb.deleteCharAt(sb.length() - 1);
+		sb.append("1");
+		if (backtrack(sb,len)) {
+			return true;
+		}
+		sb.deleteCharAt(sb.length() - 1);
+		return false;
+	}
+	String findDifferentBinaryString(String[] nums) {
+		for (String str: nums) {	
+			set.add(str);
+		}
+		int len = nums[0].length();
+		if (backtrack(new StringBuilder(),len)) {
+			return res;
+		}
+		return "";
+	}
+}

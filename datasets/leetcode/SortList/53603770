@@ -1,0 +1,75 @@
+class Solution {
+	ListNode mergeLists(ListNode head1, ListNode head2) {
+		ListNode temp1 = head1;
+		ListNode temp2 = head2;
+		ListNode head = null;
+		ListNode tail = null;
+		if (head1 == null) {
+			return head2;
+		}
+		if (head2 == null) {
+			return head1;
+		}
+		if (temp1.val <= temp2.val) {
+			head = temp1;
+			tail = temp1;
+			temp1 = temp1.next;
+		} 
+		else {
+			head = temp2;
+			tail = temp2;
+			temp2 = temp2.next;
+		}
+		while ((temp1 != null) && (temp2 != null)) {
+			if (temp2.val <= temp1.val) {
+				tail.next = temp2;
+				tail = temp2;
+				temp2 = temp2.next;
+			} 
+			else {
+				tail.next = temp1;
+				tail = temp1;
+				temp1 = temp1.next;
+			}
+		}
+		if (temp1 == null) {
+			tail.next = temp2;
+		}
+		if (temp2 == null) {
+			tail.next = temp1;
+		}
+		return head;
+	}
+	ListNode mid(ListNode head) {
+		ListNode temp = head, mid = head, prevM = null;
+		if (head == null) {
+			return head;
+		} 
+		else {
+			while (temp != null && temp.next != null) {
+				prevM = mid;
+				mid = mid.next;
+				temp = temp.next.next;
+			}
+			if (temp == null) {
+				return prevM;
+			} 
+			else {
+				return mid;
+			}
+		}
+	}
+	ListNode sortList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode mid = mid(head);
+		ListNode first = head;
+		ListNode second = mid.next;
+		mid.next = null;
+		ListNode x = sortList(first);
+		ListNode y = sortList(second);
+		ListNode head1 = mergeLists(x,y);
+		return head1;
+	}
+}

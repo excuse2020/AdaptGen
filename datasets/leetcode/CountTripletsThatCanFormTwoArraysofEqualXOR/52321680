@@ -1,0 +1,26 @@
+class Solution {
+	int countTriplets(int[] arr) {
+		if (arr.length == 1) {
+			return 0;
+		}
+		int count = 0;
+		int pre = new int[arr.length + 1];
+		solve(arr,0,pre);
+		HashMap<Integer, Integer> freq = new HashMap<>();
+		HashMap<Integer, Integer> total = new HashMap<>();
+		for (int k = 0; k < arr.length; k++) {
+			if (freq.containsKey(pre[k + 1])) {
+				count += freq.get(pre[k + 1]) * k - total.get(pre[k + 1]);
+			}
+			freq.put(pre[k],freq.getOrDefault(pre[k],0) + 1);
+			total.put(pre[k],total.getOrDefault(pre[k],0) + k);
+		}
+		return count;
+	}
+	void solve(int arr, int i, int pre) {
+		while (i < arr.length) {
+			pre[i + 1] = pre[i] ^ arr[i];
+			i++;
+		}
+	}
+}

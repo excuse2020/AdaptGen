@@ -1,0 +1,38 @@
+class Solution {
+	void f(int start, List<List<Integer>> a, int n, List<List<Integer>> ret) {
+		Queue<Integer> q = new LinkedList<>();
+		int visited = new int[n];
+		visited[start] = 1;
+		q.offer(start);
+		while (q.size() != 0) {
+			int cur = q.poll();
+			for (int i = 0; i < a.get(cur).size(); i++) {
+				if (visited[a.get(cur).get(i)] == 0) {
+					q.offer(a.get(cur).get(i));
+					visited[a.get(cur).get(i)] = 1;
+				}
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			if (visited[i] == 1 && i != start) {
+				ret.get(i).add(start);
+			}
+		}
+		return;
+	}
+	List<List<Integer>> getAncestors(int n, int[][] edges) {
+		List<List<Integer>> a = new ArrayList<>();
+		List<List<Integer>> ret = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			a.add(new ArrayList<Integer>());
+			ret.add(new ArrayList<Integer>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			a.get(edges[i][0]).add(edges[i][1]);
+		}
+		for (int i = 0; i < n; i++) {
+			f(i,a,n,ret);
+		}
+		return ret;
+	}
+}

@@ -1,0 +1,51 @@
+class Solution {
+	String compressedString(String word) {
+		HashMap<Character, Integer> hmap = new HashMap<>();
+		StringBuilder ans = new StringBuilder();
+		for (int i = 0; i < word.length(); i++) {
+			if (hmap.size() != 0 && i > 0 && word.charAt(i) != word.charAt(i - 1)) {
+				char ch = word.charAt(i - 1);
+				int val = hmap.get(ch);
+				if (val > 9) {
+					int times = val / 9;
+					int rem = val % 9;
+					for (int j = 0; j < times; j++) {
+						ans.append("9");
+						ans.append(ch);
+					}
+					if (rem != 0) {
+						ans.append(rem);
+						ans.append(ch);
+					}
+				} 
+				else {
+					ans.append(val);
+					ans.append(ch);
+				}
+				hmap.remove(ch);
+			}
+			hmap.put(word.charAt(i),hmap.getOrDefault(word.charAt(i),0) + 1);
+		}
+		for (char ch: hmap.keySet()) {	
+			int val = hmap.get(ch);
+			if (val > 9) {
+				int times = val / 9;
+				int rem = val % 9;
+				for (int j = 0; j < times; j++) {
+					ans.append("9");
+					ans.append(ch);
+				}
+				if (rem != 0) {
+					ans.append(rem);
+					ans.append(ch);
+				}
+			} 
+			else {
+				ans.append(val);
+				ans.append(ch);
+			}
+			hmap.remove(ch);
+		}
+		return ans.toString();
+	}
+}

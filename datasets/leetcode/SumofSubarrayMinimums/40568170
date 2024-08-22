@@ -1,0 +1,33 @@
+class Solution {
+	int sumSubarrayMins(int[] arr) {
+		int n = arr.length;
+		int[] nse_R = new int[n];
+		int[] nse_L = new int[n];
+		Stack<Integer> st1 = new Stack<>();
+		for (int i = 0; i < n; i++) {
+			while (!st1.isEmpty() && arr[st1.peek()] >= arr[i]) {
+				st1.pop();
+			}
+			nse_L[i] = st1.isEmpty() ? -1 : st1.peek();
+			st1.push(i);
+		}
+		Stack<Integer> st2 = new Stack<>();
+		for (int i = n - 1; i >= 0; i--) {
+			while (!st2.isEmpty() && arr[st2.peek()] > arr[i]) {
+				st2.pop();
+			}
+			nse_R[i] = st2.isEmpty() ? n : st2.peek();
+			st2.push(i);
+		}
+		long minSum = 0;
+		long m = 1000000007;
+		for (int i = 0; i < n; i++) {
+			long startingPoint = i - nse_L[i];
+			long endingPoint = nse_R[i] - i;
+			long noOfSubarrays = (startingPoint % m * endingPoint % m) % m;
+			long answer = (noOfSubarrays % m * arr[i] % m) % m;
+			minSum = (minSum % m + answer % m) % m;
+		}
+		return (int) minSum;
+	}
+}

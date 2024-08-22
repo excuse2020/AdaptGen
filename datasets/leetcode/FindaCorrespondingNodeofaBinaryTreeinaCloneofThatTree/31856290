@@ -1,0 +1,39 @@
+class Solution {
+	TreeNode getTargetCopy(TreeNode original, TreeNode cloned, TreeNode target) {
+		var originalNodes = new ArrayDeque<TreeNode>();
+		originalNodes.addLast(original);
+		var clonedNodes = new ArrayDeque<TreeNode>();
+		clonedNodes.addLast(cloned);
+		while (!originalNodes.isEmpty()) {
+			var originalNode = originalNodes.pollFirst();
+			var clonedNode = clonedNodes.pollFirst();
+			if (originalNode.val == target.val) {
+				return clonedNode;
+			}
+			var originalLeftNode = originalNode.left;
+			if (originalLeftNode != null) {
+				originalNodes.addLast(originalLeftNode);
+				clonedNodes.add(clonedNode.left);
+			}
+			var originalRightNode = originalNode.right;
+			if (originalRightNode != null) {
+				originalNodes.addLast(originalRightNode);
+				clonedNodes.add(clonedNode.right);
+			}
+		}
+		return null;
+	}
+}
+class Solution {
+	TreeNode getTargetCopy(TreeNode original, TreeNode cloned, TreeNode target) {
+		if (original == null) {
+			return null;
+		}
+		if (original.val == target.val) {
+			return cloned;
+		}
+		var leftNodeResult = getTargetCopy(original.left,cloned.left,target);
+		var rightNodeResult = getTargetCopy(original.right,cloned.right,target);
+		return leftNodeResult != null ? leftNodeResult : rightNodeResult;
+	}
+}

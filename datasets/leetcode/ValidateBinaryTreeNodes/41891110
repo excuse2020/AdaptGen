@@ -1,0 +1,64 @@
+class Solution {
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		HashMap<Integer, Integer> childParent = new HashMap<>();
+		HashMap<Integer, Integer[]> adj = new HashMap<>();
+		int count = 0;
+		int root = -1;
+		for (int i = 0; i < n; i++) {
+			if (!childParent.containsKey(leftChild[i]) && !childParent.containsKey(rightChild[i])) {
+				if (leftChild[i] != -1) {
+					childParent.put(leftChild[i],i);
+					adj.put(i,new Integer{leftChild[i]});
+				}
+				if (rightChild[i] != -1) {
+					childParent.put(rightChild[i],i);
+					if (adj.containsKey(i)) {
+						Integer[] temp = new Integer[2];
+						temp[0] = adj.get(i)[0];
+						temp[1] = rightChild[i];
+						adj.put(i,temp);
+					} 
+					else {
+						adj.put(i,new Integer{rightChild[i]});
+					}
+				}
+			} 
+			else {
+				return false;
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			if (!childParent.containsKey(i)) {
+				root = i;
+				System.out.print(root);
+			}
+		}
+		if (root == -1) {
+			return false;
+		}
+		Queue<Integer> queue = new LinkedList<>();
+		boolean[] visited = new boolean[n];
+		count = 1;
+		visited[root] = true;
+		queue.add(root);
+		while (!queue.isEmpty()) {
+			int node = queue.poll();
+			Integer[] i = adj.get(node);
+			if (i != null) {
+				for (int j: i) {	
+					if (!visited[j]) {
+						visited[j] = true;
+						count++;
+						queue.add(j);
+					}
+				}
+			}
+		}
+		if (count != n) {
+			return false;
+		} 
+		else {
+			return true;
+		}
+	}
+}

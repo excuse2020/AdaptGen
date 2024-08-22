@@ -1,0 +1,36 @@
+class Solution {
+	int helper(int arr, int k, int size, int i, int prevMax, HashMap<String, Integer> map) {
+		if (i == arr.length) {
+			return size * prevMax;
+		}
+		String key = size + "_";
+		int take = 0;
+		if (map.containsKey(key)) {
+			return map.get(key);
+		}
+		int breaking = 0;
+		if (i < arr.length) {
+			if (size == k) {
+				take = k * prevMax + helper(arr,k,1,i + 1,arr[i],map);
+			} 
+			else {
+				if (arr[i] >= prevMax) {
+					take = helper(arr,k,size + 1,i + 1,arr[i],map);
+				} 
+				else {
+					take = helper(arr,k,size + 1,i + 1,prevMax,map);
+				}
+			}
+		}
+		if (prevMax != -1) {
+			breaking = size * prevMax + helper(arr,k,1,i + 1,arr[i],map);
+		}
+		int ans = Math.max(take,breaking);
+		map.put(key,ans);
+		return ans;
+	}
+	int maxSumAfterPartitioning(int[] arr, int k) {
+		HashMap<String, Integer> map = new HashMap<>();
+		return helper(arr,k,0,0,-1,map);
+	}
+}

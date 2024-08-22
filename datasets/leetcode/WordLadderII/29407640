@@ -1,0 +1,57 @@
+class Solution {
+	void bfs(String start, String end, Set<String> dict, Map<String, List<String>> map, Map<String, Integer> distances) {
+		Queue<String> queue = new LinkedList<String>();
+		queue.add(start);
+		int length = 1;
+		distances.put(start,length);
+		while (!queue.isEmpty()) {
+			length++;
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				String word = queue.poll();
+				for (String next: getneighbors(word,dict)) {	
+					map.get(word).add(next);
+					if (!distances.containsKey(next)) {
+						distances.put(next,length);
+						queue.add(next);
+					}
+				}
+			}
+		}
+	}
+	void dfs(String start, String end, List<String> path, Map<String, List<String>> map, Map<String, Integer> distances, List<List<String>> res) {
+		path.add(start);
+		if (start.equals(end)) {
+			res.add(new ArrayList<String>(path));
+		} 
+		else {
+			for (String next: map.get(start)) {	
+				if (distances.containsKey(next) && distances.get(next) == distances.get(start) + 1) {
+					dfs(next,end,path,map,distances,res);
+				}
+			}
+		}
+		path.remove(path.size() - 1);
+	}
+	List<List<String>> findLadders(String start, String end, List<String> wordList) {
+		List<List<String>> res = new ArrayList<List<String>>();
+		Map<String, List<String>> map = new HashMap<String, List<String>>();
+		Map<String, Integer> distance = new HashMap<String, Integer>();
+		if (!wordList.contains(end)) {
+			return res;
+		}
+		Set<String> dict = new HashSet<>();
+		for (String s: wordList) {	
+			map.put(s,new ArrayList<String>());
+			dict.add(s);
+		}
+		map.put(start,new ArrayList<>());
+		bfs(start,end,dict,map,distance);
+		dfs(start,end,new ArrayList<String>(),map,distance,res);
+		return res;
+	}
+	List<String> getneighbors(String word, Set<String> wordList) {
+		List<String> neighbors = new ArrayList<String>();
+		char c;
+	}
+}

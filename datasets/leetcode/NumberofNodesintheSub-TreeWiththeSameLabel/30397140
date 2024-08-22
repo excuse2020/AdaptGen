@@ -1,0 +1,33 @@
+class Solution {
+	int[] answer;
+	boolean[] isVisited;
+	List<List<Integer>> tree;
+	int[] countSubTrees(int n, int[][] edges, String labels) {
+		tree = new ArrayList<>(n);
+		answer = new int[n];
+		for (int i = 0; i < n; i++) {
+			tree.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			int node = edge[0], neighbor = edge[1];
+			tree.get(node).add(neighbor);
+			tree.get(neighbor).add(node);
+		}
+		isVisited = new boolean[n];
+		dfs(0,labels);
+		return answer;
+	}
+	int[] dfs(int node, String labels) {
+		isVisited[node] = true;
+		int[] count = new int[26];
+		for (int neighbor: tree.get(node)) {	
+			if (!isVisited[neighbor]) {
+				int[] countsFromNeighbor = dfs(neighbor,labels);
+				for (int i = 0; i < 26; i++) {
+					count[i] += countsFromNeighbor[i];
+				}
+			}
+		}
+		int ch;
+	}
+}

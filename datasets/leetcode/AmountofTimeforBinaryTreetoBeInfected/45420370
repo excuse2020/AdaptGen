@@ -1,0 +1,60 @@
+class Solution {
+	int amountOfTime(TreeNode root, int start) {
+		ArrayList<ArrayList<Integer>> arr = new ArrayList<>();
+		ArrayList<Integer> l = new ArrayList<>();
+		num(l,root);
+		Collections.sort(l);
+		int[] vis = new int[l.get(l.size() - 1) + 1];
+		for (int i = 0; i < l.get(l.size() - 1) + 1; i++) {
+			arr.add(new ArrayList<>());
+		}
+		graph(arr,root);
+		int x = 0;
+		return bfs(arr,start,x,vis);
+	}
+	int bfs(ArrayList<ArrayList<Integer>> arr, int start, int x, int vis) {
+		Queue<Integer> q = new LinkedList<>();
+		q.add(start);
+		vis[start] = 1;
+		q.add(0);
+		while (q.size() != 0) {
+			Integer a = q.poll();
+			if (a == 0 && q.size() != 0) {
+				x++;
+				q.add(0);
+			} 
+			else {
+				for (Integer it: arr.get(a)) {	
+					if (vis[it] == 0) {
+						q.add(it);
+						vis[it] = 1;
+					}
+				}
+			}
+		}
+		return x;
+	}
+	void graph(ArrayList<ArrayList<Integer>> arr, TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		if (root.left != null) {
+			arr.get(root.val).add(root.left.val);
+			arr.get(root.left.val).add(root.val);
+		}
+		if (root.right != null) {
+			arr.get(root.val).add(root.right.val);
+			arr.get(root.right.val).add(root.val);
+		}
+		graph(arr,root.left);
+		graph(arr,root.right);
+	}
+	void num(ArrayList<Integer> l, TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		num(l,root.left);
+		l.add(root.val);
+		num(l,root.right);
+	}
+}

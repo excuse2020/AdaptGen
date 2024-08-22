@@ -1,0 +1,27 @@
+class Solution {
+	int dfs(Map<Integer, List<Integer>> graph, Set<Integer> visited, int node, int count) {
+		visited.add(node);
+		for (int neighbor: graph.get(node)) {	
+			if (neighbor > 0 && !visited.contains(neighbor)) {
+				count = dfs(graph,visited,neighbor,count + 1);
+			}
+			if (neighbor < 0 && !visited.contains(-neighbor)) {
+				count = dfs(graph,visited,-neighbor,count);
+			}
+		}
+		return count;
+	}
+	int minReorder(int n, int[][] connections) {
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		Set<Integer> visited = new HashSet();
+		for (int[] connection: connections) {	
+			int from = connection[0];
+			int to = connection[1];
+			graph.putIfAbsent(from,new ArrayList<>());
+			graph.putIfAbsent(to,new ArrayList<>());
+			graph.get(from).add(to);
+			graph.get(to).add(-from);
+		}
+		return dfs(graph,visited,0,0);
+	}
+}

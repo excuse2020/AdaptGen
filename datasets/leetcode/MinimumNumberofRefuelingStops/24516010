@@ -1,0 +1,35 @@
+class Solution {
+	int minRefuelStops(int target, int startFuel, int[][] stations) {
+		if (startFuel >= target) {
+			return 0;
+		}
+		PriorityQueue<Integer> fuelPumpVisitedTillNow = new PriorityQueue<>((a, b) -> {b - a});
+		int currentFuelLevel = startFuel;
+		int refuelStopCount = 0;
+		for (int[] station: stations) {	
+			int currentStation = station[0];
+			int currentStationFuel = station[1];
+			while (currentFuelLevel < currentStation) {
+				if (fuelPumpVisitedTillNow.isEmpty()) {
+					return -1;
+				}
+				currentFuelLevel += fuelPumpVisitedTillNow.poll();
+				refuelStopCount++;
+				if (currentFuelLevel >= target) {
+					return refuelStopCount;
+				}
+			}
+			fuelPumpVisitedTillNow.offer(currentStationFuel);
+		}
+		if (currentFuelLevel < target) {
+			while (currentFuelLevel < target) {
+				if (fuelPumpVisitedTillNow.isEmpty()) {
+					return -1;
+				}
+				currentFuelLevel += fuelPumpVisitedTillNow.poll();
+				refuelStopCount++;
+			}
+		}
+		return refuelStopCount;
+	}
+}

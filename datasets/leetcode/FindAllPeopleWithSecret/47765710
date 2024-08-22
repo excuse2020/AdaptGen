@@ -1,0 +1,49 @@
+class Solution {
+	List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+		Arrays.sort(meetings,(a, b) -> {a[2] - b[2]});
+		boolean[] secrets = new boolean[n];
+		secrets[0] = true;
+		secrets[firstPerson] = true;
+		Map<Integer, Set<Integer>> knowledgeMap = new HashMap<>();
+		Deque<Integer> queue = new ArrayDeque<>();
+		int prevTime = 0;
+		for (int[] meeting: meetings) {	
+			int x = meeting[0];
+			int y = meeting[1];
+			int time = meeting[2];
+			if (prevTime != time) {
+				prevTime = time;
+				knowledgeMap.clear();
+			}
+			if (!secrets[x] || !secrets[y]) {
+				knowledgeMap.computeIfAbsent(x,(k) -> {new HashSet<>()}).add(y);
+				knowledgeMap.computeIfAbsent(y,(k) -> {new HashSet<>()}).add(x);
+			}
+			if (secrets[x] || secrets[y]) {
+				if (!secrets[x]) {
+					queue.offer(x);
+				}
+				if (!secrets[y]) {
+					queue.offer(y);
+				}
+				while (!queue.isEmpty()) {
+					int person = queue.poll();
+					secrets[person] = true;
+					for (int temp: knowledgeMap.getOrDefault(person,new HashSet<>())) {	
+						if (!secrets[temp]) {
+							queue.offer(temp);
+						}
+					}
+					knowledgeMap.remove(person);
+				}
+			}
+		}
+		List<Integer> result = new ArrayList<>();
+		for (int i = 0; i < secrets.length; i++) {
+			if (secrets[i]) {
+				result.add(i);
+			}
+		}
+		return result;
+	}
+}

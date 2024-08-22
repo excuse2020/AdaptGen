@@ -1,0 +1,34 @@
+class Solution {
+	int longestPath(int[] parent, String s) {
+		int n = parent.length;
+		Deque<Integer> dq = new ArrayDeque<>();
+		int size = new int[n];
+		Arrays.fill(size,1);
+		int degree = new int[n];
+		for (int i = 1; i < n; i++) {
+			degree[parent[i]]++;
+		}
+		for (int i = 0; i < n; i++) {
+			if (degree[i] == 0) {
+				dq.add(i);
+			}
+		}
+		int res = 1;
+		while (!dq.isEmpty()) {
+			int curr = dq.poll();
+			if (curr == 0) {
+				continue;
+			}
+			int par = parent[curr];
+			if (s.charAt(curr) != s.charAt(par)) {
+				res = Math.max(res,size[curr] + size[par]);
+				size[par] = Math.max(size[par],size[curr] + 1);
+			}
+			degree[par]--;
+			if (degree[par] == 0) {
+				dq.add(par);
+			}
+		}
+		return res;
+	}
+}

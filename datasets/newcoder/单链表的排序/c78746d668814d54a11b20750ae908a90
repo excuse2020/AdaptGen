@@ -1,0 +1,45 @@
+class Solution {
+	ListNode getMid(ListNode head) {
+		if (head == null) {
+			return null;
+		}
+		ListNode fake_head = new ListNode(-1);
+		fake_head.next = head;
+		ListNode pre = fake_head;
+		ListNode slow = head, fast = head;
+		while (fast != null) {
+			pre = pre.next;
+			fast = fast.next;
+			slow = slow.next;
+			if (fast != null) {
+				fast = fast.next;
+			}
+		}
+		pre.next = null;
+		return slow;
+	}
+	ListNode merageSort(ListNode l1, ListNode l2) {
+		if (l1 == null) {
+			return l2;
+		}
+		if (l2 == null) {
+			return l1;
+		}
+		if (l1.val < l2.val) {
+			l1.next = merageSort(l1.next,l2);
+			return l1;
+		}
+		l2.next = merageSort(l1,l2.next);
+		return l2;
+	}
+	ListNode sortInList(ListNode head) {
+		if (head == null) {
+			return null;
+		}
+		ListNode mid = getMid(head);
+		if (mid == null) {
+			return head;
+		}
+		return merageSort(sortInList(head),sortInList(mid));
+	}
+}

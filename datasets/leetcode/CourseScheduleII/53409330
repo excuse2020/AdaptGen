@@ -1,0 +1,47 @@
+class Solution {
+	List<List<Integer>> adjList = new ArrayList<>();
+	boolean[] inStack;
+	Stack<Integer> stack = new Stack<>();
+	boolean[] visited;
+	boolean dfs(int num) {
+		if (inStack[num]) {
+			return true;
+		}
+		if (visited[num]) {
+			return false;
+		}
+		inStack[num] = true;
+		visited[num] = true;
+		List<Integer> neighbors = adjList.get(num);
+		for (int neighbor: neighbors) {	
+			if (dfs(neighbor)) {
+				return true;
+			}
+		}
+		inStack[num] = false;
+		stack.push(num);
+		return false;
+	}
+	int[] findOrder(int numCourses, int[][] prerequisites) {
+		for (int i = 0; i < numCourses; i++) {
+			adjList.add(new ArrayList<>());
+		}
+		for (int[] prerequisite: prerequisites) {	
+			adjList.get(prerequisite[1]).add(prerequisite[0]);
+		}
+		inStack = new boolean[numCourses];
+		visited = new boolean[numCourses];
+		List<Integer> list = new ArrayList<>();
+		for (int i = 0; i < numCourses; i++) {
+			if (dfs(i)) {
+				return new int[0];
+			}
+		}
+		int[] res = new int[numCourses];
+		int i = 0;
+		while (!stack.isEmpty()) {
+			res[i++] = stack.pop();
+		}
+		return res;
+	}
+}

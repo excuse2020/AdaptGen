@@ -1,0 +1,43 @@
+class Solution {
+	int MOD = (int) 1e9 + 7;
+	int[][] appleCount;
+	Integer[][][] dp;
+	int solve(int row, int col, int k) {
+		if (appleCount[row][col] < k) {
+			return 0;
+		}
+		if (k == 1) {
+			return appleCount[row][col] >= 1 ? 1 : 0;
+		}
+		if (dp[row][col][k] != null) {
+			return dp[row][col][k];
+		}
+		int horizontal = 0;
+		for (int i = row + 1; i < appleCount.length; i++) {
+			int lowerCount = appleCount[i][col];
+			int upperCount = appleCount[row][col] - lowerCount;
+			if (upperCount >= 1 && lowerCount >= k - 1) {
+				horizontal = ((horizontal % MOD) + (solve(i,col,k - 1) % MOD) % MOD);
+			}
+		}
+		int vertical = 0;
+		for (int i = col + 1; i < appleCount[row].length; i++) {
+			int rightCount = appleCount[row][i];
+			int leftCount = appleCount[row][col] - rightCount;
+			if (leftCount >= 1 && rightCount >= k - 1) {
+				vertical = ((vertical % MOD) + (solve(row,i,k - 1) % MOD)) % MOD;
+			}
+		}
+		return dp[row][col][k] = (horizontal + vertical) % MOD;
+	}
+	int ways(String[] pizza, int k) {
+		int rows = pizza.length;
+		int cols = pizza[0].length();
+		dp = new Integer[rows][cols][k + 1];
+		appleCount = new int[rows][cols];
+		int i = rows - 1;
+		int j = cols - 1;
+		appleCount[i][j] = j < cols - 1 ? appleCount[i][j + 1] : 0;
+		int l = i;
+	}
+}

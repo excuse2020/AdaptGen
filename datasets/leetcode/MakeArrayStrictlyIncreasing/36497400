@@ -1,0 +1,52 @@
+class Solution {
+	Map<String, Integer> dp;
+	int helper(int i, int j, int prev, int[] arr1, int[] arr2) {
+		if (i == arr1.length) {
+			return 0;
+		}
+		String key = i + "-";
+		if (dp.containsKey(key)) {
+			return dp.get(key);
+		}
+		int count = -1;
+		if (arr1[i] <= prev) {
+			while (j < arr2.length && arr2[j] <= prev) {
+				j++;
+			}
+			if (j < arr2.length) {
+				prev = arr2[j];
+				int subCount = helper(i + 1,j + 1,prev,arr1,arr2);
+				if (subCount > -1) {
+					count = subCount + 1;
+				}
+			}
+		} 
+		else {
+			int subCount1 = helper(i + 1,j,arr1[i],arr1,arr2);
+			int subCount2 = -1;
+			while (j < arr2.length && arr2[j] <= prev) {
+				j++;
+			}
+			if (j < arr2.length && arr2[j] < arr1[i]) {
+				prev = arr2[j];
+				subCount2 = helper(i + 1,j + 1,prev,arr1,arr2);
+			}
+			if (subCount1 > -1 && subCount2 > -1) {
+				count = Math.min(subCount1,1 + subCount2);
+			} 
+			else if (subCount1 > -1) {
+				count = subCount1;
+			} 
+			else if (subCount2 > -1) {
+				count = 1 + subCount2;
+			}
+		}
+		dp.put(key,count);
+		return count;
+	}
+	int makeArrayIncreasing(int[] arr1, int[] arr2) {
+		Arrays.sort(arr2);
+		dp = new HashMap<>();
+		return helper(0,0,-1,arr1,arr2);
+	}
+}

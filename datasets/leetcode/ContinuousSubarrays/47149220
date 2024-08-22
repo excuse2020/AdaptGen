@@ -1,0 +1,30 @@
+class Solution {
+	long continuousSubarrays(int[] nums) {
+		int fast = 0, slow = 0;
+		int min, max;
+		long len = 0, count = 0;
+		min = max = nums[fast];
+		for (fast = 0; fast < nums.length; fast++) {
+			min = Math.min(min,nums[fast]);
+			max = Math.max(max,nums[fast]);
+			if (max - min > 2) {
+				len = fast - slow;
+				count = count + (len * (len + 1) / 2);
+				slow = fast;
+				min = max = nums[fast];
+				while (Math.abs(nums[fast] - nums[slow - 1]) <= 2) {
+					slow--;
+					min = Math.min(min,nums[slow]);
+					max = Math.max(max,nums[slow]);
+				}
+				if (slow < fast) {
+					len = fast - slow;
+					count = count - (len * (len + 1) / 2);
+				}
+			}
+		}
+		len = fast - slow;
+		count = count + (len * (len + 1) / 2);
+		return count;
+	}
+}

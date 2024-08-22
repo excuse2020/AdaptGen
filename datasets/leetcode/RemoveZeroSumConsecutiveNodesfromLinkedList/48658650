@@ -1,0 +1,37 @@
+class Solution {
+	ListNode store;
+	boolean remdup(ListNode temp, int count) {
+		if (temp == null) {
+			return false;
+		}
+		if (temp.val + count == 0) {
+			store = temp.next;
+			return true;
+		}
+		return remdup(temp.next,count += temp.val);
+	}
+	ListNode removeZeroSumSublists(ListNode head) {
+		if (head == null) {
+			return null;
+		}
+		ListNode temp = head;
+		ListNode prev = head;
+		while (temp != null) {
+			if (remdup(temp,0)) {
+				if (temp == head) {
+					head = store;
+					temp = head;
+				} 
+				else {
+					prev.next = store;
+					temp = store;
+				}
+			} 
+			else {
+				prev = temp;
+				temp = temp.next;
+			}
+		}
+		return head;
+	}
+}

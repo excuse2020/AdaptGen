@@ -1,0 +1,53 @@
+class Solution {
+	String addstring(String s, int a) {
+		char[] array = s.toCharArray();
+		StringBuilder sb = new StringBuilder();
+		int i = 0;
+		sb.append(array[i]);
+		int num;
+	}
+	String findLexSmallestString(String s, int a, int b) {
+		Queue<String> queue = new ArrayDeque<>();
+		queue.offer(s);
+		Set<String> visited = new HashSet<>();
+		visited.add(s);
+		String result = s;
+		while (!queue.isEmpty()) {
+			String current = queue.poll();
+			if (current.compareTo(result) < 0) {
+				result = current;
+			}
+			String stringrotate = rotatestring(current,b);
+			String stringadd = addstring(current,a);
+			if (!visited.contains(stringrotate)) {
+				visited.add(stringrotate);
+				queue.offer(stringrotate);
+			}
+			if (!visited.contains(stringadd)) {
+				visited.add(stringadd);
+				queue.offer(stringadd);
+			}
+		}
+		return result;
+	}
+	void reverse(char[] array, int left, int right) {
+		while (left < right) {
+			char temp = array[left];
+			array[left] = array[right];
+			array[right] = temp;
+			left++;
+			right--;
+		}
+	}
+	String rotatestring(String s, int b) {
+		if (b % s.length() == 0) {
+			return s;
+		}
+		int length = b % s.length();
+		char[] array = s.toCharArray();
+		reverse(array,0,array.length - 1);
+		reverse(array,0,length - 1);
+		reverse(array,length,array.length - 1);
+		return new String(array);
+	}
+}

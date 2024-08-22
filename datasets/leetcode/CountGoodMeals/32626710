@@ -1,0 +1,28 @@
+class Solution {
+	long mod = (long) Math.pow(10,9) + 7;
+	int countPairs(int[] deliciousness) {
+		Map<Integer, Long> d = initD(deliciousness);
+		long count = 0;
+		for (int num: d.keySet()) {	
+			for (int i = 0; i <= 21; i++) {
+				int power = (int) Math.pow(2,i);
+				int key = power - num;
+				if (key == num) {
+					long val = d.get(key);
+					count += ((val - 1L) * val);
+				} 
+				else if (d.containsKey(key)) {
+					count += d.get(num) * d.get(key);
+				}
+			}
+		}
+		return (int) ((count / 2) % mod);
+	}
+	Map<Integer, Long> initD(int[] arr) {
+		Map<Integer, Long> d = new HashMap<>();
+		for (int num: arr) {	
+			d.put(num,d.getOrDefault(num,0L) + 1);
+		}
+		return d;
+	}
+}

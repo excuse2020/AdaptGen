@@ -1,0 +1,51 @@
+class Solution {
+	int findInMountainArray(int target, MountainArray mountainArr) {
+		int peak = peakindex(mountainArr);
+		int firstTry = orderAgnosticBS(mountainArr,target,0,peak);
+		if (firstTry != -1) {
+			return firstTry;
+		}
+		int secondTry = orderAgnosticBS(mountainArr,target,peak,mountainArr.length() - 1);
+		return secondTry;
+	}
+	int orderAgnosticBS(MountainArray mountainArr, int target, int start, int end) {
+		boolean isAsc = (mountainArr.get(start)) < (mountainArr.get(end));
+		while (start <= end) {
+			int mid = start + (end - start) / 2;
+			if (mountainArr.get(mid) == target) {
+				return mid;
+			}
+			if (isAsc) {
+				if (target < mountainArr.get(mid)) {
+					end = mid - 1;
+				} 
+				else {
+					start = mid + 1;
+				}
+			} 
+			else {
+				if (target > mountainArr.get(mid)) {
+					end = mid - 1;
+				} 
+				else {
+					start = mid + 1;
+				}
+			}
+		}
+		return -1;
+	}
+	int peakindex(MountainArray mountainArr) {
+		int start = 0;
+		int end = mountainArr.length() - 1;
+		while (start < end) {
+			int mid = start + (end - start) / 2;
+			if (mountainArr.get(mid) > mountainArr.get(mid + 1)) {
+				end = mid;
+			} 
+			else {
+				start = mid + 1;
+			}
+		}
+		return start;
+	}
+}

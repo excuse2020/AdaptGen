@@ -1,0 +1,44 @@
+class Solution {
+	int maxDotProduct(int[] nums1, int[] nums2) {
+		int n = nums1.length, m = nums2.length;
+		int[][] dp = new int[n + 1][m + 1];
+		int max = maxDotProduct_DP(nums1,nums2,n,m,dp);
+		return max;
+	}
+	int maxDotProduct_DP(int[] nums1, int[] nums2, int N, int M, int[][] dp) {
+		for (int n = 0; n <= N; n++) {
+			for (int m = 0; m <= M; m++) {
+				if (n == 0 || m == 0) {
+					dp[n][m] = -(int)1e8;
+					continue;
+				}
+				int val = nums1[n - 1] * nums2[m - 1];
+				int acceptBoth = dp[n - 1][m - 1] + val;
+				int a = dp[n - 1][m];
+				int b = dp[n][m - 1];
+				dp[n][m] = maximum(val,acceptBoth,a,b);
+			}
+		}
+		return dp[N][M];
+	}
+	int maxDotProduct_memo(int[] nums1, int[] nums2, int n, int m, int[][] dp) {
+		if (n == 0 || m == 0) {
+			return dp[n][m] = -(int)1e8;
+		}
+		if (dp[n][m] != -(int)1e9) {
+			return dp[n][m];
+		}
+		int val = nums1[n - 1] * nums2[m - 1];
+		int acceptBoth = maxDotProduct_memo(nums1,nums2,n - 1,m - 1,dp) + val;
+		int a = maxDotProduct_memo(nums1,nums2,n - 1,m,dp);
+		int b = maxDotProduct_memo(nums1,nums2,n,m - 1,dp);
+		return dp[n][m] = maximum(val,acceptBoth,a,b);
+	}
+	int maximum(int arr) {
+		int val = arr[0];
+		for (int ele: arr) {	
+			val = Math.max(val,ele);
+		}
+		return val;
+	}
+}

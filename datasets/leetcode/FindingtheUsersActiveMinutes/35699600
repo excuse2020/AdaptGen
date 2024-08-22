@@ -1,0 +1,28 @@
+class Solution {
+	int[] findingUsersActiveMinutes(int[][] logs, int k) {
+		int[] ans = new int[k];
+		Map<Integer, Integer> d = getUserTimeCounts(logs);
+		for (int i = 0; i < k; i++) {
+			int count = d.getOrDefault(i + 1,0);
+			ans[i] = count;
+		}
+		return ans;
+	}
+	Map<Integer, Integer> getUserTimeCounts(int[][] logs) {
+		Map<Integer, Set<Integer>> d = initD(logs);
+		Map<Integer, Integer> ans = new HashMap<>();
+		for (Set<Integer> set: d.values()) {	
+			int mins = set.size();
+			ans.put(mins,ans.getOrDefault(mins,0) + 1);
+		}
+		return ans;
+	}
+	Map<Integer, Set<Integer>> initD(int[][] logs) {
+		Map<Integer, Set<Integer>> d = new HashMap<>();
+		for (int[] log: logs) {	
+			d.putIfAbsent(log[0],new HashSet<>());
+			d.get(log[0]).add(log[1]);
+		}
+		return d;
+	}
+}

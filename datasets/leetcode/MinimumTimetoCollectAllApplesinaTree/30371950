@@ -1,0 +1,35 @@
+class Solution {
+	ArrayList<ArrayList<Integer>> graph;
+	List<Boolean> hasApple;
+	int total_time = 0;
+	boolean[] visited;
+	boolean dfs(int src) {
+		visited[src] = true;
+		boolean children_has_apple = false;
+		for (int child: graph.get(src)) {	
+			if (!visited[child]) {
+				if (dfs(child)) {
+					total_time += 2;
+					children_has_apple = true;
+				}
+			}
+		}
+		return children_has_apple || hasApple.get(src);
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		this.hasApple = hasApple;
+		visited = new boolean[n];
+		graph = new ArrayList<ArrayList<Integer>>(n);
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<Integer>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			int u = edges[i][0];
+			int v = edges[i][1];
+			graph.get(u).add(v);
+			graph.get(v).add(u);
+		}
+		boolean ans = dfs(0);
+		return total_time;
+	}
+}

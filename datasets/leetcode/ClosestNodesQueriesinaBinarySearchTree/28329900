@@ -1,0 +1,67 @@
+class Solution {
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		List<List<Integer>> ans = new ArrayList<>();
+		List<Integer> list = new ArrayList<>();
+		list = morrisInorder(root);
+		int i = 0;
+		for (int q: queries) {	
+			boolean flag = false;
+			ans.add(new ArrayList<>());
+			int l = 0, h = list.size() - 1;
+			while (l <= h) {
+				int mid = (l + h) / 2;
+				if (list.get(mid) < q) {
+					l = mid + 1;
+				} 
+				else if (list.get(mid) > q) {
+					h = mid - 1;
+				} 
+				else {
+					ans.get(i).add(q);
+					ans.get(i).add(q);
+					flag = true;
+					break;
+				}
+			}
+			if (!flag) {
+				int a = -1, b = -1;
+				if (l < list.size()) {
+					a = list.get(l);
+				}
+				if (h >= 0) {
+					b = list.get(h);
+				}
+				ans.get(i).add(b);
+				ans.get(i).add(a);
+			}
+			i++;
+		}
+		return ans;
+	}
+	List<Integer> morrisInorder(TreeNode root) {
+		List<Integer> inorder = new ArrayList<Integer>();
+		TreeNode cur = root;
+		while (cur != null) {
+			if (cur.left == null) {
+				inorder.add(cur.val);
+				cur = cur.right;
+			} 
+			else {
+				TreeNode prev = cur.left;
+				while (prev.right != null && prev.right != cur) {
+					prev = prev.right;
+				}
+				if (prev.right == null) {
+					prev.right = cur;
+					cur = cur.left;
+				} 
+				else {
+					prev.right = null;
+					inorder.add(cur.val);
+					cur = cur.right;
+				}
+			}
+		}
+		return inorder;
+	}
+}

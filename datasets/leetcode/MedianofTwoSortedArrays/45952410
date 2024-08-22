@@ -1,0 +1,54 @@
+class Solution {
+	int numToTrim;
+	int pos1, pos2;
+	int[] run1, run2;
+	double findMedianSortedArrays(int[] nums1, int[] nums2) {
+		boolean swap = nums2.length > nums1.length;
+		this.run1 = swap ? nums2 : nums1;
+		this.run2 = swap ? nums1 : nums2;
+		this.pos1 = 0;
+		this.pos2 = 0;
+		int len = run1.length + run2.length;
+		boolean hasMid = len % 2 == 1;
+		numToTrim = len / 2 - (hasMid ? 0 : 1);
+		if (numToTrim > run2.length) {
+			pos1 = numToTrim - run2.length;
+			numToTrim -= pos1;
+		}
+		while (numToTrim > 1) {
+			trimHead();
+		}
+		if (numToTrim == 1) {
+			trim1();
+		}
+		int mid1 = trim1();
+		if (hasMid) {
+			return mid1;
+		}
+		int mid2 = trim1();
+		return ((double) mid1 + mid2) / 2;
+	}
+	int trim1() {
+		if (pos1 >= run1.length) {
+			return run2[pos2++];
+		}
+		if (pos2 >= run2.length) {
+			return run1[pos1++];
+		}
+		return run1[pos1] <= run2[pos2] ? run1[pos1++] : run2[pos2++];
+	}
+	void trimHead() {
+		int trim1 = numToTrim / 2;
+		int trim2 = numToTrim - trim1;
+		int val1 = run1[pos1 + trim1 - 1];
+		int val2 = run2[pos2 + trim2 - 1];
+		if (val1 <= val2) {
+			pos1 += trim1;
+			numToTrim -= trim1;
+		}
+		if (val2 <= val1) {
+			pos2 += trim2;
+			numToTrim -= trim2;
+		}
+	}
+}

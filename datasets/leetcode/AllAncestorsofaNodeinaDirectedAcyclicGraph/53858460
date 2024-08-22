@@ -1,0 +1,33 @@
+class Solution {
+	void dfs(HashSet<Integer> hs, List<Integer> ls, int s, HashMap<Integer, List<Integer>> map) {
+		List<Integer> t = map.get(s);
+		for (int k: t) {	
+			if (hs.contains(k)) {
+				continue;
+			}
+			ls.add(k);
+			hs.add(k);
+			dfs(hs,ls,k,map);
+		}
+	}
+	List<List<Integer>> getAncestors(int n, int[][] edges) {
+		List<List<Integer>> lls = new ArrayList<>();
+		HashMap<Integer, List<Integer>> map = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			lls.add(new ArrayList<>());
+			map.put(i,new ArrayList<>());
+		}
+		for (int e: edges) {	
+			List<Integer> ls = map.get(e[1]);
+			ls.add(e[0]);
+			map.put(e[1],ls);
+		}
+		for (int i = 0; i < n; i++) {
+			dfs(new HashSet<>(),lls.get(i),i,map);
+		}
+		for (List<Integer> ls: lls) {	
+			Collections.sort(ls);
+		}
+		return lls;
+	}
+}

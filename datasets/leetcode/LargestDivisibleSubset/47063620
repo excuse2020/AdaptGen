@@ -1,0 +1,50 @@
+class Solution {
+	List<Integer> best = new ArrayList<>();
+	List<Integer> current = new ArrayList<>();
+	boolean canAdd(List<Integer> current, int n) {
+		for (int i: current) {	
+			if (i % n != 0 && n % i != 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+	List<Integer> largestDivisibleSubset(int[] nums) {
+		Arrays.sort(nums);
+		List<Integer>[] dp = new ArrayList[nums.length];
+		for (int i = 0; i < dp.length; i++) {
+			dp[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < nums.length; i++) {
+			List<Integer> maxSubset = new ArrayList<>();
+			for (int j = 0; j < i; j++) {
+				if (nums[i] % nums[j] == 0 && maxSubset.size() < dp[j].size()) {
+					maxSubset = dp[j];
+				}
+			}
+			dp[i].addAll(maxSubset);
+			dp[i].add(nums[i]);
+		}
+		List<Integer> maxSubset = new ArrayList<>();
+		for (int i = 0; i < dp.length; i++) {
+			if (maxSubset.size() < dp[i].size()) {
+				maxSubset = dp[i];
+			}
+		}
+		return maxSubset;
+	}
+	void solve(int[] nums, int start) {
+		List<Integer> c = current;
+		List<Integer> b = best;
+		if (current.size() > best.size()) {
+			best = new ArrayList<>(current);
+		}
+		for (int i = start; i < nums.length; i++) {
+			if (canAdd(current,nums[i])) {
+				current.add(nums[i]);
+				solve(nums,i + 1);
+				current.remove(current.size() - 1);
+			}
+		}
+	}
+}

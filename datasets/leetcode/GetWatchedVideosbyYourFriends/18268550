@@ -1,0 +1,58 @@
+class Solution {
+	HashMap<String, Integer> sort(Map<String, Integer> hm) {
+		List<Map.Entry<String, Integer>> l = new LinkedList<>(hm.entrySet());
+		Collections.sort(l,new Comparator<Map.Entry<String, Integer>>());
+		HashMap<String, Integer> sorted = new LinkedHashMap<>();
+		for (Map.Entry<String, Integer> it: l) {	
+			sorted.put(it.getKey(),it.getValue());
+		}
+		return sorted;
+	}
+	List<String> watchedVideosByFriends(List<List<String>> watchedVideos, int[][] friends, int id, int level) {
+		Map<String, Integer> freq = new TreeMap<>();
+		int l = 0;
+		boolean[] visited = new boolean[friends.length];
+		Queue<Integer> q = new LinkedList<>();
+		q.offer(id);
+		q.offer(null);
+		while (!q.isEmpty()) {
+			Integer u = q.poll();
+			if (u != null) {
+				if (visited[u]) {
+					continue;
+				}
+				visited[u] = true;
+				if (l > level) {
+					break;
+				}
+				if (l == level) {
+					for (String watchedVideo: watchedVideos.get(u)) {	
+						if (freq.containsKey(watchedVideo)) {
+							freq.put(watchedVideo,freq.get(watchedVideo) + 1);
+						} 
+						else {
+							freq.put(watchedVideo,1);
+						}
+					}
+				}
+				for (int i: friends[u]) {	
+					if (!visited[i]) {
+						q.offer(i);
+					}
+				}
+			} 
+			else {
+				l++;
+				if (!q.isEmpty()) {
+					q.offer(null);
+				}
+			}
+		}
+		Map<String, Integer> sorted = sort(freq);
+		List<String> res = new ArrayList<>();
+		for (Map.Entry<String, Integer> map: sorted.entrySet()) {	
+			res.add(map.getKey());
+		}
+		return res;
+	}
+}

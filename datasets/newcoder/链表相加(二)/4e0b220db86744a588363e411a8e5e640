@@ -1,0 +1,47 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		ListNode sum = null, add1 = null, add2 = null, head = null;
+		int add_1 = 0, add_2 = 0;
+		boolean aTen = false;
+		add1 = revert(head1);
+		add2 = revert(head2);
+		while (add1 != null || add2 != null) {
+			add_1 = add1 == null ? 0 : add1.val;
+			add_2 = add2 == null ? 0 : add2.val;
+			int sum_s = add_1 + add_2;
+			if (aTen) {
+				sum_s += 1;
+				aTen = false;
+			}
+			System.out.println("sum " + sum_s);
+			if (sum_s > 9) {
+				aTen = true;
+			}
+			sum = new ListNode(sum_s % 10);
+			sum.next = head;
+			head = sum;
+			if (add1 != null) {
+				add1 = add1.next;
+			}
+			if (add2 != null) {
+				add2 = add2.next;
+			}
+			if (add1 == null && add2 == null & aTen) {
+				sum = new ListNode(1);
+				sum.next = head;
+				head = sum;
+			}
+		}
+		return sum;
+	}
+	ListNode revert(ListNode listnode) {
+		ListNode pre = null, next = null;
+		while (listnode != null) {
+			next = listnode.next;
+			listnode.next = pre;
+			pre = listnode;
+			listnode = next;
+		}
+		return pre;
+	}
+}

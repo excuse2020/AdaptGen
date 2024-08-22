@@ -1,0 +1,34 @@
+class Solution {
+	long distinctNames(String[] ideas) {
+		int n = ideas.length;
+		Set<Character> uniqueChars = new HashSet<>();
+		Set<String> ideasSet = Arrays.stream(ideas).collect(Collectors.toSet());
+		for (int i = 0; i < n; i++) {
+			uniqueChars.add(ideas[i].charAt(0));
+		}
+		Map<Character, Map<Character, Integer>> charToCharToWordMap = new HashMap<>();
+		for (String word: ideas) {	
+			char startingChar = word.charAt(0);
+			charToCharToWordMap.computeIfAbsent(startingChar,(k) -> {new HashMap<>()});
+			for (char c: uniqueChars) {	
+				String transformedWord = c + word.substring(1);
+				if (!ideasSet.contains(transformedWord)) {
+					charToCharToWordMap.get(startingChar).computeIfAbsent(c,(k) -> {0});
+					charToCharToWordMap.get(startingChar).compute(c,(k, v) -> {v + 1});
+				}
+			}
+		}
+		long ans = 0;
+		for (char startingChar: charToCharToWordMap.keySet()) {	
+			for (char transformChar: charToCharToWordMap.get(startingChar).keySet()) {	
+				int transformationsFront = charToCharToWordMap.get(startingChar).get(transformChar);
+				if (!charToCharToWordMap.containsKey(transformChar) || !charToCharToWordMap.get(transformChar).containsKey(startingChar)) {
+					continue;
+				}
+				int transformationsBackward = charToCharToWordMap.get(transformChar).get(startingChar);
+				ans += transformationsFront * transformationsBackward;
+			}
+		}
+		return ans;
+	}
+}

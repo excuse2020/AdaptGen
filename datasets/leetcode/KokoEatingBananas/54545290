@@ -1,0 +1,36 @@
+class Solution {
+	boolean canEat(int[] piles, int eatingSpeed, int hours) {
+		int hoursSpend = 0;
+		for (int i = 0; i < piles.length; i++) {
+			hoursSpend += piles[i] / eatingSpeed;
+			if (piles[i] % eatingSpeed != 0) {
+				hoursSpend += 1;
+			}
+			if (hoursSpend > hours) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int minEatingSpeed(int[] piles, int h) {
+		int mins = 1;
+		int maxs = Integer.MIN_VALUE;
+		for (int i = 0; i < piles.length; i++) {
+			if (piles[i] > maxs) {
+				maxs = piles[i];
+			}
+		}
+		int ans = -1;
+		while (mins <= maxs) {
+			int mid = mins + (maxs - mins) / 2;
+			if (canEat(piles,mid,h)) {
+				ans = mid;
+				maxs = mid - 1;
+			} 
+			else {
+				mins = mid + 1;
+			}
+		}
+		return ans;
+	}
+}

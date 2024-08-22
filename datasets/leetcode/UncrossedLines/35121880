@@ -1,0 +1,27 @@
+class Solution {
+	int maxUncrossedLines(int[] nums1, int[] nums2) {
+		int[][] memo = new int[nums1.length][nums2.length];
+		for (int[] arr: memo) {	
+			Arrays.fill(arr,-1);
+		}
+		return solve(nums1,nums2,0,0,memo);
+	}
+	int solve(int[] nums1, int[] nums2, int nums1Index, int nums2Index, int[][] memo) {
+		if (nums1.length == nums1Index || nums2.length == nums2Index) {
+			return 0;
+		}
+		if (memo[nums1Index][nums2Index] != -1) {
+			return memo[nums1Index][nums2Index];
+		}
+		int answer = 0;
+		if (nums1[nums1Index] == nums2[nums2Index]) {
+			answer = 1 + solve(nums1,nums2,nums1Index + 1,nums2Index + 1,memo);
+		} 
+		else {
+			int incrementFirst = solve(nums1,nums2,nums1Index + 1,nums2Index,memo);
+			int incrementSecond = solve(nums1,nums2,nums1Index,nums2Index + 1,memo);
+			answer = Math.max(incrementFirst,incrementSecond);
+		}
+		return memo[nums1Index][nums2Index] = answer;
+	}
+}

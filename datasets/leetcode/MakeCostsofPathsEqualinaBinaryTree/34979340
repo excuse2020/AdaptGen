@@ -1,0 +1,28 @@
+class Solution {
+	int ans = 0;
+	int myN, max;
+	int helper(int i, int[] cost) {
+		if (i >= myN) {
+			return 0;
+		}
+		int left = helper(2 * i + 1,cost);
+		int right = helper(2 * i + 2,cost);
+		return cost[i] + Math.max(left,right);
+	}
+	int helper2(int i, int sum, int[] cost) {
+		if (i >= myN) {
+			ans += (max - sum);
+			return max - sum;
+		}
+		int left = helper2(2 * i + 1,sum + cost[i],cost);
+		int right = helper2(2 * i + 2,sum + cost[i],cost);
+		ans -= (Math.min(left,right));
+		return Math.min(left,right);
+	}
+	int minIncrements(int n, int[] cost) {
+		myN = n;
+		max = helper(0,cost);
+		helper2(0,0,cost);
+		return ans;
+	}
+}

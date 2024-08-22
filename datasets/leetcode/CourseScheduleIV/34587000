@@ -1,0 +1,52 @@
+class Solution {
+	List<Boolean> checkIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
+		List<Boolean> list = new ArrayList<>();
+		Set<Integer> set = new HashSet<>();
+		int[] int_array = new int[numCourses];
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int i = 0; i < prerequisites.length; i++) {
+			int_array[prerequisites[i][1]]++;
+		}
+		for (int i = 0; i < int_array.length; i++) {
+			if (int_array[i] == 0) {
+				set.add(i);
+			}
+		}
+		for (int i = 0; i < numCourses; i++) {
+			map.put(i,new ArrayList<>());
+		}
+		while (!set.isEmpty()) {
+			Iterator<Integer> it = set.iterator();
+			int course = it.next();
+			set.remove(course);
+			for (int[] pre: prerequisites) {	
+				if (pre[0] == course) {
+					map.get(pre[1]).add(pre[0]);
+					if (map.containsKey(pre[0])) {
+						for (int i = 0; i < map.get(pre[0]).size(); i++) {
+							if (map.get(pre[1]).contains(map.get(pre[0]).get(i))) {
+								continue;
+							}
+							map.get(pre[1]).add(map.get(pre[0]).get(i));
+						}
+					}
+					int_array[pre[1]]--;
+					if (int_array[pre[1]] == 0) {
+						set.add(pre[1]);
+					}
+				}
+			}
+		}
+		for (int[] query: queries) {	
+			if (map.containsKey(query[1])) {
+				if (map.get(query[1]).contains(query[0])) {
+					list.add(true);
+				} 
+				else {
+					list.add(false);
+				}
+			}
+		}
+		return list;
+	}
+}

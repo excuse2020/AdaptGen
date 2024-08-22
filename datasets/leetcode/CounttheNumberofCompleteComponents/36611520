@@ -1,0 +1,58 @@
+class Solution {
+	HashMap<Integer, Integer> edgeCount = new HashMap<>();
+	int FIND(int disjoint, int val) {
+		if (disjoint[val] < 0) {
+			return val;
+		} 
+		else {
+			return FIND(disjoint,disjoint[val]);
+		}
+	}
+	void UNION(int disjoint, int val1, int val2) {
+		int parent1 = FIND(disjoint,val1);
+		int parent2 = FIND(disjoint,val2);
+		if (parent1 == parent2) {
+			edgeCount.put(parent1,edgeCount.getOrDefault(parent1,0) + 1);
+			return;
+		}
+		int size1 = Math.abs(disjoint[parent1]);
+		int size2 = Math.abs(disjoint[parent2]);
+		int totalSize = size1 + size2;
+		if (size1 < size2) {
+			disjoint[parent2] = -(totalSize);
+			disjoint[parent1] = parent2;
+			edgeCount.put(parent2,edgeCount.getOrDefault(parent2,0) + 1);
+		} 
+		else {
+			disjoint[parent1] = -(totalSize);
+			disjoint[parent2] = parent1;
+			edgeCount.put(parent1,edgeCount.getOrDefault(parent1,0) + 1);
+		}
+	}
+	int countCompleteComponents(int n, int[][] edges) {
+		edgeCount.clear();
+		int disjoint = new int[n];
+		Arrays.fill(disjoint,-1);
+		for (int i = 0; i < edges.length; i++) {
+			int v1 = edges[i][0];
+			int v2 = edges[i][1];
+			UNION(disjoint,v1,v2);
+		}
+		int count = 0;
+		for (int i = 0; i < disjoint.length; i++) {
+			if (disjoint[i] == -1) {
+				count++;
+				continue;
+			}
+			if (disjoint[i] < 0) {
+				int size = Math.abs(disjoint[i]);
+				int expectedTotalEdges = (size * (size - 1)) / 2;
+				int totalEdges = edgeCount.get(i);
+				if (expectedTotalEdges == totalEdges) {
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+}

@@ -1,0 +1,26 @@
+class Solution {
+	int answer(int start, int end, Integer[][] dp) {
+		if (start > end) {
+			return Integer.MIN_VALUE;
+		}
+		if (start == end) {
+			return 0;
+		}
+		if (dp[start][end] != null) {
+			return dp[start][end];
+		}
+		int min = Integer.MAX_VALUE;
+		for (int i = start; i <= end - 1; i++) {
+			int max = i + Math.max(answer(start,i - 1,dp),answer(i + 1,end,dp));
+			min = Math.min(min,max);
+		}
+		return dp[start][end] = min;
+	}
+	int getMoneyAmount(int n) {
+		if (n == 1) {
+			return 0;
+		}
+		Integer[][] dp = new Integer[n + 1][n + 1];
+		return answer(1,n,dp);
+	}
+}

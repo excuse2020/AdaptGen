@@ -1,0 +1,38 @@
+class Solution {
+	boolean visited;
+	void dfs(int i, List<List<Integer>> graph, List<TreeSet<Integer>> graphSet) {
+		if (!visited[i]) {
+			visited[i] = true;
+			for (int neighbor: graph.get(i)) {	
+				dfs(neighbor,graph,graphSet);
+				graphSet.get(i).addAll(graphSet.get(neighbor));
+				graphSet.get(i).add(neighbor);
+			}
+		}
+	}
+	List<List<Integer>> getAncestors(int n, int[][] edges) {
+		List<List<Integer>> ans = new ArrayList<>();
+		List<TreeSet<Integer>> graphSet = new ArrayList<>();
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graphSet.add(new TreeSet<Integer>());
+			graph.add(new ArrayList<Integer>());
+			ans.add(new ArrayList<Integer>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			int key = edges[i][1];
+			int value = edges[i][0];
+			graph.get(key).add(value);
+		}
+		visited = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			if (!visited[i]) {
+				dfs(i,graph,graphSet);
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			ans.get(i).addAll(graphSet.get(i));
+		}
+		return ans;
+	}
+}

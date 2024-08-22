@@ -1,0 +1,86 @@
+class Solution {
+	int circleTouch;
+	HashMap<Integer, HashSet<Integer>> graph;
+	boolean vis;
+	boolean canReachCorner(int x, int y, int[][] circles) {
+		graph = new HashMap<>();
+		int n = circles.length;
+		circleTouch = new int[n];
+		for (int i = 0; i < n; i++) {
+			graph.put(i,new HashSet<>());
+		}
+		for (int i = 0; i < n; i++) {
+			long x2 = circles[i][0];
+			long y2 = circles[i][1];
+			long r2 = circles[i][2];
+			if (x2 * x2 + y2 * y2 <= r2 * r2) {
+				return false;
+			}
+			if ((x2 - x) * (x2 - x) + (y2 - y) * (y2 - y) <= r2 * r2) {
+				return false;
+			}
+			int touch = new int[4];
+			if (y2 + r2 >= y && x2 <= x) {
+				touch[0] = 1;
+			}
+			if (y2 - r2 <= 0 && x2 <= x) {
+				touch[1] = 1;
+			}
+			if (x2 - r2 <= 0 && y2 <= y) {
+				touch[2] = 1;
+			}
+			if (x2 + r2 >= x && y2 <= y) {
+				touch[3] = 1;
+			}
+			circleTouch[i] = touch;
+			for (int j = i + 1; j < n; j++) {
+				long x3 = circles[j][0];
+				long y3 = circles[j][1];
+				long r3 = circles[j][2];
+				if ((x2 - x3) * (x2 - x3) + (y2 - y3) * (y2 - y3) <= (r2 + r3) * (r2 + r3)) {
+					graph.get(i).add(j);
+					graph.get(j).add(i);
+				}
+			}
+		}
+		vis = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			if (vis[i]) {
+				continue;
+			}
+			int ans = solve(circles,i);
+			int top = ans[0];
+			int bottom = ans[1];
+			int left = ans[2];
+			int right = ans[3];
+			if (left > 0 && bottom > 0) {
+				return false;
+			}
+			if (top > 0 && right > 0) {
+				return false;
+			}
+			if (left > 0 && right > 0) {
+				return false;
+			}
+			if (top > 0 && bottom > 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int[] solve(int circles, int cur) {
+		vis[cur] = true;
+		int ans = circleTouch[cur];
+		for (int child: graph.get(cur)) {	
+			if (vis[child]) {
+				continue;
+			}
+			int curAns = solve(circles,child);
+			ans[0] = ans[0] | curAns[0];
+			ans[1] = ans[1] | curAns[1];
+			ans[2] = ans[2] | curAns[2];
+			ans[3] = ans[3] | curAns[3];
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,36 @@
+class Solution {
+	int dp;
+	List<Boolean> canMakePaliQueries(String s, int[][] queries) {
+		preparePallindrome(s);
+		List<Boolean> ans = new ArrayList<>();
+		for (int i = 0; i < queries.length; i++) {
+			int left = queries[i][0];
+			int right = queries[i][1];
+			int changes = queries[i][2];
+			if (right - left + 1 <= changes) {
+				ans.add(true);
+			} 
+			else {
+				int odd = 0;
+				for (int j = 0; j < 26; j++) {
+					int c = dp[right + 1][j] - dp[left][j];
+					if (c % 2 != 0) {
+						odd++;
+					}
+				}
+				odd = odd - 2 * changes;
+				if (odd > 1) {
+					ans.add(false);
+				} 
+				else {
+					ans.add(true);
+				}
+			}
+		}
+		return ans;
+	}
+	void preparePallindrome(String s) {
+		dp = new int[s.length() + 1][26];
+		int i = 0;
+	}
+}

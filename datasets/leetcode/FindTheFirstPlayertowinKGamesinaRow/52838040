@@ -1,0 +1,39 @@
+class Solution {
+	int findWinningPlayer(int[] skills, int k) {
+		int[] winningMap = new int[skills.length];
+		Queue<Integer> queue = new LinkedList<>();
+		int max = 0, maxPlayer = 0;
+		for (int i = 0; i < skills.length; i++) {
+			queue.add(i);
+			if (skills[i] > max) {
+				max = skills[i];
+				maxPlayer = i;
+			}
+		}
+		int firstPlayer = queue.poll();
+		while (true) {
+			int current = queue.poll();
+			if (skills[firstPlayer] < skills[current]) {
+				if (current == maxPlayer) {
+					return maxPlayer;
+				}
+				winningMap[current]++;
+				if (winningMap[current] == k) {
+					return current;
+				}
+				queue.add(firstPlayer);
+				firstPlayer = current;
+			} 
+			else {
+				if (firstPlayer == maxPlayer) {
+					return maxPlayer;
+				}
+				winningMap[firstPlayer]++;
+				if (winningMap[firstPlayer] == k) {
+					return firstPlayer;
+				}
+				queue.add(current);
+			}
+		}
+	}
+}

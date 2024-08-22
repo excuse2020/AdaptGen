@@ -1,0 +1,47 @@
+class Solution {
+	int[] getMaximumXor(int[] nums, int maximumBit) {
+		int[] ans = new int[nums.length];
+		int xor = nums[0];
+		int[] bits = new int[maximumBit];
+		int temp = xor;
+		int i = 0;
+		while (i < maximumBit) {
+			int bit = temp % 2;
+			if (bit == 0) {
+				bits[i] = 1;
+			} 
+			else {
+				bits[i] = 0;
+			}
+			temp /= 2;
+			i++;
+		}
+		int k = 0;
+		for (int j = 0; j < bits.length; j++) {
+			k += (Math.pow(2,j) * bits[j]);
+		}
+		ans[ans.length - 1] = k;
+		for (i = 1; i < nums.length; i++) {
+			temp = xor ^ nums[i];
+			xor = temp;
+			int j = 0;
+			while (j < maximumBit) {
+				int bit = temp % 2;
+				if (bit == 0) {
+					bits[j] = 1;
+				} 
+				else {
+					bits[j] = 0;
+				}
+				temp /= 2;
+				j++;
+			}
+			k = 0;
+			for (j = 0; j < bits.length; j++) {
+				k += (Math.pow(2,j) * bits[j]);
+			}
+			ans[ans.length - i - 1] = k;
+		}
+		return ans;
+	}
+}

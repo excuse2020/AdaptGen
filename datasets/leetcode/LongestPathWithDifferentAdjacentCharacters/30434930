@@ -1,0 +1,31 @@
+class Solution {
+	int longestPath = 1;
+	int dfs(Map<Integer, List<Integer>> graph, String s, int curr) {
+		if (!graph.containsKey(curr)) {
+			return 1;
+		}
+		int longest = 0, secondLongest = 0;
+		for (int child: graph.get(curr)) {	
+			int longestFromChild = dfs(graph,s,child);
+			if (s.charAt(curr) != s.charAt(child)) {
+				if (longestFromChild > longest) {
+					secondLongest = longest;
+					longest = longestFromChild;
+				} 
+				else if (longestFromChild > secondLongest) {
+					secondLongest = longestFromChild;
+				}
+			}
+		}
+		longestPath = Math.max(longestPath,longest + secondLongest);
+		return longest + 1;
+	}
+	int longestPath(int[] parent, String s) {
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		for (int i = 1; i < parent.length; i++) {
+			graph.computeIfAbsent(parent[i],(value) -> {new ArrayList<>()}).add(i);
+		}
+		dfs(graph,s,0);
+		return longestPath;
+	}
+}

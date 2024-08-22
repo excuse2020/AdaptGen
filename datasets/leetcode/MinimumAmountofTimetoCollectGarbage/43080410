@@ -1,0 +1,28 @@
+class Solution {
+	int garbageCollection(String[] garbage, int[] travel) {
+		int[] totalTravelTime = new int[travel.length + 1];
+		totalTravelTime[0] = 0;
+		totalTravelTime[1] = travel[0];
+		for (int i = 1; i < travel.length; i++) {
+			totalTravelTime[i + 1] = totalTravelTime[i] + travel[i];
+		}
+		int ans = 0;
+		boolean metalFound = false, glassFound = false, paperFound = false;
+		for (int i = garbage.length - 1; i >= 0; i--) {
+			if (!glassFound && garbage[i].contains("G")) {
+				ans += totalTravelTime[i];
+				glassFound = true;
+			}
+			if (!paperFound && garbage[i].contains("P")) {
+				ans += totalTravelTime[i];
+				paperFound = true;
+			}
+			if (!metalFound && garbage[i].contains("M")) {
+				ans += totalTravelTime[i];
+				metalFound = true;
+			}
+			ans += garbage[i].length();
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,76 @@
+class Solution {
+	String smallestEquivalentString(String s1, String s2, String baseStr) {
+		DisjointSet ds = new DisjointSet();
+		Set<Character> set = new HashSet<Character>();
+		int n = s1.length();
+		StringBuilder stb = new StringBuilder();
+		for (Character ch: s1.toCharArray()) {	
+			set.add(ch);
+		}
+		for (Character ch: s2.toCharArray()) {	
+			set.add(ch);
+		}
+		for (Character ch: set) {	
+			ds.makeSet(ch);
+		}
+		for (int i = 0; i < n; i++) {
+			ds.union(s1.charAt(i),s2.charAt(i));
+		}
+		for (int i = 0; i < baseStr.length(); i++) {
+			stb.append(ds.findSet(baseStr.charAt(i)));
+		}
+		return stb.toString();
+	}
+}
+class DisjointSet {
+	Map<Character, Node> map = new HashMap<>();
+	Character findSet(Character data) {
+		if (map.get(data) == null) {
+			return data;
+		}
+		return findSet(map.get(data)).data;
+	}
+	Node findSet(Node node) {
+		Node parent = node.parent;
+		if (parent == node) {
+			return parent;
+		}
+		node.parent = findSet(node.parent);
+		return node.parent;
+	}
+	Map<Character, Node> getMap() {
+		return map;
+	}
+	void makeSet(Character data) {
+		Node node = new Node();
+		node.data = data;
+		node.parent = node;
+		node.rank = 0;
+		map.put(data,node);
+	}
+	boolean union(Character data1, Character data2) {
+		Node node1 = map.get(data1);
+		Node node2 = map.get(data2);
+		Node parent1 = findSet(node1);
+		Node parent2 = findSet(node2);
+		if (parent1.data == parent2.data) {
+			return false;
+		}
+		if (parent1.data <= parent2.data) {
+			parent1.rank = (parent1.rank == parent2.rank) ? parent1.rank + 1 : parent1.rank;
+			parent2.parent = parent1;
+		} 
+		else {
+			parent1.parent = parent2;
+		}
+		return true;
+	}
+	class Node {
+		Character data;
+		Node parent;
+		int rank;
+		String toString() {
+			return this.data + " ";
+		}
+	}
+}

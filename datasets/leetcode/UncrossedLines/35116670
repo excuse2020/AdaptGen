@@ -1,0 +1,35 @@
+class Solution {
+	int maxUncrossedLines(int[] nums1, int[] nums2) {
+		int[][] dp = new int[nums1.length + 1][nums2.length + 1];
+		int n = nums1.length;
+		int m = nums2.length;
+		for (int i = 1; i <= n; i++) {
+			for (int j = 1; j <= m; j++) {
+				int ans = 0;
+				if (nums1[i - 1] == nums2[j - 1]) {
+					ans = 1 + dp[i - 1][j - 1];
+				} 
+				else {
+					ans = Math.max(dp[i - 1][j],dp[i][j - 1]);
+				}
+				dp[i][j] = ans;
+			}
+		}
+		return dp[n][m];
+	}
+	int solve(int[] nums1, int[] nums2, int i1, int i2, int[][] dp) {
+		if (i1 == nums1.length) {
+			return 0;
+		}
+		if (i2 == nums2.length) {
+			return 0;
+		}
+		if (dp[i1][i2] != -1) {
+			return dp[i1][i2];
+		}
+		if (nums1[i1] == nums2[i2]) {
+			return dp[i1][i2] = 1 + solve(nums1,nums2,i1 + 1,i2 + 1,dp);
+		}
+		return dp[i1][i2] = Math.max(solve(nums1,nums2,i1,i2 + 1,dp),solve(nums1,nums2,i1 + 1,i2,dp));
+	}
+}

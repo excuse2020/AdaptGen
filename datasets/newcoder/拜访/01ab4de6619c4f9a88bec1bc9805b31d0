@@ -1,0 +1,48 @@
+class Solution {
+	int columns;
+	int methodNumber = 0;
+	int rows;
+	int shortestDistance;
+	int countPath(int[][] CityMap, int n, int m) {
+		rows = n;
+		columns = m;
+		shortestDistance = n * m;
+		int[] ManagerLocation = findManagerLocation(CityMap);
+		process(ManagerLocation[0],ManagerLocation[1],CityMap,0);
+		return methodNumber;
+	}
+	int[] findManagerLocation(int[][] CityMap) {
+		int[] ManagerLocation = new int[2];
+		for (int currentX = 0; currentX < rows; currentX++) {
+			for (int currentY = 0; currentY < columns; currentY++) {
+				if (CityMap[currentX][currentY] == 1) {
+					ManagerLocation[0] = currentX;
+					ManagerLocation[1] = currentY;
+					break;
+				}
+			}
+		}
+		return ManagerLocation;
+	}
+	void process(int currentX, int currentY, int[][] CityMap, int haveTakenSteps) {
+		if (currentX < 0 || currentX >= rows || currentY < 0 || currentY >= columns || CityMap[currentX][currentY] == -1) {
+			return;
+		}
+		if (CityMap[currentX][currentY] == 2) {
+			if (haveTakenSteps == shortestDistance) {
+				methodNumber++;
+			} 
+			else if (haveTakenSteps < shortestDistance) {
+				shortestDistance = haveTakenSteps;
+				methodNumber = 1;
+			}
+			return;
+		}
+		CityMap[currentX][currentY] = -1;
+		process(currentX - 1,currentY,CityMap,haveTakenSteps + 1);
+		process(currentX + 1,currentY,CityMap,haveTakenSteps + 1);
+		process(currentX,currentY - 1,CityMap,haveTakenSteps + 1);
+		process(currentX,currentY + 1,CityMap,haveTakenSteps + 1);
+		CityMap[currentX][currentY] = 0;
+	}
+}

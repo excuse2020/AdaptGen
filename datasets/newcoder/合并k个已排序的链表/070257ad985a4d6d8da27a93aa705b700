@@ -1,0 +1,58 @@
+class Solution {
+	ListNode mergeKLists(ArrayList<ListNode> lists) {
+		int ss = lists.size();
+		if (ss == 0) {
+			return null;
+		} 
+		else if (ss == 1) {
+			return lists.get(0);
+		} 
+		else if (ss == 2) {
+			return union(lists.get(0),lists.get(1));
+		} 
+		else {
+			ListNode ll = lists.remove(0);
+			ll = union(ll,mergeKLists(lists));
+			return ll;
+		}
+	}
+	ListNode union(ListNode first, ListNode second) {
+		ListNode current = null;
+		ListNode un = null;
+		if (first == null) {
+			return second;
+		}
+		if (second == null) {
+			return first;
+		}
+		while (first != null && second != null) {
+			if (first.val < second.val) {
+				if (un == null) {
+					un = current = first;
+				} 
+				else {
+					current.next = first;
+					current = current.next;
+				}
+				first = first.next;
+			} 
+			else {
+				if (un == null) {
+					un = current = second;
+				} 
+				else {
+					current.next = second;
+					current = current.next;
+				}
+				second = second.next;
+			}
+		}
+		if (first == null) {
+			current.next = second;
+		}
+		if (second == null) {
+			current.next = first;
+		}
+		return un;
+	}
+}

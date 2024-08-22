@@ -1,0 +1,28 @@
+class Solution {
+	int maxChunksToSorted(int[] arr) {
+		int answer = 1, n = arr.length;
+		int[] dp = new int[n];
+		dp[0] = 1;
+		for (int i = 1; i < n; i++) {
+			int num = arr[i];
+			if (num >= arr[i - 1]) {
+				dp[i] = dp[i - 1] + 1;
+			} 
+			else {
+				int j = i - 1;
+				while (j >= 0 && arr[j] > num) {
+					arr[j + 1] = arr[j];
+					j--;
+				}
+				j++;
+				arr[j] = num;
+				int chunks = dp[j];
+				while (j <= i) {
+					dp[j] = chunks;
+					j++;
+				}
+			}
+		}
+		return dp[n - 1];
+	}
+}

@@ -1,0 +1,21 @@
+class Solution {
+	TreeNode reConstructBinaryTree(int[] pre, int[] vin) {
+		int len = pre.length;
+		if (len == 0) {
+			return null;
+		}
+		TreeNode root = new TreeNode(pre[0]);
+		for (int i = 0; i < len; i++) {
+			if (root.val == vin[i]) {
+				int[] leftPre = Arrays.copyOfRange(pre,1,i + 1);
+				int[] leftVin = Arrays.copyOfRange(vin,0,i);
+				root.left = reConstructBinaryTree(leftPre,leftVin);
+				int[] rightPre = Arrays.copyOfRange(pre,i + 1,len);
+				int[] rightVin = Arrays.copyOfRange(vin,i + 1,len);
+				root.right = reConstructBinaryTree(rightPre,rightVin);
+				break;
+			}
+		}
+		return root;
+	}
+}

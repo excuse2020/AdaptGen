@@ -1,0 +1,32 @@
+class Solution {
+	Integer[] dp;
+	boolean solve(int[] nums, int i) {
+		if (i == nums.length) {
+			return true;
+		}
+		if (i > nums.length) {
+			return false;
+		}
+		if (dp[i] != null) {
+			return dp[i] == 1;
+		}
+		boolean cond1 = false;
+		boolean cond2 = false;
+		boolean cond3 = false;
+		if (i + 1 < nums.length && nums[i] == nums[i + 1]) {
+			cond1 = solve(nums,i + 2);
+		}
+		if (i + 2 < nums.length && nums[i] == nums[i + 1] && nums[i] == nums[i + 2]) {
+			cond2 = solve(nums,i + 3);
+		}
+		if (i + 2 < nums.length && nums[i + 1] - nums[i] == 1 && nums[i + 2] - nums[i + 1] == 1) {
+			cond3 = solve(nums,i + 3);
+		}
+		dp[i] = (cond1 || cond2) ? 1 : 0;
+		return cond1 || cond2;
+	}
+	boolean validPartition(int[] nums) {
+		dp = new Integer[nums.length + 1];
+		return solve(nums,0);
+	}
+}

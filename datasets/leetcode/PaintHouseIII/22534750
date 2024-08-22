@@ -1,0 +1,46 @@
+class Solution {
+	Integer dp;
+	int minCost(int[] houses, int[][] cost, int m, int n, int target) {
+		dp = new Integer[m + 1][target + 1][22];
+		int minCost = paint(houses,cost,m,n,target,21);
+		if (minCost == (int) 1e9) {
+			return -1;
+		}
+		return minCost;
+	}
+	int paint(int houses, int cost, int m, int n, int target, int lastColor) {
+		if (m == 0) {
+			if (target == 1) {
+				return 0;
+			}
+			return (int) 1e9;
+		}
+		if (target == 0) {
+			return (int) 1e9;
+		}
+		if (dp[m][target][lastColor] != null) {
+			return dp[m][target][lastColor];
+		}
+		int minCost = (int) 1e9;
+		if (houses[m - 1] != 0) {
+			int color = houses[m - 1];
+			if (color == lastColor || lastColor == 21) {
+				minCost = paint(houses,cost,m - 1,n,target,color);
+			} 
+			else {
+				minCost = paint(houses,cost,m - 1,n,target - 1,color);
+			}
+		} 
+		else {
+			for (int color = n; color >= 1; color--) {
+				if (color == lastColor || lastColor == 21) {
+					minCost = Math.min(minCost,cost[m - 1][color - 1] + paint(houses,cost,m - 1,n,target,color));
+				} 
+				else {
+					minCost = Math.min(minCost,cost[m - 1][color - 1] + paint(houses,cost,m - 1,n,target - 1,color));
+				}
+			}
+		}
+		return dp[m][target][lastColor] = minCost;
+	}
+}

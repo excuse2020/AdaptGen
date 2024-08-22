@@ -1,0 +1,30 @@
+class Solution {
+	List<Integer> topStudents(String[] positive_feedback, String[] negative_feedback, String[] report, int[] student_id, int k) {
+		Set<String> p = new HashSet<>(Arrays.asList(positive_feedback));
+		Set<String> n = new HashSet<>(Arrays.asList(negative_feedback));
+		HashMap<Integer, Integer> map = new HashMap<>();
+		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {a[0] == b[0] ? a[1] - b[1] : b[0] - a[0]});
+		for (int i = 0; i < report.length; i++) {
+			map.put(student_id[i],0);
+		}
+		for (int i = 0; i < report.length; i++) {
+			String rep = report[i];
+			for (String word: rep.split(" ")) {	
+				if (p.contains(word)) {
+					map.put(student_id[i],map.get(student_id[i]) + 3);
+				} 
+				else if (n.contains(word)) {
+					map.put(student_id[i],map.get(student_id[i]) - 1);
+				}
+			}
+		}
+		for (int key: map.keySet()) {	
+			pq.add(new int{map.get(key), key});
+		}
+		List<Integer> list = new ArrayList<>();
+		for (int i = 0; i < k; i++) {
+			list.add(pq.poll()[1]);
+		}
+		return list;
+	}
+}

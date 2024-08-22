@@ -1,0 +1,33 @@
+class Solution {
+	void addCons(Stack<Integer> cities, int[] cons, int home) {
+		for (int i = 0; i < cons.length; i += 1) {
+			if (i == home) {
+				continue;
+			}
+			if (cons[i] == 1) {
+				cities.push(i);
+			}
+		}
+	}
+	int findCircleNum(int[][] isConnected) {
+		int provinces = 0;
+		boolean[] visited = new boolean[isConnected.length];
+		for (int i = 0; i < isConnected.length; i += 1) {
+			if (visited[i]) {
+				continue;
+			}
+			Stack<Integer> conCities = new Stack<>();
+			addCons(conCities,isConnected[i],i);
+			while (!conCities.isEmpty()) {
+				int city = conCities.pop();
+				if (visited[city]) {
+					continue;
+				}
+				addCons(conCities,isConnected[city],city);
+				visited[city] = true;
+			}
+			provinces += 1;
+		}
+		return provinces;
+	}
+}

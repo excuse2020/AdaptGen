@@ -1,0 +1,38 @@
+class Solution {
+	void addBits(int bits, int n) {
+		for (int i = 31; i >= 0; i--) {
+			bits[i] += ((n >> i) & 1);
+		}
+	}
+	int calculateAnd(int bits, int n) {
+		int r = 0, p = 1;
+		for (int i = 0; i < 32; i++) {
+			if (bits[i] == n) {
+				r += p;
+			}
+			p *= 2;
+		}
+		return r;
+	}
+	int minimumDifference(int[] nums, int k) {
+		int bits = new int[32];
+		int min = Integer.MAX_VALUE, left = 0, right = 0;
+		while (right < nums.length) {
+			addBits(bits,nums[right]);
+			int currAnd = calculateAnd(bits,right - left + 1);
+			min = Math.min(min,Math.abs(currAnd - k));
+			while (left <= right && currAnd < k) {
+				removeBits(bits,nums[left++]);
+				currAnd = calculateAnd(bits,right - left + 1);
+				min = Math.min(min,Math.abs(currAnd - k));
+			}
+			right++;
+		}
+		return min;
+	}
+	void removeBits(int bits, int n) {
+		for (int i = 31; i >= 0; i--) {
+			bits[i] -= ((n >> i) & 1);
+		}
+	}
+}

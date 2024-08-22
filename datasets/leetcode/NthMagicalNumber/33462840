@@ -1,0 +1,47 @@
+class Solution {
+	int findLCM(int a, int b) {
+		int gcd = 1;
+		int max = Integer.max(a,b);
+		int min = Integer.min(a,b);
+		while (true) {
+			int temp = min;
+			min = max % min;
+			max = temp;
+			if (min == 0) {
+				gcd = max;
+				break;
+			}
+		}
+		return (a * b) / gcd;
+	}
+	long findMinEqualElements(long n, int a, int b) {
+		int count = 0;
+		long aCount = n / a;
+		long bCount = n / b;
+		long overlapCount = n / findLCM(a,b);
+		return aCount + bCount - overlapCount;
+	}
+	int nthMagicalNumber(int n, int a, int b) {
+		long i = 0;
+		long j = (long) 1e14;
+		while (i <= j) {
+			long mid = i + (j - i) / 2;
+			long elements = findMinEqualElements(mid,a,b);
+			if (elements == n) {
+				if (findMinEqualElements(mid - 1,a,b) == n) {
+					j = mid - 1;
+				} 
+				else {
+					return (int) ((mid) % 1000000007);
+				}
+			} 
+			else if (elements < n) {
+				i = mid + 1;
+			} 
+			else {
+				j = mid - 1;
+			}
+		}
+		return 0;
+	}
+}

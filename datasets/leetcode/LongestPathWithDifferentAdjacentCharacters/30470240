@@ -1,0 +1,42 @@
+class Solution {
+	int answer = 1;
+	char[] chars;
+	Map<Integer, ArrayList<Integer>> tree = new HashMap<>();
+	int longestPath(int[] parent, String s) {
+		int n = s.length();
+		if (n == 0) {
+			return 0;
+		}
+		chars = s.toCharArray();
+		for (int i = 0; i < n; ++i) {
+			int b = parent[i];
+			if (b == -1) {
+				continue;
+			}
+			tree.computeIfAbsent(b,(v) -> {new ArrayList<>()}).add(i);
+		}
+		traverse(0);
+		return answer;
+	}
+	int traverse(int root) {
+		if (!tree.containsKey(root)) {
+			return 1;
+		}
+		int longestChain = 0, secondLongestChain = 0;
+		for (int child: tree.get(root)) {	
+			int longestChainStartingFromChild = traverse(child);
+			if (chars[root] == chars[child]) {
+				continue;
+			}
+			if (longestChainStartingFromChild > longestChain) {
+				secondLongestChain = longestChain;
+				longestChain = longestChainStartingFromChild;
+			} 
+			else if (longestChainStartingFromChild > secondLongestChain) {
+				secondLongestChain = longestChainStartingFromChild;
+			}
+		}
+		answer = Math.max(answer,longestChain + secondLongestChain);
+		return longestChain + 1;
+	}
+}

@@ -1,0 +1,68 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		ListNode head11 = head1;
+		ListNode head22 = head2;
+		int len1 = 0;
+		int len2 = 0;
+		while (head11 != null) {
+			len1++;
+			head11 = head11.next;
+		}
+		while (head22 != null) {
+			len2++;
+			head22 = head22.next;
+		}
+		int maxlen = len1 > len2 ? len1 : len2;
+		int minlen = len1 == maxlen ? len2 : len1;
+		ListNode maxNode = maxlen == len1 ? head1 : head2;
+		ListNode minNode = maxNode == head2 ? head1 : head2;
+		ListNode res = maxNode;
+		ListNode resMin = minNode;
+		int[] arr1 = new int[maxlen + 1];
+		int[] arr2 = new int[maxlen + 1];
+		int index = 1;
+		while (maxNode != null) {
+			arr1[index++] = maxNode.val;
+			maxNode = maxNode.next;
+		}
+		index = 1 + maxlen - minlen;
+		while (minNode != null) {
+			arr2[index++] = minNode.val;
+			minNode = minNode.next;
+		}
+		for (int i = maxlen; i > (maxlen - minlen); i--) {
+			int temp = arr1[i] + arr2[i];
+			arr1[i] = temp % 10;
+			int jin = temp / 10;
+			index = i;
+			while (jin != 0) {
+				index--;
+				int ttt = arr1[index] + 1;
+				arr1[index] = ttt % 10;
+				jin = ttt / 10;
+			}
+		}
+		ListNode tt = res;
+		if (arr1[0] == 0) {
+			index = 1;
+			while (tt != null) {
+				tt.val = arr1[index++];
+				tt = tt.next;
+			}
+		} 
+		else {
+			index = 0;
+			while (tt != null) {
+				tt.val = arr1[index++];
+				if (tt.next == null) {
+					resMin.val = arr1[maxlen - 1];
+					resMin.next = null;
+					tt.next = resMin;
+					break;
+				}
+				tt = tt.next;
+			}
+		}
+		return res;
+	}
+}

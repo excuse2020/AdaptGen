@@ -1,0 +1,28 @@
+class Solution {
+	int dfs(int idx, boolean[] vis, int[][] bombs) {
+		int count = 1;
+		for (int i = 0; i < bombs.length; i++) {
+			if (!vis[i] && rangeOf(bombs[idx],bombs[i])) {
+				vis[i] = true;
+				count += dfs(i,vis,bombs);
+			}
+		}
+		return count;
+	}
+	int maximumDetonation(int[][] bombs) {
+		int n = bombs.length;
+		int maxDetonate = 0;
+		for (int i = 0; i < n; i++) {
+			boolean[] vis = new boolean[n];
+			vis[i] = true;
+			maxDetonate = Math.max(maxDetonate,dfs(i,vis,bombs));
+		}
+		return maxDetonate;
+	}
+	boolean rangeOf(int[] dis1, int[] dis2) {
+		long disX = Math.abs(dis1[0] - dis2[0]);
+		long disY = Math.abs(dis1[1] - dis2[1]);
+		long radius = dis1[2];
+		return disX * disX + disY * disY <= radius * radius;
+	}
+}

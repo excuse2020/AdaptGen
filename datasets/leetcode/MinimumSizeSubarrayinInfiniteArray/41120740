@@ -1,0 +1,49 @@
+class Solution {
+	int minSizeSubarray(int[] nums, int target) {
+		int end = 0;
+		int start = 0;
+		int n = nums.length;
+		int minLength = Integer.MAX_VALUE;
+		int sum = 0;
+		boolean arrayCrossed = false;
+		boolean startCrossed = false;
+		int endCrossedCount = 0;
+		int startCrossedCount = 0;
+		while (true) {
+			if (startCrossed && start <= end) {
+				break;
+			}
+			sum += nums[end];
+			if (sum == target) {
+				int length = (endCrossedCount * n + end + 1) - (startCrossedCount * n + start);
+				minLength = Math.min(length,minLength);
+			} 
+			else if (sum > target) {
+				while (sum > target) {
+					sum -= nums[start];
+					start = (start + 1) % n;
+					if (start == 0 && arrayCrossed) {
+						startCrossed = true;
+						startCrossedCount++;
+					}
+				}
+				if (sum == target) {
+					int length = (endCrossedCount * n + end + 1) - (startCrossedCount * n + start);
+					minLength = Math.min(length,minLength);
+					if (startCrossedCount > 0) {
+						break;
+					}
+				}
+			}
+			end = (end + 1) % n;
+			if (end == 0 && !arrayCrossed) {
+				arrayCrossed = true;
+				endCrossedCount++;
+			} 
+			else if (end == 0) {
+				endCrossedCount++;
+			}
+		}
+		return minLength == Integer.MAX_VALUE ? -1 : minLength;
+	}
+}

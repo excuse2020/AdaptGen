@@ -1,0 +1,33 @@
+class Solution {
+	int[] advantageCount(int[] nums1, int[] nums2) {
+		int[] sortedNums1 = Arrays.copyOf(nums1,nums1.length);
+		Arrays.sort(sortedNums1);
+		int[] sortedNums2 = Arrays.copyOf(nums2,nums2.length);
+		Arrays.sort(sortedNums2);
+		HashMap<Integer, Deque<Integer>> map = new HashMap<>();
+		Deque<Integer> lessListNums1 = new LinkedList<>();
+		int i = 0;
+		for (int num2: sortedNums2) {	
+			while (i < nums1.length && sortedNums1[i] <= num2) {
+				lessListNums1.add(sortedNums1[i]);
+				i++;
+			}
+			if (i < nums1.length) {
+				map.putIfAbsent(num2,new LinkedList<>());
+				map.get(num2).add(sortedNums1[i]);
+				i++;
+			} 
+			else {
+				int remove = lessListNums1.poll();
+				map.putIfAbsent(num2,new LinkedList<>());
+				map.get(num2).add(remove);
+			}
+		}
+		int[] ans = new int[nums2.length];
+		for (int j = 0; j < nums2.length; j++) {
+			System.out.println(map.get(nums2[j]));
+			ans[j] = map.get(nums2[j]).poll();
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,55 @@
+class Solution {
+	int ANS = 0;
+	int minHeightTree(List<Integer>[] A) {
+		if (A.length == 1) {
+			return 0;
+		}
+		List<Integer> ans = new ArrayList<>();
+		int steps = 0;
+		for (int i = 0; i < A.length; i++) {
+			if (A[i].size() == 1) {
+				ans.add(i);
+			}
+		}
+		int n = A.length;
+		while (n > 2) {
+			n -= ans.size();
+			List<Integer> t = new ArrayList<>();
+			for (Integer i: ans) {	
+				int j = A[i].iterator().next();
+				A[j].remove(i);
+				if (A[j].size() == 1) {
+					t.add(j);
+				}
+			}
+			ans = t;
+			steps++;
+		}
+		ANS = Math.max(ANS,ans.size() == 1 ? 2 * steps : 2 * steps + 1);
+		return ans.size() == 1 ? steps : steps + 1;
+	}
+	int minimumDiameterAfterMerge(int[][] edges1, int[][] edges2) {
+		int n = edges1.length + 1, m = edges2.length + 1;
+		List<Integer>[] A = new ArrayList[n];
+		List<Integer>[] B = new ArrayList[m];
+		for (int i = 0; i < n; i++) {
+			A[i] = new ArrayList<>();
+		}
+		for (int j = 0; j < m; j++) {
+			B[j] = new ArrayList<>();
+		}
+		for (int[] e: edges1) {	
+			A[e[0]].add(e[1]);
+			A[e[1]].add(e[0]);
+		}
+		for (int[] e: edges2) {	
+			B[e[0]].add(e[1]);
+			B[e[1]].add(e[0]);
+		}
+		int combined = minHeightTree(A) + minHeightTree(B);
+		if (ANS < combined) {
+			ANS = combined;
+		}
+		return ANS;
+	}
+}

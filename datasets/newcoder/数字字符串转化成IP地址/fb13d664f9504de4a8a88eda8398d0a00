@@ -1,0 +1,47 @@
+class Solution {
+	ArrayList<String> restoreIpAddresses(String s) {
+		ArrayList<String> list = new ArrayList<String>();
+		if (s.length() < 4) {
+			return list;
+		}
+		char[] chs = s.toCharArray();
+		sadd(list,chs,"",0,1);
+		return list;
+	}
+	void sadd(ArrayList<String> list, char[] chs, String s, int i, int cengshu) {
+		if (cengshu >= 5) {
+			if (i == chs.length) {
+				list.add(s.substring(0,s.length() - 1));
+			}
+			return;
+		}
+		if (i >= chs.length) {
+			return;
+		}
+		cengshu++;
+		if (chs[i] == '0') {
+			s = s + "0.";
+			i++;
+			sadd(list,chs,s,i,cengshu);
+			return;
+		}
+		String s1 = s + chs[i];
+		i++;
+		sadd(list,chs,s1,i,cengshu);
+		if (i >= chs.length) {
+			return;
+		}
+		String s2 = s + chs[i - 1];
+		i++;
+		sadd(list,chs,s2,i,cengshu);
+		if (i >= chs.length) {
+			return;
+		}
+		String s3 = s + chs[i - 2];
+		if (chs[i - 2] > '2' || chs[i - 2] == '2' && chs[i - 1] > '5' || chs[i - 2] == '2' && chs[i - 1] == '5' && chs[i] > '5') {
+			return;
+		}
+		i++;
+		sadd(list,chs,s3,i,cengshu);
+	}
+}

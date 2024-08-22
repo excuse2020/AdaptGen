@@ -1,0 +1,55 @@
+class Solution {
+	HashMap<Long, List<Long>> map = new HashMap<>();
+	long maxscore = 0;
+	int totalNodes = 0;
+	int calculateScores(TreeNode node) {
+		if (node == null) {
+			return 0;
+		}
+		int leftSize = calculateScores(node.left);
+		int rightSize = calculateScores(node.right);
+		long score = 1;
+		if (leftSize != 0) {
+			score *= leftSize;
+		}
+		if (rightSize != 0) {
+			score *= rightSize;
+		}
+		if (totalNodes - leftSize != 0) {
+			score *= (totalNodes - leftSize);
+		}
+		maxscore = Math.max(score,maxscore);
+		map.putIfAbsent(score,new ArrayList<>());
+		map.get(score).add((long) node.val);
+		return leftSize + rightSize;
+	}
+	int countHighestScoreNodes(int[] parents) {
+		TreeNode root = createTree(parents);
+		totalNodes = parents.length;
+		calculateScores(root);
+		return map.get(maxscore).size();
+	}
+	TreeNode createTree(int[] parents) {
+		int n = parents.length;
+		TreeNode[] nodes = new TreeNode[n];
+		for (int i = 0; i < n; i++) {
+			nodes[i] = new TreeNode(i);
+		}
+		TreeNode root = null;
+		for (int i = 0; i < n; i++) {
+			if (parents[i] == -1) {
+				root = nodes[i];
+			} 
+			else {
+				TreeNode parent = nodes[parents[i]];
+				if (parent.left == null) {
+					parent.left = nodes[i];
+				} 
+				else {
+					parent.right = nodes[i];
+				}
+			}
+		}
+		return root;
+	}
+}

@@ -1,0 +1,28 @@
+class Solution {
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		List<List<Integer>> adjacent = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adjacent.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			int u = edge[0];
+			int v = edge[1];
+			adjacent.get(u).add(v);
+			adjacent.get(v).add(u);
+		}
+		return minTime(0,adjacent,hasApple,0);
+	}
+	int minTime(int idx, List<List<Integer>> adjacent, List<Boolean> hasApple, int parent) {
+		int time = 0;
+		for (int neighbour: adjacent.get(idx)) {	
+			if (neighbour == parent) {
+				continue;
+			}
+			time += minTime(neighbour,adjacent,hasApple,idx);
+		}
+		if (idx != 0 && (hasApple.get(idx) || time > 0)) {
+			time += 2;
+		}
+		return time;
+	}
+}

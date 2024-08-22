@@ -1,0 +1,29 @@
+class Solution {
+	boolean possible(int a, int b, int c) {
+		if (a == b && b == c) {
+			return true;
+		}
+		return b == a + 1 && c == b + 1;
+	}
+	boolean possible(int a, int b) {
+		return a == b;
+	}
+	boolean solve(int[] nums, int k, boolean dp) {
+		if (k == -1 || dp[k]) {
+			return true;
+		}
+		if (k - 2 >= 0) {
+			dp[k] = (possible(nums[k - 1],nums[k]) && solve(nums,k - 2,dp)) || (possible(nums[k - 2],nums[k - 1],nums[k]) && solve(nums,k - 3,dp));
+			return dp[k];
+		}
+		if (k - 1 >= 0) {
+			dp[k] = possible(nums[k - 1],nums[k]) && solve(nums,k - 2,dp);
+			return dp[k];
+		}
+		return false;
+	}
+	boolean validPartition(int[] nums) {
+		boolean dp = new boolean[nums.length];
+		return solve(nums,nums.length - 1,dp);
+	}
+}

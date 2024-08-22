@@ -1,0 +1,52 @@
+class Solution {
+	List<Integer> getPath(TreeNode root, int target) {
+		Stack<TreeNode> stack = new Stack<>();
+		TreeNode pre = null;
+		while (!stack.isEmpty() || root != null) {
+			boolean flag = false;
+			while (root != null) {
+				stack.push(root);
+				if (root.val == target) {
+					flag = true;
+					break;
+				}
+				root = root.left;
+			}
+			if (flag) {
+				break;
+			}
+			TreeNode temp = stack.pop();
+			if (temp.right == null || temp.right == pre) {
+				pre = temp;
+			} 
+			else {
+				stack.push(temp);
+				root = temp.right;
+			}
+		}
+		Stack<TreeNode> reverse = new Stack<>();
+		while (!stack.isEmpty()) {
+			reverse.push(stack.pop());
+		}
+		List<Integer> path = new ArrayList<>();
+		while (!reverse.isEmpty()) {
+			path.add(reverse.pop().val);
+		}
+		return path;
+	}
+	int lowestCommonAncestor(TreeNode root, int o1, int o2) {
+		List<Integer> path1 = getPath(root,o1);
+		List<Integer> path2 = getPath(root,o2);
+		int num = 0;
+		for (int i = 0; i < path1.size() && i < path2.size(); i++) {
+			int num1 = path1.get(i), num2 = path2.get(i);
+			if (num1 != num2) {
+				break;
+			} 
+			else {
+				num = num1;
+			}
+		}
+		return num;
+	}
+}

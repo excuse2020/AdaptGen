@@ -1,0 +1,38 @@
+class Solution {
+	int count;
+	boolean check(int[] cache) {
+		boolean odd = false;
+		for (int i: cache) {	
+			if (i % 2 == 1) {
+				if (odd) {
+					return false;
+				}
+				odd = true;
+			}
+		}
+		return true;
+	}
+	void find(TreeNode root, int[] cache) {
+		if (root == null) {
+			return;
+		}
+		int x = root.val;
+		cache[x]++;
+		if (root.left == null && root.right == null) {
+			if (check(cache)) {
+				count++;
+			}
+		} 
+		else {
+			find(root.left,cache);
+			find(root.right,cache);
+		}
+		cache[x]--;
+	}
+	int pseudoPalindromicPaths(TreeNode root) {
+		count = 0;
+		int[] cache = new int[10];
+		find(root,cache);
+		return count;
+	}
+}

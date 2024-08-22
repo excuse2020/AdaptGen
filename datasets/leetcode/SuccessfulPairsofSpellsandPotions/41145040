@@ -1,0 +1,31 @@
+class Solution {
+	int findPairs(int num, int[] potions, long success) {
+		int n = potions.length;
+		int left = 0, right = n - 1;
+		if ((long) potions[left] * num >= success) {
+			return n;
+		}
+		if ((long) potions[right] * num < success) {
+			return 0;
+		}
+		while (left <= right) {
+			int mid = left + (right - left) / 2;
+			if ((long) potions[mid] * num >= success) {
+				right = mid - 1;
+			} 
+			else {
+				left = mid + 1;
+			}
+		}
+		return n - left;
+	}
+	int[] successfulPairs(int[] spells, int[] potions, long success) {
+		Arrays.sort(potions);
+		int n = spells.length;
+		int[] result = new int[n];
+		for (int num = 0; num < n; num++) {
+			result[num] = findPairs(spells[num],potions,success);
+		}
+		return result;
+	}
+}

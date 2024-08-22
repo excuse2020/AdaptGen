@@ -1,0 +1,46 @@
+class Solution {
+	int[] findingUsersActiveMinutes(int[][] logs, int k) {
+		int[] id = new int[logs.length];
+		for (int i = 0; i < logs.length; i++) {
+			id[i] = logs[i][0];
+		}
+		id = set(id);
+		int[] ans = new int[k];
+		for (int j = 0; j < id.length; j++) {
+			int timespend = timespendbyid(logs,id[j]);
+			ans[timespend - 1]++;
+		}
+		return ans;
+	}
+	int[] set(int[] arr) {
+		Arrays.sort(arr);
+		ArrayList<Integer> ans = new ArrayList<Integer>();
+		int pre = arr[0];
+		ans.add(pre);
+		for (int i = 0; i < arr.length; i++) {
+			if (arr[i] != pre) {
+				ans.add(arr[i]);
+				pre = arr[i];
+			}
+		}
+		int[] ne = new int[ans.size()];
+		for (int k = 0; k < ans.size(); k++) {
+			ne[k] = ans.get(k);
+		}
+		return ne;
+	}
+	int timespendbyid(int[][] logs, int id) {
+		ArrayList<Integer> tame = new ArrayList<Integer>();
+		for (int i = 0; i < logs.length; i++) {
+			if (logs[i][0] == id) {
+				tame.add(logs[i][1]);
+			}
+		}
+		int[] tm = new int[tame.size()];
+		for (int j = 0; j < tm.length; j++) {
+			tm[j] = tame.get(j);
+		}
+		tm = set(tm);
+		return tm.length;
+	}
+}

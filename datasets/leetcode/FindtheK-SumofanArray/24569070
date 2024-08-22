@@ -1,0 +1,28 @@
+class Solution {
+	long kSum(int[] nums, int k) {
+		long sum = 0;
+		for (int i = 0; i < nums.length; i++) {
+			if (nums[i] > 0) {
+				sum += nums[i];
+			} 
+			else {
+				nums[i] = -nums[i];
+			}
+		}
+		PriorityQueue<long[]> pq = new PriorityQueue(new Comparator<long[]>());
+		Arrays.sort(nums);
+		pq.add(new long{sum - nums[0], 0});
+		long res = sum;
+		k--;
+		while (k > 0) {
+			long[] cur = pq.poll();
+			res = cur[0];
+			if (cur[1] < (long) nums.length - 1) {
+				pq.add(new long{cur[0] + nums[(int)cur[1]] - nums[(int)cur[1] + 1], cur[1] + 1});
+				pq.add(new long{cur[0] - nums[(int)cur[1] + 1], cur[1] + 1});
+			}
+			k--;
+		}
+		return res;
+	}
+}

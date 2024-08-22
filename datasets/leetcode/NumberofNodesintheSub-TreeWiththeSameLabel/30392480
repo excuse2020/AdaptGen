@@ -1,0 +1,27 @@
+class Solution {
+	int[] countSubTrees(int n, int[][] edges, String labels) {
+		List<Integer>[] adjList = new List[n];
+		for (int i = 0; i < n; i++) {
+			adjList[i] = new ArrayList<>();
+		}
+		for (int[] edge: edges) {	
+			adjList[edge[0]].add(edge[1]);
+			adjList[edge[1]].add(edge[0]);
+		}
+		int[] ans = new int[n];
+		dfs(0,0,adjList,labels.toCharArray(),ans);
+		return ans;
+	}
+	int[] dfs(int node, int parent, List<Integer>[] adjList, char[] labels, int[] ans) {
+		int[] freqs = new int[26];
+		for (int neigh: adjList[node]) {	
+			if (neigh == parent) {
+				continue;
+			}
+			int[] ofSon = dfs(neigh,node,adjList,labels,ans);
+			for (int i = 0; i < 26; i++) {
+				freqs[i] += ofSon[i];
+			}
+		}
+	}
+}

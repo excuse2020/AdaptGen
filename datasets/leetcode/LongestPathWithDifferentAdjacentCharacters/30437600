@@ -1,0 +1,37 @@
+class Solution {
+	int max = 1;
+	int dfs(Map<Integer, Set<Integer>> map, int node, String s) {
+		int len = 1;
+		if (!map.containsKey(node)) {
+			return len;
+		}
+		int x = 0, longest = 0, seclongest = 0, temp = 0;
+		for (int child: map.get(node)) {	
+			temp = 0;
+			if (s.charAt(node) == s.charAt(child)) {
+				dfs(map,child,s);
+			} 
+			else {
+				temp = dfs(map,child,s);
+			}
+			if (temp > longest) {
+				seclongest = longest;
+				longest = temp;
+			} 
+			else if (temp > seclongest) {
+				seclongest = temp;
+			}
+		}
+		len += longest;
+		max = Math.max(len + seclongest,max);
+		return len;
+	}
+	int longestPath(int[] parent, String s) {
+		Map<Integer, Set<Integer>> map = new HashMap<>();
+		for (int i = 1; i < parent.length; i++) {
+			map.computeIfAbsent(parent[i],(set) -> {new HashSet<>()}).add(i);
+		}
+		dfs(map,0,s);
+		return max;
+	}
+}

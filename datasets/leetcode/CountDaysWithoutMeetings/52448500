@@ -1,0 +1,30 @@
+class Solution {
+	int countDays(int days, int[][] meetings) {
+		if (meetings == null || meetings.length < 0) {
+			return 0;
+		}
+		int[][] mergedMeetings = mergeMeetings(meetings);
+		int daysWithoutMeetings = 0;
+		for (int i = 1; i < mergedMeetings.length; i++) {
+			daysWithoutMeetings += mergedMeetings[i][0] - mergedMeetings[i - 1][1];
+		}
+		daysWithoutMeetings += days - mergedMeetings[mergedMeetings.length - 1][1];
+		daysWithoutMeetings += mergedMeetings[0][0] - 1;
+		return daysWithoutMeetings;
+	}
+	int[][] mergeMeetings(int[][] meetings) {
+		Arrays.sort(meetings,new Comparator<int[]>());
+		List<int[]> result = new LinkedList<>();
+		for (int[] meeting: meetings) {	
+			int start = meeting[0];
+			int end = meeting[1];
+			if (!result.isEmpty() && result.getLast()[1] >= start) {
+				result.getLast()[1] = Math.max(result.getLast()[1],end);
+			} 
+			else {
+				result.add(meeting);
+			}
+		}
+		return result.toArray(new int[0][0]);
+	}
+}

@@ -1,0 +1,41 @@
+class Solution {
+	int k;
+	Map<String, Integer> map;
+	List<Integer> res;
+	int substringLen;
+	int wordLen;
+	List<Integer> findSubstring(String s, String[] words) {
+		this.k = words.length;
+		this.substringLen = words.length * words[0].length();
+		this.res = new ArrayList<>();
+		this.wordLen = words[0].length();
+		this.map = new HashMap<>();
+		if (substringLen > s.length()) {
+			return res;
+		}
+		for (String w: words) {	
+			map.put(w,map.getOrDefault(w,0) + 1);
+		}
+		for (int i = 0; i <= s.length() - substringLen; i++) {
+			if (helper(s,i)) {
+				res.add(i);
+			}
+		}
+		return res;
+	}
+	boolean helper(String s, int start) {
+		Map<String, Integer> remainer = new HashMap<>(map);
+		int num = 0;
+		for (int i = start; i < start + substringLen; i += wordLen) {
+			String curWord = s.substring(i,i + wordLen);
+			if (remainer.getOrDefault(curWord,0) != 0) {
+				remainer.put(curWord,remainer.get(curWord) - 1);
+				num++;
+			} 
+			else {
+				break;
+			}
+		}
+		return k == num;
+	}
+}

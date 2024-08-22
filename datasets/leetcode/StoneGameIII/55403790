@@ -1,0 +1,29 @@
+class Solution {
+	Integer[] dp;
+	int[] stoneValue;
+	int helper(int i) {
+		if (i >= stoneValue.length) {
+			return 0;
+		}
+		if (dp[i] != null) {
+			return dp[i];
+		}
+		int stone1 = Integer.MIN_VALUE, stone2 = Integer.MIN_VALUE, stone3 = Integer.MIN_VALUE;
+		if (i + 1 <= stoneValue.length) {
+			stone1 = stoneValue[i] - helper(i + 1);
+		}
+		if (i + 2 <= stoneValue.length) {
+			stone2 = stoneValue[i] + stoneValue[i + 1] - helper(i + 2);
+		}
+		if (i + 3 <= stoneValue.length) {
+			stone3 = stoneValue[i] + stoneValue[i + 1] - helper(i + 3);
+		}
+		return dp[i] = Math.max(stone1,Math.max(stone2,stone3));
+	}
+	String stoneGameIII(int[] stoneValue) {
+		this.stoneValue = stoneValue;
+		dp = new Integer[stoneValue.length + 1];
+		int diff = helper(0);
+		return diff == 0 ? "Tie" : (diff > 0 ? "Alice" : "Bob");
+	}
+}

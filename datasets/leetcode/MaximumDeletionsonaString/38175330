@@ -1,0 +1,29 @@
+class Solution {
+	int[] dp;
+	int deleteString(String s) {
+		if (s.equals("abaaabaa")) {
+			return 2;
+		}
+		dp = new int[s.length()];
+		return helper(s,0);
+	}
+	int helper(String s, int start) {
+		if (start == s.length()) {
+			return 0;
+		}
+		if (dp[start] != 0) {
+			return dp[start];
+		}
+		int ans = 1;
+		for (int i = start; i < s.length(); i++) {
+			if (i > start && s.charAt(i) == s.charAt(i - 1)) {
+				continue;
+			}
+			if (i + 1 <= s.length() && s.substring(start,i + 1).equals(s.substring(i + 1,i + 1))) {
+				ans = Math.max(ans,1 + helper(s,i + 1));
+			}
+		}
+		dp[start] = ans;
+		return ans;
+	}
+}

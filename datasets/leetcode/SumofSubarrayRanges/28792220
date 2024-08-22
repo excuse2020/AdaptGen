@@ -1,0 +1,26 @@
+class Solution {
+	long subArrayRanges(int[] nums) {
+		int size = nums.length;
+		Stack<Integer> stack = new Stack<>();
+		long minimalSum = 0;
+		long maxSum = 0;
+		for (int index = 0; index <= size; index++) {
+			while (!stack.isEmpty() && (index == size || nums[stack.peek()] >= nums[index])) {
+				int elementIndex = stack.pop();
+				int leftIndex = stack.isEmpty() ? -1 : stack.peek();
+				minimalSum += (long) nums[elementIndex] * (elementIndex - leftIndex);
+			}
+			stack.add(index);
+		}
+		stack.clear();
+		for (int index = 0; index <= size; index++) {
+			while (!stack.isEmpty() && (index == size || nums[stack.peek()] <= nums[index])) {
+				int elementIndex = stack.pop();
+				int leftIndex = stack.isEmpty() ? -1 : stack.peek();
+				maxSum += (long) nums[elementIndex] * (elementIndex - leftIndex);
+			}
+			stack.add(index);
+		}
+		return maxSum - minimalSum;
+	}
+}

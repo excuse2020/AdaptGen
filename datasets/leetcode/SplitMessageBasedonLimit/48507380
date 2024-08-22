@@ -1,0 +1,36 @@
+class Solution {
+	String[] construct(String message, int base, int limit) {
+		String[] ret = new String[base];
+		int delimit_start = 4 + (int) Math.ceil(Math.log10(base + 1));
+		int ret_index = 0, i = 0, count = 0;
+		while (i < message.length()) {
+			for (int p = 1; p <= 9 * Math.pow(10,count) && i < message.length(); p++) {
+				int offset = Math.min(message.length(),i + (limit - delimit_start));
+				ret[ret_index++] = message.substring(i,offset) + "<";
+				i += (limit - delimit_start);
+			}
+			count++;
+			delimit_start++;
+		}
+		return ret;
+	}
+	boolean possible(int len, int base, int limit) {
+		int delimit_start = 4 + (int) Math.ceil(Math.log10(base + 1));
+		int count = 0;
+		while (len > 0 && base > 0) {
+			len -= (Math.min(base,(9 * Math.pow(10,count))) * (limit - delimit_start));
+			delimit_start++;
+			base -= (9 * Math.pow(10,count));
+			count++;
+		}
+		return len <= 0;
+	}
+	String[] splitMessage(String message, int limit) {
+		for (int i = 1; i <= message.length(); i++) {
+			if (possible(message.length(),i,limit)) {
+				return construct(message,i,limit);
+			}
+		}
+		return new String[0];
+	}
+}

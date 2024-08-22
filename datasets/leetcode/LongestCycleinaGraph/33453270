@@ -1,0 +1,51 @@
+class Solution {
+	int dfs(int node, boolean[] vis, List<List<Integer>> rev) {
+		vis[node] = true;
+		int count = 1;
+		for (int child: rev.get(node)) {	
+			if (!vis[child]) {
+				count += dfs(child,vis,rev);
+			}
+		}
+		return count;
+	}
+	int longestCycle(int[] edges) {
+		int n = edges.length;
+		Stack<Integer> s = new Stack<>();
+		boolean[] vis = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			if (!vis[i]) {
+				topo(i,s,vis,edges);
+			}
+		}
+		List<List<Integer>> rev = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			rev.add(new ArrayList<Integer>());
+		}
+		for (int i = 0; i < n; i++) {
+			vis[i] = false;
+			if (edges[i] != -1) {
+				rev.get(edges[i]).add(i);
+			}
+		}
+		int size = 0;
+		while (!s.isEmpty()) {
+			int node = s.pop();
+			if (!vis[node]) {
+				size = Math.max(size,dfs(node,vis,rev));
+			}
+		}
+		if (size <= 1) {
+			return -1;
+		}
+		return size;
+	}
+	void topo(int node, Stack<Integer> s, boolean[] vis, int[] edges) {
+		vis[node] = true;
+		int child = edges[node];
+		if (child != -1 && !vis[child]) {
+			topo(child,s,vis,edges);
+		}
+		s.push(node);
+	}
+}

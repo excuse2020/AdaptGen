@@ -1,0 +1,90 @@
+class Solution {
+	void mergeSort(Integer[] arr, int left, int right) {
+		int diff = right - left;
+		if (diff <= 0) {
+			return;
+		}
+		if (diff == 1) {
+			if (arr[left] > arr[right]) {
+				Integer temp = arr[left];
+				arr[left] = arr[right];
+				arr[right] = temp;
+			}
+			return;
+		}
+		int middle = left + (right - left) / 2;
+		mergeSort(arr,left,middle);
+		mergeSort(arr,middle + 1,right);
+		List<Integer> list = new ArrayList<>(right - left + 1);
+		Integer loopLeft = left;
+		Integer loopRight = middle + 1;
+		while (loopLeft <= middle) {
+			int leftValue = arr[loopLeft];
+			while (loopRight <= right) {
+				if (arr[loopRight] <= leftValue) {
+					list.add(arr[loopRight]);
+					loopRight++;
+				} 
+				else {
+					break;
+				}
+			}
+			list.add(leftValue);
+			loopLeft++;
+		}
+		int index = 0;
+		for (Integer temp: list) {	
+			arr[left + index] = temp;
+			index++;
+		}
+	}
+	void quickSort(Integer[] arr, int left, int right) {
+		int keepLeft = left;
+		int keepRight = right;
+		if (left >= right) {
+			return;
+		}
+		Integer base = arr[left];
+		Integer slot = left;
+		while (left < right) {
+			while (left < right) {
+				if (arr[right] < base) {
+					arr[slot] = arr[right];
+					slot = right;
+					break;
+				}
+				right--;
+			}
+			while (left < right) {
+				if (arr[left] > base) {
+					arr[slot] = arr[left];
+					slot = left;
+					break;
+				}
+				left++;
+			}
+		}
+		arr[slot] = base;
+		quickSort(arr,keepLeft,slot - 1);
+		quickSort(arr,slot + 1,keepRight);
+	}
+	ListNode sortInList(ListNode head) {
+		if (head == null) {
+			return null;
+		}
+		List<Integer> list = new ArrayList<>();
+		ListNode loop = head;
+		while (loop != null) {
+			list.add(loop.val);
+			loop = loop.next;
+		}
+		ListNode loop2 = head;
+		Integer[] arr = list.toArray(new Integer[0]);
+		mergeSort(arr,0,arr.length - 1);
+		for (int i = 0; i < arr.length; i++) {
+			loop2.val = arr[i];
+			loop2 = loop2.next;
+		}
+		return head;
+	}
+}

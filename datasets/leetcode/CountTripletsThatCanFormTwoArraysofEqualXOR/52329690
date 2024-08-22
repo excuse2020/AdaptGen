@@ -1,0 +1,31 @@
+class Solution {
+	int countTriplets(int[] arr) {
+		int count = 0;
+		int leftSideXor = new int[arr.length];
+		int rightSideXor = new int[arr.length];
+		leftSideXor[0] = arr[0];
+		int totalXor = arr[0];
+		for (int i = 1; i < arr.length; i++) {
+			leftSideXor[i] = arr[i] ^ leftSideXor[i - 1];
+			totalXor = totalXor ^ arr[i];
+		}
+		rightSideXor[arr.length - 1] = arr[arr.length - 1];
+		for (int i = arr.length - 2; i >= 0; i--) {
+			rightSideXor[i] = arr[i] ^ rightSideXor[i + 1];
+		}
+		for (int i = 0; i < arr.length; i++) {
+			int leftRemoval = i > 0 ? leftSideXor[i - 1] ^ totalXor : totalXor;
+			for (int k = i + 1; k < arr.length; k++) {
+				int rightRemoval = k < arr.length - 1 ? totalXor ^ rightSideXor[k + 1] : totalXor;
+				for (int j = i + 1; j <= k; j++) {
+					int leftSubXor = leftRemoval ^ rightSideXor[j];
+					int rightSubXor = rightRemoval ^ leftSideXor[j - 1];
+					if (leftSubXor == rightSubXor) {
+						count++;
+					}
+				}
+			}
+		}
+		return count;
+	}
+}

@@ -1,0 +1,71 @@
+class Solution {
+	boolean check(int[] stones, int maxJump) {
+		int n = stones.length;
+		HashSet<Integer> visited = new HashSet<>();
+		for (int i = 0; i < n; i++) {
+			if (i == n - 1) {
+				break;
+			} 
+			else if (i + 1 == n - 1) {
+				if (stones[i + 1] - stones[i] <= maxJump) {
+					if (i != 0) {
+						visited.add(i);
+					}
+					break;
+				} 
+				else {
+					return false;
+				}
+			} 
+			else if (stones[i + 2] - stones[i] <= maxJump) {
+				if (i != 0) {
+					visited.add(i);
+				}
+				i++;
+			} 
+			else {
+				return false;
+			}
+		}
+		for (int i = n - 1; i >= 0; i--) {
+			if (i == 0) {
+				break;
+			}
+			if (i - 1 == 0) {
+				if (stones[i] - stones[i - 1] <= maxJump) {
+					break;
+				} 
+				else {
+					return false;
+				}
+			} 
+			else if (visited.contains(i - 1)) {
+				if (stones[i] - stones[i - 2] <= maxJump) {
+					i--;
+				} 
+				else {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	int maxJump(int[] stones) {
+		int n = stones.length;
+		int left = 1;
+		int right = stones[n - 1] - stones[0];
+		int minJump = right;
+		while (left <= right) {
+			int mid = (left + right) / 2;
+			boolean possible = check(stones,mid);
+			if (possible) {
+				minJump = mid;
+				right = mid - 1;
+			} 
+			else {
+				left = mid + 1;
+			}
+		}
+		return minJump;
+	}
+}

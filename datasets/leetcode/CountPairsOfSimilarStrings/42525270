@@ -1,0 +1,38 @@
+class Solution {
+	boolean containsSameCharacters(String a, String b) {
+		Set<Character> diffLettersA = new HashSet<>();
+		Set<Character> diffLettersB = new HashSet<>();
+		for (int i = 0; i < a.length(); ++i) {
+			diffLettersA.add(a.charAt(i));
+		}
+		for (int i = 0; i < b.length(); ++i) {
+			diffLettersB.add(b.charAt(i));
+		}
+		return diffLettersA.equals(diffLettersB);
+	}
+	int similarPairs(String[] words) {
+		Set<Integer> consumedWords = new HashSet<>();
+		int result = 0;
+		int subResult = 1;
+		for (int i = 0; i < words.length - 1; ++i) {
+			if (consumedWords.contains(i)) {
+				continue;
+			}
+			for (int j = i + 1; j < words.length; ++j) {
+				if (consumedWords.contains(j)) {
+					continue;
+				}
+				if (containsSameCharacters(words[i],words[j])) {
+					subResult++;
+					consumedWords.add(j);
+				}
+			}
+			if (subResult == 1) {
+				continue;
+			}
+			result += (subResult * (subResult - 1)) / 2;
+			subResult = 1;
+		}
+		return result;
+	}
+}

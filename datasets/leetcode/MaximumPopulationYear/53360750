@@ -1,0 +1,39 @@
+class Solution {
+	int maximumPopulation(int[][] logs) {
+		int maxyear = 0;
+		int minyear = 0;
+		for (int i = 0; i < logs.length; i++) {
+			for (int j = 0; j < logs[i].length; j++) {
+				if (logs[i][j] > maxyear) {
+					maxyear = logs[i][j];
+				}
+				if (logs[i][j] < minyear) {
+					minyear = logs[i][j];
+				}
+			}
+		}
+		int[] yeardata = new int[maxyear - minyear];
+		for (int i = 0; i < yeardata.length; i++) {
+			int count = pops(logs,i + minyear);
+			yeardata[i] = count;
+		}
+		int maxpop = 0;
+		int index = 0;
+		for (int i = 0; i < yeardata.length; i++) {
+			if (yeardata[i] > maxpop) {
+				maxpop = yeardata[i];
+				index = i;
+			}
+		}
+		return index + minyear;
+	}
+	int pops(int[][] logs, int year) {
+		int count = 0;
+		for (int i = 0; i < logs.length; i++) {
+			if (year >= logs[i][0] && year < logs[i][1]) {
+				count++;
+			}
+		}
+		return count;
+	}
+}

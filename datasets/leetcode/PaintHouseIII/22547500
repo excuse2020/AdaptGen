@@ -1,0 +1,49 @@
+class Solution {
+	int MAX_VALUE = 1000000007;
+	void init(int[][] dp, int n, int fill) {
+		for (int j = 0; j < n; ++j) {
+			Arrays.fill(dp[j],fill);
+		}
+	}
+	int minCost(int[] houses, int[][] cost, int m, int n, int target) {
+		int[][] dp = new int[n][target];
+		int[][] placeholder = new int[n][target];
+		init(dp,n,MAX_VALUE);
+		if (houses[0] == 0) {
+			for (int j = 0; j < n; ++j) {
+				dp[j][0] = cost[0][j];
+			}
+		} 
+		else {
+			dp[houses[0] - 1][0] = 0;
+		}
+		for (int i = 1; i < m; ++i) {
+			init(placeholder,n,MAX_VALUE);
+			if (houses[i] != 0) {
+				int j = houses[i] - 1;
+				placeholder[j][0] = dp[j][0];
+				for (int k = 1; k < target; ++k) {
+					for (int l = 0; l < n; ++l) {
+						placeholder[j][k] = Math.min(placeholder[j][k],dp[l][(j == l) ? k : k - 1]);
+					}
+				}
+			} 
+			else {
+				for (int j = 0; j < n; ++j) {
+					placeholder[j][0] = cost[i][j] + dp[j][0];
+					for (int k = 1; k < target; ++k) {
+						for (int l = 0; l < n; ++l) {
+							placeholder[j][k] = Math.min(placeholder[j][k],cost[i][j] + dp[l][(j == l) ? k : k - 1]);
+						}
+					}
+				}
+			}
+			dp = Arrays.stream(placeholder).map().toArray();
+		}
+		int ans = MAX_VALUE;
+		for (int j = 0; j < n; ++j) {
+			ans = Math.min(ans,dp[j][target - 1]);
+		}
+		return (ans >= MAX_VALUE) ? -1 : ans;
+	}
+}

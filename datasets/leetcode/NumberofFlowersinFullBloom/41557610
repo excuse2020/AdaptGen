@@ -1,0 +1,31 @@
+class Solution {
+	int find(int search, int[][] arr, int ind) {
+		int l = 0, r = arr.length - 1, m, f = -1;
+		while (l <= r) {
+			m = (l + r) / 2;
+			if (search >= arr[m][ind]) {
+				f = m;
+				l = m + 1;
+			} 
+			else {
+				r = m - 1;
+			}
+		}
+		return f;
+	}
+	int[] fullBloomFlowers(int[][] flowers, int[] people) {
+		int n = flowers.length, st_flowers = flowers, end_flowers = new int[n];
+		for (int i = 0; i < n; end_flowers[i] = flowers[i], i++) {
+		}
+		Arrays.sort(st_flowers,(a, b) -> {a[0] - b[0]});
+		Arrays.sort(end_flowers,(a, b) -> {a[1] - b[1]});
+		for (int i = 0; i < people.length; i++) {
+			int v = find(people[i],end_flowers,1);
+			if (v != -1 && end_flowers[v][1] == people[i]) {
+				v = find(people[i] - 1,end_flowers,1);
+			}
+			people[i] = find(people[i],st_flowers,0) - v;
+		}
+		return people;
+	}
+}

@@ -1,0 +1,56 @@
+class Solution {
+	int LONGEST_WORD_LEN = 16;
+	int findPath(int len, int wordIdx, short[][] wcs, byte[][] memo, String[] words) {
+		if (len == 1) {
+			return 1;
+		}
+		if (memo[len][wordIdx] > 0) {
+			return memo[len][wordIdx];
+		}
+		String curWord = words[wcs[len][wordIdx]];
+		int longest = 0;
+		for (int predIdx = wcs[len - 1][0]; predIdx >= 1 && longest + 1 < len; predIdx--) {
+			if (isPredecessor(curWord,words[wcs[len - 1][predIdx]])) {
+				longest = Math.max(longest,findPath(len - 1,predIdx,wcs,memo,words));
+			}
+		}
+		memo[len][wordIdx] = (byte) (longest + 1);
+		return longest + 1;
+	}
+	boolean isPredecessor(String curWord, String predWord) {
+		int diffCount = -1;
+		int predIdx = predWord.length() - 1;
+		for (int curIdx = curWord.length() - 1; curIdx >= 1; curIdx--) {
+			if (curWord.charAt(curIdx) != predWord.charAt(predIdx--)) {
+				if (diffCount++ == 0) {
+					return false;
+				}
+				predIdx++;
+			}
+		}
+		return (predIdx == -1) || (curWord.charAt(0) == predWord.charAt(0));
+	}
+	int longestStrChain(String[] words) {
+		int longestCount = 0;
+		int[] lenCounts = new int[LONGEST_WORD_LEN + 1];
+		for (int i = words.length - 1; i >= 0; i--) {
+			longestCount = Math.max(longestCount,++lenCounts[words[i].length()]);
+		}
+		int maxWordLen = 0;
+		for (maxWordLen = LONGEST_WORD_LEN; maxWordLen >= 0 && lenCounts[maxWordLen] == 0; maxWordLen--) {
+		}
+		short[][] wcs = new short[maxWordLen + 1][longestCount + 1];
+		for (int i = words.length - 1; i >= 0; i--) {
+			int len = words[i].length();
+			wcs[len][++wcs[len][0]] = (short) i;
+		}
+		byte[][] memo = new byte[maxWordLen + 1][longestCount + 1];
+		int longestFound = 1;
+		for (int len = maxWordLen; len > 1 && len > longestFound; len--) {
+			for (int wordIdx = wcs[len][0]; wordIdx >= 1 && len > longestFound; wordIdx--) {
+				longestFound = Math.max(longestFound,findPath(len,wordIdx,wcs,memo,words));
+			}
+		}
+		return longestFound;
+	}
+}

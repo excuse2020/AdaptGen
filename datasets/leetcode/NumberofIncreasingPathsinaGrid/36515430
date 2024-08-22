@@ -1,0 +1,41 @@
+class Solution {
+	int[][][] dp;
+	int[][] v;
+	int countPaths(int[][] grid) {
+		dp = new int[grid.length][grid[0].length][4];
+		v = new int[grid.length][grid[0].length];
+		int c = 0;
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				c = ((c % 1000000007) + (dfs(i,j,grid)) % 1000000007) % 1000000007;
+			}
+		}
+		return c;
+	}
+	int dfs(int i, int j, int[][] g) {
+		if (i < 0 || j < 0 || i == g.length || j == g[0].length) {
+			return 0;
+		}
+		if (v[i][j] == 1) {
+			return (dp[i][j][0] + dp[i][j][1]) % 1000000007;
+		}
+		v[i][j] = 1;
+		if (i < g.length - 1 && g[i + 1][j] > g[i][j]) {
+			int a = dfs(i + 1,j,g);
+			dp[i][j][0] = a;
+		}
+		if (j < g[0].length - 1 && g[i][j + 1] > g[i][j]) {
+			int a = dfs(i,j + 1,g);
+			dp[i][j][1] = a;
+		}
+		if (i > 0 && g[i - 1][j] > g[i][j]) {
+			int a = dfs(i - 1,j,g);
+			dp[i][j][2] = a;
+		}
+		if (j > 0 && g[i][j - 1] > g[i][j]) {
+			int a = dfs(i,j - 1,g);
+			dp[i][j][3] = a;
+		}
+		return (dp[i][j][0] + dp[i][j][1]) % 1000000007;
+	}
+}

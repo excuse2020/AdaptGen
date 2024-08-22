@@ -1,0 +1,50 @@
+class Solution {
+	int calcJumps(int[] obstacles, int targetIndex, int targetLane, int curLane, int[][] dp) {
+		if (obstacles[targetIndex - 1] == curLane + 1) {
+			return Integer.MAX_VALUE;
+		}
+		if (targetLane == curLane) {
+			return dp[targetIndex - 1][curLane];
+		}
+		if (obstacles[targetIndex - 1] != targetLane + 1) {
+			return dp[targetIndex - 1][curLane] + 1;
+		}
+		if (obstacles[targetIndex] != curLane + 1) {
+			return dp[targetIndex - 1][curLane] + 1;
+		}
+		return dp[targetIndex - 1][curLane] + 2;
+	}
+	int minOfThree(int a, int b, int c) {
+		return Math.min(a,Math.min(b,c));
+	}
+	int minSideJumps(int[] obstacles) {
+		int[][] dp = new int[obstacles.length][3];
+		dp[0][0] = 1;
+		dp[0][1] = 0;
+		dp[0][2] = 1;
+		for (int i = 1; i < obstacles.length; i++) {
+			if (obstacles[i] != 0) {
+				dp[i][obstacles[i] - 1] = Integer.MAX_VALUE;
+			}
+			if (dp[i][0] != Integer.MAX_VALUE) {
+				int jump1 = calcJumps(obstacles,i,0,0,dp);
+				int jump2 = calcJumps(obstacles,i,0,1,dp);
+				int jump3 = calcJumps(obstacles,i,0,2,dp);
+				dp[i][0] = minOfThree(jump1,jump2,jump3);
+			}
+			if (dp[i][1] != Integer.MAX_VALUE) {
+				int jump1 = calcJumps(obstacles,i,1,0,dp);
+				int jump2 = calcJumps(obstacles,i,1,1,dp);
+				int jump3 = calcJumps(obstacles,i,1,2,dp);
+				dp[i][1] = minOfThree(jump1,jump2,jump3);
+			}
+			if (dp[i][2] != Integer.MAX_VALUE) {
+				int jump1 = calcJumps(obstacles,i,2,0,dp);
+				int jump2 = calcJumps(obstacles,i,2,1,dp);
+				int jump3 = calcJumps(obstacles,i,2,2,dp);
+				dp[i][2] = minOfThree(jump1,jump2,jump3);
+			}
+		}
+		return minOfThree(dp[obstacles.length - 1][0],dp[obstacles.length - 1][1],dp[obstacles.length - 1][2]);
+	}
+}

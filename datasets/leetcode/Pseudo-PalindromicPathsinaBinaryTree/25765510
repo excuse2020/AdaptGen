@@ -1,0 +1,36 @@
+class Solution {
+	boolean isPalinDromePath(int[] arr) {
+		boolean firstOdd = true;
+		int len = arr.length;
+		for (int i = 0; i < len; i++) {
+			if (arr[i] % 2 == 1) {
+				if (!firstOdd) {
+					return false;
+				}
+				firstOdd = false;
+			}
+		}
+		return true;
+	}
+	int parsePalinTree(TreeNode root, int[] arr) {
+		int count = 0;
+		arr[root.val]++;
+		if (root.left == null && root.right == null) {
+			boolean isValidPath = isPalinDromePath(arr);
+			if (isValidPath) {
+				count = 1;
+			}
+		}
+		if (root.left != null) {
+			count += parsePalinTree(root.left,arr);
+		}
+		if (root.right != null) {
+			count += parsePalinTree(root.right,arr);
+		}
+		arr[root.val]--;
+		return count;
+	}
+	int pseudoPalindromicPaths(TreeNode root) {
+		return parsePalinTree(root,new int[10]);
+	}
+}

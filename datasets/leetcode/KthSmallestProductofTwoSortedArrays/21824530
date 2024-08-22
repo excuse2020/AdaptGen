@@ -1,0 +1,47 @@
+class Solution {
+	long countNoOfElements(int[] nums1, int[] nums2, long dotProduct) {
+		long count = 0;
+		for (int element: nums1) {	
+			if (element >= 0) {
+				int low = 0, high = nums2.length;
+				while (low < high) {
+					int mid = (low + high) / 2;
+					if ((long) element * nums2[mid] < dotProduct) {
+						low = mid + 1;
+					} 
+					else {
+						high = mid;
+					}
+				}
+				count += low;
+			} 
+			else {
+				int low = 0, high = nums2.length;
+				while (low < high) {
+					int mid = (low + high) / 2;
+					if ((long) element * nums2[mid] >= dotProduct) {
+						low = mid + 1;
+					} 
+					else {
+						high = mid;
+					}
+				}
+				count += nums2.length - low;
+			}
+		}
+		return count;
+	}
+	long kthSmallestProduct(int[] nums1, int[] nums2, long k) {
+		long low = (long) -1e10, high = (long) 1e10;
+		while (low <= high) {
+			long dotProduct = (low + high) / 2;
+			if (countNoOfElements(nums1,nums2,dotProduct) < k) {
+				low = dotProduct + 1;
+			} 
+			else {
+				high = dotProduct - 1;
+			}
+		}
+		return high;
+	}
+}

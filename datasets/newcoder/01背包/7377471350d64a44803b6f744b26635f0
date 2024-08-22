@@ -1,0 +1,27 @@
+class Solution {
+	int knapsack(int V, int n, int[][] vw) {
+		boolean[] flags = new boolean[n];
+		int max = 0;
+		for (int i = 0; i < n; ++i) {
+			if (vw[i][0] <= V) {
+				flags[i] = true;
+				int temp = search(V - vw[i][0],n,vw,flags) + vw[i][1];
+				max = Math.max(temp,max);
+				flags[i] = false;
+			}
+		}
+		return max;
+	}
+	int search(int V, int n, int[][] vw, boolean[] flags) {
+		int max = 0;
+		for (int i = 0; i < n; ++i) {
+			if (!flags[i] && vw[i][0] <= V) {
+				flags[i] = true;
+				int temp = search(V - vw[i][0],n,vw,flags) + vw[i][1];
+				flags[i] = false;
+				max = Math.max(temp,max);
+			}
+		}
+		return max;
+	}
+}

@@ -1,0 +1,90 @@
+class Solution {
+	int[] deckRevealedIncreasing(int[] deck) {
+		quickSort(deck,0,deck.length - 1);
+		int[] temp = new int[deck.length];
+		boolean[] openSpots = new boolean[deck.length];
+		for (int i = 0; i < openSpots.length; i++) {
+			openSpots[i] = true;
+		}
+		int idxDeck = 0;
+		int idxSpots = 0;
+		boolean empty = false;
+		while (empty != true) {
+			if (openSpots[0] == true) {
+				openSpots[0] = false;
+				temp[0] = deck[0];
+				idxSpots++;
+				idxDeck++;
+				empty = isEmpty(openSpots);
+			} 
+			else {
+				int next = findNext(openSpots,idxSpots);
+				temp[next] = deck[idxDeck];
+				openSpots[next] = false;
+				idxDeck++;
+				idxSpots = next;
+				empty = isEmpty(openSpots);
+			}
+		}
+		return temp;
+	}
+	int findNext(boolean[] spots, int idx) {
+		int emptyCount = 0;
+		int spot = 0;
+		while (emptyCount != 2) {
+			if (spots[idx] == true) {
+				emptyCount++;
+				if (emptyCount == 2) {
+					spot = idx;
+				}
+				if (idx == spots.length - 1) {
+					idx = 0;
+				} 
+				else {
+					idx++;
+				}
+			} 
+			else {
+				if (idx == spots.length - 1) {
+					idx = 0;
+				} 
+				else {
+					idx++;
+				}
+			}
+		}
+		return spot;
+	}
+	boolean isEmpty(boolean[] slots) {
+		for (int i = 0; i < slots.length; i++) {
+			if (slots[i] == true) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int partition(int[] a, int low, int high) {
+		int pivot = a[high];
+		int i = (low - 1);
+		for (int j = low; j <= high; j++) {
+			if (a[j] < pivot) {
+				i++;
+				swap(a,i,j);
+			}
+		}
+		swap(a,i + 1,high);
+		return (i + 1);
+	}
+	void quickSort(int[] a, int low, int high) {
+		if (low < high) {
+			int pi = partition(a,low,high);
+			quickSort(a,low,pi - 1);
+			quickSort(a,pi + 1,high);
+		}
+	}
+	void swap(int[] a, int i, int j) {
+		int temp = a[i];
+		a[i] = a[j];
+		a[j] = temp;
+	}
+}

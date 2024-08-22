@@ -1,0 +1,62 @@
+class Solution {
+	boolean goodToConnect(int l, int r, List<Set<Integer>> graph) {
+		return !graph.get(l).contains(r);
+	}
+	boolean goodToConnectThree(int l, int r, int m, List<Set<Integer>> graph) {
+		return !graph.get(l).contains(m) && !graph.get(r).contains(m);
+	}
+	boolean isPossible(int n, List<List<Integer>> edges) {
+		List<Set<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i <= n; i++) {
+			graph.add(new HashSet<>());
+		}
+		for (List<Integer> edge: edges) {	
+			int node1 = edge.get(0);
+			int node2 = edge.get(1);
+			graph.get(node1).add(node2);
+			graph.get(node2).add(node1);
+		}
+		Set<Integer> oddNodes = new HashSet<>();
+		int odds = 0;
+		for (int i = 1; i <= n; i++) {
+			if (graph.get(i).size() % 2 == 1) {
+				odds++;
+				oddNodes.add(i);
+			}
+		}
+		if (odds > 4 || odds == 1) {
+			return false;
+		}
+		if (odds == 0) {
+			return true;
+		}
+		if (odds == 2) {
+			List<Integer> list = new ArrayList<>(oddNodes);
+			int node1 = list.get(0);
+			int node2 = list.get(1);
+			if (!graph.get(node1).contains(node2)) {
+				return true;
+			}
+			Set<Integer> common = new HashSet<>();
+			common.addAll(graph.get(node1));
+			common.addAll(graph.get(node2));
+			return common.size() < n;
+		}
+		if (odds == 3) {
+			List<Integer> list = new ArrayList<>(oddNodes);
+			int node1 = list.get(0);
+			int node2 = list.get(1);
+			int node3 = list.get(2);
+			return goodToConnectThree(node1,node2,node3,graph) || goodToConnectThree(node1,node3,node2,graph);
+		}
+		if (odds == 4) {
+			List<Integer> list = new ArrayList<>(oddNodes);
+			int node1 = list.get(0);
+			int node2 = list.get(1);
+			int node3 = list.get(2);
+			int node4 = list.get(3);
+			return (goodToConnect(node1,node2,graph) && goodToConnect(node3,node4,graph)) || (goodToConnect(node1,node3,graph) && goodToConnect(node2,node4,graph));
+		}
+		return false;
+	}
+}

@@ -1,0 +1,81 @@
+class Solution {
+	List<String> fullJustify(String[] words, int maxWidth) {
+		List<String> res = new ArrayList<>();
+		if (words == null || maxWidth == 0) {
+			return res;
+		}
+		int curCharLength = 0;
+		int countWord = 0;
+		List<String> cur = new ArrayList<>();
+		for (int i = 0; i < words.length; i++) {
+			if (words[i].length() + curCharLength > maxWidth) {
+				String line = print(curCharLength,countWord,cur,maxWidth,false);
+				res.add(line);
+				curCharLength = 0;
+				countWord = 0;
+				cur = new ArrayList<String>();
+			}
+			curCharLength += words[i].length();
+			countWord += 1;
+			cur.add(words[i]);
+			if (i == words.length - 1) {
+				String line = print(curCharLength,countWord,cur,maxWidth,true);
+				res.add(line);
+			}
+		}
+		return res;
+	}
+	String print(int curCharLength, int countWord, List<String> words, int maxWidth, boolean isLastLine) {
+		String str = "";
+		if (isLastLine == true) {
+			int i = 0;
+			while (i < countWord) {
+				str += words.get(i);
+				if (i != countWord - 1) {
+					str += " ";
+				}
+				i += 1;
+			}
+			int spaceFill = maxWidth - str.length();
+			while (spaceFill > 0) {
+				spaceFill -= 1;
+				str += " ";
+			}
+			return str;
+		} 
+		else {
+			int totalSpaces = maxWidth - curCharLength;
+			if (countWord == 1) {
+				str += words.get(0);
+				while (totalSpaces > 0) {
+					str += " ";
+					totalSpaces -= 1;
+				}
+				return str;
+			} 
+			else {
+				int spaceArea = countWord - 1;
+				int[] spaceCount = new int[spaceArea];
+				int evenSpace = totalSpaces / spaceArea;
+				for (int i = 0; i < spaceArea; i++) {
+					spaceCount[i] = evenSpace;
+				}
+				int moreSpace = totalSpaces % spaceArea;
+				for (int i = 0; i < moreSpace; i++) {
+					spaceCount[i] += 1;
+				}
+				str += words.get(0);
+				int index = 0;
+				while (index < spaceArea) {
+					while (spaceCount[index] > 0) {
+						str += " ";
+						spaceCount[index] -= 1;
+					}
+					str += words.get(index + 1);
+					index += 1;
+				}
+				return str;
+			}
+		}
+	}
+}

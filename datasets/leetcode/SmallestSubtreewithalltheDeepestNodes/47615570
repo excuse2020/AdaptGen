@@ -1,0 +1,28 @@
+class Solution {
+	HashMap<TreeNode, Integer> map = new HashMap<>();
+	int getHofEachNode(TreeNode root) {
+		if (root == null) {
+			map.put(root,0);
+			return 0;
+		}
+		int level = Math.max(getHofEachNode(root.left),getHofEachNode(root.right)) + 1;
+		map.put(root,level);
+		return level;
+	}
+	TreeNode helper(TreeNode root) {
+		if (map.get(root.left) == map.get(root.right)) {
+			return root;
+		}
+		if (map.get(root.left) > map.get(root.right)) {
+			return helper(root.left);
+		}
+		if (map.get(root.left) < map.get(root.right)) {
+			return helper(root.right);
+		}
+		return null;
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		getHofEachNode(root);
+		return helper(root);
+	}
+}

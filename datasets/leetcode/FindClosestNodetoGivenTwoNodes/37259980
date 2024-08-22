@@ -1,0 +1,45 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		int[] distanceFromNode1 = new int[edges.length];
+		Arrays.fill(distanceFromNode1,-1);
+		int c = -1;
+		boolean[] seen = new boolean[edges.length];
+		int result = Integer.MAX_VALUE;
+		int resultingNode = -1;
+		while (node1 != -1) {
+			if (seen[node1]) {
+				break;
+			}
+			seen[node1] = true;
+			distanceFromNode1[node1] = ++c;
+			node1 = edges[node1];
+			if (node1 == node2) {
+				result = c + 1;
+				resultingNode = node2;
+				break;
+			}
+		}
+		c = -1;
+		Arrays.fill(seen,false);
+		while (node2 != -1) {
+			if (seen[node2]) {
+				break;
+			}
+			seen[node2] = true;
+			c++;
+			if (distanceFromNode1[node2] != -1) {
+				if (result > Math.max(distanceFromNode1[node2],c)) {
+					result = Math.max(distanceFromNode1[node2],c);
+					resultingNode = node2;
+				} 
+				else if (result == Math.max(distanceFromNode1[node2],c)) {
+					if (resultingNode > node2) {
+						resultingNode = node2;
+					}
+				}
+			}
+			node2 = edges[node2];
+		}
+		return resultingNode;
+	}
+}

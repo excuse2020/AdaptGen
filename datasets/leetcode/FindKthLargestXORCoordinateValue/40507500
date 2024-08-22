@@ -1,0 +1,36 @@
+class Solution {
+	int kthLargestValue(int[][] matrix, int k) {
+		int[][] mat = new int[matrix.length][matrix[0].length];
+		int[][] matV = new int[mat.length][mat[0].length];
+		ArrayList<Integer> list = new ArrayList<>();
+		for (int i = 0; i < mat[0].length; i++) {
+			matV[0][i] = matrix[0][i];
+		}
+		for (int i = 1; i < mat.length; i++) {
+			for (int j = 0; j < mat[0].length; j++) {
+				matV[i][j] = matrix[i][j] ^ matV[i - 1][j];
+			}
+		}
+		mat[0][0] = matrix[0][0];
+		list.add(mat[0][0]);
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix[0].length; j++) {
+				if (i == 0 && j == 0) {
+					continue;
+				}
+				if (i == 0) {
+					mat[i][j] = matrix[i][j] ^ mat[i][j - 1];
+				} 
+				else if (j == 0) {
+					mat[i][j] = matV[i][j];
+				} 
+				else {
+					mat[i][j] = mat[i][j - 1] ^ matV[i][j];
+				}
+				list.add(mat[i][j]);
+			}
+		}
+		Collections.sort(list);
+		return list.get(list.size() - k);
+	}
+}

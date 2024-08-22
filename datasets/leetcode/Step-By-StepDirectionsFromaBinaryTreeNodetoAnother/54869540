@@ -1,0 +1,44 @@
+class Solution {
+	TreeNode startNode;
+	void computeParent(TreeNode root, TreeNode prevNode, HashMap<Integer, TreeNode> parent, int startValue) {
+		if (root == null) {
+			return;
+		}
+		if (root.val == startValue) {
+			startNode = root;
+		}
+		parent.put(root.val,prevNode == null ? new TreeNode(0) : prevNode);
+		computeParent(root.left,root,parent,startValue);
+		computeParent(root.right,root,parent,startValue);
+	}
+	String getDirections(TreeNode root, int startValue, int destValue) {
+		HashMap<Integer, TreeNode> parent = new HashMap<>();
+		computeParent(root,null,parent,startValue);
+		Queue<Object[]> q = new ArrayDeque<>();
+		HashSet<Integer> hs = new HashSet<>();
+		boolean visited = new boolean[parent.size() + 1];
+		visited[startNode.val] = true;
+		q.offer(new Object{startNode, ""});
+		while (q.isEmpty() == false) {
+			Object[] poll = q.poll();
+			TreeNode tn = (TreeNode) poll[0];
+			String dir = (String) poll[1];
+			if (tn.val == destValue) {
+				return dir;
+			}
+			if (tn.left != null && !visited[tn.left.val]) {
+				q.offer(new Object{tn.left, dir + "L"});
+				visited[tn.left.val] = true;
+			}
+			if (tn.right != null && !visited[tn.right.val]) {
+				q.offer(new Object{tn.right, dir + "R"});
+				visited[tn.right.val] = true;
+			}
+			if (parent.get(tn.val) != null && !visited[parent.get(tn.val).val]) {
+				q.offer(new Object{parent.get(tn.val), dir + "U"});
+				visited[parent.get(tn.val).val] = true;
+			}
+		}
+		return "";
+	}
+}

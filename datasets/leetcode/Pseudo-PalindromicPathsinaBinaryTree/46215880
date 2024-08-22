@@ -1,0 +1,34 @@
+class Solution {
+	int count = 0;
+	boolean checkPallindromePossible(int[] freq) {
+		int noOfOddFreq = 0;
+		for (int i = 0; i < 9; i++) {
+			if (freq[i] % 2 != 0) {
+				noOfOddFreq++;
+			}
+		}
+		if (noOfOddFreq <= 1) {
+			return true;
+		}
+		return false;
+	}
+	void helper(TreeNode root, int[] freq) {
+		if (root == null) {
+			return;
+		}
+		freq[root.val - 1]++;
+		if (root.left == null && root.right == null) {
+			if (checkPallindromePossible(freq)) {
+				count++;
+			}
+		}
+		helper(root.left,freq);
+		helper(root.right,freq);
+		freq[root.val - 1]--;
+	}
+	int pseudoPalindromicPaths(TreeNode root) {
+		int[] freq = new int[9];
+		helper(root,freq);
+		return count;
+	}
+}

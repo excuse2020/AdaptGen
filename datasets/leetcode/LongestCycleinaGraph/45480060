@@ -1,0 +1,43 @@
+class Solution {
+	int longestCycle(int[] edges) {
+		int in = new int[edges.length];
+		for (int i = 0; i < edges.length; i++) {
+			if (edges[i] != -1) {
+				in[edges[i]]++;
+			}
+		}
+		Queue<Integer> queue = new LinkedList<>();
+		for (int i = 0; i < in.length; i++) {
+			if (in[i] == 0) {
+				queue.add(i);
+			}
+		}
+		int visited = new int[edges.length];
+		while (!queue.isEmpty()) {
+			int v = queue.poll();
+			visited[v] = 1;
+			int neighbour = edges[v];
+			if (neighbour != -1) {
+				in[neighbour]--;
+				if (in[neighbour] == 0) {
+					queue.add(neighbour);
+				}
+			}
+		}
+		int ans = -1;
+		for (int i = 0; i < visited.length; i++) {
+			if (visited[i] == 0) {
+				int count = 1;
+				visited[i] = 1;
+				int neighbour = edges[i];
+				while (neighbour != i) {
+					visited[neighbour] = 1;
+					neighbour = edges[neighbour];
+					count++;
+				}
+				ans = Math.max(ans,count);
+			}
+		}
+		return ans;
+	}
+}

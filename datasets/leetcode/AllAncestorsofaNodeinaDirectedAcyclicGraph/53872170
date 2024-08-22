@@ -1,0 +1,25 @@
+class Solution {
+	void dfs(int curr, int ancestor, List<List<Integer>> adjList, List<List<Integer>> ans) {
+		for (int child: adjList.get(curr)) {	
+			if (ans.get(child).isEmpty() || ans.get(child).get(ans.get(child).size() - 1) != ancestor) {
+				ans.get(child).add(ancestor);
+				dfs(child,ancestor,adjList,ans);
+			}
+		}
+	}
+	List<List<Integer>> getAncestors(int n, int[][] edges) {
+		List<List<Integer>> ans = new ArrayList<>();
+		List<List<Integer>> adjList = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			ans.add(new ArrayList<>());
+			adjList.add(new ArrayList<>());
+		}
+		for (int[] e: edges) {	
+			adjList.get(e[0]).add(e[1]);
+		}
+		for (int i = 0; i < n; i++) {
+			dfs(i,i,adjList,ans);
+		}
+		return ans;
+	}
+}

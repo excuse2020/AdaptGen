@@ -1,0 +1,25 @@
+class Solution {
+	int peopleAwareOfSecret(int n, int delay, int forget) {
+		Map<Integer, Long> delayMap = new HashMap<>();
+		Map<Integer, Long> forgetMap = new HashMap<>();
+		int curr = 1, mod = 1000000007;
+		delayMap.put(delay + 1,1l);
+		forgetMap.put(forget + 1,1l);
+		long pplKnow = 1l, pplShare = 0l;
+		while (curr <= n) {
+			if (curr <= delay) {
+				curr++;
+				continue;
+			}
+			long numOfForget = forgetMap.getOrDefault(curr,0l);
+			pplKnow -= numOfForget;
+			pplShare -= numOfForget;
+			pplShare += delayMap.getOrDefault(curr,0l);
+			delayMap.put(curr + delay,pplShare % mod);
+			forgetMap.put(curr + forget,pplShare % mod);
+			pplKnow += pplShare;
+			curr++;
+		}
+		return (int) (pplKnow % mod);
+	}
+}

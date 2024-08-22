@@ -1,0 +1,34 @@
+class Solution {
+	TreeNode increasingBST(TreeNode root) {
+		TreeNode reverseDummy = new TreeNode();
+		increasingBST(root,reverseDummy);
+		TreeNode dummyNode = new TreeNode();
+		reverseDummy = reverseDummy.right;
+		while (reverseDummy != null && reverseDummy.right != null) {
+			TreeNode nextNode = reverseDummy.right;
+			reverseDummy.right = dummyNode.right;
+			dummyNode.right = reverseDummy;
+			reverseDummy = nextNode;
+		}
+		reverseDummy.right = dummyNode.right;
+		dummyNode.right = reverseDummy;
+		return dummyNode.right;
+	}
+	void increasingBST(TreeNode root, TreeNode dummy) {
+		if (root.left == null && root.right == null) {
+			root.right = dummy.right;
+			dummy.right = root;
+			return;
+		}
+		if (root.left != null) {
+			increasingBST(root.left,dummy);
+		}
+		TreeNode rightNode = root.right;
+		root.left = null;
+		root.right = dummy.right;
+		dummy.right = root;
+		if (rightNode != null) {
+			increasingBST(rightNode,dummy);
+		}
+	}
+}

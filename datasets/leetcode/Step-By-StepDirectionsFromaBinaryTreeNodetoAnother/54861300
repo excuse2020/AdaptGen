@@ -1,0 +1,47 @@
+class Solution {
+	String res = "bola el ola";
+	int resLen = Integer.MAX_VALUE;
+	String getDirections(TreeNode root, int startValue, int destValue) {
+		HashMap<Integer, TreeNode[]> hm = new HashMap<>();
+		saveParent(root,null,hm);
+		solve(startValue,destValue,new StringBuilder(),hm,new HashSet<>());
+		return res;
+	}
+	void saveParent(TreeNode cur, TreeNode parent, HashMap<Integer, TreeNode[]> hm) {
+		if (cur == null) {
+			return;
+		}
+		TreeNode[] arr = new TreeNode[2];
+		arr[0] = cur;
+		arr[1] = parent;
+		hm.put(cur.val,arr);
+		saveParent(cur.left,cur,hm);
+		saveParent(cur.right,cur,hm);
+	}
+	void solve(int start, int end, StringBuilder path, HashMap<Integer, TreeNode[]> hm, Set<Integer> vis) {
+		if (vis.contains(start)) {
+			return;
+		}
+		vis.add(start);
+		TreeNode cur = hm.get(start)[0], parent = hm.get(start)[1];
+		if (start == end && path.length() < resLen) {
+			res = path.toString();
+			resLen = path.length();
+		}
+		if (parent != null) {
+			path.append("U");
+			solve(parent.val,end,path,hm,vis);
+			path.deleteCharAt(path.length() - 1);
+		}
+		if (cur.left != null) {
+			path.append("L");
+			solve(cur.left.val,end,path,hm,vis);
+			path.deleteCharAt(path.length() - 1);
+		}
+		if (cur.right != null) {
+			path.append("R");
+			solve(cur.right.val,end,path,hm,vis);
+			path.deleteCharAt(path.length() - 1);
+		}
+	}
+}

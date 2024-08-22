@@ -1,0 +1,43 @@
+class Solution {
+	int maxStarSum(int[] v, int[][] e, int k) {
+		HashMap<Integer, ArrayList<Integer>> h = new HashMap<>();
+		if (e.length == 0) {
+			int vm = v[0];
+			for (int i = 1; i < v.length; i++) {
+				if (v[i] > vm) {
+					vm = v[i];
+				}
+			}
+			return vm;
+		}
+		for (int i = 0; i < e.length; i++) {
+			ArrayList<Integer> l = h.getOrDefault(e[i][0],new ArrayList<>());
+			l.add(v[e[i][1]]);
+			h.put(e[i][0],l);
+			l = h.getOrDefault(e[i][01],new ArrayList<>());
+			l.add(v[e[i][0]]);
+			h.put(e[i][1],l);
+		}
+		int max = Integer.MIN_VALUE;
+		for (Map.Entry<Integer, ArrayList<Integer>> en: h.entrySet()) {	
+			int sum = v[en.getKey()];
+			ArrayList<Integer> l = en.getValue();
+			Collections.sort(l);
+			int i = l.size() - 1, c = 0;
+			while (i >= 0 && c < k) {
+				if (sum + l.get(i) > sum) {
+					sum = sum + l.get(i);
+				} 
+				else {
+					break;
+				}
+				c++;
+				i--;
+			}
+			if (sum > max) {
+				max = sum;
+			}
+		}
+		return max;
+	}
+}

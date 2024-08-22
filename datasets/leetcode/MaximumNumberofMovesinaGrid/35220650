@@ -1,0 +1,30 @@
+class Solution {
+	int f(int r, int c, int[][] grid, int[][] dp) {
+		if (dp[r][c] != -1) {
+			return dp[r][c];
+		}
+		int val = grid[r][c];
+		int m1 = 0, m2 = 0, m3 = 0;
+		if (r - 1 >= 0 && c + 1 < grid[r - 1].length && val < grid[r - 1][c + 1]) {
+			m1 += 1 + f(r - 1,c + 1,grid,dp);
+		}
+		if (c + 1 < grid[r].length && val < grid[r][c + 1]) {
+			m2 += 1 + f(r,c + 1,grid,dp);
+		}
+		if (r + 1 < grid.length && c + 1 < grid[r + 1].length && val < grid[r + 1][c + 1]) {
+			m3 += 1 + f(r + 1,c + 1,grid,dp);
+		}
+		return dp[r][c] = Math.max(m1,Math.max(m2,m3));
+	}
+	int maxMoves(int[][] grid) {
+		int[][] dp = new int[grid.length + 1][grid[0].length + 1];
+		for (int[] i: dp) {	
+			Arrays.fill(i,-1);
+		}
+		int ans = 0;
+		for (int i = 0; i < grid.length; i++) {
+			ans = Math.max(ans,f(i,0,grid,dp));
+		}
+		return ans;
+	}
+}

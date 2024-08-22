@@ -1,0 +1,47 @@
+class Solution {
+	int minimumTime(int n, int[][] relations, int[] time) {
+		ArrayList<ArrayList<Integer>> adjList = new ArrayList<>();
+		for (int i = 0; i <= n; i++) {
+			adjList.add(new ArrayList<>());
+		}
+		int[] indegree = new int[n + 1];
+		for (int i = 0; i < relations.length; i++) {
+			int u = relations[i][0];
+			int v = relations[i][1];
+			adjList.get(u).add(v);
+			indegree[v]++;
+		}
+		Queue<Integer> queue = new LinkedList<>();
+		for (int i = 1; i <= n; i++) {
+			if (indegree[i] == 0) {
+				queue.add(i);
+			}
+		}
+		ArrayList<Integer> topo = new ArrayList<>();
+		int cnt = 0;
+		while (!queue.isEmpty()) {
+			int node = queue.poll();
+			topo.add(node);
+			for (Integer ngh: adjList.get(node)) {	
+				indegree[ngh]--;
+				if (indegree[ngh] == 0) {
+					queue.add(ngh);
+				}
+			}
+		}
+		int[] timeTaken = new int[n + 1];
+		for (Integer node: topo) {	
+			timeTaken[node] = time[node - 1];
+		}
+		for (Integer node: topo) {	
+			for (Integer ngh: adjList.get(node)) {	
+				timeTaken[ngh] = Math.max(timeTaken[ngh],timeTaken[node] + time[ngh - 1]);
+			}
+		}
+		int Max = -1;
+		for (int i = 0; i <= n; i++) {
+			Max = Math.max(Max,timeTaken[i]);
+		}
+		return Max;
+	}
+}

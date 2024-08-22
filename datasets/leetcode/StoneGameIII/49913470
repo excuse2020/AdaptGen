@@ -1,0 +1,28 @@
+class Solution {
+	int helper(int[] stoneValue, int index, int[] dp) {
+		int n = stoneValue.length;
+		if (index == n) {
+			return 0;
+		}
+		if (dp[index] != -1) {
+			return dp[index];
+		}
+		int diff = Integer.MIN_VALUE;
+		int takeOne = (stoneValue[index]) - helper(stoneValue,index + 1,dp);
+		int takeTwo = index < n - 1 ? (stoneValue[index] + stoneValue[index + 1]) - helper(stoneValue,index + 2,dp) : Integer.MIN_VALUE;
+		int takeThree = index < n - 2 ? (stoneValue[index] + stoneValue[index + 1]) - helper(stoneValue,index + 3,dp) : Integer.MIN_VALUE;
+		return dp[index] = Math.max(Math.max(takeOne,takeTwo),takeThree);
+	}
+	String stoneGameIII(int[] stoneValue) {
+		int[] dp = new int[stoneValue.length];
+		Arrays.fill(dp,-1);
+		int AliceDiff = helper(stoneValue,0,dp);
+		if (AliceDiff > 0) {
+			return "Alice";
+		}
+		if (AliceDiff < 0) {
+			return "Bob";
+		}
+		return "Tie";
+	}
+}

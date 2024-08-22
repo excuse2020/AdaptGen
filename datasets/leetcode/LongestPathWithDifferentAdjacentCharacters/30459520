@@ -1,0 +1,48 @@
+class Solution {
+	int max = 0;
+	int dfs(List<List<Integer>> adj, char ch, int node, int parent, String s, boolean flag) {
+		int tempmax = 0, val = 0;
+		List<Integer> ls = new ArrayList<>();
+		for (int child: adj.get(node)) {	
+			if (child == parent) {
+				continue;
+			}
+			int temp;
+			if (s.charAt(child) == s.charAt(node)) {
+				temp = dfs(adj,s.charAt(node),child,node,s,true);
+			} 
+			else {
+				temp = dfs(adj,s.charAt(node),child,node,s,false);
+			}
+			ls.add(temp);
+		}
+		int secmax = 0;
+		for (int i = 0; i < ls.size(); i++) {
+			if (ls.get(i) > tempmax) {
+				secmax = tempmax;
+				tempmax = ls.get(i);
+			} 
+			else if (ls.get(i) > secmax) {
+				secmax = ls.get(i);
+			}
+		}
+		max = Math.max(max,tempmax + secmax);
+		if (flag) {
+			return 0;
+		}
+		return 1 + tempmax;
+	}
+	int longestPath(int[] parent, String s) {
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < parent.length; i++) {
+			adj.add(new ArrayList<>());
+		}
+		if (parent.length == 1) {
+			return 1;
+		}
+		for (int i = 1; i < parent.length; i++) {
+			adj.get(i).add(parent[i]);
+			adj.get(parent[i]).add(i);
+		}
+	}
+}

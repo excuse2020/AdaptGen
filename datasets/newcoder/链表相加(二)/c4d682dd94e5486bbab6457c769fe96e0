@@ -1,0 +1,63 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		ListNode newHead1 = reverse(head1);
+		ListNode newHead2 = reverse(head2);
+		int sum = 0;
+		int count = 0;
+		boolean flag = false;
+		ListNode head = null;
+		ListNode pHead = null;
+		while (newHead1 != null && newHead2 != null) {
+			int num = newHead1.val + newHead2.val;
+			sum = num % 10;
+			count = num / 10;
+			if (!flag) {
+				head = new ListNode(sum);
+				pHead = head;
+				flag = true;
+			} 
+			else {
+				ListNode cur = new ListNode(sum);
+				head.next = cur;
+				head = head.next;
+			}
+			newHead1 = newHead1.next;
+			newHead2 = newHead2.next;
+		}
+		while (newHead1 != null) {
+			int num = newHead1.val + count;
+			sum = num % 10;
+			count = num / 10;
+			ListNode cur = new ListNode(sum);
+			head.next = cur;
+			head = head.next;
+			newHead1 = newHead1.next;
+		}
+		while (newHead2 != null) {
+			int num = newHead2.val + count;
+			sum = num % 10;
+			count = num / 10;
+			ListNode cur = new ListNode(sum);
+			head.next = cur;
+			head = head.next;
+			newHead2 = newHead2.next;
+		}
+		if (count == 1) {
+			ListNode cur = new ListNode(count);
+			head.next = cur;
+		}
+		return reverse(pHead);
+	}
+	ListNode reverse(ListNode head) {
+		ListNode pre = null;
+		ListNode cur = head;
+		ListNode curNext = new ListNode(0);
+		while (cur != null) {
+			curNext = cur.next;
+			cur.next = pre;
+			pre = cur;
+			cur = curNext;
+		}
+		return pre;
+	}
+}

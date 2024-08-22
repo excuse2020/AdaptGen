@@ -1,0 +1,36 @@
+class Solution {
+	boolean isMatch(String s, String t) {
+		int i = 0;
+		int j = 0;
+		if (t.length() != s.length() + 1) {
+			return false;
+		}
+		while (i < s.length() && j < t.length()) {
+			if (s.charAt(i) == t.charAt(j)) {
+				i++;
+			}
+			j++;
+		}
+		return i == s.length();
+	}
+	int longestStrChain(String[] words) {
+		Arrays.sort(words,(a, b) -> {Integer.compare(a.length(),b.length())});
+		Integer dp = new Integer[words.length][words.length];
+		return solve(words,words.length - 1,words.length,dp);
+	}
+	int solve(String words, int curr, int next, Integer dp) {
+		if (curr < 0) {
+			return 0;
+		}
+		if (dp[curr][next - 1] != null) {
+			return dp[curr][next - 1];
+		}
+		int take = 0;
+		int notTake = 0;
+		if (next == words.length || isMatch(words[curr],words[next])) {
+			take = 1 + solve(words,curr - 1,curr,dp);
+		}
+		notTake = solve(words,curr - 1,next,dp);
+		return dp[curr][next - 1] = Math.max(notTake,take);
+	}
+}

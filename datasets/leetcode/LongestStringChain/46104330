@@ -1,0 +1,21 @@
+class Solution {
+	int longestStrChain(String[] words) {
+		Arrays.sort(words,(word1, word2) -> {word1.length() - word2.length()});
+		Map<String, Integer> map = new HashMap<>();
+		int ans = Integer.MIN_VALUE;
+		for (String word: words) {	
+			for (int i = 0; i < word.length(); i++) {
+				String predecessor = word.substring(0,i) + word.substring(i + 1);
+				map.putIfAbsent(word,1);
+				if (map.containsKey(predecessor)) {
+					map.put(word,Math.max(map.get(word),map.get(predecessor) + 1));
+				} 
+				else {
+					map.put(word,map.get(word));
+				}
+			}
+			ans = Math.max(ans,map.get(word));
+		}
+		return ans;
+	}
+}

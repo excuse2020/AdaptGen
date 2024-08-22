@@ -1,0 +1,27 @@
+class Solution {
+	int mod = (int) (1e9 + 7);
+	int maximumSumSubsequence(int[] a, int[][] q) {
+		long ans = 0;
+		for (int i = 0; i < q.length; i++) {
+			a[q[i][0]] = q[i][1];
+			long pre = new long[2];
+			pre[0] = a[0];
+			for (int j = 1; j < a.length; j++) {
+				long cur = new long[2];
+				for (int fl = 0; fl <= 1; fl++) {
+					long take = 0, notake = 0;
+					if (fl == 0) {
+						take = (pre[1] + a[j]) % mod;
+					}
+					notake = pre[0];
+					cur[fl] = Math.max(take,notake) % mod;
+				}
+				pre = cur;
+			}
+			long tot = 0;
+			tot = Math.max(tot,Math.max(pre[0],pre[1]));
+			ans = (ans + tot) % mod;
+		}
+		return (int) ans;
+	}
+}

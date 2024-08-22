@@ -1,0 +1,33 @@
+class Solution {
+	int f(int r, int c, int[][] obstacleGrid, int[][] dp) {
+		if (r == 0 && c == 0) {
+			if (obstacleGrid[0][0] == 0) {
+				dp[0][0] = 1;
+			} 
+			else {
+				dp[0][0] = 0;
+			}
+		}
+		if (r < 0 || c < 0) {
+			return 0;
+		}
+		if (dp[r][c] != -1) {
+			return dp[r][c];
+		}
+		int left = 0, up = 0;
+		if (obstacleGrid[r][c] == 0) {
+			left = f(r,c - 1,obstacleGrid,dp);
+			up = f(r - 1,c,obstacleGrid,dp);
+		}
+		return dp[r][c] = up + left;
+	}
+	int uniquePathsWithObstacles(int[][] obstacleGrid) {
+		int r = obstacleGrid.length;
+		int c = obstacleGrid[0].length;
+		int[][] dp = new int[r][c];
+		for (int[] rows: dp) {	
+			Arrays.fill(rows,-1);
+		}
+		return f(r - 1,c - 1,obstacleGrid,dp);
+	}
+}

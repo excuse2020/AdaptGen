@@ -1,0 +1,55 @@
+class Solution {
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		Map<Integer, Integer> childToParentMap = new HashMap<>();
+		Map<Integer, List<Integer>> adjancenyList = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			int node = i;
+			int leftChildNode = leftChild[i];
+			int rightChildNode = rightChild[i];
+			List<Integer> list = new ArrayList<>();
+			if (leftChildNode != -1) {
+				if (childToParentMap.containsKey(leftChildNode)) {
+					return false;
+				}
+				list.add(leftChildNode);
+				childToParentMap.put(leftChildNode,node);
+			}
+			if (rightChildNode != -1) {
+				if (childToParentMap.containsKey(rightChildNode)) {
+					return false;
+				}
+				list.add(rightChildNode);
+				childToParentMap.put(rightChildNode,node);
+			}
+			adjancenyList.put(node,list);
+		}
+		int root = -1;
+		for (int i = 0; i < n; i++) {
+			if (childToParentMap.containsKey(i) == false) {
+				if (root != -1) {
+					return false;
+				}
+				root = i;
+			}
+		}
+		if (root == -1) {
+			return false;
+		}
+		boolean[] isVisited = new boolean[n];
+		Queue<Integer> q = new LinkedList<>();
+		q.add(root);
+		int count = 1;
+		isVisited[root] = true;
+		while (!q.isEmpty()) {
+			int currNode = q.remove();
+			for (int child: adjancenyList.get(currNode)) {	
+				if (isVisited[child] == false) {
+					isVisited[child] = true;
+					count++;
+					q.add(child);
+				}
+			}
+		}
+		return count == n;
+	}
+}

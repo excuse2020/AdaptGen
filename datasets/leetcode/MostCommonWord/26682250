@@ -1,0 +1,31 @@
+class Solution {
+	String mostCommonWord(String paragraph, String[] banned) {
+		int n = paragraph.length();
+		int index = 0;
+		Map<String, Integer> freq = new HashMap<>();
+		Set<String> blocked = new HashSet<>(Arrays.asList(banned));
+		blocked.add("");
+		StringBuilder sb = new StringBuilder();
+		while (index < n) {
+			sb.setLength(0);
+			while (index < n && Character.isAlphabetic(paragraph.charAt(index))) {
+				sb.append(Character.toLowerCase(paragraph.charAt(index)));
+				index++;
+			}
+			index++;
+			if (blocked.contains(sb.toString())) {
+				continue;
+			}
+			freq.put(sb.toString(),freq.getOrDefault(sb.toString(),0) + 1);
+		}
+		int mostFreq = 0;
+		String word = "";
+		for (String key: freq.keySet()) {	
+			if (freq.get(key) > mostFreq) {
+				mostFreq = freq.get(key);
+				word = key;
+			}
+		}
+		return word;
+	}
+}

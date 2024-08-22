@@ -1,0 +1,42 @@
+class Solution {
+	int minimumAverageDifference(int[] num) {
+		long first, last;
+		int index = 0;
+		long absoluteDifference = new long[num.length];
+		long firstsum = new long[num.length + 1];
+		for (int i = 1; i <= num.length; i++) {
+			firstsum[i] = firstsum[i - 1] + num[i - 1];
+		}
+		for (int i = 0; i < num.length; i++) {
+			Long sumfirst = firstsum[i + 1];
+			first = sumfirst / (i + 1);
+			Long sumlast = firstsum[num.length] - sumfirst;
+			if (i != num.length - 1) {
+				last = sumlast / (num.length - i);
+			} 
+			else {
+				last = 0;
+			}
+			absoluteDifference[i] = first - last;
+			if (absoluteDifference[i] < 0) {
+				absoluteDifference[i] = absoluteDifference[i] - (2 * absoluteDifference[i]);
+			}
+		}
+		long min = absoluteDifference[0];
+		for (int i = 0; i < absoluteDifference.length; i++) {
+			if (i != absoluteDifference.length - 1) {
+				if (absoluteDifference[i + 1] < min) {
+					min = absoluteDifference[i + 1];
+				}
+			}
+		}
+		for (int i = 0; i < absoluteDifference.length; i++) {
+			if (absoluteDifference[i] == min) {
+				index = i;
+				break;
+			}
+		}
+		System.out.println("The index of minimum absolute difference is " + index);
+		return index;
+	}
+}

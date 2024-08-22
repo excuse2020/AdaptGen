@@ -1,0 +1,25 @@
+class Solution {
+	int sumImbalanceNumbers(int[] A) {
+		int n = A.length;
+		int[] left = new int[n];
+		Arrays.fill(left,-1);
+		int[] last = new int[n + 2];
+		Arrays.fill(last,-1);
+		for (int i = 0; i < n; i++) {
+			left[i] = last[A[i] + 1];
+			last[A[i]] = i;
+		}
+		int[] right = new int[n];
+		Arrays.fill(right,n);
+		Arrays.fill(last,n);
+		for (int i = n - 1; i >= 0; i--) {
+			right[i] = Math.min(last[A[i]],last[A[i] + 1]);
+			last[A[i]] = i;
+		}
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			ans += (i - left[i]) * (right[i] - i);
+		}
+		return ans - n * (n + 1) / 2;
+	}
+}

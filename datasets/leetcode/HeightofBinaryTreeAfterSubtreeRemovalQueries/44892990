@@ -1,0 +1,51 @@
+class Solution {
+	int[] htWithout = new int[100_001];
+	int maxHeight = 0;
+	boolean singleChildrenOnly = true;
+	void traverseLeftToRight(TreeNode node, int height) {
+		htWithout[node.val] = maxHeight;
+		if (height > maxHeight) {
+			maxHeight = height;
+		}
+		if (node.left == null) {
+			if (node.right != null) {
+				traverseLeftToRight(node.right,height + 1);
+			}
+		} 
+		else if (node.right != null) {
+			traverseLeftToRight(node.left,height + 1);
+			traverseLeftToRight(node.right,height + 1);
+			singleChildrenOnly = false;
+		} 
+		else {
+			traverseLeftToRight(node.left,height + 1);
+		}
+	}
+	void traverseRightToLeft(TreeNode node, int height) {
+		if (maxHeight > htWithout[node.val]) {
+			htWithout[node.val] = maxHeight;
+		}
+		if (height > maxHeight) {
+			maxHeight = height;
+		}
+		if (node.right != null) {
+			traverseRightToLeft(node.right,height + 1);
+		}
+		if (node.left != null) {
+			traverseRightToLeft(node.left,height + 1);
+		}
+	}
+	int[] treeQueries(TreeNode root, int[] queries) {
+		maxHeight = 0;
+		traverseLeftToRight(root,0);
+		if (!singleChildrenOnly) {
+			maxHeight = 0;
+			traverseRightToLeft(root,0);
+		}
+		int[] result = new int[queries.length];
+		for (int i = queries.length - 1; i >= 0; i--) {
+			result[i] = htWithout[queries[i]];
+		}
+		return result;
+	}
+}

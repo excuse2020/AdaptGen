@@ -1,0 +1,43 @@
+class Solution {
+	boolean isValidTime(int[] bat, int n, long time, long[] sum) {
+		for (int i = bat.length - 1; i >= 0; i--) {
+			if (n == 0) {
+				return true;
+			}
+			if (bat[i] < time) {
+				if (sum[i] / n < time) {
+					return false;
+				}
+				break;
+			}
+			n--;
+		}
+		return true;
+	}
+	long maxRunTime(int n, int[] bat) {
+		Arrays.sort(bat);
+		int m = bat.length;
+		long lo = bat[m - n];
+		long[] sum = new long[m];
+		long hi = 0;
+		for (int i = 0; i < m; i++) {
+			hi += (long) bat[i];
+			sum[i] = hi;
+		}
+		hi /= n;
+		long ans = lo;
+		while (lo <= hi) {
+			long mid = lo + (hi - lo) / 2;
+			if (isValidTime(bat,n,mid,sum)) {
+				if (ans < mid) {
+					ans = mid;
+				}
+				lo = mid + 1;
+			} 
+			else {
+				hi = mid - 1;
+			}
+		}
+		return ans;
+	}
+}

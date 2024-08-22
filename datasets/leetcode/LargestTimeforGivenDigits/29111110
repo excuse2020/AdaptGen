@@ -1,0 +1,43 @@
+class Solution {
+	int getMinutes(String time) {
+		return Integer.parseInt(time.substring(0,2)) * 60 + Integer.parseInt(time.substring(2));
+	}
+	boolean isValidTimeString(String time) {
+		return getMinutes(time) <= 1439 && Integer.parseInt(time.substring(2)) <= 59;
+	}
+	String largestTimeFromDigits(int[] arr) {
+		boolean picked = new boolean[arr.length];
+		String res = maxTimeStringFrom(arr,picked,"");
+		if (res.length() == 0) {
+			return res;
+		}
+		return res.substring(0,2) + ":";
+	}
+	String maxTimeString(String time1, String time2) {
+		if (time1.length() == 0) {
+			return time2;
+		}
+		if (time2.length() == 0) {
+			return time1;
+		}
+		int minutes1 = getMinutes(time1);
+		int minutes2 = getMinutes(time2);
+		return minutes1 > minutes2 ? time1 : time2;
+	}
+	String maxTimeStringFrom(int arr, boolean picked, String time) {
+		String res = "";
+		boolean allFilled = true;
+		for (int i = 0; i < arr.length; i++) {
+			if (!picked[i]) {
+				allFilled = false;
+				picked[i] = true;
+				res = maxTimeString(res,maxTimeStringFrom(arr,picked,time + arr[i]));
+				picked[i] = false;
+			}
+		}
+		if (allFilled && isValidTimeString(time)) {
+			return time;
+		}
+		return res;
+	}
+}

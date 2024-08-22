@@ -1,0 +1,36 @@
+class Solution {
+	int nodes;
+	void dfs(int n, HashMap<Integer, ArrayList<Integer>> graph, HashSet<Integer> restrict, int node, HashSet<Integer> visited) {
+		if (restrict.contains(node) || visited.contains(node)) {
+			return;
+		}
+		nodes++;
+		visited.add(node);
+		for (int neighbour: graph.get(node)) {	
+			dfs(n,graph,restrict,neighbour,visited);
+		}
+	}
+	HashMap<Integer, ArrayList<Integer>> process(int[][] edges, int n) {
+		HashMap<Integer, ArrayList<Integer>> graph = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			graph.put(i,new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			graph.get(edge[0]).add(edge[1]);
+			graph.get(edge[1]).add(edge[0]);
+		}
+		return graph;
+	}
+	int reachableNodes(int n, int[][] edges, int[] restricted) {
+		HashMap<Integer, ArrayList<Integer>> graph = process(edges,n);
+		HashSet<Integer> restrict = new HashSet<Integer>();
+		for (int node: restricted) {	
+			restrict.add(node);
+		}
+		nodes = 0;
+		int startNode = 0;
+		HashSet<Integer> visited = new HashSet<>();
+		dfs(n,graph,restrict,0,visited);
+		return nodes;
+	}
+}

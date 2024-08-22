@@ -1,0 +1,48 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		if (node1 == node2) {
+			return node1;
+		}
+		int[] seen = new int[edges.length];
+		seen[node1] = 1;
+		seen[node2] = 2;
+		boolean cycle1 = false;
+		boolean cycle2 = false;
+		boolean find1 = false;
+		boolean find2 = false;
+		while (true) {
+			if ((cycle1 || node1 == -1) && (cycle2 || node2 == -1)) {
+				return -1;
+			}
+			node1 = node1 == -1 ? -1 : edges[node1];
+			node2 = node2 == -1 ? -1 : edges[node2];
+			if (node1 != -1) {
+				int val = seen[node1];
+				if (val == 2) {
+					find1 = true;
+				} 
+				else if (val == 1) {
+					cycle1 = true;
+				} 
+				else {
+					seen[node1] = 1;
+				}
+			}
+			if (node2 != -1) {
+				int val = seen[node2];
+				if (val == 1) {
+					find2 = true;
+				} 
+				else if (val == 2) {
+					cycle2 = true;
+				} 
+				else {
+					seen[node2] = 2;
+				}
+			}
+			if (find1 || find2) {
+				return find1 && find2 ? Math.min(node1,node2) : find1 ? node1 : node2;
+			}
+		}
+	}
+}

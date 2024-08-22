@@ -1,0 +1,41 @@
+class Solution {
+	int GROUP_1 = 1;
+	int GROUP_2 = 2;
+	int UNVISITED = 0;
+	HashMap<Integer, ArrayList<Integer>> adjList = new HashMap();
+	int[] visited;
+	boolean dfs(int currentPosition, int assignedGroup) {
+		visited[currentPosition - 1] = assignedGroup;
+		for (int neighbor: adjList.get(currentPosition)) {	
+			if (visited[neighbor - 1] == assignedGroup) {
+				return false;
+			}
+			if (visited[neighbor - 1] == UNVISITED) {
+				int newGroup = assignedGroup == GROUP_1 ? GROUP_2 : GROUP_1;
+				if (!dfs(neighbor,newGroup)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		visited = new int[n];
+		for (int[] dislike: dislikes) {	
+			ArrayList<Integer> updatedList1 = adjList.getOrDefault(dislike[0],new ArrayList());
+			updatedList1.add(dislike[1]);
+			adjList.put(dislike[0],updatedList1);
+			ArrayList<Integer> updatedList2 = adjList.getOrDefault(dislike[1],new ArrayList());
+			updatedList2.add(dislike[0]);
+			adjList.put(dislike[1],updatedList2);
+		}
+		for (int source: adjList.keySet()) {	
+			if (visited[source - 1] == UNVISITED) {
+				if (!dfs(source,GROUP_1)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

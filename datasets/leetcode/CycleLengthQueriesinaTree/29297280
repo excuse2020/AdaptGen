@@ -1,0 +1,38 @@
+class Solution {
+	int[] cycleLengthQueries(int n, int[][] queries) {
+		int m = queries.length;
+		int[] res = new int[m];
+		for (int i = 0; i < m; i++) {
+			int left = queries[i][0];
+			int right = queries[i][1];
+			int d1 = depth(left);
+			int d2 = depth(right);
+			int root = root(left,right);
+			int d = depth(root);
+			res[i] = d1 + d2 - 2 * d + 1;
+		}
+		return res;
+	}
+	int depth(int n) {
+		int count = 0;
+		while (n > 0) {
+			n = n / 2;
+			count++;
+		}
+		return count;
+	}
+	int root(int u, int v) {
+		if (u > v) {
+			return root(v,u);
+		}
+		Set<Integer> set = new HashSet<>();
+		while (u > 0) {
+			set.add(u);
+			u = u / 2;
+		}
+		while (!set.contains(v)) {
+			v = v / 2;
+		}
+		return v;
+	}
+}

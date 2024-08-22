@@ -1,0 +1,41 @@
+class Solution {
+	TreeNode reConstructBinaryTree(int[] pre, int[] vin) {
+		if (pre.length == 0) {
+			return null;
+		}
+		TreeNode head = new TreeNode(pre[0]);
+		for (int i = 0; i < pre.length; i++) {
+			if (pre[0] == vin[i]) {
+				head.left = reConstructBinaryTree(Arrays.copyOfRange(pre,1,i + 1),Arrays.copyOfRange(vin,0,i));
+				head.right = reConstructBinaryTree(Arrays.copyOfRange(pre,i + 1,pre.length),Arrays.copyOfRange(vin,i + 1,vin.length));
+			}
+		}
+		return head;
+	}
+	int[] solve(int[] xianxu, int[] zhongxu) {
+		TreeNode root = reConstructBinaryTree(xianxu,zhongxu);
+		ArrayList<Integer> list = new ArrayList<>();
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(root);
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				TreeNode tmp = queue.poll();
+				if (i == size - 1) {
+					list.add(tmp.val);
+				}
+				if (tmp.left != null) {
+					queue.add(tmp.left);
+				}
+				if (tmp.right != null) {
+					queue.add(tmp.right);
+				}
+			}
+		}
+		int[] res = new int[list.size()];
+		for (int i = 0; i < res.length; i++) {
+			res[i] = list.get(i);
+		}
+		return res;
+	}
+}

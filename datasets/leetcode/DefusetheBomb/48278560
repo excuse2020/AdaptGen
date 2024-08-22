@@ -1,0 +1,45 @@
+class Solution {
+	int[] decrypt(int[] code, int k) {
+		if (k == 0) {
+			Arrays.fill(code,0);
+			return code;
+		}
+		int sum = 0;
+		boolean r = (k > 0);
+		int[] res = new int[code.length];
+		if (k < 0) {
+			k = -k;
+		}
+		int j = 0;
+		while (j < k) {
+			if (r) {
+				sum += code[j + 1];
+			} 
+			else {
+				sum += code[code.length - 1 - j];
+			}
+			j++;
+		}
+		res[0] = sum;
+		for (int i = 1; i < code.length; i++) {
+			if (r) {
+				int prev = i;
+				int next = i + k;
+				if (next > code.length - 1) {
+					next -= code.length;
+				}
+				sum += -code[prev] + code[next];
+			} 
+			else {
+				int prev = i - 1;
+				int next = code.length - k + i - 1;
+				if (next >= code.length) {
+					next -= code.length;
+				}
+				sum += code[prev] - code[next];
+			}
+			res[i] = sum;
+		}
+		return res;
+	}
+}

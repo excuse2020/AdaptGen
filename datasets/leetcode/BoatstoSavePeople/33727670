@@ -1,0 +1,31 @@
+class Solution {
+	int numRescueBoats(int[] people, int limit) {
+		int count = 0;
+		if (people == null || people.length == 0) {
+			return count;
+		}
+		Arrays.sort(people);
+		int boats = new int[people.length];
+		Arrays.fill(boats,limit);
+		boats[0] -= people[people.length - 1];
+		for (int i = people.length - 2; i >= 0; i--) {
+			for (int j = 0; j < people.length - i; j++) {
+				if (boats[j] >= people[i]) {
+					if (boats[j] == limit) {
+						boats[j] -= people[i];
+					} 
+					else {
+						boats[j] = 0;
+					}
+					break;
+				}
+			}
+		}
+		for (int i = 0; i < people.length; i++) {
+			if (boats[i] < limit) {
+				count++;
+			}
+		}
+		return count;
+	}
+}

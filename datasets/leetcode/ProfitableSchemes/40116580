@@ -1,0 +1,32 @@
+class Solution {
+	int ans;
+	int profitableSchemes(int ppl, int minProfit, int[] group, int[] profit) {
+		int sum = 0;
+		for (int i: profit) {	
+			sum = sum + i;
+		}
+		ans = new int[group.length + 1][ppl + 1][sum + 1];
+		for (int[][] a: ans) {	
+			for (int[] b: a) {	
+				Arrays.fill(b,-1);
+			}
+		}
+		return rec(group.length,ppl,minProfit,0,group,profit);
+	}
+	int rec(int n, int ppl, int min, int p, int[] group, int[] profit) {
+		if (n == 0 || ppl == 0) {
+			ans[n][ppl][p] = min <= p ? 1 : 0;
+			return ans[n][ppl][p];
+		}
+		if (ans[n][ppl][p] != -1) {
+			return ans[n][ppl][p] % (int) (Math.pow(10,9) + 7);
+		}
+		if (ppl >= group[n - 1]) {
+			ans[n][ppl][p] = (rec(n - 1,ppl - group[n - 1],min,p + profit[n - 1],group,profit) + rec(n - 1,ppl,min,p,group,profit));
+		} 
+		else {
+			ans[n][ppl][p] = rec(n - 1,ppl,min,p,group,profit);
+		}
+		return ans[n][ppl][p] % (int) (Math.pow(10,9) + 7);
+	}
+}

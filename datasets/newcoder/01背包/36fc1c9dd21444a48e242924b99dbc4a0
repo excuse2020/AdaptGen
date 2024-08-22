@@ -1,0 +1,28 @@
+class Solution {
+	int knapsack(int V, int n, int[][] vw) {
+		List<Goods> list = new ArrayList<>();
+		for (int i = 0; i < vw.length; i++) {
+			Goods goods = new Goods();
+			goods.v = vw[i][0];
+			goods.w = vw[i][1];
+			list.add(goods);
+		}
+		int[][] dp = new int[n + 1][V + 1];
+		for (int i = 1; i <= n; i++) {
+			Goods curGoods = list.get(i - 1);
+			for (int j = 1; j <= V; j++) {
+				if (j < curGoods.v) {
+					dp[i][j] = dp[i - 1][j];
+				} 
+				else {
+					dp[i][j] = Math.max(dp[i - 1][j],dp[i - 1][j - curGoods.v] + curGoods.w);
+				}
+			}
+		}
+		return dp[n][V];
+	}
+	class Goods {
+		int v;
+		int w;
+	}
+}

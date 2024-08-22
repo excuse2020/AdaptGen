@@ -1,0 +1,36 @@
+class Solution {
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		List<List<Integer>> adjList = new ArrayList<>();
+		for (int i = 0; i < numCourses; i++) {
+			adjList.add(new ArrayList<>());
+		}
+		for (int[] e: prerequisites) {	
+			adjList.get(e[1]).add(e[0]);
+		}
+		boolean[] tempMark = new boolean[numCourses];
+		boolean[] permMark = new boolean[numCourses];
+		for (int i = 0; i < numCourses; i++) {
+			if (cycleExists(i,tempMark,permMark,adjList)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean cycleExists(int u, boolean[] tempMark, boolean[] permMark, List<List<Integer>> adjList) {
+		if (permMark[u]) {
+			return false;
+		}
+		if (tempMark[u]) {
+			return true;
+		}
+		tempMark[u] = true;
+		for (int v: adjList.get(u)) {	
+			if (cycleExists(v,tempMark,permMark,adjList)) {
+				return true;
+			}
+		}
+		tempMark[u] = false;
+		permMark[u] = true;
+		return false;
+	}
+}

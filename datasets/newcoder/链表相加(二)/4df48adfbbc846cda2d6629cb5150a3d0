@@ -1,0 +1,68 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		if (head1 == null && head2 == null) {
+			return null;
+		}
+		int n1 = 0, n2 = 0;
+		ListNode p1 = head1, p2 = head2;
+		while (p1 != null) {
+			n1++;
+			p1 = p1.next;
+		}
+		while (p2 != null) {
+			n2++;
+			p2 = p2.next;
+		}
+		if (n1 == 0) {
+			return head2;
+		}
+		if (n2 == 0) {
+			return head1;
+		}
+		int[] arr1 = new int[n1];
+		int[] arr2 = new int[n2];
+		int n = n1 > n2 ? n1 : n2;
+		p1 = head1;
+		p2 = head2;
+		for (int i = n1 - 1; i >= 0; i--) {
+			arr1[i] = p1.val;
+			p1 = p1.next;
+		}
+		for (int i = n2 - 1; i >= 0; i--) {
+			arr2[i] = p2.val;
+			p2 = p2.next;
+		}
+		int[] m = new int[n + 1];
+		int c = 0;
+		for (int i = 0; i < n; i++) {
+			if (c != 0) {
+				m[i] += c;
+				c = 0;
+			}
+			if (i < n1 && i < n2) {
+				m[i] += arr1[i] + arr2[i];
+			} 
+			else {
+				m[i] += n1 > n2 ? arr1[i] : arr2[i];
+			}
+			if (m[i] > 9 && i == n - 1) {
+				c = 1;
+				m[n] = 1;
+				m[i] %= 10;
+			} 
+			else if (m[i] > 9 && i < n - 1) {
+				c = 1;
+				m[i] %= 10;
+			}
+		}
+		n = c == 1 ? 1 + n : n;
+		ListNode p3 = new ListNode(m[0]);
+		ListNode head3 = p3;
+		for (int i = 1; i < n; i++) {
+			ListNode p4 = new ListNode(m[i]);
+			p4.next = head3;
+			head3 = p4;
+		}
+		return head3;
+	}
+}

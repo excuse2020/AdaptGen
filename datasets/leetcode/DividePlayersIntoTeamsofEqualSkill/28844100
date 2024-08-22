@@ -1,0 +1,37 @@
+class Solution {
+	long dividePlayers(int[] skill) {
+		long chem = 0;
+		long sum = 0;
+		int len = skill.length;
+		for (int i: skill) {	
+			sum += i;
+		}
+		if (sum % (len / 2) != 0) {
+			return -1;
+		}
+		sum = sum / (len / 2);
+		HashMap<Long, Integer> hm = new HashMap<>();
+		for (int i = 0; i < len; i++) {
+			long compliment = Math.abs(sum - skill[i]);
+			if (hm.containsKey(compliment)) {
+				if (hm.get(compliment) == 1) {
+					chem = chem + skill[i] * compliment;
+					hm.remove(compliment);
+				} 
+				else {
+					chem = chem + skill[i] * compliment;
+					hm.put(compliment,hm.getOrDefault(compliment,0) - 1);
+				}
+			} 
+			else {
+				hm.put((long) skill[i],hm.getOrDefault((long) skill[i],0) + 1);
+			}
+		}
+		if (hm.size() == 0) {
+			return chem;
+		} 
+		else {
+			return -1;
+		}
+	}
+}

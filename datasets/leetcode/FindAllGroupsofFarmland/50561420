@@ -1,0 +1,38 @@
+class Solution {
+	int i1, j1;
+	void DFS(int[][] land, boolean[][] visited, int i, int j) {
+		if (i < 0 || i >= land.length || j < 0 || j >= land[0].length || land[i][j] == 0 || visited[i][j] == true) {
+			return;
+		}
+		visited[i][j] = true;
+		if (i > i1) {
+			i1 = i;
+		}
+		if (j > j1) {
+			j1 = j;
+		}
+		DFS(land,visited,i + 1,j);
+		DFS(land,visited,i,j + 1);
+	}
+	int[][] findFarmland(int[][] land) {
+		boolean[][] visited = new boolean[land.length][land[0].length];
+		List<int[]> list = new ArrayList<>();
+		for (int i = 0; i < land.length; i += 1) {
+			for (int j = 0; j < land[0].length; j += 1) {
+				if (land[i][j] == 1 && visited[i][j] == false) {
+					i1 = i;
+					j1 = j;
+					DFS(land,visited,i,j);
+					list.add(new int{i, j, i1, j1});
+				}
+			}
+		}
+		int[][] res = new int[list.size()];
+		int index = 0;
+		for (int[] group: list) {	
+			res[index] = group;
+			index += 1;
+		}
+		return res;
+	}
+}

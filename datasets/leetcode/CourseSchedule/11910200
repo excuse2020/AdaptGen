@@ -1,0 +1,39 @@
+class Solution {
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		ArrayList<Integer>[] courses = new ArrayList[numCourses];
+		for (int i = 0; i < numCourses; i++) {
+			courses[i] = new ArrayList();
+		}
+		for (int[] p: prerequisites) {	
+			courses[p[0]].add(p[1]);
+		}
+		boolean[] processing = new boolean[numCourses];
+		boolean[] checkedNoCycle = new boolean[numCourses];
+		for (int currCourse = 0; currCourse < numCourses; currCourse++) {
+			if (isCycle(currCourse,courses,processing,checkedNoCycle)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean isCycle(int currCourse, ArrayList<Integer>[] courses, boolean[] processing, boolean[] checkedNoCycle) {
+		if (checkedNoCycle[currCourse]) {
+			return false;
+		}
+		if (processing[currCourse]) {
+			return true;
+		}
+		if (courses[currCourse].size() == 0) {
+			return false;
+		}
+		processing[currCourse] = true;
+		for (int neighbor: courses[currCourse]) {	
+			if (isCycle(neighbor,courses,processing,checkedNoCycle)) {
+				return true;
+			}
+		}
+		processing[currCourse] = false;
+		checkedNoCycle[currCourse] = true;
+		return false;
+	}
+}

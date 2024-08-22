@@ -1,0 +1,33 @@
+class Solution {
+	int minSizeSubarray(int[] nums, int target) {
+		int n = nums.length;
+		Queue<Integer> dq = new LinkedList<>();
+		int sum = 0;
+		int res = Integer.MAX_VALUE;
+		int totalSum = Arrays.stream(nums).sum();
+		int toAdd = 0;
+		if (target > (totalSum)) {
+			toAdd = (target / totalSum) * n;
+			if (target % totalSum == 0) {
+				return toAdd;
+			}
+			target = target % totalSum;
+		}
+		int arr = new int[n + n];
+		for (int i = 0; i < n + n; i++) {
+			arr[i] = nums[i % n];
+		}
+		for (int i = 0; i < n + n; i++) {
+			dq.offer(arr[i]);
+			sum = sum + arr[i];
+			while (sum > target) {
+				int t = dq.poll();
+				sum = sum - t;
+			}
+			if (sum == target) {
+				res = Math.min(res,dq.size());
+			}
+		}
+		return (res == Integer.MAX_VALUE) ? -1 : res + toAdd;
+	}
+}

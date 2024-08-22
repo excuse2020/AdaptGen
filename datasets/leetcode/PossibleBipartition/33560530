@@ -1,0 +1,54 @@
+class Solution {
+	boolean[] color;
+	boolean res = true;
+	boolean[] visited;
+	void bfs(List<Integer>[] graph, int v) {
+		if (visited[v]) {
+			return;
+		}
+		if (!res) {
+			return;
+		}
+		Queue<Integer> q = new LinkedList<>();
+		visited[v] = true;
+		q.offer(v);
+		while (!q.isEmpty()) {
+			int cur = q.poll();
+			for (int adj: graph[cur]) {	
+				if (!visited[adj]) {
+					color[adj] = !color[cur];
+					visited[adj] = true;
+					q.offer(adj);
+				} 
+				else {
+					if (color[adj] == color[cur]) {
+						res = false;
+						return;
+					}
+				}
+			}
+		}
+	}
+	List<Integer>[] buildGraph(int n, int[][] dislikes) {
+		List<Integer>[] graph = new LinkedList[n + 1];
+		for (int i = 1; i <= n; i++) {
+			graph[i] = new LinkedList<Integer>();
+		}
+		for (int[] edge: dislikes) {	
+			int a = edge[0];
+			int b = edge[1];
+			graph[a].add(b);
+			graph[b].add(a);
+		}
+		return graph;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		List<Integer>[] graph = buildGraph(n,dislikes);
+		visited = new boolean[graph.length];
+		color = new boolean[graph.length];
+		for (int i = 1; i <= n; i++) {
+			bfs(graph,i);
+		}
+		return res;
+	}
+}

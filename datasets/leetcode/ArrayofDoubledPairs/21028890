@@ -1,0 +1,30 @@
+class Solution {
+	boolean canReorderDoubled(int[] arr) {
+		HashMap<Integer, Integer> hashmap = new HashMap<>();
+		for (int num: arr) {	
+			hashmap.put(num,hashmap.getOrDefault(num,0) + 1);
+		}
+		Arrays.sort(arr);
+		for (int i = 0; i < arr.length; i++) {
+			if (!hashmap.containsKey(arr[i])) {
+				continue;
+			}
+			if (arr[i] < 0 && arr[i] % 2 != 0) {
+				return false;
+			}
+			int num = arr[i] > 0 ? arr[i] * 2 : arr[i] / 2;
+			if (!hashmap.containsKey(num)) {
+				return false;
+			}
+			hashmap.put(arr[i],hashmap.get(arr[i]) - 1);
+			hashmap.put(num,hashmap.get(num) - 1);
+			if (hashmap.get(arr[i]) == 0) {
+				hashmap.remove(arr[i]);
+			}
+			if (hashmap.getOrDefault(num,-1) == 0) {
+				hashmap.remove(num);
+			}
+		}
+		return true;
+	}
+}

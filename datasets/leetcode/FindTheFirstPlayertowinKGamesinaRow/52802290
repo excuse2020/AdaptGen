@@ -1,0 +1,40 @@
+class Solution {
+	int findWinningPlayer(int[] skills, int k) {
+		int count = new int[skills.length];
+		Deque<Integer> queue = new LinkedList<>();
+		for (int i = 0; i < skills.length; i++) {
+			queue.add(i);
+		}
+		int re = 0;
+		if (k >= skills.length) {
+			for (int i = 0; i < skills.length; i++) {
+				if (skills[i] > skills[re]) {
+					re = i;
+				}
+			}
+			return re;
+		}
+		while (true) {
+			int a = queue.removeFirst();
+			int b = queue.removeFirst();
+			if (skills[a] > skills[b]) {
+				count[a]++;
+				queue.addFirst(a);
+				count[b] = 0;
+				queue.addLast(b);
+			} 
+			else {
+				count[b]++;
+				queue.addFirst(b);
+				count[a] = 0;
+				queue.addLast(a);
+			}
+			if (count[a] == k) {
+				return a;
+			}
+			if (count[b] == k) {
+				return b;
+			}
+		}
+	}
+}

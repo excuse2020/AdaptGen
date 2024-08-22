@@ -1,0 +1,28 @@
+class Solution {
+	int n;
+	List<List<Integer>> res = new ArrayList<>();
+	void backtrackDFS(List<Integer> curList, HashMap<Integer, Integer> counter) {
+		if (curList.size() == n) {
+			res.add(new ArrayList<>(curList));
+			return;
+		}
+		for (int val: counter.keySet()) {	
+			if (counter.get(val) > 0) {
+				curList.add(val);
+				counter.put(val,counter.get(val) - 1);
+				backtrackDFS(curList,counter);
+				curList.remove(curList.size() - 1);
+				counter.put(val,counter.get(val) + 1);
+			}
+		}
+	}
+	List<List<Integer>> permuteUnique(int[] nums) {
+		HashMap<Integer, Integer> counter = new HashMap<>();
+		n = nums.length;
+		for (int n: nums) {	
+			counter.put(n,counter.getOrDefault(n,0) + 1);
+		}
+		backtrackDFS(new ArrayList<>(),counter);
+		return res;
+	}
+}

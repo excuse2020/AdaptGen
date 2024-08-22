@@ -1,0 +1,25 @@
+class Solution {
+	TreeNode arrayToBT(List inOrder, int start, int end) {
+		if (start > end) {
+			return null;
+		}
+		int mid = (start + end) / 2;
+		TreeNode leftChild = arrayToBT(inOrder,start,mid - 1);
+		TreeNode rightChild = arrayToBT(inOrder,mid + 1,end);
+		TreeNode root = new TreeNode((int) inOrder.get(mid), leftChild, rightChild);
+		return root;
+	}
+	TreeNode balanceBST(TreeNode root) {
+		List<Integer> inorder = new ArrayList<Integer>();
+		inOrderTraversal(root,inorder);
+		return arrayToBT(inorder,0,inorder.size() - 1);
+	}
+	void inOrderTraversal(TreeNode root, List inorder) {
+		if (root == null) {
+			return;
+		}
+		inOrderTraversal(root.left,inorder);
+		inorder.add(root.val);
+		inOrderTraversal(root.right,inorder);
+	}
+}

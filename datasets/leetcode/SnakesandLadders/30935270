@@ -1,0 +1,61 @@
+class Solution {
+	HashMap<Integer, Integer> mapSnL(int[][] board) {
+		HashMap<Integer, Integer> map = new HashMap<>();
+		int sq = 1;
+		int pattern = 0;
+		for (int i = board.length - 1; i >= 0; i--) {
+			if (pattern % 2 == 0) {
+				for (int j = 0; j < board.length; j++) {
+					if (board[i][j] != -1) {
+						map.put(sq,board[i][j]);
+					}
+					sq++;
+				}
+			} 
+			else {
+				for (int j = board.length - 1; j >= 0; j--) {
+					if (board[i][j] != -1) {
+						map.put(sq,board[i][j]);
+					}
+					sq++;
+				}
+			}
+			pattern++;
+		}
+		return map;
+	}
+	int snakesAndLadders(int[][] board) {
+		HashSet<Integer> vis = new HashSet<>();
+		HashMap<Integer, Integer> mapping = mapSnL(board);
+		Queue<Integer> queue = new ArrayDeque<>();
+		queue.add(1);
+		int chances = 0;
+		while (queue.size() != 0) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				int presentLoc = queue.poll();
+				if (presentLoc == board.length * board.length) {
+					return chances;
+				}
+				if (vis.contains(presentLoc)) {
+					continue;
+				}
+				vis.add(presentLoc);
+				for (int k = 1; k <= 6; k++) {
+					int pos = k + presentLoc;
+					if (pos > board.length * board.length) {
+						break;
+					}
+					if (mapping.containsKey(pos)) {
+						pos = mapping.get(pos);
+					}
+					if (!vis.contains(pos)) {
+						queue.add(pos);
+					}
+				}
+			}
+			chances++;
+		}
+		return -1;
+	}
+}

@@ -1,0 +1,24 @@
+class Solution {
+	int longestCycle(int[] edges) {
+		var visitedNodes = new int[edges.length];
+		var maxIterations = -1;
+		var iteration = 1;
+		for (int i = 0; i < edges.length; i++) {
+			if (visitedNodes[i] == 0) {
+				var curNode = i;
+				var curCycleMinIteration = iteration;
+				while (curNode != -1 && visitedNodes[curNode] == 0) {
+					visitedNodes[curNode] = iteration++;
+					curNode = edges[curNode];
+				}
+				if (curNode != -1 && visitedNodes[curNode] >= curCycleMinIteration) {
+					var curCycleIterations = iteration - visitedNodes[curNode];
+					if (curCycleIterations > maxIterations) {
+						maxIterations = curCycleIterations;
+					}
+				}
+			}
+		}
+		return maxIterations;
+	}
+}

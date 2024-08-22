@@ -1,0 +1,61 @@
+class Solution {
+	int d = Integer.MAX_VALUE;
+	HashMap<String, Integer> map = new HashMap<>();
+	int getBigger(int x, int nums) {
+		int low = 0, high = nums.length - 1;
+		int ans = -1;
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			if (nums[mid] <= x) {
+				low = mid + 1;
+			} 
+			else {
+				ans = nums[mid];
+				high = mid - 1;
+			}
+		}
+		return ans;
+	}
+	int makeArrayIncreasing(int[] nums1, int[] nums2) {
+		Arrays.sort(nums2);
+		int ans = solve(nums1,nums2,0,-1);
+		return ans == d ? -1 : ans;
+	}
+	int solve(int nums1, int nums2, int index, int prev) {
+		if (index == nums1.length) {
+			return 0;
+		}
+		StringBuilder s = new StringBuilder();
+		s.append(index);
+		s.append(",");
+		s.append(prev);
+		String key = s.toString();
+		if (map.containsKey(key)) {
+			return map.get(key);
+		}
+		int x = d, y = d, z = d;
+		int cur = nums1[index];
+		if (nums1[index] <= prev) {
+			cur = getBigger(prev,nums2);
+			if (cur > prev) {
+				x = solve(nums1,nums2,index + 1,cur);
+			}
+			if (x != d) {
+				x++;
+			}
+		} 
+		else {
+			y = solve(nums1,nums2,index + 1,cur);
+			cur = getBigger(prev,nums2);
+			if (cur > prev) {
+				z = solve(nums1,nums2,index + 1,cur);
+			}
+			if (z != d) {
+				z++;
+			}
+		}
+		int minCount = Math.min(x,Math.min(y,z));
+		map.put(key,minCount);
+		return minCount;
+	}
+}

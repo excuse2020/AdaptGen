@@ -1,0 +1,75 @@
+class Solution {
+	void createGraph(int arr, ArrayList<Integer> G) {
+		for (int i = 0; i < arr.length; i++) {
+			G[arr[i][1]].add(arr[i][0]);
+		}
+	}
+	void dfs(ArrayList<Integer> G, int v, int ans) {
+		boolean vis = new boolean[v];
+		Stack<Integer> s = new Stack<>();
+		for (int i = 0; i < v; i++) {
+			if (!vis[i]) {
+				dfsUtil(G,v,vis,i,s);
+			}
+		}
+		int j = 0;
+		while (!s.isEmpty()) {
+			ans[j] = s.pop();
+			j++;
+		}
+	}
+	void dfsUtil(ArrayList<Integer> G, int v, boolean vis, int curr, Stack<Integer> s) {
+		vis[curr] = true;
+		for (int i = 0; i < G[curr].size(); i++) {
+			int x = G[curr].get(i);
+			if (!vis[x]) {
+				dfsUtil(G,v,vis,x,s);
+			}
+		}
+		s.push(curr);
+	}
+	int[] findOrder(int numCourses, int[][] prerequisites) {
+		ArrayList<Integer> G = new ArrayList[numCourses];
+		for (int i = 0; i < G.length; i++) {
+			G[i] = new ArrayList<>();
+		}
+		createGraph(prerequisites,G);
+		int v = numCourses;
+		if (isCycleExist(G,v)) {
+			int arr = new int[0];
+			return arr;
+		}
+		int ans = new int[numCourses];
+		dfs(G,v,ans);
+		return ans;
+	}
+	boolean isCycleExist(ArrayList<Integer> G, int v) {
+		boolean vis = new boolean[v];
+		boolean stack = new boolean[v];
+		for (int i = 0; i < v; i++) {
+			if (!vis[i]) {
+				if (isCycleExistUtil(G,v,vis,i,stack)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	boolean isCycleExistUtil(ArrayList<Integer> G, int v, boolean vis, int curr, boolean stack) {
+		vis[curr] = true;
+		stack[curr] = true;
+		for (int i = 0; i < G[curr].size(); i++) {
+			int x = G[curr].get(i);
+			if (!vis[x]) {
+				if (isCycleExistUtil(G,v,vis,x,stack)) {
+					return true;
+				}
+			} 
+			else if (stack[x]) {
+				return true;
+			}
+		}
+		stack[curr] = false;
+		return false;
+	}
+}

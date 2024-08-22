@@ -1,0 +1,34 @@
+class Solution {
+	int MAX_COST = 1100000;
+	int helper(int[] houses, int[][] cost, int target, int pos, int curCost, int prev, int dp) {
+		if (pos >= houses.length && target == 0) {
+			return curCost;
+		}
+		if (target < 0 || pos >= houses.length) {
+			return MAX_COST;
+		}
+		if (dp[target][pos][prev + 1] != -1) {
+			return dp[target][pos][prev + 1];
+		}
+		int ret = MAX_COST;
+		if (houses[pos] != 0) {
+			ret = helper(houses,cost,(prev != houses[pos]) ? (target - 1) : target,pos + 1,curCost,houses[pos],dp);
+		} 
+		else {
+			for (int i = 0; i < cost[0].length; i++) {
+				ret = Math.min(ret,helper(houses,cost,(prev != (i + 1)) ? (target - 1) : target,pos + 1,curCost,(i + 1),dp) + cost[pos][i]);
+			}
+		}
+		return dp[target][pos][prev + 1] = ret;
+	}
+	int minCost(int[] houses, int[][] cost, int m, int n, int target) {
+		int dp = new int[101][101][23];
+		for (int i = 0; i < 101; i++) {
+			for (int j = 0; j < 101; j++) {
+				Arrays.fill(dp[i][j],-1);
+			}
+		}
+		int ret = helper(houses,cost,target,0,0,-1,dp);
+		return (ret < MAX_COST) ? ret : -1;
+	}
+}

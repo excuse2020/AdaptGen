@@ -1,0 +1,69 @@
+class Solution {
+	ListNode endNode = null;
+	ListNode headNode = null;
+	int size = 0;
+	ListNode startNode = null;
+	ListNode tailNode = null;
+	ListNode reverseBetween(ListNode head, int m, int n) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		if (m == n) {
+			return head;
+		}
+		size = n - m;
+		int index = 1;
+		ListNode tempNode = head;
+		while (tempNode.next != null) {
+			index++;
+			if (index == m) {
+				startNode = tempNode;
+				break;
+			}
+			tempNode = tempNode.next;
+		}
+		if (startNode != null) {
+			System.out.println("startNode: " + startNode.val);
+			tailNode = startNode.next;
+			int loopIndex = 0;
+			System.out.println("swap start");
+			swap(startNode.next,startNode.next.next,loopIndex);
+			System.out.println("swap end");
+			startNode.next = headNode;
+			tailNode.next = endNode;
+			return head;
+		} 
+		else {
+			int loopIndex = 0;
+			System.out.println("swap start");
+			swap(head,head.next,loopIndex);
+			System.out.println("swap end");
+			System.out.println(headNode.val);
+			System.out.println(headNode.next.val);
+			head.next = endNode;
+			return headNode;
+		}
+	}
+	void swap(ListNode p, ListNode c, int loopIndex) {
+		System.out.println("swap");
+		loopIndex++;
+		if (loopIndex <= size) {
+			if (c == null) {
+				swap(null,null,loopIndex);
+			} 
+			else {
+				swap(c,c.next,loopIndex);
+			}
+		}
+		if (loopIndex > size) {
+			headNode = p;
+			endNode = c;
+			System.out.println("headNode");
+		} 
+		else {
+			if (c != null) {
+				c.next = p;
+			}
+		}
+	}
+}

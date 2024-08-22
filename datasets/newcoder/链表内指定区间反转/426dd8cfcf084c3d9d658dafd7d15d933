@@ -1,0 +1,38 @@
+class Solution {
+	ListNode reverseBetween(ListNode head, int m, int n) {
+		if (head == null || head.next == null || m == n) {
+			return head;
+		}
+		ListNode nNode = head;
+		ListNode prevOfInsert = new ListNode(-1);
+		prevOfInsert.next = head;
+		int i = 1;
+		int j = m;
+		while (i < m) {
+			i++;
+			prevOfInsert = prevOfInsert.next;
+			nNode = nNode.next;
+		}
+		Stack<ListNode> backup = new Stack<ListNode>();
+		while (j < n) {
+			j++;
+			backup.push(nNode);
+			nNode = nNode.next;
+		}
+		backup.push(nNode);
+		ListNode nextOfInsert = nNode.next;
+		prevOfInsert.next = nextOfInsert;
+		nNode.next = null;
+		ListNode toBeInsert = null;
+		while (!backup.empty()) {
+			toBeInsert = backup.pop();
+			toBeInsert.next = nextOfInsert;
+			prevOfInsert.next = toBeInsert;
+			prevOfInsert = toBeInsert;
+		}
+		if (m == 1) {
+			return nNode;
+		}
+		return head;
+	}
+}

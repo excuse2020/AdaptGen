@@ -1,0 +1,27 @@
+class Solution {
+	long[] countBlackBlocks(int rows, int cols, int[][] blacks) {
+		long total = ((long) rows - 1) * (cols - 1);
+		HashMap<String, Integer> topLeftToCnt = new HashMap<>();
+		for (int[] p: blacks) {	
+			int r = p[0], c = p[1];
+			if (r < rows - 1 && c < cols - 1) {
+				topLeftToCnt.put(r + "-",topLeftToCnt.getOrDefault(r + "-",0) + 1);
+			}
+			if (r < rows - 1 && c > 0) {
+				topLeftToCnt.put(r + "-",topLeftToCnt.getOrDefault(r + "-",0) + 1);
+			}
+			if (r > 0 && c < cols - 1) {
+				topLeftToCnt.put((r - 1) + "-",topLeftToCnt.getOrDefault((r - 1) + "-",0) + 1);
+			}
+			if (r > 0 && c > 0) {
+				topLeftToCnt.put((r - 1) + "-",topLeftToCnt.getOrDefault((r - 1) + "-",0) + 1);
+			}
+		}
+		long[] ans = new long[5];
+		for (int cnt: topLeftToCnt.values()) {	
+			ans[cnt]++;
+		}
+		ans[0] = total - ans[1];
+		return ans;
+	}
+}

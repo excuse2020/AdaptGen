@@ -1,0 +1,85 @@
+class Solution {
+	boolean isAllZeros(String str) {
+		if (str.length() == 1) {
+			return false;
+		}
+		boolean rs = true;
+		for (char chr: str.toCharArray()) {	
+			if (chr != '0') {
+				rs = false;
+				break;
+			}
+		}
+		return rs;
+	}
+	boolean isFigure(String str) {
+		boolean rs = true;
+		for (char chr: str.toCharArray()) {	
+			if (chr < '0' || chr > '9') {
+				rs = false;
+				break;
+			}
+		}
+		return rs;
+	}
+	boolean isValid(String str) {
+		boolean rs = true;
+		for (char chr: str.toCharArray()) {	
+			if (!((chr >= 'a' && chr <= 'f') || (chr >= 'A' && chr <= 'F') || (chr >= '0' && chr <= '9'))) {
+				rs = false;
+				break;
+			}
+		}
+		return rs;
+	}
+	String solve(String IP) {
+		String rs = "Neither";
+		String[] judgement = IP.split("\\.");
+		if (judgement.length > 1) {
+			if (IP.split("\\.").length != 4) {
+				return "Neither";
+			} 
+			else {
+				for (String str: IP.split("\\.")) {	
+					if (!isFigure(str)) {
+						return "Neither";
+					} 
+					else {
+						if (Integer.valueOf(str) < 0 || Integer.valueOf(str) > 255) {
+							return "Neither";
+						} 
+						else {
+							if ((Integer.valueOf(str) + "").length() != str.length()) {
+								return "Neither";
+							}
+						}
+					}
+				}
+				rs = "IPv4";
+			}
+		} 
+		else {
+			if (IP.split(":").length != 8) {
+				return "Neither";
+			}
+			if (IP.charAt(IP.length() - 1) == ':') {
+				return "Neither";
+			} 
+			else {
+				for (String str: IP.split(":")) {	
+					if (str.length() > 4) {
+						return "Neither";
+					}
+					if (isAllZeros(str)) {
+						return "Neither";
+					}
+					if (!isValid(str)) {
+						return "Neither";
+					}
+				}
+				rs = "IPv6";
+			}
+		}
+		return rs;
+	}
+}

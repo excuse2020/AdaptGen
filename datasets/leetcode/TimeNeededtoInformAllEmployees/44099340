@@ -1,0 +1,21 @@
+class Solution {
+	int func(int employee, int[] manager, int[] informTime, int memo) {
+		if (manager[employee] == -1) {
+			return 0;
+		}
+		if (memo[manager[employee]] == -1) {
+			memo[manager[employee]] = func(manager[employee],manager,informTime,memo) + informTime[manager[employee]];
+		}
+		return memo[manager[employee]];
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		int[] memo = new int[n];
+		Arrays.fill(memo,-1);
+		for (int i = 0; i < n; i++) {
+			if (informTime[i] == 0) {
+				func(i,manager,informTime,memo);
+			}
+		}
+		return Math.max(Arrays.stream(memo).max().orElse(0),0);
+	}
+}

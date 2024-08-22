@@ -1,0 +1,47 @@
+class Solution {
+	int[] freq = new int[10];
+	boolean isPalindrome() {
+		int cnt = 0;
+		for (int n: freq) {	
+			cnt += n;
+		}
+		System.out.println(cnt);
+		if (cnt % 2 == 0) {
+			for (int n: freq) {	
+				if (n % 2 != 0) {
+					return false;
+				}
+			}
+			return true;
+		} 
+		else {
+			boolean found = false;
+			for (int n: freq) {	
+				if (n % 2 == 1) {
+					if (found) {
+						return false;
+					}
+					found = true;
+				}
+			}
+			return true;
+		}
+	}
+	int pseudoPalindromicPaths(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		freq[root.val]++;
+		if (root.left == null && root.right == null) {
+			if (isPalindrome()) {
+				freq[root.val]--;
+				return 1;
+			}
+			freq[root.val]--;
+			return 0;
+		}
+		int res = pseudoPalindromicPaths(root.left) + pseudoPalindromicPaths(root.right);
+		freq[root.val]--;
+		return res;
+	}
+}

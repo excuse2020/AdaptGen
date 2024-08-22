@@ -1,0 +1,45 @@
+class Solution {
+	int[] houses;
+	int k;
+	Integer[][][] memo;
+	Integer[][] sum;
+	int dp(int start, int end, int k) {
+		if (start == end) {
+			return 0;
+		}
+		if (memo[start][end][k] != null) {
+			return memo[start][end][k];
+		}
+		int cur = Integer.MAX_VALUE;
+		if (k > 1) {
+			for (int i = start; i < end; i++) {
+				cur = Math.min(cur,findSum(start,i) + dp(i + 1,end,k - 1));
+			}
+		} 
+		else {
+			cur = findSum(start,end);
+		}
+		memo[start][end][k] = cur;
+		return memo[start][end][k];
+	}
+	int findSum(int start, int end) {
+		if (sum[start][end] != null) {
+			return sum[start][end];
+		}
+		int medium = start + (end - start) / 2;
+		int result = 0;
+		for (int i = start; i <= end; i++) {
+			result += Math.abs(houses[i] - houses[medium]);
+		}
+		sum[start][end] = result;
+		return sum[start][end];
+	}
+	int minDistance(int[] houses, int k) {
+		Arrays.sort(houses);
+		memo = new Integer[houses.length][houses.length][k + 1];
+		sum = new Integer[houses.length][houses.length];
+		this.houses = houses;
+		this.k = k;
+		return dp(0,houses.length - 1,k);
+	}
+}

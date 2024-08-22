@@ -1,0 +1,29 @@
+class Solution {
+	Map<Integer, Integer> bottomUp(int[] nums, int index) {
+		if (index == nums.length) {
+			return null;
+		}
+		Map<Integer, Integer> map = new HashMap<>();
+		Map<Integer, Integer> temp = bottomUp(nums,index + 1);
+		int val = nums[index];
+		if (temp != null) {
+			for (Map.Entry<Integer, Integer> entry: temp.entrySet()) {	
+				int key = entry.getKey(), value = entry.getValue();
+				map.put(key,value);
+			}
+			for (Map.Entry<Integer, Integer> entry: temp.entrySet()) {	
+				int key = entry.getKey(), value = entry.getValue();
+				map.put(key | val,map.getOrDefault(key | val,0) + value);
+			}
+		}
+		map.put(val,map.getOrDefault(val,0) + 1);
+		return map;
+	}
+	int countMaxOrSubsets(int[] nums) {
+		int maxOR = 0;
+		for (int num: nums) {	
+			maxOR = maxOR | num;
+		}
+		return bottomUp(nums,0).getOrDefault(maxOR,0);
+	}
+}

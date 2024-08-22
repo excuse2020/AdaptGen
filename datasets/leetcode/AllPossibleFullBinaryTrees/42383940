@@ -1,0 +1,38 @@
+class Solution {
+	Map<Integer, List<TreeNode>> map;
+	List<TreeNode> allPossibleFBT(int n) {
+		List<TreeNode> res = new ArrayList<>();
+		if (n == 2 || n % 2 == 0) {
+			return res;
+		}
+		map = new HashMap<>();
+		return getTree(n);
+	}
+	List<TreeNode> getTree(int n) {
+		List<TreeNode> res = new ArrayList<>();
+		if (n < 1 || n == 2) {
+			return res;
+		}
+		if (n == 1) {
+			res.add(new TreeNode(0));
+			return res;
+		}
+		if (map.containsKey(n)) {
+			return map.get(n);
+		}
+		for (int i = 1; i <= n - 2; i += 2) {
+			List<TreeNode> left = getTree(i);
+			List<TreeNode> right = getTree(n - i);
+			for (TreeNode l: left) {	
+				for (TreeNode r: right) {	
+					TreeNode t = new TreeNode(0);
+					t.left = l;
+					t.right = r;
+					res.add(t);
+				}
+			}
+		}
+		map.put(n,res);
+		return res;
+	}
+}

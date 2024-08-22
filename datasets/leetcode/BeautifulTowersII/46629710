@@ -1,0 +1,52 @@
+class Solution {
+	long maximumSumOfHeights(List<Integer> maxHeights) {
+		int n = maxHeights.size();
+		int[] NSER = new int[n];
+		Arrays.fill(NSER,n);
+		Stack<Integer> monoIncreasingStack = new Stack<>();
+		for (int i = 0; i < n; i++) {
+			while (!monoIncreasingStack.isEmpty() && maxHeights.get(i) < maxHeights.get(monoIncreasingStack.peek())) {
+				int popIndex = monoIncreasingStack.pop();
+				NSER[popIndex] = i;
+			}
+			monoIncreasingStack.push(i);
+		}
+		int[] NSEL = new int[n];
+		Arrays.fill(NSEL,-1);
+		monoIncreasingStack = new Stack<>();
+		for (int i = n - 1; i >= 0; i--) {
+			while (!monoIncreasingStack.isEmpty() && maxHeights.get(i) < maxHeights.get(monoIncreasingStack.peek())) {
+				int popIndex = monoIncreasingStack.pop();
+				NSEL[popIndex] = i;
+			}
+			monoIncreasingStack.push(i);
+		}
+		long[] leftSum = new long[n];
+		leftSum[0] = maxHeights.get(0);
+		for (int i = 1; i < n; i++) {
+			int nsel = NSEL[i];
+			if (nsel == -1) {
+				leftSum[i] = maxHeights.get(i) * 1L;
+			} 
+			else {
+				leftSum[i] = 1L * leftSum[nsel] + 1L * maxHeights.get(i);
+			}
+		}
+		long[] rightSum = new long[n];
+		rightSum[n - 1] = maxHeights.get(n - 1);
+		for (int i = n - 2; i >= 0; i--) {
+			int nser = NSER[i];
+			if (nser == n) {
+				rightSum[i] = 1L * maxHeights.get(i);
+			} 
+			else {
+				rightSum[i] = 1L * rightSum[nser] + 1L * maxHeights.get(i);
+			}
+		}
+		long maxSum = 0;
+		for (int i = 0; i < n; i++) {
+			maxSum = Math.max(maxSum,1L * leftSum[i] + 1L * rightSum[i] - 1L * maxHeights.get(i));
+		}
+		return maxSum;
+	}
+}

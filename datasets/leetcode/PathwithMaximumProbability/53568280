@@ -1,0 +1,36 @@
+class Solution {
+	double maxProbability(int n, int[][] edges, double[] succProb, int start_node, int end_node) {
+		ArrayList<double[]>[] adjlst = new ArrayList[n];
+		ArrayList<Double> max = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adjlst[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < edges.length; i++) {
+			adjlst[edges[i][0]].add(new double{edges[i][1], succProb[i]});
+			adjlst[edges[i][1]].add(new double{edges[i][0], succProb[i]});
+		}
+		boolean[] visited = new boolean[n];
+		PriorityQueue<double[]> pq = new PriorityQueue<>((a, b) -> {Double.compare(b[1],a[1])});
+		pq.add(new double{start_node, 1});
+		while (!pq.isEmpty()) {
+			double[] temp = pq.poll();
+			if (temp[0] == end_node) {
+				max.add(temp[1]);
+				continue;
+			}
+			if (visited[(int)temp[0]]) {
+				continue;
+			} 
+			else {
+				visited[(int)temp[0]] = true;
+				for (double[] ne: adjlst[(int)temp[0]]) {	
+					pq.add(new double{ne[0], ne[1] * temp[1]});
+				}
+			}
+		}
+		if (!max.isEmpty()) {
+			return Collections.max(max);
+		}
+		return 0;
+	}
+}

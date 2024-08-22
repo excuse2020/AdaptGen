@@ -1,0 +1,37 @@
+class Solution {
+	boolean isPartition(String value, int start, int target) {
+		if (start == value.length()) {
+			return false;
+		}
+		int number = Integer.valueOf(value.substring(start,value.length()));
+		if (number == target) {
+			return true;
+		}
+		for (int i = start + 1; i < value.length(); i++) {
+			int num = Integer.valueOf(value.substring(start,i));
+			if (num <= target) {
+				if (isPartition(value,i,target - num)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	int punishmentNumber(int n) {
+		boolean[] number = new boolean[n + 1];
+		for (int i = 1; i <= n; i++) {
+			if (isPartition(String.valueOf(i * i),0,i)) {
+				number[i] = true;
+			}
+		}
+		int sum = 0;
+		int i = 0;
+		while (i <= n) {
+			if (number[i]) {
+				sum += i * i;
+			}
+			i++;
+		}
+		return sum;
+	}
+}

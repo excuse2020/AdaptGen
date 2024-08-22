@@ -1,0 +1,43 @@
+class Solution {
+	ListNode divdeMearge(int left, int right, ArrayList<ListNode> lists) {
+		if (left > right) {
+			return null;
+		}
+		if (left == right) {
+			return lists.get(left);
+		}
+		int mid = (left + right) / 2;
+		return merge(divdeMearge(left,mid,lists),divdeMearge(mid + 1,right,lists));
+	}
+	ListNode merge(ListNode leftlist, ListNode rightlist) {
+		if (leftlist == null) {
+			return rightlist;
+		}
+		if (rightlist == null) {
+			return leftlist;
+		}
+		ListNode dummpy = new ListNode(0);
+		ListNode res = dummpy;
+		while (leftlist != null && rightlist != null) {
+			if (leftlist.val < rightlist.val) {
+				dummpy.next = leftlist;
+				leftlist = leftlist.next;
+			} 
+			else {
+				dummpy.next = rightlist;
+				rightlist = rightlist.next;
+			}
+			dummpy = dummpy.next;
+		}
+		if (leftlist == null) {
+			dummpy.next = rightlist;
+		}
+		if (rightlist == null) {
+			dummpy.next = leftlist;
+		}
+		return res.next;
+	}
+	ListNode mergeKLists(ArrayList<ListNode> lists) {
+		return divdeMearge(0,lists.size() - 1,lists);
+	}
+}

@@ -1,0 +1,25 @@
+class Solution {
+	boolean carPooling(int[][] trips, int capacity) {
+		for (int[] trip: trips) {	
+			if (trip[0] > capacity) {
+				return false;
+			}
+		}
+		int lastDropLocation = -1;
+		for (int[] trip: trips) {	
+			lastDropLocation = Math.max(lastDropLocation,trip[2]);
+		}
+		int[] high = new int[lastDropLocation + 1];
+		for (int[] trip: trips) {	
+			high[trip[1]] += trip[0];
+			high[trip[2]] -= trip[0];
+		}
+		for (int i = 1; i <= lastDropLocation; i++) {
+			high[i] += high[i - 1];
+			if (high[i] > capacity) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

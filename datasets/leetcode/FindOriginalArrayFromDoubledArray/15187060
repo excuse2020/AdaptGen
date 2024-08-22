@@ -1,0 +1,22 @@
+class Solution {
+	int[] findOriginalArray(int[] ch) {
+		if (ch.length % 2 != 0) {
+			return new int[0];
+		}
+		Arrays.sort(ch);
+		var idxMap = new HashMap<Integer, List<Integer>>();
+		IntStream.range(0,ch.length).forEach((i) -> {idxMap.computeIfAbsent(ch[i],(k) -> {new ArrayList<Integer>()}).add(i)});
+		for (int i = 0; i < ch.length; i++) {
+			if (ch[i] < 0) {
+				continue;
+			}
+			List<Integer> idx2xList = idxMap.get(ch[i] * 2);
+			if (idx2xList == null || idx2xList.isEmpty()) {
+				return new int[0];
+			}
+			int idx2x = idx2xList.remove(idx2xList.size() - 1);
+			ch[idx2x] = -1;
+		}
+		return Arrays.stream(ch).filter((e) -> {e >= 0}).toArray();
+	}
+}

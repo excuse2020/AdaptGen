@@ -1,0 +1,52 @@
+class Solution {
+	ListNode mergeKLists(List<ListNode> lists) {
+		if (null == lists || lists.size() == 0) {
+			return null;
+		}
+		if (lists.size() >= 2) {
+			int mid = lists.size() / 2;
+			ListNode left = mergeKLists(lists.subList(0,mid));
+			ListNode right = mergeKLists(lists.subList(mid,lists.size()));
+			if (null == left) {
+				return right;
+			}
+			if (null == right) {
+				return left;
+			}
+			ListNode head = left, rHead = null;
+			if (left.val > right.val) {
+				head = right;
+				right = right.next;
+			} 
+			else {
+				left = left.next;
+			}
+			rHead = head;
+			while (null != left && null != right) {
+				if (left.val <= right.val) {
+					head.next = left;
+					head = head.next;
+					left = left.next;
+				} 
+				else {
+					head.next = right;
+					head = head.next;
+					right = right.next;
+				}
+			}
+			while (null != left) {
+				head.next = left;
+				head = head.next;
+				left = left.next;
+			}
+			while (null != right) {
+				head.next = right;
+				head = head.next;
+				right = right.next;
+			}
+			head.next = null;
+			return rHead;
+		}
+		return lists.get(0);
+	}
+}

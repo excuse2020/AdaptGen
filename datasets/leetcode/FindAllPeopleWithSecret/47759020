@@ -1,0 +1,39 @@
+class Solution {
+	List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+		Map<Integer, List<int[]>> meetingCache = new HashMap<>();
+		int[] res = new int[n];
+		Arrays.fill(res,Integer.MAX_VALUE);
+		res[0] = 0;
+		res[firstPerson] = 0;
+		for (int[] meeting: meetings) {	
+			meetingCache.computeIfAbsent(meeting[0],(key) -> {new LinkedList<>()}).add(new int{meeting[1], meeting[2]});
+			meetingCache.computeIfAbsent(meeting[1],(key) -> {new LinkedList<>()}).add(new int{meeting[0], meeting[2]});
+		}
+		Queue<Integer> queue = new LinkedList<>();
+		queue.offer(0);
+		queue.offer(firstPerson);
+		while (!queue.isEmpty()) {
+			int len = queue.size();
+			for (int i = 0; i < len; i++) {
+				int person = queue.poll();
+				if (!meetingCache.containsKey(person)) {
+					continue;
+				}
+				List<int[]> linkings = meetingCache.get(person);
+				for (int[] linking: linkings) {	
+					if (linking[1] >= res[person] && res[linking[0]] > linking[1]) {
+						res[linking[0]] = linking[1];
+						queue.offer(linking[0]);
+					}
+				}
+			}
+		}
+		List<Integer> result = new LinkedList<>();
+		for (int i = 0; i < res.length; i++) {
+			if (res[i] < Integer.MAX_VALUE) {
+				result.add(i);
+			}
+		}
+		return result;
+	}
+}

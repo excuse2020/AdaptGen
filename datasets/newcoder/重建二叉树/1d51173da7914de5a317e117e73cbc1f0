@@ -1,0 +1,21 @@
+class Solution {
+	TreeNode dfs(int preStart, int vinStart, int vinEnd, int[] preOrder, int[] vinOrder) {
+		if (preStart > preOrder.length - 1 || vinStart > vinEnd) {
+			return null;
+		}
+		TreeNode root = new TreeNode(preOrder[preStart]);
+		int index = 0;
+		for (int i = vinStart; i <= vinEnd; i++) {
+			if (vinOrder[i] == preOrder[preStart]) {
+				index = i;
+				break;
+			}
+		}
+		root.left = dfs(preStart + 1,vinStart,index - 1,preOrder,vinOrder);
+		root.right = dfs(preStart + index - vinStart + 1,index + 1,vinEnd,preOrder,vinOrder);
+		return root;
+	}
+	TreeNode reConstructBinaryTree(int[] preOrder, int[] vinOrder) {
+		return dfs(0,0,vinOrder.length - 1,preOrder,vinOrder);
+	}
+}

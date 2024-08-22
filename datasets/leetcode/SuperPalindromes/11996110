@@ -1,0 +1,41 @@
+class Solution {
+	int P_MAX = 100000;
+	int getCountSuperPalindrome(long min, long max, boolean oddLength) {
+		int count = 0;
+		for (int k = 1; k < P_MAX; k++) {
+			String numStr = Integer.toString(k);
+			StringBuilder sb = new StringBuilder(numStr);
+			int start = oddLength ? sb.length() - 2 : sb.length() - 1;
+			for (int i = start; i >= 0; i--) {
+				sb.append(sb.charAt(i));
+			}
+			long palindrome = Long.valueOf(sb.toString());
+			palindrome *= palindrome;
+			if (palindrome > max) {
+				break;
+			}
+			if (palindrome >= min && isPalindrome(palindrome)) {
+				count++;
+			}
+		}
+		return count;
+	}
+	boolean isPalindrome(long num) {
+		return num == reverse(num);
+	}
+	long reverse(long num) {
+		long ans = 0;
+		while (num > 0) {
+			ans = (ans * 10) + (num % 10);
+			num /= 10;
+		}
+		return ans;
+	}
+	int superpalindromesInRange(String left, String right) {
+		long min = Long.valueOf(left);
+		long max = Long.valueOf(right);
+		int countOddLengthPalindromes = getCountSuperPalindrome(min,max,true);
+		int countEvenLengthPalindromes = getCountSuperPalindrome(min,max,false);
+		return countOddLengthPalindromes + countEvenLengthPalindromes;
+	}
+}

@@ -1,0 +1,58 @@
+class Solution {
+	boolean isDigitLog(String log) {
+		String[] split = log.split(" ");
+		int n = split.length;
+		for (int i = 1; i < n; i++) {
+			if (!isNumber(split[i])) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean isNumber(String content) {
+		for (char chr: content.toCharArray()) {	
+			if (!Character.isDigit(chr)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	String[] processLetterLog(String log) {
+		String[] split = log.split(" ");
+		int n = split.length;
+		String[] letter = new String[3];
+		letter[0] = log;
+		letter[1] = split[0];
+		letter[2] = "";
+		for (int i = 1; i < n; i++) {
+			letter[2] += split[i];
+			if (i != n - 1) {
+				letter[2] += " ";
+			}
+		}
+		return letter;
+	}
+	String[] reorderLogFiles(String[] logs) {
+		int n = logs.length;
+		String[] result = new String[n];
+		List<String[]> letterLogs = new ArrayList<>();
+		List<String> digitLogs = new ArrayList<>();
+		for (String log: logs) {	
+			if (isDigitLog(log)) {
+				digitLogs.add(log);
+			} 
+			else {
+				letterLogs.add(processLetterLog(log));
+			}
+		}
+		Collections.sort(letterLogs,(a, b) -> {a[2].equals(b[2]) ? a[1].compareTo(b[1]) : a[2].compareTo(b[2])});
+		int index = 0;
+		for (String[] log: letterLogs) {	
+			result[index++] = log[0];
+		}
+		for (String log: digitLogs) {	
+			result[index++] = log;
+		}
+		return result;
+	}
+}

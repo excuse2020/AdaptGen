@@ -1,0 +1,28 @@
+class Solution {
+	int deleteGreatestValue(int[][] grid) {
+		int ans = 0;
+		int n = 0;
+		int[] res = new int[grid[0].length];
+		int[] tmp = new int[grid.length];
+		while (n < grid[0].length) {
+			for (int i = 0; i < grid.length; i++) {
+				PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> {b - a});
+				for (int j = 0; j < grid[0].length; j++) {
+					pq.add(grid[i][j]);
+				}
+				for (int m = 0; m < n; m++) {
+					pq.poll();
+				}
+				tmp[i] = Math.max(pq.poll(),tmp[i]);
+			}
+			Arrays.sort(tmp);
+			res[n++] = tmp[grid.length - 1];
+			Arrays.fill(tmp,0);
+		}
+		for (int i: res) {	
+			ans += i;
+		}
+		System.gc();
+		return ans;
+	}
+}

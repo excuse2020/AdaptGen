@@ -1,0 +1,32 @@
+class Solution {
+	int maxPointsInsideSquare(int[][] points, String s) {
+		HashMap<Character, int[]> map = new HashMap<>();
+		int max = Integer.MAX_VALUE;
+		for (int i = 0; i < s.length(); i++) {
+			if (map.containsKey(s.charAt(i))) {
+				int maxP = Math.max(Math.abs(points[i][0]),Math.abs(points[i][1]));
+				int maxPP = Math.max(Math.abs(map.get(s.charAt(i))[0]),Math.abs(map.get(s.charAt(i))[1]));
+				if (maxP < maxPP) {
+					map.remove(s.charAt(i));
+					map.put(s.charAt(i),points[i]);
+				}
+				maxPP = Math.max(maxP,maxPP);
+				max = Math.min(maxPP,max);
+			} 
+			else {
+				map.put(s.charAt(i),points[i]);
+			}
+		}
+		System.out.println(map + " ");
+		max = max - 1;
+		int ans = 0;
+		for (int i = 0; i < s.length(); i++) {
+			if (points[i][1] <= max && points[i][1] >= -max) {
+				if (points[i][0] <= max && points[i][0] >= -max) {
+					ans++;
+				}
+			}
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,29 @@
+class Solution {
+	int countDays(int days, int[][] meetings) {
+		Arrays.sort(meetings,(a, b) -> {a[0] - b[0]});
+		List<int[]> lst = new ArrayList<>();
+		int i = 0;
+		int ans = 0;
+		while (i < meetings.length) {
+			int j = i + 1;
+			int maxEnd = meetings[i][1];
+			while (j < meetings.length && meetings[j][0] <= maxEnd) {
+				maxEnd = Math.max(maxEnd,meetings[j][1]);
+				j++;
+			}
+			lst.add(new int{meetings[i][0], maxEnd});
+			i = j;
+		}
+		i = 1;
+		int size = lst.size();
+		while (i < size) {
+			int prevEnd = lst.get(i - 1)[1];
+			int currStart = lst.get(i)[0];
+			ans += currStart - prevEnd;
+			i++;
+		}
+		ans += days - lst.get(size - 1)[1];
+		ans += lst.get(0)[0] - 1;
+		return ans;
+	}
+}

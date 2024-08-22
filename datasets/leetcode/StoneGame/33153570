@@ -1,0 +1,29 @@
+class Solution {
+	int[][] dp;
+	int n;
+	int[] piles;
+	int dfs(int st, int ed, boolean isAliceTurn) {
+		if (st > ed) {
+			return 0;
+		}
+		if (dp[st][ed] == Integer.MIN_VALUE) {
+			if (isAliceTurn) {
+				dp[st][ed] = Math.max(piles[st] + dfs(st + 1,ed,false),piles[ed] + dfs(st,ed - 1,false));
+			} 
+			else {
+				dp[st][ed] = Math.max(-piles[st] + dfs(st + 1,ed,true),-piles[ed] + dfs(st,ed - 1,true));
+			}
+		}
+		return dp[st][ed];
+	}
+	boolean stoneGame(int[] piles) {
+		this.piles = piles;
+		this.n = piles.length;
+		dp = new int[n][n];
+		for (int i = 0; i < n; i++) {
+			Arrays.fill(dp[i],Integer.MIN_VALUE);
+		}
+		int scoreDiff = dfs(0,n - 1,true);
+		return scoreDiff > 0;
+	}
+}

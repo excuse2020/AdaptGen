@@ -1,0 +1,32 @@
+class Solution {
+	boolean x = false;
+	Stack<Integer> eval(TreeNode root, Stack<Integer> st) {
+		if (root != null) {
+			st = eval(root.left,st);
+			st = eval(root.right,st);
+			if (root.val == 2 || root.val == 3) {
+				int a = st.pop();
+				int b = st.pop();
+				if (root.val == 2) {
+					st.push(a | b);
+				} 
+				else if (root.val == 3) {
+					st.push(a & b);
+				}
+			} 
+			else {
+				st.push(root.val);
+			}
+		}
+		return st;
+	}
+	boolean evaluateTree(TreeNode root) {
+		Stack<Integer> st = new Stack<>();
+		st = eval(root,st);
+		int y = st.pop();
+		if (y == 0) {
+			return false;
+		}
+		return true;
+	}
+}

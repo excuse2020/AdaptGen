@@ -1,0 +1,33 @@
+class Solution {
+	int maximumSum(int[] nums) {
+		Map<Integer, PriorityQueue<Integer>> sumOfDigitsToNums = new HashMap<>();
+		for (int n: nums) {	
+			int sum = sumOfDigits(n);
+			if (!sumOfDigitsToNums.containsKey(sum)) {
+				sumOfDigitsToNums.put(sum,new PriorityQueue<>());
+			}
+			PriorityQueue<Integer> pq = sumOfDigitsToNums.get(sum);
+			pq.add(n);
+			if (pq.size() > 2) {
+				pq.remove();
+			}
+		}
+		int result = -1;
+		for (int sum: sumOfDigitsToNums.keySet()) {	
+			PriorityQueue<Integer> pq = sumOfDigitsToNums.get(sum);
+			if (pq.size() == 2) {
+				int curr = pq.remove() + pq.remove();
+				result = Math.max(result,curr);
+			}
+		}
+		return result;
+	}
+	int sumOfDigits(int n) {
+		int sum = 0;
+		while (n != 0) {
+			sum += n % 10;
+			n /= 10;
+		}
+		return sum;
+	}
+}

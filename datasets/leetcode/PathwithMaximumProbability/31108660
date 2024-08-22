@@ -1,0 +1,35 @@
+class Solution {
+	double maxProbability(int n, int[][] edges, double[] succProb, int start, int end) {
+		Map<Integer, List<int[]>> graph = new HashMap<>();
+		for (int i = 0; i < edges.length; i++) {
+			int[] edge = edges[i];
+			graph.computeIfAbsent(edge[0],(x) -> {new ArrayList<>()}).add(new int{edge[1], i});
+			graph.computeIfAbsent(edge[1],(x) -> {new ArrayList<>()}).add(new int{edge[0], i});
+		}
+		PriorityQueue<double[]> pq = new PriorityQueue<>((a, b) -> {Double.compare(b[1],a[1])});
+		pq.add(new double{start, 1});
+		double[] probs = new double[n];
+		probs[start] = 1;
+		while (!pq.isEmpty()) {
+			double[] cur = pq.poll();
+			int node = (int) cur[0];
+			double prob = cur[1];
+			if (probs[node] > prob) {
+				continue;
+			}
+			if (node == end) {
+				return prob;
+			}
+			if (!graph.containsKey(node)) {
+				continue;
+			}
+			for (int[] next: graph.get(node)) {	
+				if (prob * succProb[next[1]] > probs[next[0]]) {
+					probs[next[0]] = prob * succProb[next[1]];
+					pq.add(new double{next[0], probs[next[0]]});
+				}
+			}
+		}
+		return 0;
+	}
+}

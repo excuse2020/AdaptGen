@@ -1,0 +1,42 @@
+class Solution {
+	boolean VerifySquenceOfBST(int[] sequence) {
+		if (sequence == null || sequence.length == 0) {
+			return false;
+		}
+		int[] mid = new int[sequence.length];
+		for (int i = 0; i < sequence.length; i++) {
+			mid[i] = sequence[i];
+		}
+		Arrays.sort(mid);
+		return helper(sequence,0,sequence.length - 1,mid,0,sequence.length - 1);
+	}
+	boolean helper(int[] last, int lastL, int lastR, int[] mid, int midL, int midR) {
+		if (lastL >= lastR) {
+			return true;
+		}
+		int root = last[lastR];
+		int i = midL;
+		for (; i <= midR; i++) {
+			if (root == mid[i]) {
+				break;
+			}
+		}
+		return judgeL(last,lastL,i - midL + lastL - 1,root) && judgeR(last,i - midL + lastL,lastR - 1,root);
+	}
+	boolean judgeL(int[] last, int lastL, int lastR, int root) {
+		for (int i = lastL; i <= lastR; i++) {
+			if (last[i] > root) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean judgeR(int[] last, int lastL, int lastR, int root) {
+		for (int i = lastL; i <= lastR; i++) {
+			if (last[i] < root) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

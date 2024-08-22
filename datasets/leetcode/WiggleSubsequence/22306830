@@ -1,0 +1,23 @@
+class Solution {
+	int wiggleMaxLength(int[] nums) {
+		int n = nums.length;
+		return Math.max(wiggleUtil(nums,0,0),wiggleUtil(nums,0,1));
+	}
+	int wiggleUtil(int[] nums, int index, int previous, int[][] dp) {
+		if (index == nums.length) {
+			return 0;
+		}
+		int notInclude = wiggleUtil(nums,index + 1,previous);
+		int include = 0;
+		int next = previous == 0 ? 1 : 0;
+		if (index > 0) {
+			if ((previous == 1 && nums[index] > nums[index - 1]) || (previous == 0 && nums[index] < nums[index - 1])) {
+				include = 1 + wiggleUtil(nums,index + 1,next);
+			}
+		} 
+		else {
+			include = 1 + wiggleUtil(nums,index + 1,next);
+		}
+		return Math.max(notInclude,include);
+	}
+}

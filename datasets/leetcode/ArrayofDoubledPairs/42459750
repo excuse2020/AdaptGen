@@ -1,0 +1,55 @@
+class Solution {
+	boolean canReorderDoubled(int[] vals) {
+		TreeMap<Integer, Integer> valToCnt = new TreeMap<>();
+		for (int val: vals) {	
+			valToCnt.put(val,valToCnt.getOrDefault(val,0) + 1);
+		}
+		if (valToCnt.containsKey(0)) {
+			if (valToCnt.get(0) % 2 != 0) {
+				return false;
+			}
+			valToCnt.remove(0);
+		}
+		for (int cur = 0; true; ) {
+			Integer nextVal = valToCnt.higherKey(cur);
+			if (nextVal == null) {
+				break;
+			}
+			cur = nextVal;
+			int nextCnt = valToCnt.get(nextVal);
+			int doubleNextVal = nextVal * 2;
+			Integer doubleNextCnt = valToCnt.get(doubleNextVal);
+			if (doubleNextCnt == null || !(doubleNextCnt >= nextCnt)) {
+				return false;
+			}
+			valToCnt.remove(nextVal);
+			if (doubleNextCnt > nextCnt) {
+				valToCnt.put(doubleNextVal,doubleNextCnt - nextCnt);
+			} 
+			else {
+				valToCnt.remove(doubleNextVal);
+			}
+		}
+		for (int cur = 0; true; ) {
+			Integer nextVal = valToCnt.lowerKey(cur);
+			if (nextVal == null) {
+				break;
+			}
+			cur = nextVal;
+			int nextCnt = valToCnt.get(nextVal);
+			int doubleNextVal = nextVal * 2;
+			Integer doubleNextCnt = valToCnt.get(doubleNextVal);
+			if (doubleNextCnt == null || !(doubleNextCnt >= nextCnt)) {
+				return false;
+			}
+			valToCnt.remove(nextVal);
+			if (doubleNextCnt > nextCnt) {
+				valToCnt.put(doubleNextVal,doubleNextCnt - nextCnt);
+			} 
+			else {
+				valToCnt.remove(doubleNextVal);
+			}
+		}
+		return true;
+	}
+}

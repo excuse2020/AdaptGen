@@ -1,0 +1,44 @@
+class Solution {
+	int earliestFullBloom(int[] plantTime, int[] growTime) {
+		quickSort(growTime,plantTime,0,plantTime.length - 1);
+		int endofGrow = 0;
+		int plantDate = 0;
+		for (int i = 0; i < plantTime.length; i++) {
+			plantDate += plantTime[i];
+			int curEOG = plantDate + growTime[i];
+			if (curEOG > endofGrow) {
+				endofGrow = curEOG;
+			}
+		}
+		return endofGrow;
+	}
+	void quickSort(int[] nums, int[] nums2, int l, int h) {
+		if (h <= l) {
+			return;
+		}
+		int s = l, e = h, pivot = nums[(l + h) / 2];
+		while (s <= e) {
+			while (nums[s] > pivot) {
+				s++;
+			}
+			while (pivot > nums[e]) {
+				e--;
+			}
+			if (s == e) {
+				s++;
+				e--;
+				break;
+			}
+			if (s < e) {
+				int temp = nums[s];
+				int temp2 = nums2[s];
+				nums[s] = nums[e];
+				nums2[s++] = nums2[e];
+				nums[e] = temp;
+				nums2[e--] = temp2;
+			}
+		}
+		quickSort(nums,nums2,l,e);
+		quickSort(nums,nums2,s,h);
+	}
+}

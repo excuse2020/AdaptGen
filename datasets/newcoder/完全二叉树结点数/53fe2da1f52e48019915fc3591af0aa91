@@ -1,0 +1,43 @@
+class Solution {
+	boolean isNullLeaf(int leafId, int h, TreeNode head) {
+		int bitmask = 1 << h - 1;
+		TreeNode cur = head;
+		while (bitmask > 0) {
+			boolean goRight = (bitmask & leafId) > 0;
+			if (goRight) {
+				cur = cur.right;
+			} 
+			else {
+				cur = cur.left;
+			}
+			bitmask >>= 1;
+		}
+		return cur == null;
+	}
+	int nodeNum(TreeNode head) {
+		if (head == null) {
+			return 0;
+		}
+		TreeNode t = head;
+		int h = 0;
+		while (t.left != null) {
+			t = t.left;
+			h++;
+		}
+		if (h == 0) {
+			return 1;
+		}
+		int lo = 0, hi = (int) Math.pow(2,h) - 1;
+		while (lo <= hi) {
+			int mid = lo + ((hi - lo) >> 1);
+			if (isNullLeaf(mid,h,head)) {
+				hi = mid - 1;
+			} 
+			else {
+				lo = mid + 1;
+			}
+		}
+		int numNonLeaf = (int) Math.pow(2,h) - 1;
+		return numNonLeaf + hi;
+	}
+}

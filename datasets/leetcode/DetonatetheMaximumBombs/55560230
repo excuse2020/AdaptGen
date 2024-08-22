@@ -1,0 +1,41 @@
+class Solution {
+	int bfs(int cur, int[][] b, boolean[] v) {
+		v[cur] = true;
+		Queue<int[]> q = new LinkedList<>();
+		q.offer(b[cur]);
+		int cnt = 1;
+		while (!q.isEmpty()) {
+			int[] node = q.poll();
+			for (int i = 0; i < b.length; i++) {
+				if (!v[i] && isRange(node,b[i])) {
+					cnt++;
+					v[i] = true;
+					q.offer(b[i]);
+				}
+			}
+		}
+		return cnt;
+	}
+	int dfs(int idx, int[][] b, boolean[] v) {
+		int cnt = 0;
+		v[idx] = true;
+		for (int i = 0; i < b.length; i++) {
+			if (!v[i] && isRange(b[idx],b[i])) {
+				cnt += dfs(i,b,v);
+			}
+		}
+		return 1 + cnt;
+	}
+	boolean isRange(int[] b1, int[] b2) {
+		long dx = b1[0] - b2[0], dy = b1[1] - b2[1], r = b1[2];
+		return dx * dx + dy * dy <= r * r;
+	}
+	int maximumDetonation(int[][] bombs) {
+		int m = bombs.length;
+		int max = 0;
+		for (int i = 0; i < m; i++) {
+			max = Math.max(max,bfs(i,bombs,new boolean[bombs.length]));
+		}
+		return max;
+	}
+}

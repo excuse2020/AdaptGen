@@ -1,0 +1,27 @@
+class Solution {
+	int maximumLength(int[] nums, int k) {
+		int n = nums.length;
+		int[][] dp = new int[k][n];
+		int[] lastPos = new int[k];
+		Arrays.fill(lastPos,-1);
+		for (int[] inner: dp) {	
+			Arrays.fill(inner,1);
+		}
+		int rem = nums[0] % k;
+		lastPos[rem] = 0;
+		int res = 0;
+		for (int i = 1; i < n; i++) {
+			int currRem = nums[i] % k;
+			for (int j = 0; j < k; j++) {
+				int lastPosition = lastPos[j];
+				int newRem = (currRem + j) % k;
+				if (lastPosition >= 0) {
+					dp[newRem][i] = dp[newRem][lastPosition] + 1;
+					res = Math.max(res,dp[newRem][i]);
+				}
+			}
+			lastPos[currRem] = i;
+		}
+		return res;
+	}
+}

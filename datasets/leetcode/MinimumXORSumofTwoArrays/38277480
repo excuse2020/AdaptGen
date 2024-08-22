@@ -1,0 +1,28 @@
+class Solution {
+	Integer[][] dp;
+	int[] nums1;
+	int[] nums2;
+	int dfs(int i, int mask) {
+		if (i == nums1.length) {
+			return 0;
+		}
+		if (dp[i][mask] != null) {
+			return dp[i][mask];
+		}
+		int total = Integer.MAX_VALUE;
+		for (int j = 0; j < nums1.length; j++) {
+			if (((1 << j) & mask) == 0) {
+				int curr = (nums1[i] ^ nums2[j]) + dfs(i + 1,((1 << j) | mask));
+				total = Math.min(total,curr);
+			}
+		}
+		return dp[i][mask] = total;
+	}
+	int minimumXORSum(int[] nums1, int[] nums2) {
+		int n = nums1.length;
+		this.nums1 = nums1;
+		this.nums2 = nums2;
+		dp = new Integer[n + 1][1 << (n + 1)];
+		return dfs(0,0);
+	}
+}

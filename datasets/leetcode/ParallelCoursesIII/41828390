@@ -1,0 +1,31 @@
+class Solution {
+	int minimumTime(int n, int[][] relations, int[] time) {
+		Map<Integer, ArrayList<Integer>> graph = new HashMap<>();
+		Queue<Integer> queue = new LinkedList<>();
+		int[] indegree = new int[n + 1];
+		int[] max = new int[n + 1];
+		for (int[] relation: relations) {	
+			graph.computeIfAbsent(relation[0],(k) -> {new ArrayList<>()}).add(relation[1]);
+			indegree[relation[1]]++;
+		}
+		for (int i = 1; i <= n; i++) {
+			if (indegree[i] == 0) {
+				queue.add(i);
+				max[i] = time[i - 1];
+			}
+		}
+		while (!queue.isEmpty()) {
+			Integer node = queue.remove();
+			if (graph.containsKey(node)) {
+				for (int child: graph.get(node)) {	
+					indegree[child]--;
+					max[child] = Math.max(max[child],max[node] + time[child - 1]);
+					if (indegree[child] == 0) {
+						queue.add(child);
+					}
+				}
+			}
+		}
+		return Arrays.stream(max).max().getAsInt();
+	}
+}

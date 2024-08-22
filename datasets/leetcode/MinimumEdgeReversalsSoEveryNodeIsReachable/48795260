@@ -1,0 +1,46 @@
+class Solution {
+	int dfs(int node, int beforeNode, int dir, List<List<int[]>> list, int dp, int in, int out) {
+		if (list.get(node).size() == 0) {
+			return dir;
+		}
+		int cnt = 0;
+		for (int i = 0; i < list.get(node).size(); i++) {
+			int nextNode = list.get(node).get(i)[0];
+			int nextDir = list.get(node).get(i)[1];
+			if (nextNode == beforeNode) {
+				continue;
+			}
+			if (nextDir == 1) {
+				cnt += dfs(nextNode,node,nextDir,list,dp,in + 1,out);
+			} 
+			else {
+				cnt += dfs(nextNode,node,nextDir,list,dp,in,out + 1);
+			}
+		}
+		dp[node][0] = in;
+		dp[node][1] = out;
+		if (dir == 1) {
+			cnt++;
+		}
+		return cnt;
+	}
+	int[] minEdgeReversals(int n, int[][] edges) {
+		List<List<int[]>> list = new ArrayList<List<int[]>>();
+		for (int i = 0; i < n; i++) {
+			list.add(new ArrayList<int[]>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			int from = edges[i][0];
+			int to = edges[i][1];
+			list.get(from).add(new int{to, 0});
+			list.get(to).add(new int{from, 1});
+		}
+		int dp = new int[n][2];
+		int result = new int[n];
+		result[0] = dfs(0,-1,0,list,dp,0,0);
+		for (int i = 1; i < n; i++) {
+			result[i] = result[0] - dp[i][0] + dp[i][1];
+		}
+		return result;
+	}
+}

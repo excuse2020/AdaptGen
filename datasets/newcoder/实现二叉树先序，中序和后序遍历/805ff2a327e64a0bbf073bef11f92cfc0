@@ -1,0 +1,49 @@
+class Solution {
+	void after(TreeNode root, ArrayList array) {
+		if (root != null) {
+			after(root.left,array);
+			after(root.right,array);
+			array.add(root.val);
+		}
+	}
+	int count(TreeNode root) {
+		if (root == null) {
+			return 0;
+		} 
+		else {
+			int leftCount = count(root.left);
+			int rightCount = count(root.right);
+			return leftCount + rightCount;
+		}
+	}
+	void first(TreeNode root, ArrayList array) {
+		if (root != null) {
+			array.add(root.val);
+			first(root.left,array);
+			first(root.right,array);
+		}
+	}
+	void middle(TreeNode root, ArrayList array) {
+		if (root != null) {
+			middle(root.left,array);
+			array.add(root.val);
+			middle(root.right,array);
+		}
+	}
+	int[][] threeOrders(TreeNode root) {
+		int sum = count(root);
+		int[][] array = new int[3][sum];
+		ArrayList array1 = new ArrayList<Integer>();
+		first(root,array1);
+		middle(root,array1);
+		after(root,array1);
+		int s = 0;
+		for (int i = 0; i < array.length; i++) {
+			for (int j = 0; j < array[i].length; j++) {
+				array[i][j] = (int) array1.get(s);
+				s++;
+			}
+		}
+		return array;
+	}
+}

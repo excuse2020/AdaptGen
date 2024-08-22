@@ -1,0 +1,41 @@
+class Solution {
+	int comp = 0;
+	int edge = 0;
+	Map<Integer, List<Integer>> map = new HashMap<>();
+	int num = 0;
+	boolean[] visited;
+	int countCompleteComponents(int n, int[][] edges) {
+		for (int i = 0; i < n; i++) {
+			map.put(i,new ArrayList<>());
+		}
+		for (int edge: edges) {	
+			map.get(edge[0]).add(edge[1]);
+			map.get(edge[1]).add(edge[0]);
+		}
+		this.visited = new boolean[n];
+		for (int l: map.keySet()) {	
+			if (!visited[l]) {
+				dfs(l);
+				if (edge / 2 == num * (num - 1) / 2) {
+					comp++;
+				}
+				num = 0;
+				edge = 0;
+			}
+		}
+		return comp;
+	}
+	void dfs(int l) {
+		if (!visited[l]) {
+			num++;
+			visited[l] = true;
+			List<Integer> out = map.get(l);
+			edge = edge + out.size();
+			for (int i = 0; i < out.size(); i++) {
+				if (!visited[out.get(i)]) {
+					dfs(out.get(i));
+				}
+			}
+		}
+	}
+}

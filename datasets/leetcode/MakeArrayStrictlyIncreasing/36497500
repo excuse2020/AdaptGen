@@ -1,0 +1,58 @@
+class Solution {
+	int int_max = Integer.MAX_VALUE;
+	int getBigger(int[] arr, int target) {
+		int l = 0, h = arr.length - 1;
+		int ans = -1;
+		while (l <= h) {
+			int mid = l + (h - l) / 2;
+			if (arr[mid] <= target) {
+				l = mid + 1;
+			} 
+			else {
+				ans = arr[mid];
+				h = mid - 1;
+			}
+		}
+		return ans;
+	}
+	int makeArrayIncreasing(int[] arr1, int[] arr2) {
+		Arrays.sort(arr2);
+		HashMap<Pair<Integer, Integer>, Integer> map = new HashMap();
+		int ans = solve(arr1,arr2,map,0,-1);
+		return (ans == int_max ? -1 : ans);
+	}
+	int solve(int[] arr1, int[] arr2, HashMap<Pair<Integer, Integer>, Integer> map, int currIdx, int prev) {
+		if (currIdx == arr1.length) {
+			return 0;
+		}
+		if (map.containsKey(new Pair<>(currIdx, prev))) {
+			return map.get(new Pair<>(currIdx, prev));
+		}
+		int x, y, z;
+		x = y = z = int_max;
+		int newCurr, curr;
+		newCurr = curr = arr1[currIdx];
+		if (arr1[currIdx] <= prev) {
+			newCurr = getBigger(arr2,prev);
+			if (newCurr > prev) {
+				x = solve(arr1,arr2,map,currIdx + 1,newCurr);
+			}
+			if (x != int_max) {
+				x++;
+			}
+		} 
+		else {
+			y = solve(arr1,arr2,map,currIdx + 1,curr);
+			newCurr = getBigger(arr2,prev);
+			if (newCurr > prev) {
+				z = solve(arr1,arr2,map,currIdx + 1,newCurr);
+			}
+			if (z != int_max) {
+				z++;
+			}
+		}
+		int res = Math.min(x,Math.min(y,z));
+		map.put(new Pair<>(currIdx, prev),res);
+		return res;
+	}
+}

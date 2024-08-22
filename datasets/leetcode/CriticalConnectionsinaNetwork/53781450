@@ -1,0 +1,44 @@
+class Solution {
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(i,new ArrayList<>());
+		}
+		for (List<Integer> l: connections) {	
+			int a = l.get(0);
+			int b = l.get(1);
+			adj.get(a).add(b);
+			adj.get(b).add(a);
+		}
+		int[] dis = new int[n];
+		int[] low = new int[n];
+		boolean[] vist = new boolean[n];
+		int time = 0;
+		List<List<Integer>> bridge = new ArrayList<>();
+		dfs(0,-1,time,dis,low,vist,adj,bridge);
+		return bridge;
+	}
+	void dfs(int i, int parent, int time, int[] dis, int[] low, boolean[] vist, ArrayList<ArrayList<Integer>> adj, List<List<Integer>> bridge) {
+		vist[i] = true;
+		dis[i] = time;
+		low[i] = time;
+		time = time + 1;
+		for (int j: adj.get(i)) {	
+			if (j != parent) {
+				if (!vist[j]) {
+					dfs(j,i,time,dis,low,vist,adj,bridge);
+					low[i] = Math.min(low[j],low[i]);
+					if (low[j] > dis[i]) {
+						ArrayList<Integer> l = new ArrayList<>();
+						l.add(i);
+						l.add(j);
+						bridge.add(l);
+					}
+				} 
+				else {
+					low[i] = Math.min(low[j],low[i]);
+				}
+			}
+		}
+	}
+}

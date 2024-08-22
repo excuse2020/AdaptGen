@@ -1,0 +1,55 @@
+class Solution {
+	int snakesAndLadders(int[][] board) {
+		int n = board.length;
+		int m = board[0].length;
+		HashMap<Integer, Integer> map = new HashMap<>();
+		int count = 1;
+		int rowCount = 0;
+		for (int i = n - 1; i >= 0; i--) {
+			if (rowCount % 2 == 0) {
+				for (int j = 0; j < m; j++) {
+					if (board[i][j] != -1) {
+						map.put(count,board[i][j]);
+					}
+					count++;
+				}
+			} 
+			else {
+				for (int j = m - 1; j >= 0; j--) {
+					if (board[i][j] != -1) {
+						map.put(count,board[i][j]);
+					}
+					count++;
+				}
+			}
+			rowCount++;
+		}
+		Queue<Integer> q = new LinkedList<>();
+		q.add(1);
+		HashSet<Integer> visited = new HashSet<>();
+		visited.add(1);
+		int level = 0;
+		while (!q.isEmpty()) {
+			int size = q.size();
+			while (size-- > 0) {
+				int rem = q.remove();
+				if (rem == n * m) {
+					return level;
+				}
+				for (int i = 1; i <= 6; i++) {
+					int next = rem + i;
+					if (map.containsKey(next)) {
+						next = map.get(next);
+					}
+					if (visited.contains(next)) {
+						continue;
+					}
+					q.add(next);
+					visited.add(next);
+				}
+			}
+			level++;
+		}
+		return -1;
+	}
+}

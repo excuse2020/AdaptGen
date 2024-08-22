@@ -1,0 +1,26 @@
+class Solution {
+	int dfs(int curr, int par, Map<Integer, List<Integer>> adj, List<Boolean> hasApple) {
+		int time = 0;
+		for (var neighbour: adj.get(curr)) {	
+			if (neighbour == par) {
+				continue;
+			}
+			int childt = dfs(neighbour,curr,adj,hasApple);
+			if (childt > 0 || hasApple.get(neighbour)) {
+				time += 2 + childt;
+			}
+		}
+		return time;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		HashMap<Integer, List<Integer>> adjList = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			adjList.put(i,new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			(adjList.get(edges[i][0])).add(edges[i][1]);
+			(adjList.get(edges[i][1])).add(edges[i][0]);
+		}
+		return dfs(0,-1,adjList,hasApple);
+	}
+}

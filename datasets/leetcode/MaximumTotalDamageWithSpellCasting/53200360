@@ -1,0 +1,48 @@
+class Solution {
+	long[] memo;
+	long dp(List<int[]> powerWithFreq, int i) {
+		if (i >= powerWithFreq.size()) {
+			return 0;
+		}
+		if (memo[i] != -1) {
+			return memo[i];
+		}
+		long skip = dp(powerWithFreq,i + 1);
+		int nextIdx = nextIdx(powerWithFreq,i);
+		long take = dp(powerWithFreq,nextIdx) + ((long) powerWithFreq.get(i)[0] * powerWithFreq.get(i)[1]);
+		return memo[i] = Math.max(skip,take);
+	}
+	long maximumTotalDamage(int[] power) {
+		Arrays.sort(power);
+		this.memo = new long[power.length];
+		Arrays.fill(memo,-1);
+		List<int[]> powerWithFreq = new ArrayList<>();
+		int idx = 0;
+		while (idx < power.length) {
+			int init = power[idx];
+			int freq = 0;
+			while (idx < power.length && power[idx] == init) {
+				idx++;
+				freq++;
+			}
+			powerWithFreq.add(new int{init, freq});
+		}
+		return dp(powerWithFreq,0);
+	}
+	int nextIdx(List<int[]> powerWithFreq, int i) {
+		int init = powerWithFreq.get(i)[0];
+		if (i + 2 < powerWithFreq.size()) {
+			int val = powerWithFreq.get(i + 2)[0];
+			if (val == init + 1 || val == init + 2) {
+				return i + 3;
+			}
+		}
+		if (i + 1 < powerWithFreq.size()) {
+			int val = powerWithFreq.get(i + 1)[0];
+			if (val == init + 1 || val == init + 2) {
+				return i + 2;
+			}
+		}
+		return i + 1;
+	}
+}

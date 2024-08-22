@@ -1,0 +1,30 @@
+class Solution {
+	int solve(int starting, int ending, int[][] dp, int[] piles) {
+		if (starting > ending) {
+			return 0;
+		}
+		if (dp[starting][ending] != -1) {
+			return dp[starting][ending];
+		}
+		int first = piles[starting] + Math.min(solve(starting + 2,ending,dp,piles),solve(starting + 1,ending - 1,dp,piles));
+		int last = piles[ending] + Math.min(solve(starting,ending - 1,dp,piles),solve(starting + 1,ending - 1,dp,piles));
+		return dp[starting][ending] = Math.max(first,last);
+	}
+	boolean stoneGame(int[] piles) {
+		int[][] dp = new int[piles.length][piles.length];
+		for (int[] row: dp) {	
+			Arrays.fill(row,-1);
+		}
+		int total = 0;
+		for (int i = 0; i < piles.length; i++) {
+			total += piles[i];
+		}
+		int alice = solve(0,piles.length - 1,dp,piles);
+		if (total - alice > alice) {
+			return false;
+		} 
+		else {
+			return true;
+		}
+	}
+}

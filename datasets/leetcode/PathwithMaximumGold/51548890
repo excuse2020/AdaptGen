@@ -1,0 +1,32 @@
+class Solution {
+	int sum;
+	boolean vis;
+	int getMaximumGold(int[][] grid) {
+		sum = 0;
+		vis = new boolean[grid.length][grid[0].length];
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				helper(grid,i,j,vis);
+			}
+		}
+		return sum;
+	}
+	int helper(int[][] grid, int i, int j, boolean vis) {
+		if (i >= grid.length || j >= grid[0].length || i < 0 || j < 0) {
+			return 0;
+		}
+		if (grid[i][j] == 0 || vis[i][j] == true) {
+			return 0;
+		}
+		vis[i][j] = true;
+		int left = helper(grid,i,j - 1,vis);
+		int right = helper(grid,i,j + 1,vis);
+		int up = helper(grid,i - 1,j,vis);
+		int down = helper(grid,i + 1,j,vis);
+		int max = Math.max(left,Math.max(right,Math.max(up,down)));
+		int currentGold = grid[i][j] + max;
+		sum = Math.max(sum,currentGold);
+		vis[i][j] = false;
+		return max + grid[i][j];
+	}
+}

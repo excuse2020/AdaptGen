@@ -1,0 +1,36 @@
+class Solution {
+	int minReorder(int n, int[][] connections) {
+		Map<Integer, List<Integer>> directed = new HashMap<>();
+		Map<Integer, List<Integer>> undirected = new HashMap<>();
+		for (int[] connection: connections) {	
+			directed.computeIfAbsent(connection[0],(k) -> {new ArrayList<>()}).add(connection[1]);
+			undirected.computeIfAbsent(connection[0],(k) -> {new ArrayList<>()}).add(connection[1]);
+			undirected.computeIfAbsent(connection[1],(k) -> {new ArrayList<>()}).add(connection[0]);
+		}
+		Queue<Integer> queue = new LinkedList<>();
+		queue.add(0);
+		int count = 0;
+		Set<Integer> visited = new HashSet<>();
+		while (!queue.isEmpty()) {
+			int itemsToPoll = queue.size();
+			while (itemsToPoll-- != 0) {
+				int node = queue.remove();
+				List<Integer> neighbours = undirected.get(node);
+				visited.add(node);
+				for (int neighbour: neighbours) {	
+					if (visited.contains(neighbour)) {
+						continue;
+					}
+					List<Integer> edges = directed.getOrDefault(neighbour,new ArrayList<>());
+					if (!edges.contains(node)) {
+						count++;
+					}
+					if (!visited.contains(neighbour)) {
+						queue.add(neighbour);
+					}
+				}
+			}
+		}
+		return count;
+	}
+}

@@ -1,0 +1,31 @@
+class Solution {
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		List<List<Integer>> adj = new ArrayList<>(n + 1);
+		for (int i = 0; i < n + 1; ++i) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n; ++i) {
+			if (manager[i] != -1) {
+				adj.get(manager[i]).add(i);
+			}
+		}
+		int[] vis = new int[n + 1];
+		Queue<Pair<Integer, Integer>> q = new LinkedList<>();
+		q.add(new Pair<>(headID, 0));
+		int maxi = 0;
+		while (!q.isEmpty()) {
+			int head = q.peek().getKey();
+			vis[head] = 1;
+			int time = informTime[head] + q.peek().getValue();
+			maxi = Math.max(maxi,time);
+			q.poll();
+			for (int it: adj.get(head)) {	
+				if (vis[it] == 0) {
+					q.add(new Pair<>(it, time));
+					vis[it] = 1;
+				}
+			}
+		}
+		return maxi;
+	}
+}

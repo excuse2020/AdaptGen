@@ -1,0 +1,50 @@
+class Solution {
+	int superEgg(int k, int n, int[][] t) {
+		if (k == 1) {
+			return n;
+		}
+		if (n == 1 || n == 0) {
+			return n;
+		}
+		if (t[n][k] != -1) {
+			return t[n][k];
+		} 
+		else {
+			int min = Integer.MAX_VALUE;
+			int l = 1;
+			int r = n;
+			while (l <= r) {
+				int mid = l + (r - l) / 2;
+				int left = -1;
+				int right = -1;
+				if (t[mid - 1][k - 1] != -1) {
+					left = t[mid - 1][k - 1];
+				} 
+				else {
+					left = superEgg(k - 1,mid - 1,t);
+				}
+				if (t[n - mid][k] != -1) {
+					right = t[n - mid][k];
+				} 
+				else {
+					right = superEgg(k,n - mid,t);
+				}
+				int temp = Math.max(left,right) + 1;
+				min = Math.min(min,temp);
+				if (left < right) {
+					l = mid + 1;
+				} 
+				else {
+					r = mid - 1;
+				}
+			}
+			t[n][k] = min;
+			return min;
+		}
+	}
+	int superEggDrop(int k, int n) {
+		int t = new int[n + 1][k + 1];
+		Arrays.stream(t).forEach((t1) -> {Arrays.fill(t1,-1)});
+		return superEgg(k,n,t);
+	}
+}

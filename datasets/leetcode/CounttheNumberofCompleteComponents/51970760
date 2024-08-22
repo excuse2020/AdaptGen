@@ -1,0 +1,46 @@
+class Solution {
+	void bfs(int node, List<List<Integer>> map, Set<Integer> visited) {
+		Queue<Integer> queue = new LinkedList<>();
+		queue.add(node);
+		visited.add(node);
+		while (!queue.isEmpty()) {
+			int current = queue.poll();
+			for (int neigh: map.get(current)) {	
+				if (!visited.contains(neigh)) {
+					visited.add(neigh);
+					queue.add(neigh);
+				}
+			}
+		}
+	}
+	int countCompleteComponents(int n, int[][] edges) {
+		Set<Integer> visited = new HashSet<>();
+		List<List<Integer>> map = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			map.add(new ArrayList<>());
+		}
+		for (int edge: edges) {	
+			map.get(edge[0]).add(edge[1]);
+			map.get(edge[1]).add(edge[0]);
+		}
+		int count = 0;
+		for (int i = 0; i < n; i++) {
+			if (!visited.contains(i)) {
+				HashSet<Integer> subVisited = new HashSet<>();
+				bfs(i,map,subVisited);
+				System.out.println(subVisited);
+				boolean lever = true;
+				for (int a: subVisited) {	
+					if (map.get(a).size() != subVisited.size() - 1) {
+						lever = false;
+					}
+				}
+				visited.addAll(subVisited);
+				if (lever) {
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+}

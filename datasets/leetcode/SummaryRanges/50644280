@@ -1,0 +1,32 @@
+class Solution {
+	List<String> summaryRanges(int[] nums) {
+		if (nums.length == 0) {
+			return new ArrayList<>();
+		}
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		List<String> ans = new ArrayList<>();
+		int index = 0;
+		map.put(index,new ArrayList<>(Arrays.asList(nums[0])));
+		for (int i = 1; i < nums.length; i++) {
+			if (Math.abs(nums[i] - map.get(index).get(map.get(index).size() - 1)) == 1) {
+				map.get(index).add(nums[i]);
+			} 
+			else {
+				StringBuilder sb = new StringBuilder();
+				sb.append(map.get(index).get(0));
+				if (map.get(index).size() > 1) {
+					sb.append("->").append(map.get(index).get(map.get(index).size() - 1));
+				}
+				ans.add(sb.toString());
+				map.put(++index,new ArrayList<>(Arrays.asList(nums[i])));
+			}
+		}
+		StringBuilder sb = new StringBuilder();
+		sb.append(map.get(index).get(0));
+		if (map.get(index).size() > 1) {
+			sb.append("->").append(map.get(index).get(map.get(index).size() - 1));
+		}
+		ans.add(sb.toString());
+		return ans;
+	}
+}

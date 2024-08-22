@@ -1,0 +1,29 @@
+class Solution {
+	int helper(int left, int right, int seq, int[] boxes, int[][][] memo) {
+		if (left > right) {
+			return 0;
+		}
+		if (memo[left][right][seq] > 0) {
+			return memo[left][right][seq] - 1;
+		}
+		int c = boxes[left], pos = left + 1;
+		while (pos <= right && boxes[pos] == c) {
+			pos++;
+		}
+		int count = pos - left;
+		int max = helper(pos,right,0,boxes,memo) + (seq + count) * (seq + count);
+		while (pos <= right) {
+			while (pos <= right && boxes[pos] != c) {
+				pos++;
+			}
+			max = Math.max(max,helper(left + count,pos - 1,0,boxes,memo) + helper(pos,right,count + seq,boxes,memo));
+			while (pos <= right && boxes[pos] == c) {
+				pos++;
+			}
+		}
+		return (memo[left][right][seq] = max + 1) - 1;
+	}
+	int removeBoxes(int[] boxes) {
+		return helper(0,boxes.length - 1,0,boxes,new int[boxes.length][boxes.length][boxes.length]);
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	int countCompleteComponents(int n, int[][] edges) {
+		boolean[] visited = new boolean[n];
+		int count = 0;
+		HashMap<Integer, List<Integer>> map = new HashMap<>();
+		for (int[] edge: edges) {	
+			int i = edge[0];
+			int j = edge[1];
+			map.putIfAbsent(i,new LinkedList<>());
+			map.putIfAbsent(j,new LinkedList<>());
+			map.get(i).add(j);
+			map.get(j).add(i);
+		}
+		for (int i = 0; i < n; i++) {
+			if (!visited[i]) {
+				visited[i] = true;
+				int totalEdges = 0;
+				int totalVertices = 0;
+				Queue<Integer> q = new LinkedList<>();
+				q.add(i);
+				while (!q.isEmpty()) {
+					int curr = q.poll();
+					totalEdges += map.getOrDefault(curr,new LinkedList<>()).size();
+					totalVertices++;
+					for (int j: map.getOrDefault(curr,new LinkedList<>())) {	
+						if (!visited[j]) {
+							q.add(j);
+							visited[j] = true;
+						}
+					}
+				}
+				if ((totalEdges / 2) == (totalVertices * (totalVertices - 1)) / 2) {
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+}

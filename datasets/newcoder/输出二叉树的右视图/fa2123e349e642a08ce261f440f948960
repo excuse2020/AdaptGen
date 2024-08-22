@@ -1,0 +1,48 @@
+class Solution {
+	Map<Integer, Integer> map;
+	TreeNode buildTree(int[] preOrder, int[] inOrder) {
+		map = new HashMap<>();
+		for (int i = 0; i < inOrder.length; i++) {
+			map.put(inOrder[i],i);
+		}
+		return findNode(preOrder,0,preOrder.length,inOrder,0,inOrder.length);
+	}
+	TreeNode findNode(int[] preOrder, int preBegin, int preEnd, int[] inOrder, int inBegin, int inEnd) {
+		if (preBegin >= preEnd || inBegin >= inEnd) {
+			return null;
+		}
+		int val = preOrder[preBegin];
+		int rootIdx = map.get(val);
+		TreeNode root = new TreeNode(val);
+		int lenOfLeft = rootIdx - inBegin;
+		root.left = findNode(preOrder,preBegin + 1,preBegin + 1,inOrder,inBegin,rootIdx);
+		root.right = findNode(preOrder,preBegin + lenOfLeft,preEnd,inOrder,rootIdx + 1,inEnd);
+		return root;
+	}
+	int[] solve(int[] preOrder, int[] inOrder) {
+		TreeNode root = buildTree(preOrder,inOrder);
+		Queue<TreeNode> que = new LinkedList<>();
+		int tmp = 0;
+		List<Integer> list = new ArrayList<>();
+		que.offer(root);
+		while (!que.isEmpty()) {
+			int size = que.size();
+			while (size-- > 0) {
+				TreeNode node = que.poll();
+				if (node.left != null) {
+					que.offer(node.left);
+				}
+				if (node.right != null) {
+					que.offer(node.right);
+				}
+				tmp = node.val;
+			}
+			list.add(tmp);
+		}
+		int[] arr = new int[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			arr[i] = list.get(i);
+		}
+		return arr;
+	}
+}

@@ -1,0 +1,33 @@
+class Solution {
+	int cherryPickup(int[][] grid) {
+		int m = grid.length;
+		int n = grid[0].length;
+		int[][][] dp = new int[m][n][n];
+		for (int[][] mat: dp) {	
+			for (int[] row: mat) {	
+				Arrays.fill(row,-1);
+			}
+		}
+		return f(grid,0,0,n - 1,dp);
+	}
+	int f(int[][] grid, int row, int robo1, int robo2, int[][][] dp) {
+		if (row == grid.length || robo1 < 0 || robo2 < 0 || robo1 >= grid[0].length || robo2 >= grid[0].length) {
+			return 0;
+		}
+		if (dp[row][robo1][robo2] != -1) {
+			return dp[row][robo1][robo2];
+		}
+		int result = 0;
+		result += grid[row][robo1];
+		result += grid[row][robo2];
+		int max = 0;
+		for (int a = robo1 - 1; a <= robo1 + 1; a++) {
+			for (int b = robo2 - 1; b <= robo2 + 1; b++) {
+				if (b > a) {
+					max = Math.max(max,f(grid,row + 1,a,b,dp));
+				}
+			}
+		}
+		return dp[row][robo1][robo2] = result + max;
+	}
+}

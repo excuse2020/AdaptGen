@@ -1,0 +1,80 @@
+class Solution {
+	int[] fullBloomFlowers(int[][] flowers, int[] people) {
+		HashMap<Integer, ArrayList<Integer>> map = new HashMap();
+		for (int i = 0; i < people.length; i++) {
+			int time = people[i];
+			if (!map.containsKey(time)) {
+				map.put(time,new ArrayList());
+			}
+			map.get(time).add(i);
+		}
+		int[][] temp = new int[map.size()][3];
+		int i = 0;
+		for (Map.Entry<Integer, ArrayList<Integer>> entry: map.entrySet()) {	
+			int key = entry.getKey();
+			temp[i][0] = key;
+			i++;
+		}
+		Arrays.sort(temp,new Comparator<int[]>());
+		for (int[] flower: flowers) {	
+			int startIndex = lowerBound(temp,flower);
+			if (startIndex != -1) {
+				int endIndex = upperBound(temp,flower);
+				temp[startIndex][1]++;
+				temp[endIndex][2]++;
+			}
+		}
+		int[] ans = new int[people.length];
+		int count = 0;
+		for (int i = 0; i < temp.length; i++) {
+			int time = temp[i][0];
+			count += temp[i][1];
+			ArrayList<Integer> indexes = map.get(time);
+			for (int index: indexes) {	
+				ans[index] = count;
+			}
+			count -= temp[i][2];
+		}
+		return ans;
+	}
+	int lowerBound(int[][] temp, int[] flower) {
+		int s = 0;
+		int e = temp.length - 1;
+		int index = -1;
+		while (s <= e) {
+			int m = s + (e - s) / 2;
+			int ele = temp[m][0];
+			if (flower[0] <= ele && ele <= flower[1]) {
+				index = m;
+				e = m - 1;
+			} 
+			else if (flower[0] > ele) {
+				s = m + 1;
+			} 
+			else {
+				e = m - 1;
+			}
+		}
+		return index;
+	}
+	int upperBound(int[][] temp, int[] flower) {
+		int s = 0;
+		int e = temp.length - 1;
+		int index = -1;
+		while (s <= e) {
+			int m = s + (e - s) / 2;
+			int ele = temp[m][0];
+			if (flower[0] <= ele && ele <= flower[1]) {
+				index = m;
+				s = m + 1;
+			} 
+			else if (flower[0] > ele) {
+				s = m + 1;
+			} 
+			else {
+				e = m - 1;
+			}
+		}
+		return index;
+	}
+}

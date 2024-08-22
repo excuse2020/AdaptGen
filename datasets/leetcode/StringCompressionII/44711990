@@ -1,0 +1,28 @@
+class Solution {
+	int getLengthOfOptimalCompression(String s, int k) {
+		int[][] dp = new int[s.length() + 1][k + 1];
+		for (int[] row: dp) {	
+			Arrays.fill(row,-1);
+		}
+		return get_ans(s,0,k,dp);
+	}
+	int get_ans(String s, int i, int k, int[][] dp) {
+		if (dp[i][k] != -1) {
+			return dp[i][k];
+		} 
+		else if (s.length() - i <= k) {
+			return 0;
+		}
+		int ans = k > 0 ? get_ans(s,i + 1,k - 1,dp) : 101, cnt = 0, del = 0;
+		for (int j = i; j < s.length(); j++) {
+			if (s.charAt(i) == s.charAt(j)) {
+				cnt++;
+			} 
+			else if (++del > k) {
+				break;
+			}
+			ans = Math.min(ans,1 + ((cnt > 99) ? 3 : (cnt > 9) ? 2 : (cnt > 1) ? 1 : 0));
+		}
+		return dp[i][k] = ans;
+	}
+}

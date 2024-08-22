@@ -1,0 +1,25 @@
+class Solution {
+	int getMax(int index1, int index2, int[] arr) {
+		int result = 0;
+		for (int i = index1; i <= index2; i++) {
+			result = Math.max(result,arr[i]);
+		}
+		return result;
+	}
+	int getMinSum(int left, int right, int[] arr, Integer[][] dp) {
+		if (left >= right) {
+			return 0;
+		}
+		if (dp[left][right] != null) {
+			return dp[left][right];
+		}
+		int minResult = Integer.MAX_VALUE;
+		for (int i = left; i < right; i++) {
+			minResult = Math.min(minResult,(getMax(left,i,arr) * getMax(i + 1,right,arr) + getMinSum(left,i,arr,dp) + getMinSum(i + 1,right,arr,dp)));
+		}
+		return dp[left][right] = minResult;
+	}
+	int mctFromLeafValues(int[] arr) {
+		return getMinSum(0,arr.length - 1,arr,new Integer[arr.length][arr.length]);
+	}
+}

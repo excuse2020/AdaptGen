@@ -1,0 +1,34 @@
+class Solution {
+	int findKth(int[] a, int n, int K) {
+		int kmin = n + 1 - K;
+		quick_sort(a,0,n - 1,kmin);
+		return a[kmin - 1];
+	}
+	int partition(int[] nums, int lo, int hi) {
+		int pivot = nums[lo];
+		while (lo < hi) {
+			while (lo < hi && nums[hi] >= pivot) {
+				hi--;
+			}
+			nums[lo] = nums[hi];
+			while (lo < hi && nums[lo] <= pivot) {
+				lo++;
+			}
+			nums[hi] = nums[lo];
+		}
+		nums[lo] = pivot;
+		return lo;
+	}
+	void quick_sort(int[] nums, int lo, int hi, int k) {
+		if (lo < hi) {
+			int pivot_pos = partition(nums,lo,hi);
+			int cur_left_len = pivot_pos - lo + 1;
+			if (cur_left_len < k) {
+				quick_sort(nums,pivot_pos + 1,hi,k - cur_left_len);
+			} 
+			else if (cur_left_len > k) {
+				quick_sort(nums,lo,pivot_pos - 1,k);
+			}
+		}
+	}
+}

@@ -1,0 +1,52 @@
+class Solution {
+	boolean reorderedPowerOf2(int n) {
+		if (0 == n) {
+			return false;
+		}
+		if (1 == n) {
+			return true;
+		}
+		int temp1 = n;
+		int[] arrOfdigitCountsInN = new int[10];
+		while (0 != n) {
+			int rem = n % 10;
+			n = n / 10;
+			arrOfdigitCountsInN[rem]++;
+		}
+		int largestPossibleNumber = 0;
+		for (int i = arrOfdigitCountsInN.length - 1; i >= 0; i--) {
+			while (arrOfdigitCountsInN[i] > 0) {
+				largestPossibleNumber = largestPossibleNumber * 10 + i;
+				arrOfdigitCountsInN[i]--;
+			}
+		}
+		int[] arrOfdigitCountsInN2 = new int[10];
+		while (0 != temp1) {
+			int rem3 = temp1 % 10;
+			temp1 = temp1 / 10;
+			arrOfdigitCountsInN2[rem3]++;
+		}
+		int powerOfTwo = 1;
+		while (powerOfTwo <= largestPossibleNumber) {
+			boolean isPowOf2 = true;
+			int temp = powerOfTwo;
+			int[] arrOfdigitCountsInpowerOfTwo = new int[10];
+			while (0 != powerOfTwo) {
+				int rem2 = powerOfTwo % 10;
+				powerOfTwo = powerOfTwo / 10;
+				arrOfdigitCountsInpowerOfTwo[rem2]++;
+			}
+			for (int i = 0; i <= 9; i++) {
+				if (arrOfdigitCountsInpowerOfTwo[i] != arrOfdigitCountsInN2[i]) {
+					isPowOf2 = false;
+					break;
+				}
+			}
+			if (isPowOf2) {
+				return true;
+			}
+			powerOfTwo = temp * 2;
+		}
+		return false;
+	}
+}

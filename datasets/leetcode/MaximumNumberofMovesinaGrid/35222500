@@ -1,0 +1,35 @@
+class Solution {
+	int dfs(int m, int n, int r, int c, int[][] grid, int[][] vis, int[][] dp) {
+		if (dp[r][c] != -1) {
+			return dp[r][c];
+		}
+		int cnt = 0;
+		vis[r][c] = 1;
+		if (c + 1 < n && grid[r][c + 1] > grid[r][c]) {
+			cnt = Math.max(cnt,1 + dfs(m,n,r,c + 1,grid,vis,dp));
+		}
+		if (r - 1 >= 0 && c + 1 < n && grid[r - 1][c + 1] > grid[r][c]) {
+			cnt = Math.max(cnt,1 + dfs(m,n,r - 1,c + 1,grid,vis,dp));
+		}
+		if (r + 1 < m && c + 1 < n && grid[r + 1][c + 1] > grid[r][c]) {
+			cnt = Math.max(cnt,1 + dfs(m,n,r + 1,c + 1,grid,vis,dp));
+		}
+		return dp[r][c] = cnt;
+	}
+	int maxMoves(int[][] grid) {
+		int m = grid.length;
+		int n = grid[0].length;
+		int[][] vis = new int[m][n];
+		int[][] dp = new int[m][n];
+		for (int[] d: dp) {	
+			Arrays.fill(d,-1);
+		}
+		int max = 0;
+		for (int i = 0; i < m; i++) {
+			if (vis[i][0] == 0) {
+				max = Math.max(max,dfs(m,n,i,0,grid,vis,dp));
+			}
+		}
+		return max;
+	}
+}

@@ -1,0 +1,31 @@
+class Solution {
+	int countDifferentSubsequenceGCDs(int[] nums) {
+		int maxNum = Arrays.stream(nums).max().getAsInt();
+		boolean[] isPresent = new boolean[maxNum + 1];
+		for (int num: nums) {	
+			isPresent[num] = true;
+		}
+		int count = 0;
+		for (int i = 1; i <= maxNum; i++) {
+			int currentGCD = 0;
+			for (int j = i; j <= maxNum; j += i) {
+				if (isPresent[j]) {
+					currentGCD = gcd(currentGCD,j);
+				}
+				if (currentGCD == i) {
+					count++;
+					break;
+				}
+			}
+		}
+		return count;
+	}
+	int gcd(int a, int b) {
+		while (b != 0) {
+			int temp = b;
+			b = a % b;
+			a = temp;
+		}
+		return a;
+	}
+}

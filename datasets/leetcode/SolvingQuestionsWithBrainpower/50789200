@@ -1,0 +1,32 @@
+class Solution {
+	long dfs(int i, int[][] questions, long[] cache) {
+		if (i >= questions.length) {
+			return 0;
+		}
+		if (cache[i] != -1) {
+			return cache[i];
+		}
+		long choice1 = questions[i][0] + dfs(i + questions[i][1],questions,cache);
+		long choice2 = dfs(i + 1,questions,cache);
+		cache[i] = Math.max(choice1,choice2);
+		return cache[i];
+	}
+	long mostPoints(int[][] questions) {
+		int n = questions.length;
+		long[] dp = new long[n];
+		long result = 0;
+		for (int i = n - 1; i >= 0; i--) {
+			int nextPossibleIndexForChoice1 = questions[i][1] + i;
+			long choice1 = questions[i][0] + (nextPossibleIndexForChoice1 < n ? dp[nextPossibleIndexForChoice1] : 0);
+			long choice2 = i < n - 1 ? dp[i + 1] : 0;
+			dp[i] = Math.max(choice1,choice2);
+			result = Math.max(result,dp[i]);
+		}
+		return result;
+	}
+	long mostPointsRecursive(int[][] questions) {
+		long[] cache = new long[questions.length];
+		Arrays.fill(cache,-1);
+		return dfs(0,questions,cache);
+	}
+}

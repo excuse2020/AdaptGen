@@ -1,0 +1,28 @@
+class Solution {
+	Map<Pair<Integer, Integer>, Integer> dp = new HashMap<>();
+	int dfs(int i, int prev, int[] arr1, int[] arr2, int idx) {
+		if (i == arr1.length) {
+			return 0;
+		}
+		if (dp.containsKey(new Pair<>(i, prev))) {
+			return dp.get(new Pair<>(i, prev));
+		}
+		int cost = 2_001;
+		if (arr1[i] > prev) {
+			cost = dfs(i + 1,arr1[i],arr1,arr2,idx);
+		}
+		while (idx < arr2.length && arr2[idx] <= prev) {
+			idx++;
+		}
+		if (idx < arr2.length) {
+			cost = Math.min(cost,1 + dfs(i + 1,arr2[idx],arr1,arr2,idx + 1));
+		}
+		dp.put(new Pair<>(i, prev),cost);
+		return cost;
+	}
+	int makeArrayIncreasing(int[] arr1, int[] arr2) {
+		Arrays.sort(arr2);
+		int answer = dfs(0,-1,arr1,arr2,0);
+		return answer < 2_001 ? answer : -1;
+	}
+}

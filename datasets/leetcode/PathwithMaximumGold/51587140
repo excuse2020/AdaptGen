@@ -1,0 +1,27 @@
+class Solution {
+	int max = 0;
+	int getMaximumGold(int[][] grid) {
+		for (int row = 0; row < grid.length; row++) {
+			for (int col = 0; col < grid[0].length; col++) {
+				if (grid[row][col] != 0) {
+					getMaximumGold(grid,row,col,0);
+				}
+			}
+		}
+		return max;
+	}
+	void getMaximumGold(int[][] grid, int i, int j, int totalGold) {
+		if (i < 0 || j < 0 || i > grid.length - 1 || j > grid[0].length - 1 || grid[i][j] == 0) {
+			return;
+		}
+		int goldAtCurrentCell = grid[i][j];
+		totalGold += goldAtCurrentCell;
+		max = Math.max(totalGold,max);
+		grid[i][j] = 0;
+		getMaximumGold(grid,i + 1,j,totalGold);
+		getMaximumGold(grid,i,j + 1,totalGold);
+		getMaximumGold(grid,i - 1,j,totalGold);
+		getMaximumGold(grid,i,j - 1,totalGold);
+		grid[i][j] = goldAtCurrentCell;
+	}
+}

@@ -1,0 +1,53 @@
+class Solution {
+	boolean IsPopOrder(int[] push, int[] pop) {
+		if (push == null || push.length == 0) {
+			return true;
+		}
+		if (push.length == 1) {
+			return push[0] == pop[0];
+		}
+		Set<Integer> popped = new HashSet<>();
+		for (int i = 0; i < pop.length; ++i) {
+			Set<Integer> set = new HashSet<>();
+			int tmp = pop[i];
+			int index = indexOf(push,tmp);
+			if (index == -1) {
+				return false;
+			}
+			for (int j = index - 1; j >= 0; --j) {
+				if (!popped.contains(push[j])) {
+					set.add(push[j]);
+				}
+			}
+			for (int j = i + 1, k = index - 1; j < pop.length && k >= 0; ) {
+				if (!set.contains(push[k])) {
+					--k;
+					continue;
+				}
+				if (!set.contains(pop[j])) {
+					++j;
+					continue;
+				}
+				if (pop[j] == push[k]) {
+					++j;
+					--k;
+				} 
+				else {
+					return false;
+				}
+			}
+			popped.add(tmp);
+		}
+		return true;
+	}
+	int indexOf(int[] arr, int target) {
+		int index = -1;
+		for (int i = 0; i < arr.length; ++i) {
+			if (arr[i] == target) {
+				index = i;
+				break;
+			}
+		}
+		return index;
+	}
+}

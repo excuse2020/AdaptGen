@@ -1,0 +1,39 @@
+class Solution {
+	int[] queryResults(int limit, int[][] queries) {
+		int count = 0;
+		HashMap<Integer, Integer> ballToColor = new HashMap<>();
+		HashMap<Integer, HashSet<Integer>> colorToBall = new HashMap<>();
+		int[] ans = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			int ball = queries[i][0];
+			int color = queries[i][1];
+			if (!ballToColor.containsKey(ball)) {
+				ballToColor.put(ball,color);
+				if (!colorToBall.containsKey(color)) {
+					colorToBall.put(color,new HashSet<>());
+					colorToBall.get(color).add(ball);
+				} 
+				else {
+					colorToBall.get(color).add(ball);
+				}
+			} 
+			else {
+				int originalColor = ballToColor.get(ball);
+				colorToBall.get(originalColor).remove(ball);
+				if (colorToBall.get(originalColor).size() == 0) {
+					colorToBall.remove(originalColor);
+				}
+				ballToColor.put(ball,color);
+				if (!colorToBall.containsKey(color)) {
+					colorToBall.put(color,new HashSet<>());
+					colorToBall.get(color).add(ball);
+				} 
+				else {
+					colorToBall.get(color).add(ball);
+				}
+			}
+			ans[i] = colorToBall.size();
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,47 @@
+class Solution {
+	ListNode FindFirstCommonNode(ListNode pHead1, ListNode pHead2) {
+		if (pHead1 == null || pHead2 == null) {
+			return null;
+		}
+		if (pHead1 == pHead2) {
+			return pHead1;
+		}
+		int indexFromEnd = 1;
+		ListNode lastKOfPhead1 = findKthNodeFromEnd(pHead1,1);
+		ListNode lastKOfPhead2 = findKthNodeFromEnd(pHead2,1);
+		ListNode lastSameNodeFromEnd = null;
+		while (lastKOfPhead1 == lastKOfPhead2) {
+			lastSameNodeFromEnd = lastKOfPhead1;
+			indexFromEnd++;
+			lastKOfPhead1 = findKthNodeFromEnd(pHead1,indexFromEnd);
+			lastKOfPhead2 = findKthNodeFromEnd(pHead2,indexFromEnd);
+		}
+		return lastSameNodeFromEnd;
+	}
+	ListNode findKthNodeFromEnd(ListNode head, int k) {
+		if (k == 0 || head == null) {
+			return head;
+		}
+		if (head.next == null && k == 1) {
+			return head;
+		}
+		if (head.next == null && k > 1) {
+			return null;
+		}
+		ListNode slow = head;
+		ListNode fast = head;
+		int count = 1;
+		while (count < k && fast.next != null) {
+			fast = fast.next;
+			count++;
+		}
+		if (count < k) {
+			return null;
+		}
+		while (fast.next != null) {
+			slow = slow.next;
+			fast = fast.next;
+		}
+		return slow;
+	}
+}

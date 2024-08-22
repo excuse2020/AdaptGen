@@ -1,0 +1,29 @@
+class Solution {
+	int dfs(int index, int parent, ArrayList<ArrayList<Integer>> list, List<Boolean> hasApple, int[] ans) {
+		int answer = 0;
+		for (int neigh: list.get(index)) {	
+			if (neigh == parent) {
+				continue;
+			}
+			answer += dfs(neigh,index,list,hasApple,ans);
+		}
+		ans[0] += answer * 2;
+		if (answer > 0 || hasApple.get(index)) {
+			return 1;
+		}
+		return 0;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		ArrayList<ArrayList<Integer>> list = new ArrayList();
+		for (int i = 0; i < n; i++) {
+			list.add(new ArrayList());
+		}
+		for (int[] edge: edges) {	
+			list.get(edge[0]).add(edge[1]);
+			list.get(edge[1]).add(edge[0]);
+		}
+		int[] ans = new int[1];
+		dfs(0,-1,list,hasApple,ans);
+		return ans[0];
+	}
+}

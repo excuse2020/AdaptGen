@@ -1,0 +1,49 @@
+class Solution {
+	String[] reorderLogFiles(String[] logs) {
+		List<String> digits = new ArrayList<>();
+		List<String> letters = new ArrayList<>();
+		Map<String, List<String>> log2Id = new HashMap<>();
+		for (String log: logs) {	
+			String[] words = log.split(" ");
+			StringBuilder sb = new StringBuilder();
+			for (int i = 1; i < words.length; i++) {
+				sb.append(words[i]);
+				sb.append(" ");
+			}
+			sb.deleteCharAt(sb.length() - 1);
+			if (Character.isDigit(words[1].charAt(0))) {
+				digits.add(log);
+			} 
+			else {
+				letters.add(sb.toString());
+				log2Id.putIfAbsent(sb.toString(),new ArrayList<>());
+				log2Id.get(sb.toString()).add(words[0]);
+			}
+		}
+		Collections.sort(letters);
+		for (String key: log2Id.keySet()) {	
+			Collections.sort(log2Id.get(key),Collections.reverseOrder());
+		}
+		String[] ret = new String[digits.size() + letters.size()];
+		int ptr1 = 0;
+		int ptr2 = 0;
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < ret.length; i++) {
+			if (ptr1 < letters.size()) {
+				List<String> ids = log2Id.get(letters.get(ptr1));
+				sb.append(ids.get(ids.size() - 1));
+				ids.remove(ids.size() - 1);
+				sb.append(" ");
+				sb.append(letters.get(ptr1));
+				ret[i] = sb.toString();
+				sb.setLength(0);
+				ptr1++;
+			} 
+			else {
+				ret[i] = digits.get(ptr2);
+				ptr2++;
+			}
+		}
+		return ret;
+	}
+}

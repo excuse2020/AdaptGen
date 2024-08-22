@@ -1,0 +1,33 @@
+class Solution {
+	int[] sortJumbled(int[] mapping, int[] nums) {
+		var map = new HashMap<Integer, List<Integer>>();
+		for (int num: nums) {	
+			int mappedNum = 0;
+			int base = 1;
+			int temp = num;
+			if (temp == 0) {
+				mappedNum += mapping[num];
+			}
+			while (temp > 0) {
+				int digit = mapping[temp % 10];
+				mappedNum += base * digit;
+				temp /= 10;
+				base *= 10;
+			}
+			var currentMapping = map.getOrDefault(mappedNum,new ArrayList<Integer>());
+			currentMapping.add(num);
+			map.put(mappedNum,currentMapping);
+		}
+		List sortedKeys = new ArrayList<Integer>(map.keySet());
+		Collections.sort(sortedKeys);
+		int i = 0;
+		for (var key: sortedKeys) {	
+			List<Integer> values = map.get(key);
+			for (int val: values) {	
+				nums[i] = val;
+				++i;
+			}
+		}
+		return nums;
+	}
+}

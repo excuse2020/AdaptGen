@@ -1,0 +1,55 @@
+class Solution {
+	int compare(int left, int right) {
+		return right - left;
+	}
+	boolean isValid(long mid, long extra, int n, int[] batteries) {
+		for (int i = 0; i < n; i++) {
+			if (mid > batteries[i]) {
+				extra -= mid - batteries[i];
+			}
+			if (extra < 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+	long maxRunTime(int n, int[] batteries) {
+		int m = batteries.length;
+		reverseSort(batteries);
+		long extra = 0;
+		for (int i = n; i < m; i++) {
+			extra += batteries[i];
+		}
+		for (int i = 0; i < m; i++) {
+			System.out.print(batteries[i] + " ");
+		}
+		System.out.println();
+		System.out.println(extra);
+		long start = 1, end = (long) 1e15;
+		long ans = start;
+		while (start <= end) {
+			long mid = (start + end) / 2;
+			boolean check = isValid(mid,extra,n,batteries);
+			if (check) {
+				ans = mid;
+				start = mid + 1;
+			} 
+			else {
+				end = mid - 1;
+			}
+		}
+		return ans;
+	}
+	void reverseSort(int[] arr) {
+		Arrays.sort(arr);
+		int n = arr.length;
+		int s = 0, e = n - 1;
+		while (s <= e) {
+			int temp = arr[s];
+			arr[s] = arr[e];
+			arr[e] = temp;
+			s++;
+			e--;
+		}
+	}
+}

@@ -1,0 +1,24 @@
+class Solution {
+	int numRollsToTarget(int n, int k, int target) {
+		if (target < n || target > n * k) {
+			return 0;
+		}
+		Integer[][] rolls = new Integer[n][target + 1];
+		return rollDice(0,target,k,rolls);
+	}
+	int rollDice(int diceIndex, int target, int faces, Integer[][] rolls) {
+		if (target < rolls.length - diceIndex || target > (faces * (rolls.length - diceIndex))) {
+			return 0;
+		}
+		if (diceIndex >= rolls.length) {
+			return target == 0 ? 1 : 0;
+		}
+		if (rolls[diceIndex][target] == null) {
+			rolls[diceIndex][target] = 0;
+			for (int i = 1; i <= Math.min(faces,target); i++) {
+				rolls[diceIndex][target] = (rolls[diceIndex][target] + rollDice(diceIndex + 1,target - i,faces,rolls)) % 1_000_000_007;
+			}
+		}
+		return rolls[diceIndex][target];
+	}
+}

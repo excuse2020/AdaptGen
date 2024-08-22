@@ -1,0 +1,42 @@
+class Solution {
+	int nextGreaterElement(int n) {
+		int m = n;
+		int len = (int) Math.log10(n) + 1;
+		if (n >= Integer.MAX_VALUE) {
+			return -1;
+		}
+		int[] arr = new int[len];
+		if (arr.length == 1) {
+			return -1;
+		}
+		int cur = -1;
+		int pre = -1;
+		for (int i = 0; i < len; i++) {
+			cur = n % 10;
+			arr[i] = cur;
+			n /= 10;
+			if (cur < pre) {
+				for (int j = 0; j < i; j++) {
+					if (cur < arr[j]) {
+						int temp = arr[i];
+						arr[i] = arr[j];
+						arr[j] = temp;
+						break;
+					}
+				}
+				n = (n * 10) + arr[i];
+				for (int k = 0; k < i; k++) {
+					n = (n * 10) + arr[k];
+				}
+				if (n > Integer.MAX_VALUE || n < -Integer.MAX_VALUE || n <= m) {
+					return -1;
+				} 
+				else {
+					return n;
+				}
+			}
+			pre = cur;
+		}
+		return -1;
+	}
+}

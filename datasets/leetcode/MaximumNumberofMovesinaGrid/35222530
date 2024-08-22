@@ -1,0 +1,26 @@
+class Solution {
+	int dfs(int[][] grid, int i, int j, int parent, int[][] dp) {
+		if (i < 0 || i > grid.length - 1 || j < 0 || j > grid[0].length - 1 || parent >= grid[i][j]) {
+			return 0;
+		}
+		if (dp[i][j] != -1) {
+			return dp[i][j];
+		}
+		int l = dfs(grid,i - 1,j + 1,grid[i][j],dp);
+		int r = dfs(grid,i,j + 1,grid[i][j],dp);
+		int u = dfs(grid,i + 1,j + 1,grid[i][j],dp);
+		return dp[i][j] = Math.max(Math.max(l,u),r) + 1;
+	}
+	int maxMoves(int[][] grid) {
+		int max = Integer.MIN_VALUE;
+		int i = 0;
+		int[][] dp = new int[grid.length][grid[0].length];
+		for (int[] d: dp) {	
+			Arrays.fill(d,-1);
+		}
+		for (int j = 0; j < grid.length; j++) {
+			max = Math.max(dfs(grid,j,0,-1,dp),max);
+		}
+		return max - 1;
+	}
+}

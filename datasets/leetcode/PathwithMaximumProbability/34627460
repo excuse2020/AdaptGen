@@ -1,0 +1,35 @@
+class Solution {
+	double maxProbability(int n, int[][] edges, double[] succProb, int start, int end) {
+		List<List<Pair<Integer, Double>>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			int current = edges[i][0];
+			int next = edges[i][1];
+			double prob = succProb[i];
+			graph.get(current).add(new Pair<Integer, Double>(next, prob));
+			graph.get(next).add(new Pair<Integer, Double>(current, prob));
+		}
+		double[] maxProb = new double[n];
+		Arrays.fill(maxProb,Double.MIN_VALUE);
+		maxProb[start] = 1;
+		Queue<Pair<Integer, Double>> queue = new ArrayDeque<>();
+		queue.offer(new Pair<Integer, Double>(start, 1.0));
+		while (!queue.isEmpty()) {
+			Pair<Integer, Double> current = queue.poll();
+			int currentNode = current.getKey();
+			double currentProb = current.getValue();
+			List<Pair<Integer, Double>> neighbors = graph.get(currentNode);
+			for (Pair<Integer, Double> nei: neighbors) {	
+				int nextNode = nei.getKey();
+				double nextProb = nei.getValue();
+				if (maxProb[nextNode] < currentProb * nextProb) {
+					queue.offer(new Pair<Integer, Double>(nextNode, currentProb * nextProb));
+					maxProb[nextNode] = currentProb * nextProb;
+				}
+			}
+		}
+		return maxProb[end] == Double.MIN_VALUE ? 0 : maxProb[end];
+	}
+}

@@ -1,0 +1,94 @@
+class Solution {
+	TreeNode findNode(int smallNum, int bigNum, List<List<TreeNode>> list, TreeNode node) {
+		TreeNode p = node;
+		while (bigNum >= smallNum) {
+			List<TreeNode> l = list.get(bigNum);
+			for (int i = 0; i < l.size(); i++) {
+				TreeNode next = l.get(i);
+				if (next.left == p || next.right == p) {
+					p = next;
+					break;
+				}
+			}
+			bigNum--;
+		}
+		return p;
+	}
+	int findParent(int line, TreeNode node1, TreeNode node2, List<List<TreeNode>> list) {
+		TreeNode p1 = null;
+		TreeNode p2 = null;
+		List<TreeNode> l = list.get(line - 1);
+		for (int i = 0; i < l.size(); i++) {
+			TreeNode next = l.get(i);
+			if (next.left == node1 || next.right == node1) {
+				p1 = next;
+			}
+			if (next.left == node2 || next.right == node2) {
+				p2 = next;
+			}
+		}
+		if (p1 == p2) {
+			return p1.val;
+		} 
+		else {
+			int nextLine = line - 1;
+			return findParent(nextLine,p1,p2,list);
+		}
+	}
+	int lowestCommonAncestor(TreeNode root, int o1, int o2) {
+		List<List<TreeNode>> list = new ArrayList<>();
+		TreeNode node1 = null;
+		TreeNode node2 = null;
+		int lineNum1 = -1;
+		int lineNum2 = -1;
+		boolean isFindNode1 = false;
+		boolean isFindNode2 = false;
+		Queue<TreeNode> q = new LinkedList<>();
+		q.offer(root);
+		while (!q.isEmpty()) {
+			if (!isFindNode1) {
+				lineNum1 += 1;
+			}
+			if (!isFindNode2) {
+				lineNum2 += 1;
+			}
+			int size = q.size();
+			List<TreeNode> line = new ArrayList<>();
+			for (int i = 0; i < size; i++) {
+				TreeNode next = q.poll();
+				line.add(next);
+				if (next.val == o1) {
+					node1 = next;
+					isFindNode1 = true;
+				}
+				if (next.val == o2) {
+					node2 = next;
+					isFindNode2 = true;
+				}
+				if (isFindNode1 && isFindNode2) {
+					break;
+				}
+				if (next.left != null) {
+					q.offer(next.left);
+				}
+				if (next.right != null) {
+					q.offer(next.right);
+				}
+			}
+			list.add(line);
+		}
+		if (lineNum2 != lineNum1) {
+			if (lineNum2 > lineNum1) {
+				node2 = findNode(lineNum1,lineNum2,list,node2);
+			} 
+			else {
+				node1 = findNode(lineNum2,lineNum1,list,node1);
+			}
+		}
+		if (node1 == node2) {
+			return node1.val;
+		}
+		int val = findParent(lineNum1,node1,node2,list);
+		return val;
+	}
+}

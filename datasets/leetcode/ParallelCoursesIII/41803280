@@ -1,0 +1,49 @@
+class Solution {
+	int minimumTime(int n, int[][] relations, int[] time) {
+		List[] dependOn = new List[n + 1], unlockList = new List[n + 1];
+		int[] startTime = new int[n + 1], endTime = new int[n + 1];
+		for (int i = 0; i <= n; i++) {
+			dependOn[i] = new ArrayList();
+			unlockList[i] = new ArrayList();
+		}
+		for (int[] relation: relations) {	
+			dependOn[relation[1]].add(relation[0]);
+			unlockList[relation[0]].add(relation[1]);
+		}
+		boolean done = new boolean[n + 1];
+		Queue<Integer> free = new LinkedList();
+		for (int i = 1; i <= n; i++) {
+			if (dependOn[i].size() == 0) {
+				startTime[i] = 0;
+				endTime[i] = time[i - 1];
+				free.offer(i);
+			}
+		}
+		while (!free.isEmpty()) {
+			int size = free.size();
+			for (int i = 0; i < size; i++) {
+				int last = free.poll();
+				done[last] = true;
+				for (int unlocked: (List<Integer>) unlockList[last]) {	
+					startTime[unlocked] = Math.max(startTime[unlocked],endTime[last]);
+					boolean freed = true;
+					for (int dependcy: (List<Integer>) dependOn[unlocked]) {	
+						if (!done[dependcy]) {
+							freed = false;
+							break;
+						}
+					}
+					if (freed) {
+						free.offer(unlocked);
+						endTime[unlocked] = startTime[unlocked] + time[unlocked - 1];
+					}
+				}
+			}
+		}
+		int ans = 0;
+		for (int end: endTime) {	
+			ans = Math.max(ans,end);
+		}
+		return ans;
+	}
+}

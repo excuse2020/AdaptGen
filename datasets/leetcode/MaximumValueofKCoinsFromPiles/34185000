@@ -1,0 +1,28 @@
+class Solution {
+	int maxPilesUtils(List<List<Integer>> piles, int k, int i, Integer[][] dp) {
+		if (k <= 0 || i >= piles.size()) {
+			return 0;
+		}
+		int maxSum = 0;
+		if (dp[k][i] != null) {
+			return dp[k][i];
+		}
+		for (int j = 0; j < k && j < piles.get(i).size(); j++) {
+			maxSum = Math.max(maxSum,maxPilesUtils(piles,k - j,i + 1,dp) + piles.get(i).get(j));
+		}
+		maxSum = Math.max(maxSum,maxPilesUtils(piles,k,i + 1,dp) + 0);
+		return dp[k][i] = maxSum;
+	}
+	int maxValueOfCoins(List<List<Integer>> piles, int k) {
+		for (int i = 0; i < piles.size(); i++) {
+			List<Integer> list = piles.get(i);
+			for (int j = 0; j < list.size(); j++) {
+				if (j != 0) {
+					list.set(j,list.get(j - 1) + list.get(j));
+				}
+			}
+		}
+		Integer[][] dp = new Integer[k + 1][piles.size()];
+		return maxPilesUtils(piles,k,0,dp);
+	}
+}

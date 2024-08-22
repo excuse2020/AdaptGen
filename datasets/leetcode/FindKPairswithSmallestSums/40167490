@@ -1,0 +1,26 @@
+class Solution {
+	List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) {
+		List<List<Integer>> result = new ArrayList<>();
+		PriorityQueue<int[]> queue = new PriorityQueue<>((n1, n2) -> {n2[0] - n1[0]});
+		for (int i = 0; i < nums1.length; i++) {
+			for (int j = 0; j < nums2.length; j++) {
+				int s = nums1[i] + nums2[j];
+				if (queue.size() < k) {
+					queue.add(new int{s, nums1[i], nums2[j]});
+				} 
+				else if (s < queue.peek()[0]) {
+					queue.remove();
+					queue.add(new int{s, nums1[i], nums2[j]});
+				} 
+				else {
+					break;
+				}
+			}
+		}
+		while (!queue.isEmpty()) {
+			int pair = queue.remove();
+			result.add(List.of(pair[1],pair[2]));
+		}
+		return result;
+	}
+}

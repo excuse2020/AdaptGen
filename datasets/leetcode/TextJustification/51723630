@@ -1,0 +1,52 @@
+class Solution {
+	String formatFirstN(StringBuilder line, int maxSpace, List<Integer> wordMap) {
+		if (wordMap.size() == 1) {
+			line.append(" ".repeat(maxSpace));
+			return line.toString();
+		}
+		int count = 1;
+		for (int i = 0; i < maxSpace; i++) {
+			int currIndex = i % (wordMap.size() - 1);
+			line.insert(wordMap.get(currIndex) + (count * currIndex)," ");
+			if (currIndex == wordMap.size() - 2) {
+				count++;
+			}
+		}
+		return line.toString();
+	}
+	String formatLastLine(StringBuilder line, int maxSpace, List<Integer> wordMap) {
+		for (int i = 0; i < maxSpace; i++) {
+			if (i < wordMap.size() - 1) {
+				line.insert(wordMap.get(i) + i," ");
+			} 
+			else {
+				line.insert(wordMap.get(wordMap.size() - 1) + i," ");
+			}
+		}
+		return line.toString();
+	}
+	List<String> fullJustify(String[] words, int maxWidth) {
+		List<String> ans = new ArrayList<>();
+		List<Integer> wordMap = new ArrayList<>();
+		StringBuilder line = new StringBuilder();
+		for (String currWord: words) {	
+			if (line.length() + wordMap.size() > maxWidth) {
+				ans.add(formatFirstN(line,maxWidth - line.length(),wordMap));
+				line = new StringBuilder(currWord);
+				wordMap = new ArrayList<>();
+				wordMap.add(line.length());
+			} 
+			else {
+				line.append(currWord);
+				wordMap.add(line.length());
+			}
+		}
+		if (line.toString().isEmpty()) {
+			return ans;
+		} 
+		else {
+			ans.add(formatLastLine(line,maxWidth - line.length(),wordMap));
+		}
+		return ans;
+	}
+}

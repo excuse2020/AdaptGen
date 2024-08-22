@@ -1,0 +1,27 @@
+class Solution {
+	int answerQuery(int[][] posAndNumberOfCandles, int leftQuery, int rightQuery) {
+		int firstCandleOnLeft = posAndNumberOfCandles[1][leftQuery];
+		int lastCandleOnRight = posAndNumberOfCandles[0][rightQuery];
+		if (firstCandleOnLeft == -1 || lastCandleOnRight == -1 || lastCandleOnRight <= firstCandleOnLeft || lastCandleOnRight > rightQuery || firstCandleOnLeft < leftQuery) {
+			return 0;
+		}
+		int validInterval = (lastCandleOnRight - firstCandleOnLeft) + 1;
+		int candleCount = posAndNumberOfCandles[2][lastCandleOnRight] - (firstCandleOnLeft == 0 ? 0 : posAndNumberOfCandles[2][firstCandleOnLeft - 1]);
+		return validInterval - candleCount;
+	}
+	int[][] getPosAndNumberOfCandles(String s) {
+		int[][] posAndNumberOfCandles = new int[3][s.length()];
+		char left, right;
+		int i = 0, j = s.length() - 1;
+		posAndNumberOfCandles[0][0] = -1;
+		posAndNumberOfCandles[1][j] = -1;
+	}
+	int[] platesBetweenCandles(String s, int[][] queries) {
+		int[][] posAndNumberOfCandles = getPosAndNumberOfCandles(s);
+		int[] answer = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			answer[i] = answerQuery(posAndNumberOfCandles,queries[i][0],queries[i][1]);
+		}
+		return answer;
+	}
+}

@@ -1,0 +1,45 @@
+class Solution {
+	void bfs(int node, boolean[] visited, ArrayList<ArrayList<Integer>> arr) {
+		visited[node] = true;
+		Queue<Integer> pq = new LinkedList<>();
+		pq.add(node);
+		while (!pq.isEmpty()) {
+			int n = pq.poll();
+			for (Integer a: arr.get(n)) {	
+				if (!visited[a]) {
+					visited[a] = true;
+					pq.add(a);
+				}
+			}
+		}
+	}
+	int removeStones(int[][] stones) {
+		ArrayList<ArrayList<Integer>> arr = new ArrayList<>();
+		int n = stones.length;
+		for (int i = 0; i < stones.length; i++) {
+			arr.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			int row = stones[i][0];
+			int col = stones[i][1];
+			for (int j = 0; j < n; j++) {
+				if (i != j) {
+					if (row == stones[j][0] || col == stones[j][1]) {
+						arr.get(i).add(j);
+						arr.get(j).add(i);
+					}
+				}
+			}
+		}
+		int count = 0;
+		boolean[] visited = new boolean[stones.length];
+		Arrays.fill(visited,false);
+		for (int i = 0; i < n; i++) {
+			if (!visited[i]) {
+				bfs(i,visited,arr);
+				count++;
+			}
+		}
+		return stones.length - count;
+	}
+}

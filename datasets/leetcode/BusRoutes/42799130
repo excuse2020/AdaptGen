@@ -1,0 +1,43 @@
+class Solution {
+	int numBusesToDestination(int[][] routes, int source, int target) {
+		if (source == target) {
+			return 0;
+		}
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		Queue<Integer> pq = new ArrayDeque<>();
+		for (int i = 0; i < routes.length; i++) {
+			for (int j = 0; j < routes[i].length; j++) {
+				if (!graph.containsKey(routes[i][j])) {
+					graph.put(routes[i][j],new ArrayList<>());
+				}
+				graph.get(routes[i][j]).add(i);
+			}
+		}
+		pq.offer(source);
+		boolean[] vis = new boolean[routes.length];
+		int lvl = 0;
+		while (!pq.isEmpty()) {
+			int s = pq.size();
+			for (int i = 0; i < s; i++) {
+				int node = pq.poll();
+				for (int nei: graph.get(node)) {	
+					if (vis[nei]) {
+						continue;
+					}
+					for (int r: routes[nei]) {	
+						if (r == node) {
+							continue;
+						}
+						if (r == target) {
+							return lvl + 1;
+						}
+						pq.offer(r);
+					}
+					vis[nei] = true;
+				}
+			}
+			lvl++;
+		}
+		return -1;
+	}
+}

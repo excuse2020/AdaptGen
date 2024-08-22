@@ -1,0 +1,40 @@
+class Solution {
+	ListNode merge(ListNode p1, ListNode p2) {
+		ListNode dummy = new ListNode(-1);
+		ListNode cur = dummy;
+		while (p1 != null && p2 != null) {
+			if (p1.val <= p2.val) {
+				cur.next = p1;
+				p1 = p1.next;
+			} 
+			else {
+				cur.next = p2;
+				p2 = p2.next;
+			}
+			cur = cur.next;
+		}
+		if (p1 != null) {
+			cur.next = p1;
+		}
+		if (p2 != null) {
+			cur.next = p2;
+		}
+		return dummy.next;
+	}
+	ListNode sortInList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode fast = head.next;
+		ListNode slow = head;
+		while (fast != null && fast.next != null) {
+			fast = fast.next.next;
+			slow = slow.next;
+		}
+		ListNode tmp = slow.next;
+		slow.next = null;
+		ListNode left = sortInList(head);
+		ListNode right = sortInList(tmp);
+		return merge(left,right);
+	}
+}

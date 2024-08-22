@@ -1,0 +1,30 @@
+class Solution {
+	int getSize(ListNode head) {
+		ListNode temp = head;
+		int s = 0;
+		while (temp != null) {
+			temp = temp.next;
+			s++;
+		}
+		return s;
+	}
+	TreeNode sortedListToBST(ListNode head) {
+		if (head == null) {
+			return null;
+		}
+		int size = getSize(head);
+		return sortedListToBSTHelper(new ListNode{head},size);
+	}
+	TreeNode sortedListToBSTHelper(ListNode[] head, int n) {
+		if (head[0] == null || n <= 0) {
+			return null;
+		}
+		TreeNode leftSubtree = sortedListToBSTHelper(head,n / 2);
+		TreeNode root = new TreeNode(head[0].val);
+		root.left = leftSubtree;
+		head[0] = head[0].next;
+		TreeNode rightSubtree = sortedListToBSTHelper(head,n - (n / 2));
+		root.right = rightSubtree;
+		return root;
+	}
+}

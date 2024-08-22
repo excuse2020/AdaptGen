@@ -1,0 +1,40 @@
+class Solution {
+	TreeNode balanceBST(TreeNode root) {
+		List<Integer> lt = new LinkedList<>();
+		dfs(lt,root);
+		TreeNode shoot = new TreeNode();
+		f(lt,shoot,0,lt.size() - 1);
+		return shoot;
+	}
+	void dfs(List<Integer> lt, TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		dfs(lt,root.left);
+		lt.add(root.val);
+		dfs(lt,root.right);
+		return;
+	}
+	void f(List<Integer> lt, TreeNode shoot, int start, int end) {
+		if (start > end) {
+			return;
+		}
+		int mid = -1;
+		if ((end - start + 1) % 2 == 0) {
+			mid = start + (end - start + 1) / 2;
+		} 
+		else {
+			mid = start + (end - start) / 2;
+		}
+		shoot.val = lt.get(mid);
+		if (start <= mid - 1) {
+			shoot.left = new TreeNode();
+		}
+		if (end >= mid + 1) {
+			shoot.right = new TreeNode();
+		}
+		f(lt,shoot.left,start,mid - 1);
+		f(lt,shoot.right,mid + 1,end);
+		return;
+	}
+}

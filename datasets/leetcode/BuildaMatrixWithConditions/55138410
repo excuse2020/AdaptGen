@@ -1,0 +1,50 @@
+class Solution {
+	int[][] buildMatrix(int k, int[][] rc, int[][] cc) {
+		int[] r = getArray(k,rc);
+		int[] c = getArray(k,cc);
+		if (r == null || c == null) {
+			return new int[0][0];
+		}
+		int[][] a = new int[k][k];
+		for (int i = 1; i <= k; i++) {
+			a[r[i]][c[i]] = i;
+		}
+		return a;
+	}
+	int[] getArray(int k, int[][] c) {
+		List<Integer>[] t = new ArrayList[k + 1];
+		for (int i = 1; i <= k; i++) {
+			t[i] = new ArrayList<>();
+		}
+		int[] d = new int[k + 1];
+		for (int[] conn: c) {	
+			t[conn[0]].add(conn[1]);
+			d[conn[1]]++;
+		}
+		Queue<Integer> q = new LinkedList<>();
+		for (int i = 1; i <= k; i++) {
+			if (d[i] == 0) {
+				q.add(i);
+			}
+		}
+		int u;
+		int[] a = new int[k + 1];
+		for (int i = 0; i < k; i++) {
+			if (q.isEmpty()) {
+				return null;
+			}
+			u = q.poll();
+			a[u] = i;
+			for (int n: t[u]) {	
+				d[n]--;
+				if (d[n] == 0) {
+					q.add(n);
+				} 
+				else if (d[n] < 0) {
+					return null;
+				}
+			}
+		}
+		return a;
+	}
+}

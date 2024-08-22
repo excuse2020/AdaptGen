@@ -1,0 +1,46 @@
+class Solution {
+	HashMap<String, Integer> dp;
+	int findScore(int[] student, int[] mentor) {
+		int result = 0;
+		for (int i = 0; i < student.length; ++i) {
+			if (student[i] == mentor[i]) {
+				result++;
+			}
+		}
+		return result;
+	}
+	int helper(int[][] students, int[][] mentors, int[] map, Stack<Integer> mentorstack) {
+		if (mentorstack.isEmpty()) {
+			return 0;
+		}
+		String key = new String();
+		for (int i = 0; i < map.length; ++i) {
+			key += i + "-";
+		}
+		if (dp.containsKey(key)) {
+			return dp.get(key);
+		}
+		int result = Integer.MIN_VALUE;
+		for (int i = 0; i < map.length; ++i) {
+			if (map[i] == -1) {
+				int mentor = mentorstack.pop();
+				map[i] = mentor;
+				result = Math.max(result,helper(students,mentors,map,mentorstack) + findScore(students[i],mentors[mentor]));
+				map[i] = -1;
+				mentorstack.push(mentor);
+			}
+		}
+		dp.put(key,result);
+		return result;
+	}
+	int maxCompatibilitySum(int[][] students, int[][] mentors) {
+		dp = new HashMap<String, Integer>();
+		int[] map = new int[students.length];
+		Stack<Integer> mentorstack = new Stack<Integer>();
+		for (int i = 0; i < map.length; ++i) {
+			map[i] = -1;
+			mentorstack.push(i);
+		}
+		return helper(students,mentors,map,mentorstack);
+	}
+}

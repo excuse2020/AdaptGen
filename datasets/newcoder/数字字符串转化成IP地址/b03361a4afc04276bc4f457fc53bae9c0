@@ -1,0 +1,40 @@
+class Solution {
+	int len;
+	ArrayList<String> result = new ArrayList<>();
+	void dfs(String s, int index, List<String> ip, int ipParts) {
+		if (ipParts == 4 && index == s.length()) {
+			result.add(String.join(".",ip));
+			return;
+		}
+		if (ipParts > 4) {
+			return;
+		}
+		for (int i = 1; i <= 3; i++) {
+			if (index + i <= len) {
+				String part = s.substring(index,index + i);
+				if (isValid(part)) {
+					ip.add(part);
+					dfs(s,index + i,ip,ipParts + 1);
+					ip.remove(ipParts);
+				}
+			}
+		}
+	}
+	boolean isValid(String part) {
+		if (part.length() > 1 && part.startsWith("0")) {
+			return false;
+		}
+		if (Integer.parseInt(part) > 255) {
+			return false;
+		}
+		return true;
+	}
+	ArrayList<String> restoreIpAddresses(String s) {
+		len = s.length();
+		if (len < 4 || 12 < len) {
+			return new ArrayList<>();
+		}
+		dfs(s,0,new ArrayList<>(),0);
+		return result;
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	long countPairs(int n, int[][] edges) {
+		ArrayList<Integer>[] neigh = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			neigh[i] = new ArrayList<>();
+		}
+		for (var edge: edges) {	
+			neigh[edge[0]].add(edge[1]);
+			neigh[edge[1]].add(edge[0]);
+		}
+		boolean[] visited = new boolean[n];
+		long sum = 0, sqsum = 0;
+		for (int i = 0; i < n; i++) {
+			if (!visited[i]) {
+				long ans = (long) dfs(i,neigh,visited);
+				sum += ans;
+				sqsum += ans * ans;
+			}
+		}
+		return (sum * sum - sqsum) / 2;
+	}
+	int dfs(int node, ArrayList<Integer>[] neig, boolean[] visited) {
+		visited[node] = true;
+		int ans = 1;
+		for (var i: neig[node]) {	
+			if (!visited[i]) {
+				ans += dfs(i,neig,visited);
+			}
+		}
+		return ans;
+	}
+}

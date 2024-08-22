@@ -1,0 +1,63 @@
+class Solution {
+	Set<String> ans = new HashSet<>();
+	Map<Integer, List<Integer>> bitcounts = seedBitcounts();
+	String convertToTimeString(int hours, int minutes) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(hours);
+		sb.append(":");
+		if (minutes < 10) {
+			sb.append("0");
+		}
+		sb.append(minutes);
+		return sb.toString();
+	}
+	int countSetBits(int n) {
+		int count = 0;
+		while (n > 0) {
+			count += n & 1;
+			n >>= 1;
+		}
+		return count;
+	}
+	List<String> readBinaryWatch(int turnedOn) {
+		List<String> finalAnswer = new ArrayList<>();
+		if (turnedOn > 8) {
+			return finalAnswer;
+		}
+		if (turnedOn == 0) {
+			finalAnswer.add("0:00");
+			return finalAnswer;
+		}
+		for (int i = 0; i < turnedOn; ++i) {
+			List<Integer> x = bitcounts.getOrDefault(i,new ArrayList<>());
+			List<Integer> y = bitcounts.getOrDefault(turnedOn - i,new ArrayList<>());
+			for (int h: x.stream().filter((n) -> {n < 12}).collect(Collectors.toList())) {	
+				for (int m: y.stream().filter((n) -> {n < 60}).collect(Collectors.toList())) {	
+					ans.add(convertToTimeString(h,m));
+				}
+			}
+			for (int h: y.stream().filter((n) -> {n < 12}).collect(Collectors.toList())) {	
+				for (int m: x.stream().filter((n) -> {n < 60}).collect(Collectors.toList())) {	
+					ans.add(convertToTimeString(h,m));
+				}
+			}
+		}
+		finalAnswer.addAll(ans);
+		return finalAnswer;
+	}
+	Map<Integer, List<Integer>> seedBitcounts() {
+		Map<Integer, List<Integer>> bitcounts = new HashMap<>();
+		for (int i = 0; i < 60; ++i) {
+			int setBits = countSetBits(i);
+			if (bitcounts.containsKey(setBits)) {
+				bitcounts.get(setBits).add(i);
+			} 
+			else {
+				List<Integer> l = new ArrayList<>();
+				l.add(i);
+				bitcounts.put(setBits,l);
+			}
+		}
+		return bitcounts;
+	}
+}

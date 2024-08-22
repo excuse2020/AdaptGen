@@ -1,0 +1,47 @@
+class Solution {
+	long dividePlayers(int[] skill) {
+		if (skill.length == 2) {
+			return skill[0] * skill[1];
+		}
+		int total = 0;
+		int pairs = skill.length / 2;
+		long prodSum = 0;
+		int[] skillArray = new int[1001];
+		for (int s: skill) {	
+			total += s;
+			skillArray[s]++;
+		}
+		if (total % pairs != 0) {
+			return -1;
+		}
+		int pairSum = total / pairs;
+		for (int i = 1; i < 1001; i++) {
+			if (skillArray[i] == 0) {
+				continue;
+			}
+			int teammate = pairSum - i;
+			int n = 0;
+			if (teammate == i) {
+				if (skillArray[i] % 2 != 0) {
+					return -1;
+				}
+				n = skillArray[i] / 2;
+			} 
+			else {
+				if (teammate < 1 || teammate > 1000) {
+					return -1;
+				}
+				if (skillArray[teammate] == 0) {
+					return -1;
+				}
+				if (skillArray[i] != skillArray[teammate]) {
+					return -1;
+				}
+				n = skillArray[i];
+			}
+			prodSum += (long) i * teammate;
+			skillArray[i] = skillArray[teammate] = 0;
+		}
+		return prodSum;
+	}
+}

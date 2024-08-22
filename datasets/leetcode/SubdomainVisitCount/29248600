@@ -1,0 +1,39 @@
+class Solution {
+	List<String> subdomainVisits(String[] cpdomains) {
+		List<String> res = new ArrayList<>();
+		Map<String, Integer> domainVisitsMap = new HashMap<String, Integer>();
+		int n = cpdomains.length;
+		for (int i = 0; i < n; i++) {
+			int spaceIdx = cpdomains[i].indexOf(" ");
+			int visits = Integer.parseInt(cpdomains[i].substring(0,spaceIdx));
+			String domain = cpdomains[i].substring(spaceIdx + 1,cpdomains[i].length());
+			int len = domain.length();
+			int first = domain.indexOf("."), last = domain.lastIndexOf(".");
+			boolean threeLayers = last == first ? false : true;
+			String _2ndLayer = "";
+			String _1stLayer = "";
+			if (threeLayers) {
+				_2ndLayer = domain.substring(first + 1,len);
+				_1stLayer = domain.substring(last + 1,len);
+			} 
+			else {
+				_1stLayer = domain.substring(last + 1,len);
+			}
+			domainVisitsMap.put(domain,domainVisitsMap.getOrDefault(domain,0) + visits);
+			if (threeLayers) {
+				domainVisitsMap.put(_2ndLayer,domainVisitsMap.getOrDefault(_2ndLayer,0) + visits);
+				domainVisitsMap.put(_1stLayer,domainVisitsMap.getOrDefault(_1stLayer,0) + visits);
+			} 
+			else {
+				domainVisitsMap.put(_1stLayer,domainVisitsMap.getOrDefault(_1stLayer,0) + visits);
+			}
+		}
+		StringBuilder sb = new StringBuilder();
+		for (Map.Entry<String, Integer> en: domainVisitsMap.entrySet()) {	
+			sb.setLength(0);
+			sb.append(en.getValue()).append(" ").append(en.getKey());
+			res.add(sb.toString());
+		}
+		return res;
+	}
+}

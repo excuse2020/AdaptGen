@@ -1,0 +1,56 @@
+class Solution {
+	boolean o1Flag = false;
+	List<Integer> o1List = new ArrayList<>();
+	boolean o2Flag = false;
+	List<Integer> o2List = new ArrayList<>();
+	void DFS(TreeNode root, int o1, int o2) {
+		if (root != null) {
+			if (o1Flag && o2Flag) {
+				return;
+			}
+			if (!o1Flag) {
+				o1List.add(root.val);
+			}
+			if (!o2Flag) {
+				o2List.add(root.val);
+			}
+			if (root.val == o1) {
+				o1Flag = true;
+			}
+			if (root.val == o2) {
+				o2Flag = true;
+			}
+			DFS(root.left,o1,o2);
+			DFS(root.right,o1,o2);
+			int length;
+			if (!o1Flag) {
+				length = o1List.size();
+				o1List.remove(length - 1);
+			}
+			if (!o2Flag) {
+				length = o2List.size();
+				o2List.remove(length - 1);
+			}
+		}
+	}
+	int lowestCommonAncestor(TreeNode root, int o1, int o2) {
+		DFS(root,o1,o2);
+		int i = 0;
+		int j = 0;
+		while (true) {
+			if (i > o1List.size() - 1) {
+				return o1List.get(i - 1);
+			}
+			if (j > o2List.size() - 1) {
+				return o2List.get(j - 1);
+			}
+			if (o1List.get(i).equals(o2List.get(j))) {
+				i++;
+				j++;
+			} 
+			else {
+				return o1List.get(i - 1);
+			}
+		}
+	}
+}

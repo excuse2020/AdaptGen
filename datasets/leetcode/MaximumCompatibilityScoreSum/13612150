@@ -1,0 +1,35 @@
+class Solution {
+	int m;
+	int dfs(int[][] scores, boolean[] mentor, int i) {
+		if (i == m) {
+			return 0;
+		}
+		int sum = 0;
+		for (int j = 0; j < m; j++) {
+			if (mentor[j]) {
+				continue;
+			}
+			mentor[j] = true;
+			sum = Math.max(sum,scores[i][j] + dfs(scores,mentor,i + 1));
+			mentor[j] = false;
+		}
+		return sum;
+	}
+	int maxCompatibilitySum(int[][] students, int[][] mentors) {
+		this.m = students.length;
+		int n = students[0].length;
+		int[][] scores = new int[m][m];
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < m; j++) {
+				int score = 0;
+				for (int k = 0; k < n; k++) {
+					if (students[i][k] == mentors[j][k]) {
+						score++;
+					}
+				}
+				scores[i][j] = score;
+			}
+		}
+		return dfs(scores,new boolean[8],0);
+	}
+}

@@ -1,0 +1,28 @@
+class Solution {
+	int dp;
+	int n;
+	int f(int[] prices, int idx, int buy, int cap) {
+		if (idx == n || cap == 0) {
+			return 0;
+		}
+		if (dp[idx][buy][cap] != -1) {
+			return dp[idx][buy][cap];
+		}
+		if (buy == 1) {
+			return dp[idx][buy][cap] = Math.max(-prices[idx] + f(prices,idx + 1,0,cap),0 + f(prices,idx + 1,1,cap));
+		} 
+		else {
+			return dp[idx][buy][cap] = Math.max(prices[idx] + f(prices,idx + 1,1,cap - 1),0 + f(prices,idx + 1,0,cap));
+		}
+	}
+	int maxProfit(int[] prices) {
+		n = prices.length;
+		dp = new int[n][2][3];
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < 2; j++) {
+				Arrays.fill(dp[i][j],-1);
+			}
+		}
+		return f(prices,0,1,2);
+	}
+}

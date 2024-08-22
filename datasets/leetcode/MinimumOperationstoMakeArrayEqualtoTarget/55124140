@@ -1,0 +1,62 @@
+class Solution {
+	long get_ans(int s, int e, int diffArr, long sub) {
+		if (s >= e) {
+			return s == e ? diffArr[s] - sub : 0l;
+		}
+		long res = 0l;
+		Queue<Integer> divisionPoint = new LinkedList<>();
+		divisionPoint.add(s);
+		for (int i = s + 1; i <= e; i++) {
+			if (diffArr[divisionPoint.peek()] == diffArr[i]) {
+				divisionPoint.add(i);
+			} 
+			else if (diffArr[divisionPoint.peek()] > diffArr[i]) {
+				divisionPoint.clear();
+				divisionPoint.add(i);
+			}
+		}
+		res += diffArr[divisionPoint.peek()] - sub;
+		sub += diffArr[divisionPoint.peek()] - sub;
+		while (!divisionPoint.isEmpty()) {
+			res += get_ans(s,divisionPoint.peek() - 1,diffArr,sub);
+			s = divisionPoint.poll() + 1;
+		}
+		return res + get_ans(s,e,diffArr,sub);
+	}
+	long minimumOperations(int[] nums, int[] target) {
+		long res = 0l;
+		int n = nums.length, diffArr = new int[n];
+		for (int i = 0; i < n; i++) {
+			diffArr[i] = target[i] - nums[i];
+		}
+		int i = 0, j = 0;
+		while (j < n && diffArr[j] == 0) {
+			j++;
+		}
+		if (j == n) {
+			return res;
+		}
+		i = j;
+		boolean isPositive = diffArr[i] > 0;
+		if (!isPositive) {
+			diffArr[i] *= -1;
+		}
+		while (++j < n) {
+			if ((isPositive && diffArr[j] < 1) || (!isPositive && diffArr[j] > -1)) {
+				res += get_ans(i,j - 1,diffArr,0);
+				while (j < n && diffArr[j] == 0) {
+					j++;
+				}
+				if (j == n) {
+					return res;
+				}
+				i = j;
+				isPositive = diffArr[j] > 0;
+			}
+			if (diffArr[j] < 0) {
+				diffArr[j] *= -1;
+			}
+		}
+		return res + get_ans(i,j - 1,diffArr,0);
+	}
+}

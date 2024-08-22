@@ -1,0 +1,51 @@
+class Solution {
+	int getRoot(int[] roots, int a) {
+		if (roots[a] == a) {
+			return a;
+		}
+		return roots[a] = getRoot(roots,roots[a]);
+	}
+	int largestComponentSize(int[] A) {
+		int max = 0;
+		for (int a: A) {	
+			max = Math.max(max,a);
+		}
+		int[] roots = new int[max + 1], sizes = new int[max + 1];
+		for (int idx = 1; idx <= max; idx++) {
+			roots[idx] = idx;
+		}
+		for (int a: A) {	
+			if (a == 1) {
+				sizes[a] = 1;
+				continue;
+			}
+			int sqrt = (int) Math.sqrt(a);
+			int thisRoot = getRoot(roots,a);
+			sizes[thisRoot]++;
+			for (int factor = 1; factor <= sqrt; factor++) {
+				if (a % factor == 0) {
+					int otherFactor = a / factor;
+					int factorRoot = getRoot(roots,factor);
+					int otherFactorRoot = getRoot(roots,otherFactor);
+					if (factor != 1) {
+						union(roots,thisRoot,factor,sizes);
+					}
+					union(roots,thisRoot,otherFactorRoot,sizes);
+				}
+			}
+		}
+		int maxConnection = 0;
+		for (int size: sizes) {	
+			maxConnection = Math.max(maxConnection,size);
+		}
+		return maxConnection;
+	}
+	void union(int[] roots, int a, int b, int[] sizes) {
+		int rootA = getRoot(roots,a);
+		int rootB = getRoot(roots,b);
+		if (rootA != rootB) {
+			sizes[rootA] += sizes[rootB];
+			roots[rootB] = rootA;
+		}
+	}
+}

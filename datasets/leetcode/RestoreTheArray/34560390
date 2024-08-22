@@ -1,0 +1,31 @@
+class Solution {
+	long dp;
+	long mod = 1000000007;
+	int numberOfArrays(String s, int k) {
+		dp = new long[s.length() + 1];
+		Arrays.fill(dp,-1 * 1l);
+		solve(s,s.length(),k);
+		return (int) dp[s.length()];
+	}
+	int solve(String s, int n, int k) {
+		if (n == 0) {
+			return 1;
+		}
+		if (dp[n] != -1) {
+			return (int) dp[n];
+		}
+		int start = s.length() - n;
+		int end = s.length() - 1;
+		long ans = 0l;
+		for (int i = start; i <= Math.min(end,start + 10); i++) {
+			long ck = Long.parseLong(s.substring(start,i + 1));
+			if (ck <= k && ck >= 1) {
+				ans = (ans + solve(s,n - (i + 1 - start),k)) % mod;
+			} 
+			else {
+				break;
+			}
+		}
+		return (int) (dp[n] = (ans) % mod);
+	}
+}

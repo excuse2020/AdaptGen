@@ -1,0 +1,43 @@
+class Solution {
+	int findWinningPlayer(int[] skills, int k) {
+		int max = 0;
+		int ans = 0;
+		Map<Integer, Integer> map = new HashMap<>();
+		Deque<Integer> deque = new ArrayDeque<>();
+		for (int i = 0; i < skills.length; i++) {
+			deque.addLast(i);
+			map.put(i,0);
+			if (max < skills[i]) {
+				ans = i;
+				max = skills[i];
+			}
+		}
+		if (k >= skills.length) {
+			return ans;
+		}
+		boolean flag = true;
+		while (flag) {
+			int first = deque.removeFirst();
+			int second = deque.removeFirst();
+			if (skills[first] > skills[second]) {
+				map.put(first,map.get(first) + 1);
+				map.put(second,0);
+				deque.addFirst(first);
+				deque.addLast(second);
+			} 
+			else {
+				map.put(second,map.get(second) + 1);
+				map.put(first,0);
+				deque.addFirst(second);
+				deque.addLast(first);
+			}
+			if (map.get(first) == k) {
+				return first;
+			}
+			if (map.get(second) == k) {
+				return second;
+			}
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,22 @@
+class Solution {
+	long mod = 1000000007;
+	long helper(long dp, int[][] grid, int k, int i, int j, int sum) {
+		if (i < 0 || j < 0 || j >= grid[0].length || i >= grid.length) {
+			return 0;
+		}
+		sum += grid[i][j];
+		if (i == grid.length - 1 && j == grid[0].length - 1 && sum % k == 0) {
+			return 1;
+		}
+		if (dp[i][j][sum % k] != 0) {
+			return dp[i][j][sum % k];
+		}
+		long down = helper(dp,grid,k,i + 1,j,sum);
+		long right = helper(dp,grid,k,i,j + 1,sum);
+		return dp[i][j][sum % k] = (down % mod + right % mod) % mod;
+	}
+	int numberOfPaths(int[][] grid, int k) {
+		long dp = new long[grid.length + 1][grid[0].length + 1][k + 1];
+		return (int) helper(dp,grid,k,0,0,0);
+	}
+}

@@ -1,0 +1,50 @@
+class Solution {
+	boolean four(Set<Integer> set, HashSet<Integer>[] arr) {
+		int index = 0;
+		int[] a = new int[4];
+		for (int x: set) {	
+			a[index++] = x;
+		}
+		return (!arr[a[0]].contains(a[1]) && !arr[a[2]].contains(a[3])) || (!arr[a[0]].contains(a[2]) && !arr[a[1]].contains(a[3]));
+	}
+	boolean isPossible(int n, List<List<Integer>> edges) {
+		HashSet<Integer>[] arr = new HashSet[n + 1];
+		for (int i = 1; i <= n; i++) {
+			arr[i] = new HashSet<>();
+		}
+		for (List<Integer> list: edges) {	
+			arr[list.get(0)].add(list.get(1));
+			arr[list.get(1)].add(list.get(0));
+		}
+		Set<Integer> set = new HashSet<>();
+		for (int i = 1; i <= n; i++) {
+			if (arr[i].size() % 2 == 1) {
+				set.add(i);
+			}
+		}
+		if (set.size() % 2 == 1 || set.size() > 4) {
+			return false;
+		}
+		if (set.size() == 0) {
+			return true;
+		}
+		if (set.size() == 4) {
+			return four(set,arr);
+		}
+		return two(set,arr);
+	}
+	boolean two(Set<Integer> set, HashSet<Integer>[] arr) {
+		Iterator<Integer> iterator = set.iterator();
+		int x = iterator.next();
+		int y = iterator.next();
+		if (!arr[x].contains(y)) {
+			return true;
+		}
+		for (int i = 1; i < arr.length; i++) {
+			if (i != x && i != y && !arr[i].contains(x) && !arr[i].contains(y)) {
+				return true;
+			}
+		}
+		return false;
+	}
+}

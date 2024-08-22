@@ -1,0 +1,37 @@
+class Solution {
+	boolean reorderedPowerOf2(int n) {
+		List<Map<Integer, Integer>> l = new ArrayList<>();
+		int N = 1;
+		int i = 1;
+		while (N <= 1e9) {
+			int temp = N;
+			Map<Integer, Integer> digits = new HashMap<>();
+			while (temp > 0) {
+				int rem = temp % 10;
+				digits.put(rem,digits.getOrDefault(rem,0) + 1);
+				temp /= 10;
+			}
+			l.add(digits);
+			N = (int) Math.pow(2,i++);
+		}
+		int temp = n;
+		Map<Integer, Integer> digits = new HashMap<>();
+		while (temp > 0) {
+			int rem = temp % 10;
+			digits.put(rem,digits.getOrDefault(rem,0) + 1);
+			temp /= 10;
+		}
+		for (Map<Integer, Integer> set: l) {	
+			int count = 0;
+			for (int x: set.keySet()) {	
+				if (digits.containsKey(x) && digits.get(x) == set.get(x)) {
+					count++;
+				}
+			}
+			if (count == digits.size() && set.size() == count) {
+				return true;
+			}
+		}
+		return false;
+	}
+}

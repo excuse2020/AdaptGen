@@ -1,0 +1,30 @@
+class Solution {
+	int numSubmatrixSumTarget(int[][] matrix, int target) {
+		int l = 0, r = 0, c = 0;
+		for (l = 0; l < matrix[0].length; l++) {
+			int[] arr = new int[matrix.length];
+			for (r = l; r < matrix[0].length; r++) {
+				for (int i = 0; i < matrix.length; i++) {
+					arr[i] += matrix[i][r];
+				}
+				c += subarraySum(arr,target);
+			}
+		}
+		return c;
+	}
+	int subarraySum(int[] nums, int k) {
+		int c = 0;
+		int sum = 0;
+		int i = 0, n = nums.length;
+		Map<Integer, Integer> map = new HashMap<>();
+		map.put(0,1);
+		while (i < n) {
+			sum += nums[i];
+			int y = sum - k;
+			c += map.getOrDefault(y,0);
+			map.put(sum,map.getOrDefault(sum,0) + 1);
+			i += 1;
+		}
+		return c;
+	}
+}

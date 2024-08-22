@@ -1,0 +1,45 @@
+class Solution {
+	List<List<Integer>> getAncestors(int n, int[][] edges) {
+		int[] indegree = new int[n];
+		int[] edge;
+		Map<Integer, Set<Integer>> res = new HashMap();
+		Map<Integer, ArrayList<Integer>> map = new HashMap();
+		for (int i = 0; i < edges.length; i++) {
+			edge = edges[i];
+			indegree[edge[1]]++;
+			map.putIfAbsent(edge[0],new ArrayList());
+			map.get(edge[0]).add(edge[1]);
+		}
+		Queue<Integer> nodes = new LinkedList();
+		for (int i = 0; i < indegree.length; i++) {
+			if (indegree[i] == 0) {
+				nodes.add(i);
+			}
+		}
+		int node;
+		ArrayList<Integer> children;
+		int child = 0;
+		while (!nodes.isEmpty()) {
+			node = nodes.poll();
+			children = map.get(node);
+			if (children != null) {
+				for (int i = 0; i < children.size(); i++) {
+					child = children.get(i);
+					indegree[child]--;
+					res.putIfAbsent(child,new HashSet());
+					res.get(child).add(node);
+					res.get(child).addAll(res.getOrDefault(node,new HashSet()));
+					if (indegree[child] == 0) {
+						nodes.add(child);
+					}
+				}
+			}
+		}
+		List<List<Integer>> ans = new ArrayList();
+		for (int i = 0; i < n; i++) {
+			ans.add(new ArrayList(res.getOrDefault(i,new HashSet())));
+			Collections.sort(ans.get(i));
+		}
+		return ans;
+	}
+}

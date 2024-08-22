@@ -1,0 +1,23 @@
+class Solution {
+	TreeNode constructBinaryTree(int[] pre, int startPre, int endPre, int[] in, int startIn, int endIn) {
+		if (startPre > endPre || startIn > endIn) {
+			return null;
+		}
+		TreeNode root = new TreeNode(pre[startPre]);
+		for (int index = startIn; index <= endIn; index++) {
+			if (in[index] == pre[startPre]) {
+				root.left = constructBinaryTree(pre,startPre + 1,startPre + (index - startIn),in,startIn,index - 1);
+				root.right = constructBinaryTree(pre,(index - startIn) + startPre,endPre,in,index + 1,endIn);
+				break;
+			}
+		}
+		return root;
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] vin) {
+		if (pre == null || pre.length == 0 || vin == null || vin.length == 0) {
+			return null;
+		}
+		TreeNode root = constructBinaryTree(pre,0,pre.length - 1,vin,0,vin.length - 1);
+		return root;
+	}
+}

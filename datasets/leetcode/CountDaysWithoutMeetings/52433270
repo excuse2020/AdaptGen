@@ -1,0 +1,41 @@
+class Solution {
+	int countDays(int days, int[][] meetings) {
+		int[][] mergedIntervals = merge(meetings);
+		int result = 0;
+		for (int i = 0; i < mergedIntervals.length - 1; i++) {
+			int[] mergedInterval1 = mergedIntervals[i];
+			int[] mergedInterval2 = mergedIntervals[i + 1];
+			int start1 = mergedInterval1[0];
+			int end1 = mergedInterval1[1];
+			int start2 = mergedInterval2[0];
+			int end2 = mergedInterval2[1];
+			result = result + start2 - end1 - 1;
+		}
+		result = result + mergedIntervals[0][0] - 1;
+		result = result + days - mergedIntervals[mergedIntervals.length - 1][1];
+		return result;
+	}
+	int[][] merge(int[][] intervals) {
+		Arrays.sort(intervals,new Comparator<int[]>());
+		ArrayList<int[]> result = new ArrayList<int[]>();
+		result.add(intervals[0]);
+		for (int i = 1; i < intervals.length; i++) {
+			int[] interval1 = result.get(result.size() - 1);
+			int[] interval2 = intervals[i];
+			if (interval1[1] >= interval2[0]) {
+				int startValue = interval1[0];
+				int endValue = Math.max(interval1[1],interval2[1]);
+				result.remove(result.size() - 1);
+				result.add(new int{startValue, endValue});
+			} 
+			else {
+				result.add(interval2);
+			}
+		}
+		int[][] convertedResult = new int[result.size()][2];
+		for (int i = 0; i < result.size(); i++) {
+			convertedResult[i] = result.get(i);
+		}
+		return convertedResult;
+	}
+}

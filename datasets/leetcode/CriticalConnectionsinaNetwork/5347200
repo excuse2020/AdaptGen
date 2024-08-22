@@ -1,0 +1,45 @@
+class Solution {
+	int[] disc;
+	List<Integer>[] g;
+	int[] low;
+	int n, time;
+	List<List<Integer>> res;
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> cs) {
+		this.n = n;
+		g = new ArrayList[n];
+		disc = new int[n];
+		low = new int[n];
+		time = 0;
+		res = new ArrayList<>();
+		Arrays.fill(disc,-1);
+		for (int i = 0; i < n; i++) {
+			g[i] = new ArrayList<>();
+		}
+		for (List<Integer> c: cs) {	
+			int fr = c.get(0), to = c.get(1);
+			g[fr].add(to);
+			g[to].add(fr);
+		}
+		for (int i = 0; i < n; i++) {
+			if (disc[i] == -1) {
+				dfs(i,i);
+			}
+		}
+		return res;
+	}
+	void dfs(int u, int pre) {
+		disc[u] = low[u] = ++time;
+		for (int v: g[u]) {	
+			if (v == pre) {
+				continue;
+			}
+			if (disc[v] == -1) {
+				dfs(v,u);
+				if (low[v] > disc[u]) {
+					res.add(Arrays.asList(u,v));
+				}
+			}
+			low[u] = Math.min(low[u],low[v]);
+		}
+	}
+}

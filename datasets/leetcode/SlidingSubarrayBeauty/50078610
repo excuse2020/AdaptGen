@@ -1,0 +1,48 @@
+class Solution {
+	int[] getSubarrayBeauty(int[] nums, int k, int x) {
+		int n = nums.length;
+		TreeMap<Integer, Integer> mp = new TreeMap<>();
+		int[] arr = new int[n - k + 1];
+		int t = 0;
+		int i = 0;
+		int j = 0;
+		int count = 0;
+		boolean flag = false;
+		while (j < nums.length) {
+			if (nums[j] < 0) {
+				if (!mp.containsKey(nums[j])) {
+					mp.put(nums[j],1);
+				} 
+				else {
+					mp.put(nums[j],mp.get(nums[j]) + 1);
+				}
+			}
+			if (j - i + 1 < k) {
+				j++;
+			} 
+			else {
+				for (Map.Entry<Integer, Integer> e: mp.entrySet()) {	
+					int key = e.getKey();
+					int value = e.getValue();
+					count = count + value;
+					if (count >= x) {
+						arr[t++] = key;
+						flag = true;
+						break;
+					}
+				}
+				if (!flag) {
+					arr[t++] = 0;
+				}
+				if (mp.containsKey(nums[i])) {
+					mp.put(nums[i],mp.get(nums[i]) - 1);
+				}
+				i++;
+				j++;
+				count = 0;
+				flag = false;
+			}
+		}
+		return arr;
+	}
+}

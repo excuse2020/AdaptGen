@@ -1,0 +1,35 @@
+class Solution {
+	int nextGreaterElement(int n) {
+		List<Integer> list = new ArrayList<>();
+		while (n > 0) {
+			list.add(n % 10);
+			n /= 10;
+		}
+		if (list.size() == 1) {
+			return -1;
+		}
+		int prev = list.get(0);
+		int i = 1;
+		while (list.get(i - 1) <= list.get(i)) {
+			i++;
+			if (i == list.size()) {
+				return -1;
+			}
+		}
+		int j = 0;
+		while (list.get(j) <= list.get(i)) {
+			j++;
+		}
+		int tmp = list.get(i);
+		list.set(i,list.get(j));
+		list.set(j,tmp);
+		Collections.reverse(list.subList(0,i));
+		long res = 0;
+		int m = 1;
+		for (int num: list) {	
+			res += (long) num * m;
+			m *= 10;
+		}
+		return (res > Integer.MAX_VALUE) ? -1 : (int) res;
+	}
+}

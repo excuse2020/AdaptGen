@@ -1,0 +1,58 @@
+class Solution {
+	int[] Suffle(int[] deck, int[] newDeck, int i, int j, boolean cheaker, int size) {
+		if (i == size) {
+			return newDeck;
+		}
+		while (j < size) {
+			if (newDeck[j] == 0) {
+				if (!cheaker) {
+					newDeck[j] = deck[i];
+					i++;
+				}
+				cheaker = toggle(cheaker);
+			}
+			j++;
+		}
+		return Suffle(deck,newDeck,i,0,cheaker,size);
+	}
+	int[] deckRevealedIncreasing(int[] deck) {
+		int size = deck.length;
+		int[] newDeck = new int[size];
+		quickSort(deck);
+		return Suffle(deck,newDeck,0,0,false,size);
+	}
+	int partition(int start, int end, int[] array) {
+		int pivot = array[end];
+		int j = start - 1;
+		for (int i = start; i < end; i++) {
+			if (pivot > array[i]) {
+				j++;
+				int temp = array[i];
+				array[i] = array[j];
+				array[j] = temp;
+			}
+		}
+		j++;
+		int temp = array[j];
+		array[j] = array[end];
+		array[end] = temp;
+		return j;
+	}
+	void quickSort(int[] array) {
+		quickSortHelper(0,array.length - 1,array);
+	}
+	void quickSortHelper(int start, int end, int[] array) {
+		if (start >= end) {
+			return;
+		}
+		int pivot = partition(start,end,array);
+		quickSortHelper(start,pivot - 1,array);
+		quickSortHelper(pivot + 1,end,array);
+	}
+	boolean toggle(boolean a) {
+		if (a) {
+			return false;
+		}
+		return true;
+	}
+}

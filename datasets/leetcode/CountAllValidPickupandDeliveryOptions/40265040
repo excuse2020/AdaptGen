@@ -1,0 +1,31 @@
+class Solution {
+	int MOD = 100_000_000_7;
+	int countOrders(int n) {
+		int[][] memo = new int[n + 1][n + 1];
+		for (int i = 0; i < n + 1; i++) {
+			Arrays.fill(memo[i],-1);
+		}
+		return (int) dfs(0,0,memo,n);
+	}
+	long dfs(int pickup, int delivery, int[][] memo, int n) {
+		if (pickup < delivery || pickup > n) {
+			return 0;
+		}
+		if (memo[pickup][delivery] != -1) {
+			return memo[pickup][delivery];
+		}
+		if (pickup == delivery) {
+			if (pickup == n) {
+				return 1;
+			}
+			long answer = ((n - pickup) * dfs(pickup + 1,delivery,memo,n)) % MOD;
+			return memo[pickup][delivery] = (int) answer;
+		} 
+		else {
+			long pickUpDecision = ((n - pickup) * dfs(pickup + 1,delivery,memo,n)) % MOD;
+			long deliveryDecision = ((pickup - delivery) * dfs(pickup,delivery + 1,memo,n)) % MOD;
+			int answer = (int) (pickUpDecision + deliveryDecision) % MOD;
+			return memo[pickup][delivery] = answer;
+		}
+	}
+}

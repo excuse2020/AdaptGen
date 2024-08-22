@@ -1,0 +1,18 @@
+class Solution {
+	int countTriplets(int[] arr) {
+		int ans = 0, n = arr.length;
+		int[] prefXor = new int[n + 1];
+		HashMap<Integer, Integer> sumOfi = new HashMap<>();
+		HashMap<Integer, Integer> countOfXor = new HashMap<>();
+		sumOfi.put(0,0);
+		countOfXor.put(0,1);
+		for (int k = 1; k <= n; k++) {
+			prefXor[k] = prefXor[k - 1] ^ arr[k - 1];
+			int x = prefXor[k];
+			ans += k * countOfXor.getOrDefault(x,0) - sumOfi.getOrDefault(x,0) - countOfXor.getOrDefault(x,0);
+			countOfXor.put(x,countOfXor.getOrDefault(x,0) + 1);
+			sumOfi.put(x,sumOfi.getOrDefault(x,0) + k);
+		}
+		return ans;
+	}
+}

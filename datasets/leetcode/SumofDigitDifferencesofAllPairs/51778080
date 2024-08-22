@@ -1,0 +1,32 @@
+class Solution {
+	long sol(Map<Integer, Integer> map) {
+		long ans = 0;
+		List<Integer> list = new ArrayList<>();
+		for (Map.Entry<Integer, Integer> m: map.entrySet()) {	
+			list.add(m.getValue());
+		}
+		int n = list.size();
+		int[] pfx = new int[n];
+		pfx[n - 1] = list.get(n - 1);
+		for (int i = n - 2; i >= 0; i--) {
+			pfx[i] = pfx[i + 1] + list.get(i);
+		}
+		for (int i = 0; i < n; i++) {
+			ans += list.get(i) * (pfx[i] - list.get(i));
+		}
+		return ans;
+	}
+	long sumDigitDifferences(int[] nums) {
+		long ans = 0;
+		while (nums[0] > 0) {
+			Map<Integer, Integer> map = new HashMap<>();
+			for (int j = 0; j < nums.length; j++) {
+				int temp = nums[j] % 10;
+				nums[j] /= 10;
+				map.put(temp,map.getOrDefault(temp,0) + 1);
+			}
+			ans += sol(map);
+		}
+		return ans;
+	}
+}

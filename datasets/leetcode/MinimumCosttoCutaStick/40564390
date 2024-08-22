@@ -1,0 +1,29 @@
+class Solution {
+	Integer[][] dp;
+	int minCost(int n, int[] cuts) {
+		int size = cuts.length;
+		dp = new Integer[size + 1][size + 1];
+		int[] mCuts = new int[size + 2];
+		mCuts[0] = 0;
+		mCuts[1] = n;
+		for (int i = 2; i < size + 2; i++) {
+			mCuts[i] = cuts[i - 2];
+		}
+		Arrays.sort(mCuts);
+		return solve(1,size,mCuts);
+	}
+	int solve(int i, int j, int[] cuts) {
+		if (i > j) {
+			return 0;
+		}
+		if (dp[i][j] != null) {
+			return dp[i][j];
+		}
+		int mn = Integer.MAX_VALUE;
+		for (int k = i; k <= j; k++) {
+			int cost = cuts[j + 1] - cuts[i - 1] + solve(i,k - 1,cuts) + solve(k + 1,j,cuts);
+			mn = Math.min(mn,cost);
+		}
+		return dp[i][j] = mn;
+	}
+}

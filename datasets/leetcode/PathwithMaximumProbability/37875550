@@ -1,0 +1,31 @@
+class Solution {
+	double maxProbability(int p, int[][] edges, double[] prob, int start_node, int end_node) {
+		Map<Integer, List<Pair<Integer, Double>>> map = new HashMap<>();
+		int n = edges.length;
+		for (int i = 0; i < n; i++) {
+			int[] edge = edges[i];
+			List<Pair<Integer, Double>> current = map.getOrDefault(edge[0],new ArrayList<>());
+			current.add(new Pair<>(edge[1], prob[i]));
+			map.put(edge[0],current);
+			current = map.getOrDefault(edge[1],new ArrayList<>());
+			current.add(new Pair<>(edge[0], prob[i]));
+			map.put(edge[1],current);
+		}
+		Set<Integer> visited = new HashSet<>();
+		PriorityQueue<Pair<Integer, Double>> pq = new PriorityQueue<>((a, b) -> {Double.compare(b.getValue(),a.getValue())});
+		pq.offer(new Pair<Integer, Double>(start_node, 1.00));
+		while (!pq.isEmpty()) {
+			Pair<Integer, Double> current = pq.poll();
+			if (current.getKey() == end_node) {
+				return current.getValue();
+			}
+			visited.add(current.getKey());
+			for (Pair<Integer, Double> neigh: map.getOrDefault(current.getKey(),new ArrayList<>())) {	
+				if (!visited.contains(neigh.getKey())) {
+					pq.offer(new Pair<>(neigh.getKey(), neigh.getValue() * current.getValue()));
+				}
+			}
+		}
+		return 0;
+	}
+}

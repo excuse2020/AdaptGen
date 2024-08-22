@@ -1,0 +1,59 @@
+class Solution {
+	int[][] memo;
+	int compressString(String s, int k) {
+		memo = new int[s.length()][s.length() - k + 1];
+		return help(s.toCharArray(),0,s.length() - k);
+	}
+	int getLength(int num) {
+		if (num == 1) {
+			return 1;
+		}
+		int length = 1;
+		while (num > 0) {
+			length++;
+			num /= 10;
+		}
+		return length;
+	}
+	int help(char[] arr, int index, int count) {
+		if (count == 0) {
+			return 0;
+		}
+		if (index == arr.length) {
+			return Integer.MAX_VALUE;
+		}
+		if (memo[index][count] > 0) {
+			return memo[index][count];
+		}
+		int min = Integer.MAX_VALUE;
+		boolean[] used = new boolean[26];
+		for (int i = index; i < arr.length; i++) {
+			if (used[arr[i] - 'a']) {
+				continue;
+			}
+			if (index > 0 && arr[i] == arr[index - 1]) {
+				continue;
+			}
+			used[arr[i] - 'a'] = true;
+			int leftCount = 0;
+			for (int j = i; j < arr.length; j++) {
+				if (arr[j] != arr[i]) {
+					continue;
+				}
+				leftCount++;
+				if (count - leftCount < 0) {
+					break;
+				}
+				int left = getLength(leftCount);
+				int right = help(arr,j + 1,count - leftCount);
+				if (right == Integer.MAX_VALUE) {
+					continue;
+				}
+				int length = left + right;
+				min = Math.min(min,length);
+			}
+		}
+		memo[index][count] = min;
+		return min;
+	}
+}

@@ -1,0 +1,48 @@
+class Solution {
+	int findParent(int node, int[] parent) {
+		if (parent[node] == node) {
+			return node;
+		}
+		return parent[node] = findParent(parent[node],parent);
+	}
+	int regionsBySlashes(String[] grid) {
+		int n = grid.length;
+		int dots = n + 1;
+		int regionCount = 1;
+		int parent = new int[dots * dots];
+		int rank = new int[dots * dots];
+		for (int i = 0; i < parent.length; i++) {
+			parent[i] = i;
+			rank[i] = 0;
+		}
+		for (int row = 0; row < dots; row++) {
+			for (int col = 0; col < dots; col++) {
+				if (row == 0 || col == 0 || row == dots - 1 || col == dots - 1) {
+					int cellNo = row * dots + col;
+					union(0,cellNo,parent,rank);
+				}
+			}
+		}
+		int i = 0;
+		char[] st = grid[i].toCharArray();
+		int j = 0;
+	}
+	boolean union(int x, int y, int[] parent, int[] rank) {
+		int px = findParent(x,parent);
+		int py = findParent(y,parent);
+		if (px != py) {
+			if (rank[px] < rank[py]) {
+				parent[px] = py;
+			} 
+			else if (rank[px] > rank[py]) {
+				parent[py] = px;
+			} 
+			else {
+				parent[py] = px;
+				rank[px]++;
+			}
+			return false;
+		}
+		return true;
+	}
+}

@@ -1,0 +1,50 @@
+class Solution {
+	int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
+		int[][] sortedData = new int[startTime.length][3];
+		for (int i = 0; i < startTime.length; i++) {
+			sortedData[i][0] = startTime[i];
+			sortedData[i][1] = endTime[i];
+			sortedData[i][2] = profit[i];
+		}
+		Arrays.sort(sortedData,Comparator.comparingInt((a) -> {a[1]}));
+		HashMap<Integer, Integer> map = new HashMap<>();
+		int prev = sortedData[0][1];
+		int iterator = 0;
+		map.put(sortedData[0][1],0);
+		for (int i = 1; i < endTime.length; i++) {
+			if (sortedData[i][1] == prev) {
+				continue;
+			}
+			map.put(sortedData[i][1],++iterator);
+			prev = sortedData[i][1];
+		}
+		Arrays.sort(startTime);
+		HashMap<Integer, Integer> startToStop = new HashMap<>();
+		int endIndex = 0;
+		for (int i = 0; i < startTime.length; i++) {
+			if (startTime[i] < sortedData[0][1]) {
+				startToStop.put(startTime[i],-1);
+			} 
+			else {
+				while (startTime[i] >= sortedData[endIndex][1]) {
+					endIndex++;
+				}
+				startToStop.put(startTime[i],map.get(sortedData[endIndex - 1][1]));
+			}
+		}
+		int[] dp = new int[map.size()];
+		dp[0] = sortedData[0][2];
+		for (int i = 1; i < sortedData.length; i++) {
+			if (sortedData[i][1] == sortedData[0][1]) {
+				dp[0] = Math.max(dp[0],sortedData[i][2]);
+			} 
+			else if (startToStop.get(sortedData[i][0]) == -1) {
+				dp[map.get(sortedData[i][1])] = Math.max(dp[map.get(sortedData[i][1])],Math.max(dp[map.get(sortedData[i][1]) - 1],sortedData[i][2]));
+			} 
+			else {
+				dp[map.get(sortedData[i][1])] = Math.max(dp[map.get(sortedData[i][1])],Math.max(dp[map.get(sortedData[i][1]) - 1],sortedData[i][2] + dp[startToStop.get(sortedData[i][0])]));
+			}
+		}
+		return dp[dp.length - 1];
+	}
+}

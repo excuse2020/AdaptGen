@@ -1,0 +1,31 @@
+class Solution {
+	boolean btreeGameWinningMove(TreeNode root, int n, int x) {
+		if (root == null) {
+			return false;
+		}
+		if (x == root.val) {
+			int ln = countNodes(root.left);
+			int rn = countNodes(root.right);
+			int upNodes = n - ln;
+			if (upNodes > ln + rn || rn > ln + 1 || ln > rn + upNodes) {
+				return true;
+			}
+			return false;
+		}
+		boolean lans = btreeGameWinningMove(root.left,n,x);
+		boolean rans = btreeGameWinningMove(root.right,n,x);
+		if (lans || rans) {
+			return true;
+		}
+		return false;
+	}
+	int countNodes(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		int count = 0;
+		count += countNodes(root.left);
+		count += countNodes(root.right);
+		return count + 1;
+	}
+}

@@ -1,0 +1,60 @@
+class Solution {
+	boolean[] dp = new boolean[100005];
+	Map<Integer, Boolean> memo = new HashMap<>();
+	boolean equal(int i, int j, int[] nums) {
+		int ii = i;
+		if (nums.length < j) {
+			return false;
+		}
+		while (i < j) {
+			if (nums[ii] != nums[i]) {
+				return false;
+			}
+			i++;
+		}
+		return true;
+	}
+	boolean increasing(int i, int j, int[] nums) {
+		int pre = nums[i];
+		if (nums.length < j) {
+			return false;
+		}
+		i++;
+		while (i < j) {
+			if (nums[i] != pre + 1) {
+				return false;
+			}
+			pre = nums[i];
+			i++;
+		}
+		return true;
+	}
+	boolean solve(int i, int[] nums) {
+		int n = nums.length;
+		if (i >= n) {
+			return true;
+		}
+		if (memo.containsKey(i)) {
+			return memo.get(i);
+		}
+		memo.put(i,true);
+		boolean two = equal(i,i + 2,nums) && solve(i + 2,nums);
+		if (two) {
+			return two;
+		}
+		boolean three = equal(i,i + 3,nums) && solve(i + 3,nums);
+		if (three) {
+			return true;
+		}
+		three = increasing(i,i + 3,nums) && solve(i + 3,nums);
+		if (three) {
+			return true;
+		}
+		memo.put(i,false);
+		return false;
+	}
+	boolean validPartition(int[] nums) {
+		boolean ans = solve(0,nums);
+		return ans;
+	}
+}

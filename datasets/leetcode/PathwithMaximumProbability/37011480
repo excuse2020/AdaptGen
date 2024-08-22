@@ -1,0 +1,29 @@
+class Solution {
+	double maxProbability(int n, int[][] edges, double[] succProb, int start, int end) {
+		double[] vis = new double[n];
+		boolean[] visited = new boolean[n];
+		PriorityQueue<double[]> pq = new PriorityQueue<>(new Comparator<double[]>());
+		List<List<int[]>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<int[]>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			adj.get(edges[i][0]).add(new int{edges[i][1], i});
+			adj.get(edges[i][1]).add(new int{edges[i][0], i});
+		}
+		pq.add(new double{start, 1});
+		while (!pq.isEmpty()) {
+			double[] p = pq.poll();
+			if (!visited[(int)p[0]]) {
+				visited[(int)p[0]] = true;
+				vis[(int)p[0]] = p[1];
+				for (int[] l: adj.get((int) p[0])) {	
+					if (!visited[l[0]]) {
+						pq.add(new double{l[0], p[1] * succProb[l[1]]});
+					}
+				}
+			}
+		}
+		return vis[end];
+	}
+}

@@ -1,0 +1,46 @@
+class Solution {
+	long minSumSquareDiff(int[] nums1, int[] nums2, int k1, int k2) {
+		long minSumSqDiff = 0;
+		TreeMap<Long, Integer> diffFrequency = new TreeMap<>();
+		for (int i = 0; i < nums1.length; i++) {
+			long dif = Math.abs(nums1[i] - nums2[i]);
+			minSumSqDiff += dif * dif;
+			if (diffFrequency.containsKey(dif)) {
+				diffFrequency.put(dif,diffFrequency.get(dif) + 1);
+			} 
+			else {
+				diffFrequency.put(dif,1);
+			}
+		}
+		long countOps = k1 + k2;
+		while (diffFrequency.size() > 1 && countOps > 0) {
+			long maxDif = diffFrequency.lastKey();
+			long nextMaxDif = diffFrequency.lowerKey(maxDif);
+			int cntMax = diffFrequency.get(maxDif);
+			int cntNextMax = diffFrequency.get(nextMaxDif);
+			long delta = maxDif - nextMaxDif;
+			if (countOps < cntMax * delta) {
+				break;
+			}
+			diffFrequency.put(nextMaxDif,cntNextMax + cntMax);
+			diffFrequency.remove(maxDif);
+			countOps -= cntMax * delta;
+			minSumSqDiff += (delta * delta - 2 * maxDif) * cntMax;
+			if (countOps == 0) {
+				return minSumSqDiff;
+			}
+		}
+		if (countOps > 0) {
+			long maxDif = diffFrequency.lastKey();
+			int countMax = diffFrequency.get(maxDif);
+			long q = Math.min(maxDif,countOps / countMax);
+			minSumSqDiff += countMax * (q * q - 2 * maxDif);
+			maxDif -= q;
+			if (maxDif > 0) {
+				long r = countOps % countMax;
+				minSumSqDiff += r * (1 - 2 * maxDif);
+			}
+		}
+		return minSumSqDiff;
+	}
+}

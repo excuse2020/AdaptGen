@@ -1,0 +1,31 @@
+class Solution {
+	List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+		List<int[]>[] unprocessedMeetings = (List<int[]>[]) new List[n];
+		Arrays.setAll(unprocessedMeetings,(k) -> {new ArrayList<>()});
+		unprocessedMeetings[0].add(new int{0, firstPerson});
+		unprocessedMeetings[firstPerson].add(new int{0, 0});
+		for (int[] meeting: meetings) {	
+			unprocessedMeetings[meeting[0]].add(new int{meeting[2], meeting[1]});
+			unprocessedMeetings[meeting[1]].add(new int{meeting[2], meeting[0]});
+		}
+		PriorityQueue<int[]> goingToKnow = new PriorityQueue<>(Comparator.comparingInt((m) -> {m[0]}));
+		goingToKnow.offer(new int{0, 0});
+		List<Integer> knows = new ArrayList<>();
+		while (!goingToKnow.isEmpty()) {
+			int[] g = goingToKnow.poll();
+			int person = g[1];
+			if (unprocessedMeetings[person].isEmpty()) {
+				continue;
+			}
+			knows.add(person);
+			int time = g[0];
+			for (int[] meeting: unprocessedMeetings[person]) {	
+				if (meeting[0] >= time) {
+					goingToKnow.offer(meeting);
+				}
+			}
+			unprocessedMeetings[person].clear();
+		}
+		return knows;
+	}
+}

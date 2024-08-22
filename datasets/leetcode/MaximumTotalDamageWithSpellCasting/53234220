@@ -1,0 +1,30 @@
+class Solution {
+	long maximumTotalDamage(int[] power) {
+		HashMap<Integer, Integer> m = new HashMap<>();
+		for (int i: power) {	
+			m.put(i,m.getOrDefault(i,0) + 1);
+		}
+		ArrayList<Integer> l = new ArrayList<>(m.keySet());
+		Collections.sort(l);
+		long dp = new long[l.size()];
+		dp[0] = (long) l.get(0) * (long) m.get(l.get(0));
+		for (int i = 1; i < l.size(); i++) {
+			int val = l.get(i);
+			if ((val - 2) > 0) {
+				for (int j = i - 1; j >= 0; j--) {
+					if (l.get(j) < val - 2) {
+						dp[i] = Math.max(dp[i - 1],(l.get(i) * m.get(l.get(i))) + dp[j]);
+						break;
+					}
+					if (j == 0 && dp[i] == 0) {
+						dp[i] = Math.max(dp[i - 1],l.get(i) * m.get(l.get(i)));
+					}
+				}
+			} 
+			else {
+				dp[i] = Math.max(dp[i - 1],l.get(i) * m.get(l.get(i)));
+			}
+		}
+		return dp[dp.length - 1];
+	}
+}

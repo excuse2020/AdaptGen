@@ -1,0 +1,35 @@
+class Solution {
+	List<Integer> goodSubsetofBinaryMatrix(int[][] grid) {
+		boolean[] bin = new boolean[32];
+		ArrayList<Integer> ret = new ArrayList<>();
+		ArrayList<int[]> list = new ArrayList<>();
+		int num = 0;
+		for (int i = 0; i < grid.length; i++) {
+			num = 0;
+			for (int j = 0; j < grid[0].length; j++) {
+				num = (num << 1);
+				if (grid[i][j] == 1) {
+					num = num | 1;
+				}
+			}
+			if (num == 0) {
+				ret.add(i);
+				return ret;
+			}
+			if (!bin[num]) {
+				list.add(new int{num, i});
+				bin[num] = true;
+			}
+		}
+		for (int i = 0; i < list.size(); i++) {
+			for (int j = 0; j < list.size(); j++) {
+				if (i != j && (list.get(i)[0] & list.get(j)[0]) == 0) {
+					ret.add(list.get(i)[1]);
+					ret.add(list.get(j)[1]);
+					return ret;
+				}
+			}
+		}
+		return ret;
+	}
+}

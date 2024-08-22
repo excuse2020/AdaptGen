@@ -1,0 +1,27 @@
+class Solution {
+	int distribute(int[] children, int[] cookies, int cookieIndex) {
+		if (cookieIndex >= cookies.length) {
+			int max = children[0];
+			for (int i = 1; i < children.length; i++) {
+				if (children[i] > max) {
+					max = children[i];
+				}
+			}
+			return max;
+		}
+		int min = Integer.MAX_VALUE;
+		for (int i = 0; i < children.length; i++) {
+			children[i] += cookies[cookieIndex];
+			min = Math.min(min,distribute(children,cookies,cookieIndex + 1));
+			children[i] -= cookies[cookieIndex];
+			if (children[i] == 0) {
+				break;
+			}
+		}
+		return min;
+	}
+	int distributeCookies(int[] cookies, int k) {
+		int[] children = new int[k];
+		return distribute(children,cookies,0);
+	}
+}

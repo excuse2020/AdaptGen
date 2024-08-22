@@ -1,0 +1,33 @@
+class Solution {
+	int minimumRounds(int[] tasks) {
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < tasks.length; i++) {
+			if (!map.containsKey(tasks[i])) {
+				map.put(tasks[i],1);
+			} 
+			else {
+				map.put(tasks[i],map.get(tasks[i]) + 1);
+			}
+		}
+		Iterator itr = map.entrySet().iterator();
+		int round = 0;
+		while (itr.hasNext()) {
+			Map.Entry ele = (Map.Entry) itr.next();
+			int val = (int) ele.getValue();
+			if (val == 1) {
+				return -1;
+			}
+			if (val % 3 == 0 || val % 3 == 2) {
+				round += val / 3;
+				round += (val % 3) / 2;
+			} 
+			else {
+				int threeCnt = (val / 3) - 1;
+				val = val - threeCnt * 3;
+				int twoCnt = val / 2;
+				round += (threeCnt + twoCnt);
+			}
+		}
+		return round;
+	}
+}

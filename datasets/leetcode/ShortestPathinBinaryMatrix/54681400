@@ -1,0 +1,52 @@
+class Solution {
+	List<Pair<Integer, Integer>> offSets = Arrays.asList(new Pair(-1, -1),new Pair(-1, 0),new Pair(-1, 1),new Pair(0, -1),new Pair(0, 1),new Pair(1, -1),new Pair(1, 0),new Pair(1, 1));
+	List<Pair<Integer, Integer>> getAdjecentCells(int row, int col, int maxRow, int maxCol) {
+		List<Pair<Integer, Integer>> cells = new ArrayList<>();
+		for (Pair<Integer, Integer> offset: offSets) {	
+			int newRow = row + offset.getKey();
+			int newCol = col + offset.getValue();
+			if (newRow >= 0 && newRow <= maxRow && newCol >= 0 && newCol <= maxCol) {
+				cells.add(new Pair(newRow, newCol));
+			}
+		}
+		return cells;
+	}
+	int shortestPathBinaryMatrix(int[][] grid) {
+		int n = grid.length;
+		if (grid == null || grid.length == 0) {
+			return -1;
+		}
+		if (grid[0][0] != 0 || grid[n - 1][n - 1] != 0) {
+			return -1;
+		}
+		Queue<Pair<Integer, Integer>> dfs = new LinkedList<>();
+		int[][] dp = new int[n][n];
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				dp[i][j] = -1;
+			}
+		}
+		dfs.offer(new Pair(0, 0));
+		dp[0][0] = 1;
+		while (dfs.isEmpty() == false) {
+			Pair<Integer, Integer> currentCell = dfs.poll();
+			int curRow = currentCell.getKey();
+			int curCol = currentCell.getValue();
+			List<Pair<Integer, Integer>> adjCells = getAdjecentCells(curRow,curCol,n - 1,n - 1);
+			for (Pair<Integer, Integer> cell: adjCells) {	
+				int adjRow = cell.getKey();
+				int adjCol = cell.getValue();
+				if (grid[adjRow][adjCol] == 0) {
+					if (dp[adjRow][adjCol] != -1) {
+						dp[adjRow][adjCol] = Math.min(dp[adjRow][adjCol],dp[curRow][curCol] + 1);
+					} 
+					else {
+						dp[adjRow][adjCol] = dp[curRow][curCol] + 1;
+						dfs.offer(cell);
+					}
+				}
+			}
+		}
+		return dp[n - 1][n - 1];
+	}
+}

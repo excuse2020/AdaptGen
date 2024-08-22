@@ -1,0 +1,34 @@
+class Solution {
+	int dfs(int node, List<List<Integer>> Adj, int[] dp, int[] time) {
+		if (dp[node] != -1) {
+			return dp[node];
+		}
+		int t = 0;
+		for (int next: Adj.get(node)) {	
+			t = Math.max(t,dfs(next,Adj,dp,time));
+		}
+		t += time[node - 1];
+		return dp[node] = t;
+	}
+	int minimumTime(int n, int[][] relations, int[] time) {
+		List<List<Integer>> Adj = new ArrayList<>();
+		for (int i = 0; i <= n; i++) {
+			Adj.add(new ArrayList<>());
+		}
+		for (int[] edge: relations) {	
+			Adj.get(edge[1]).add(edge[0]);
+		}
+		int[] dp = new int[n + 1];
+		Arrays.fill(dp,-1);
+		for (int i = 1; i <= n; i++) {
+			if (dp[i] == -1) {
+				dfs(i,Adj,dp,time);
+			}
+		}
+		int ans = 0;
+		for (int num: dp) {	
+			ans = Math.max(ans,num);
+		}
+		return ans;
+	}
+}

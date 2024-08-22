@@ -1,0 +1,36 @@
+class Solution {
+	int find(List<Integer> power, int x) {
+		int n = power.size();
+		int l = 0, r = n - 1;
+		while (l < r) {
+			int mid = (l + r) / 2;
+			if (x >= power.get(mid)) {
+				l = mid + 1;
+			} 
+			else {
+				r = mid;
+			}
+		}
+		return l < n && power.get(l) > x ? l - 1 : l;
+	}
+	long maximumTotalDamage(int[] power) {
+		int n = power.length;
+		Map<Integer, Long> map = new TreeMap<>();
+		for (int i = 0; i < n; i++) {
+			map.put(power[i],map.containsKey(power[i]) ? map.get(power[i]) + 1 : 1);
+		}
+		List<Integer> list = new ArrayList<>(map.keySet());
+		int size = list.size();
+		long[] dp = new long[size];
+		for (int i = 0; i < size; i++) {
+			int cur = list.get(i);
+			int ind = find(list,cur - 3);
+			long sol = cur * map.get(cur);
+			if (ind != -1) {
+				sol += dp[ind];
+			}
+			dp[i] = Long.max(sol,(i - 1 >= 0) ? dp[i - 1] : 0);
+		}
+		return dp[size - 1];
+	}
+}

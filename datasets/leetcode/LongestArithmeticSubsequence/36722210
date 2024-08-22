@@ -1,0 +1,41 @@
+class Solution {
+	int longestArithSeqLength(int[] nums) {
+		int numsSize = nums.length;
+		int[][] dp = new int[numsSize][numsSize];
+		int max = 2, count = 0;
+		int found = new int[1000];
+		for (int i = 1; i < numsSize; i++) {
+			count = 0;
+			for (int j = i - 1; j >= 0; j--) {
+				int m;
+				for (m = 0; m < count; m++) {
+					if (nums[j] == found[m]) {
+						dp[i][j] = -1;
+						break;
+					}
+				}
+				if (m != count) {
+					continue;
+				}
+				int k;
+				for (k = j - 1; k >= 0; k--) {
+					if (dp[j][k] != -1 && nums[j] - nums[k] == nums[i] - nums[j]) {
+						dp[i][j] = dp[j][k] + 1;
+						found[count] = nums[j];
+						count++;
+						if (dp[i][j] > max) {
+							max = dp[i][j];
+						}
+						break;
+					}
+				}
+				if (k == -1) {
+					found[count] = nums[j];
+					count++;
+					dp[i][j] = 2;
+				}
+			}
+		}
+		return max;
+	}
+}

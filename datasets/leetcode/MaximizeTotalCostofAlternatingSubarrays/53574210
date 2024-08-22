@@ -1,0 +1,26 @@
+class Solution {
+	long helperFunction(long[][] dp, int n, int[] nums, int flag, int index) {
+		if (index >= nums.length) {
+			return 0;
+		}
+		if (dp[flag][index] != -1) {
+			return dp[flag][index];
+		}
+		long res1;
+		if (flag == 0) {
+			res1 = (long) nums[index] + helperFunction(dp,n,nums,1,index + 1);
+		} 
+		else {
+			res1 = -1 * (long) nums[index] + helperFunction(dp,n,nums,0,index + 1);
+		}
+		dp[flag][index] = Math.max(res1,(long) nums[index] + helperFunction(dp,n,nums,0,index + 1));
+		return dp[flag][index];
+	}
+	long maximumTotalCost(int[] nums) {
+		long[][] dp = new long[2][nums.length];
+		for (long[] arr: dp) {	
+			Arrays.fill(arr,-1);
+		}
+		return helperFunction(dp,nums.length,nums,0,0);
+	}
+}

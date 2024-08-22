@@ -1,0 +1,51 @@
+class Solution {
+	TreeNode createBinaryTree(int[][] descriptions) {
+		Map<Integer, TreeNode> nodes = new HashMap<>();
+		Set<Integer> children = new HashSet<>();
+		for (int[] description: descriptions) {	
+			int parent = description[0];
+			int child = description[1];
+			int isLeft = description[2];
+			if (!nodes.containsKey(parent)) {
+				nodes.put(parent,new TreeNode(parent));
+			}
+			if (!nodes.containsKey(child)) {
+				nodes.put(child,new TreeNode(child));
+			}
+			if (isLeft == 1) {
+				nodes.get(parent).left = nodes.get(child);
+			} 
+			else {
+				nodes.get(parent).right = nodes.get(child);
+			}
+			children.add(child);
+		}
+		TreeNode root = null;
+		for (int node: nodes.keySet()) {	
+			if (!children.contains(node)) {
+				root = nodes.get(node);
+				break;
+			}
+		}
+		return root;
+	}
+	List<Integer> levelOrderTraversal(TreeNode root) {
+		List<Integer> result = new ArrayList<>();
+		if (root == null) {
+			return result;
+		}
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(root);
+		while (!queue.isEmpty()) {
+			TreeNode node = queue.poll();
+			result.add(node.val);
+			if (node.left != null) {
+				queue.add(node.left);
+			}
+			if (node.right != null) {
+				queue.add(node.right);
+			}
+		}
+		return result;
+	}
+}

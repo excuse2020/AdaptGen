@@ -1,0 +1,52 @@
+class Solution {
+	int minOparater(List<Integer> list) {
+		if (list == null || list.size() <= 1) {
+			return 0;
+		}
+		int n = list.size();
+		HashMap<Integer, Integer> map = new HashMap<>();
+		List<Integer> sortList = new ArrayList(list);
+		Collections.sort(sortList);
+		int ops = 0;
+		for (int i = 0; i < n; i++) {
+			map.put(list.get(i),i);
+		}
+		for (int i = 0; i < n; i++) {
+			int curr = list.get(i);
+			int temp = sortList.get(i);
+			if (curr != temp) {
+				ops++;
+				swap(list,i,map.get(temp));
+				map.put(curr,map.get(temp));
+				map.put(sortList.get(i),i);
+			}
+		}
+		return ops;
+	}
+	int minimumOperations(TreeNode root) {
+		Deque<TreeNode> queue = new ArrayDeque<>();
+		int res = 0;
+		queue.add(root);
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			List<Integer> level = new ArrayList<>();
+			for (int i = 0; i < size; i++) {
+				TreeNode curr = queue.poll();
+				level.add(curr.val);
+				if (curr.left != null) {
+					queue.add(curr.left);
+				}
+				if (curr.right != null) {
+					queue.add(curr.right);
+				}
+			}
+			res += minOparater(level);
+		}
+		return res;
+	}
+	void swap(List<Integer> list, int i, int j) {
+		int temp = list.get(i);
+		list.set(i,list.get(j));
+		list.set(j,temp);
+	}
+}

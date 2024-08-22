@@ -1,0 +1,36 @@
+class Solution {
+	Queue<Object[]> runQuery(int[] query, String[] nums) {
+		Queue<Object[]> heap = new PriorityQueue<>(new IntArrayComparator());
+		int idx = 0;
+		for (String num: nums) {	
+			int k = query[0];
+			int trim = query[1];
+			int len = num.length();
+			num = num.substring(len - trim);
+			heap.offer(new Object{num, idx});
+			if (heap.size() > k) {
+				heap.poll();
+			}
+			idx++;
+		}
+		return heap;
+	}
+	int[] smallestTrimmedNumbers(String[] nums, int[][] queries) {
+		int queryLen = queries.length;
+		int[] result = new int[queryLen];
+		int idx = 0;
+		for (int[] query: queries) {	
+			Queue<Object[]> heap = runQuery(query,nums);
+			result[idx++] = (int) heap.poll()[1];
+		}
+		return result;
+	}
+	class IntArrayComparator {
+		int compare(Object[] o1, Object[] o2) {
+			if (o2[0].equals(o1[0])) {
+				return Integer.compare((int) o2[1],(int) o1[1]);
+			}
+			return ((String) o2[0]).compareTo((String) o1[0]);
+		}
+	}
+}

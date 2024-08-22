@@ -1,0 +1,47 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		int a = 0, b = 0;
+		if (head1 == null) {
+			return head2;
+		}
+		if (head2 == null) {
+			return head1;
+		}
+		ListNode virtualHead1 = new ListNode(0);
+		virtualHead1.next = head1;
+		ListNode prev = virtualHead1;
+		ListNode cur = head1;
+		ListNode next = head1.next;
+		ListNode newHead1 = head1, newHead2 = head2;
+		while (head1.next != null) {
+			ListNode t = head1.next;
+			head1.next = head1.next.next;
+			t.next = newHead1;
+			newHead1 = t;
+		}
+		while (head2.next != null) {
+			ListNode t = head2.next;
+			head2.next = head2.next.next;
+			t.next = newHead2;
+			newHead2 = t;
+		}
+		ListNode heading = new ListNode(0);
+		int nextIncr = 0;
+		while (newHead1 != null || newHead2 != null) {
+			int val = (newHead1 == null ? 0 : newHead1.val) + (newHead2 == null ? 0 : newHead2.val);
+			int remaining = val % 10;
+			nextIncr = val / 10;
+			ListNode t = new ListNode(remaining);
+			t.next = heading.next;
+			heading.next = t;
+			newHead1 = newHead1 == null ? null : newHead1.next;
+			newHead2 = newHead2 == null ? null : newHead2.next;
+		}
+		if (nextIncr > 0) {
+			ListNode t = new ListNode(nextIncr);
+			t.next = heading.next;
+			heading.next = t;
+		}
+		return heading.next;
+	}
+}

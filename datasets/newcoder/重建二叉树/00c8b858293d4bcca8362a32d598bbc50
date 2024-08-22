@@ -1,0 +1,31 @@
+class Solution {
+	TreeNode build(int[] pre, int pl, int pr, int[] vin, int vl, int vr) {
+		if (pr == pl || vr == vl) {
+			return new TreeNode(pre[pl]);
+		}
+		if (pl > pr || vl > vr) {
+			return null;
+		}
+		int val = pre[pl];
+		int localVin = vl;
+		Set<Integer> set = new HashSet<>();
+		while (localVin <= vr && vin[localVin] != val) {
+			set.add(vin[localVin]);
+			localVin++;
+		}
+		int localPre = pl + 1;
+		while (localPre <= pr && set.contains(pre[localPre])) {
+			localPre++;
+		}
+		TreeNode node = new TreeNode(pre[pl]);
+		node.left = build(pre,pl + 1,localPre - 1,vin,vl,localVin - 1);
+		node.right = build(pre,localPre,pr,vin,localVin + 1,vr);
+		return node;
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] vin) {
+		if (pre.length == 0 || vin.length == 0) {
+			return null;
+		}
+		return build(pre,0,pre.length - 1,vin,0,vin.length - 1);
+	}
+}

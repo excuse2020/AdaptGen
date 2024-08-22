@@ -1,0 +1,26 @@
+class Solution {
+	double maxProbability(int n, int[][] edges, double[] succProb, int start, int end) {
+		double prob = new double[n];
+		PriorityQueue<Integer> q = new PriorityQueue<>((a, b) -> {Double.compare(prob[b],prob[a])});
+		List<int[]>[] adj = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			adj[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < edges.length; i++) {
+			adj[edges[i][0]].add(new int{edges[i][1], i});
+			adj[edges[i][1]].add(new int{edges[i][0], i});
+		}
+		prob[start] = 1;
+		q.offer(start);
+		while (!q.isEmpty()) {
+			int cur = q.poll();
+			for (int[] hei: adj[cur]) {	
+				if (prob[cur] * succProb[hei[1]] > prob[hei[0]]) {
+					prob[hei[0]] = prob[cur] * succProb[hei[1]];
+					q.offer(hei[0]);
+				}
+			}
+		}
+		return prob[end];
+	}
+}

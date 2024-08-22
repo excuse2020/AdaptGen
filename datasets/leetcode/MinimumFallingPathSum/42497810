@@ -1,0 +1,29 @@
+class Solution {
+	int min;
+	int minFallingPathSum(int[][] mat) {
+		min = Integer.MAX_VALUE;
+		int m = mat.length;
+		int n = mat[0].length;
+		int memo = new int[m][n];
+		for (int a: memo) {	
+			Arrays.fill(a,Integer.MIN_VALUE);
+		}
+		for (int i = 0; i < m; i++) {
+			min = Math.min(min,sol(mat,i,0,memo));
+		}
+		return min;
+	}
+	int sol(int[][] mat, int c, int r, int[][] memo) {
+		if (c == mat[0].length || c < 0) {
+			return Integer.MAX_VALUE;
+		}
+		if (r == mat.length) {
+			return 0;
+		}
+		if (memo[r][c] != Integer.MIN_VALUE) {
+			return memo[r][c];
+		}
+		memo[r][c] = mat[r][c] + Math.min(sol(mat,c,r + 1,memo),Math.min(sol(mat,c + 1,r + 1,memo),sol(mat,c - 1,r + 1,memo)));
+		return memo[r][c];
+	}
+}

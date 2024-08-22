@@ -1,0 +1,36 @@
+class Solution {
+	int cherryPickup(int[][] grid) {
+		int m = grid.length;
+		int n = grid[0].length;
+		int[][][] dp = new int[m][n][n];
+		for (int[][] row: dp) {	
+			for (int[] row1: row) {	
+				Arrays.fill(row1,-1);
+			}
+		}
+		return memo(0,0,n - 1,m,n,grid,dp);
+	}
+	int memo(int i1, int j1, int j2, int m, int n, int[][] grid, int[][][] dp) {
+		if (i1 < 0 || i1 == m || j1 < 0 || j1 == n || j2 < 0 || j2 == n) {
+			return 0;
+		}
+		if (dp[i1][j1][j2] != -1) {
+			return dp[i1][j1][j2];
+		}
+		int pickup = 0;
+		if (j1 == j2) {
+			pickup = grid[i1][j1];
+		} 
+		else {
+			pickup = grid[i1][j1] + grid[i1][j2];
+		}
+		int maxi = Integer.MIN_VALUE;
+		for (int i = -1; i <= 1; i++) {
+			for (int j = -1; j <= 1; j++) {
+				maxi = Math.max(maxi,memo(i1 + 1,j1 + i,j2 + j,m,n,grid,dp));
+			}
+		}
+		pickup += maxi;
+		return dp[i1][j1][j2] = pickup;
+	}
+}

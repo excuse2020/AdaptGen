@@ -1,0 +1,42 @@
+class Solution {
+	int ans = 0;
+	int cover(int[][] mat) {
+		int count = 0;
+		for (int i = 0; i < mat.length; i++) {
+			boolean flag = true;
+			for (int j = 0; j < mat[0].length; j++) {
+				if (mat[i][j] != 0) {
+					flag = false;
+					break;
+				}
+			}
+			if (flag == true) {
+				count++;
+			}
+		}
+		return count;
+	}
+	int maximumRows(int[][] mat, int cols) {
+		solver(mat,cols,0);
+		return ans;
+	}
+	int solver(int[][] mat, int cols, int i) {
+		if (cols == 0 || i == mat[0].length) {
+			int c = cover(mat);
+			ans = Math.max(ans,c);
+			return c;
+		}
+		int x = solver(mat,cols,i + 1);
+		int[][] cmat = new int[mat.length][mat[0].length];
+		for (int k = 0; k < cmat.length; k++) {
+			for (int j = 0; j < cmat[0].length; j++) {
+				cmat[k][j] = mat[k][j];
+			}
+		}
+		for (int j = 0; j < cmat.length; j++) {
+			cmat[j][i] = 0;
+		}
+		int y = solver(cmat,cols - 1,i + 1);
+		return Math.max(x,y);
+	}
+}

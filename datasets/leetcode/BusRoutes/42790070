@@ -1,0 +1,56 @@
+class Solution {
+	int numBusesToDestination(int[][] routes, int source, int target) {
+		Map<Integer, List<Integer>> timetable = new HashMap<>();
+		Map<Integer, Boolean> vis = new HashMap<>();
+		int bus = 0;
+		if (source == target) {
+			return bus;
+		}
+		int n = routes.length;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < routes[i].length; j++) {
+				int stop = routes[i][j];
+				if (timetable.get(stop) == null) {
+					timetable.put(stop,new ArrayList<>());
+					vis.put(stop,false);
+				}
+				timetable.get(stop).add(i);
+			}
+		}
+		if (timetable.get(target) == null) {
+			return -1;
+		}
+		boolean check = false;
+		Queue<Integer> q = new LinkedList<>();
+		for (Integer it: timetable.get(source)) {	
+			q.add(it);
+		}
+		vis.put(source,false);
+		while (!q.isEmpty()) {
+			int size = q.size();
+			bus++;
+			for (int i = 0; i < size; i++) {
+				int curBus = q.poll();
+				for (int j = 0; j < routes[curBus].length; j++) {
+					if (target == routes[curBus][j]) {
+						check = true;
+						break;
+					}
+					if (vis.get(routes[curBus][j]) == false) {
+						for (Integer it: timetable.get(routes[curBus][j])) {	
+							q.add(it);
+						}
+						vis.put(routes[curBus][j],true);
+					}
+				}
+				if (check) {
+					break;
+				}
+			}
+			if (check) {
+				break;
+			}
+		}
+		return check ? bus : -1;
+	}
+}

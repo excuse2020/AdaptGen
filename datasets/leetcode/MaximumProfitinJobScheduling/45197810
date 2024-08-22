@@ -1,0 +1,80 @@
+class Solution {
+	int getNext(int[] startTime, Integer[] indices, int time) {
+		int left = 0;
+		int right = indices.length - 1;
+		if (startTime.length == 1) {
+			if (startTime[0] < time) {
+				return -1;
+			} 
+			else {
+				return 0;
+			}
+		}
+		while (left < right) {
+			if (left == right - 1) {
+				if (startTime[indices[left]] < time && startTime[indices[right]] >= time) {
+					return right;
+				} 
+				else if (startTime[indices[left]] >= time) {
+					return left;
+				} 
+				else {
+					return -1;
+				}
+			}
+			int midpoint = (left + right) / 2;
+			if (startTime[indices[midpoint]] < time && startTime[indices[midpoint + 1]] >= time) {
+				return midpoint + 1;
+			} 
+			else if (startTime[indices[midpoint]] >= time) {
+				right = midpoint;
+			} 
+			else {
+				left = midpoint + 1;
+			}
+		}
+		if (startTime[indices[left]] < time) {
+			return -1;
+		} 
+		else {
+			return left;
+		}
+	}
+	int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
+		Integer[] indices = new Integer[startTime.length];
+		for (int i = 0; i < indices.length; i++) {
+			indices[i] = i;
+		}
+		Arrays.sort(indices,(indx1, indx2) -> {startTime[indx1] - startTime[indx2]});
+		int[] maxProfit = new int[startTime.length];
+		for (int i = 0; i < maxProfit.length; i++) {
+			maxProfit[i] = profit[indices[i]];
+		}
+		for (int i = 0; i < indices.length; i++) {
+			int j;
+			int endPoint;
+			int minEndTimes = Integer.MAX_VALUE;
+			j = getNext(startTime,indices,endTime[indices[i]]);
+			if (j == -1) {
+				continue;
+			}
+			boolean cont = true;
+			while (j < indices.length && startTime[indices[j]] < minEndTimes) {
+				if (maxProfit[i] + profit[indices[j]] > maxProfit[j]) {
+					maxProfit[j] = maxProfit[i] + profit[indices[j]];
+				}
+				if (endTime[indices[j]] < minEndTimes) {
+					minEndTimes = endTime[indices[j]];
+				}
+				j++;
+			}
+		}
+		int optimalAll = 0;
+		for (int i = 0; i < maxProfit.length; i++) {
+			if (maxProfit[i] > optimalAll) {
+				optimalAll = maxProfit[i];
+			}
+		}
+		return optimalAll;
+	}
+}

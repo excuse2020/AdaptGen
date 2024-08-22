@@ -1,0 +1,61 @@
+class Solution {
+	ListNode merge(ListNode h1, ListNode h2) {
+		ListNode dummy = new ListNode(0), head = dummy;
+		while (h1 != null && h2 != null) {
+			if (h1.val <= h2.val) {
+				head.next = h1;
+				h1 = h1.next;
+			} 
+			else {
+				head.next = h2;
+				h2 = h2.next;
+			}
+			head = head.next;
+		}
+		head.next = h1 == null ? h2 : h1;
+		return dummy.next;
+	}
+	ListNode sortInList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode p = head;
+		int len = 0;
+		while (p != null) {
+			p = p.next;
+			len++;
+		}
+		ListNode faker = new ListNode(0);
+		faker.next = head;
+		for (int step = 1; step < len; step *= 2) {
+			ListNode unsortedHead = faker.next;
+			ListNode sortedTail = faker;
+			while (unsortedHead != null) {
+				ListNode cutHead1 = unsortedHead;
+				ListNode cutHead2 = split(unsortedHead,step);
+				unsortedHead = split(cutHead2,step);
+				sortedTail.next = merge(cutHead1,cutHead2);
+				while (sortedTail.next != null) {
+					sortedTail = sortedTail.next;
+				}
+			}
+		}
+		return faker.next;
+	}
+	ListNode split(ListNode head, int n) {
+		if (head == null) {
+			return null;
+		}
+		ListNode p = head;
+		int count = 0;
+		while (p != null && --n > 0) {
+			p = p.next;
+		}
+		if (p == null) {
+			return null;
+		}
+		ListNode remain = p.next;
+		p.next = null;
+		return remain;
+	}
+}

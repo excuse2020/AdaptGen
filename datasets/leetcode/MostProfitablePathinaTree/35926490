@@ -1,0 +1,89 @@
+class Solution {
+	void bfs(int start, Map<Integer, List<Integer>> graph, int[] distances) {
+		int n = distances.length;
+		distances[start] = 0;
+		Deque<Integer> q = new ArrayDeque<>();
+		boolean[] visited = new boolean[n];
+		int level = 0;
+		q.offer(start);
+		visited[start] = true;
+		while (!q.isEmpty()) {
+			int qSize = q.size();
+			for (int i = 0; i < qSize; i++) {
+				int node = q.poll();
+				distances[node] = level;
+				for (int neighbour: graph.get(node)) {	
+					if (!visited[neighbour]) {
+						q.offer(neighbour);
+						visited[neighbour] = true;
+					}
+				}
+			}
+			level++;
+		}
+	}
+	Map<Integer, List<Integer>> buildGraph(int[][] edges) {
+		int n = edges.length;
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		for (int i = 0; i < n + 1; i++) {
+			graph.put(i,new ArrayList<>());
+		}
+		for (int[] e: edges) {	
+			graph.get(e[0]).add(e[1]);
+			graph.get(e[1]).add(e[0]);
+		}
+		return graph;
+	}
+	void findBobsPath(int node, Map<Integer, List<Integer>> graph, Set<Integer> visited, List<Integer> path, List<Integer> bobPath) {
+		visited.add(node);
+		path.add(node);
+		if (node == 0) {
+			bobPath.addAll(path);
+			return;
+		}
+		for (int neighbour: graph.get(node)) {	
+			if (!visited.contains(neighbour)) {
+				findBobsPath(neighbour,graph,visited,path,bobPath);
+			}
+		}
+		path.remove(path.size() - 1);
+	}
+	int maxPathSum(int node, Map<Integer, List<Integer>> graph, int[] amount, Set<Integer> visited) {
+		visited.add(node);
+		int maxSum = Integer.MIN_VALUE;
+		for (int neighbour: graph.get(node)) {	
+			if (!visited.contains(neighbour)) {
+				int maxForwardSum = maxPathSum(neighbour,graph,amount,visited);
+				maxSum = Math.max(maxSum,maxForwardSum);
+			}
+		}
+		return maxSum == Integer.MIN_VALUE ? amount[node] : maxSum + amount[node];
+	}
+	int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+		int n = amount.length;
+		Map<Integer, List<Integer>> graph = buildGraph(edges);
+		int[] aliceDis = new int[n];
+		Arrays.fill(aliceDis,-1);
+		int[] bobDis = new int[n];
+		Arrays.fill(bobDis,-1);
+		List<Integer> bobPath = new ArrayList<>();
+		findBobsPath(bob,graph,new HashSet<Integer>(),new ArrayList<>(),bobPath);
+		for (int i = 0; i < bobPath.size(); i++) {
+			bobDis[bobPath.get(i)] = i;
+		}
+		bfs(0,graph,aliceDis);
+		for (int i = 0; i < n; i++) {
+			if (bobDis[i] == -1) {
+				continue;
+			} 
+			else if (aliceDis[i] == bobDis[i]) {
+				amount[i] /= 2;
+			} 
+			else if (aliceDis[i] > bobDis[i]) {
+				amount[i] = 0;
+			}
+		}
+		Set<Integer> visited = new HashSet<>();
+		return maxPathSum(0,graph,amount,visited);
+	}
+}

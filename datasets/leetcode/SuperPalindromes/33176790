@@ -1,0 +1,69 @@
+class Solution {
+	boolean check(char[] digits) {
+		long value = Long.parseLong(String.valueOf(digits));
+		System.out.println("checks" + value);
+		value = value * value;
+		digits = Long.toString(value).toCharArray();
+		for (int n = 0; n < digits.length; n++) {
+			if ((!(digits[n] == digits[digits.length - n - 1]))) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int findRT(String min, String max, int count) {
+		String minHalf = Long.toString((long) (Math.pow(10,Math.floor(min.length() / 2 - 1))));
+		String maxHalf = max.substring(0,(int) Math.ceil((double) max.length() / 2));
+		for (long i = Long.parseLong(minHalf); i <= Long.parseLong(maxHalf); i++) {
+			char[] pali = Long.toString(i).toCharArray();
+			char[] newPali = new char[pali.length * 2];
+			for (int n = 0; n < pali.length; n++) {
+				newPali[n] = pali[n];
+				newPali[newPali.length - 1 - n] = pali[n];
+			}
+			if (Long.parseLong(new String(newPali)) >= Long.parseLong(min) && Long.parseLong(new String(newPali)) <= Long.parseLong(max)) {
+				if (check(newPali)) {
+					count++;
+					System.out.println(newPali);
+				}
+			}
+			for (int x = 0; x < 10; x++) {
+				char[] temp = new char[newPali.length + 1];
+				for (int h = 0; h < pali.length; h++) {
+					temp[h] = pali[h];
+					temp[temp.length - 1 - h] = pali[h];
+				}
+				temp[pali.length] = valueOf(x).charAt(0);
+				if ((Long.parseLong(new String(temp)) >= Long.parseLong(min) && Long.parseLong(new String(temp)) <= Long.parseLong(max))) {
+					if (check(temp)) {
+						count++;
+						System.out.println(temp);
+					}
+				}
+			}
+		}
+		return count;
+	}
+	void main(String[] args) {
+		System.out.println(superpalindromesInRange("444","17017"));
+	}
+	int superpalindromesInRange(String left, String right) {
+		int count = 0;
+		long ogMin = Long.parseLong(left);
+		long ogMax = Long.parseLong(right);
+		String minRT = valueOf((long) Math.ceil(Math.sqrt(ogMin)));
+		String maxRT = valueOf((long) Math.floor(Math.sqrt(ogMax)));
+		if (minRT.length() == 1) {
+			while (Long.parseLong(minRT) <= Long.parseLong(maxRT) && Long.parseLong(minRT) < 10) {
+				if (check(minRT.toCharArray())) {
+					count++;
+				}
+				minRT = valueOf(Long.parseLong(minRT) + 1);
+			}
+			if (Long.parseLong(minRT) >= Long.parseLong(maxRT)) {
+				return count;
+			}
+		}
+		return findRT(minRT,maxRT,count);
+	}
+}

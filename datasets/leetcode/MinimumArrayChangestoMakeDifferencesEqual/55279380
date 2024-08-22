@@ -1,0 +1,29 @@
+class Solution {
+	int minChanges(int[] nums, int k) {
+		int[] vis = new int[k + 1];
+		int n = nums.length;
+		int left = 0, right = n - 1;
+		vis[0] = n / 2;
+		int[] vis1 = new int[k + 1];
+		while (left < right) {
+			vis1[Math.abs(nums[left] - nums[right])]++;
+			int minVal = Math.min(nums[left],nums[right]);
+			int maxVal = Math.max(nums[left],nums[right]);
+			int num = Math.max(maxVal,k - minVal);
+			if (num < k) {
+				vis[num + 1] = -1;
+			}
+			left++;
+			right--;
+		}
+		for (int i = 1; i <= k; i++) {
+			vis[i] += vis[i - 1];
+		}
+		int res = n;
+		for (int i = 0; i <= k; i++) {
+			int val = (n / 2 - vis[i]) * 2 + (vis[i] - vis1[i]);
+			res = Math.min(res,val);
+		}
+		return res;
+	}
+}

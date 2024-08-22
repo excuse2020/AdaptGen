@@ -1,0 +1,53 @@
+class Solution {
+	int Solve1(int index, int prev, int count, int[] rating, int dp) {
+		if (count == 3) {
+			return 1;
+		}
+		if (index >= rating.length) {
+			return 0;
+		}
+		if (dp[index][prev + 1][count] != -1) {
+			return dp[index][prev + 1][count];
+		}
+		int notTake = Solve1(index + 1,prev,count,rating,dp);
+		int take = 0;
+		if (prev == -1 || rating[prev] < rating[index]) {
+			take = Solve1(index + 1,index,count + 1,rating,dp);
+		}
+		return dp[index][prev + 1][count] = take + notTake;
+	}
+	int Solve2(int index, int prev, int count, int[] rating, int dp) {
+		if (count == 3) {
+			return 1;
+		}
+		if (index >= rating.length) {
+			return 0;
+		}
+		if (dp[index][prev + 1][count] != -1) {
+			return dp[index][prev + 1][count];
+		}
+		int notTake = Solve2(index + 1,prev,count,rating,dp);
+		int take = 0;
+		if (prev == -1 || rating[prev] > rating[index]) {
+			take = Solve2(index + 1,index,count + 1,rating,dp);
+		}
+		return dp[index][prev + 1][count] = take + notTake;
+	}
+	int numTeams(int[] rating) {
+		int dp1 = new int[rating.length][rating.length + 1][3];
+		for (int row: dp1) {	
+			for (int col: row) {	
+				Arrays.fill(col,-1);
+			}
+		}
+		int inc = Solve1(0,-1,0,rating,dp1);
+		int dp2 = new int[rating.length][rating.length + 1][3];
+		for (int row: dp2) {	
+			for (int col: row) {	
+				Arrays.fill(col,-1);
+			}
+		}
+		int dec = Solve2(0,-1,0,rating,dp2);
+		return inc + dec;
+	}
+}

@@ -1,0 +1,41 @@
+class Solution {
+	int[][] dp;
+	int n;
+	int computeFalling(int[][] matrix, int row, int col) {
+		if (dp[row][col] != Integer.MAX_VALUE) {
+			return dp[row][col];
+		}
+		int min = Integer.MAX_VALUE;
+		if (isValid(row + 1,col - 1)) {
+			min = Math.min(min,matrix[row][col] + computeFalling(matrix,row + 1,col - 1));
+		}
+		if (isValid(row + 1,col)) {
+			min = Math.min(min,matrix[row][col] + computeFalling(matrix,row + 1,col));
+		}
+		if (isValid(row + 1,col + 1)) {
+			min = Math.min(min,matrix[row][col] + computeFalling(matrix,row + 1,col + 1));
+		}
+		dp[row][col] = min;
+		return min;
+	}
+	boolean isValid(int row, int col) {
+		return row >= 0 && row < n && col >= 0 && col < n;
+	}
+	int minFallingPathSum(int[][] matrix) {
+		n = matrix.length;
+		dp = new int[n][n];
+		for (int i = 0; i < n - 1; i++) {
+			Arrays.fill(dp[i],Integer.MAX_VALUE);
+			dp[n - 1][i] = matrix[n - 1][i];
+		}
+		dp[n - 1][n - 1] = matrix[n - 1][n - 1];
+		for (int i = 0; i < n; i++) {
+			dp[0][i] = computeFalling(matrix,0,i);
+		}
+		int fallingCost = dp[0][0];
+		for (int i = 1; i < n; i++) {
+			fallingCost = Math.min(fallingCost,dp[0][i]);
+		}
+		return fallingCost;
+	}
+}

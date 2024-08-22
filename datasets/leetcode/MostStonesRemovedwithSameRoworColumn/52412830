@@ -1,0 +1,39 @@
+class Solution {
+	int get_ans(Map<Integer, Set<Integer>> m, int i, Set<Integer> vis) {
+		vis.add(i);
+		int res = 0;
+		if (m.containsKey(i)) {
+			for (int j: m.get(i)) {	
+				if (!vis.contains(j)) {
+					res += get_ans(m,j,vis) + 1;
+				}
+			}
+		}
+		return res;
+	}
+	int removeStones(int[][] stones) {
+		Map<Integer, Set<Integer>> m = new HashMap<>();
+		for (int i = 0; i < stones.length; i++) {
+			if (!m.containsKey(i)) {
+				m.put(i,new HashSet<>());
+			}
+			for (int j = i + 1; j < stones.length; j++) {
+				if (i != j && (stones[i][0] == stones[j][0] || stones[i][1] == stones[j][1])) {
+					m.get(i).add(j);
+					if (!m.containsKey(j)) {
+						m.put(j,new HashSet<>());
+					}
+					m.get(j).add(i);
+				}
+			}
+		}
+		int res = 0;
+		Set<Integer> vis = new HashSet<>();
+		for (int i = 0; i < stones.length; i++) {
+			if (!vis.contains(i)) {
+				res += get_ans(m,i,vis);
+			}
+		}
+		return res;
+	}
+}

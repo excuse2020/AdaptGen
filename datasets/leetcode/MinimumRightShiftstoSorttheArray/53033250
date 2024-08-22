@@ -1,0 +1,43 @@
+class Solution {
+	int minimumRightShifts(List<Integer> nums) {
+		int minValue = Integer.MAX_VALUE, minIndex = 0;
+		for (int i = 0; i < nums.size(); i++) {
+			if (nums.get(i) < minValue) {
+				minValue = nums.get(i);
+				minIndex = i;
+			}
+		}
+		if (nums.get(0) - minValue == 1 && minIndex > 0 && minIndex < nums.size() - 1) {
+			return -1;
+		}
+		boolean isMinValueArrived = false;
+		int prev = nums.get(0);
+		int maxBeforeMin = 0, maxAfterMin = 0;
+		for (int x: nums) {	
+			if (x == minValue) {
+				isMinValueArrived = true;
+				prev = x;
+			}
+			if (!isMinValueArrived && x < prev) {
+				return -1;
+			}
+			if (isMinValueArrived && x < prev) {
+				return -1;
+			}
+			if (!isMinValueArrived && x > maxBeforeMin) {
+				maxBeforeMin = x;
+			}
+			if (isMinValueArrived && x > maxAfterMin) {
+				maxAfterMin = x;
+			}
+			prev = x;
+		}
+		if (minIndex == 0) {
+			return 0;
+		}
+		if (maxBeforeMin < maxAfterMin) {
+			return -1;
+		}
+		return nums.size() - minIndex;
+	}
+}

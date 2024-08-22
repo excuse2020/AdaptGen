@@ -1,0 +1,28 @@
+class Solution {
+	int[] ans;
+	int[] countSubTrees(int n, int[][] edges, String labels) {
+		ans = new int[n];
+		ArrayList<Integer>[] graph = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new ArrayList<Integer>();
+		}
+		for (int[] e: edges) {	
+			int a = e[0], b = e[1];
+			graph[a].add(b);
+			graph[b].add(a);
+		}
+		dfs(0,-1,graph,labels);
+		return ans;
+	}
+	int[] dfs(int curr, int per, ArrayList<Integer>[] graph, String labels) {
+		int freq = new int[26];
+		for (int x: graph[curr]) {	
+			if (per != x) {
+				int[] res = dfs(x,curr,graph,labels);
+				for (int i = 0; i < res.length; i++) {
+					freq[i] += res[i];
+				}
+			}
+		}
+	}
+}

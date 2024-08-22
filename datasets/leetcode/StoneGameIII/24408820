@@ -1,0 +1,42 @@
+class Solution {
+	int[][] memo;
+	int find(int i, int n, int turn, int[] arr) {
+		if (i >= n) {
+			return 0;
+		}
+		if (memo[i][turn] != -1) {
+			return memo[i][turn];
+		}
+		if (turn == 0) {
+			int score = 0, res = Integer.MIN_VALUE;
+			for (int j = 0; j < 3; j++) {
+				if (i + j >= n) {
+					break;
+				}
+				score += arr[i + j];
+				res = Math.max(res,score + find(i + j,n,turn ^ 1,arr));
+			}
+			return memo[i][turn] = res;
+		} 
+		else {
+			int score = 0, res = Integer.MAX_VALUE;
+			for (int j = 0; j < 3; j++) {
+				if (i + j >= n) {
+					break;
+				}
+				score -= arr[i + j];
+				res = Math.min(res,score + find(i + j,n,turn ^ 1,arr));
+			}
+			return memo[i][turn] = res;
+		}
+	}
+	String stoneGameIII(int[] stoneValue) {
+		int n = stoneValue.length;
+		memo = new int[n + 1][2];
+		for (int[] x: memo) {	
+			Arrays.fill(x,-1);
+		}
+		int val = find(0,n,0,stoneValue);
+		return val == 0 ? "Tie" : (val > 0 ? "Alice" : "Bob");
+	}
+}

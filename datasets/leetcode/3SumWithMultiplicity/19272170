@@ -1,0 +1,48 @@
+class Solution {
+	int threeSumMulti(int[] arr, int target) {
+		int n = arr.length;
+		int modl = (int) Math.pow(10,9) + 7;
+		long[] count = new long[101];
+		long result = 0;
+		for (int i = 0; i < n; i++) {
+			count[arr[i]] += 1;
+		}
+		for (int i = 0; i <= 100; i++) {
+			int l = i;
+			int h = 100;
+			while (h >= l && h >= i && h <= 100 && l >= i && l <= 100) {
+				int sum = i + l;
+				if (sum > target) {
+					h--;
+				} 
+				else if (sum < target) {
+					l++;
+				} 
+				else if (sum == target) {
+					if (i != l && l != h && i != h) {
+						result += count[i] * count[l];
+						result %= modl;
+					} 
+					else if (i == l && l == h) {
+						result += count[i] * (count[i] - 1) / 6;
+						result %= modl;
+					} 
+					else if (i == l && i != h) {
+						result += count[i] * (count[i] - 1) / 2 * count[h];
+						result %= modl;
+					} 
+					else if (l == h && l != i) {
+						result += count[l] * (count[l] - 1) / 2 * count[i];
+						result %= modl;
+					} 
+					else if (i == h && i != l) {
+						result += count[l] * (count[l] - 1) / 2 * count[l];
+						result %= modl;
+					}
+					l++;
+				}
+			}
+		}
+		return (int) result;
+	}
+}

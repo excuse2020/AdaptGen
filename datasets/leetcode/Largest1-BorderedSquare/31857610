@@ -1,0 +1,61 @@
+class Solution {
+	int largest1BorderedSquare(int[][] grid) {
+		int horizontal_count = new int[grid.length][grid[0].length];
+		int vertical_count = new int[grid.length][grid[0].length];
+		int ans = 1, flag = 0;
+		for (int i = 0; i < grid.length; i++) {
+			int c = 0;
+			for (int j = grid[0].length - 1; j >= 0; j--) {
+				if (grid[i][j] == 1) {
+					flag = 1;
+					c++;
+					horizontal_count[i][j] = c;
+				} 
+				else {
+					c = 0;
+				}
+			}
+		}
+		if (flag == 0) {
+			return 0;
+		}
+		for (int i = 0; i < grid[0].length; i++) {
+			int c = 0;
+			for (int j = grid.length - 1; j >= 0; j--) {
+				if (grid[j][i] == 1) {
+					c++;
+					vertical_count[j][i] = c;
+				} 
+				else {
+					c = 0;
+				}
+			}
+		}
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				if (vertical_count[i][j] > ans) {
+					int temp = vertical_count[i][j] >= horizontal_count[i][j] ? horizontal_count[i][j] : vertical_count[i][j];
+					if (j - 1 + temp >= grid[0].length) {
+						temp = grid[0].length - j;
+					}
+					if (i - 1 + temp >= grid.length) {
+						temp = grid.length - i;
+					}
+					if (temp < ans) {
+						continue;
+					}
+					while (temp > ans) {
+						if (temp <= vertical_count[i][j - 1 + temp] && temp <= horizontal_count[i - 1 + temp][j]) {
+							ans = temp;
+							break;
+						} 
+						else {
+							temp--;
+						}
+					}
+				}
+			}
+		}
+		return ans * ans;
+	}
+}

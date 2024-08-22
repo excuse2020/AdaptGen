@@ -1,0 +1,32 @@
+class Solution {
+	int cherryPickup(int[][] grid) {
+		int r = grid.length, c = grid[0].length;
+		int[][][] dp = new int[r][c][c];
+		for (int j = 0; j < c; j++) {
+			for (int k = 0; k < c; k++) {
+				dp[r - 1][j][k] = (j != k) ? grid[r - 1][j] + grid[r - 1][k] : grid[r - 1][j];
+			}
+		}
+		for (int i = r - 2; i >= 0; i--) {
+			for (int j = 0; j < c; j++) {
+				for (int k = 0; k < c; k++) {
+					int max = Integer.MIN_VALUE;
+					for (int mj = -1; mj < 2; mj++) {
+						for (int mk = -1; mk < 2; mk++) {
+							int val = (j != k) ? grid[i][j] + grid[i][k] : grid[i][j];
+							if (j + mj < 0 || j + mj >= c || k + mk < 0 || k + mk >= c) {
+								val += Integer.MIN_VALUE;
+							} 
+							else {
+								val += dp[i + 1][j + mj][k + mk];
+							}
+							max = Math.max(max,val);
+						}
+					}
+					dp[i][j][k] = max;
+				}
+			}
+		}
+		return dp[0][0][c - 1];
+	}
+}

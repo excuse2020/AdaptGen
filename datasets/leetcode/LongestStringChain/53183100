@@ -1,0 +1,35 @@
+class Solution {
+	boolean chk(String s1, String s2) {
+		int count = 0;
+		int i = 0, j = 0;
+		while (i < s1.length() && j < s2.length()) {
+			if (s1.charAt(i) == s2.charAt(j)) {
+				i++;
+				j++;
+			} 
+			else {
+				j++;
+				count++;
+			}
+		}
+		return (i == s1.length() && (j == s2.length() || j == s2.length() - 1));
+	}
+	int longestStrChain(String[] words) {
+		Arrays.sort(words,new Comparator<String>());
+		int n = words.length;
+		int[] dp = new int[n];
+		Arrays.fill(dp,1);
+		for (int i = 1; i < n; i++) {
+			for (int j = 0; j < i; j++) {
+				if (words[j].length() + 1 == words[i].length() && chk(words[j],words[i])) {
+					dp[i] = Math.max(dp[i],dp[j] + 1);
+				}
+			}
+		}
+		int answer = 0;
+		for (int i: dp) {	
+			answer = Math.max(answer,i);
+		}
+		return answer;
+	}
+}

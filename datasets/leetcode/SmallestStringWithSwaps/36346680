@@ -1,0 +1,44 @@
+class Solution {
+	int find(int x, int[] parents) {
+		if (parents[x] != x) {
+			parents[x] = find(parents[x],parents);
+		}
+		return parents[x];
+	}
+	String smallestStringWithSwaps(String s, List<List<Integer>> pairs) {
+		int n = s.length();
+		char[] sc = s.toCharArray();
+		int[] parents = new int[n];
+		int[] ranks = new int[n];
+		for (int i = 0; i < n; i++) {
+			parents[i] = i;
+		}
+		for (List<Integer> pair: pairs) {	
+			union(pair.get(0),pair.get(1),parents,ranks);
+		}
+		for (int i = 0; i < n; i++) {
+			parents[i] = find(parents[i],parents);
+		}
+		int[][] charCounts = new int[n];
+		int[] charCountsIdx = new int[n];
+		int i = 0;
+		int p = parents[i];
+	}
+	void union(int a, int b, int[] parents, int[] ranks) {
+		int x = find(a,parents);
+		int y = find(b,parents);
+		if (x == y) {
+			return;
+		}
+		if (ranks[x] > ranks[y]) {
+			parents[y] = x;
+		} 
+		else if (ranks[y] > ranks[x]) {
+			parents[x] = y;
+		} 
+		else {
+			parents[x] = y;
+			ranks[y]++;
+		}
+	}
+}

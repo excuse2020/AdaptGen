@@ -1,0 +1,57 @@
+class Solution {
+	int minCut = 0;
+	int minimumCost(int m, int n, int[] horizontalCut, int[] verticalCut) {
+		List<Integer> horizontalCutList = Arrays.stream(horizontalCut).boxed().collect(Collectors.toList());
+		List<Integer> verticalCutList = Arrays.stream(verticalCut).boxed().collect(Collectors.toList());
+		minimumCostHelper(m,n,horizontalCutList,verticalCutList);
+		return minCut;
+	}
+	void minimumCostHelper(int m, int n, List<Integer> horizontalCut, List<Integer> verticalCut) {
+		int horizontalSum = 0, verticalSum = 0;
+		for (int i = 0; i < horizontalCut.size(); ++i) {
+			horizontalSum += horizontalCut.get(i);
+		}
+		for (int i = 0; i < verticalCut.size(); ++i) {
+			verticalSum += verticalCut.get(i);
+		}
+		if (n == 1) {
+			minCut += horizontalSum;
+			return;
+		}
+		if (m == 1) {
+			minCut += verticalSum;
+			return;
+		}
+		int firstCutWeight = 0;
+		int firstCutIndex = 0;
+		String firstCutType = "";
+		for (int i = 0; i < horizontalCut.size(); ++i) {
+			if (horizontalCut.get(i) > firstCutWeight) {
+				firstCutWeight = horizontalCut.get(i);
+				firstCutIndex = i;
+				firstCutType = "horizontalCut";
+			}
+		}
+		for (int i = 0; i < verticalCut.size(); ++i) {
+			if (verticalCut.get(i) > firstCutWeight) {
+				firstCutWeight = verticalCut.get(i);
+				firstCutIndex = i;
+				firstCutType = "verticalCut";
+			}
+		}
+		if ("horizontalCut".equals(firstCutType)) {
+			minCut += horizontalCut.get(firstCutIndex);
+			List<Integer> list1 = horizontalCut.subList(0,firstCutIndex);
+			List<Integer> list2 = horizontalCut.subList(firstCutIndex + 1,horizontalCut.size());
+			minimumCostHelper(firstCutIndex + 1,n,list1,verticalCut);
+			minimumCostHelper(m - firstCutIndex,n,list2,verticalCut);
+		} 
+		else if ("verticalCut".equals(firstCutType)) {
+			minCut += verticalCut.get(firstCutIndex);
+			List<Integer> list1 = verticalCut.subList(0,firstCutIndex);
+			List<Integer> list2 = verticalCut.subList(firstCutIndex + 1,verticalCut.size());
+			minimumCostHelper(m,firstCutIndex + 1,horizontalCut,list1);
+			minimumCostHelper(m,n - firstCutIndex,horizontalCut,list2);
+		}
+	}
+}

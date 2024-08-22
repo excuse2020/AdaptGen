@@ -1,0 +1,69 @@
+class Solution {
+	ArrayList<ArrayList<TreeNode>> bfs(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		Queue<TreeNode> queue1 = new LinkedList<>();
+		Queue<TreeNode> queue2 = new LinkedList<>();
+		queue1.offer(root);
+		ArrayList<ArrayList<TreeNode>> res = new ArrayList<>();
+		ArrayList<TreeNode> item = new ArrayList<>();
+		while (!queue1.isEmpty()) {
+			TreeNode node = queue1.poll();
+			item.add(node);
+			if (node.left != null) {
+				queue2.offer(node.left);
+			}
+			if (node.right != null) {
+				queue2.offer(node.right);
+			}
+			if (queue1.isEmpty()) {
+				res.add(item);
+				item = new ArrayList<>();
+				Queue tmp = queue1;
+				queue1 = queue2;
+				queue2 = tmp;
+			}
+		}
+		return res;
+	}
+	int[] getRightView(ArrayList<ArrayList<TreeNode>> lists) {
+		ArrayList<TreeNode> tmp = new ArrayList<>();
+		for (ArrayList<TreeNode> list: lists) {	
+			Collections.reverse(list);
+			tmp.add(list.get(0));
+		}
+		int[] res = new int[tmp.size()];
+		for (int i = 0; i < tmp.size(); i++) {
+			res[i] = tmp.get(i).val;
+		}
+		return res;
+	}
+	TreeNode reCreateTree(List<Integer> pre, List<Integer> in) {
+		if (pre.size() == 0) {
+			return null;
+		}
+		TreeNode root = new TreeNode(pre.get(0));
+		int rootIndex = in.indexOf(root.val);
+		List<Integer> inLeftList = in.subList(0,rootIndex);
+		List<Integer> inRightList = in.subList(rootIndex + 1,in.size());
+		List<Integer> preLeftList = pre.subList(1,1 + inLeftList.size());
+		List<Integer> preRightList = pre.subList(1 + inLeftList.size(),pre.size());
+		root.left = reCreateTree(preLeftList,inLeftList);
+		root.right = reCreateTree(preRightList,inRightList);
+		return root;
+	}
+	int[] solve(int[] preOrder, int[] inOrder) {
+		if (preOrder == null || preOrder.length == 0 || inOrder == null || inOrder.length == 0) {
+			return null;
+		}
+		List<Integer> preOrderList = new LinkedList<>();
+		List<Integer> inOrderList = new LinkedList<>();
+		for (int i = 0; i < preOrder.length; i++) {
+			preOrderList.add(preOrder[i]);
+			inOrderList.add(inOrder[i]);
+		}
+		TreeNode tree = reCreateTree(preOrderList,inOrderList);
+		return getRightView(bfs(tree));
+	}
+}

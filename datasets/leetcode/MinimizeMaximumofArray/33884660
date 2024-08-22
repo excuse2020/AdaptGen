@@ -1,0 +1,29 @@
+class Solution {
+	boolean feasible(int[] nums, int avg) {
+		if (nums[0] > avg) {
+			return false;
+		}
+		long prev = nums[0];
+		for (int i = 1; i < nums.length; i++) {
+			prev += nums[i] - avg;
+			if (prev > avg) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int minimizeArrayValue(int[] nums) {
+		int lo = 0;
+		int hi = Arrays.stream(nums).max().getAsInt();
+		while (lo < hi) {
+			int mid = lo + (hi - lo) / 2;
+			if (feasible(nums,mid)) {
+				hi = mid;
+			} 
+			else {
+				lo = mid + 1;
+			}
+		}
+		return lo;
+	}
+}

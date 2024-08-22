@@ -1,0 +1,48 @@
+class Solution {
+	StringBuilder res = new StringBuilder();
+	TreeNode find(TreeNode root, int val, StringBuilder cur) {
+		if (root == null) {
+			return null;
+		}
+		if (root.val == val) {
+			res = cur;
+			return root;
+		}
+		TreeNode left = find(root.left,val,cur);
+		if (left != null) {
+			cur.append("L");
+			return left;
+		}
+		TreeNode right = find(root.right,val,cur);
+		if (right != null) {
+			cur.append("R");
+			return right;
+		}
+		return null;
+	}
+	String getDirections(TreeNode root, int startValue, int destValue) {
+		TreeNode start = find(root,startValue,new StringBuilder());
+		StringBuilder st = res;
+		st.reverse();
+		TreeNode end = find(root,destValue,new StringBuilder());
+		StringBuilder dest = res;
+		dest.reverse();
+		int i = 0;
+		int j = 0;
+		while (i < st.length() && j < dest.length()) {
+			if (st.charAt(i) != dest.charAt(j)) {
+				break;
+			} 
+			else {
+				st.deleteCharAt(i);
+				dest.deleteCharAt(j);
+			}
+		}
+		StringBuilder result = new StringBuilder();
+		for (int k = 0; k < st.length(); k++) {
+			result.append("U");
+		}
+		result.append(dest.toString());
+		return result.toString();
+	}
+}

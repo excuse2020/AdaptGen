@@ -1,0 +1,42 @@
+class Solution {
+	int[] fullBloomFlowers(int[][] flowers, int[] people) {
+		int arrStart = new int[flowers.length];
+		int arrEnd = new int[flowers.length];
+		for (int i = 0; i < flowers.length; i++) {
+			arrStart[i] = flowers[i][0];
+			arrEnd[i] = flowers[i][1] + 1;
+		}
+		Arrays.sort(arrStart);
+		Arrays.sort(arrEnd);
+		TreeMap<Integer, Integer> tree = new TreeMap<>();
+		int in1 = 0;
+		int in2 = 0;
+		int count = 0;
+		tree.put(0,0);
+		while (in1 < flowers.length && in2 < flowers.length) {
+			if (arrStart[in1] <= arrEnd[in2]) {
+				count++;
+				tree.put(arrStart[in1],count);
+				in1++;
+			} 
+			else {
+				count--;
+				tree.put(arrEnd[in2],count);
+				in2++;
+			}
+		}
+		while (in1 < flowers.length) {
+			count++;
+			tree.put(arrStart[in1++],count);
+		}
+		while (in2 < flowers.length) {
+			count--;
+			tree.put(arrEnd[in2++],count);
+		}
+		int out = new int[people.length];
+		for (int i = 0; i < people.length; i++) {
+			out[i] = tree.floorEntry(people[i]).getValue();
+		}
+		return out;
+	}
+}

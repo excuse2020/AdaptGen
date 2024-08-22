@@ -1,0 +1,49 @@
+class Solution {
+	boolean dfs(int idx, Map<Integer, List<Integer>> graph, int[] arr, int c, boolean[] visited) {
+		if (arr[idx] != 0 && arr[idx] != c) {
+			return false;
+		}
+		if (visited[idx]) {
+			return true;
+		}
+		arr[idx] = c;
+		visited[idx] = true;
+		if (!graph.containsKey(idx)) {
+			return true;
+		}
+		for (int edge: graph.get(idx)) {	
+			boolean check = dfs(edge,graph,arr,c * -1,visited);
+			if (!check) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		int[] arr = new int[n + 1];
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		for (int[] edge: dislikes) {	
+			int x = edge[0];
+			int y = edge[1];
+			if (!graph.containsKey(x)) {
+				graph.put(x,new ArrayList<>());
+			}
+			if (!graph.containsKey(y)) {
+				graph.put(y,new ArrayList<>());
+			}
+			graph.get(x).add(y);
+			graph.get(y).add(x);
+		}
+		boolean[] visited = new boolean[n + 1];
+		for (int i = 1; i <= n; i++) {
+			if (visited[i] || arr[i] != 0) {
+				continue;
+			}
+			boolean check = dfs(i,graph,arr,1,visited);
+			if (!check) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

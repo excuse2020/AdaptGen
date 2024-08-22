@@ -1,0 +1,64 @@
+class Solution {
+	int numBusesToDestination(int[][] routes, int source, int target) {
+		if (source == target) {
+			return 0;
+		}
+		int n = routes.length;
+		Map<Integer, List<Integer>> connect = new HashMap<>();
+		List<Set<Integer>> list = new ArrayList<>(n);
+		Set<Integer> starts = new HashSet<>();
+		Set<Integer> ends = new HashSet<>();
+		for (int i = 0; i < n; i++) {
+			Set<Integer> r1 = Arrays.stream(routes[i]).boxed().collect(Collectors.toSet());
+			list.add(r1);
+			for (int j = 0; j < i; j++) {
+				if (!Collections.disjoint(r1,list.get(j))) {
+					connect.computeIfAbsent(i,(k) -> {new ArrayList<>()}).add(j);
+					connect.computeIfAbsent(j,(k) -> {new ArrayList<>()}).add(i);
+				}
+			}
+			if (r1.contains(source) && r1.contains(target)) {
+				return 1;
+			} 
+			else if (r1.contains(source)) {
+				starts.add(i);
+			} 
+			else if (r1.contains(target)) {
+				ends.add(i);
+			}
+		}
+		if (ends.size() < starts.size()) {
+			Set<Integer> tmp = starts;
+			starts = ends;
+			ends = tmp;
+		}
+		int res = Integer.MAX_VALUE;
+		for (int start: starts) {	
+			Set<Integer> visited = new HashSet<>();
+			Queue<Integer> queue = new LinkedList<>();
+			queue.add(start);
+			visited.add(start);
+			int step = 0;
+			boolean stop = false;
+			while (!stop && !queue.isEmpty()) {
+				step++;
+				int size = queue.size();
+				for (int i = 0; i < size && !stop; i++) {
+					int node = queue.poll();
+					for (int next: connect.getOrDefault(node,Collections.emptyList())) {	
+						if (ends.contains(next)) {
+							res = Integer.min(res,step + 1);
+							stop = true;
+							break;
+						} 
+						else if (!visited.contains(next)) {
+							queue.add(next);
+							visited.add(next);
+						}
+					}
+				}
+			}
+		}
+		return res == Integer.MAX_VALUE ? -1 : res;
+	}
+}

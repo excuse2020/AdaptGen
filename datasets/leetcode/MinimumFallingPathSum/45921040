@@ -1,0 +1,28 @@
+class Solution {
+	int minFallingPathSum(int[][] matrix) {
+		int width = matrix[0].length;
+		int[][] memo = new int[matrix.length][width];
+		for (int i = 0; i < memo.length; i++) {
+			for (int j = 0; j < width; j++) {
+				if (i == 0) {
+					memo[i][j] = matrix[i][j];
+				} 
+				else {
+					int minPathSoFar = memo[i - 1][j];
+					if (j > 0) {
+						minPathSoFar = Math.min(memo[i - 1][j - 1],minPathSoFar);
+					}
+					if (j < width - 1) {
+						minPathSoFar = Math.min(memo[i - 1][j + 1],minPathSoFar);
+					}
+					memo[i][j] = minPathSoFar + matrix[i][j];
+				}
+			}
+		}
+		int globalMin = memo[matrix.length - 1][0];
+		for (int sum: memo[matrix.length - 1]) {	
+			globalMin = Math.min(globalMin,sum);
+		}
+		return globalMin;
+	}
+}

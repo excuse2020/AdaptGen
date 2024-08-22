@@ -1,0 +1,42 @@
+class Solution {
+	int EZ(int[][] grid, int[][] visited, int i, int j) {
+		visited[i][j] = 1;
+		int cgold = grid[i][j];
+		int gold = 0, goldL = 0, goldR = 0, goldU = 0, goldD = 0;
+		if (grid[i][j] == 0) {
+			return 0;
+		}
+		if (j - 1 >= 0 && visited[i][j - 1] == 0) {
+			goldL = EZ(grid,visited,i,j - 1);
+		}
+		if (j + 1 < grid[0].length && visited[i][j + 1] == 0) {
+			goldR = EZ(grid,visited,i,j + 1);
+		}
+		if (i - 1 >= 0 && visited[i - 1][j] == 0) {
+			goldU = EZ(grid,visited,i - 1,j);
+		}
+		if (i + 1 < grid.length && visited[i + 1][j] == 0) {
+			goldD = EZ(grid,visited,i + 1,j);
+		}
+		visited[i][j] = 0;
+		gold = Math.max(goldL,goldR);
+		gold = Math.max(gold,goldU);
+		gold = Math.max(gold,goldD);
+		return gold + cgold;
+	}
+	int getMaximumGold(int[][] grid) {
+		int r = grid.length;
+		int c = grid[0].length;
+		int max = 0;
+		int[][] visited = new int[r][c];
+		for (int i = 0; i < r; i++) {
+			for (int j = 0; j < c; j++) {
+				if (grid[i][j] != 0) {
+					int gold = EZ(grid,visited,i,j);
+					max = Math.max(max,gold);
+				}
+			}
+		}
+		return max;
+	}
+}

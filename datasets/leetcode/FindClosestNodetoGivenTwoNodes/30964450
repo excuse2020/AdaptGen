@@ -1,0 +1,35 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		HashMap<Integer, Integer> map1 = new HashMap();
+		HashMap<Integer, Integer> map2 = new HashMap();
+		fillMap(edges,node1,map1,0);
+		fillMap(edges,node2,map2,0);
+		int min = Integer.MAX_VALUE;
+		int ansNode = Integer.MAX_VALUE;
+		for (Map.Entry entry: map1.entrySet()) {	
+			int node = (int) entry.getKey();
+			int dist = (int) entry.getValue();
+			if (map2.containsKey(node)) {
+				dist = Math.max(dist,(int) map2.get(node));
+				if (min > dist) {
+					min = dist;
+					ansNode = node;
+				} 
+				else if (min == dist && ansNode > node) {
+					ansNode = node;
+				}
+			}
+		}
+		return ansNode == Integer.MAX_VALUE ? -1 : ansNode;
+	}
+	void fillMap(int[] edges, int node, HashMap map, int distance) {
+		if (map.containsKey(node)) {
+			return;
+		}
+		map.put(node,distance);
+		if (edges[node] == -1) {
+			return;
+		}
+		fillMap(edges,edges[node],map,distance + 1);
+	}
+}

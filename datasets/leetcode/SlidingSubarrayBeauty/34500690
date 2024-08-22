@@ -1,0 +1,46 @@
+class Solution {
+	int[] getSubarrayBeauty(int[] nums, int k, int x) {
+		int[] res = new int[nums.length - k + 1];
+		int[] track = new int[150];
+		for (int i = 0; i < k; i++) {
+			track[nums[i] + 50]++;
+		}
+		int xClone = x;
+		for (int i = 0; i < 50; i++) {
+			if (track[i] > 0) {
+				if (xClone - track[i] <= 0) {
+					res[0] = i - 50;
+					xClone -= track[i];
+					break;
+				} 
+				else {
+					xClone -= track[i];
+				}
+			}
+		}
+		if (xClone > 0) {
+			res[0] = 0;
+		}
+		for (int i = 0; i < nums.length - k; i++) {
+			track[nums[i] + 50]--;
+			track[nums[i + k] + 50]++;
+			int xClone2 = x;
+			for (int j = 0; j < 50; j++) {
+				if (track[j] > 0) {
+					if (xClone2 - track[j] <= 0) {
+						res[i + 1] = j - 50;
+						xClone2 -= track[j];
+						break;
+					} 
+					else {
+						xClone2 -= track[j];
+					}
+				}
+			}
+			if (xClone2 > 0) {
+				res[i + 1] = 0;
+			}
+		}
+		return res;
+	}
+}

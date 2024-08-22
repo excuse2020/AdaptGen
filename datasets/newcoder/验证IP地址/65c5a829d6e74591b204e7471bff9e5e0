@@ -1,0 +1,63 @@
+class Solution {
+	String solve(String IP) {
+		boolean dot = false, mao = false;
+		if (IP.contains(".")) {
+			dot = true;
+		}
+		if (IP.contains(":")) {
+			mao = true;
+		}
+		if (dot && mao) {
+			return "Neither";
+		}
+		if (dot) {
+			String[] ipArr = IP.split("\\.");
+			System.out.println(ipArr.length);
+			boolean flag = true;
+			if (ipArr.length != 4) {
+				flag = false;
+			}
+			for (int i = 0; i < ipArr.length; i++) {
+				if (ipArr[i].length() > 1 && ipArr[i].charAt(0) == '0') {
+					flag = false;
+				}
+				if (ipArr[i].split("[^0-9]").length > 1) {
+					flag = false;
+					break;
+				}
+				int t = Integer.valueOf(ipArr[i]);
+				if (t > 255) {
+					flag = false;
+				}
+			}
+			if (flag) {
+				return "IPv4";
+			} 
+			else {
+				return "Neither";
+			}
+		}
+		if (mao) {
+			String[] ipArr = IP.split(":");
+			boolean flag = true;
+			if (ipArr.length != 8 || IP.charAt(IP.length() - 1) == ':') {
+				flag = false;
+			}
+			for (int i = 0; i < ipArr.length; i++) {
+				if (ipArr[i].length() == 0 || ipArr[i].length() > 1 && ipArr[i].charAt(0) == '0' && ipArr[i].charAt(1) == '0') {
+					flag = false;
+				}
+				if (ipArr[i].split("[g-z]").length > 1 || ipArr[i].split("[G-Z]").length > 1) {
+					flag = false;
+				}
+			}
+			if (flag) {
+				return "IPv6";
+			} 
+			else {
+				return "Neither";
+			}
+		}
+		return "";
+	}
+}

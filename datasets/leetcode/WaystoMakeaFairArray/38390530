@@ -1,0 +1,42 @@
+class Solution {
+	int waysToMakeFair(int[] nums) {
+		int n = nums.length;
+		int[] even = new int[n];
+		int[] odd = new int[n];
+		even[0] = nums[0];
+		odd[0] = 0;
+		for (int i = 1; i < n; i++) {
+			if (i % 2 == 0) {
+				even[i] = nums[i] + even[i - 1];
+			} 
+			else {
+				even[i] = even[i - 1];
+			}
+		}
+		for (int i = 1; i < n; i++) {
+			if (i % 2 != 0) {
+				odd[i] = nums[i] + odd[i - 1];
+			} 
+			else {
+				odd[i] = odd[i - 1];
+			}
+		}
+		int count = 0;
+		for (int i = 0; i < n; i++) {
+			int sum_even, sum_odd;
+			if (i != 0) {
+				sum_even = even[i - 1] + odd[n - 1] - odd[i];
+				sum_odd = odd[i - 1] + even[n - 1] - even[i];
+			} 
+			else {
+				sum_even = odd[n - 1] - odd[i];
+				sum_odd = even[n - 1] - even[i];
+			}
+			if (sum_even == sum_odd) {
+				count++;
+			}
+		}
+		System.gc();
+		return count;
+	}
+}

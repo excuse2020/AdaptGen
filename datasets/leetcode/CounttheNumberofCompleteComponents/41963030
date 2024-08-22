@@ -1,0 +1,68 @@
+class Solution {
+	boolean checkEdge(int a, int b, int[][] edge) {
+		for (int i = 0; i < edge.length; i++) {
+			if ((a == edge[i][0] && b == edge[i][1]) || (a == edge[i][1] && b == edge[i][0])) {
+				return true;
+			}
+		}
+		return false;
+	}
+	int countCompleteComponents(int n, int[][] edges) {
+		int[] parent = new int[n];
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int i = 0; i < parent.length; i++) {
+			parent[i] = i;
+		}
+		for (int i = 0; i < edges.length; i++) {
+			int u = edges[i][0];
+			int v = edges[i][1];
+			int a = findRoot(u,parent);
+			int b = findRoot(v,parent);
+			if (a != b) {
+				parent[a] = b;
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			int a = findRoot(i,parent);
+			if (!map.containsKey(a)) {
+				List<Integer> set = new ArrayList<>();
+				set.add(i);
+				map.put(a,set);
+			} 
+			else {
+				List<Integer> set = map.get(a);
+				set.add(i);
+				map.put(a,set);
+			}
+		}
+		for (int i = 0; i < parent.length; i++) {
+		}
+		int count = 0;
+		for (Map.Entry<Integer, List<Integer>> values: map.entrySet()) {	
+			int key = values.getKey();
+			List<Integer> value = values.getValue();
+			boolean flag = true;
+			for (int i = 0; i < value.size(); i++) {
+				for (int j = i + 1; j < value.size(); j++) {
+					if (!checkEdge(value.get(i),value.get(j),edges)) {
+						flag = false;
+						break;
+					}
+				}
+				if (!flag) {
+					break;
+				}
+			}
+			if (flag) {
+				count++;
+			}
+		}
+		return count;
+	}
+	int findRoot(int a, int[] parent) {
+		if (a != parent[a]) {
+			parent[a] = findRoot(parent[a],parent);
+		}
+		return parent[a];
+	}
+}

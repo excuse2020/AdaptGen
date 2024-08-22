@@ -1,0 +1,30 @@
+class Solution {
+	int dp(int lowIndex, int highIndex, int[][] dp) {
+		if (lowIndex >= highIndex) {
+			return 0;
+		}
+		if (lowIndex + 1 == highIndex) {
+			return lowIndex;
+		}
+		if (dp[lowIndex][highIndex] != 0) {
+			return dp[lowIndex][highIndex];
+		}
+		dp[lowIndex][highIndex] = Integer.MAX_VALUE;
+		for (int i = (lowIndex + highIndex) / 2; i <= highIndex; i++) {
+			int left = dp(lowIndex,i - 1,dp);
+			int right = dp(i + 1,highIndex,dp);
+			dp[lowIndex][highIndex] = Math.min(dp[lowIndex][highIndex],Math.max(left + i,i + right));
+		}
+		return dp[lowIndex][highIndex];
+	}
+	int getMoneyAmount(int n) {
+		if (n <= 2) {
+			return n - 1;
+		}
+		int[][] dp = new int[n + 1][n + 1];
+		for (int i = 0; i <= n; i++) {
+			Arrays.fill(dp[i],0);
+		}
+		return dp(1,n,dp);
+	}
+}

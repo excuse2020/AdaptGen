@@ -1,0 +1,55 @@
+class Solution {
+	int checkAscending(MountainArray arr, int target, int start, int end, boolean asc) {
+		while (start <= end) {
+			int mid = start + (end - start) / 2;
+			int midValue = arr.get(mid);
+			if (midValue > target) {
+				if (asc) {
+					end = mid - 1;
+				} 
+				else {
+					start = mid + 1;
+				}
+			} 
+			else if (midValue < target) {
+				if (asc) {
+					start = mid + 1;
+				} 
+				else {
+					end = mid - 1;
+				}
+			} 
+			else {
+				return mid;
+			}
+		}
+		return -1;
+	}
+	int findInMountainArray(int target, MountainArray arr) {
+		int first = checkAscending(arr,target,0,pickArr(arr),true);
+		int last = checkAscending(arr,target,pickArr(arr) + 1,arr.length() - 1,false);
+		if (first != -1) {
+			return first;
+		} 
+		else if (first == -1 && last != -1) {
+			return last;
+		} 
+		else {
+			return -1;
+		}
+	}
+	int pickArr(MountainArray arr) {
+		int start = 0;
+		int end = arr.length() - 1;
+		while (start < end) {
+			int mid = start + (end - start) / 2;
+			if (arr.get(mid) > arr.get(mid + 1)) {
+				end = mid;
+			} 
+			else {
+				start = mid + 1;
+			}
+		}
+		return start;
+	}
+}

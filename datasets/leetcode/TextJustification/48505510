@@ -1,0 +1,58 @@
+class Solution {
+	String SPACE = " ";
+	List<String> fullJustify(String[] words, int maxWidth) {
+		List<List<String>> rows = splitIntoRows(words,maxWidth);
+		List<String> output = rows.stream().limit(rows.size() - 1).map((list) -> {join(list,maxWidth)}).collect(Collectors.toList());
+		output.add(joinLast(rows.get(rows.size() - 1),maxWidth));
+		return output;
+	}
+	int getNumberOfChars(List<String> words) {
+		return words.stream().mapToInt().reduce(0,);
+	}
+	int getNumberOfSpaces(List<String> words, int maxWidth) {
+		int nChars = getNumberOfChars(words);
+		return maxWidth - nChars;
+	}
+	String join(List<String> words, int maxWidth) {
+		if (words.size() == 1) {
+			return joinLast(words,maxWidth);
+		}
+		int numberOfSpaces = getNumberOfSpaces(words,maxWidth);
+		int spacesBetweenWords = numberOfSpaces / (words.size() - 1);
+		int additionalSpaces = numberOfSpaces - spacesBetweenWords * (words.size() - 1);
+		StringBuilder builder = new StringBuilder(words.get(0));
+		for (int i = 1; i < words.size(); i++) {
+			if (additionalSpaces > 0) {
+				builder.append(SPACE.repeat(spacesBetweenWords + 1));
+				additionalSpaces--;
+			} 
+			else {
+				builder.append(SPACE.repeat(spacesBetweenWords));
+			}
+			builder.append(words.get(i));
+		}
+		return builder.toString();
+	}
+	String joinLast(List<String> words, int maxWidth) {
+		int spaces = getNumberOfSpaces(words,maxWidth);
+		return String.join(SPACE,words) + SPACE.repeat(spaces - (words.size() - 1));
+	}
+	List<List<String>> splitIntoRows(String[] words, int maxWidth) {
+		List<List<String>> rows = new ArrayList<>();
+		List<String> currentRow = new ArrayList<>();
+		int currentSize = 0;
+		for (String word: words) {	
+			if (currentSize + SPACE.length() > maxWidth) {
+				if (!currentRow.isEmpty()) {
+					rows.add(currentRow);
+				}
+				currentRow = new ArrayList<>();
+				currentSize = 0;
+			}
+			currentSize += currentRow.isEmpty() ? word.length() : SPACE.length() + word.length();
+			currentRow.add(word);
+		}
+		rows.add(currentRow);
+		return rows;
+	}
+}

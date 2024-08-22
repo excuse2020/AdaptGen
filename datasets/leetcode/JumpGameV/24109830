@@ -1,0 +1,50 @@
+class Solution {
+	int[] arr;
+	int d;
+	Integer[] dp;
+	int n;
+	boolean isValley(int man) {
+		if (man >= n || man < 0) {
+			return true;
+		}
+		if ((man + 1 >= n || arr[man] <= arr[man + 1]) && (man - 1 < 0 || arr[man] <= arr[man - 1])) {
+			return true;
+		}
+		return false;
+	}
+	int maxJumps(int[] ar, int dist) {
+		arr = ar;
+		d = dist;
+		n = arr.length;
+		dp = new Integer[n];
+		int jumps = 0;
+		for (int i = 0; i < n; i++) {
+			jumps = Math.max(jumps,solve(i));
+		}
+		return jumps + 1;
+	}
+	int solve(int man) {
+		if (isValley(man)) {
+			return 0;
+		}
+		if (dp[man] != null) {
+			return dp[man];
+		}
+		int jumps = 0;
+		int leftExtreme = Math.max(0,man - d);
+		int rightExtreme = Math.min(n - 1,man + d);
+		for (int i = man - 1; i >= leftExtreme; i--) {
+			if (arr[i] >= arr[man]) {
+				break;
+			}
+			jumps = Math.max(jumps,1 + solve(i));
+		}
+		for (int i = man + 1; i <= rightExtreme; i++) {
+			if (arr[i] >= arr[man]) {
+				break;
+			}
+			jumps = Math.max(jumps,1 + solve(i));
+		}
+		return dp[man] = jumps;
+	}
+}

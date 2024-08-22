@@ -1,0 +1,69 @@
+class Solution {
+	int maxProfit(int[] prices) {
+		return solveOpti(prices);
+	}
+	int solveDp(int ind, int prev, int[] arr, int[][] dp) {
+		if (ind == arr.length) {
+			return 0;
+		}
+		if (dp[ind][prev + arr.length] != -1) {
+			return dp[ind][prev + arr.length];
+		}
+		int buy = 0, sell = 0, ans = 0;
+		for (int i = ind; i < arr.length; i++) {
+			if (prev != -1) {
+				sell = (arr[i] - arr[prev]) + solveDp(i + 1,-1,arr,dp);
+			}
+			buy = solveDp(i + 1,i,arr,dp);
+			ans = Math.max(ans,Math.max(buy,sell));
+		}
+		return dp[ind][prev + arr.length] = ans;
+	}
+	int solveDp2(int[] arr) {
+		int[][] dp = new int[arr.length + 1][arr.length + 1];
+		for (int ind = arr.length - 1; ind >= 0; ind--) {
+			for (int prev = arr.length; prev >= 0; prev--) {
+				int buy = 0, sell = 0, ans = 0;
+				for (int i = ind; i < arr.length; i++) {
+					if (prev != 0) {
+						sell = (arr[i] - arr[prev - 1]) + dp[i + 1][0];
+					}
+					buy = dp[i + 1][i + 1];
+					ans = Math.max(ans,Math.max(buy,sell));
+				}
+				dp[ind][prev] = ans;
+			}
+		}
+		return dp[0][0];
+	}
+	int solveOpti(int[] arr) {
+		int n = arr.length;
+		int[] dp = new int[n + 1];
+		for (int ind = n - 1; ind >= 0; ind--) {
+			int buy = 0, sell = 0, ans = 0;
+			for (int i = ind; i < n; i++) {
+				if (ind != 0) {
+					sell = Math.max(sell,(arr[i] - arr[ind - 1]) + dp[i + 1]);
+				}
+				buy = Math.max(buy,dp[i + 1]);
+			}
+			ans = Math.max(buy,sell);
+			dp[ind] = ans;
+		}
+		return dp[0];
+	}
+	int solveRec(int ind, int prev, int[] arr) {
+		if (ind == arr.length) {
+			return 0;
+		}
+		int buy = 0, sell = 0, ans = 0;
+		for (int i = ind; i < arr.length; i++) {
+			if (prev != -1) {
+				sell = (arr[i] - arr[prev]) + solveRec(i + 1,-1,arr);
+			}
+			buy = solveRec(i + 1,i,arr);
+			ans = Math.max(ans,Math.max(buy,sell));
+		}
+		return ans;
+	}
+}

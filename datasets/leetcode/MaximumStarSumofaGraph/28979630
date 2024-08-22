@@ -1,0 +1,33 @@
+class Solution {
+	int maxStarSum(int[] vals, int[][] edges, int k) {
+		int n = vals.length;
+		List<Integer>[] g = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			g[i] = new ArrayList<Integer>();
+		}
+		for (var edge: edges) {	
+			g[edge[0]].add(edge[1]);
+			g[edge[1]].add(edge[0]);
+		}
+		int ans = Integer.MIN_VALUE;
+		for (int i = 0; i < n; i++) {
+			var list = g[i];
+			if (list.size() == 0) {
+				ans = Math.max(ans,vals[i]);
+				continue;
+			}
+			if (list.size() > 1) {
+				list.sort((e1, e2) -> {vals[e1] - vals[e2]});
+			}
+			int currSum = vals[i];
+			int ll = list.size();
+			for (int j = 0; j < k && (ll - 1 >= 0); j++) {
+				if (vals[list.get(ll - 1 - j)] > 0) {
+					currSum += vals[list.get(ll - 1 - j)];
+				}
+			}
+			ans = Math.max(ans,currSum);
+		}
+		return ans;
+	}
+}

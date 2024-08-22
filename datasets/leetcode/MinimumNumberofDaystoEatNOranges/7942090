@@ -1,0 +1,39 @@
+class Solution {
+	int dfs(int n, int days) {
+		if (n <= 0) {
+			return days;
+		}
+		if (n == 1) {
+			return 1 + days;
+		}
+		int op1 = n - 1;
+		int op2 = Integer.MAX_VALUE;
+		if (n % 2 == 0) {
+			op2 = n - (n / 2);
+		}
+		int op3 = Integer.MAX_VALUE;
+		if (n % 3 == 0) {
+			op3 = n - (2 * (n / 3));
+		}
+		int one = dfs(op1,days + 1);
+		if (op2 != Integer.MAX_VALUE && op3 != Integer.MAX_VALUE) {
+			int two = dfs(op2,days + 1);
+			int three = dfs(op3,days + 1);
+			return Math.min(one,Math.min(two,three));
+		} 
+		else if (op2 != Integer.MAX_VALUE && op3 == Integer.MAX_VALUE) {
+			int two = dfs(op2,days + 1);
+			return Math.min(one,two);
+		} 
+		else if (op2 == Integer.MAX_VALUE && op3 != Integer.MAX_VALUE) {
+			int three = dfs(op3,days + 1);
+			return Math.min(one,three);
+		} 
+		else {
+			return one;
+		}
+	}
+	int minDays(int n) {
+		return dfs(n,0);
+	}
+}

@@ -1,0 +1,61 @@
+class Solution {
+	HashMap<Integer, Pair<Integer, Integer>> heightMp;
+	HashMap<Integer, Pair<TreeNode, Boolean>> mp;
+	int bfs(TreeNode root, TreeNode parent, boolean isLeft) {
+		if (root == null) {
+			return 0;
+		}
+		mp.put(root.val,new Pair<>(parent, isLeft));
+		int heightL = bfs(root.left,root,true);
+		int heightR = bfs(root.right,root,false);
+		heightMp.put(root.val,new Pair<>(heightL, heightR));
+		return Math.max(heightL,heightR) + 1;
+	}
+	int helper(int startIdx, int newH) {
+		Pair<TreeNode, Boolean> parentInfo;
+		while ((parentInfo = mp.get(startIdx)).getKey() != null) {
+			TreeNode parent = parentInfo.getKey();
+			boolean isLeft = parentInfo.getValue();
+			Pair<Integer, Integer> heightInfo = heightMp.get(parent.val);
+			if (isLeft) {
+				if (heightInfo.getKey() <= heightInfo.getValue()) {
+					return -1;
+				}
+				newH = Math.max(newH,heightInfo.getValue()) + 1;
+			} 
+			else {
+				if (heightInfo.getKey() >= heightInfo.getValue()) {
+					return -1;
+				}
+				newH = Math.max(newH,heightInfo.getKey()) + 1;
+			}
+			startIdx = parent.val;
+		}
+		return newH - 1;
+	}
+	int[] treeQueries(TreeNode root, int[] queries) {
+		mp = new HashMap<>();
+		heightMp = new HashMap<>();
+		bfs(root,null,false);
+		List<Integer> ans = new ArrayList<>();
+		int rootLH = heightMp.get(root.val).getKey();
+		int rootRH = heightMp.get(root.val).getValue();
+		int maxH = Math.max(rootLH,rootRH);
+		for (int query: queries) {	
+			int height = helper(query,0);
+			if (height == -1) {
+				ans.add(maxH);
+			} 
+			else {
+				ans.add(height);
+			}
+		}
+		int[] ret = new int[ans.size()];
+		int i = 0;
+		for (int element: ans) {	
+			ret[i] = element;
+			i++;
+		}
+		return ret;
+	}
+}

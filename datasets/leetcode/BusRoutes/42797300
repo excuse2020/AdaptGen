@@ -1,0 +1,62 @@
+class Solution {
+	HashSet<Integer> busVis;
+	HashMap<Integer, ArrayList<Integer>> stopToBus;
+	HashSet<Integer> stopVis;
+	int bfs(int[][] routes, int source, int target) {
+		Queue<Integer> stopQueue = new LinkedList<>();
+		int noOfBus = 0;
+		stopQueue.add(source);
+		while (!stopQueue.isEmpty()) {
+			int size = stopQueue.size();
+			while (size-- > 0) {
+				int currentStop = stopQueue.poll();
+				if (currentStop == target) {
+					return noOfBus;
+				}
+				ArrayList<Integer> buses = stopToBus.get(currentStop);
+				for (Integer bus: buses) {	
+					if (busVis.contains(bus)) {
+						continue;
+					}
+					int neighbours = routes[bus];
+					for (Integer neighbour: neighbours) {	
+						if (stopVis.contains(neighbour)) {
+							continue;
+						}
+						stopQueue.add(neighbour);
+						stopVis.add(neighbour);
+					}
+					busVis.add(bus);
+				}
+			}
+			noOfBus++;
+		}
+		return -1;
+	}
+	void constuctMap(int routes) {
+		for (int i = 0; i < routes.length; i++) {
+			for (Integer stop: routes[i]) {	
+				if (!stopToBus.containsKey(stop)) {
+					ArrayList<Integer> buses = new ArrayList<>();
+					buses.add(i);
+					stopToBus.put(stop,buses);
+				} 
+				else {
+					ArrayList<Integer> buses = stopToBus.get(stop);
+					buses.add(i);
+					stopToBus.put(stop,buses);
+				}
+			}
+		}
+	}
+	int numBusesToDestination(int[][] routes, int source, int target) {
+		if (source == target) {
+			return 0;
+		}
+		stopToBus = new HashMap<>();
+		constuctMap(routes);
+		busVis = new HashSet<>();
+		stopVis = new HashSet<>();
+		return bfs(routes,source,target);
+	}
+}

@@ -1,0 +1,28 @@
+class Solution {
+	int[] group, profit;
+	int[][][] memo = new int[101][101][101];
+	int n, minProfit;
+	int profitableSchemes(int i, int membersSoFar, int profitSoFar) {
+		if (i == group.length) {
+			return profitSoFar >= minProfit ? 1 : 0;
+		}
+		if (memo[i][membersSoFar][profitSoFar] != -1) {
+			return memo[i][membersSoFar][profitSoFar];
+		}
+		memo[i][membersSoFar][profitSoFar] = profitableSchemes(i + 1,membersSoFar,profitSoFar) + (membersSoFar + group[i] <= n ? profitableSchemes(i + 1,membersSoFar + group[i],Math.min(profitSoFar + profit[i],minProfit)) : 0);
+		memo[i][membersSoFar][profitSoFar] %= 1000000007;
+		return memo[i][membersSoFar][profitSoFar];
+	}
+	int profitableSchemes(int n, int minProfit, int[] group, int[] profit) {
+		this.n = n;
+		this.minProfit = minProfit;
+		this.group = group;
+		this.profit = profit;
+		for (var x: memo) {	
+			for (var row: x) {	
+				Arrays.fill(row,-1);
+			}
+		}
+		return profitableSchemes(0,0,0);
+	}
+}

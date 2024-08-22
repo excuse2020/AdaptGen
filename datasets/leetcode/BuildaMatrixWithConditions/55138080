@@ -1,0 +1,54 @@
+class Solution {
+	int[][] buildMatrix(int k, int[][] rowConditions, int[][] colConditions) {
+		List<Integer> sortedByRow = topologicalSort(rowConditions,k);
+		List<Integer> sortedByCol = topologicalSort(colConditions,k);
+		if (sortedByRow.isEmpty() || sortedByCol.isEmpty()) {
+			return new int[0][0];
+		}
+		int[][] cellsIndexed = new int[k + 1][2];
+		for (int row = 0; row < sortedByRow.size(); row++) {
+			int cellAtRow = sortedByRow.get(row);
+			cellsIndexed[cellAtRow][0] = row;
+		}
+		for (int col = 0; col < sortedByCol.size(); col++) {
+			int cellAtCol = sortedByCol.get(col);
+			cellsIndexed[cellAtCol][1] = col;
+		}
+		int[][] ans = new int[k][k];
+		for (int cell = 1; cell <= k; cell++) {
+			int[] cellCoordinates = cellsIndexed[cell];
+			ans[cellCoordinates[0]][cellCoordinates[1]] = cell;
+		}
+		return ans;
+	}
+	List<Integer> topologicalSort(int[][] conditions, int k) {
+		Map<Integer, List<Integer>> adjacency = new HashMap<>();
+		for (int[] condition: conditions) {	
+			adjacency.putIfAbsent(condition[0],new ArrayList<>());
+			adjacency.get(condition[0]).add(condition[1]);
+		}
+		int[] indegreeLookup = new int[k + 1];
+		for (int[] condition: conditions) {	
+			indegreeLookup[condition[1]]++;
+		}
+		Queue<Integer> q = new ArrayDeque<>();
+		for (int vertex = 1; vertex <= k; vertex++) {
+			if (indegreeLookup[vertex] == 0) {
+				q.offer(vertex);
+			}
+		}
+		List<Integer> ans = new ArrayList<>();
+		while (!q.isEmpty()) {
+			int vertex = q.poll();
+			ans.add(vertex);
+			List<Integer> adjacents = adjacency.getOrDefault(vertex,new ArrayList<>());
+			for (int adjacentVertex: adjacents) {	
+				indegreeLookup[adjacentVertex]--;
+				if (indegreeLookup[adjacentVertex] == 0) {
+					q.offer(adjacentVertex);
+				}
+			}
+		}
+		return ans.size() < k ? new ArrayList<>() : ans;
+	}
+}

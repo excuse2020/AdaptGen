@@ -1,0 +1,66 @@
+class Solution {
+	int getMedian(int[] arr) {
+		Arrays.sort(arr);
+		var len = arr.length;
+		var m = ((len - 1) / 2);
+		return arr[m];
+	}
+	int[] getStrongest(int[] arr, int k) {
+		var result = new int[k];
+		var median = getMedian(arr);
+		var strongest = mergeSort(arr,0,arr.length,median);
+		for (int i = 0; i < k; i++) {
+			result[i] = strongest[i];
+		}
+		return result;
+	}
+	int[] mergeSort(int[] arr, int start, int end, int median) {
+		if (arr.length <= 1) {
+			return arr;
+		}
+		var result = new int[end];
+		var lArr = Arrays.copyOfRange(arr,start,end / 2);
+		var rArr = Arrays.copyOfRange(arr,(end / 2),end);
+		var left = mergeSort(lArr,0,end / 2,median);
+		var right = mergeSort(rArr,0,rArr.length,median);
+		var i = 0;
+		var j = 0;
+		var r = 0;
+		while (i < left.length && j < right.length) {
+			if (Math.abs(left[i] - median) > Math.abs(right[j] - median)) {
+				result[r++] = left[i];
+				i++;
+			} 
+			else if (Math.abs(left[i] - median) == Math.abs(right[j] - median)) {
+				if (left[i] > right[j]) {
+					result[r++] = left[i];
+					i++;
+				} 
+				else {
+					result[r++] = right[j];
+					j++;
+				}
+			} 
+			else {
+				result[r++] = right[j];
+				j++;
+			}
+		}
+		System.out.println("i: " + i);
+		if (i < left.length) {
+			while (i < left.length) {
+				result[r] = left[i];
+				r++;
+				i++;
+			}
+		}
+		if (j < right.length) {
+			while (j < right.length) {
+				result[r] = right[j];
+				r++;
+				j++;
+			}
+		}
+		return result;
+	}
+}

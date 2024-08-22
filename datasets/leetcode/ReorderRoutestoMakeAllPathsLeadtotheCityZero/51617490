@@ -1,0 +1,39 @@
+class Solution {
+	int minReorder(int n, int[][] connections) {
+		List<List<Integer>> gr = new ArrayList<>();
+		List<List<Integer>> ugr = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			gr.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			ugr.add(new ArrayList<>());
+		}
+		boolean[] vis = new boolean[n];
+		for (int[] connection: connections) {	
+			gr.get(connection[0]).add(connection[1]);
+		}
+		for (int[] connection: connections) {	
+			ugr.get(connection[0]).add(connection[1]);
+			ugr.get(connection[1]).add(connection[0]);
+		}
+		Queue<Integer> q = new LinkedList<>();
+		q.add(0);
+		vis[0] = true;
+		int count = 0;
+		while (!q.isEmpty()) {
+			int curr = q.poll();
+			List<Integer> currList = ugr.get(curr);
+			for (int i = 0; i < currList.size(); i++) {
+				int currNode = currList.get(i);
+				if (!vis[currNode]) {
+					vis[currNode] = true;
+					q.add(currNode);
+					if (gr.get(curr).contains(currNode)) {
+						count++;
+					}
+				}
+			}
+		}
+		return count;
+	}
+}

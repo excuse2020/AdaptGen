@@ -1,0 +1,33 @@
+class Solution {
+	int leftMax = 0, rightMax = 0;
+	int[] maxLevelForNode;
+	void dfsFromLeft(TreeNode root, int level) {
+		if (root == null) {
+			return;
+		}
+		maxLevelForNode[root.val] = leftMax;
+		leftMax = Math.max(leftMax,level);
+		dfsFromLeft(root.left,level + 1);
+		dfsFromLeft(root.right,level + 1);
+	}
+	void dfsFromRight(TreeNode root, int level) {
+		if (root == null) {
+			return;
+		}
+		maxLevelForNode[root.val] = Math.max(maxLevelForNode[root.val],rightMax);
+		rightMax = Math.max(rightMax,level);
+		dfsFromRight(root.right,level + 1);
+		dfsFromRight(root.left,level + 1);
+	}
+	int[] treeQueries(TreeNode root, int[] queries) {
+		int n = 100001;
+		maxLevelForNode = new int[n];
+		dfsFromLeft(root,0);
+		dfsFromRight(root,0);
+		int[] ans = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			ans[i] = maxLevelForNode[queries[i]];
+		}
+		return ans;
+	}
+}

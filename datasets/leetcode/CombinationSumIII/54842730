@@ -1,0 +1,30 @@
+class Solution {
+	void backtrack(List<List<Integer>> ans, int k, int sum, List<Integer> combo, int sumSoFar, int startAt) {
+		if (sumSoFar > sum) {
+			return;
+		}
+		if (sumSoFar == sum && combo.size() == k) {
+			ans.add(new ArrayList<Integer>(combo));
+			return;
+		}
+		int min = startAt;
+		int max = sum - sumSoFar;
+		if (max > 9) {
+			max = 9;
+		}
+		for (int i = min; i <= max; i++) {
+			combo.add(i);
+			backtrack(ans,k,sum,combo,sumSoFar + i,i + 1);
+			combo.remove(combo.size() - 1);
+		}
+	}
+	List<List<Integer>> combinationSum3(int k, int sum) {
+		List<List<Integer>> ans = new ArrayList<>();
+		int minSum = (k * (k + 1)) / 2;
+		if (sum < minSum) {
+			return ans;
+		}
+		backtrack(ans,k,sum,new ArrayList<Integer>(),0,1);
+		return ans;
+	}
+}

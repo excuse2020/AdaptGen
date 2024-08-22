@@ -1,0 +1,39 @@
+class Solution {
+	int nonSpecialCount(int l, int r) {
+		int c = 0;
+		int max = 31622;
+		boolean[] isPrime = sieveOfEra(max);
+		List<Integer> list = new ArrayList<>();
+		for (int i = 2; i <= max; i++) {
+			if (isPrime[i]) {
+				long special = (long) i * i;
+				if (special <= 1_000_000_000) {
+					list.add((int) special);
+				}
+			}
+		}
+		int specialcount = 0;
+		for (int special: list) {	
+			if (special >= l && special <= r) {
+				specialcount++;
+			}
+		}
+		int total = r - l + 1;
+		return total - specialcount;
+	}
+	boolean[] sieveOfEra(int r) {
+		boolean[] isPrime = new boolean[r + 1];
+		for (int i = 0; i <= r; i++) {
+			isPrime[i] = true;
+		}
+		isPrime[0] = isPrime[1] = false;
+		for (int i = 2; i * i <= r; i++) {
+			if (isPrime[i]) {
+				for (int j = i * i; j <= r; j += i) {
+					isPrime[j] = false;
+				}
+			}
+		}
+		return isPrime;
+	}
+}

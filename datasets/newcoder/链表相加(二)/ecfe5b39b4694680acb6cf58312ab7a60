@@ -1,0 +1,55 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		head1 = reverseList(head1);
+		head2 = reverseList(head2);
+		ListNode preRes = new ListNode(-1);
+		int carry = 0;
+		int tmp = 0;
+		while (head1 != null && head2 != null) {
+			tmp = head1.val + head2.val;
+			carry = tmp / 10;
+			tmp = tmp % 10;
+			ListNode p = new ListNode(tmp);
+			p.next = preRes.next;
+			preRes.next = p;
+			head1 = head1.next;
+			head2 = head2.next;
+		}
+		while (head1 != null) {
+			tmp = head1.val + carry;
+			carry = tmp / 10;
+			tmp = tmp % 10;
+			ListNode p = new ListNode(tmp);
+			p.next = preRes.next;
+			preRes.next = p;
+			head1 = head1.next;
+		}
+		while (head2 != null) {
+			tmp = head2.val + carry;
+			carry = tmp / 10;
+			tmp = tmp % 10;
+			ListNode p = new ListNode(tmp);
+			p.next = preRes.next;
+			preRes.next = p;
+			head2 = head2.next;
+		}
+		if (carry == 1) {
+			ListNode p = new ListNode(1);
+			p.next = preRes.next;
+			preRes.next = p;
+		}
+		return preRes.next;
+	}
+	ListNode reverseList(ListNode head) {
+		ListNode nullHead = new ListNode(-1);
+		ListNode p = head;
+		while (p != null) {
+			ListNode q = p.next;
+			p.next = nullHead.next;
+			nullHead.next = p;
+			p = q;
+		}
+		head = nullHead.next;
+		return head;
+	}
+}

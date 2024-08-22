@@ -1,0 +1,47 @@
+class Solution {
+	int ans = 1;
+	int helper(int index, String[] words, int[] dp) {
+		if (index == words.length) {
+			return 0;
+		}
+		if (dp[index] != 0) {
+			return dp[index];
+		}
+		int max = 1;
+		for (int i = index + 1; i < words.length; i++) {
+			if (isPredecessor(words[index],words[i])) {
+				max = Math.max(max,helper(i,words,dp) + 1);
+			}
+		}
+		ans = Math.max(ans,max);
+		return dp[index] = max;
+	}
+	boolean isPredecessor(String wordA, String wordB) {
+		if (wordA.length() + 1 != wordB.length()) {
+			return false;
+		}
+		int i = 0, j = 0;
+		boolean insertionUsed = false;
+		while (i < wordA.length() && j < wordB.length()) {
+			if (wordA.charAt(i) == wordB.charAt(j)) {
+				i++;
+			} 
+			else if (!insertionUsed) {
+				insertionUsed = true;
+			} 
+			else {
+				return false;
+			}
+			j++;
+		}
+		return true;
+	}
+	int longestStrChain(String[] words) {
+		int[] dp = new int[words.length];
+		Arrays.sort(words,Comparator.comparingInt());
+		for (int i = 0; i < words.length; i++) {
+			helper(i,words,dp);
+		}
+		return ans;
+	}
+}

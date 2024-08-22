@@ -1,0 +1,38 @@
+class Solution {
+	boolean canMove(int row, int col, int grid) {
+		if (row < 0 || col < 0 || row == grid.length || col == grid[0].length) {
+			return false;
+		}
+		return true;
+	}
+	int helper(int[][] grid, int row, int col, int dp) {
+		if (!canMove(row,col,grid)) {
+			return 0;
+		}
+		if (dp[row][col] != -1) {
+			return dp[row][col];
+		}
+		int upRight = 0, right = 0, downRight = 0;
+		if (canMove(row - 1,col + 1,grid) && grid[row][col] < grid[row - 1][col + 1]) {
+			upRight = 1 + helper(grid,row - 1,col + 1,dp);
+		}
+		if (canMove(row,col + 1,grid) && grid[row][col] < grid[row][col + 1]) {
+			right = 1 + helper(grid,row,col + 1,dp);
+		}
+		if (canMove(row + 1,col + 1,grid) && grid[row][col] < grid[row + 1][col + 1]) {
+			downRight = 1 + helper(grid,row + 1,col + 1,dp);
+		}
+		return dp[row][col] = Math.max(right,Math.max(upRight,downRight));
+	}
+	int maxMoves(int[][] grid) {
+		int res = 0;
+		int dp = new int[grid.length + 1][grid[0].length + 1];
+		for (int memo: dp) {	
+			Arrays.fill(memo,-1);
+		}
+		for (int i = 0; i < grid.length; i++) {
+			res = Math.max(res,helper(grid,i,0,dp));
+		}
+		return res;
+	}
+}

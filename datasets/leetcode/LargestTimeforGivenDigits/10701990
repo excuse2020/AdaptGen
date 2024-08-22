@@ -1,0 +1,41 @@
+class Solution {
+	int max;
+	void function(List<Integer> list, int index) {
+		if (index >= 4) {
+			return;
+		}
+		int hour = list.get(1) + (10 * list.get(0));
+		int minute = list.get(3) + (10 * list.get(2));
+		if (hour < 24 && minute <= 59) {
+			max = Math.max(max,(hour * 60 + minute));
+		}
+		for (int i = index; i < 4; i++) {
+			Collections.swap(list,index,i);
+			function(list,index + 1);
+			Collections.swap(list,index,i);
+		}
+	}
+	String largestTimeFromDigits(int[] A) {
+		max = -1;
+		List<Integer> list = new ArrayList<>();
+		for (int x: A) {	
+			list.add(x);
+		}
+		function(list,0);
+		if (max == -1) {
+			return "";
+		}
+		StringBuilder str = new StringBuilder();
+		if (max / 60 < 10) {
+			str.append("0");
+		}
+		str.append((max / 60));
+		str.append(":");
+		max %= 60;
+		if (max < 10) {
+			str.append("0");
+		}
+		str.append(max);
+		return str.toString();
+	}
+}

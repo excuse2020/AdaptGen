@@ -1,0 +1,33 @@
+class Solution {
+	String bricks;
+	int[][] memo;
+	String word;
+	int dfs(int wi, int bi) {
+		if (wi == word.length()) {
+			return 1;
+		}
+		if (bi == bricks.length()) {
+			return 0;
+		}
+		Integer value = memo[bi][wi];
+		if (value == -1) {
+			int takeIt = 0;
+			if (word.charAt(wi) == bricks.charAt(bi)) {
+				takeIt = dfs(wi + 1,bi + 1);
+			}
+			int skipIt = dfs(wi,bi + 1);
+			value = takeIt + skipIt;
+			memo[bi][wi] = value;
+		}
+		return value;
+	}
+	int numDistinct(String s, String t) {
+		this.word = t;
+		this.bricks = s;
+		this.memo = new int[bricks.length()][word.length()];
+		for (int i = 0; i < bricks.length(); i++) {
+			Arrays.fill(memo[i],-1);
+		}
+		return dfs(0,0);
+	}
+}

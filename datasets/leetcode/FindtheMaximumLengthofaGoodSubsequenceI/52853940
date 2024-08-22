@@ -1,0 +1,23 @@
+class Solution {
+	int f(int index, int prevIndex, int k, int nums) {
+		if (index == nums.length) {
+			return 0;
+		}
+		if (dp[index][prevIndex + 1][k] != null) {
+			return dp[index][prevIndex + 1][k];
+		}
+		int pick = 0;
+		if (prevIndex == -1 || nums[prevIndex] == nums[index]) {
+			pick = 1 + f(index + 1,index,k,nums);
+		} 
+		else if (nums[prevIndex] != nums[index] && k > 0) {
+			pick = 1 + f(index + 1,index,k - 1,nums);
+		}
+		int notPick = f(index + 1,prevIndex,k,nums);
+		return dp[index][prevIndex + 1][k] = Math.max(pick,notPick);
+	}
+	int maximumLength(int[] nums, int k) {
+		int n = nums.length;
+		return f(0,-1,k,nums,dp);
+	}
+}

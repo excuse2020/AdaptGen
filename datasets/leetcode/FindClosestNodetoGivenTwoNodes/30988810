@@ -1,0 +1,35 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		int d1 = new int[edges.length];
+		int d2 = new int[edges.length];
+		boolean visited = new boolean[edges.length + 1];
+		Arrays.fill(visited,false);
+		for (int i = 0; i < d1.length; i++) {
+			d1[i] = edges.length + 2;
+			d2[i] = d1[i];
+		}
+		distanceSet(edges,d1,node1,0,visited);
+		Arrays.fill(visited,false);
+		distanceSet(edges,d2,node2,0,visited);
+		int ans = edges.length + 2;
+		int index = -1;
+		for (int i = 0; i < d1.length; i++) {
+			if (ans > Math.max(d1[i],d2[i])) {
+				ans = Math.max(d1[i],d2[i]);
+				index = i;
+			}
+		}
+		return index;
+	}
+	void distanceSet(int edges, int[] d, int node, int distance, boolean visited) {
+		if (visited[node]) {
+			return;
+		}
+		visited[node] = true;
+		d[node] = distance;
+		if (edges[node] != -1) {
+			distanceSet(edges,d,edges[node],distance + 1,visited);
+		}
+		return;
+	}
+}

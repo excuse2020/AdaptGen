@@ -1,0 +1,55 @@
+class Solution {
+	long binarySearch(int n, int[] batteries, long start, long end, long preSum) {
+		long mid;
+		while (start < end) {
+			mid = (long) Math.ceil((double) (start + end) / 2.0);
+			if (isPossible(n,batteries,mid,preSum)) {
+				start = mid;
+			} 
+			else {
+				end = mid - 1;
+			}
+		}
+		return start;
+	}
+	int binarySearchUpper(int[] batteries, long target) {
+		int start = 0;
+		int end = batteries.length;
+		int mid;
+		while (start < end) {
+			mid = (start + end) / 2;
+			if (batteries[mid] >= target) {
+				end = mid;
+			} 
+			else {
+				start = mid + 1;
+			}
+		}
+		return end;
+	}
+	boolean isPossible(int n, int[] batteries, long target, long[] preSum) {
+		int cnt = 0;
+		long sum = 0;
+		int idx = binarySearchUpper(batteries,target);
+		cnt = batteries.length - idx;
+		if (cnt >= n) {
+			return true;
+		}
+		cnt = n - cnt;
+		idx--;
+		sum = preSum[idx];
+		if (sum / cnt >= target) {
+			return true;
+		}
+		return false;
+	}
+	long maxRunTime(int n, int[] batteries) {
+		Arrays.sort(batteries);
+		long preSum = new long[batteries.length];
+		preSum[0] = batteries[0];
+		for (int i = 1; i < batteries.length; i++) {
+			preSum[i] = preSum[i - 1] + batteries[i];
+		}
+		return binarySearch(n,batteries,0,Long.MAX_VALUE,preSum);
+	}
+}

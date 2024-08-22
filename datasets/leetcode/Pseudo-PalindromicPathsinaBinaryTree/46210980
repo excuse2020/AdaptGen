@@ -1,0 +1,25 @@
+class Solution {
+	int helper(TreeNode root, int frq) {
+		if (root == null) {
+			return 0;
+		}
+		if (root.left == null && root.right == null) {
+			frq = frq ^ (1 << root.val);
+			int x = (frq & (frq - 1)) == 0 ? 1 : 0;
+			frq = frq ^ (1 << root.val);
+			return x;
+		}
+		int ans = 0;
+		frq = frq ^ (1 << root.val);
+		ans += helper(root.left,frq);
+		frq = frq ^ (1 << root.val);
+		frq = frq ^ (1 << root.val);
+		ans += helper(root.right,frq);
+		frq = frq ^ (1 << root.val);
+		return ans;
+	}
+	int pseudoPalindromicPaths(TreeNode root) {
+		int x = 0;
+		return helper(root,x);
+	}
+}

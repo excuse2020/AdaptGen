@@ -1,0 +1,55 @@
+class Solution {
+	TreeNode Deserialize(String str) {
+		if ("#".equals(str)) {
+			return null;
+		}
+		int splitIndex = 0;
+		Stack<TreeNode> parents = new Stack<>();
+		TreeNode root = null;
+		for (int i = 0; i < str.length(); i++) {
+			if (str.charAt(i) == '!') {
+				int value = Integer.parseInt(str.substring(splitIndex,i));
+				TreeNode node = new TreeNode(value);
+				if (!parents.empty()) {
+					TreeNode parent = parents.peek();
+					if (parent.left == null && str.charAt(splitIndex - 1) != '#') {
+						parent.left = node;
+					} 
+					else if (parent.right == null) {
+						parent.right = node;
+						parents.pop();
+					}
+				}
+				if (root == null) {
+					root = node;
+				}
+				parents.push(node);
+				splitIndex = i + 1;
+			}
+			if (str.charAt(i) == '#') {
+				if (i < str.length() - 1 && str.charAt(i + 1) == '#') {
+					if (!parents.empty()) {
+						parents.pop();
+					}
+					splitIndex = i + 2;
+				} 
+				else {
+					if (splitIndex < i && !parents.empty() && parents.peek().left != null) {
+						if (!parents.empty()) {
+							parents.pop();
+						}
+					}
+					splitIndex = i + 1;
+				}
+			}
+		}
+		return root;
+	}
+	String Serialize(TreeNode root) {
+		if (root == null) {
+			return "#";
+		}
+		String result = String.valueOf(root.val).concat("!");
+		return result.concat(Serialize(root.left)).concat(Serialize(root.right));
+	}
+}

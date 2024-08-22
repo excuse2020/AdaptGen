@@ -1,0 +1,34 @@
+class Solution {
+	int maximumSum(int[] nums) {
+		Map<Integer, List<Integer>> sumList = new HashMap<>();
+		for (int i: nums) {	
+			int val = Arrays.stream(Integer.toString(i).split("")).mapToInt((a1) -> {Integer.parseInt(a1)}).reduce(0,(a1, a2) -> {a1 + a2});
+			if (sumList.keySet().contains(val)) {
+				List<Integer> sum = sumList.get(val);
+				sum.add(i);
+				sumList.put(val,sum);
+			} 
+			else {
+				List<Integer> sum = new ArrayList<>();
+				sum.add(i);
+				sumList.put(val,sum);
+			}
+		}
+		int max = -1;
+		for (Integer i: sumList.keySet()) {	
+			if (sumList.get(i).size() < 2) {
+				continue;
+			} 
+			else {
+				List<Integer> maxOrderList = sumList.get(i).stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+				int first = maxOrderList.get(0);
+				int second = maxOrderList.get(1);
+				int result = first + second;
+				if (result > max) {
+					max = result;
+				}
+			}
+		}
+		return max;
+	}
+}

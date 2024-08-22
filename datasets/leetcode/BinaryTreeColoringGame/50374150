@@ -1,0 +1,36 @@
+class Solution {
+	boolean btreeGameWinningMove(TreeNode root, int n, int x) {
+		int[] childrenCount = new int[2];
+		TreeNode xNode = helper(root,x);
+		childrenCount[0] = getCount(xNode.left);
+		childrenCount[1] = getCount(xNode.right);
+		int parentSubTree = n - 1;
+		int maxC = Math.max(childrenCount[0],childrenCount[1]);
+		int minC = Math.min(childrenCount[0],childrenCount[1]);
+		int maxOfThree = Math.max(maxC,parentSubTree);
+		int minT = Math.min(maxC,parentSubTree);
+		if (maxOfThree > minT + minC) {
+			return true;
+		}
+		return false;
+	}
+	int getCount(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		return 1 + getCount(root.left);
+	}
+	TreeNode helper(TreeNode root, int x) {
+		if (root == null) {
+			return null;
+		}
+		if (root.val == x) {
+			return root;
+		}
+		TreeNode left = helper(root.left,x);
+		if (left != null) {
+			return left;
+		}
+		return helper(root.right,x);
+	}
+}

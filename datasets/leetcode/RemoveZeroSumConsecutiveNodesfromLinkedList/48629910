@@ -1,0 +1,41 @@
+class Solution {
+	ArrayList<Integer> fun(ArrayList<Integer> arr, int startIndex, int endIndex, int sum) {
+		if (startIndex >= arr.size()) {
+			return arr;
+		}
+		sum += arr.get(endIndex);
+		if (sum == 0) {
+			for (int i = endIndex; i >= startIndex; i--) {
+				arr.remove(i);
+			}
+			return fun(arr,0,0,0);
+		} 
+		else {
+			if (endIndex < arr.size() - 1) {
+				return fun(arr,startIndex,endIndex + 1,sum);
+			} 
+			else {
+				return fun(arr,startIndex + 1,startIndex + 1,0);
+			}
+		}
+	}
+	ListNode removeZeroSumSublists(ListNode head) {
+		ArrayList<Integer> arr = new ArrayList<>();
+		ListNode temp = new ListNode();
+		temp = head;
+		while (temp != null) {
+			arr.add(temp.val);
+			temp = temp.next;
+		}
+		int startIndex = 0;
+		arr = (fun(arr,0,0,0));
+		ListNode ans = new ListNode();
+		temp = ans;
+		for (int i = 0; i < arr.size(); i++) {
+			ListNode temp1 = new ListNode(arr.get(i));
+			ans.next = temp1;
+			ans = ans.next;
+		}
+		return temp.next;
+	}
+}

@@ -1,0 +1,37 @@
+class Solution {
+	int countSubarrays(int[] nums, int k) {
+		int kIndex = getKIndex(nums,k);
+		Map<Integer, Integer> prefix = new HashMap<>();
+		int balance = 0;
+		for (int leftIndex = kIndex; leftIndex >= 0; leftIndex--) {
+			if (nums[leftIndex] < k) {
+				balance--;
+			} 
+			else if (nums[leftIndex] > k) {
+				balance++;
+			}
+			prefix.put(balance,prefix.getOrDefault(balance,0) + 1);
+		}
+		balance = 0;
+		int subArraysWithMedianK = prefix.getOrDefault(0,0) + prefix.getOrDefault(1,0);
+		for (int index = kIndex + 1; index < nums.length; index++) {
+			if (nums[index] < k) {
+				balance--;
+			} 
+			else {
+				balance++;
+			}
+			subArraysWithMedianK += prefix.getOrDefault(-balance,0);
+			subArraysWithMedianK += prefix.getOrDefault(1 - balance,0);
+		}
+		return subArraysWithMedianK;
+	}
+	int getKIndex(int[] nums, int k) {
+		for (int index = 0; index < nums.length; index++) {
+			if (nums[index] == k) {
+				return index;
+			}
+		}
+		return -1;
+	}
+}

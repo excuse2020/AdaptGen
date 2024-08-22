@@ -1,0 +1,30 @@
+class Solution {
+	int max = (int) Math.pow(10,9) + 7;
+	int knightDialer(int n) {
+		if (n == 1) {
+			return 10;
+		}
+		long zerodp1 = 0;
+		long zerodp2 = 1;
+		long zerodp3 = 2;
+		long zerocurr;
+		long prevDP = 20;
+		long currDP = 20;
+		for (int i = 3; i <= n; i++) {
+			if (i % 2 != 0) {
+				long multipliedBy3 = ((zerodp2 - zerodp1) * 2 + max) % max;
+				long multipliedBy2 = (zerodp3 - multipliedBy3 + max) % max;
+				zerocurr = (3 * multipliedBy3 + 2 * multipliedBy2 + max) % max;
+			} 
+			else {
+				zerocurr = (2 * zerodp3) % max;
+			}
+			currDP = (zerocurr + (prevDP * 2) % max) % max;
+			prevDP = currDP;
+			zerodp1 = zerodp2;
+			zerodp2 = zerodp3;
+			zerodp3 = zerocurr;
+		}
+		return (int) (currDP % max);
+	}
+}

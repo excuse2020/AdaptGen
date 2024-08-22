@@ -1,0 +1,49 @@
+class Solution {
+	int findBestValue(int[] arr, int tar) {
+		Arrays.sort(arr);
+		int n = arr.length;
+		int pre = new int[n + 1];
+		pre[0] = arr[0];
+		for (int i = 1; i < n; i++) {
+			pre[i] = pre[i - 1] + arr[i];
+		}
+		int min = 1000000;
+		int ans = -1;
+		int i = 0;
+		while (i <= arr[n - 1]) {
+			int s = next(arr,i);
+			int val = 0;
+			if (s == 0) {
+				val = (n - s) * i;
+			} 
+			else {
+				val = pre[s - 1] + (n - s) * i;
+			}
+			int v = Math.abs(tar - val);
+			if (min > v) {
+				min = v;
+				ans = i;
+			}
+			i++;
+		}
+		return ans;
+	}
+	int next(int[] arr, int target) {
+		int start = 0, end = arr.length - 1;
+		int ans = -1;
+		while (start <= end) {
+			int mid = (start + end) / 2;
+			if (arr[mid] == target) {
+				return mid;
+			}
+			if (arr[mid] <= target) {
+				start = mid + 1;
+			} 
+			else {
+				ans = mid;
+				end = mid - 1;
+			}
+		}
+		return ans;
+	}
+}

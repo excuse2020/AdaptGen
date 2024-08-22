@@ -1,0 +1,44 @@
+class Solution {
+	long[][][] dp;
+	int mod = 1_000_000_007;
+	int distinctSequences(int n) {
+		dp = new long[n + 1][7][7];
+		if (n == 1) {
+			return 6;
+		}
+		if (n == 2) {
+			return 22;
+		}
+		for (long[][] mat: dp) {	
+			for (long[] arr: mat) {	
+				Arrays.fill(arr,-1);
+			}
+		}
+		return (int) helper(n,0,0,0);
+	}
+	int gcd(int low, int high) {
+		for (int i = 2; i <= Math.min(low,high); i++) {
+			if (low % i == 0 && high % i == 0) {
+				return i;
+			}
+		}
+		return 1;
+	}
+	long helper(int n, int last, int prevLast, int idx) {
+		if (idx == n) {
+			return 1;
+		}
+		if (dp[idx][last][prevLast] != -1) {
+			return dp[idx][last][prevLast];
+		}
+		long ans = 0;
+		for (int i = 1; i <= 6; i++) {
+			if (i == last || i == prevLast || last != 0 && gcd(i,last) != 1) {
+				continue;
+			}
+			ans = (ans + helper(n,i,last,idx + 1)) % mod;
+		}
+		dp[idx][last][prevLast] = ans;
+		return ans;
+	}
+}

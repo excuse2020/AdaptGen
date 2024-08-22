@@ -1,0 +1,37 @@
+class Solution {
+	int n;
+	String num;
+	List<String> res;
+	int target;
+	String[] addOpt(String num, int target) {
+		this.res = new ArrayList<>();
+		this.num = num;
+		this.n = num.length();
+		this.target = target;
+		dfs(0,0,0,"");
+		return res.toArray(new String[res.size()]);
+	}
+	void dfs(int index, long cur, long val, String s) {
+		if (index == n) {
+			if (val == target) {
+				res.add(s);
+			}
+			return;
+		}
+		long number = 0;
+		for (int i = index; i < n; i++) {
+			if (i != index && num.charAt(index) == '0') {
+				break;
+			}
+			number = number * 10 + num.charAt(i) - '0';
+			if (index == 0) {
+				dfs(i + 1,number,number,"" + number);
+			} 
+			else {
+				dfs(i + 1,number,val + number,s + "+");
+				dfs(i + 1,-number,val - number,s + "-");
+				dfs(i + 1,cur * number,val - cur + cur * number,s + "*");
+			}
+		}
+	}
+}

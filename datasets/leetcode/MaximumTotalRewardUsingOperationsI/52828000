@@ -1,0 +1,26 @@
+class Solution {
+	int f(int ind, int curr_rewd, int[] rewardValues, int[][] dp) {
+		int n = rewardValues.length;
+		if (ind >= n) {
+			return curr_rewd;
+		}
+		if (dp[ind][curr_rewd] != -1) {
+			return dp[ind][curr_rewd];
+		}
+		int notTake = f(ind + 1,curr_rewd,rewardValues,dp);
+		int take = 0;
+		if (rewardValues[ind] > curr_rewd) {
+			take = f(ind + 1,curr_rewd + rewardValues[ind],rewardValues,dp);
+		}
+		return dp[ind][curr_rewd] = Math.max(take,notTake);
+	}
+	int maxTotalReward(int[] rewardValues) {
+		Arrays.sort(rewardValues);
+		int n = rewardValues.length;
+		int[][] dp = new int[n][4001];
+		for (int[] row: dp) {	
+			Arrays.fill(row,-1);
+		}
+		return f(0,0,rewardValues,dp);
+	}
+}

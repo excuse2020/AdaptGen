@@ -1,0 +1,31 @@
+class Solution {
+	long minimumOperations(int[] nums, int[] target) {
+		int n = nums.length;
+		long result = 0;
+		LinkedList<Integer> list = new LinkedList();
+		for (int i = 0; i < n; i++) {
+			int diff = target[i] - nums[i];
+			if (diff == 0) {
+				list.clear();
+				continue;
+			}
+			if (list.size() > 0 && 1L * list.peekFirst() < 0) {
+				list.clear();
+			}
+			if (list.size() == 0) {
+				list.add(diff);
+				result += Math.abs(diff);
+			} 
+			else {
+				if (Math.abs(diff) > Math.abs(list.peekLast())) {
+					result += Math.abs(diff) - Math.abs(list.peekLast());
+					while (!list.isEmpty() && Math.abs(list.peekLast()) < Math.abs(diff)) {
+						list.pollLast();
+					}
+				}
+				list.add(diff);
+			}
+		}
+		return result;
+	}
+}

@@ -1,0 +1,41 @@
+class Solution {
+	int helper(int i, int j, List<List<Integer>> grid, int dp) {
+		if (j >= grid.get(0).size() || i >= grid.size()) {
+			return 0;
+		}
+		if (dp[i][j] != Integer.MIN_VALUE) {
+			return dp[i][j];
+		}
+		int temp = Integer.MIN_VALUE;
+		int temp1 = Integer.MIN_VALUE;
+		if (j + 1 < grid.get(0).size()) {
+			temp = (grid.get(i).get(j + 1) - grid.get(i).get(j)) + helper(i,j + 1,grid,dp);
+		}
+		if (i + 1 < grid.size()) {
+			temp1 = (grid.get(i + 1).get(j) - grid.get(i).get(j)) + helper(i + 1,j,grid,dp);
+		}
+		return dp[i][j] = Math.max(0,Math.max(temp,temp1));
+	}
+	int maxScore(List<List<Integer>> grid) {
+		int m = grid.size();
+		int n = grid.get(0).size();
+		int dp = new int[m][n];
+		for (int arr: dp) {	
+			Arrays.fill(arr,Integer.MIN_VALUE);
+		}
+		int ans = Integer.MIN_VALUE;
+		int neg = Integer.MIN_VALUE;
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				ans = Math.max(ans,helper(i,j,grid,dp));
+				if (i + 1 < m) {
+					neg = Math.max(neg,grid.get(i + 1).get(j) - grid.get(i).get(j));
+				}
+				if (j + 1 < n) {
+					neg = Math.max(neg,grid.get(i).get(j + 1) - grid.get(i).get(j));
+				}
+			}
+		}
+		return ans == 0 ? neg : ans;
+	}
+}

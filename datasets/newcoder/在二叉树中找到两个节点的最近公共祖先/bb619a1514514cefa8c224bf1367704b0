@@ -1,0 +1,29 @@
+class Solution {
+	void getParent(TreeNode node, HashMap<Integer, Integer> map) {
+		if (node == null) {
+			return;
+		}
+		if (node.left != null) {
+			map.put(node.left.val,node.val);
+			getParent(node.left,map);
+		}
+		if (node.right != null) {
+			map.put(node.right.val,node.val);
+			getParent(node.right,map);
+		}
+	}
+	int lowestCommonAncestor(TreeNode root, int o1, int o2) {
+		HashMap<Integer, Integer> map = new HashMap<>();
+		map.put(root.val,Integer.MIN_VALUE);
+		getParent(root,map);
+		Set<Integer> o1Set = new HashSet<>();
+		while (map.containsKey(o1)) {
+			o1Set.add(o1);
+			o1 = map.get(o1);
+		}
+		while (!o1Set.contains(o2)) {
+			o2 = map.get(o2);
+		}
+		return o2;
+	}
+}

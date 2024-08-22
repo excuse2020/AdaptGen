@@ -1,0 +1,23 @@
+class Solution {
+	long continuousSubarrays(int[] nums) {
+		long count = 0;
+		int n = nums.length;
+		int start = 0, end = 0;
+		TreeMap<Integer, Integer> tmap = new TreeMap<>();
+		for (end = 0; end < n; end++) {
+			tmap.put(nums[end],tmap.getOrDefault(nums[end],0) + 1);
+			while (!tmap.isEmpty() && Math.abs(tmap.firstKey() - tmap.lastKey()) > 2) {
+				int remo = nums[start++];
+				int f = tmap.get(remo);
+				if (f > 1) {
+					tmap.put(remo,f - 1);
+				} 
+				else {
+					tmap.remove(remo);
+				}
+			}
+			count += (end - start + 1) * 1L;
+		}
+		return count;
+	}
+}

@@ -1,0 +1,43 @@
+class Solution {
+	int maxDotProduct(int[] nums1, int[] nums2) {
+		int n = nums1.length;
+		int m = nums2.length;
+		int[][] dp = new int[n][m];
+		for (int i = 0; i < n; ++i) {
+			Arrays.fill(dp[i],-1);
+		}
+		int answer = solve(nums1,nums2,0,0,dp);
+		if (answer == 0) {
+			int max1 = -1001, max2 = -1001;
+			int min1 = 1001, min2 = 1001;
+			for (int i = 0; i < n; ++i) {
+				max1 = Math.max(max1,nums1[i]);
+				min1 = Math.min(min1,nums1[i]);
+			}
+			for (int i = 0; i < m; ++i) {
+				max2 = Math.max(max2,nums2[i]);
+				min2 = Math.min(min2,nums2[i]);
+			}
+			if (max1 <= 0) {
+				return max1 * min2;
+			} 
+			else {
+				return max2 * min1;
+			}
+		}
+		return answer;
+	}
+	int solve(int[] n1, int[] n2, int s1, int s2, int[][] dp) {
+		if (s1 == n1.length || s2 == n2.length) {
+			return 0;
+		}
+		if (dp[s1][s2] != -1) {
+			return dp[s1][s2];
+		}
+		int max = solve(n1,n2,s1 + 1,s2 + 1,dp) + n1[s1] * n2[s2];
+		max = Math.max(max,solve(n1,n2,s1,s2 + 1,dp));
+		max = Math.max(max,solve(n1,n2,s1 + 1,s2,dp));
+		dp[s1][s2] = max;
+		return max;
+	}
+}

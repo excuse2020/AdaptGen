@@ -1,0 +1,41 @@
+class Solution {
+	TreeNode lcaDeepestLeaves(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		Map<TreeNode, TreeNode> childToParent = new HashMap<>();
+		Set<TreeNode> lowestLevel = new HashSet<>();
+		TreeNode levelMarker = new TreeNode();
+		Queue<TreeNode> q = new ArrayDeque<>();
+		q.offer(root);
+		q.offer(levelMarker);
+		while (!q.isEmpty()) {
+			TreeNode node = q.poll();
+			if (node == levelMarker) {
+				if (q.isEmpty()) {
+					break;
+				}
+				lowestLevel.clear();
+				q.offer(levelMarker);
+				continue;
+			}
+			lowestLevel.add(node);
+			if (node.left != null) {
+				childToParent.put(node.left,node);
+				q.offer(node.left);
+			}
+			if (node.right != null) {
+				childToParent.put(node.right,node);
+				q.offer(node.right);
+			}
+		}
+		while (lowestLevel.size() > 1) {
+			Set<TreeNode> parents = new HashSet<>();
+			for (TreeNode node: lowestLevel) {	
+				parents.add(childToParent.get(node));
+			}
+			lowestLevel = parents;
+		}
+		return lowestLevel.stream().findAny().orElse(null);
+	}
+}

@@ -1,0 +1,53 @@
+class Solution {
+	int largest1BorderedSquare(int[][] grid) {
+		int n = grid.length;
+		int m = grid[0].length;
+		int prefix = new int[n][m];
+		int f = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				int up = i - 1 >= 0 ? prefix[i - 1][j] : 0;
+				int left = j - 1 >= 0 ? prefix[i][j - 1] : 0;
+				int diag = i - 1 >= 0 && j - 1 >= 0 ? prefix[i - 1][j - 1] : 0;
+				if (grid[i][j] == 1) {
+					f++;
+				}
+				prefix[i][j] = up + left - diag + grid[i][j];
+			}
+		}
+		if (f == 0) {
+			return 0;
+		}
+		int maxSize = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				int size = Math.min(i + 1,j + 1);
+				if (size < maxSize) {
+					continue;
+				}
+				for (int k = size; k > maxSize; k--) {
+					int sumOfBigSquare = sumOfSquareOfSizeK(i,j,prefix,k);
+					int sumOfMiddle = sumOfSquareOfSizeK(i - 1,j - 1,prefix,k - 2);
+					int sumOfBorder = sumOfBigSquare - sumOfMiddle;
+					if (sumOfBorder >= (k * 4) - 4) {
+						maxSize = k;
+						break;
+					}
+				}
+			}
+		}
+		return maxSize * maxSize;
+	}
+	int sumOfSquareOfSizeK(int x, int y, int prefix, int k) {
+		int n = prefix.length;
+		int m = prefix[0].length;
+		if (x < 0 || y < 0 || x >= n || y >= m) {
+			return 0;
+		}
+		int me = prefix[x][y];
+		int up = x - k >= 0 ? prefix[x - k][y] : 0;
+		int left = y - k >= 0 ? prefix[x][y - k] : 0;
+		int add = x - k >= 0 && y - k >= 0 ? prefix[x - k][y - k] : 0;
+		return me - left + add;
+	}
+}

@@ -1,0 +1,36 @@
+class Solution {
+	int minReorder(int n, int[][] conn) {
+		Deque<Integer> mQ = new ArrayDeque<Integer>();
+		HashMap<Integer, List<Integer>> map = new HashMap<>();
+		for (int arr: conn) {	
+			if (!map.containsKey(arr[0])) {
+				map.put(arr[0],new ArrayList<Integer>());
+			}
+			if (!map.containsKey(arr[1])) {
+				map.put(arr[1],new ArrayList<Integer>());
+			}
+			map.get(arr[0]).add(-arr[1]);
+			map.get(arr[1]).add(arr[0]);
+		}
+		HashSet<Integer> vis = new HashSet<Integer>();
+		mQ.offer(0);
+		vis.add(0);
+		int result = 0;
+		while (!mQ.isEmpty()) {
+			int node = mQ.poll();
+			if (map.containsKey(node)) {
+				for (int child: map.get(node)) {	
+					if (!vis.contains(Math.abs(child))) {
+						if (child < 0) {
+							result++;
+							child = -child;
+						}
+						mQ.offer(child);
+						vis.add(child);
+					}
+				}
+			}
+		}
+		return result;
+	}
+}

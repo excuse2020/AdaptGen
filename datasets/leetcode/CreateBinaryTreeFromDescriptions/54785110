@@ -1,0 +1,28 @@
+class Solution {
+	TreeNode createBinaryTree(int[][] descriptions) {
+		HashMap<Integer, TreeNode> graph = new HashMap<>();
+		HashSet<Integer> children = new HashSet<>();
+		for (int[] edge: descriptions) {	
+			int parent = edge[0];
+			int child = edge[1];
+			int isLeft = edge[2];
+			TreeNode parentNode = graph.getOrDefault(parent,new TreeNode(parent));
+			TreeNode childNode = graph.getOrDefault(child,new TreeNode(child));
+			if (isLeft == 1) {
+				parentNode.left = childNode;
+			} 
+			else {
+				parentNode.right = childNode;
+			}
+			graph.put(parent,parentNode);
+			graph.put(child,childNode);
+			children.add(child);
+		}
+		for (int node: graph.keySet()) {	
+			if (!children.contains(node)) {
+				return graph.get(node);
+			}
+		}
+		return null;
+	}
+}

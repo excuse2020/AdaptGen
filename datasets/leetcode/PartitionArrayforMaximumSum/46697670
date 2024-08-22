@@ -1,0 +1,26 @@
+class Solution {
+	int[] arr, memo;
+	int k;
+	int dfs(int ind) {
+		if (ind == arr.length) {
+			return 0;
+		}
+		if (memo[ind] != -1) {
+			return memo[ind];
+		}
+		int min = Math.min(ind + k,arr.length);
+		int currMax = arr[ind], sum = 0;
+		for (int i = ind; i < min; ++i) {
+			currMax = Math.max(currMax,arr[i]);
+			sum = Math.max(sum,dfs(i + 1) + ((i - ind + 1) * currMax));
+		}
+		return memo[ind] = sum;
+	}
+	int maxSumAfterPartitioning(int[] arr, int k) {
+		this.arr = arr;
+		this.k = k;
+		this.memo = new int[arr.length];
+		Arrays.fill(memo,-1);
+		return dfs(0);
+	}
+}

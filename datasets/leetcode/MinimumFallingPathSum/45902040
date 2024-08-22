@@ -1,0 +1,26 @@
+class Solution {
+	int helper(int[][] matrix, int row, int col, Integer[][] dp) {
+		if (row == matrix.length) {
+			return 0;
+		}
+		if (col < 0 || col >= matrix[0].length) {
+			return Integer.MAX_VALUE;
+		}
+		if (dp[row][col] != null) {
+			return dp[row][col];
+		}
+		int minsteps = matrix[row][col] + Math.min(helper(matrix,row + 1,col - 1,dp),Math.min(helper(matrix,row + 1,col,dp),helper(matrix,row + 1,col + 1,dp)));
+		dp[row][col] = minsteps;
+		return minsteps;
+	}
+	int minFallingPathSum(int[][] matrix) {
+		int rows = matrix.length;
+		int cols = matrix[0].length;
+		Integer[][] dp = new Integer[rows + 1][cols + 1];
+		int minsteps = Integer.MAX_VALUE;
+		for (int i = 0; i < cols; i++) {
+			minsteps = Math.min(minsteps,helper(matrix,0,i,dp));
+		}
+		return minsteps;
+	}
+}

@@ -1,0 +1,43 @@
+class Solution {
+	int MAX = 100001;
+	TreeNode[] map = new TreeNode[MAX];
+	boolean[] visit = new boolean[MAX];
+	int amountOfTime(TreeNode root, int start) {
+		createRootMap(root);
+		return check(getStart(root,start));
+	}
+	int check(TreeNode node) {
+		int max = -1;
+		if (visit[node.val]) {
+			return max;
+		}
+		visit[node.val] = true;
+		if (node.left != null) {
+			max = Math.max(max,check(node.left));
+		}
+		if (node.right != null) {
+			max = Math.max(max,check(node.right));
+		}
+		if (map[node.val] != null) {
+			max = Math.max(max,check(map[node.val]));
+		}
+		return 1 + max;
+	}
+	void createRootMap(TreeNode node) {
+		if (node.left != null) {
+			map[node.left.val] = node;
+			createRootMap(node.left);
+		}
+		if (node.right != null) {
+			map[node.right.val] = node;
+			createRootMap(node.right);
+		}
+	}
+	TreeNode getStart(TreeNode root, int start) {
+		TreeNode father = map[start];
+		if (father == null) {
+			return root;
+		}
+		return father.left != null && father.left.val == start ? father.left : father.right;
+	}
+}

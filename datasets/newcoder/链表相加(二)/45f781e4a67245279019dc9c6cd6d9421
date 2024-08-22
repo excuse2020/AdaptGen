@@ -1,0 +1,41 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		if (head1 == null) {
+			return head2;
+		}
+		if (head2 == null) {
+			return head1;
+		}
+		ListNode reverse1 = reverseLinkedList(head1);
+		ListNode reverse2 = reverseLinkedList(head2);
+		int total = 0;
+		int carryOver = 0;
+		ListNode current = null;
+		ListNode prev = null;
+		while (reverse1 != null || reverse2 != null || carryOver != 0) {
+			total = carryOver;
+			if (reverse1 != null) {
+				total += reverse1.val;
+				reverse1 = reverse1.next;
+			}
+			if (reverse2 != null) {
+				total += reverse2.val;
+				reverse2 = reverse2.next;
+			}
+			carryOver = total / 10;
+			prev = new ListNode(total % 10);
+			prev.next = current;
+			current = prev;
+		}
+		return current;
+	}
+	ListNode reverseLinkedList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode headOfReversedList = reverseLinkedList(head.next);
+		head.next.next = head;
+		head.next = null;
+		return headOfReversedList;
+	}
+}

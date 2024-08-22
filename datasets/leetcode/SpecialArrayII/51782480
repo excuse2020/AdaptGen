@@ -1,0 +1,55 @@
+class Solution {
+	int greatorOrEqual(int num, List<Integer> badIdx) {
+		int res = Integer.MAX_VALUE;
+		int l = 0, r = badIdx.size() - 1;
+		while (l <= r) {
+			int mid = (l + r) / 2;
+			if (badIdx.get(mid) >= num) {
+				res = badIdx.get(mid);
+				r = mid - 1;
+			} 
+			else {
+				l = mid + 1;
+			}
+		}
+		return res;
+	}
+	boolean[] isArraySpecial(int[] nums, int[][] queries) {
+		List<Integer> badIdx = new ArrayList<>();
+		for (int i = 0; i < nums.length - 1; i++) {
+			if ((nums[i] + nums[i + 1]) % 2 == 0) {
+				badIdx.add(i);
+			}
+		}
+		int m = queries.length;
+		boolean[] res = new boolean[m];
+		for (int i = 0; i < m; i++) {
+			int l = queries[i][0];
+			int r = queries[i][1];
+			int ge = greatorOrEqual(l,badIdx);
+			int lt = lessThan(r,badIdx);
+			if (ge <= lt) {
+				res[i] = false;
+			} 
+			else {
+				res[i] = true;
+			}
+		}
+		return res;
+	}
+	int lessThan(int num, List<Integer> badIdx) {
+		int res = Integer.MIN_VALUE;
+		int l = 0, r = badIdx.size() - 1;
+		while (l <= r) {
+			int mid = (l + r) / 2;
+			if (badIdx.get(mid) < num) {
+				res = badIdx.get(mid);
+				l = mid + 1;
+			} 
+			else {
+				r = mid - 1;
+			}
+		}
+		return res;
+	}
+}

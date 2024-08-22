@@ -1,0 +1,62 @@
+class Solution {
+	ArrayList<Integer> GetLeastNumbers_Solution(int[] input, int k) {
+		ArrayList<Integer> res = new ArrayList<>();
+		if (k == 0 || k > input.length) {
+			return res;
+		}
+		int i = 0;
+		for (; i < k; i++) {
+			res.add(input[i]);
+			buildHeap(res);
+		}
+		for (; i < input.length; i++) {
+			if (input[i] < res.get(0)) {
+				res.set(0,input[i]);
+				reBuildHeap(res,1,k);
+			}
+		}
+		heapSort(res);
+		return res;
+	}
+	void buildHeap(ArrayList<Integer> heap) {
+		for (int i = heap.size() / 2; i > 0; i--) {
+			reBuildHeap(heap,i,heap.size());
+		}
+	}
+	void exchange(ArrayList<Integer> heap, int i, int j) {
+		int tep = heap.get(i - 1);
+		heap.set(i - 1,heap.get(j - 1));
+		heap.set(j - 1,tep);
+	}
+	void heapSort(ArrayList<Integer> heap) {
+		for (int i = heap.size(); i > 1; i--) {
+			exchange(heap,1,i);
+			reBuildHeap(heap,1,i - 1);
+		}
+	}
+	void main(String[] args) {
+		System.out.println(new Solution().GetLeastNumbers_Solution(new int{4, 5, 1, 6, 2, 7, 3, 8},4));
+	}
+	void reBuildHeap(ArrayList<Integer> heap, Integer index, Integer heapSize) {
+		int i = index;
+		int l = 2 * i;
+		int r = l + 1;
+		while (true) {
+			int max = i;
+			if (l > heapSize) {
+				return;
+			}
+			max = heap.get(max - 1) > heap.get(l - 1) ? max : l;
+			if (r < heapSize && heap.get(max - 1) < heap.get(r - 1)) {
+				max = r;
+			}
+			if (i == max) {
+				return;
+			}
+			exchange(heap,i,max);
+			i = max;
+			l = 2 * i;
+			r = l + 1;
+		}
+	}
+}

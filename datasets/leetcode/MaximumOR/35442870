@@ -1,0 +1,28 @@
+class Solution {
+	long maximumOr(List<Integer> nums, int k) {
+		long ans = 0;
+		long mul = 1;
+		List<Long> pre = new ArrayList<>(Collections.nCopies(nums.size(),0L));
+		List<Long> suf = new ArrayList<>(Collections.nCopies(nums.size(),0L));
+		pre.set(0,nums.get(0));
+		suf.set(nums.size() - 1,nums.get(nums.size() - 1));
+		for (int i = 1; i < nums.size(); ++i) {
+			pre.set(i,pre.get(i - 1) | nums.get(i));
+			suf.set(nums.size() - i,suf.get(nums.size() - i) | nums.get(nums.size() - i));
+		}
+		for (int i = 0; i < k; ++i) {
+			mul *= 2;
+		}
+		for (int i = 0; i < nums.size(); ++i) {
+			long x = nums.get(i) * mul;
+			if (i - 1 >= 0) {
+				x = x | pre.get(i - 1);
+			}
+			if (i + 1 < nums.size()) {
+				x = x | suf.get(i + 1);
+			}
+			ans = Math.max(ans,x);
+		}
+		return ans;
+	}
+}

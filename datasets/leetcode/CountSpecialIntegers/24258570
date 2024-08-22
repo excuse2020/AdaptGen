@@ -1,0 +1,41 @@
+class Solution {
+	int countSpecialNumbers(int n) {
+		List<Integer> nums = new ArrayList<>();
+		while (n > 0) {
+			nums.add(n % 10);
+			n /= 10;
+		}
+		int ret = 0;
+		for (int len = 1; len < nums.size(); len++) {
+			int curr = 9;
+			for (int slot = 0, choice = 9; slot < len - 1; slot++, choice--) {
+				curr *= choice;
+			}
+			System.out.println(curr);
+			ret += curr;
+		}
+		Collections.reverse(nums);
+		boolean[] visited = new boolean[10];
+		for (int i = 0; i < nums.size(); i++) {
+			for (int j = i == 0 ? 1 : 0; j < nums.get(i); j++) {
+				if (visited[j]) {
+					continue;
+				}
+				int curr = 1;
+				for (int slot = 0, choice = 9 - i; slot < nums.size() - i; slot++, choice--) {
+					curr *= choice;
+				}
+				ret += curr;
+			}
+			if (visited[nums.get(i)]) {
+				break;
+			}
+			visited[nums.get(i)] = true;
+		}
+		Set<Integer> set = new HashSet<>(nums);
+		if (set.size() == nums.size()) {
+			ret++;
+		}
+		return ret;
+	}
+}

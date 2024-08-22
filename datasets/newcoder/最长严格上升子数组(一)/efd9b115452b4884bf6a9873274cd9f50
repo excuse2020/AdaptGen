@@ -1,0 +1,36 @@
+class Solution {
+	int maxSubArrayLengthTwo(int[] nums) {
+		if (nums.length < 2) {
+			return nums.length;
+		}
+		if (nums.length == 2) {
+			return nums[0] == 100000 ? 1 : 2;
+		}
+		int[] dp = new int[nums.length];
+		Arrays.fill(dp,Integer.valueOf(1));
+		int ans = 1;
+		for (int i = 1; i < nums.length; i++) {
+			if (nums[i] > nums[i - 1]) {
+				dp[i] = dp[i - 1] + 1;
+				ans = Math.max(ans,dp[i]);
+			}
+		}
+		for (int currentIndex = 1; currentIndex < dp.length; currentIndex++) {
+			if (dp[currentIndex] == 1) {
+				ans = Math.max(ans,dp[currentIndex - 1] == 100000 ? dp[currentIndex] : dp[currentIndex - 1] + 1);
+				continue;
+			}
+			int previousIndex = currentIndex - dp[currentIndex];
+			if (previousIndex > -1 && nums[previousIndex + 1] > 1) {
+				ans = Math.max(ans,dp[currentIndex] + 1);
+			}
+			if (previousIndex > -1 && nums[previousIndex + 2] - nums[previousIndex] >= 2) {
+				ans = Math.max(ans,dp[currentIndex] + dp[previousIndex]);
+			}
+			if (previousIndex - 1 > -1 && nums[previousIndex + 1] - nums[previousIndex - 1] >= 2) {
+				ans = Math.max(ans,dp[currentIndex] + dp[previousIndex]);
+			}
+		}
+		return ans;
+	}
+}

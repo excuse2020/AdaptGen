@@ -1,0 +1,35 @@
+class Solution {
+	int dp(int[] arr, int k) {
+		int n = arr.length;
+		int[] dp = new int[n + 1];
+		for (int st = n - 1; st >= 0; st--) {
+			int res = 0;
+			int max = 0;
+			int ele = 0;
+			for (int i = st; i < arr.length && i < st + k; i++) {
+				max = Math.max(max,arr[i]);
+				ele++;
+				res = Math.max(res,max * ele + dp[i + 1]);
+			}
+			dp[st] = res;
+		}
+		return dp[0];
+	}
+	int maxSumAfterPartitioning(int[] arr, int k) {
+		return dp(arr,k);
+	}
+	int recr(int[] arr, int st, int k) {
+		if (st == arr.length) {
+			return 0;
+		}
+		int res = 0;
+		int max = 0;
+		int ele = 0;
+		for (int i = st; i < arr.length && i < st + k; i++) {
+			max = Math.max(max,arr[i]);
+			ele++;
+			res = Math.max(res,max * ele + recr(arr,i + 1,k));
+		}
+		return res;
+	}
+}

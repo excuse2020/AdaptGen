@@ -1,0 +1,38 @@
+class Solution {
+	int numSplits(String s) {
+		int n = s.length();
+		int[] leftDistinct = new int[n];
+		int[] rightDistinct = new int[n];
+		Set<Character> uniques = new HashSet<>();
+		int idx = 0;
+		int count = 0;
+		for (int i = 0; i < n; i++) {
+			if (uniques.add(s.charAt(i))) {
+				leftDistinct[idx] = ++count;
+			} 
+			else {
+				leftDistinct[idx] = count;
+			}
+			idx++;
+		}
+		idx = n - 1;
+		count = 0;
+		uniques = new HashSet<>();
+		for (int i = n - 1; i >= 0; i--) {
+			if (uniques.add(s.charAt(i))) {
+				rightDistinct[idx] = ++count;
+			} 
+			else {
+				rightDistinct[idx] = count;
+			}
+			idx--;
+		}
+		int result = 0;
+		for (int i = 0; i < n - 1; i++) {
+			if (leftDistinct[i] == rightDistinct[i + 1]) {
+				result++;
+			}
+		}
+		return result;
+	}
+}

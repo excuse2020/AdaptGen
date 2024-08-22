@@ -1,0 +1,75 @@
+class Solution {
+	List<Pair>[] list;
+	Map<Integer, Pair> map;
+	int dfs(TreeNode root, int height) {
+		if (root == null) {
+			return height;
+		}
+		Pair p = new Pair();
+		p.value = root.val;
+		p.depth = height;
+		if (list[height] == null) {
+			List<Pair> pList = new ArrayList<>();
+			pList.add(p);
+			list[height] = pList;
+		} 
+		else {
+			list[height].add(p);
+		}
+		map.put(root.val,p);
+		int max = Math.max(dfs(root.left,height + 1),dfs(root.right,height + 1));
+		map.get(root.val).height = max - height;
+		return max;
+	}
+	int[] treeQueries(TreeNode root, int[] queries) {
+		list = new List[100001];
+		map = new HashMap<>();
+		boolean[] check = new boolean[100001];
+		int noUse = dfs(root,0);
+		int m = queries.length;
+		int[] ans = new int[m];
+		int j = 0;
+		for (int q: queries) {	
+			int d = map.get(q).depth;
+			List<Pair> dList = list[d];
+			if (!check[d]) {
+				Collections.sort(dList);
+				check[d] = true;
+			}
+			if (dList.size() == 1) {
+				ans[j++] = d - 1;
+				continue;
+			}
+			for (Pair p: dList) {	
+				if (p.value == q && dList.size() > 1) {
+					int hAfter = dList.get(1).height + dList.get(1).depth;
+					if (d > hAfter) {
+						ans[j++] = d;
+					} 
+					else {
+						ans[j++] = hAfter;
+					}
+				} 
+				else {
+					int hAfter = dList.get(0).height + dList.get(0).depth;
+					if (d >= hAfter || dList.size() == 1) {
+						ans[j++] = d;
+					} 
+					else {
+						ans[j++] = hAfter;
+					}
+				}
+				break;
+			}
+		}
+		return ans;
+	}
+	class Pair {
+		int depth;
+		int height;
+		int value;
+		int compareTo(Pair P) {
+			return P.height - this.height;
+		}
+	}
+}

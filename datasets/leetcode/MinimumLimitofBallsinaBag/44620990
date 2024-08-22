@@ -1,0 +1,33 @@
+class Solution {
+	int MAX = (int) 1e9;
+	int getMaxSize(int[] nums, int maxOperations, int low, int high) {
+		if (low + 1 == high) {
+			if (isValid(nums,maxOperations,low)) {
+				return low;
+			} 
+			else {
+				return high;
+			}
+		}
+		int mid = (low + high) / 2;
+		if (isValid(nums,maxOperations,mid)) {
+			return getMaxSize(nums,maxOperations,low,mid);
+		} 
+		else {
+			return getMaxSize(nums,maxOperations,mid,high);
+		}
+	}
+	boolean isValid(int[] nums, int maxOperations, int k) {
+		int sumOperations = 0;
+		for (int i = 0; i < nums.length; i++) {
+			if (nums[i] > k) {
+				sumOperations += Math.ceil((double) nums[i] / k) - 1;
+			}
+		}
+		return sumOperations <= maxOperations;
+	}
+	int minimumSize(int[] nums, int maxOperations) {
+		int max = Arrays.stream(nums).max().orElse(0);
+		return getMaxSize(nums,maxOperations,0,max);
+	}
+}

@@ -1,0 +1,57 @@
+class Solution {
+	int calculate(String s) {
+		s = s.concat("&");
+		Stack<Integer> number1 = new Stack<>();
+		Stack<Character> operation1 = new Stack<>();
+		int i = 0;
+		int flag = 0;
+		int tmp = 0;
+		while (i < s.length()) {
+			if (s.charAt(i) <= '9' && s.charAt(i) >= '0') {
+				tmp *= 10;
+				tmp += s.charAt(i) - '0';
+			} 
+			else {
+				number1.push(tmp);
+				tmp = 0;
+				if (flag == 1) {
+					int num1 = number1.pop();
+					int num2 = number1.pop();
+					char operation = operation1.pop();
+					if (operation == '*') {
+						number1.push(num2 * num1);
+					} 
+					else if (operation == '/') {
+						number1.push(num2 / num1);
+					}
+					flag = 0;
+				}
+				if (s.charAt(i) == '+' || s.charAt(i) == '-' || s.charAt(i) == '&') {
+					while (!operation1.empty()) {
+						int num1 = number1.pop();
+						int num2 = number1.pop();
+						char operation = operation1.pop();
+						if (operation == '+') {
+							number1.push(num2 + num1);
+						} 
+						else if (operation == '-') {
+							number1.push(num2 - num1);
+						} 
+						else if (operation == '*') {
+							number1.push(num2 * num1);
+						} 
+						else if (operation == '/') {
+							number1.push(num2 / num1);
+						}
+					}
+				} 
+				else {
+					flag = 1;
+				}
+				operation1.push(s.charAt(i));
+			}
+			i++;
+		}
+		return number1.pop();
+	}
+}

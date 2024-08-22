@@ -1,0 +1,33 @@
+class Solution {
+	int f(int ind, int buy, int trans, int[] prices, int[][][] dp) {
+		if (trans == 0 || ind == prices.length) {
+			return 0;
+		}
+		if (dp[ind][buy][trans] != -1) {
+			return dp[ind][buy][trans];
+		}
+		int profit1 = 0;
+		int profit2 = 0;
+		if (buy == 1) {
+			int take = -prices[ind] + f(ind + 1,0,trans,prices,dp);
+			int not_take = f(ind + 1,1,trans,prices,dp);
+			profit1 = Math.max(take,not_take);
+		} 
+		else {
+			int sell = prices[ind] + f(ind + 1,1,trans - 1,prices,dp);
+			int not_sell = f(ind + 1,0,trans,prices,dp);
+			profit2 = Math.max(sell,not_sell);
+		}
+		return dp[ind][buy][trans] = Math.max(profit1,profit2);
+	}
+	int maxProfit(int[] prices) {
+		int n = prices.length;
+		int[][][] dp = new int[n][2][3];
+		for (int[][] row: dp) {	
+			for (int[] ele: row) {	
+				Arrays.fill(ele,-1);
+			}
+		}
+		return f(0,1,2,prices,dp);
+	}
+}

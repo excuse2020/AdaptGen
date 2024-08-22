@@ -1,0 +1,36 @@
+class Solution {
+	int dfs(boolean[] visited, ArrayList[] graph, int i) {
+		if (visited[i] == true) {
+			return 0;
+		}
+		visited[i] = true;
+		int totalNodes = 1;
+		for (int j = 0; j < graph[i].size(); j++) {
+			totalNodes += dfs(visited,graph,(int) graph[i].get(j));
+		}
+		return totalNodes;
+	}
+	int maximumDetonation(int[][] bombs) {
+		ArrayList<Integer>[] graph = new ArrayList[bombs.length];
+		for (int i = 0; i < bombs.length; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < bombs.length; i++) {
+			for (int j = 0; j < bombs.length; j++) {
+				if (i != j) {
+					long x1 = bombs[j][0], x2 = bombs[i][0];
+					long y1 = bombs[j][1], y2 = bombs[i][1];
+					double dist = Math.sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)));
+					if (dist <= (double) bombs[i][2]) {
+						graph[i].add(j);
+					}
+				}
+			}
+		}
+		int ans = 0;
+		for (int i = 0; i < bombs.length; i++) {
+			ans = Math.max(ans,dfs(new boolean[bombs.length],graph,i));
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,62 @@
+class Solution {
+	int find(int v, int[] par) {
+		if (par[v] == -1 || par[v] == v) {
+			return v;
+		}
+		return par[v] = find(par[v],par);
+	}
+	List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+		int[] par = new int[n];
+		Arrays.fill(par,-1);
+		par[0] = 0;
+		par[firstPerson] = 0;
+		Arrays.sort(meetings,(a, b) -> {Integer.compare(a[2],b[2])});
+		int i = 0;
+		while (i < meetings.length) {
+			int[] meet = meetings[i];
+			Queue<int[]> queue = new ArrayDeque<>();
+			int j = i;
+			while (j < meetings.length && meet[2] == meetings[j][2]) {
+				int pa = find(meetings[j][0],par);
+				int pb = find(meetings[j][1],par);
+				if (pa == 0) {
+					par[pb] = 0;
+				} 
+				else if (pb == 0) {
+					par[pa] = 0;
+				} 
+				else {
+					par[pb] = pa;
+					queue.offer(meetings[j]);
+				}
+				j++;
+			}
+			while (!queue.isEmpty()) {
+				int[] m = queue.poll();
+				int pa = find(m[0],par);
+				int pb = find(m[1],par);
+				if (pa == 0) {
+					par[pb] = 0;
+				} 
+				else if (pb == 0) {
+					par[pa] = 0;
+				} 
+				else {
+					par[m[0]] = -1;
+					par[m[1]] = -1;
+				}
+			}
+			if (j == i) {
+				j++;
+			}
+			i = j;
+		}
+		List<Integer> res = new ArrayList<>();
+		for (i = 0; i < n; i++) {
+			if (find(i,par) == 0) {
+				res.add(i);
+			}
+		}
+		return res;
+	}
+}

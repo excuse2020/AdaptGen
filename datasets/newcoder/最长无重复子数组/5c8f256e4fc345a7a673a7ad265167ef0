@@ -1,0 +1,35 @@
+class Solution {
+	int maxLength(int[] arr) {
+		int[] dict = new int[100000];
+		int maxLen = 0;
+		int lastRepeatIndex = -1;
+		Arrays.fill(dict,-1);
+		int i = 0;
+		while (i < arr.length) {
+			int value = arr[i];
+			if (dict[value] > lastRepeatIndex) {
+				lastRepeatIndex = dict[value];
+			}
+			dict[value] = i;
+			maxLen = Math.max(maxLen,i - lastRepeatIndex);
+			if (maxLen >= arr.length - lastRepeatIndex) {
+				return maxLen;
+			}
+			i++;
+		}
+		return maxLen;
+	}
+	int maxLength_set(int[] arr) {
+		int res = 0;
+		Set<Integer> set = new HashSet<>();
+		for (int l = 0, r = 0; r < arr.length; r++) {
+			int a = arr[r];
+			while (set.contains(a)) {
+				set.remove(arr[l++]);
+			}
+			set.add(a);
+			res = Math.max(res,r - l + 1);
+		}
+		return res;
+	}
+}

@@ -1,0 +1,40 @@
+class Solution {
+	int maxScore(List<List<Integer>> grid) {
+		int[][] ques = new int[grid.size()][grid.get(0).size()];
+		for (int i = 0; i < grid.size(); i++) {
+			for (int j = 0; j < grid.get(0).size(); j++) {
+				ques[i][j] = grid.get(i).get(j);
+			}
+		}
+		int[][] dp = new int[ques.length][ques[0].length];
+		for (int i = ques.length - 1; i >= 0; i--) {
+			for (int j = ques[0].length - 1; j >= 0; j--) {
+				if (i == ques.length - 1 && j == ques[0].length - 1) {
+					dp[ques.length - 1][ques[0].length - 1] = 0;
+				} 
+				else {
+					int max = Integer.MIN_VALUE;
+					for (int k = i, l = j + 1; l < ques[0].length; l++) {
+						max = Math.max(max,(ques[k][l] - ques[i][j]));
+						max = Math.max(max,dp[k][l] + (ques[k][l] - ques[i][j]));
+					}
+					for (int l = j, k = i + 1; k < ques.length; k++) {
+						max = Math.max(max,(ques[k][l] - ques[i][j]));
+						max = Math.max(max,dp[k][l] + (ques[k][l] - ques[i][j]));
+					}
+					dp[i][j] = max;
+				}
+			}
+		}
+		int ans = Integer.MIN_VALUE;
+		for (int i = 0; i < dp.length; i++) {
+			for (int j = 0; j < dp[0].length; j++) {
+				if (i == ques.length - 1 && j == ques[0].length - 1) {
+					break;
+				}
+				ans = Math.max(ans,dp[i][j]);
+			}
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,31 @@
+class Solution {
+	boolean permutations(List<Integer> digits, int num, boolean visited) {
+		boolean allDigitsUsed = true;
+		for (int i = 0; i < digits.size(); i++) {
+			if (!visited[i] && !(digits.get(i) == 0 && num == 0)) {
+				allDigitsUsed = false;
+				num *= 10;
+				num += digits.get(i);
+				visited[i] = true;
+				if (permutations(digits,num,visited)) {
+					return true;
+				}
+				visited[i] = false;
+				num /= 10;
+			}
+		}
+		if (allDigitsUsed) {
+			return ((num & (num - 1)) == 0);
+		}
+		return false;
+	}
+	boolean reorderedPowerOf2(int n) {
+		List<Integer> digits = new ArrayList();
+		while (n > 0) {
+			digits.add(n % 10);
+			n /= 10;
+		}
+		boolean visited = new boolean[digits.size()];
+		return permutations(digits,0,visited);
+	}
+}

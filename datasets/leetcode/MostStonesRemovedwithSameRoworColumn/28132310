@@ -1,0 +1,65 @@
+class Solution {
+	int[] parent;
+	int[] rank;
+	int find(int x) {
+		if (x != parent[x]) {
+			parent[x] = find(parent[x]);
+		}
+		return parent[x];
+	}
+	int removeStones(int[][] stones) {
+		int n = stones.length;
+		rank = new int[n];
+		parent = new int[n];
+		for (int i = 0; i < n; i++) {
+			parent[i] = i;
+		}
+		Map<Integer, List<Integer>> xMap = new HashMap<>();
+		Map<Integer, List<Integer>> yMap = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			xMap.putIfAbsent(stones[i][0],new ArrayList<Integer>());
+			yMap.putIfAbsent(stones[i][1],new ArrayList<Integer>());
+			xMap.get(stones[i][0]).add(i);
+			yMap.get(stones[i][1]).add(i);
+		}
+		unionMapValue(xMap);
+		unionMapValue(yMap);
+		Map<Integer, Integer> cnt = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			int p = find(i);
+			cnt.put(p,cnt.getOrDefault(p,0) + 1);
+		}
+		int res = 0;
+		for (Map.Entry<Integer, Integer> entry: cnt.entrySet()) {	
+			int value = entry.getValue();
+			if (value > 1) {
+				res += (value - 1);
+			}
+		}
+		return res;
+	}
+	void union(int x, int y) {
+		int rootX = find(x);
+		int rootY = find(y);
+		if (rootX == rootY) {
+			return;
+		}
+		if (rank[rootX] > rank[rootY]) {
+			parent[rootY] = rootX;
+		} 
+		else {
+			parent[rootX] = rootY;
+			if (rank[rootX] == rank[rootY]) {
+				rank[rootY]++;
+			}
+		}
+	}
+	void unionMapValue(Map<Integer, List<Integer>> map) {
+		for (Map.Entry<Integer, List<Integer>> entry: map.entrySet()) {	
+			List<Integer> list = entry.getValue();
+			for (int i = 1; i < list.size(); i++) {
+				union(list.get(0),list.get(i));
+			}
+		}
+	}
+}

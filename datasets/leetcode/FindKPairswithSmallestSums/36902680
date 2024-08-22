@@ -1,0 +1,42 @@
+class Solution {
+	List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) {
+		PriorityQueue<Element> pq = new PriorityQueue<>(new ElementComparator());
+		for (int i = 0; i < nums1.length; i++) {
+			Element element = new Element();
+			element.current_sum = nums1[i] + nums2[0];
+			element.original_index = i;
+			element.other_list_index = 0;
+			pq.add(element);
+		}
+		List<List<Integer>> res = new ArrayList<>();
+		for (int i = 0; i < k; i++) {
+			if (pq.size() == 0) {
+				break;
+			}
+			Element poll = pq.poll();
+			List<Integer> newRes = new ArrayList<>();
+			newRes.add(nums1[poll.original_index]);
+			newRes.add(nums2[poll.other_list_index]);
+			res.add(newRes);
+			if (poll.other_list_index + 1 < nums2.length) {
+				poll.other_list_index += 1;
+				poll.current_sum = nums1[poll.original_index] + nums2[poll.other_list_index];
+				pq.add(poll);
+			}
+		}
+		return res;
+	}
+	class Element {
+		int current_sum = 0;
+		int original_index = 0;
+		int other_list_index = 0;
+	}
+	class ElementComparator {
+		int compare(Element e1, Element e2) {
+			if (e1.current_sum >= e2.current_sum) {
+				return 1;
+			}
+			return -1;
+		}
+	}
+}

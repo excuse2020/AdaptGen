@@ -1,0 +1,32 @@
+class Solution {
+	int[] distinctDifferenceArray(int[] nums) {
+		int result = new int[nums.length];
+		int n = nums.length;
+		int left = new int[n];
+		int right = new int[n];
+		left[0] = 1;
+		for (int i = 1; i < n; i++) {
+			HashSet<Integer> set1 = new HashSet<>();
+			for (int j = 0; j < i; j++) {
+				if (!set1.contains(nums[j]) && nums[j] != nums[i]) {
+					left[i]++;
+					set1.add(nums[j]);
+				}
+			}
+			left[i]++;
+		}
+		for (int i = n - 2; i >= 0; i--) {
+			HashSet<Integer> set2 = new HashSet<>();
+			for (int j = n - 1; j > i; j--) {
+				if (!set2.contains(nums[j])) {
+					right[i]++;
+					set2.add(nums[j]);
+				}
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			result[i] = left[i] - right[i];
+		}
+		return result;
+	}
+}

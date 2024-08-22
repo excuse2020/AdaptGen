@@ -1,0 +1,39 @@
+class Solution {
+	int numBusesToDestination(int[][] routes, int source, int target) {
+		ArrayList<Integer>[] graph = new ArrayList[1000000];
+		for (int i = 0; i < routes.length; i++) {
+			int[] arr = routes[i];
+			for (int e: arr) {	
+				if (graph[e] == null) {
+					graph[e] = new ArrayList<>();
+				}
+				graph[e].add(i);
+			}
+		}
+		boolean[] vis = new boolean[1000000];
+		boolean[] bus_vis = new boolean[routes.length];
+		Queue<int[]> q = new LinkedList<>();
+		q.add(new int{source, 0});
+		while (!q.isEmpty()) {
+			int[] e = q.remove();
+			int s = e[0];
+			int lev = e[1];
+			if (s == target) {
+				return lev;
+			}
+			vis[s] = true;
+			for (int bus: graph[s]) {	
+				if (bus_vis[bus]) {
+					continue;
+				}
+				for (int x: routes[bus]) {	
+					if (!vis[x]) {
+						q.add(new int{x, lev + 1});
+					}
+				}
+				bus_vis[bus] = true;
+			}
+		}
+		return -1;
+	}
+}

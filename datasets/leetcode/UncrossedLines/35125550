@@ -1,0 +1,26 @@
+class Solution {
+	int dp;
+	int findMaxLines(int[] nums1, int[] nums2, int i, int j) {
+		if (i < 0 || j < 0) {
+			return 0;
+		}
+		if (dp[i][j] != -1) {
+			return dp[i][j];
+		}
+		int possible_pair_1 = Integer.MIN_VALUE;
+		if (nums1[i] == nums2[j]) {
+			possible_pair_1 = findMaxLines(nums1,nums2,i - 1,j - 1) + 1;
+		}
+		int possible_pair_2 = findMaxLines(nums1,nums2,i - 1,j);
+		int possible_pair_3 = findMaxLines(nums1,nums2,i,j - 1);
+		dp[i][j] = Math.max(Math.max(possible_pair_2,possible_pair_3),possible_pair_1);
+		return dp[i][j];
+	}
+	int maxUncrossedLines(int[] nums1, int[] nums2) {
+		dp = new int[nums1.length][nums2.length];
+		for (int rows: dp) {	
+			Arrays.fill(rows,-1);
+		}
+		return findMaxLines(nums1,nums2,nums1.length - 1,nums2.length - 1);
+	}
+}

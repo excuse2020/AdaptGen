@@ -1,0 +1,32 @@
+class Solution {
+	int finder(int grid, int cost, int row, int col, int dp) {
+		if (row == 0) {
+			return grid[row][col];
+		}
+		if (dp[row][col] != -1) {
+			return dp[row][col];
+		}
+		int minCost = Integer.MAX_VALUE;
+		for (int i = 0; i < grid[0].length; i++) {
+			int currMoveCost = finder(grid,cost,row - 1,i,dp);
+			if (currMoveCost != Integer.MAX_VALUE) {
+				currMoveCost += (grid[row][col] + cost[grid[row - 1][i]][col]);
+			}
+			minCost = Math.min(minCost,currMoveCost);
+		}
+		System.out.println(minCost);
+		return dp[row][col] = minCost;
+	}
+	int minPathCost(int[][] grid, int[][] moveCost) {
+		int dp = new int[grid.length][grid[0].length];
+		int cost = Integer.MAX_VALUE;
+		for (int i = 0; i < dp.length; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		for (int i = 0; i < grid[0].length; i++) {
+			int curr = finder(grid,moveCost,grid.length - 1,i,dp);
+			cost = Math.min(cost,curr);
+		}
+		return cost;
+	}
+}

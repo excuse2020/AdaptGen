@@ -1,0 +1,42 @@
+class Solution {
+	int[] par;
+	int findPar(int u) {
+		return par[u] = (par[u] == u) ? u : findPar(par[u]);
+	}
+	String smallestStringWithSwaps(String s, List<List<Integer>> pairs) {
+		StringBuilder sb = new StringBuilder();
+		par = new int[s.length()];
+		for (int i = 0; i < par.length; i++) {
+			par[i] = i;
+		}
+		for (List<Integer> ele: pairs) {	
+			int u = ele.get(0);
+			int v = ele.get(1);
+			int parU = findPar(u);
+			int parV = findPar(v);
+			if (parU != parV) {
+				par[parU] = parV;
+			}
+		}
+		HashMap<Integer, TreeMap<Character, Integer>> map = new HashMap<>();
+		for (int i = 0; i < s.length(); i++) {
+			int par = findPar(i);
+			if (!map.containsKey(par)) {
+				map.put(par,new TreeMap<>());
+			}
+			TreeMap<Character, Integer> set = map.get(par);
+			set.put(s.charAt(i),set.getOrDefault(s.charAt(i),0) + 1);
+		}
+		for (int i = 0; i < s.length(); i++) {
+			int par = findPar(i);
+			TreeMap<Character, Integer> temp = map.get(par);
+			char firstKey = temp.firstKey();
+			sb.append(firstKey);
+			temp.put(firstKey,temp.get(firstKey) - 1);
+			if (temp.get(firstKey) == 0) {
+				temp.remove(firstKey);
+			}
+		}
+		return sb.toString();
+	}
+}

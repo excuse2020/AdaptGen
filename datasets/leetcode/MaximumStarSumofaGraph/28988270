@@ -1,0 +1,80 @@
+class Solution {
+	List<List<Integer>> buildAdjList(int n, int[][] edges, int[] values) {
+		List<List<Integer>> adjList = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adjList.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			if (values[edges[i][1]] > 0) {
+				adjList.get(edges[i][0]).add(edges[i][1]);
+			}
+			if (values[edges[i][0]] > 0) {
+				adjList.get(edges[i][1]).add(edges[i][0]);
+			}
+		}
+		return adjList;
+	}
+	void getKSmallestElems(int[] nums, int k, int low, int high) {
+		if (low == high) {
+			return;
+		}
+		int mid = low + new Random().nextInt(high - low);
+		int midIdx = partition(nums,low,high,mid);
+		if (midIdx == k) {
+			return;
+		}
+		if (midIdx < k) {
+			getKSmallestElems(nums,k,midIdx + 1,high);
+		} 
+		else {
+			getKSmallestElems(nums,k,low,midIdx - 1);
+		}
+	}
+	int maxStarSum(int[] vals, int[][] edges, int k) {
+		List<List<Integer>> adjList = buildAdjList(vals.length,edges,vals);
+		int maxSum = Integer.MIN_VALUE;
+		for (int i = 0; i < vals.length; i++) {
+			maxSum = Math.max(maxSum,vals[i] + maxStarSum(i,adjList,vals,k));
+		}
+		return maxSum;
+	}
+	int maxStarSum(int u, List<List<Integer>> adjList, int[] vals, int k) {
+		List<Integer> adjVs = adjList.get(u);
+		int sum = 0;
+		if (adjVs.size() <= k) {
+			for (int i = 0; i < adjVs.size(); i++) {
+				sum += vals[adjVs.get(i)];
+			}
+			return sum;
+		}
+		int[] valsArray = new int[adjVs.size()];
+		for (int i = 0; i < adjVs.size(); i++) {
+			valsArray[i] = vals[adjVs.get(i)];
+		}
+		getKSmallestElems(valsArray,adjVs.size() - k,0,adjVs.size() - 1);
+		for (int i = valsArray.length - 1; i >= valsArray.length - k; i--) {
+			sum += valsArray[i];
+		}
+		return sum;
+	}
+	int partition(int[] nums, int low, int high, int mid) {
+		swap(nums,high,mid);
+		int correctMidPlace = high;
+		int firstSmaller = correctMidPlace - 1;
+		int i = firstSmaller;
+		while (i >= low) {
+			if (nums[i] > nums[correctMidPlace]) {
+				swap(nums,i,firstSmaller);
+				firstSmaller--;
+			}
+			i--;
+		}
+		swap(nums,firstSmaller + 1,correctMidPlace);
+		return firstSmaller + 1;
+	}
+	void swap(int[] nums, int i, int j) {
+		int tmp = nums[i];
+		nums[i] = nums[j];
+		nums[j] = tmp;
+	}
+}

@@ -1,0 +1,52 @@
+class Solution {
+	int binarySearch(List<Integer> list, int query) {
+		int left = 0;
+		int right = list.size() - 1;
+		while (left <= right) {
+			int mid = left + (right - left) / 2;
+			if (list.get(mid) == query) {
+				return mid;
+			} 
+			else if (list.get(mid) > query) {
+				right = mid - 1;
+			} 
+			else {
+				left = mid + 1;
+			}
+		}
+		return left;
+	}
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		List<Integer> sortedList = new ArrayList<>();
+		sortedListFromBST(root,sortedList);
+		int n = sortedList.size();
+		List<List<Integer>> result = new ArrayList<>();
+		for (int query: queries) {	
+			int insertionIndex = binarySearch(sortedList,query);
+			int min = -1;
+			int max = -1;
+			if (insertionIndex < n && sortedList.get(insertionIndex) == query) {
+				min = query;
+				max = query;
+			} 
+			else {
+				if (insertionIndex - 1 >= 0) {
+					min = sortedList.get(insertionIndex - 1);
+				}
+				if (insertionIndex < n) {
+					max = sortedList.get(insertionIndex);
+				}
+			}
+			result.add(Arrays.asList(min,max));
+		}
+		return result;
+	}
+	void sortedListFromBST(TreeNode root, List<Integer> sortedTreeList) {
+		if (root == null) {
+			return;
+		}
+		sortedListFromBST(root.left,sortedTreeList);
+		sortedTreeList.add(root.val);
+		sortedListFromBST(root.right,sortedTreeList);
+	}
+}

@@ -1,0 +1,43 @@
+class Solution {
+	Integer[][] memoAsc;
+	Integer[][] memoDesc;
+	int findTeamsDecreasing(int[] ratings, int idx, int lastValidIdx, int teamSize) {
+		if (teamSize == 3) {
+			return 1;
+		}
+		if (idx == ratings.length) {
+			return 0;
+		}
+		if (memoDesc[lastValidIdx][teamSize] != null) {
+			return memoDesc[lastValidIdx][teamSize];
+		}
+		int take = 0, leave = 0;
+		if (teamSize == 0 || ratings[lastValidIdx] > ratings[idx]) {
+			take = findTeamsDecreasing(ratings,idx + 1,idx,teamSize + 1);
+		}
+		leave = findTeamsDecreasing(ratings,idx + 1,lastValidIdx,teamSize);
+		return memoDesc[lastValidIdx][teamSize] = take + leave;
+	}
+	int findTeamsIncreasing(int[] ratings, int idx, int lastValidIdx, int teamSize) {
+		if (teamSize == 3) {
+			return 1;
+		}
+		if (idx == ratings.length) {
+			return 0;
+		}
+		if (memoAsc[lastValidIdx][teamSize] != null) {
+			return memoAsc[lastValidIdx][teamSize];
+		}
+		int take = 0, leave = 0;
+		if (teamSize == 0 || ratings[lastValidIdx] < ratings[idx]) {
+			take = findTeamsIncreasing(ratings,idx + 1,idx,teamSize + 1);
+		}
+		leave = findTeamsIncreasing(ratings,idx + 1,lastValidIdx,teamSize);
+		return memoAsc[lastValidIdx][teamSize] = take + leave;
+	}
+	int numTeams(int[] rating) {
+		memoAsc = new Integer[rating.length][3];
+		memoDesc = new Integer[rating.length][3];
+		return findTeamsIncreasing(rating,0,0,0) + findTeamsDecreasing(rating,0,0,0);
+	}
+}

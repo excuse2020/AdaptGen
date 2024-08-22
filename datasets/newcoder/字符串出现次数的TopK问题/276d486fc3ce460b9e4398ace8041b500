@@ -1,0 +1,78 @@
+class Solution {
+	String[][] topKstrings(String[] strings, int k) {
+		HashMap<String, Integer> hashMap = new HashMap<>();
+		int num;
+		Queue<String> queue = new LinkedList<>();
+		Arrays.sort(strings);
+		for (String str: strings) {	
+			if (!queue.contains(str)) {
+				queue.add(str);
+			}
+			num = hashMap.getOrDefault(str,0);
+			num++;
+			hashMap.put(str,num);
+		}
+		ArrayList<ArrayList<String>> arrayList = new ArrayList<>();
+		String tmpStr;
+		while (!queue.isEmpty()) {
+			tmpStr = queue.poll();
+			num = hashMap.get(tmpStr);
+			ArrayList<String> tmpArrayList = new ArrayList<>();
+			tmpArrayList.add(tmpStr);
+			tmpArrayList.add(String.valueOf(num));
+			arrayList.add(tmpArrayList);
+		}
+		arrayList.sort(new ComparaTuple());
+		if (arrayList.size() < k) {
+			return null;
+		}
+		String[][] rs = new String[k][2];
+		for (int i = 0; i < k; i++) {
+			rs[i][0] = arrayList.get(i).get(0);
+			rs[i][1] = arrayList.get(i).get(1);
+		}
+		return rs;
+	}
+	class ComparaTuple {
+		int comparaString(String str1, String str2) {
+			int len1 = str1.length();
+			int len2 = str2.length();
+			int p1 = 0;
+			int p2 = 0;
+			int rs = 0;
+			while (p1 < len1 && p2 < len2) {
+				if (str1.charAt(p1) < str2.charAt(p2)) {
+					return -1;
+				} 
+				else if (str1.charAt(p1) > str2.charAt(p2)) {
+					return 1;
+				} 
+				else {
+					p1++;
+					p2++;
+				}
+			}
+			if (p1 == len1 && p2 == len2) {
+				rs = 0;
+			} 
+			else if (p1 == len1) {
+				rs = -1;
+			} 
+			else {
+				rs = 1;
+			}
+			return rs;
+		}
+		int compare(ArrayList<String> arr1, ArrayList<String> arr2) {
+			if (Integer.valueOf(arr1.get(1)) < Integer.valueOf(arr2.get(1))) {
+				return 1;
+			} 
+			else if (Integer.valueOf(arr1.get(1)) > Integer.valueOf(arr2.get(1))) {
+				return -1;
+			} 
+			else {
+				return comparaString(arr1.get(0),arr2.get(0));
+			}
+		}
+	}
+}

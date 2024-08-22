@@ -1,0 +1,19 @@
+class Solution {
+	int numMusicPlaylists(int n, int goal, int k) {
+		int[] memo = new int[n + 1];
+		int mod = 1_000_000_007;
+		for (int song = 1; song <= goal; song++) {
+			long diag = song == 1 ? 1 : 0;
+			for (int diffSongs = 1; diffSongs <= n; diffSongs++) {
+				long up = memo[diffSongs];
+				long sum = (diag * Math.max(0,n - diffSongs + 1)) % mod;
+				if (diffSongs > k) {
+					sum = (sum + up * (diffSongs - k)) % mod;
+				}
+				memo[diffSongs] = (int) sum;
+				diag = up;
+			}
+		}
+		return memo[n];
+	}
+}

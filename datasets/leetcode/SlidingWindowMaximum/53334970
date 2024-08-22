@@ -1,0 +1,19 @@
+class Solution {
+	record Element(int index, int value) {
+	}
+	int[] maxSlidingWindow(int[] nums, int k) {
+		var results = new ArrayList<Integer>();
+		var cmp = Comparator.comparing().reversed();
+		var elements = new PriorityQueue<>(k, cmp);
+		for (int i = 0; i < nums.length; i++) {
+			elements.add(new Element(i, nums[i]));
+			if (i >= k - 1) {
+				while (!elements.isEmpty() && elements.peek().index < i - k + 1) {
+					elements.poll();
+				}
+				results.add(elements.peek().value);
+			}
+		}
+		return results.stream().mapToInt((x) -> {x}).toArray();
+	}
+}

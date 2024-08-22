@@ -1,0 +1,29 @@
+class Solution {
+	List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+		List<List<Pair<Integer, Integer>>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int[] m: meetings) {	
+			adj.get(m[0]).add(new Pair<>(m[1], m[2]));
+			adj.get(m[1]).add(new Pair<>(m[0], m[2]));
+		}
+		Set<Integer> isVisited = new HashSet<>();
+		PriorityQueue<Pair<Integer, Integer>> pq = new PriorityQueue<>((a, b) -> {a.getValue() < b.getValue() ? -1 : 1});
+		pq.offer(new Pair<>(0, 0));
+		pq.offer(new Pair<>(firstPerson, 0));
+		while (!pq.isEmpty()) {
+			Pair<Integer, Integer> curr = pq.poll();
+			if (isVisited.contains(curr.getKey())) {
+				continue;
+			}
+			isVisited.add(curr.getKey());
+			for (Pair<Integer, Integer> a: adj.get(curr.getKey())) {	
+				if (!isVisited.contains(a.getKey()) && a.getValue() >= curr.getValue()) {
+					pq.offer(a);
+				}
+			}
+		}
+		return new ArrayList<>(isVisited);
+	}
+}

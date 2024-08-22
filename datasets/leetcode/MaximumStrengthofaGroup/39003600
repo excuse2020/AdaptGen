@@ -1,0 +1,40 @@
+class Solution {
+	long maxStrength(int[] nums) {
+		if (nums.length == 1) {
+			return nums[0];
+		}
+		Arrays.sort(nums);
+		int n = nums.length;
+		long prod = 1;
+		boolean used = false;
+		for (int i = nums.length - 1; i >= 0; i--) {
+			if (nums[i] <= 0) {
+				break;
+			}
+			used = true;
+			prod *= nums[i];
+		}
+		if (!used) {
+			prod = 0;
+		}
+		for (int i = 0; i < nums.length; i++) {
+			if (nums[i] >= 0) {
+				break;
+			}
+			if (prod == 0) {
+				if (i + 1 < n && nums[i + 1] < 0) {
+					prod = nums[i] * nums[i + 1];
+					i++;
+				}
+			} 
+			else {
+				if (i + 1 < n && nums[i + 1] < 0) {
+					int mul = nums[i] * nums[i + 1];
+					prod *= mul;
+					i++;
+				}
+			}
+		}
+		return prod;
+	}
+}

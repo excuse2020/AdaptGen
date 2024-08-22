@@ -1,0 +1,31 @@
+class Solution {
+	int numSubmatrixSumTarget(int[][] matrix, int target) {
+		int n = matrix.length;
+		int m = matrix[0].length;
+		int[] summedRow = new int[m];
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			Arrays.fill(summedRow,0);
+			for (int j = i; j < n; j++) {
+				for (int k = 0; k < m; k++) {
+					summedRow[k] += matrix[j][k];
+				}
+				ans += subarraySum(summedRow,target);
+			}
+		}
+		return ans;
+	}
+	int subarraySum(int[] nums, int k) {
+		HashMap<Integer, Integer> map = new HashMap<>();
+		int sum = 0, ans = 0;
+		map.put(0,1);
+		for (int i = 0; i < nums.length; i++) {
+			sum = sum + nums[i];
+			if (map.containsKey(sum - k)) {
+				ans = ans + map.get(sum - k);
+			}
+			map.put(sum,map.getOrDefault(sum,0) + 1);
+		}
+		return ans;
+	}
+}

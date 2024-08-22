@@ -1,0 +1,46 @@
+class Solution {
+	HashMap<Integer, Integer> map = new HashMap<>();
+	List<Integer> res = new ArrayList<>();
+	TreeNode build(int[] xianxu, int root, int left, int right) {
+		if (left > right) {
+			return null;
+		}
+		TreeNode newNode = new TreeNode(xianxu[root]);
+		int index = map.get(xianxu[root]);
+		newNode.left = build(xianxu,root + 1,left,index - 1);
+		newNode.right = build(xianxu,root + index - left + 1,index + 1,right);
+		return newNode;
+	}
+	void solution(TreeNode root) {
+		Queue<TreeNode> q = new LinkedList<>();
+		q.offer(root);
+		while (!q.isEmpty()) {
+			int size = q.size();
+			for (int i = 0; i < size; i++) {
+				TreeNode node = q.poll();
+				if (node.left != null) {
+					q.offer(node.left);
+				}
+				if (node.right != null) {
+					q.offer(node.right);
+				}
+				if (i == size - 1) {
+					res.add(node.val);
+				}
+			}
+		}
+	}
+	int[] solve(int[] xianxu, int[] zhongxu) {
+		for (int i = 0; i < zhongxu.length; i++) {
+			map.put(zhongxu[i],i);
+		}
+		TreeNode root = build(xianxu,0,0,zhongxu.length - 1);
+		solution(root);
+		int[] num = new int[res.size()];
+		int i = 0;
+		for (int ans: res) {	
+			num[i++] = ans;
+		}
+		return num;
+	}
+}

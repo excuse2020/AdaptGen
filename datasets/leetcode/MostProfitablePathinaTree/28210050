@@ -1,0 +1,69 @@
+class Solution {
+	int[] parent;
+	void dfs(int node, int previous, int[] visited, HashMap<Integer, ArrayList<Integer>> map) {
+		visited[node] = 1;
+		parent[node] = previous;
+		ArrayList<Integer> ls = map.get(node);
+		for (int nbr: ls) {	
+			if (visited[nbr] != 1) {
+				dfs(nbr,node,visited,map);
+			}
+		}
+	}
+	void dfsBob(int node, int[] dist) {
+		dist[node] = 0;
+		int steps = 0;
+		while (node != 0) {
+			steps++;
+			int p = parent[node];
+			node = p;
+			dist[node] = steps;
+		}
+	}
+	int getMax(int node, HashMap<Integer, ArrayList<Integer>> map, int[] dist, int[] amount, int level, int[] vis) {
+		vis[node] = 1;
+		int score = 0;
+		if (level == dist[node]) {
+			score = amount[node] / 2;
+		} 
+		else if (level < dist[node]) {
+			score = amount[node];
+		}
+		System.out.println(score);
+		int max = Integer.MIN_VALUE;
+		boolean f1 = false;
+		ArrayList<Integer> ls = map.get(node);
+		for (int nbr: ls) {	
+			if (vis[nbr] != 1) {
+				f1 = true;
+				max = Math.max(score + getMax(nbr,map,dist,amount,level + 1,vis),max);
+			}
+		}
+		if (!f1) {
+			return score;
+		}
+		return max;
+	}
+	int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+		int n = edges.length;
+		parent = new int[n + 1];
+		HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			int st = edges[i][0];
+			int end = edges[i][1];
+			ArrayList<Integer> ls = map.getOrDefault(st,new ArrayList<>());
+			ls.add(end);
+			ArrayList<Integer> rs = map.getOrDefault(end,new ArrayList<>());
+			rs.add(st);
+			map.put(st,ls);
+			map.put(end,rs);
+		}
+		int[] dist = new int[n + 1];
+		Arrays.fill(dist,Integer.MAX_VALUE);
+		int[] Visited = new int[n + 1];
+		int[] vis = new int[n + 1];
+		dfs(0,-1,Visited,map);
+		dfsBob(bob,dist);
+		return getMax(0,map,dist,amount,0,vis);
+	}
+}

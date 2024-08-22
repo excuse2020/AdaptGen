@@ -1,0 +1,33 @@
+class Solution {
+	TreeNode Convert(TreeNode pRootOfTree) {
+		if (pRootOfTree == null) {
+			return pRootOfTree;
+		}
+		TreeNode node = postOrder(pRootOfTree,true);
+		while (node.left != null) {
+			node = node.left;
+		}
+		return node;
+	}
+	TreeNode postOrder(TreeNode root, boolean isLeft) {
+		if (root == null) {
+			return root;
+		}
+		TreeNode nodeLeft = postOrder(root.left,true);
+		TreeNode nodeRight = postOrder(root.right,false);
+		if (nodeLeft != null) {
+			nodeLeft.right = root;
+			root.left = nodeLeft;
+		}
+		if (nodeRight != null) {
+			nodeRight.left = root;
+			root.right = nodeRight;
+		}
+		if (isLeft) {
+			return nodeRight == null ? root : nodeRight;
+		} 
+		else {
+			return nodeLeft == null ? root : nodeLeft;
+		}
+	}
+}

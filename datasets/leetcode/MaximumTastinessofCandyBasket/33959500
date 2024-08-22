@@ -1,0 +1,43 @@
+class Solution {
+	boolean check(int[] price, int minDiff, int k) {
+		int n = price.length;
+		int prevCandyPrice = Integer.MAX_VALUE;
+		for (int i = 0; i < n; i++) {
+			if (Math.abs(prevCandyPrice - price[i]) >= minDiff) {
+				prevCandyPrice = price[i];
+				k--;
+			}
+			if (k == 0) {
+				return true;
+			}
+		}
+		if (k == 0) {
+			return true;
+		} 
+		else {
+			return false;
+		}
+	}
+	int maximumTastiness(int[] price, int k) {
+		Arrays.sort(price);
+		int n = price.length;
+		int left = price[1] - price[0];
+		int right = price[n - 1] - price[0];
+		for (int i = 0; i < n - 1; i++) {
+			left = Math.min(price[i + 1] - price[i],left);
+		}
+		int maxTastiness = Integer.MIN_VALUE;
+		while (left <= right) {
+			int mid = (left + right) / 2;
+			boolean possible = check(price,mid,k);
+			if (possible) {
+				maxTastiness = mid;
+				left = mid + 1;
+			} 
+			else {
+				right = mid - 1;
+			}
+		}
+		return maxTastiness;
+	}
+}

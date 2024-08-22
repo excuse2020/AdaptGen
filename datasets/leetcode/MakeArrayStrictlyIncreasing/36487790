@@ -1,0 +1,49 @@
+class Solution {
+	Integer[][] dp;
+	int ch(int[] a, int[] b, int i, int pre, int k) {
+		if (i == a.length) {
+			return 0;
+		}
+		if (dp[i][k] != null) {
+			return dp[i][k];
+		}
+		int c = Integer.MAX_VALUE;
+		if (a[i] > pre) {
+			int d = ch(a,b,i + 1,a[i],k);
+			if (d != -1) {
+				c = Math.min(c,d);
+			}
+		}
+		while (k < b.length && b[k] <= pre) {
+			k++;
+		}
+		if (k < b.length && b[k] > pre) {
+			int d = ch(a,b,i + 1,b[k],k + 1);
+			if (d != -1) {
+				c = Math.min(c,d + 1);
+			}
+		}
+		return dp[i][k] = c == Integer.MAX_VALUE ? -1 : c;
+	}
+	int makeArrayIncreasing(int[] arr1, int[] arr2) {
+		dp = new Integer[arr1.length][arr2.length + 1];
+		if (arr1.length == 1) {
+			return 0;
+		}
+		int[] t = new int[arr1.length];
+		for (int i = 0; i < arr1.length; i++) {
+			t[i] = arr1[i];
+		}
+		HashSet<Integer> h = new HashSet<>();
+		for (int i = 0; i < arr2.length; i++) {
+			h.add(arr2[i]);
+		}
+		int[] p = new int[h.size()];
+		int c = 0;
+		for (int i: h) {	
+			p[c++] = i;
+		}
+		Arrays.sort(p);
+		return ch(arr1,p,0,-1,0);
+	}
+}

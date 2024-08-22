@@ -1,0 +1,39 @@
+class Solution {
+	ListNode deleteDuplicates(ListNode head) {
+		if (head == null) {
+			return null;
+		} 
+		else if (head.next == null) {
+			return head;
+		}
+		ListNode p1, p2, p3 = null;
+		ListNode succ = null;
+		p1 = new ListNode(-1001);
+		p2 = head;
+		p1.next = p2;
+		head = p1;
+		succ = p1;
+		p3 = p2.next;
+		while (p2 != null) {
+			if (!testNode(p1,p2,p3)) {
+				succ.next = p3;
+				p2.next = null;
+			} 
+			else {
+				succ = p2;
+			}
+			p1 = p2;
+			p2 = p3;
+			p3 = p3 == null ? null : p3.next;
+		}
+		ListNode ret = head.next;
+		head.next = null;
+		return ret;
+	}
+	boolean testNode(ListNode p1, ListNode p2, ListNode p3) {
+		if (p3 == null) {
+			return p1.val < p2.val;
+		}
+		return p1.val < p2.val && p2.val < p3.val;
+	}
+}

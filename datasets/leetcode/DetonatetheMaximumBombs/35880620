@@ -1,0 +1,45 @@
+class Solution {
+	int ans = 1;
+	void dfs(List<List<Integer>> adj, boolean[] visit, int s) {
+		for (Integer i: adj.get(s)) {	
+			if (!visit[i]) {
+				visit[i] = true;
+				dfs(adj,visit,i);
+			}
+		}
+	}
+	int maximumDetonation(int[][] bombs) {
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < bombs.length; i++) {
+			int x1 = bombs[i][0];
+			int y1 = bombs[i][1];
+			int d1 = bombs[i][2];
+			List<Integer> l = new ArrayList<>();
+			for (int j = 0; j < bombs.length; j++) {
+				if (i != j) {
+					int x2 = bombs[j][0];
+					int y2 = bombs[j][1];
+					int d2 = bombs[j][2];
+					int temp = (int) (Math.pow(d1,2) - (Math.pow((x1 - x2),2) + Math.pow(y1 - y2,2)));
+					if (temp >= 0) {
+						l.add(j);
+					}
+				}
+			}
+			adj.add(l);
+		}
+		for (int i = 0; i < bombs.length; i++) {
+			boolean visit = new boolean[bombs.length];
+			int count = 0;
+			visit[i] = true;
+			dfs(adj,visit,i);
+			for (int k = 0; k < visit.length; k++) {
+				if (visit[k]) {
+					count++;
+				}
+			}
+			ans = Math.max(ans,count);
+		}
+		return ans;
+	}
+}

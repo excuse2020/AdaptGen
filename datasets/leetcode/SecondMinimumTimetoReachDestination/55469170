@@ -1,0 +1,48 @@
+class Solution {
+	int secondMinimum(int n, int[][] edges, int time, int change) {
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i <= n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			adj.get(edge[0]).add(edge[1]);
+			adj.get(edge[1]).add(edge[0]);
+		}
+		PriorityQueue<int[]> minHeap = new PriorityQueue<>(Comparator.comparingInt((a) -> {a[0]}));
+		int[] dist1 = new int[n + 1];
+		int[] dist2 = new int[n + 1];
+		int[] freq = new int[n + 1];
+		Arrays.fill(dist1,Integer.MAX_VALUE);
+		Arrays.fill(dist2,Integer.MAX_VALUE);
+		minHeap.add(new int{0, 1});
+		dist1[1] = 0;
+		while (!minHeap.isEmpty()) {
+			int[] curr = minHeap.poll();
+			int timeTaken = curr[0];
+			int node = curr[1];
+			freq[node]++;
+			if (freq[node] == 2 && node == n) {
+				return timeTaken;
+			}
+			for (int neighbor: adj.get(node)) {	
+				int newTimeTaken = timeTaken;
+				if ((newTimeTaken / change) % 2 != 0) {
+					newTimeTaken = change * (newTimeTaken / change + 1) + time;
+				} 
+				else {
+					newTimeTaken = newTimeTaken + time;
+				}
+				if (dist1[neighbor] > newTimeTaken) {
+					dist2[neighbor] = dist1[neighbor];
+					dist1[neighbor] = newTimeTaken;
+					minHeap.add(new int{newTimeTaken, neighbor});
+				} 
+				else if (dist2[neighbor] > newTimeTaken && dist1[neighbor] != newTimeTaken) {
+					dist2[neighbor] = newTimeTaken;
+					minHeap.add(new int{newTimeTaken, neighbor});
+				}
+			}
+		}
+		return 0;
+	}
+}

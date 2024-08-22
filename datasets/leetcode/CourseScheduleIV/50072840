@@ -1,0 +1,37 @@
+class Solution {
+	List<Boolean> checkIfPrerequisite(int n, int[][] prerequisites, int[][] queries) {
+		List<List<Integer>> graph = new ArrayList<>(n);
+		for (int i = 0; i < n; i++) {
+			graph.add(new LinkedList<>());
+		}
+		for (int[] prereqs: prerequisites) {	
+			graph.get(prereqs[1]).add(prereqs[0]);
+		}
+		List<Boolean> ans = new LinkedList<>();
+		boolean[][] res = new boolean[n][n];
+		for (int i = 0; i < n; i++) {
+			boolean[] visited = new boolean[n];
+			visited[i] = true;
+			Stack<Integer> stk = new Stack<Integer>();
+			stk.push(i);
+			while (!stk.isEmpty()) {
+				int tp = stk.pop();
+				visited[tp] = true;
+				for (int r: graph.get(tp)) {	
+					if (!visited[r]) {
+						stk.push(r);
+					}
+				}
+			}
+			for (int j = 0; j < n; j++) {
+				res[i][j] = (visited[j]);
+			}
+		}
+		for (int[] query: queries) {	
+			int u = query[0];
+			int v = query[1];
+			ans.add(res[v][u]);
+		}
+		return ans;
+	}
+}

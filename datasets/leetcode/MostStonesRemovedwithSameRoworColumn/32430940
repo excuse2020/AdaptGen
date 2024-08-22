@@ -1,0 +1,37 @@
+class Solution {
+	int removeStones(int[][] stones) {
+		int sum = 0;
+		HashMap<Integer, List<Integer>> row = new HashMap<>();
+		HashMap<Integer, List<Integer>> column = new HashMap<>();
+		for (int i = 0; i < stones.length; i++) {
+			int[] x = stones[i];
+			row.putIfAbsent(x[0],new ArrayList<>());
+			column.putIfAbsent(x[1],new ArrayList<>());
+			row.get(x[0]).add(i);
+			column.get(x[1]).add(i);
+		}
+		Set<Integer> visited = new HashSet<>();
+		for (Map.Entry<Integer, List<Integer>> entry: row.entrySet()) {	
+			if (visited.contains(entry.getKey())) {
+				continue;
+			} 
+			else {
+				sum++;
+				Queue<Integer> q = new LinkedList<>();
+				q.addAll(entry.getValue());
+				while (!q.isEmpty()) {
+					int index = q.poll();
+					if (!visited.contains(stones[index][0])) {
+						visited.add(stones[index][0]);
+						q.addAll(row.get(stones[index][0]));
+					}
+					if (column.containsKey(stones[index][1])) {
+						q.addAll(column.get(stones[index][1]));
+						column.remove(stones[index][1]);
+					}
+				}
+			}
+		}
+		return stones.length - sum;
+	}
+}

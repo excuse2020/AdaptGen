@@ -1,0 +1,43 @@
+class Solution {
+	int res = 0;
+	void bsearch(int low, int high, int[] piles, int h) {
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			if (isPossible(mid,piles,h)) {
+				high = mid - 1;
+				res = mid;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+	}
+	boolean isPossible(int speed, int[] piles, int h) {
+		int count = 0;
+		for (int i = 0; i < piles.length; i++) {
+			if (piles[i] > speed) {
+				if (piles[i] % speed != 0) {
+					count += (piles[i] / speed) + 1;
+				} 
+				else {
+					count += (piles[i] / speed);
+				}
+			} 
+			else {
+				count += 1;
+			}
+			if (count > h) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int minEatingSpeed(int[] piles, int h) {
+		int max = 0;
+		for (int pile: piles) {	
+			max = Math.max(max,pile);
+		}
+		bsearch(1,max,piles,h);
+		return res;
+	}
+}

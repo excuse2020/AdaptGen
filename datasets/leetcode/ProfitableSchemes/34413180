@@ -1,0 +1,34 @@
+class Solution {
+	int MOD = (int) 1e9 + 7;
+	int[][][] dp;
+	int[] grp, Profit;
+	int len;
+	int minProfit;
+	int dfs(int i, int n, int p) {
+		if (i == len) {
+			return (p >= minProfit) ? 1 : 0;
+		}
+		if (dp[i][n][p] != -1) {
+			return dp[i][n][p];
+		}
+		int notCommit = dfs(i + 1,n,p);
+		int commit = 0;
+		if (n - grp[i] >= 0) {
+			commit = dfs(i + 1,n - grp[i],Math.min(minProfit,p + Profit[i]));
+		}
+		return dp[i][n][p] = (notCommit + commit) % MOD;
+	}
+	int profitableSchemes(int n, int minProfit, int[] group, int[] profit) {
+		this.minProfit = minProfit;
+		grp = group;
+		Profit = profit;
+		this.len = group.length;
+		dp = new int[len][n + 1][minProfit + 1];
+		for (int[][] x: dp) {	
+			for (int[] y: x) {	
+				Arrays.fill(y,-1);
+			}
+		}
+		return dfs(0,n,0);
+	}
+}

@@ -1,0 +1,29 @@
+class Solution {
+	int bagOfTokensScore(int[] tokens, int power) {
+		int l = 0;
+		int r = tokens.length - 1;
+		if (r == 0) {
+			return power > tokens[0] ? 1 : 0;
+		}
+		Arrays.sort(tokens);
+		int score = 0;
+		int maxScore = 0;
+		while (l < r) {
+			while (power < tokens[l]) {
+				power += tokens[r];
+				r--;
+				score--;
+				if (score < 0) {
+					return maxScore;
+				}
+			}
+			while (power >= tokens[l]) {
+				power -= tokens[l];
+				l++;
+				score++;
+				maxScore = maxScore > score ? maxScore : score;
+			}
+		}
+		return maxScore;
+	}
+}

@@ -1,0 +1,46 @@
+class Solution {
+	int calcNextDistance(int nextIndex, int startIndex, int n) {
+		if (nextIndex < startIndex) {
+			return nextIndex + n - startIndex;
+		}
+		return nextIndex - startIndex;
+	}
+	int calcPrevDistance(int prevIndex, int startIndex, int n) {
+		if (prevIndex > startIndex) {
+			return startIndex + n - prevIndex;
+		}
+		return startIndex - prevIndex;
+	}
+	int closetTarget(String[] words, String target, int startIndex) {
+		if (words[startIndex].equals(target)) {
+			return 0;
+		}
+		return solve(words,target,startIndex,words.length);
+	}
+	int getNextIndex(int i, int n) {
+		return (i + 1) % n;
+	}
+	int getPrevIndex(int i, int n) {
+		return (i - 1 + n) % n;
+	}
+	int solve(String[] words, String target, int startIndex, int n) {
+		int nextIndex = getNextIndex(startIndex,n);
+		int prevIndex = getPrevIndex(startIndex,n);
+		while (true) {
+			String currNextWord = words[nextIndex];
+			String currPrevWord = words[prevIndex];
+			if (currNextWord.equals(target)) {
+				return calcNextDistance(nextIndex,startIndex,n);
+			}
+			if (currPrevWord.equals(target)) {
+				return calcPrevDistance(prevIndex,startIndex,n);
+			}
+			if (nextIndex == prevIndex || Math.abs(nextIndex - prevIndex) == 1) {
+				break;
+			}
+			nextIndex = getNextIndex(nextIndex,n);
+			prevIndex = getPrevIndex(prevIndex,n);
+		}
+		return -1;
+	}
+}

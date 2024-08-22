@@ -1,0 +1,61 @@
+class Solution {
+	boolean isPossible(int n, List<List<Integer>> edges) {
+		HashSet<Integer>[] graph = new HashSet[n + 1];
+		for (int i = 0; i < n + 1; i++) {
+			graph[i] = new HashSet<>();
+		}
+		int[] deg = new int[n + 1];
+		for (List<Integer> ele: edges) {	
+			deg[ele.get(0)]++;
+			deg[ele.get(1)]++;
+			graph[ele.get(0)].add(ele.get(1));
+			graph[ele.get(1)].add(ele.get(0));
+		}
+		HashSet<Integer> oddDeg = new HashSet<>();
+		HashSet<Integer> evenDeg = new HashSet<>();
+		for (int i = 1; i < deg.length; i++) {
+			if (deg[i] % 2 == 1) {
+				oddDeg.add(i);
+			} 
+			else {
+				evenDeg.add(i);
+			}
+		}
+		int itr = 2;
+		while (itr-- > 0) {
+			int first = -1;
+			for (int ele: oddDeg) {	
+				first = ele;
+				break;
+			}
+			if (first == -1) {
+				break;
+			}
+			oddDeg.remove(first);
+			int second = -1;
+			for (int ele: oddDeg) {	
+				if (!graph[first].contains(ele)) {
+					second = ele;
+					oddDeg.remove(second);
+					evenDeg.add(first);
+					evenDeg.add(second);
+					break;
+				}
+			}
+			if (second == -1) {
+				for (int ele: evenDeg) {	
+					if (!graph[first].contains(ele)) {
+						second = ele;
+						oddDeg.add(second);
+						evenDeg.add(first);
+						break;
+					}
+				}
+			}
+			if (second == -1) {
+				oddDeg.add(first);
+			}
+		}
+		return oddDeg.size() == 0;
+	}
+}

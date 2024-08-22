@@ -1,0 +1,42 @@
+class Solution {
+	int ans;
+	String s;
+	List<List<Integer>> tree;
+	int longestPath(int[] parent, String s) {
+		int n = parent.length;
+		if (n == 1) {
+			return 1;
+		}
+		this.tree = new ArrayList<>();
+		this.s = s;
+		for (int i = 0; i < n; i++) {
+			this.tree.add(new ArrayList<>());
+		}
+		for (int i = 1; i < n; i++) {
+			this.tree.get(parent[i]).add(i);
+		}
+		solve(0);
+		return ans;
+	}
+	int solve(int node) {
+		if (this.tree.get(node).size() == 0) {
+			return 1;
+		}
+		int max1 = 0, max2 = 0;
+		List<Integer> childs = this.tree.get(node);
+		for (int n: childs) {	
+			int child = solve(n);
+			if (s.charAt(n) != s.charAt(node)) {
+				if (child >= max1) {
+					max2 = max1;
+					max1 = child;
+				} 
+				else if (child > max2) {
+					max2 = child;
+				}
+			}
+		}
+		ans = Math.max(ans,(max1 + max2));
+		return (Math.max(max1,max2) + 1);
+	}
+}

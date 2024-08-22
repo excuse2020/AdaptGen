@@ -1,0 +1,32 @@
+class Solution {
+	int cnt = 0;
+	PriorityQueue<Integer> high = new Comparator<Integer>();
+	PriorityQueue<Integer> low = new PriorityQueue<>();
+	Double GetMedian() {
+		double aver = 0;
+		if ((cnt & 1) == 1) {
+			aver = high.peek();
+		}
+		if ((cnt & 1) == 0) {
+			aver = (high.peek() + low.peek()) / 2.0;
+		}
+		return aver;
+	}
+	void Insert(Integer num) {
+		cnt++;
+		if ((cnt & 1) == 1) {
+			if (!low.isEmpty() && num > low.peek()) {
+				low.offer(num);
+				num = low.poll();
+			}
+			high.offer(num);
+		}
+		if ((cnt & 1) == 0) {
+			if (!high.isEmpty() && num < high.peek()) {
+				high.offer(num);
+				num = high.poll();
+			}
+			low.offer(num);
+		}
+	}
+}

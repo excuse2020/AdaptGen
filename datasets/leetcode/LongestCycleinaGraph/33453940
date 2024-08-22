@@ -1,0 +1,46 @@
+class Solution {
+	int dfs(int node, boolean[] stack, boolean[] seen, int[] edges) {
+		if (stack[node] == true) {
+			return 0;
+		}
+		seen[node] = true;
+		stack[node] = true;
+		int len = dfs(edges[node],stack,seen,edges);
+		stack[node] = false;
+		return len + 1;
+	}
+	int longestCycle(int[] edges) {
+		int n = edges.length;
+		int indegree = new int[n];
+		boolean seen = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			if (edges[i] != -1) {
+				indegree[edges[i]]++;
+			}
+		}
+		Queue<Integer> q = new LinkedList<>();
+		for (int i = 0; i < n; i++) {
+			if (indegree[i] == 0) {
+				q.add(i);
+			}
+		}
+		while (!q.isEmpty()) {
+			int node = q.poll();
+			seen[node] = true;
+			int next = edges[node];
+			if (next != -1) {
+				indegree[next]--;
+				if (indegree[next] == 0) {
+					q.add(next);
+				}
+			}
+		}
+		int res = -1;
+		for (int i = 0; i < n; i++) {
+			if (!seen[i]) {
+				res = Math.max(res,dfs(i,new boolean[n],seen,edges));
+			}
+		}
+		return res;
+	}
+}

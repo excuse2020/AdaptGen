@@ -1,0 +1,30 @@
+class Solution {
+	boolean checkCanCoverTrips(int[] time, long currentTime, int req) {
+		long total = 0;
+		for (int t: time) {	
+			total += (currentTime / t);
+			if (total >= req) {
+				return true;
+			}
+		}
+		return false;
+	}
+	long minimumTime(int[] time, int totalTrips) {
+		long minTime = Long.MAX_VALUE;
+		long maxTime = Long.MAX_VALUE;
+		for (int t: time) {	
+			minTime = Math.min(minTime,t);
+		}
+		while (minTime <= maxTime) {
+			long midTime = minTime + (maxTime - minTime) / 2;
+			boolean canCoverTrips = checkCanCoverTrips(time,midTime,totalTrips);
+			if (!canCoverTrips) {
+				minTime = midTime + 1;
+			} 
+			else {
+				maxTime = midTime - 1;
+			}
+		}
+		return minTime;
+	}
+}

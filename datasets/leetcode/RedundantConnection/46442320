@@ -1,0 +1,48 @@
+class Solution {
+	int[] par;
+	int rank;
+	int find(int x) {
+		if (x == par[x]) {
+			return x;
+		}
+		int temp = find(par[x]);
+		par[x] = temp;
+		return temp;
+	}
+	int[] findRedundantConnection(int[][] edges) {
+		int n = edges.length;
+		par = new int[n + 1];
+		rank = new int[n + 1];
+		for (int i = 0; i < n; i++) {
+			par[i] = i;
+			rank[i] = 1;
+		}
+		for (int i = 0; i < n; i++) {
+			int u = edges[i][0];
+			int v = edges[i][1];
+			boolean flag = union(u,v);
+			if (flag == false) {
+				return edges[i];
+			}
+		}
+		return new int[2];
+	}
+	boolean union(int x, int y) {
+		int px = find(x);
+		int py = find(y);
+		if (px == py) {
+			return false;
+		}
+		if (rank[px] > rank[py]) {
+			par[py] = px;
+		} 
+		else if (rank[py] < rank[px]) {
+			par[px] = py;
+		} 
+		else {
+			par[px] = py;
+			rank[py]++;
+		}
+		return true;
+	}
+}

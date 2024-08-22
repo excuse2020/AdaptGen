@@ -1,0 +1,28 @@
+class Solution {
+	int helper(int row, int col, List<List<Integer>> triangle, int n, List<int[]> dp) {
+		int length = triangle.get(row).size();
+		if (row >= n || col >= length) {
+			return Integer.MAX_VALUE;
+		}
+		if (row == n - 1) {
+			return triangle.get(row).get(col);
+		}
+		if (dp.get(row)[col] != -1) {
+			return dp.get(row)[col];
+		}
+		int down = helper(row + 1,col,triangle,n,dp);
+		int downRight = helper(row + 1,col + 1,triangle,n,dp);
+		return dp.get(row)[col] = triangle.get(row).get(col) + Math.min(down,downRight);
+	}
+	int minimumTotal(List<List<Integer>> triangle) {
+		int n = triangle.size();
+		List<int[]> dp = new ArrayList(n);
+		for (int i = 0; i < n; i++) {
+			int size = triangle.get(i).size();
+			int[] arr = new int[size];
+			Arrays.fill(arr,-1);
+			dp.add(arr);
+		}
+		return helper(0,0,triangle,n,dp);
+	}
+}

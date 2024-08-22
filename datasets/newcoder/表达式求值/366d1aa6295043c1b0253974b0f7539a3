@@ -1,0 +1,61 @@
+class Solution {
+	void calcStack(Stack<Character> opStack, Stack<Integer> vStack, Character next) {
+		if (next == null || next == ')' || next == '+' || next == '-') {
+			while (!opStack.isEmpty()) {
+				char op = opStack.pop();
+				if (op == '+') {
+					vStack.push(vStack.pop() + vStack.pop());
+				} 
+				else if (op == '-') {
+					vStack.push(-vStack.pop() + vStack.pop());
+				} 
+				else if (op == '*') {
+					vStack.push(vStack.pop() * vStack.pop());
+				} 
+				else {
+					opStack.push(op);
+					break;
+				}
+			}
+		}
+	}
+	void removeBracket(Stack<Character> opStack) {
+		char op = opStack.pop();
+		if (op == ')') {
+			opStack.pop();
+			return;
+		}
+		opStack.push(op);
+	}
+	int solve(String s) {
+		Stack<Integer> vStack = new Stack<>();
+		Stack<Character> opStack = new Stack<>();
+		for (int index = 0; index < s.length(); index++) {
+			char c = s.charAt(index);
+			if (c >= '0' && c <= '9') {
+				int v = c - '0';
+				while ((index + 1) < s.length()) {
+					char tmp = s.charAt(index + 1);
+					if (tmp >= '0' && tmp <= '9') {
+						v = v * 10 + (tmp - '0');
+						index++;
+						continue;
+					}
+					break;
+				}
+				Character next = (index + 1) < s.length() ? s.charAt(index + 1) : null;
+				vStack.push(v);
+				calcStack(opStack,vStack,next);
+			} 
+			else {
+				Character next = (index + 1) < s.length() ? s.charAt(index + 1) : null;
+				opStack.push(c);
+				if (c == ')') {
+					removeBracket(opStack);
+					calcStack(opStack,vStack,next);
+				}
+			}
+		}
+		return vStack.pop();
+	}
+}

@@ -1,0 +1,36 @@
+class Solution {
+	ListNode sortInList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode slow = head, fast = head.next;
+		while (fast != null && fast.next != null) {
+			fast = fast.next.next;
+			slow = slow.next;
+		}
+		ListNode head2 = slow.next;
+		slow.next = null;
+		ListNode left = sortInList(head);
+		ListNode right = sortInList(head2);
+		ListNode ans = new ListNode(-1);
+		ListNode res = ans;
+		while (left != null && right != null) {
+			if (left.val <= right.val) {
+				res.next = new ListNode(left.val);
+				left = left.next;
+			} 
+			else {
+				res.next = new ListNode(right.val);
+				right = right.next;
+			}
+			res = res.next;
+		}
+		if (left == null) {
+			res.next = right;
+		}
+		if (right == null) {
+			res.next = left;
+		}
+		return ans.next;
+	}
+}

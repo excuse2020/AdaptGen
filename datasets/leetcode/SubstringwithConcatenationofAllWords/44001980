@@ -1,0 +1,30 @@
+class Solution {
+	List<Integer> findSubstring(String s, String[] words) {
+		List<Integer> result = new ArrayList<>();
+		if (s == null || s.length() == 0 || words == null || words.length == 0) {
+			return result;
+		}
+		int wordLength = words[0].length();
+		int wordCount = words.length;
+		int totalLength = wordLength * wordCount;
+		Map<String, Integer> wordFreq = new HashMap<>();
+		for (String word: words) {	
+			wordFreq.put(word,wordFreq.getOrDefault(word,0) + 1);
+		}
+		for (int i = 0; i <= s.length() - totalLength; i++) {
+			String substr = s.substring(i,i + totalLength);
+			if (isConcatenation(substr,wordFreq,wordLength)) {
+				result.add(i);
+			}
+		}
+		return result;
+	}
+	boolean isConcatenation(String substr, Map<String, Integer> wordFreq, int wordLength) {
+		Map<String, Integer> wordCount = new HashMap<>();
+		for (int i = 0; i < substr.length(); i += wordLength) {
+			String word = substr.substring(i,i + wordLength);
+			wordCount.put(word,wordCount.getOrDefault(word,0) + 1);
+		}
+		return wordCount.equals(wordFreq);
+	}
+}

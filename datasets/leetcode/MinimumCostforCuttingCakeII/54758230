@@ -1,0 +1,52 @@
+class Solution {
+	long minimumCost(int m, int n, int[] horizontalCut, int[] verticalCut) {
+		int[] hh = horizontalCut.clone();
+		Arrays.sort(hh);
+		for (int i = 0; i < hh.length; i++) {
+			horizontalCut[i] = hh[hh.length - 1 - i];
+		}
+		int[] cc = verticalCut.clone();
+		Arrays.sort(cc);
+		for (int i = 0; i < cc.length; i++) {
+			verticalCut[i] = cc[cc.length - 1 - i];
+		}
+		long cost = 0;
+		int h = 0;
+		int ch = 0;
+		int cv = 0;
+		int v = 0;
+		while (h < horizontalCut.length && v < verticalCut.length) {
+			if (horizontalCut[h] == verticalCut[v]) {
+				if (ch > cv) {
+					cost += horizontalCut[h] * (cv + 1);
+					h++;
+					ch++;
+				} 
+				else {
+					cost += verticalCut[v] * (ch + 1);
+					v++;
+					cv++;
+				}
+			} 
+			else if (horizontalCut[h] > verticalCut[v]) {
+				cost += horizontalCut[h] * (cv + 1);
+				h++;
+				ch++;
+			} 
+			else {
+				cost += verticalCut[v] * (ch + 1);
+				v++;
+				cv++;
+			}
+		}
+		while (h != horizontalCut.length) {
+			cost += horizontalCut[h] * (cv + 1);
+			h++;
+		}
+		while (v != verticalCut.length) {
+			cost += verticalCut[v] * (ch + 1);
+			v++;
+		}
+		return cost;
+	}
+}

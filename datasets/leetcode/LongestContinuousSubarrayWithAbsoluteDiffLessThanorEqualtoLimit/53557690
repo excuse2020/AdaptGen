@@ -1,0 +1,29 @@
+class Solution {
+	int longestSubarray(int[] nums, int limit) {
+		int res = 0;
+		List<Integer> max = new LinkedList<>();
+		List<Integer> min = new LinkedList<>();
+		int l = 0;
+		for (int r = 0; r < nums.length; r++) {
+			while (max.size() > 0 && nums[r] > max.getLast()) {
+				max.removeLast();
+			}
+			max.add(nums[r]);
+			while (min.size() > 0 && nums[r] < min.getLast()) {
+				min.removeLast();
+			}
+			min.add(nums[r]);
+			while (Math.abs(max.getFirst() - min.getFirst()) > limit) {
+				if (nums[l] == max.getFirst()) {
+					max.removeFirst();
+				}
+				if (nums[l] == min.getFirst()) {
+					min.removeFirst();
+				}
+				l += 1;
+			}
+			res = Math.max(res,r - l + 1);
+		}
+		return res;
+	}
+}

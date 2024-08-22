@@ -1,0 +1,59 @@
+class Solution {
+	List<String> subdomainVisits(String[] cpdomains) {
+		HashMap<String, Integer> map = new HashMap<>();
+		for (String s: cpdomains) {	
+			String arr = s.split(" ");
+			int visit = Integer.parseInt(arr[0]);
+			String fullDomain = arr[1];
+			String sub = fullDomain.split("[.]");
+			int len = sub.length;
+			for (int i = 1; i <= len; i++) {
+				if (i == 1) {
+					if (map.containsKey(fullDomain)) {
+						int tempVisit = map.get(fullDomain);
+						map.put(fullDomain,visit + tempVisit);
+					} 
+					else {
+						map.put(fullDomain,visit);
+					}
+				} 
+				else if (i == 2) {
+					if (len == i) {
+						if (map.containsKey(sub[1])) {
+							int tempVisit = map.get(sub[1]);
+							map.put(sub[1],visit + tempVisit);
+						} 
+						else {
+							map.put(sub[1],visit);
+						}
+					} 
+					else {
+						String tempSub = sub[1] + ".";
+						if (map.containsKey(tempSub)) {
+							int tempVisit = map.get(tempSub);
+							map.put(tempSub,visit + tempVisit);
+						} 
+						else {
+							map.put(tempSub,visit);
+						}
+					}
+				} 
+				else {
+					if (map.containsKey(sub[2])) {
+						int tempVisit = map.get(sub[2]);
+						map.put(sub[2],visit + tempVisit);
+					} 
+					else {
+						map.put(sub[2],visit);
+					}
+				}
+			}
+		}
+		List<String> list = new ArrayList<>();
+		for (String s: map.keySet()) {	
+			String temp = map.get(s) + " ";
+			list.add(temp);
+		}
+		return list;
+	}
+}

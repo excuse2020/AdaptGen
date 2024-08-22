@@ -1,0 +1,31 @@
+class Solution {
+	boolean DFS(TreeNode currNode, StringBuilder path, int destVal) {
+		if (currNode == null) {
+			return false;
+		}
+		if (currNode.val == destVal) {
+			return true;
+		}
+		if (DFS(currNode.left,path,destVal)) {
+			path.append("L");
+		} 
+		else if (DFS(currNode.right,path,destVal)) {
+			path.append("R");
+		}
+		return path.length() > 0;
+	}
+	String getDirections(TreeNode root, int startValue, int destValue) {
+		StringBuilder sr = new StringBuilder();
+		StringBuilder dr = new StringBuilder();
+		DFS(root,sr,startValue);
+		DFS(root,dr,destValue);
+		int i = sr.length(), j = dr.length();
+		int cnt = 0;
+		while (i > 0 && j > 0 && sr.charAt(i - 1) == dr.charAt(j - 1)) {
+			cnt++;
+			i--;
+			j--;
+		}
+		return "U".repeat(sr.length() - cnt) + dr.reverse().substring(cnt,dr.length());
+	}
+}

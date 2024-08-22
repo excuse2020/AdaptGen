@@ -1,0 +1,33 @@
+class Solution {
+	int longestPalindrome(String[] words) {
+		int[][] dp = new int[26][26];
+		int result = 0;
+		boolean midElement = false;
+		for (int i = 0; i < words.length; i++) {
+			dp[(int)words[i].charAt(0) - 97][(int)words[i].charAt(1) - 97]++;
+		}
+		for (int i = 0; i < 26; i++) {
+			for (int j = 0; j < 26; j++) {
+				if (i == j) {
+					if (dp[i][j] % 2 == 0) {
+						result += 2 * (dp[i][j]);
+					} 
+					else {
+						midElement = true;
+						result += 2 * (dp[i][j] - 1);
+					}
+				} 
+				else {
+					if (dp[i][j] > 0 && dp[j][i] > 0) {
+						result += 4 * Math.min(dp[i][j],dp[j][i]);
+						dp[j][i] = 0;
+					}
+				}
+			}
+		}
+		if (midElement) {
+			result += 2;
+		}
+		return result;
+	}
+}

@@ -1,0 +1,31 @@
+class Solution {
+	int time = 0;
+	boolean dfs(int node, int parent, Map<Integer, List<Integer>> adjMap, List<Boolean> hasApple) {
+		boolean needVisit = false;
+		if (hasApple.get(node)) {
+			needVisit = true;
+		}
+		List<Integer> nodes = adjMap.get(node);
+		for (int chld: nodes) {	
+			if (chld == parent) {
+				continue;
+			}
+			if (dfs(chld,node,adjMap,hasApple)) {
+				needVisit = true;
+				time += 2;
+			}
+		}
+		return needVisit;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		Map<Integer, List<Integer>> adjMap = new HashMap<>();
+		for (int[] conn: edges) {	
+			int node1 = conn[0];
+			int node2 = conn[1];
+			adjMap.computeIfAbsent(node1,(val) -> {new ArrayList<Integer>()}).add(node2);
+			adjMap.computeIfAbsent(node2,(val) -> {new ArrayList<Integer>()}).add(node1);
+		}
+		dfs(0,-1,adjMap,hasApple);
+		return time;
+	}
+}

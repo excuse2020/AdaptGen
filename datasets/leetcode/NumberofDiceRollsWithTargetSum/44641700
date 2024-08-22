@@ -1,0 +1,29 @@
+class Solution {
+	int MOD = 1000000007;
+	int[][] memo;
+	int backtracking(int n, int k, int target) {
+		if (n == target) {
+			return 1;
+		}
+		if (n == 0 || n > target) {
+			return 0;
+		}
+		if (memo[n][target] >= 0) {
+			return memo[n][target];
+		}
+		int count = 0;
+		for (int i = 1; i <= k && i <= target - n + 1; i++) {
+			count += backtracking(n - 1,k,target - i);
+			count = count % MOD;
+		}
+		memo[n][target] = count;
+		return count;
+	}
+	int numRollsToTarget(int n, int k, int target) {
+		memo = new int[n + 1][target + 1];
+		for (int[] row: memo) {	
+			Arrays.fill(row,-1);
+		}
+		return backtracking(n,k,target);
+	}
+}

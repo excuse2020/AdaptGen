@@ -1,0 +1,55 @@
+class Solution {
+	void checkForPredecessor(String[] words, int back, int front, int[] dp) {
+		String w1 = words[back], w2 = words[front];
+		int missMatchCount = 0;
+		for (int p1 = 0, p2 = 0; p1 < w1.length() && p2 < w2.length(); p2++) {
+			if (w1.charAt(p1) != w2.charAt(p2)) {
+				missMatchCount++;
+			} 
+			else {
+				p1++;
+			}
+			if (missMatchCount > 1) {
+				break;
+			}
+		}
+		if (missMatchCount < 2) {
+			dp[front] = Math.max(dp[front],dp[back] + 1);
+		}
+	}
+	int longestStrChain(String[] words) {
+		if (words == null || words.length == 0) {
+			return 0;
+		}
+		int[] dp = new int[words.length];
+		Arrays.fill(dp,1);
+		Arrays.sort(words,Comparator.comparingInt());
+		int back = 0, front = 1, oldPlace = -1;
+		while (front < words.length) {
+			if (words[front].length() - words[back].length() == 1) {
+				checkForPredecessor(words,back,front,dp);
+				if (front + 1 < words.length) {
+					front++;
+				} 
+				else if (oldPlace != -1) {
+					front = oldPlace;
+					back++;
+				} 
+				else {
+					back++;
+				}
+				if (oldPlace == -1) {
+					oldPlace = front;
+				}
+			} 
+			else if (words[front].length() - words[back].length() > 1) {
+				back++;
+				front = back + 1;
+			} 
+			else {
+				front++;
+			}
+		}
+		return Arrays.stream(dp).max().getAsInt();
+	}
+}

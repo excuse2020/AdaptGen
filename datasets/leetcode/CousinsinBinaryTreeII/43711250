@@ -1,0 +1,51 @@
+class Solution {
+	TreeNode replaceValueInTree(TreeNode root) {
+		List<List<TreeNode>> bfs = new ArrayList<>();
+		Queue<TreeNode> Qu = new LinkedList<>();
+		Map<TreeNode, Integer> childSumMap = new HashMap<>();
+		Map<Integer, Integer> levelSumMap = new HashMap<>();
+		Qu.add(root);
+		TreeNode Temp = root;
+		int currLevel = 0;
+		while (!Qu.isEmpty()) {
+			int EachLevelSize = Qu.size();
+			List<TreeNode> Ans = new ArrayList<>();
+			int currLevelSum = 0;
+			for (int i = 1; i <= EachLevelSize; i++) {
+				Temp = Qu.remove();
+				Ans.add(Temp);
+				currLevelSum += Temp.val;
+				if (Temp.left != null) {
+					Qu.add(Temp.left);
+					childSumMap.put(Temp,childSumMap.getOrDefault(Temp,0) + Temp.left.val);
+				}
+				if (Temp.right != null) {
+					Qu.add(Temp.right);
+					childSumMap.put(Temp,childSumMap.getOrDefault(Temp,0) + Temp.right.val);
+				}
+			}
+			bfs.add(Ans);
+			levelSumMap.put(currLevel++,currLevelSum);
+		}
+		root.val = 0;
+		if (root.left != null) {
+			root.left.val = 0;
+		}
+		if (root.right != null) {
+			root.right.val = 0;
+		}
+		for (int i = 0; i < bfs.size() - 1; i++) {
+			List<TreeNode> levelElements = bfs.get(i);
+			for (int j = 0; j < levelElements.size(); j++) {
+				TreeNode Elem = levelElements.get(j);
+				if (Elem.left != null) {
+					Elem.left.val = levelSumMap.get(i + 1) - childSumMap.get(Elem);
+				}
+				if (Elem.right != null) {
+					Elem.right.val = levelSumMap.get(i + 1) - childSumMap.get(Elem);
+				}
+			}
+		}
+		return root;
+	}
+}

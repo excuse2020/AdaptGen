@@ -1,0 +1,35 @@
+class Solution {
+	long subArrayRanges(int[] nums) {
+		return sumSubarrayMaxs(nums) - sumSubarrayMins(nums);
+	}
+	long sumSubarrayMaxs(int[] A) {
+		Stack<Integer> stack = new Stack<>();
+		int n = A.length;
+		long count = 0;
+		for (int i = 0; i <= n; i++) {
+			while (!stack.isEmpty() && (i == n || A[stack.peek()] < A[i])) {
+				int mid = stack.pop();
+				int l = mid - (stack.isEmpty() ? -1 : stack.peek());
+				int r = i - mid;
+				count += (long) A[mid] * (l);
+			}
+			stack.push(i);
+		}
+		return (count);
+	}
+	long sumSubarrayMins(int[] A) {
+		Stack<Integer> stack = new Stack<>();
+		int n = A.length;
+		long count = 0;
+		for (int i = 0; i <= n; i++) {
+			while (!stack.isEmpty() && (i == n || A[stack.peek()] > A[i])) {
+				int mid = stack.pop();
+				int l = mid - (stack.isEmpty() ? -1 : stack.peek());
+				int r = i - mid;
+				count += (long) A[mid] * (l);
+			}
+			stack.push(i);
+		}
+		return (count);
+	}
+}

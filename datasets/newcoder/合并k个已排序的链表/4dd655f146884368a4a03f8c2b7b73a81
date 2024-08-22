@@ -1,0 +1,35 @@
+class Solution {
+	ListNode mergeKLists(ArrayList<ListNode> lists) {
+		if (lists == null || lists.size() == 0) {
+			return null;
+		}
+		ListNode head = new ListNode(0);
+		ArrayList<Integer> number = new ArrayList<>();
+		ArrayList<ListNode> tests = new ArrayList<>(lists);
+		for (ListNode tmp: lists) {	
+			if (tmp != null) {
+				number.add(tmp.val);
+			} 
+			else {
+				tests.remove(tmp);
+			}
+		}
+		ListNode res = head;
+		while (!tests.isEmpty() && !number.isEmpty()) {
+			int min = Collections.min(number);
+			int lindex = number.indexOf(Integer.valueOf(min));
+			ListNode ltmp = tests.get(lindex);
+			if (ltmp.next == null) {
+				tests.remove(lindex);
+				number.remove(lindex);
+			} 
+			else {
+				tests.set(lindex,ltmp.next);
+				number.set(lindex,ltmp.next.val);
+			}
+			res.next = new ListNode(min);
+			res = res.next;
+		}
+		return head.next;
+	}
+}

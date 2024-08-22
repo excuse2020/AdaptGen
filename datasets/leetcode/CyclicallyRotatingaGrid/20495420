@@ -1,0 +1,83 @@
+class Solution {
+	List<Integer> rotate(List<Integer> list, int k) {
+		k = k % list.size();
+		while (k > 0) {
+			int t = list.remove(0);
+			list.add(t);
+			k--;
+		}
+		return list;
+	}
+	int[][] rotateGrid(int[][] grid, int k) {
+		int m = grid.length;
+		int n = grid[0].length;
+		int layers = Math.min(m,n) / 2;
+		List<List<Integer>> arrays = new ArrayList<>();
+		for (int i = 0; i < layers; i++) {
+			List<Integer> list = new ArrayList<>();
+			int row = i;
+			int col = i;
+			while (col < n - i) {
+				list.add(grid[row][col]);
+				col++;
+			}
+			col--;
+			row++;
+			while (row < m - i) {
+				list.add(grid[row][col]);
+				row++;
+			}
+			row--;
+			col--;
+			while (col >= i) {
+				list.add(grid[row][col]);
+				col--;
+			}
+			col++;
+			row--;
+			while (row > i) {
+				list.add(grid[row][col]);
+				row--;
+			}
+			arrays.add(list);
+		}
+		for (int i = 0; i < arrays.size(); i++) {
+			List<Integer> list = arrays.get(i);
+			list = rotate(list,k);
+			arrays.set(i,list);
+		}
+		for (int i = 0; i < layers; i++) {
+			List<Integer> list = arrays.get(i);
+			int row = i;
+			int col = i;
+			int c = 0;
+			while (col < n - i) {
+				grid[row][col] = list.get(c);
+				c++;
+				col++;
+			}
+			col--;
+			row++;
+			while (row < m - i) {
+				grid[row][col] = list.get(c);
+				c++;
+				row++;
+			}
+			row--;
+			col--;
+			while (col >= i) {
+				grid[row][col] = list.get(c);
+				c++;
+				col--;
+			}
+			col++;
+			row--;
+			while (row > i) {
+				grid[row][col] = list.get(c);
+				c++;
+				row--;
+			}
+		}
+		return grid;
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	int cherryPickup(int[][] grid) {
+		int m = grid.length;
+		int n = grid[0].length;
+		int[][][] dp = new int[m][n][n];
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				Arrays.fill(dp[i][j],-1);
+			}
+		}
+		return pickMax(grid,0,0,n - 1,dp);
+	}
+	int pickMax(int[][] grid, int row, int r1, int r2, int[][][] dp) {
+		if (row >= grid.length) {
+			return 0;
+		}
+		if (r1 < 0 || r1 >= grid[0].length || r2 < 0 || r2 >= grid[0].length) {
+			return 0;
+		}
+		if (r1 == r2) {
+			return 0;
+		}
+		if (dp[row][r1][r2] != -1) {
+			return dp[row][r1][r2];
+		}
+		int max = 0;
+		max = Math.max(max,pickMax(grid,row + 1,r1 - 1,r2 - 1,dp));
+		max = Math.max(max,pickMax(grid,row + 1,r1 - 1,r2,dp));
+		max = Math.max(max,pickMax(grid,row + 1,r1 - 1,r2 + 1,dp));
+		max = Math.max(max,pickMax(grid,row + 1,r1,r2 - 1,dp));
+		max = Math.max(max,pickMax(grid,row + 1,r1,r2,dp));
+		max = Math.max(max,pickMax(grid,row + 1,r1,r2 + 1,dp));
+		max = Math.max(max,pickMax(grid,row + 1,r1 + 1,r2 - 1,dp));
+		max = Math.max(max,pickMax(grid,row + 1,r1 + 1,r2,dp));
+		max = Math.max(max,pickMax(grid,row + 1,r1 + 1,r2 + 1,dp));
+		dp[row][r1][r2] = max + grid[row][r1];
+		return dp[row][r1][r2];
+	}
+}

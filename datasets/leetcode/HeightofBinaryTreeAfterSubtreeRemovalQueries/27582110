@@ -1,0 +1,30 @@
+class Solution {
+	Map<Integer, Integer> leftMap = new HashMap<>();
+	Map<Integer, Integer> removed = new HashMap<>();
+	Map<Integer, Integer> rightMap = new HashMap<>();
+	void calculateRemovedHeights(TreeNode node, int height) {
+		if (node == null) {
+			return;
+		}
+		removed.put(node.val,height);
+		calculateRemovedHeights(node.left,Math.max(height,rightMap.get(node.val)));
+		calculateRemovedHeights(node.right,Math.max(height,leftMap.get(node.val)));
+	}
+	int populateHeights(TreeNode node, int height) {
+		if (node == null) {
+			return height - 1;
+		}
+		leftMap.put(node.val,populateHeights(node.left,height + 1));
+		rightMap.put(node.val,populateHeights(node.right,height + 1));
+		return Math.max(leftMap.get(node.val),rightMap.get(node.val));
+	}
+	int[] treeQueries(TreeNode root, int[] queries) {
+		populateHeights(root,0);
+		calculateRemovedHeights(root,0);
+		int[] output = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			output[i] = removed.get(queries[i]);
+		}
+		return output;
+	}
+}

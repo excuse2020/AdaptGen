@@ -1,0 +1,39 @@
+class Solution {
+	int countBit(int a) {
+		int c = 0;
+		while (a > 0) {
+			if (a % 2 == 1) {
+				c++;
+			}
+			a /= 2;
+		}
+		return c;
+	}
+	int[] sortByBits(int[] arr) {
+		int[] res = new int[arr.length];
+		int[] c = new int[arr.length];
+		int k = 0;
+		for (int i = 0; i < arr.length; i++) {
+			int t = k, d = countBit(arr[i]);
+			while (t > 0) {
+				if (c[t - 1] <= d) {
+					break;
+				}
+				res[t] = res[t - 1];
+				c[t] = c[t - 1];
+				t--;
+			}
+			if (t > 0 && c[t - 1] == d) {
+				while (t > 0 && c[t - 1] == d && res[t - 1] > arr[i]) {
+					res[t] = res[t - 1];
+					c[t] = c[t - 1];
+					t--;
+				}
+			}
+			res[t] = arr[i];
+			c[t] = d;
+			k++;
+		}
+		return res;
+	}
+}

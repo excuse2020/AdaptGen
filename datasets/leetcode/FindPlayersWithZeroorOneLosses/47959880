@@ -1,0 +1,26 @@
+class Solution {
+	List<List<Integer>> findWinners(int[][] matches) {
+		List<List<Integer>> answer = new ArrayList<>();
+		int[] loseCount = new int[100001];
+		Set<Integer> winners = new HashSet<>();
+		Set<Integer> losers = new HashSet<>();
+		for (int[] match: matches) {	
+			int loser = match[1];
+			int winner = match[0];
+			++loseCount[loser];
+			if (loseCount[winner] == 0) {
+				winners.add(winner);
+			}
+			if (loseCount[loser] == 1) {
+				losers.add(loser);
+				winners.remove(loser);
+			} 
+			else if (loseCount[loser] > 1) {
+				losers.remove(loser);
+			}
+		}
+		answer.add(winners.stream().sorted().toList());
+		answer.add(losers.stream().sorted().toList());
+		return answer;
+	}
+}

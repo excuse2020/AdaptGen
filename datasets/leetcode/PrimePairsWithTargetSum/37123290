@@ -1,0 +1,31 @@
+class Solution {
+	List<List<Integer>> findPrimePairs(int n) {
+		ArrayList<Integer> primes = primeInRange(n);
+		List<List<Integer>> ans = new LinkedList<>();
+		for (int l = 0, r = primes.size() - 1; l <= r; ) {
+			if (primes.get(l) + primes.get(r) > n) {
+				--r;
+			} 
+			else if (primes.get(l) + primes.get(r) < n) {
+				++l;
+			} 
+			else {
+				ans.add(new LinkedList<>(Arrays.asList(primes.get(l++),primes.get(r--))));
+			}
+		}
+		return ans;
+	}
+	ArrayList<Integer> primeInRange(int range) {
+		int table = new int[range + 1];
+		ArrayList<Integer> primes = new ArrayList<>();
+		for (int i = 2; i <= range; i++) {
+			if (table[i] == 0) {
+				primes.add(i);
+				for (int k = i + i; k <= range; k += i) {
+					table[k] = 1;
+				}
+			}
+		}
+		return primes;
+	}
+}

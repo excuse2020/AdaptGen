@@ -1,0 +1,29 @@
+class Solution {
+	boolean[] isArraySpecial(int[] nums, int[][] queries) {
+		int n = nums.length;
+		int m = queries.length;
+		boolean ans = new boolean[m];
+		if (n == 1) {
+			Arrays.fill(ans,true);
+			return ans;
+		}
+		int prefixSameParityCount = new int[n];
+		for (int i = 1; i < n; i++) {
+			prefixSameParityCount[i] = prefixSameParityCount[i - 1];
+			prefixSameParityCount[i] += (nums[i] % 2 == nums[i - 1] % 2) ? 1 : 0;
+		}
+		int k = 0;
+		for (int[] query: queries) {	
+			int si = query[0];
+			int ei = query[1];
+			if (prefixSameParityCount[ei] - prefixSameParityCount[si] == 0) {
+				ans[k] = true;
+			} 
+			else {
+				ans[k] = false;
+			}
+			k++;
+		}
+		return ans;
+	}
+}

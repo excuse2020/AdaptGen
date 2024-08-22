@@ -1,0 +1,59 @@
+class Solution {
+	boolean areMapEqual(Map<String, Integer> map, Map<String, Integer> cmap) {
+		if (map.size() != cmap.size()) {
+			return false;
+		}
+		for (String key: map.keySet()) {	
+			if (!cmap.containsKey(key)) {
+				return false;
+			}
+			if (!cmap.get(key).equals(map.get(key))) {
+				return false;
+			}
+		}
+		return true;
+	}
+	List<Integer> findSubstring(String s, String[] words) {
+		Map<String, Integer> map = new HashMap<>();
+		int tokenLen = words[0].length();
+		List<Integer> lst = new ArrayList<>();
+		for (String word: words) {	
+			if (map.containsKey(word)) {
+				map.put(word,map.get(word) + 1);
+			} 
+			else {
+				map.put(word,1);
+			}
+		}
+		for (int startPoint = 0; startPoint < tokenLen; startPoint++) {
+			Map<String, Integer> cmap = new HashMap<>();
+			int count = 0;
+			for (int i = startPoint; i < s.length() - tokenLen + 1; i += tokenLen) {
+				String ww = s.substring(i,i + tokenLen);
+				if (map.containsKey(ww)) {
+					if (cmap.containsKey(ww)) {
+						cmap.put(ww,cmap.get(ww) + 1);
+					} 
+					else {
+						cmap.put(ww,1);
+					}
+				}
+				count++;
+				if (count > words.length) {
+					int k = i - words.length * tokenLen;
+					String needToRemove = s.substring(k,k + tokenLen);
+					if (cmap.containsKey(needToRemove)) {
+						cmap.put(needToRemove,cmap.get(needToRemove) - 1);
+					}
+				}
+				if (count >= words.length) {
+					int k = i - (words.length - 1) * tokenLen;
+					if (areMapEqual(map,cmap)) {
+						lst.add(k);
+					}
+				}
+			}
+		}
+		return lst;
+	}
+}

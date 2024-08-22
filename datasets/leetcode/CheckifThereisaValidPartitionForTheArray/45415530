@@ -1,0 +1,57 @@
+class Solution {
+	boolean recursive(int[] nums, int l) {
+		if (l == nums.length) {
+			return true;
+		}
+		if (nums.length - l == 1) {
+			return false;
+		}
+		boolean a = false;
+		boolean b = false;
+		boolean c = false;
+		if (nums[l] == nums[l + 1]) {
+			a = recursive(nums,l + 2);
+		}
+		if (nums.length - l >= 3) {
+			if ((nums[l] == nums[l + 1]) && (nums[l] == nums[l + 2])) {
+				b = recursive(nums,l + 3);
+			}
+			if ((nums[l] + 1 == nums[l + 1]) && (nums[l + 1] + 1 == nums[l + 2])) {
+				c = recursive(nums,l + 3);
+			}
+		}
+		return a || b;
+	}
+	boolean validPartition(int[] nums) {
+		Boolean[] dp = new Boolean[nums.length + 1];
+		boolean flag = validPartitionDP(nums,0,dp);
+		return flag;
+	}
+	boolean validPartitionDP(int[] nums, int l, Boolean[] dp) {
+		if (l == nums.length) {
+			return true;
+		}
+		if (nums.length - l == 1) {
+			return false;
+		}
+		if (dp[l] != null) {
+			return dp[l];
+		}
+		boolean a = false;
+		boolean b = false;
+		boolean c = false;
+		if (nums[l] == nums[l + 1]) {
+			a = validPartitionDP(nums,l + 2,dp);
+		}
+		if (nums.length - l >= 3) {
+			if ((nums[l] == nums[l + 1]) && (nums[l] == nums[l + 2])) {
+				b = validPartitionDP(nums,l + 3,dp);
+			}
+			if ((nums[l] + 1 == nums[l + 1]) && (nums[l + 1] + 1 == nums[l + 2])) {
+				c = validPartitionDP(nums,l + 3,dp);
+			}
+		}
+		dp[l] = a || b;
+		return dp[l];
+	}
+}

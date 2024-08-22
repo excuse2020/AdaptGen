@@ -1,0 +1,47 @@
+class Solution {
+	int countDigitOne(int n) {
+		List<Integer> list = new ArrayList<>();
+		int temp = n;
+		while (temp > 0) {
+			list.add(temp % 10);
+			temp /= 10;
+		}
+		Collections.reverse(list);
+		int[][][] dp = new int[10][2][10];
+		for (int[][] mat: dp) {	
+			for (int[] arr: mat) {	
+				Arrays.fill(arr,-1);
+			}
+		}
+		return memo(0,0,0,list,dp);
+	}
+	int memo(int i, int condition, int currSum, List<Integer> list, int[][][] dp) {
+		int n = list.size();
+		if (i == n) {
+			return currSum;
+		}
+		if (dp[i][condition][currSum] != -1) {
+			return dp[i][condition][currSum];
+		}
+		int res = 0;
+		if (condition == 1) {
+			for (int j = 0; j <= 9; j++) {
+				int o = j == 1 ? memo(i + 1,condition,currSum + 1,list,dp) : memo(i + 1,condition,currSum,list,dp);
+				res += o;
+			}
+		} 
+		else {
+			for (int j = 0; j <= list.get(i); j++) {
+				if (j != list.get(i)) {
+					int o = j == 1 ? memo(i + 1,1,currSum + 1,list,dp) : memo(i + 1,1,currSum,list,dp);
+					res += o;
+				} 
+				else {
+					int o = j == 1 ? memo(i + 1,condition,currSum + 1,list,dp) : memo(i + 1,condition,currSum,list,dp);
+					res += o;
+				}
+			}
+		}
+		return dp[i][condition][currSum] = res;
+	}
+}

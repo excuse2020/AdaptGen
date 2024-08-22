@@ -1,0 +1,21 @@
+class Solution {
+	long maximumSubarraySum(int[] nums, int k) {
+		HashMap<Integer, Integer> map = new HashMap<>();
+		long maxSum = 0, sum = 0;
+		for (int index = 0; index < nums.length; index++) {
+			sum += nums[index];
+			map.put(nums[index],map.getOrDefault(nums[index],0) + 1);
+			if (index >= k) {
+				map.put(nums[index - k],map.get(nums[index - k]) - 1);
+				sum -= nums[index - k];
+				if (map.get(nums[index - k]) == 0) {
+					map.remove(nums[index - k]);
+				}
+			}
+			if (map.size() == k) {
+				maxSum = Math.max(maxSum,sum);
+			}
+		}
+		return maxSum;
+	}
+}

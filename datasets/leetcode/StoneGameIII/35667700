@@ -1,0 +1,39 @@
+class Solution {
+	int solve(int index, int nums, Integer dp) {
+		if (index == nums.length) {
+			return 0;
+		}
+		if (dp[index] != null) {
+			return dp[index];
+		}
+		int stone = 0;
+		int ans = Integer.MIN_VALUE;
+		for (int i = 0; i < 3; i++) {
+			int x = i + index;
+			if (x >= nums.length) {
+				continue;
+			}
+			stone += nums[x];
+			int max = stone - solve(x + 1,nums,dp);
+			ans = Math.max(ans,max);
+		}
+		return dp[index] = ans;
+	}
+	String stoneGameIII(int[] stoneValue) {
+		int sum = 0;
+		for (int i: stoneValue) {	
+			sum += i;
+		}
+		Integer dp = new Integer[stoneValue.length + 1];
+		int x = (sum + solve(0,stoneValue,dp)) / 2;
+		int alice = x;
+		int bob = sum - x;
+		if (alice > bob) {
+			return "Alice";
+		} 
+		else if (alice < bob) {
+			return "Bob";
+		}
+		return "Tie";
+	}
+}

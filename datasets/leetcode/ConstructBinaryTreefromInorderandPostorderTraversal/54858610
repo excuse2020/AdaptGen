@@ -1,0 +1,31 @@
+class Solution {
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		int minVal = Integer.MAX_VALUE;
+		int maxVal = Integer.MIN_VALUE;
+		for (int val: inorder) {	
+			if (val < minVal) {
+				minVal = val;
+			}
+			if (val > maxVal) {
+				maxVal = val;
+			}
+		}
+		int offset = -minVal;
+		int[] index = new int[maxVal - minVal + 1];
+		for (int i = 0; i < inorder.length; i++) {
+			index[inorder[i] + offset] = i;
+		}
+		return helper(inorder,0,inorder.length - 1,postorder,postorder.length - 1,0,index,offset);
+	}
+	TreeNode helper(int[] inorder, int instart, int inend, int[] postorder, int poststart, int postend, int[] index, int offset) {
+		if (instart > inend || postend > poststart) {
+			return null;
+		}
+		TreeNode root = new TreeNode(postorder[poststart]);
+		int inRoot = index[root.val + offset];
+		int numleft = inend - inRoot;
+		root.right = helper(inorder,inRoot + 1,inend,postorder,poststart - 1,poststart - numleft,index,offset);
+		root.left = helper(inorder,instart,inRoot - 1,postorder,poststart - numleft,postend,index,offset);
+		return root;
+	}
+}

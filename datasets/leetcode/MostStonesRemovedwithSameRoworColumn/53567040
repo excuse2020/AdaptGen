@@ -1,0 +1,52 @@
+class Solution {
+	int parent;
+	int rank;
+	int find(int x) {
+		if (parent[x] == x) {
+			return x;
+		}
+		return parent[x] = find(parent[x]);
+	}
+	int removeStones(int[][] stones) {
+		int maxRow = 0;
+		int maxCol = 0;
+		HashMap<Integer, Integer> hm = new HashMap<>();
+		for (int i = 0; i < stones.length; i++) {
+			maxRow = Math.max(stones[i][0],maxRow);
+			maxCol = Math.max(stones[i][1],maxCol);
+		}
+		parent = new int[maxRow + maxCol];
+		rank = new int[maxRow + maxCol];
+		for (int i = 0; i < parent.length; i++) {
+			parent[i] = i;
+			rank[i] = 0;
+		}
+		for (int i = 0; i < stones.length; i++) {
+			hm.put(stones[i][0],1);
+			hm.put(stones[i][1] + maxRow,1);
+			union(stones[i][0],stones[i][1] + maxRow);
+		}
+		int count = 0;
+		Set<Integer> key = hm.keySet();
+		for (int k: key) {	
+			if (find(k) == k) {
+				count++;
+			}
+		}
+		return stones.length - count;
+	}
+	void union(int a, int b) {
+		int pa = find(a);
+		int pb = find(b);
+		if (rank[pa] == rank[pb]) {
+			parent[pb] = pa;
+			rank[pa]++;
+		} 
+		else if (rank[pa] < rank[pb]) {
+			parent[pa] = pb;
+		} 
+		else {
+			parent[pb] = pa;
+		}
+	}
+}

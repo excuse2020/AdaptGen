@@ -1,0 +1,29 @@
+class Solution {
+	long maxstrength = Long.MIN_VALUE;
+	long dfs(int[] nums, int index, int size, long strength, long mxStrength, boolean noElementIncluded) {
+		if (index + 1 == size) {
+			if (noElementIncluded) {
+				mxStrength = Math.max(nums[index],mxStrength);
+			} 
+			else {
+				mxStrength = Math.max(Math.max(strength,strength * nums[index]),mxStrength);
+			}
+			return mxStrength;
+		}
+		mxStrength = dfs(nums,index + 1,size,strength * nums[index],mxStrength,false);
+		mxStrength = dfs(nums,index + 1,size,strength,mxStrength,noElementIncluded);
+		return mxStrength;
+	}
+	long maxStrength(int[] nums) {
+		if (nums.length == 0) {
+			return -1;
+		}
+		if (nums.length == 1) {
+			return nums[0];
+		}
+		int index = 0;
+		long maxstrength1 = dfs(nums,index + 1,nums.length,nums[0],maxstrength,false);
+		long maxstrength2 = dfs(nums,index + 1,nums.length,1,maxstrength,true);
+		return Math.max(maxstrength1,maxstrength2);
+	}
+}

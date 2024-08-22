@@ -1,0 +1,38 @@
+class Solution {
+	int[] findOriginalArray(int[] changed) {
+		if ((changed.length & 1) == 1) {
+			return new int[0];
+		}
+		int ans = new int[changed.length >> 1], id = 0, z = 0;
+		TreeMap<Integer, Integer> table = new TreeMap<>();
+		for (int n: changed) {	
+			if (n == 0) {
+				z++;
+			} 
+			else {
+				Integer val = table.get(n);
+				table.put(n,val == null ? 1 : val + 1);
+			}
+		}
+		if ((z & 1) == 1) {
+			return new int[0];
+		}
+		id = z >> 1;
+		for (Map.Entry<Integer, Integer> it: table.entrySet()) {	
+			int v = it.getValue(), k = it.getKey();
+			if (v == 0) {
+				continue;
+			}
+			int dk = k << 1;
+			Integer dv = table.get(dk);
+			if (dv == null || dv < v) {
+				return new int[0];
+			}
+			table.put(dk,dv - v);
+			while (v-- != 0) {
+				ans[id++] = k;
+			}
+		}
+		return ans;
+	}
+}

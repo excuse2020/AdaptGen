@@ -1,0 +1,31 @@
+class Solution {
+	long minCost(int[] nums, int x) {
+		int n = nums.length;
+		long totalCost = 0;
+		Map<Integer, Integer> map = new HashMap<>();
+		Queue<Integer> q = new LinkedList<>();
+		for (int i = n - 1; i >= 0; i--) {
+			totalCost += nums[i];
+			map.put(i,nums[i]);
+			q.add(nums[i]);
+		}
+		long ans = totalCost;
+		for (int rotations = 0; rotations < n - 1; rotations++) {
+			q.add(q.poll());
+			totalCost += x;
+			Iterator<Integer> it = q.iterator();
+			int i = n - 1;
+			while (it.hasNext()) {
+				int currCost = it.next();
+				int prevCost = map.get(i);
+				if (currCost < prevCost) {
+					totalCost = totalCost - prevCost + currCost;
+					map.put(i,currCost);
+				}
+				i--;
+			}
+			ans = Math.min(ans,totalCost);
+		}
+		return ans;
+	}
+}

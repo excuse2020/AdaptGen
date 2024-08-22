@@ -1,0 +1,42 @@
+class Solution {
+	boolean allZ(int[] n) {
+		for (int i: n) {	
+			if (i != 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+	long maxStrength(int[] nums) {
+		Arrays.sort(nums);
+		if (nums[nums.length - 1] == 0 && (negCt(nums) == 1 || allZ(nums))) {
+			return 0;
+		}
+		if (nums.length == 1) {
+			return nums[0];
+		}
+		long nonZProd = 1;
+		for (long i: nums) {	
+			if (i != 0) {
+				nonZProd *= i;
+			}
+		}
+		if (nonZProd > 0) {
+			return nonZProd;
+		}
+		long smallestNeg = Long.MIN_VALUE;
+		for (long i: nums) {	
+			if (i < 0 && i > smallestNeg) {
+				smallestNeg = i;
+			}
+		}
+		return nonZProd / smallestNeg;
+	}
+	int negCt(int[] n) {
+		int out = 0;
+		for (int i: n) {	
+			out += (i < 0) ? 1 : 0;
+		}
+		return out;
+	}
+}

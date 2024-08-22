@@ -1,0 +1,33 @@
+class Solution {
+	Map<Integer, List<Integer>> graph;
+	Set<Integer> seen;
+	boolean dfs(int node, int destination) {
+		if (node == destination) {
+			return true;
+		}
+		boolean res = false;
+		for (int neighbor: graph.get(node)) {	
+			if (!seen.contains(neighbor)) {
+				seen.add(neighbor);
+				res = res || dfs(neighbor,destination);
+			}
+		}
+		return res;
+	}
+	boolean validPath(int n, int[][] edges, int source, int destination) {
+		graph = new HashMap<>();
+		for (int[] edge: edges) {	
+			if (!graph.containsKey(edge[0])) {
+				graph.put(edge[0],new ArrayList<>());
+			}
+			if (!graph.containsKey(edge[1])) {
+				graph.put(edge[1],new ArrayList<>());
+			}
+			graph.get(edge[0]).add(edge[1]);
+			graph.get(edge[1]).add(edge[0]);
+		}
+		seen = new HashSet<>();
+		seen.add(source);
+		return dfs(source,destination);
+	}
+}

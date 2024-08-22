@@ -1,0 +1,31 @@
+class Solution {
+	ArrayList<String> res = new ArrayList<>();
+	String s;
+	void dfs(int index, int depth, StringBuilder ip) {
+		int len = ip.length();
+		if (index == s.length()) {
+			if (depth == 4) {
+				ip.deleteCharAt(ip.length() - 1);
+				res.add(ip.toString());
+			}
+			return;
+		}
+		for (int i = 1; i <= 3; i++) {
+			if (i + index > s.length()) {
+				break;
+			}
+			int num = Integer.parseInt(s.substring(index,index + i));
+			if (num > 255 || String.valueOf(num).length() != i) {
+				continue;
+			}
+			ip.append(num).append(".");
+			dfs(index + i,depth + 1,ip);
+			ip.setLength(len);
+		}
+	}
+	ArrayList<String> restoreIpAddresses(String s) {
+		this.s = s;
+		dfs(0,0,new StringBuilder());
+		return res;
+	}
+}

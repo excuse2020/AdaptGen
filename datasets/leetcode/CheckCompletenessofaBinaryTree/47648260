@@ -1,0 +1,36 @@
+class Solution {
+	HashMap<Integer, List<Integer>> map;
+	boolean check() {
+		for (int i = 0; i < map.size() - 1; i++) {
+			List<Integer> list = map.get(i);
+			if (list.size() != Math.pow(2,i)) {
+				return false;
+			}
+		}
+		List<Integer> list = map.get(map.size() - 1);
+		for (int i = 0; i < list.size(); i++) {
+			if (i != list.get(i)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean isCompleteTree(TreeNode root) {
+		map = new HashMap<>();
+		traverse(root,0,0);
+		return check();
+	}
+	void traverse(TreeNode root, int depth, int index) {
+		if (root != null) {
+			List<Integer> list = map.get(depth);
+			if (list == null) {
+				list = new ArrayList<>();
+				map.put(depth,list);
+			}
+			list.add(index);
+			depth++;
+			traverse(root.left,depth,2 * index);
+			traverse(root.right,depth,(2 * index + 1));
+		}
+	}
+}

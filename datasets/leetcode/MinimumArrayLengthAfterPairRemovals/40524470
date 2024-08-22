@@ -1,0 +1,32 @@
+class Solution {
+	int minLengthAfterRemovals(List<Integer> nums) {
+		HashMap<Integer, Integer> mp = new HashMap<>();
+		for (int i = 0; i < nums.size(); i++) {
+			mp.put(nums.get(i),mp.getOrDefault(nums.get(i),0) + 1);
+		}
+		PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+		for (Map.Entry<Integer, Integer> e: mp.entrySet()) {	
+			pq.add(e.getValue());
+		}
+		while (pq.size() > 1) {
+			int first = pq.remove();
+			int sec = pq.remove();
+			if (pq.size() >= 1) {
+				if (pq.peek() - 1 > 0) {
+					pq.add(pq.peek() - 1);
+				}
+				int rem = pq.peek() - 1 + Math.max(first,sec) - Math.min(first,sec);
+				if (rem != 0) {
+					pq.add(rem);
+				}
+			} 
+			else {
+				int rem = Math.max(first,sec) - Math.min(first,sec);
+				if (rem != 0) {
+					pq.add(rem);
+				}
+			}
+		}
+		return pq.size() == 0 ? 0 : pq.peek();
+	}
+}

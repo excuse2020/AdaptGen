@@ -1,0 +1,55 @@
+class Solution {
+	List<String> wordSubsets(String[] words1, String[] words2) {
+		ArrayList<String> al = new ArrayList<>();
+		HashMap<Character, Integer> hm1 = new HashMap<>();
+		for (int i = 0; i < words2.length; i++) {
+			HashMap<Character, Integer> t = new HashMap<>();
+			for (int j = 0; j < words2[i].length(); j++) {
+				if (t.containsKey(words2[i].charAt(j))) {
+					int temp = t.get(words2[i].charAt(j));
+					t.put(words2[i].charAt(j),temp + 1);
+				} 
+				else {
+					t.put(words2[i].charAt(j),1);
+				}
+			}
+			for (Map.Entry<Character, Integer> x: t.entrySet()) {	
+				if (hm1.containsKey(x.getKey())) {
+					hm1.put(x.getKey(),Math.max(x.getValue(),hm1.get(x.getKey())));
+				} 
+				else {
+					hm1.put(x.getKey(),x.getValue());
+				}
+			}
+		}
+		for (int i = 0; i < words1.length; i++) {
+			HashMap<Character, Integer> t2 = new HashMap<>();
+			for (int j = 0; j < words1[i].length(); j++) {
+				if (t2.containsKey(words1[i].charAt(j))) {
+					int temp = t2.get(words1[i].charAt(j));
+					t2.put(words1[i].charAt(j),temp + 1);
+				} 
+				else {
+					t2.put(words1[i].charAt(j),1);
+				}
+			}
+			boolean ch = true;
+			for (Map.Entry<Character, Integer> y: hm1.entrySet()) {	
+				if (t2.containsKey(y.getKey())) {
+					int a = t2.get(y.getKey());
+					int b = hm1.get(y.getKey());
+					if (a < b) {
+						ch = false;
+					}
+				} 
+				else {
+					ch = false;
+				}
+			}
+			if (ch == true) {
+				al.add(words1[i]);
+			}
+		}
+		return al;
+	}
+}

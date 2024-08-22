@@ -1,0 +1,35 @@
+class Solution {
+	Map<Integer, List<Integer>> adjMap;
+	int ans;
+	Set<String> edges;
+	void dfs(int node, Set<Integer> visited) {
+		visited.add(node);
+		for (Integer neighbor: adjMap.getOrDefault(node,new ArrayList<>())) {	
+			if (visited.contains(neighbor)) {
+				continue;
+			}
+			String edge = node + "->";
+			if (edges.contains(edge)) {
+				ans++;
+			}
+			dfs(neighbor,visited);
+		}
+	}
+	int minReorder(int n, int[][] connections) {
+		edges = new HashSet<>();
+		adjMap = new HashMap<>();
+		ans = 0;
+		for (int[] con: connections) {	
+			List<Integer> adjs = adjMap.getOrDefault(con[0],new ArrayList<>());
+			adjs.add(con[1]);
+			adjMap.put(con[0],adjs);
+			adjs = adjMap.getOrDefault(con[1],new ArrayList<>());
+			adjs.add(con[0]);
+			adjMap.put(con[1],adjs);
+			String edge = con[0] + "->";
+			edges.add(edge);
+		}
+		dfs(0,new HashSet<>());
+		return ans;
+	}
+}

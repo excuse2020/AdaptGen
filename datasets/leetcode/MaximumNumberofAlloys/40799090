@@ -1,0 +1,58 @@
+class Solution {
+	boolean checkAvailability(List<List<Integer>> composition, List<Integer> stockList, int k, int n) {
+		boolean check = true;
+		List<Integer> compositionOfKthMachine = composition.get(k);
+		for (int i = 0; i < n; i++) {
+			check = check && (stockList.get(i) >= compositionOfKthMachine.get(i));
+		}
+		if (check) {
+			for (int i = 0; i < n; i++) {
+				stockList.set(i,stockList.get(i) - compositionOfKthMachine.get(i));
+			}
+		}
+		return check;
+	}
+	int maxNumberOfAlloys(int n, int k, int budget, List<List<Integer>> composition, List<Integer> stock, List<Integer> cost) {
+		int ans = 0;
+		for (int i = 0; i < k; i++) {
+			int count = 0;
+			List<Integer> stockList = new ArrayList<>(stock);
+			int minCount = Integer.MAX_VALUE;
+			for (int m = 0; m < n; m++) {
+				int available = stock.get(m);
+				int required = composition.get(i).get(m);
+				minCount = Math.min(minCount,available / required);
+			}
+			for (int m = 0; m < n; m++) {
+				stockList.set(m,stockList.get(m) - (minCount * composition.get(i).get(m)));
+			}
+			count += minCount;
+			int extraCount = 0;
+			int left = 0, right = budget / n;
+			while (left <= right) {
+				int mid = (left + right) / 2;
+				int noOfAlloys = mid;
+				long costSum = 0;
+				for (int metal = 0; metal < n; metal++) {
+					long totalMetalCompositionRequired = noOfAlloys * composition.get(i).get(metal);
+					long totalMetalCompositionAvailable = stockList.get(metal);
+					long metalCost = 0;
+					if (totalMetalCompositionRequired >= totalMetalCompositionAvailable) {
+						metalCost = (totalMetalCompositionRequired - totalMetalCompositionAvailable) * cost.get(metal);
+					}
+					costSum += metalCost;
+				}
+				if (costSum <= (long) budget) {
+					extraCount = (int) mid;
+					left = mid + 1;
+				} 
+				else {
+					right = mid - 1;
+				}
+			}
+			count = count + extraCount;
+			ans = Math.max(ans,count);
+		}
+		return ans;
+	}
+}

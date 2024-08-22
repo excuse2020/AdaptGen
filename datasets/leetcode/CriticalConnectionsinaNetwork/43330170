@@ -1,0 +1,43 @@
+class Solution {
+	int timer;
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		List<List<Integer>> bridges = new ArrayList<>();
+		boolean[] vis = new boolean[n];
+		int[] low = new int[n];
+		int[] tin = new int[n];
+		timer = 1;
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < connections.size(); i++) {
+			int start = connections.get(i).get(0);
+			int end = connections.get(i).get(1);
+			adj.get(start).add(end);
+			adj.get(end).add(start);
+		}
+		dfs(0,-1,vis,low,tin,bridges,adj);
+		return bridges;
+	}
+	void dfs(int i, int parent, boolean[] vis, int[] low, int[] tin, List<List<Integer>> bridges, ArrayList<ArrayList<Integer>> adj) {
+		vis[i] = true;
+		tin[i] = timer;
+		low[i] = timer;
+		timer++;
+		for (int j: adj.get(i)) {	
+			if (j == parent) {
+				continue;
+			}
+			if (!vis[j]) {
+				dfs(j,i,vis,low,tin,bridges,adj);
+				low[i] = Math.min(low[i],low[j]);
+				if (low[j] > tin[i]) {
+					bridges.add(Arrays.asList(i,j));
+				}
+			} 
+			else {
+				low[i] = Math.min(low[i],low[j]);
+			}
+		}
+	}
+}

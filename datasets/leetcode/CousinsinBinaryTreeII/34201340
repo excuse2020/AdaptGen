@@ -1,0 +1,56 @@
+class Solution {
+	void distribute(TreeNode root, LinkedList<Integer> layers) {
+		LinkedList<TreeNode> queue = new LinkedList<>();
+		queue.add(root);
+		root.val = layers.poll() - root.val;
+		while (!layers.isEmpty()) {
+			int sz = queue.size();
+			int val = layers.poll();
+			while (sz-- > 0) {
+				TreeNode temp = queue.poll();
+				if (temp.left != null && temp.right != null) {
+					int both = temp.left.val + temp.right.val;
+					temp.left.val = val - both;
+					temp.right.val = val - both;
+					queue.add(temp.left);
+					queue.add(temp.right);
+				} 
+				else if (temp.left != null) {
+					temp.left.val = val - temp.left.val;
+					queue.add(temp.left);
+				} 
+				else if (temp.right != null) {
+					temp.right.val = val - temp.right.val;
+					queue.add(temp.right);
+				}
+			}
+		}
+	}
+	LinkedList<Integer> layers(TreeNode root) {
+		LinkedList<TreeNode> queue = new LinkedList<>();
+		queue.add(root);
+		LinkedList<Integer> ans = new LinkedList<>();
+		while (!queue.isEmpty()) {
+			int sz = queue.size();
+			int sum = 0;
+			while (sz-- > 0) {
+				TreeNode temp = queue.poll();
+				sum += temp.val;
+				if (temp.left != null) {
+					queue.add(temp.left);
+				}
+				if (temp.right != null) {
+					queue.add(temp.right);
+				}
+			}
+			ans.add(sum);
+		}
+		return ans;
+	}
+	TreeNode replaceValueInTree(TreeNode root) {
+		LinkedList<TreeNode> queue = new LinkedList<>();
+		LinkedList<Integer> layers = layers(root);
+		distribute(root,layers);
+		return root;
+	}
+}

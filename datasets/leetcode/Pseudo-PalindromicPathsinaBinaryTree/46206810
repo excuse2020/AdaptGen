@@ -1,0 +1,45 @@
+class Solution {
+	int cnt = 0;
+	boolean check(int[] freq) {
+		int even = 0, odd = 0;
+		for (int e: freq) {	
+			if ((e & 1) == 0) {
+				even++;
+			} 
+			else {
+				odd++;
+			}
+		}
+		return odd <= 1;
+	}
+	void f(TreeNode root, int freq) {
+		if (root == null) {
+			return;
+		}
+		if (root.left == null && root.right == null) {
+			if (check(freq)) {
+				cnt++;
+			}
+			return;
+		}
+		if (root.left != null) {
+			int ele = root.left.val;
+			freq[ele]++;
+			f(root.left,freq);
+			freq[ele]--;
+		}
+		if (root.right != null) {
+			int ele = root.right.val;
+			freq[ele]++;
+			f(root.right,freq);
+			freq[ele]--;
+		}
+	}
+	int pseudoPalindromicPaths(TreeNode root) {
+		cnt = 0;
+		int freq = new int[10];
+		freq[root.val]++;
+		f(root,freq);
+		return cnt;
+	}
+}

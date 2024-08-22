@@ -1,0 +1,73 @@
+class Solution {
+	int getMappedValue(int[] mapping, int num) {
+		if (num == 0) {
+			return mapping[0];
+		}
+		int mappedValue = 0;
+		int factor = 1;
+		while (num > 0) {
+			mappedValue += mapping[num % 10] * factor;
+			factor *= 10;
+			num /= 10;
+		}
+		return mappedValue;
+	}
+	void merge(int[] nums, int[] mappedValues, int left, int middle, int right) {
+		int n1 = middle - left + 1;
+		int n2 = right - middle;
+		int[] leftNums = new int[n1];
+		int[] rightNums = new int[n2];
+		int[] leftMapped = new int[n1];
+		int[] rightMapped = new int[n2];
+		for (int i = 0; i < n1; i++) {
+			leftNums[i] = nums[left + i];
+			leftMapped[i] = mappedValues[left + i];
+		}
+		for (int j = 0; j < n2; j++) {
+			rightNums[j] = nums[middle + 1 + j];
+			rightMapped[j] = mappedValues[middle + 1 + j];
+		}
+		int i = 0, j = 0, k = left;
+		while (i < n1 && j < n2) {
+			if (leftMapped[i] <= rightMapped[j]) {
+				nums[k] = leftNums[i];
+				mappedValues[k] = leftMapped[i];
+				i++;
+			} 
+			else {
+				nums[k] = rightNums[j];
+				mappedValues[k] = rightMapped[j];
+				j++;
+			}
+			k++;
+		}
+		while (i < n1) {
+			nums[k] = leftNums[i];
+			mappedValues[k] = leftMapped[i];
+			i++;
+			k++;
+		}
+		while (j < n2) {
+			nums[k] = rightNums[j];
+			mappedValues[k] = rightMapped[j];
+			j++;
+			k++;
+		}
+	}
+	void mergeSort(int[] nums, int[] mappedValues, int left, int right) {
+		if (left < right) {
+			int middle = left + (right - left) / 2;
+			mergeSort(nums,mappedValues,left,middle);
+			mergeSort(nums,mappedValues,middle + 1,right);
+			merge(nums,mappedValues,left,middle,right);
+		}
+	}
+	int[] sortJumbled(int[] mapping, int[] nums) {
+		int[] mappedValues = new int[nums.length];
+		for (int i = 0; i < nums.length; i++) {
+			mappedValues[i] = getMappedValue(mapping,nums[i]);
+		}
+		mergeSort(nums,mappedValues,0,nums.length - 1);
+		return nums;
+	}
+}

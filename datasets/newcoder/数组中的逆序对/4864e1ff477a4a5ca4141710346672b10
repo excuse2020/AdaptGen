@@ -1,0 +1,51 @@
+class Solution {
+	int count = 0;
+	int InversePairs(int[] array) {
+		if (array == null || array.length == 0) {
+			return 0;
+		}
+		int low = 0;
+		int high = array.length - 1;
+		inversePairs(array,low,high);
+		return count;
+	}
+	void inversePairs(int[] array, int low, int high) {
+		if (low >= high) {
+			return;
+		}
+		int mid = low + ((high - low) >> 1);
+		inversePairs(array,low,mid);
+		inversePairs(array,mid + 1,high);
+		int left = low;
+		int right = mid + 1;
+		int[] newArray = new int[high - low + 1];
+		int index = 0;
+		while (left <= mid && right <= high) {
+			if (array[left] > array[right]) {
+				count = (count + mid - left + 1) % 1000000007;
+				newArray[index] = array[right];
+				right++;
+			} 
+			else {
+				newArray[index] = array[left];
+				left++;
+			}
+			index++;
+		}
+		while (left <= mid) {
+			newArray[index] = array[left];
+			index++;
+			left++;
+		}
+		while (right <= high) {
+			newArray[index] = array[right];
+			index++;
+			right++;
+		}
+		left = low;
+		for (int i = 0; i < newArray.length; i++) {
+			array[left] = newArray[i];
+			left++;
+		}
+	}
+}

@@ -1,0 +1,43 @@
+class Solution {
+	int nodes;
+	boolean checkComplete(ArrayList<ArrayList<Integer>> arr, int i) {
+		int currSize = arr.get(i).size();
+		for (int adj: arr.get(i)) {	
+			if (arr.get(adj).size() != currSize || nodes - 1 != currSize) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int countCompleteComponents(int n, int[][] edges) {
+		ArrayList<ArrayList<Integer>> arr = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			arr.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			arr.get(edges[i][0]).add(edges[i][1]);
+			arr.get(edges[i][1]).add(edges[i][0]);
+		}
+		boolean[] visited = new boolean[n];
+		int count = 0;
+		for (int i = 0; i < n; i++) {
+			if (!visited[i]) {
+				nodes = 0;
+				dfs(arr,visited,i);
+				if (checkComplete(arr,i)) {
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+	void dfs(ArrayList<ArrayList<Integer>> arr, boolean[] visited, int i) {
+		visited[i] = true;
+		for (int adj: arr.get(i)) {	
+			if (!visited[adj]) {
+				dfs(arr,visited,adj);
+			}
+		}
+		nodes++;
+	}
+}

@@ -1,0 +1,26 @@
+class Solution {
+	int shortestSubarray(ArrayList<Integer> nums, int k) {
+		int[] pre = new int[nums.size()];
+		pre[0] = nums.get(0);
+		for (int i = 1; i < nums.size(); i++) {
+			pre[i] = pre[i - 1] + nums.get(i);
+		}
+		int res = Integer.MAX_VALUE;
+		for (int i = 0; i < nums.size(); i++) {
+			if (nums.get(i) >= k) {
+				res = 1;
+				break;
+			}
+			if (pre[i] >= k) {
+				res = Math.min(res,i + 1);
+				for (int j = i - 2; j > -1; j--) {
+					if (pre[i] - pre[j] >= k) {
+						res = Math.min(res,i - j);
+						break;
+					}
+				}
+			}
+		}
+		return res == Integer.MAX_VALUE ? -1 : res;
+	}
+}

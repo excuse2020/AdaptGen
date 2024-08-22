@@ -1,0 +1,28 @@
+class Solution {
+	int rob(int[] nums) {
+		int n = nums.length;
+		if (n == 1) {
+			return nums[0];
+		}
+		int dp = new int[n + 1];
+		int dp2 = new int[n + 1];
+		Arrays.fill(dp,-1);
+		Arrays.fill(dp2,-1);
+		return Math.max(solve(nums,dp,n - 1,1),solve(nums,dp2,n - 2,0));
+	}
+	int solve(int nums, int dp, int idx, int start) {
+		if (idx < start) {
+			return 0;
+		}
+		if (idx == start) {
+			return nums[idx];
+		}
+		if (dp[idx] != -1) {
+			return dp[idx];
+		}
+		int pick = nums[idx] + solve(nums,dp,idx - 2,start);
+		int notPick = solve(nums,dp,idx - 1,start);
+		dp[idx] = Math.max(pick,notPick);
+		return dp[idx];
+	}
+}

@@ -1,0 +1,33 @@
+class Solution {
+	boolean checkPartitioning(String s) {
+		char arr = s.toCharArray();
+		boolean dp = new boolean[arr.length][arr.length];
+		for (int i = 0; i < dp.length; i++) {
+			dp[i][i] = true;
+			if (i + 1 < dp.length && arr[i] == arr[i + 1]) {
+				dp[i][i + 1] = true;
+			}
+		}
+		int len = 3;
+		while (len <= arr.length) {
+			int st = 0;
+			int e = st + len - 1;
+			while (e < arr.length) {
+				if (arr[st] == arr[e]) {
+					dp[st][e] = dp[st + 1][e - 1];
+				}
+				st++;
+				e = st + len - 1;
+			}
+			len++;
+		}
+		for (int i = 0; i < arr.length - 2; i++) {
+			for (int j = i + 1; j < arr.length - 1; j++) {
+				if (dp[0][i] && dp[i + 1][j]) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+}

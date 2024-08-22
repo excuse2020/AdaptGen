@@ -1,0 +1,23 @@
+class Solution {
+	TreeNode ans(int[] postorder, int pst, int pen, int[] inorder, int ist, int ien, Map<Integer, Integer> map) {
+		if (ist > ien || pst < pen) {
+			return null;
+		}
+		TreeNode root = new TreeNode(postorder[pst]);
+		int ind = map.get(postorder[pst]);
+		int len = ind - ist;
+		int l = ien - ind;
+		root.left = ans(postorder,pst - l,pen,inorder,ist,ind - 1,map);
+		root.right = ans(postorder,pst - 1,pen + len,inorder,ind + 1,ien,map);
+		return root;
+	}
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		Map<Integer, Integer> map = new HashMap<>();
+		int n = inorder.length;
+		for (int i = 0; i < n; i++) {
+			map.put(inorder[i],i);
+		}
+		TreeNode sol = ans(postorder,n - 1,0,inorder,0,n - 1,map);
+		return sol;
+	}
+}

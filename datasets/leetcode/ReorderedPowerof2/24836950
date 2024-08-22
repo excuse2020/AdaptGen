@@ -1,0 +1,49 @@
+class Solution {
+	int[] getFreq(int n) {
+		int[] freq = new int[10];
+		while (n > 0) {
+			freq[n % 10]++;
+			n /= 10;
+		}
+		return freq;
+	}
+	int leftmostSetBit(int n) {
+		int pos = 0;
+		while (n > 0) {
+			n = n >> 1;
+			pos++;
+		}
+		return 1 << (pos - 1);
+	}
+	boolean reorderedPowerOf2(int n) {
+		int[] freq = getFreq(n);
+		int l = 0;
+		int h = 0;
+		for (int i = 9; i >= 0; i--) {
+			for (int j = freq[i]; j > 0; j--) {
+				h = h * 10 + i;
+			}
+			for (int j = freq[9 - i]; j > 0; j--) {
+				l = l * 10 + (9 - i);
+			}
+		}
+		int hi = leftmostSetBit(h);
+		int lo = leftmostSetBit(l);
+		while (lo <= hi) {
+			int[] check = getFreq(lo);
+			if (valid(check,freq)) {
+				return true;
+			}
+			lo <<= 1;
+		}
+		return false;
+	}
+	boolean valid(int[] freq1, int[] freq2) {
+		for (int i = 9; i >= 0; i--) {
+			if (freq1[i] != freq2[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

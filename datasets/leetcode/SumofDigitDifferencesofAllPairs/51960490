@@ -1,0 +1,35 @@
+class Solution {
+	HashMap<Integer, Map<Character, Integer>> map = new HashMap<>();
+	void getFrequency(int num) {
+		String str = String.valueOf(num);
+		for (int i = 0; i < str.length(); i++) {
+			if (map.containsKey(i)) {
+				if (map.get(i).containsKey(str.charAt(i))) {
+					map.get(i).put(str.charAt(i),map.get(i).get(str.charAt(i)) + 1);
+				} 
+				else {
+					map.get(i).put(str.charAt(i),1);
+				}
+			} 
+			else {
+				HashMap<Character, Integer> subMap = new HashMap<>();
+				subMap.put(str.charAt(i),1);
+				map.put(i,subMap);
+			}
+		}
+	}
+	long sumDigitDifferences(int[] nums) {
+		for (int i: nums) {	
+			getFrequency(i);
+		}
+		int l = String.valueOf(nums[0]).length();
+		long ans = 0l;
+		for (int i: nums) {	
+			for (int j = 0; j < l; j++) {
+				char c = String.valueOf(i).charAt(j);
+				ans += nums.length - map.get(j).get(c);
+			}
+		}
+		return ans / 2;
+	}
+}

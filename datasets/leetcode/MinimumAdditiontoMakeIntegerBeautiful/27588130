@@ -1,0 +1,39 @@
+class Solution {
+	int digitCount(long n) {
+		int count = 0;
+		while (n > 0) {
+			n = n / 10;
+			count++;
+		}
+		return count;
+	}
+	int digitSum(long n) {
+		int sum = 0;
+		while (n > 0) {
+			sum += n % 10;
+			n = n / 10;
+		}
+		return sum;
+	}
+	long makeIntegerBeautiful(long n, int target) {
+		if (digitSum(n) <= target) {
+			return 0;
+		}
+		if (digitCount(n) == 1) {
+			return 10 - n;
+		}
+		long result = 0;
+		long temp = n;
+		int digitSum = digitSum(n);
+		int i = 1;
+		while (digitSum > target) {
+			long lastDigit = temp % 10;
+			digitSum -= lastDigit;
+			digitSum = i == 1 ? digitSum + 1 : digitSum;
+			result += i == 1 ? (10 - lastDigit) : (10 - lastDigit) * (long) Math.pow(10,i - 1);
+			temp = temp / 10;
+			i++;
+		}
+		return result;
+	}
+}

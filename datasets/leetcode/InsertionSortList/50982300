@@ -1,0 +1,61 @@
+class Solution {
+	ListNode firstNode;
+	ListNode lastNode;
+	int leftLen = 0;
+	ListNode midNode;
+	int rightLen = 0;
+	void insert(ListNode temp) {
+		ListNode prev = lastNode;
+		ListNode run = lastNode.next;
+		if (temp.val < midNode.val) {
+			prev = firstNode;
+			run = firstNode.next;
+			leftLen++;
+		} 
+		else {
+			if (temp.val < lastNode.val) {
+				prev = midNode;
+				run = midNode.next;
+			}
+			rightLen++;
+		}
+		int count = 1;
+		while (run != null && run.val < temp.val) {
+			prev = run;
+			run = run.next;
+			count++;
+		}
+		prev.next = temp;
+		temp.next = run;
+		if (prev == lastNode) {
+			lastNode = temp;
+		}
+		if (leftLen < rightLen && midNode.next != null) {
+			rightLen--;
+			leftLen++;
+			midNode = midNode.next;
+		} 
+		else if (leftLen > rightLen) {
+			int totalLen = leftLen + rightLen;
+			int halfLen = totalLen / 2;
+			if (Math.abs(totalLen - count) < Math.abs(rightLen - halfLen)) {
+				rightLen = totalLen - count;
+				leftLen = count;
+				midNode = prev;
+			}
+		}
+	}
+	ListNode insertionSortList(ListNode head) {
+		if (head == null) {
+			return null;
+		}
+		lastNode = midNode = firstNode = new ListNode(0);
+		ListNode node = head;
+		while (node != null) {
+			ListNode temp = node;
+			node = node.next;
+			insert(temp);
+		}
+		return firstNode.next;
+	}
+}

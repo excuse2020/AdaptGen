@@ -1,0 +1,39 @@
+class Solution {
+	int[] getNext(String s) {
+		int i = 0;
+		int j = -1;
+		int[] next = new int[s.length()];
+		next[0] = j;
+		while (i < s.length() - 1) {
+			if (j == -1 || s.charAt(i) == s.charAt(j)) {
+				j++;
+				i++;
+				next[i] = j;
+			} 
+			else {
+				j = next[j];
+			}
+		}
+		return next;
+	}
+	int kmp(String S, String T) {
+		int count = 0;
+		int i = 0;
+		int j = 0;
+		int[] next = getNext(S);
+		while (i < T.length() && j < S.length()) {
+			if (j == -1 || T.charAt(i) == S.charAt(j)) {
+				i++;
+				j++;
+			} 
+			else {
+				j = next[j];
+			}
+			if (j == S.length()) {
+				count++;
+				j = next[j - 1] + 1;
+			}
+		}
+		return count;
+	}
+}

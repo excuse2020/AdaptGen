@@ -1,0 +1,31 @@
+class Solution {
+	boolean isVisited;
+	int getMinLength(int index, List<List<Integer>> adj, List<Boolean> hasApple, int parent) {
+		int length = 0;
+		if (isVisited[index]) {
+			return 0;
+		}
+		isVisited[index] = true;
+		for (int vertex: adj.get(index)) {	
+			length += getMinLength(vertex,adj,hasApple,index);
+		}
+		if (index != 0 && (hasApple.get(index) || length > 0)) {
+			length += 2;
+		}
+		return length;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		List<List<Integer>> adj = new ArrayList<>();
+		isVisited = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int edge: edges) {	
+			int u = edge[0];
+			int v = edge[1];
+			adj.get(u).add(v);
+			adj.get(v).add(u);
+		}
+		return getMinLength(0,adj,hasApple,0);
+	}
+}

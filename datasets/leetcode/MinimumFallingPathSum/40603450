@@ -1,0 +1,51 @@
+class Solution {
+	int minFallingPathSum(int[][] matrix) {
+		int n = matrix.length;
+		int[] prev = new int[n];
+		for (int row = 0; row < n; row++) {
+			int[] curr = new int[n];
+			for (int col = 0; col < n; col++) {
+				if (row == 0) {
+					curr[col] = matrix[row][col];
+					continue;
+				}
+				int left = Integer.MAX_VALUE;
+				int up = Integer.MAX_VALUE;
+				int right = Integer.MAX_VALUE;
+				if (col > 0) {
+					left = matrix[row][col] + prev[col - 1];
+				}
+				if (col < n - 1) {
+					right = matrix[row][col] + prev[col + 1];
+				}
+				up = matrix[row][col] + prev[col];
+				curr[col] = Math.min(left,Math.min(up,right));
+			}
+			prev = curr;
+		}
+		int ans = Integer.MAX_VALUE;
+		for (int col = 0; col < n; col++) {
+			ans = Math.min(ans,prev[col]);
+		}
+		return ans;
+	}
+	int task(int[][] mat, int row, int col, int[][] dp) {
+		if (row == 0) {
+			return mat[row][col];
+		}
+		if (dp[row][col] != -1) {
+			return dp[row][col];
+		}
+		int left = Integer.MAX_VALUE;
+		int up = Integer.MAX_VALUE;
+		int right = Integer.MAX_VALUE;
+		if (col > 0) {
+			left = mat[row][col] + task(mat,row - 1,col - 1,dp);
+		}
+		if (col < mat.length - 1) {
+			right = mat[row][col] + task(mat,row - 1,col + 1,dp);
+		}
+		up = mat[row][col] + task(mat,row - 1,col,dp);
+		return dp[row][col] = Math.min(left,Math.min(up,right));
+	}
+}

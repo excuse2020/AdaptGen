@@ -1,0 +1,21 @@
+class Solution {
+	boolean carPooling(int[][] trips, int capacity) {
+		PriorityQueue<int[]> endLocations = new PriorityQueue<>(new Comparator<int[]>());
+		int currentPassenger = 0;
+		Arrays.sort(trips,new Comparator<int[]>());
+		for (int[] trip: trips) {	
+			int numberOfPassengers = trip[0];
+			int startLocation = trip[1];
+			while (!endLocations.isEmpty() && endLocations.peek()[2] <= startLocation) {
+				int passenger = endLocations.poll()[0];
+				currentPassenger -= passenger;
+			}
+			if (currentPassenger + numberOfPassengers > capacity) {
+				return false;
+			}
+			currentPassenger += numberOfPassengers;
+			endLocations.add(trip);
+		}
+		return true;
+	}
+}

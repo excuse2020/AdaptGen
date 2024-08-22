@@ -1,0 +1,33 @@
+class Solution {
+	Map<Integer, Integer> map;
+	Map<Integer, Long> memo;
+	long dp(List<Integer> keys, int index) {
+		if (index == keys.size()) {
+			return 0;
+		}
+		if (memo.containsKey(index)) {
+			return memo.get(index);
+		}
+		int key = keys.get(index);
+		long take = (long) key * map.get(key);
+		int nextIndex = index + 1;
+		while (nextIndex < keys.size() && (keys.get(nextIndex) == key + 1 || keys.get(nextIndex) == key + 2)) {
+			nextIndex++;
+		}
+		take += dp(keys,nextIndex);
+		long notTake = dp(keys,index + 1);
+		long res = Math.max(take,notTake);
+		memo.put(index,res);
+		return res;
+	}
+	long maximumTotalDamage(int[] power) {
+		memo = new HashMap();
+		map = new HashMap();
+		for (int p: power) {	
+			map.put(p,map.getOrDefault(p,0) + 1);
+		}
+		List<Integer> keys = new ArrayList(map.keySet());
+		Collections.sort(keys);
+		return dp(keys,0);
+	}
+}

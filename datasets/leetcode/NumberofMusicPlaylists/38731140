@@ -1,0 +1,33 @@
+class Solution {
+	long[][] dp;
+	int mod = (int) (1e9 + 7);
+	int n, goal, k;
+	long makeCombinations(int used, int pos) {
+		if (n < used) {
+			return 0;
+		}
+		if (pos == goal) {
+			if (n != used) {
+				return 0;
+			}
+			return 1;
+		}
+		if (dp[used][pos] != -1) {
+			return dp[used][pos];
+		}
+		long takingUsedSong = (Math.max(used - k,0) * makeCombinations(used,pos + 1)) % mod;
+		long takingNewSong = ((n - used) * makeCombinations(used + 1,pos + 1)) % mod;
+		long totalWaysToFillPlaylistUptoPOS = takingUsedSong + takingNewSong;
+		return dp[used][pos] = totalWaysToFillPlaylistUptoPOS;
+	}
+	int numMusicPlaylists(int n, int goal, int k) {
+		this.n = n;
+		this.goal = goal;
+		this.k = k;
+		dp = new long[n + 1][goal + 1];
+		for (long[] row: dp) {	
+			Arrays.fill(row,-1);
+		}
+		return (int) makeCombinations(0,0);
+	}
+}

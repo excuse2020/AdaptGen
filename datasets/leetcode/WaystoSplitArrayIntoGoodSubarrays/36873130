@@ -1,0 +1,40 @@
+class Solution {
+	HashMap<String, Integer> hash = new HashMap<>();
+	int mod = (int) 1e9 + 7;
+	int numberOfGoodSubarraySplits(int[] nums) {
+		return solve(nums,0,0,false);
+	}
+	int solve(int[] nums, int oneC, int index, boolean notakeb) {
+		if (index >= nums.length) {
+			if (notakeb == true) {
+				return 0;
+			}
+			return 1;
+		}
+		String key = index + ".";
+		if (hash.containsKey(key)) {
+			return hash.get(key);
+		}
+		int take = 0;
+		if (nums[index] == 1) {
+			if (oneC == 0) {
+				take = solve(nums,0,index + 1,false);
+			}
+		} 
+		else if (nums[index] == 0) {
+			if (oneC == 1) {
+				take = solve(nums,0,index + 1,false);
+			}
+		}
+		int notake = 0;
+		if (nums[index] == 1) {
+			notake = solve(nums,oneC + 1,index + 1,true);
+		} 
+		else {
+			notake = solve(nums,oneC,index + 1,true);
+		}
+		int ans = (notake % mod + take % mod) % mod;
+		hash.put(key,ans);
+		return ans;
+	}
+}

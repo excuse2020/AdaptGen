@@ -1,0 +1,30 @@
+class Solution {
+	int sumSubarrayMins(int[] arr) {
+		int n = arr.length;
+		int[] nextSmallerToLeft = new int[n];
+		int[] nextSmallerToRight = new int[n];
+		Arrays.fill(nextSmallerToLeft,-1);
+		Arrays.fill(nextSmallerToRight,-1);
+		Deque<Integer> stack = new ArrayDeque<>();
+		for (int i = 0; i < n; i++) {
+			while (!stack.isEmpty() && arr[stack.peek()] >= arr[i]) {
+				nextSmallerToRight[stack.pop()] = i;
+			}
+			stack.push(i);
+		}
+		stack.clear();
+		for (int i = n - 1; i >= 0; i--) {
+			while (!stack.isEmpty() && arr[stack.peek()] > arr[i]) {
+				nextSmallerToLeft[stack.pop()] = i;
+			}
+			stack.push(i);
+		}
+		long sum = 0;
+		for (int i = 0; i < n; i++) {
+			int left = i - nextSmallerToLeft[i];
+			int right = (nextSmallerToRight[i] == -1 ? n : nextSmallerToRight[i]) - i;
+			sum += (long) left * (right);
+		}
+		return (int) (sum % 1000000007);
+	}
+}

@@ -1,0 +1,54 @@
+class Solution {
+	int countCompleteComponents(int n, int[][] edges) {
+		Set<Integer> visited = new HashSet<>();
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int[] edge: edges) {	
+			int from = edge[0];
+			int to = edge[1];
+			map.putIfAbsent(from,new ArrayList<>());
+			map.get(from).add(to);
+			map.putIfAbsent(to,new ArrayList<>());
+			map.get(to).add(from);
+		}
+		int result = 0;
+		for (int i = 0; i < n; i++) {
+			if (visited.contains(i)) {
+				continue;
+			}
+			if (helper(i,map,visited)) {
+				result++;
+			}
+		}
+		return result;
+	}
+	boolean helper(int node, Map<Integer, List<Integer>> map, Set<Integer> visited) {
+		Queue<Integer> queue = new ArrayDeque<>();
+		queue.offer(node);
+		visited.add(node);
+		int num_edges = map.get(node) == null ? 0 : map.get(node).size();
+		int num_nodes = 0;
+		boolean result = true;
+		while (!queue.isEmpty()) {
+			int current = queue.poll();
+			num_nodes++;
+			if (map.get(current) == null) {
+				result = num_edges == 0;
+			} 
+			else if (map.get(current).size() != num_edges) {
+				result = false;
+			}
+			List<Integer> neighbors = map.get(current);
+			if (neighbors == null) {
+				continue;
+			}
+			for (int nei: neighbors) {	
+				if (visited.contains(nei)) {
+					continue;
+				}
+				visited.add(nei);
+				queue.offer(nei);
+			}
+		}
+		return result && num_edges == num_nodes - 1;
+	}
+}

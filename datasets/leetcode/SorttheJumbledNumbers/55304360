@@ -1,0 +1,79 @@
+class Solution {
+	int[] ma;
+	void conversion(int[] mapping, int[] nums, int[] ma) {
+		for (int i = 0; i < nums.length; i++) {
+			int n = nums[i];
+			int map = 0;
+			int c = 1;
+			if (n == 0) {
+				map = mapping[0];
+			} 
+			else {
+				while (n != 0) {
+					int d = n % 10;
+					map += mapping[d] * c;
+					c *= 10;
+					n = n / 10;
+				}
+			}
+			ma[i] = map;
+		}
+	}
+	void merge(int[] nums, int[] ma, int l, int m, int r) {
+		int n1 = m - l + 1;
+		int n2 = r - m;
+		int[] leftNums = new int[n1];
+		int[] rightNums = new int[n2];
+		int[] leftMa = new int[n1];
+		int[] rightMa = new int[n2];
+		for (int i = 0; i < n1; i++) {
+			leftNums[i] = nums[l + i];
+			leftMa[i] = ma[l + i];
+		}
+		for (int j = 0; j < n2; j++) {
+			rightNums[j] = nums[m + 1 + j];
+			rightMa[j] = ma[m + 1 + j];
+		}
+		int i = 0, j = 0;
+		int k = l;
+		while (i < n1 && j < n2) {
+			if (leftMa[i] <= rightMa[j]) {
+				nums[k] = leftNums[i];
+				ma[k] = leftMa[i];
+				i++;
+			} 
+			else {
+				nums[k] = rightNums[j];
+				ma[k] = rightMa[j];
+				j++;
+			}
+			k++;
+		}
+		while (i < n1) {
+			nums[k] = leftNums[i];
+			ma[k] = leftMa[i];
+			i++;
+			k++;
+		}
+		while (j < n2) {
+			nums[k] = rightNums[j];
+			ma[k] = rightMa[j];
+			j++;
+			k++;
+		}
+	}
+	void mergeSort(int[] nums, int[] ma, int l, int r) {
+		if (l < r) {
+			int m = (l + r) / 2;
+			mergeSort(nums,ma,l,m);
+			mergeSort(nums,ma,m + 1,r);
+			merge(nums,ma,l,m,r);
+		}
+	}
+	int[] sortJumbled(int[] mapping, int[] nums) {
+		ma = new int[nums.length];
+		conversion(mapping,nums,ma);
+		mergeSort(nums,ma,0,nums.length - 1);
+		return nums;
+	}
+}

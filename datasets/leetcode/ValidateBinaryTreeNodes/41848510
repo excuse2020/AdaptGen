@@ -1,0 +1,40 @@
+class Solution {
+	int components;
+	int[] parent;
+	boolean Union(int p, int c) {
+		if (findP(c) != c) {
+			return false;
+		}
+		if (findP(p) == c) {
+			return false;
+		}
+		parent[c] = p;
+		components--;
+		return true;
+	}
+	int findP(int x) {
+		if (parent[x] == x) {
+			return x;
+		}
+		return parent[x] = findP(parent[x]);
+	}
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		components = n;
+		parent = new int[n];
+		for (int i = 0; i < n; i++) {
+			parent[i] = i;
+		}
+		for (int i = 0; i < n; i++) {
+			int node = i;
+			int lc = leftChild[i];
+			int rc = rightChild[i];
+			if (lc != -1 && Union(node,lc) == false) {
+				return false;
+			}
+			if (rc != -1 && Union(node,rc) == false) {
+				return false;
+			}
+		}
+		return components == 1;
+	}
+}

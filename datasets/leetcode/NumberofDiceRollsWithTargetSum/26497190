@@ -1,0 +1,26 @@
+class Solution {
+	Integer[][] mem;
+	int mod = (int) (1e9 + 7);
+	int numRolls(int n, int k, int target) {
+		if (target == 0 && n == 0) {
+			return 1;
+		}
+		if (n == 0) {
+			return 0;
+		}
+		if (mem[n][target] != null) {
+			return mem[n][target];
+		}
+		int total = 0;
+		for (int curr = 1; curr <= k; curr++) {
+			if (target - curr >= 0) {
+				total = ((total % mod) + (numRolls(n - 1,k,target - curr) % mod) % mod);
+			}
+		}
+		return mem[n][target] = total % mod;
+	}
+	int numRollsToTarget(int n, int k, int target) {
+		mem = new Integer[n + 1][target + 1];
+		return numRolls(n,k,target);
+	}
+}

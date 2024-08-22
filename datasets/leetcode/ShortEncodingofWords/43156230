@@ -1,0 +1,49 @@
+class Solution {
+	int minimumLengthEncoding(String[] words) {
+		List<Set<String>> list = new ArrayList<>();
+		for (int i = 0; i <= 6; i++) {
+			list.add(null);
+		}
+		for (String str: words) {	
+			int length = str.length();
+			Set innerList = null;
+			if (list.get(length - 1) == null) {
+				innerList = new HashSet<>();
+				list.set(length - 1,innerList);
+			} 
+			else {
+				innerList = list.get(length - 1);
+			}
+			innerList.add(str);
+		}
+		int result = 0;
+		Set<String> resultSet = new HashSet<>();
+		for (int i = list.size() - 1; i >= 0; i--) {
+			Set<String> innerWords = list.get(i);
+			if (innerWords == null) {
+				continue;
+			}
+			for (String word: innerWords) {	
+				String newWord = word;
+				boolean isFound = false;
+				for (String splitWord: resultSet) {	
+					int startIndex = splitWord.length() - newWord.length();
+					if (startIndex >= 0) {
+						String subStr = splitWord.substring(startIndex);
+						if (newWord.equals(subStr)) {
+							isFound = true;
+							break;
+						}
+					}
+				}
+				if (!isFound) {
+					resultSet.add(word);
+				}
+			}
+		}
+		for (String str: resultSet) {	
+			result = result + str.length();
+		}
+		return result;
+	}
+}

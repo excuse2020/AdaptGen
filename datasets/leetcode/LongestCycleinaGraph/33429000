@@ -1,0 +1,34 @@
+class Solution {
+	int ans = -1;
+	void dfs(int i, List<List<Integer>> al, int vis, int dfs, int dp) {
+		vis[i] = 1;
+		dfs[i] = 1;
+		for (int j: al.get(i)) {	
+			if (dfs[j] == 1) {
+				ans = Math.max(ans,Math.abs(dp[j] - dp[i]) + 1);
+			}
+			if (vis[j] == 0) {
+				dp[j] = dp[i] + 1;
+				dfs(j,al,vis,dfs,dp);
+			}
+		}
+		dfs[i] = 0;
+	}
+	int longestCycle(int[] edges) {
+		int n = edges.length;
+		int vis = new int[n], dfs = new int[n], dp = new int[n];
+		List<List<Integer>> al = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			al.add(new ArrayList<>());
+			if (edges[i] != -1) {
+				al.get(i).add(edges[i]);
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			if (vis[i] == 0) {
+				dfs(i,al,vis,dfs,dp);
+			}
+		}
+		return ans;
+	}
+}

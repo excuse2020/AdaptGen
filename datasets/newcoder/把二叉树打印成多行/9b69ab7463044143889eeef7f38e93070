@@ -1,0 +1,50 @@
+class Solution {
+	ArrayList<ArrayList<Integer>> Print(TreeNode pRoot) {
+		ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+		LinkedList<TreeNode> list1 = new LinkedList<>();
+		LinkedList<TreeNode> list2 = new LinkedList<>();
+		if (pRoot == null) {
+			return res;
+		}
+		list1.add(pRoot);
+		while (!list1.isEmpty() || !list2.isEmpty()) {
+			if (!list1.isEmpty()) {
+				printTreeNode(res,list1,0);
+			}
+			while (!list1.isEmpty()) {
+				addList(list1,list2);
+			}
+			if (!list2.isEmpty()) {
+				printTreeNode(res,list2,0);
+			}
+			while (!list2.isEmpty()) {
+				addList(list2,list1);
+			}
+		}
+		return res;
+	}
+	void addList(LinkedList<TreeNode> list1, LinkedList<TreeNode> list2) {
+		TreeNode root = list1.removeFirst();
+		if (root.left != null) {
+			list2.add(root.left);
+		}
+		if (root.right != null) {
+			list2.add(root.right);
+		}
+	}
+	void printTreeNode(ArrayList<ArrayList<Integer>> res, LinkedList<TreeNode> list, int mode) {
+		ArrayList<Integer> listNums = new ArrayList<>();
+		if (mode == 0) {
+			for (TreeNode root: list) {	
+				listNums.add(root.val);
+			}
+		} 
+		else {
+			for (int i = list.size() - 1; i >= 0; i--) {
+				listNums.add(list.get(i).val);
+			}
+		}
+		res.add(listNums);
+		return;
+	}
+}

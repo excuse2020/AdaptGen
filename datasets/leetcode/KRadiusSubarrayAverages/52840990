@@ -1,0 +1,42 @@
+class Solution {
+	int[] getAverages(int[] nums, int k) {
+		int[] ansArray = new int[nums.length];
+		Arrays.fill(ansArray,-1);
+		if (nums.length < 2 * k + 1) {
+			return ansArray;
+		}
+		System.out.println(nums.length);
+		if (k >= nums.length) {
+			return ansArray;
+		}
+		if (nums.length == 1 && k == 0) {
+			ansArray[0] = nums[0];
+			return ansArray;
+		}
+		if (nums.length == 1 && k >= 0) {
+			return ansArray;
+		}
+		int initial = 0;
+		int end = k + k;
+		long prefixSum = 0;
+		long suffixSum = 0;
+		for (int i = 0; i < k; i++) {
+			prefixSum = prefixSum + nums[i];
+		}
+		for (int i = k + 1; i <= k + k; i++) {
+			suffixSum = suffixSum + nums[i];
+		}
+		int curr = nums[k];
+		long total = prefixSum + suffixSum;
+		ansArray[k] = (int) ((total) / (k * 2 + 1));
+		for (int i = k + 1; i < nums.length - k; i++) {
+			total = total - nums[initial];
+			total = total + nums[end];
+			int avg = (int) ((total) / (k * 2 + 1));
+			ansArray[i] = avg;
+			initial = initial + 1;
+			end = end + 1;
+		}
+		return ansArray;
+	}
+}

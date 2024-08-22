@@ -1,0 +1,37 @@
+class Solution {
+	int minimumTime(int n, int[][] relations, int[] time) {
+		Map<Integer, List<Integer>> adj = new HashMap<>();
+		int[] incoming = new int[n];
+		for (int[] edge: relations) {	
+			int from = edge[0] - 1;
+			int to = edge[1] - 1;
+			adj.putIfAbsent(from,new ArrayList<>());
+			adj.get(from).add(to);
+			incoming[to]++;
+		}
+		int finishTime = 0;
+		int[] completionTimes = new int[n];
+		for (int course = 0; course < time.length; course++) {
+			completionTimes[course] = time[course];
+			finishTime = Math.max(finishTime,completionTimes[course]);
+		}
+		Queue<Integer> queue = new LinkedList<>();
+		for (int i = 0; i < n; i++) {
+			if (incoming[i] == 0) {
+				queue.add(i);
+			}
+		}
+		while (!queue.isEmpty()) {
+			int node = queue.poll();
+			for (int child: adj.getOrDefault(node,Collections.emptyList())) {	
+				incoming[child]--;
+				completionTimes[child] = Math.max(completionTimes[child],completionTimes[node] + time[child]);
+				finishTime = Math.max(finishTime,completionTimes[child]);
+				if (incoming[child] == 0) {
+					queue.add(child);
+				}
+			}
+		}
+		return finishTime;
+	}
+}

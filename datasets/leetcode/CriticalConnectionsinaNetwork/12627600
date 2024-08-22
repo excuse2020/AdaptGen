@@ -1,0 +1,44 @@
+class Solution {
+	int time = 0;
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		int[] disc = new int[n];
+		int[] low = new int[n];
+		List<Integer>[] graph = new ArrayList[n];
+		List<List<Integer>> ans = new ArrayList<>();
+		Arrays.fill(disc,-1);
+		for (int i = 0; i < n; ++i) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < connections.size(); ++i) {
+			int u = connections.get(i).get(0);
+			int v = connections.get(i).get(1);
+			graph[u].add(v);
+			graph[v].add(u);
+		}
+		for (int i = 0; i < n; ++i) {
+			if (disc[i] == -1) {
+				dfs(i,i,low,disc,graph,ans);
+			}
+		}
+		return ans;
+	}
+	void dfs(int u, int par, int[] low, int[] disc, List<Integer>[] graph, List<List<Integer>> ans) {
+		disc[u] = low[u] = ++time;
+		for (int j = 0; j < graph[u].size(); ++j) {
+			int v = graph[u].get(j);
+			if (v == par) {
+				continue;
+			}
+			if (disc[v] != -1) {
+				low[u] = Math.min(low[u],disc[v]);
+			} 
+			else {
+				dfs(v,u,low,disc,graph,ans);
+				low[u] = Math.min(low[u],low[v]);
+				if (disc[u] < low[v]) {
+					ans.add(Arrays.asList(u,v));
+				}
+			}
+		}
+	}
+}

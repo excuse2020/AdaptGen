@@ -1,0 +1,49 @@
+class Solution {
+	List<List<String>> findLadders(String beginWord, String endWord, Set<String> wordList) {
+		List<List<String>> list = new ArrayList<List<String>>();
+		List<String> subList = new ArrayList<String>();
+		Queue<List<String>> queue = new LinkedList<List<String>>();
+		Set<String> set = new HashSet<String>();
+		boolean flag = false;
+		int len = Integer.MAX_VALUE;
+		wordList.add(endWord);
+		wordList.remove(beginWord);
+		subList.add(beginWord);
+		queue.offer(subList);
+		while (!queue.isEmpty() && !flag) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				List<String> path = queue.poll();
+				if (path.size() >= len) {
+					flag = true;
+					break;
+				}
+				String lastWord = path.get(path.size() - 1);
+				char[] arr = lastWord.toCharArray();
+				for (int j = 0; j < arr.length; j++) {
+					char original = arr[j];
+					for (char c = 'a'; c <= 'z'; c++) {
+						arr[j] = c;
+						String newWord = new String(arr);
+						if (wordList.contains(newWord)) {
+							List<String> newPath = new ArrayList<String>(path);
+							newPath.add(newWord);
+							set.add(newWord);
+							if (newWord.equals(endWord)) {
+								len = newPath.size();
+								list.add(newPath);
+							} 
+							else {
+								queue.offer(newPath);
+							}
+						}
+					}
+					arr[j] = original;
+				}
+			}
+			wordList.removeAll(set);
+			set.clear();
+		}
+		return list;
+	}
+}

@@ -1,0 +1,58 @@
+class Solution {
+	int index = 0;
+	int[] tree = new int[100001];
+	ArrayList<Integer> check(int start, int end, int t) {
+		ArrayList<Integer> l = new ArrayList<Integer>();
+		int mid = 0;
+		while (start <= end) {
+			mid = (start + end) / 2;
+			if (mid != 0 && tree[mid] > t && tree[mid - 1] < t) {
+				l.add(tree[mid - 1]);
+				l.add(tree[mid]);
+				return l;
+			} 
+			else if (mid != index - 1 && tree[mid] < t && t < tree[mid + 1]) {
+				l.add(tree[mid]);
+				l.add(tree[mid + 1]);
+				return l;
+			}
+			if (tree[mid] == t) {
+				l.add(t);
+				l.add(t);
+				return l;
+			} 
+			else if (t > tree[mid]) {
+				start = mid + 1;
+			} 
+			else {
+				end = mid - 1;
+			}
+		}
+		if (mid == 0) {
+			l.add(-1);
+			l.add(tree[mid]);
+		}
+		if (mid == index - 1) {
+			l.add(tree[mid]);
+			l.add(-1);
+		}
+		return l;
+	}
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		travel(root);
+		List<List<Integer>> l = new ArrayList<>();
+		for (Integer i: queries) {	
+			ArrayList<Integer> temp = check(0,index - 1,i);
+			l.add(temp);
+		}
+		return l;
+	}
+	void travel(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		travel(root.left);
+		tree[index++] = root.val;
+		travel(root.right);
+	}
+}

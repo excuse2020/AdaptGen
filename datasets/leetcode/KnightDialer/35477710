@@ -1,0 +1,29 @@
+class Solution {
+	int mod = 1000000007;
+	long dfs(int r, int c, int count, long[][][] dp) {
+		if (r < 0 || r >= 4 || c < 0 || c >= 3 || (c == 0 && r == 3) || (c == 2 && r == 3)) {
+			return 0;
+		}
+		if (count == 0) {
+			return 1;
+		}
+		if (dp[r][c][count] != 0) {
+			return dp[r][c][count];
+		}
+		dp[r][c][count] = dfs(r - 2,c - 1,count - 1,dp) % mod + dfs(r - 2,c + 1,count - 1,dp) % mod + dfs(r - 1,c - 2,count - 1,dp) % mod + dfs(r - 1,c + 2,count - 1,dp) % mod + dfs(r + 2,c - 1,count - 1,dp) % mod + dfs(r + 2,c + 1,count - 1,dp) % mod + dfs(r + 1,c + 2,count - 1,dp) % mod + dfs(r + 1,c - 2,count - 1,dp) % mod;
+		return dp[r][c][count];
+	}
+	int knightDialer(int n) {
+		int r = 4;
+		int c = 3;
+		long ans = 0;
+		int count = n;
+		long[][][] dp = new long[r][c][n];
+		for (int i = 0; i < r; ++i) {
+			for (int j = 0; j < c; ++j) {
+				ans = ans % mod + dfs(i,j,count - 1,dp) % mod;
+			}
+		}
+		return (int) ans;
+	}
+}

@@ -1,0 +1,61 @@
+class Solution {
+	int ans = 0;
+	void helper(int n) {
+		int i = 0;
+		if (n == 0) {
+			return;
+		}
+		while (Math.pow(2,i) < n) {
+			i++;
+		}
+		int[] arr = new int[i + 1];
+		for (int j = 0; j <= i; j++) {
+			arr[j] = (int) Math.pow(2,j);
+		}
+		int start = 0;
+		int end = arr.length - 1;
+		int s = -1;
+		while (start <= end) {
+			int mid = (start + end) / 2;
+			if (arr[mid] <= n) {
+				s = arr[mid];
+				start = mid + 1;
+			} 
+			else {
+				end = mid - 1;
+			}
+		}
+		int l = -1;
+		start = 0;
+		end = arr.length - 1;
+		while (start <= end) {
+			int mid = (start + end) / 2;
+			if (arr[mid] < n) {
+				start = mid + 1;
+			} 
+			else {
+				l = arr[mid];
+				end = mid - 1;
+			}
+		}
+		if (s == n || l == n) {
+			ans++;
+			return;
+		}
+		if (n - s > l - n) {
+			n = l - n;
+			ans++;
+			helper(n);
+		} 
+		else {
+			n = n - s;
+			ans++;
+			helper(n);
+		}
+		return;
+	}
+	int minOperations(int n) {
+		helper(n);
+		return ans;
+	}
+}

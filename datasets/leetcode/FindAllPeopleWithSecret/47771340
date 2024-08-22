@@ -1,0 +1,44 @@
+class Solution {
+	record Meet(int p1, int p2, int time) {
+	}
+	List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+		boolean[] key = new boolean[n];
+		key[0] = key[firstPerson] = true;
+		Comparator<Meet> comp = (a, b) -> {a.time - b.time};
+		Queue<Meet> queue = new PriorityQueue<>(comp);
+		for (int[] arr: meetings) {	
+			queue.add(new Meet(arr[0], arr[1], arr[2]));
+		}
+		while (!queue.isEmpty()) {
+			Meet meet = queue.poll();
+			List<Meet> list = new ArrayList<>();
+			list.add(meet);
+			while (!queue.isEmpty() && queue.peek().time == meet.time) {
+				list.add(queue.poll());
+			}
+			boolean[] check = new boolean[list.size()];
+			while (true) {
+				boolean found = false;
+				for (int i = 0; i < list.size(); i++) {
+					if (check[i]) {
+						continue;
+					}
+					meet = list.get(i);
+					if (key[meet.p1] || key[meet.p2]) {
+						found = key[meet.p1] = key[meet.p2] = check[i] = true;
+					}
+				}
+				if (!found) {
+					break;
+				}
+			}
+		}
+		List<Integer> ans = new LinkedList<>();
+		for (int i = 0; i < n; i++) {
+			if (key[i]) {
+				ans.add(i);
+			}
+		}
+		return ans;
+	}
+}

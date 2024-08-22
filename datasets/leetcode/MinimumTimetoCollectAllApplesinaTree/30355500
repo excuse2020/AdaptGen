@@ -1,0 +1,26 @@
+class Solution {
+	List<Boolean> hasApple;
+	Map<Integer, List<Integer>> nodes;
+	int calcTime(int node, int parent) {
+		var steps = 0;
+		var children = nodes.getOrDefault(node,Collections.emptyList());
+		for (var child: children) {	
+			if (child != parent) {
+				steps += calcTime(child,node);
+			}
+		}
+		if (node > 0 && (hasApple.get(node) || steps > 0)) {
+			steps += 2;
+		}
+		return steps;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		nodes = new HashMap<>();
+		this.hasApple = hasApple;
+		for (var edge: edges) {	
+			nodes.computeIfAbsent(edge[0],(x) -> {new LinkedList<>()}).add(edge[1]);
+			nodes.computeIfAbsent(edge[1],(x) -> {new LinkedList<>()}).add(edge[0]);
+		}
+		return calcTime(0,-1);
+	}
+}

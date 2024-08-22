@@ -1,0 +1,41 @@
+class Solution {
+	int n, m, idx_x, idx_y;
+	boolean[][] vis;
+	void find(int i, int j, int[][] land) {
+		if (i < 0 || j < 0 || i == n || j == m || vis[i][j] || land[i][j] == 0) {
+			return;
+		}
+		vis[i][j] = true;
+		idx_x = Math.max(idx_x,i);
+		idx_y = Math.max(idx_y,j);
+		find(i + 1,j,land);
+		find(i,j + 1,land);
+		find(i - 1,j,land);
+		find(i,j - 1,land);
+	}
+	int[][] findFarmland(int[][] land) {
+		int n = land.length;
+		int m = land[0].length;
+		this.m = m;
+		this.n = n;
+		vis = new boolean[n][m];
+		ArrayList<int[]> list = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				if (land[i][j] == 1 && !vis[i][j]) {
+					idx_x = i;
+					idx_y = j;
+					find(i,j,land);
+					list.add(new int{i, j, idx_x, idx_y});
+				}
+			}
+		}
+		int[][] ans = new int[list.size()][4];
+		for (int i = 0; i < list.size(); i++) {
+			for (int j = 0; j < 4; j++) {
+				ans[i][j] = list.get(i)[j];
+			}
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	int maximumPopulation(int[][] logs) {
+		ArrayList<Integer> years = new ArrayList<>();
+		Map<Integer, Integer> yearCount = new LinkedHashMap<>();
+		Map<Integer, Integer> occurence = new LinkedHashMap<>();
+		int maxPopulation = Integer.MIN_VALUE;
+		int yearOfMaxPopulation = 0;
+		for (int i = 0; i < logs.length; i++) {
+			for (int j = logs[i][0]; j <= logs[i][1] - 1; j++) {
+				years.add(j);
+			}
+		}
+		Collections.sort(years);
+		for (Integer year: years) {	
+			yearCount.put(year,yearCount.getOrDefault(year,0) + 1);
+		}
+		for (Map.Entry entry: yearCount.entrySet()) {	
+			int year = (int) entry.getKey();
+			int count = (int) entry.getValue();
+			if (!occurence.containsKey(count)) {
+				occurence.put(count,year);
+			}
+		}
+		for (Map.Entry entry: occurence.entrySet()) {	
+			if ((int) entry.getKey() > maxPopulation) {
+				maxPopulation = (int) entry.getKey();
+			}
+		}
+		yearOfMaxPopulation = occurence.get(maxPopulation);
+		return yearOfMaxPopulation;
+	}
+}

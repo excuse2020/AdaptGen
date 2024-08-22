@@ -1,0 +1,41 @@
+class Solution {
+	boolean isCompleteTree(TreeNode root) {
+		if (root == null) {
+			return false;
+		}
+		Queue<TreeNode> q = new LinkedList<>();
+		boolean hasUncompleteLevel = false;
+		int nodesAtLevel = 1;
+		q.offer(root);
+		while (!q.isEmpty()) {
+			int size = q.size();
+			if (hasUncompleteLevel && nodesAtLevel != size) {
+				return false;
+			}
+			if (!hasUncompleteLevel && nodesAtLevel != size) {
+				hasUncompleteLevel = true;
+			}
+			boolean flag = false;
+			for (int i = 0; i < size; i++) {
+				TreeNode curr = q.poll();
+				if (curr.left == null && curr.right != null) {
+					return false;
+				}
+				if (flag && (curr.left != null || curr.right != null)) {
+					return false;
+				}
+				if (!flag && ((curr.left == null && curr.right == null) || (curr.left != null && curr.right == null))) {
+					flag = true;
+				}
+				if (curr.left != null) {
+					q.offer(curr.left);
+				}
+				if (curr.right != null) {
+					q.offer(curr.right);
+				}
+			}
+			nodesAtLevel *= 2;
+		}
+		return true;
+	}
+}

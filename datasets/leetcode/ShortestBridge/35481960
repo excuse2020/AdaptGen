@@ -1,0 +1,88 @@
+class Solution {
+	boolean activeList0 = true;
+	List<HashSet<Pair<Integer, Integer>>> list = new ArrayList();
+	void DFS(int i, int j, int[][] grid, boolean[][] vis) {
+		if (i < 0 || j < 0 || i == grid.length || j == grid[0].length || vis[i][j] || grid[i][j] == 0) {
+			return;
+		}
+		vis[i][j] = true;
+		if (activeList0) {
+			list.get(0).add(new Pair<Integer, Integer>(i, j));
+		} 
+		else {
+			list.get(1).add(new Pair<Integer, Integer>(i, j));
+		}
+		DFS(i - 1,j,grid,vis);
+		DFS(i,j - 1,grid,vis);
+		DFS(i + 1,j,grid,vis);
+		DFS(i,j + 1,grid,vis);
+	}
+	int Pathfrom0to1(int i, int j, int[][] grid, boolean[][] vis) {
+		if (i < 0 || j < 0 || i == grid.length || j == grid[0].length || grid[i][j] == 1) {
+			return Integer.MAX_VALUE;
+		}
+		int Ans = 0;
+		Queue<Pair<Integer, Integer>> que = new LinkedList();
+		que.add(new Pair<Integer, Integer>(i, j));
+		while (que.size() != 0) {
+			int size = que.size();
+			while (size != 0) {
+				size--;
+				Pair<Integer, Integer> pair = que.poll();
+				i = pair.getKey();
+				j = pair.getValue();
+				if (vis[i][j]) {
+					continue;
+				}
+				if (grid[i][j] == 1) {
+					if (list.get(1).contains(pair)) {
+						return Ans;
+					} 
+					else {
+						continue;
+					}
+				}
+				vis[i][j] = true;
+				if (i - 1 >= 0) {
+					que.add(new Pair<Integer, Integer>(i - 1, j));
+				}
+				if (i + 1 < grid.length) {
+					que.add(new Pair<Integer, Integer>(i + 1, j));
+				}
+				if (j - 1 >= 0) {
+					que.add(new Pair<Integer, Integer>(i, j - 1));
+				}
+				if (j + 1 < grid[0].length) {
+					que.add(new Pair<Integer, Integer>(i, j + 1));
+				}
+			}
+			Ans += 1;
+		}
+		return Integer.MAX_VALUE;
+	}
+	int shortestBridge(int[][] grid) {
+		boolean vis = new boolean[grid.length][grid[0].length];
+		list.add(new HashSet<Pair<Integer, Integer>>());
+		list.add(new HashSet<Pair<Integer, Integer>>());
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				if (grid[i][j] == 1 && !vis[i][j]) {
+					DFS(i,j,grid,vis);
+					activeList0 = !activeList0;
+				}
+			}
+		}
+		int shortPath = Integer.MAX_VALUE;
+		for (Pair<Integer, Integer> box: list.get(0)) {	
+			boolean visited = new boolean[grid.length][grid[0].length];
+			shortPath = Math.min(shortPath,Pathfrom0to1(box.getKey() - 1,box.getValue(),grid,visited));
+			visited = new boolean[grid.length][grid[0].length];
+			shortPath = Math.min(shortPath,Pathfrom0to1(box.getKey() + 1,box.getValue(),grid,visited));
+			visited = new boolean[grid.length][grid[0].length];
+			shortPath = Math.min(shortPath,Pathfrom0to1(box.getKey(),box.getValue() - 1,grid,visited));
+			visited = new boolean[grid.length][grid[0].length];
+			shortPath = Math.min(shortPath,Pathfrom0to1(box.getKey(),box.getValue() + 1,grid,visited));
+		}
+		return shortPath;
+	}
+}

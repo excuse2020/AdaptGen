@@ -1,0 +1,99 @@
+class Solution {
+	int calculate(Stack<String> stack) {
+		StringBuilder sb = new StringBuilder();
+		while (!stack.peek().equals("(")) {
+			sb.insert(0,stack.pop());
+		}
+		stack.pop();
+		String curS = sb.toString();
+		int value = calculateWithStr(curS);
+		return value;
+	}
+	int calculateSubtract(String str) {
+		String[] s1 = str.split("-");
+		int res = 0;
+		if (!s1[0].equals("")) {
+			if (s1[0].contains("*") || s1[0].contains("&")) {
+				res = calculateX(s1[0]);
+			} 
+			else {
+				res = Integer.valueOf(s1[0]);
+			}
+		}
+		for (int i = 1; i < s1.length; i++) {
+			String next = s1[i];
+			if (next.contains("*") || next.contains("&")) {
+				res -= calculateX(next);
+			} 
+			else {
+				res -= Integer.valueOf(next);
+			}
+		}
+		return res;
+	}
+	int calculateWithStr(String str) {
+		str = str.replace("+-","-");
+		str = str.replace("--","+");
+		str = str.replace("*-","&");
+		String[] s1 = str.split("\\+");
+		int res = 0;
+		for (int i = 0; i < s1.length; i++) {
+			String next = s1[i];
+			if (next.contains("-")) {
+				res += calculateSubtract(next);
+			} 
+			else {
+				if (next.contains("*") || next.contains("&")) {
+					res += calculateX(next);
+				} 
+				else {
+					res += Integer.valueOf(next);
+				}
+			}
+		}
+		return res;
+	}
+	int calculateX(String s) {
+		s = s.replace("&","*-");
+		String[] s2 = s.split("\\*");
+		int tempX = Integer.valueOf(s2[0]);
+		for (int j = 1; j < s2.length; j++) {
+			tempX = tempX * Integer.valueOf(s2[j]);
+		}
+		return tempX;
+	}
+	int solve(String s) {
+		if (s.length() == 0) {
+			return 0;
+		}
+		if (s.length() == 1) {
+			return Integer.valueOf(s);
+		}
+		if (s.contains("(")) {
+			Stack<String> stack = new Stack<>();
+			for (int i = 0; i < s.length(); i++) {
+				char next = s.charAt(i);
+				if (next == ')') {
+					int value = calculate(stack);
+					stack.push(value + "");
+				} 
+				else {
+					stack.push(String.valueOf(next));
+				}
+			}
+			String temp = "";
+			while (!stack.isEmpty()) {
+				temp = stack.pop() + temp;
+			}
+			if (temp.equals("")) {
+				return 0;
+			} 
+			else {
+				return calculateWithStr(temp);
+			}
+		} 
+		else {
+			return calculateWithStr(s);
+		}
+	}
+}

@@ -1,0 +1,29 @@
+class Solution {
+	boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
+		Pair<Integer, Integer>[] a = new Pair[nums.length];
+		for (int i = 0; i < nums.length; i++) {
+			a[i] = new Pair<Integer, Integer>(i, nums[i]);
+		}
+		Arrays.sort(a,(t1, t2) -> {t2.getValue() - t1.getValue()});
+		int i = 0;
+		int j = i + 1;
+		long T = Long.valueOf(t);
+		while (j < nums.length) {
+			int diffK = Math.abs(a[i].getKey() - a[j].getKey());
+			long diffT = Math.abs((long) a[i].getValue() - (long) a[j].getValue());
+			if (diffK <= k && diffT <= T) {
+				return true;
+			}
+			if (diffT < T) {
+				j++;
+			} 
+			else {
+				i++;
+			}
+			if (i == j) {
+				j++;
+			}
+		}
+		return false;
+	}
+}

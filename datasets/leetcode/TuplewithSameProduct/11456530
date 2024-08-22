@@ -1,0 +1,27 @@
+class Solution {
+	int combination(int n) {
+		int res = 1;
+		while (n > 0) {
+			res *= n;
+			n--;
+		}
+		return res;
+	}
+	int tupleSameProduct(int[] nums) {
+		HashMap<Integer, Integer> counter = new HashMap<>();
+		for (int i = 0; i < nums.length; i++) {
+			for (int j = i + 1; j < nums.length; j++) {
+				counter.putIfAbsent(nums[i] * nums[j],0);
+				counter.put(nums[i] * nums[j],counter.getOrDefault(nums[i] * nums[j],0) + 1);
+			}
+		}
+		int res = 0;
+		for (int key: counter.keySet()) {	
+			int freq = counter.get(key);
+			if (freq >= 2) {
+				res += (combination(freq) / (combination(freq - 2) * combination(2))) * 8;
+			}
+		}
+		return res;
+	}
+}

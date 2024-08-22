@@ -1,0 +1,24 @@
+class Solution {
+	TreeNode lastLeft = null;
+	TreeNode Convert(TreeNode pRootOfTree) {
+		if (pRootOfTree == null) {
+			return null;
+		}
+		if (pRootOfTree.left == null && pRootOfTree.right == null) {
+			lastLeft = pRootOfTree;
+			return pRootOfTree;
+		}
+		TreeNode leftList = Convert(pRootOfTree.left);
+		if (leftList != null) {
+			lastLeft.right = pRootOfTree;
+			pRootOfTree.left = lastLeft;
+		}
+		lastLeft = pRootOfTree;
+		TreeNode rightList = Convert(pRootOfTree.right);
+		if (rightList != null) {
+			rightList.left = pRootOfTree;
+			pRootOfTree.right = rightList;
+		}
+		return leftList == null ? pRootOfTree : leftList;
+	}
+}

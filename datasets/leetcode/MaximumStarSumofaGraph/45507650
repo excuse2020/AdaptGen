@@ -1,0 +1,32 @@
+class Solution {
+	int maxStarSum(int[] vals, int[][] edges, int k) {
+		int n = vals.length;
+		PriorityQueue<Integer>[] gp = new PriorityQueue[n];
+		for (int i = 0; i < n; i++) {
+			gp[i] = new PriorityQueue<>(Collections.reverseOrder());
+		}
+		int m = edges.length;
+		int ans = Integer.MIN_VALUE;
+		for (int i = 0; i < m; i++) {
+			int s = edges[i][0];
+			int d = edges[i][1];
+			gp[s].offer(vals[d]);
+			gp[d].offer(vals[s]);
+		}
+		for (int i = 0; i < n; i++) {
+			int sum = vals[i];
+			ans = Math.max(ans,sum);
+			for (int j = 0; j < k; j++) {
+				if (!gp[i].isEmpty()) {
+					sum += gp[i].poll();
+					ans = Math.max(ans,sum);
+				} 
+				else {
+					break;
+				}
+			}
+			ans = Math.max(ans,sum);
+		}
+		return ans;
+	}
+}

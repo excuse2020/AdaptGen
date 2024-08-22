@@ -1,0 +1,44 @@
+class Solution {
+	boolean splitHelper(String s, ArrayList<BigInteger> ans) {
+		if (s.equals("")) {
+			boolean check = true;
+			for (int i = 0; i < ans.size() - 1; i++) {
+				BigInteger val1 = ans.get(i);
+				BigInteger val2 = ans.get(i + 1);
+				BigInteger val3 = val1.subtract(val2);
+				BigInteger one = new BigInteger("1");
+				if (val3.compareTo(one) != 0) {
+					check = false;
+				}
+			}
+			if (ans.size() == 1) {
+				check = false;
+			}
+			return check;
+		}
+		if (ans.size() > 1) {
+			BigInteger val1 = ans.get(ans.size() - 2);
+			BigInteger val2 = ans.get(ans.size() - 1);
+			BigInteger val3 = val1.subtract(val2);
+			BigInteger one = new BigInteger("1");
+			if (val3.compareTo(one) != 0) {
+				return false;
+			}
+		}
+		for (int i = 0; i < s.length(); i++) {
+			String str = s.substring(0,i + 1);
+			String roq = s.substring(i + 1);
+			BigInteger val = new BigInteger(str);
+			ans.add(val);
+			boolean check = splitHelper(roq,ans);
+			if (check) {
+				return true;
+			}
+			ans.remove(ans.size() - 1);
+		}
+		return false;
+	}
+	boolean splitString(String s) {
+		return splitHelper(s,new ArrayList<BigInteger>());
+	}
+}

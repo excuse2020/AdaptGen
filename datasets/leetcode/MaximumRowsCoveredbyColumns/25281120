@@ -1,0 +1,39 @@
+class Solution {
+	int ans = 0;
+	void backtrack(int numberSelectedColumn, boolean visited, int cols, int[][] mat, int columnIndex) {
+		if (numberSelectedColumn == cols) {
+			int longest = 0;
+			for (int i = 0; i < mat.length; i++) {
+				boolean isCovered = true;
+				for (int j = 0; j < mat[0].length; j++) {
+					if (mat[i][j] == 1 && !visited[j]) {
+						isCovered = false;
+						break;
+					}
+				}
+				if (isCovered) {
+					longest++;
+				}
+			}
+			ans = Math.max(ans,longest);
+		} 
+		else {
+			if (columnIndex < mat[0].length) {
+				visited[columnIndex] = true;
+				backtrack(numberSelectedColumn + 1,visited,cols,mat,columnIndex + 1);
+				visited[columnIndex] = false;
+				backtrack(numberSelectedColumn,visited,cols,mat,columnIndex + 1);
+			}
+		}
+	}
+	int maximumRows(int[][] mat, int cols) {
+		int m = mat.length;
+		int n = mat[0].length;
+		if (n == cols) {
+			return m;
+		}
+		boolean visited = new boolean[n];
+		backtrack(0,visited,cols,mat,0);
+		return ans;
+	}
+}

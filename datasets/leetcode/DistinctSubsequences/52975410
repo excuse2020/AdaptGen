@@ -1,0 +1,28 @@
+class Solution {
+	int help(String s, String t, int n1, int n2, int[][] dp) {
+		if (n2 < 0) {
+			return 1;
+		}
+		if (n1 < 0) {
+			return 0;
+		}
+		if (dp[n1][n2] != -1) {
+			return dp[n1][n2];
+		}
+		int take = 0;
+		if (s.charAt(n1) == t.charAt(n2)) {
+			return dp[n1][n2] = help(s,t,n1 - 1,n2 - 1,dp) + help(s,t,n1 - 1,n2,dp);
+		}
+		int nottake = help(s,t,n1 - 1,n2,dp);
+		return dp[n1][n2] = nottake;
+	}
+	int numDistinct(String s, String t) {
+		int n1 = s.length();
+		int n2 = t.length();
+		int[][] memo = new int[n1][n2];
+		for (int[] row: memo) {	
+			Arrays.fill(row,-1);
+		}
+		return help(s,t,n1 - 1,n2 - 1,memo);
+	}
+}

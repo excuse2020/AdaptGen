@@ -1,0 +1,69 @@
+class Solution {
+	int maxScore;
+	int nodeCount;
+	TreeNode root;
+	int countHighestScoreNodes(int[] parents) {
+		maxScore = 0;
+		nodeCount = parents.length;
+		Map<Integer, TreeNode> mp = new HashMap<>();
+		root = new TreeNode();
+		mp.put(0,root);
+		for (int i = 1; i < parents.length; i++) {
+			TreeNode cur = mp.getOrDefault(i,new TreeNode());
+			TreeNode father = mp.getOrDefault(parents[i],new TreeNode());
+			if (father.left == null) {
+				father.left = cur;
+			} 
+			else {
+				father.right = cur;
+			}
+			mp.put(i,cur);
+			mp.put(parents[i],father);
+		}
+		countScore(root);
+		int ans = 0;
+		for (int i = 0; i < parents.length; i++) {
+			if (maxScore == mp.get(i).score) {
+				ans++;
+			}
+		}
+		return ans;
+	}
+	void countScore(TreeNode node) {
+		if (node.right == null && node.left == null) {
+			node.count = 1;
+			node.score = nodeCount - 1;
+			maxScore = Math.max(maxScore,node.score);
+			return;
+		}
+		if (node.left == null || node.right == null) {
+			TreeNode child = node.left == null ? node.right : node.left;
+			countScore(child);
+			node.count = child.count + 1;
+			if (node == root) {
+				node.score = child.count;
+			} 
+			else {
+				node.score = child.count * (nodeCount - node.count);
+			}
+			maxScore = Math.max(maxScore,node.score);
+			return;
+		}
+		countScore(node.left);
+		countScore(node.right);
+		node.count = node.left.count + node.right.count;
+		if (node == root) {
+			node.score = node.left.count * node.right.count;
+		} 
+		else {
+			node.score = (nodeCount - node.count) * node.left.count;
+		}
+		maxScore = Math.max(maxScore,node.score);
+	}
+}
+class TreeNode {
+	int count;
+	TreeNode left;
+	TreeNode right;
+	int score;
+}

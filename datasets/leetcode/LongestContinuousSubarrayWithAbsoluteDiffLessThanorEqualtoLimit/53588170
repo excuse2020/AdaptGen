@@ -1,0 +1,30 @@
+class Solution {
+	int longestSubarray(int[] nums, int limit) {
+		ArrayDeque<Integer> increase = new ArrayDeque<Integer>();
+		ArrayDeque<Integer> decrease = new ArrayDeque<Integer>();
+		int left = 0;
+		int n = nums.length;
+		int maxCount = 0;
+		for (int right = 0; right < n; right++) {
+			while (!increase.isEmpty() && nums[right] < increase.getLast()) {
+				increase.removeLast();
+			}
+			increase.add(nums[right]);
+			while (!decrease.isEmpty() && nums[right] > decrease.getLast()) {
+				decrease.removeLast();
+			}
+			decrease.add(nums[right]);
+			while (decrease.getFirst() - increase.getFirst() > limit) {
+				if (nums[left] == increase.getFirst()) {
+					increase.removeFirst();
+				}
+				if (nums[left] == decrease.getFirst()) {
+					decrease.removeFirst();
+				}
+				left++;
+			}
+			maxCount = Math.max(maxCount,right - left + 1);
+		}
+		return maxCount;
+	}
+}

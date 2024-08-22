@@ -1,0 +1,72 @@
+class Solution {
+	Map<Integer, List<TreeNode>> leaves = new HashMap<>();
+	Map<Integer, TreeNode> roots = new HashMap<>();
+	TreeNode canMerge(List<TreeNode> trees) {
+		for (TreeNode node: trees) {	
+			roots.put(node.val,node);
+			if (node.left != null) {
+				List<TreeNode> nodes = leaves.get(node.left.val);
+				if (nodes == null) {
+					nodes = new LinkedList<TreeNode>();
+				}
+				nodes.add(node);
+				leaves.put(node.left.val,nodes);
+			}
+			if (node.right != null) {
+				List<TreeNode> nodes = leaves.get(node.right.val);
+				if (nodes == null) {
+					nodes = new LinkedList<TreeNode>();
+				}
+				nodes.add(node);
+				leaves.put(node.right.val,nodes);
+			}
+		}
+		TreeNode bstRoot = null;
+		for (TreeNode n: trees) {	
+			if (!leaves.containsKey(n.val)) {
+				bstRoot = n;
+				break;
+			}
+		}
+		if (bstRoot == null) {
+			return null;
+		}
+		merge(bstRoot);
+		if (roots.size() == 1 && isValidBST(bstRoot,Integer.MIN_VALUE,Integer.MAX_VALUE)) {
+			return bstRoot;
+		}
+		return null;
+	}
+	boolean isValidBST(TreeNode n, int min, int max) {
+		if (n.val < min || n.val > max) {
+			return false;
+		}
+		boolean l = true, r = true;
+		if (n.left != null) {
+			l = isValidBST(n.left,min,n.val);
+		}
+		if (n.right != null) {
+			r = isValidBST(n.right,n.val,max);
+		}
+		return n.val > min && n.val < max & l && r;
+	}
+	void merge(TreeNode node) {
+		if (node == null) {
+			return;
+		}
+		if (node.left != null) {
+			if (roots.containsKey(node.left.val)) {
+				node.left = roots.get(node.left.val);
+				roots.remove(node.left.val);
+			}
+		}
+		if (node.right != null) {
+			if (roots.containsKey(node.right.val)) {
+				node.right = roots.get(node.right.val);
+				roots.remove(node.right.val);
+			}
+		}
+		merge(node.left);
+		merge(node.right);
+	}
+}

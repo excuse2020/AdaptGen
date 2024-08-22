@@ -1,0 +1,39 @@
+class Solution {
+	Map<Integer, Integer> map = new HashMap<>();
+	int bSearch(int[] arr, int s, int e, int val) {
+		int ans = arr.length;
+		while (s <= e) {
+			int m = s + (e - s) / 2;
+			if (arr[m] >= val) {
+				e = m - 1;
+				ans = m;
+			} 
+			else {
+				s = m + 1;
+			}
+		}
+		return ans;
+	}
+	long find(int[] power, int n, int idx, long[] dp) {
+		if (idx >= n) {
+			return 0;
+		}
+		if (dp[idx + 1] != -1) {
+			return dp[idx + 1];
+		}
+		long skip = find(power,n,idx + 1,dp);
+		int nextIdx = bSearch(power,idx + 1,n - 1,power[idx] + 3);
+		long take = (power[idx] * (long) map.get(power[idx])) + find(power,n,nextIdx,dp);
+		return dp[idx + 1] = Math.max(take,skip);
+	}
+	long maximumTotalDamage(int[] power) {
+		int n = power.length;
+		for (int el: power) {	
+			map.put(el,map.getOrDefault(el,0) + 1);
+		}
+		Arrays.sort(power);
+		long[] dp = new long[n + 1];
+		Arrays.fill(dp,-1);
+		return find(power,n,0,dp);
+	}
+}

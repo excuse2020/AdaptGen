@@ -1,0 +1,52 @@
+class Solution {
+	boolean find;
+	String path;
+	String getDirections(TreeNode root, int startValue, int destValue) {
+		path = "";
+		find = false;
+		getPath(root,startValue,new StringBuilder());
+		String startPath = path;
+		path = "";
+		find = false;
+		getPath(root,destValue,new StringBuilder());
+		String destPath = path;
+		int startIdx = 0;
+		for (int i = 0; i < Math.min(startPath.length(),destPath.length()); i++) {
+			if (startPath.charAt(i) == destPath.charAt(i)) {
+				startIdx = i + 1;
+				continue;
+			} 
+			else {
+				startIdx = i;
+				break;
+			}
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = startIdx; i < startPath.length(); i++) {
+			sb.append("U");
+		}
+		for (int i = startIdx; i < destPath.length(); i++) {
+			sb.append(destPath.charAt(i));
+		}
+		return sb.toString();
+	}
+	void getPath(TreeNode root, int val, StringBuilder path) {
+		if (find) {
+			return;
+		}
+		if (root == null) {
+			return;
+		}
+		if (root.val == val) {
+			find = true;
+			this.path = path.toString();
+			return;
+		}
+		path.append("L");
+		getPath(root.left,val,path);
+		path.deleteCharAt(path.length() - 1);
+		path.append("R");
+		getPath(root.right,val,path);
+		path.deleteCharAt(path.length() - 1);
+	}
+}

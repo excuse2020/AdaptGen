@@ -1,0 +1,61 @@
+class Solution {
+	boolean isPossible(String text, String pattern, int[] lps) {
+		int n = text.length();
+		int m = pattern.length();
+		int i = 0, j = 0;
+		while (i < n) {
+			if (j < m && text.charAt(i) == pattern.charAt(j)) {
+				i++;
+				j++;
+			}
+			if (j == m) {
+				return true;
+			} 
+			else if (i < n && (j == 0 || pattern.charAt(j) != text.charAt(i))) {
+				if (j != 0) {
+					j = lps[j - 1];
+				} 
+				else {
+					i++;
+				}
+			}
+		}
+		return false;
+	}
+	int repeatedStringMatch(String a, String b) {
+		int n = a.length();
+		int m = b.length();
+		int repeat = (int) Math.ceil((double) m / n);
+		String ans = new String();
+		for (int i = 0; i < repeat; i++) {
+			ans += a;
+		}
+		int[] lps = new int[m];
+		lps[0] = 0;
+		int len = 0;
+		int indx = 1;
+		while (indx < m) {
+			if (b.charAt(len) == b.charAt(indx)) {
+				lps[indx] = len + 1;
+				len++;
+				indx++;
+			} 
+			else {
+				if (len != 0) {
+					len = lps[len - 1];
+				} 
+				else {
+					lps[indx] = 0;
+					indx++;
+				}
+			}
+		}
+		for (int i = 0; i < 3; i++) {
+			if (isPossible(ans,b,lps)) {
+				return repeat + i;
+			}
+			ans += a;
+		}
+		return -1;
+	}
+}

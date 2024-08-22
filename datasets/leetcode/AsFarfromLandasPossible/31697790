@@ -1,0 +1,59 @@
+class Solution {
+	void bfs(int[] temp, int[][] grid, Queue<int[]> queue) {
+		int i = temp[0], j = temp[1];
+		if (isValid(i,j + 1,grid)) {
+			grid[i][j + 1] = 1;
+			queue.add(new int{i, j + 1});
+		}
+		if (isValid(i,j - 1,grid)) {
+			grid[i][j - 1] = 1;
+			queue.add(new int{i, j - 1});
+		}
+		if (isValid(i - 1,j,grid)) {
+			grid[i - 1][j] = 1;
+			queue.add(new int{i - 1, j});
+		}
+		if (isValid(i + 1,j,grid)) {
+			grid[i + 1][j] = 1;
+			queue.add(new int{i + 1, j});
+		}
+	}
+	Queue<int[]> findOne(int[][] grid) {
+		int n = grid.length;
+		Queue<int[]> queue = new LinkedList<>();
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (grid[i][j] == 1) {
+					queue.add(new int{i, j});
+				}
+			}
+		}
+		return queue;
+	}
+	boolean isValid(int i, int j, int[][] grid) {
+		int n = grid.length;
+		if (i < n && j < n && i >= 0 && j >= 0) {
+			if (grid[i][j] == 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+	int maxDistance(int[][] grid) {
+		int n = grid.length;
+		Queue<int[]> queue = findOne(grid);
+		if (queue.size() == n * n || queue.isEmpty()) {
+			return -1;
+		}
+		int dist = -1;
+		while (!queue.isEmpty()) {
+			int sz = queue.size();
+			++dist;
+			for (int i = 0; i < sz; i++) {
+				int[] temp = queue.poll();
+				bfs(temp,grid,queue);
+			}
+		}
+		return dist;
+	}
+}

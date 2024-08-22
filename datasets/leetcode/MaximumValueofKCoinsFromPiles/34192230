@@ -1,0 +1,29 @@
+class Solution {
+	int dp;
+	int helper(List<List<Integer>> piles, int i, int coins) {
+		if (i == 0) {
+			return 0;
+		}
+		if (dp[i][coins] != -1) {
+			return dp[i][coins];
+		}
+		int currSum = 0;
+		for (int currCoins = 0; currCoins <= Math.min(piles.get(i - 1).size(),coins); currCoins++) {
+			if (currCoins > 0) {
+				currSum += piles.get(i - 1).get(currCoins - 1);
+			}
+			dp[i][coins] = Math.max(dp[i][coins],helper(piles,i - 1,coins - currCoins) + currSum);
+		}
+		return dp[i][coins];
+	}
+	int maxValueOfCoins(List<List<Integer>> piles, int k) {
+		int n = piles.size();
+		dp = new int[n + 1][k + 1];
+		for (int i = 1; i <= n; i++) {
+			for (int coins = 0; coins <= k; coins++) {
+				dp[i][coins] = -1;
+			}
+		}
+		return helper(piles,n,k);
+	}
+}

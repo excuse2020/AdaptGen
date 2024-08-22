@@ -1,0 +1,50 @@
+class Solution {
+	List<List<Integer>> adj = new ArrayList<>();
+	int main = -1;
+	boolean DFS(int node, boolean vis, boolean check, int count) {
+		vis[node] = true;
+		check[node] = true;
+		for (int edg: adj.get(node)) {	
+			if (!vis[edg]) {
+				if (DFS(edg,vis,check,count + 1)) {
+					return true;
+				}
+			} 
+			else {
+				if (check[edg] == true) {
+					main = count;
+					return true;
+				}
+			}
+		}
+		check[node] = false;
+		return false;
+	}
+	int longestCycle(int[] edges) {
+		int n = edges.length;
+		int ans = -1;
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			if (edges[i] != -1) {
+				adj.get(edges[i]).add(i);
+			}
+		}
+		boolean vis = new boolean[n];
+		boolean check = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			main = -1;
+			if (!vis[i]) {
+				if (DFS(i,vis,check,1)) {
+					ans = Math.max(ans,main);
+				}
+			}
+		}
+		System.out.print(adj);
+		if (ans == 0) {
+			return -1;
+		}
+		return ans;
+	}
+}

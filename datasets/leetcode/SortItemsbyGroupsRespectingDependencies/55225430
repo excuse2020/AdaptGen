@@ -1,0 +1,80 @@
+class Solution {
+	List<Integer> Topological_Sort(int N, Map<Integer, List<Integer>> adjacency_list) {
+		List<Integer> topologically_sorted_nodes_list = breadth_first_search(N,adjacency_list,build_indegree_array(N,adjacency_list));
+		return ((topologically_sorted_nodes_list.size() == N) ? (topologically_sorted_nodes_list) : (List.of()));
+	}
+	List<Integer> breadth_first_search(int N, Map<Integer, List<Integer>> adjacency_list, int[] indegree_array) {
+		Queue<Integer> queue = new LinkedList<>();
+		for (int node = 0; (node < N); node++) {
+			if (indegree_array[node] == 0) {
+				queue.add(node);
+			}
+		}
+		List<Integer> topologically_sorted_nodes_list = new ArrayList<>();
+		while (!queue.isEmpty()) {
+			int current_node = queue.poll();
+			topologically_sorted_nodes_list.add(current_node);
+			for (int neighbour_node: adjacency_list.getOrDefault(current_node,List.of())) {	
+				indegree_array[neighbour_node]--;
+				if (indegree_array[neighbour_node] == 0) {
+					queue.add(neighbour_node);
+				}
+			}
+		}
+		return topologically_sorted_nodes_list;
+	}
+	Map<Integer, List<Integer>> build_adjacency_list(int choice, int N, int[] groups_array, List<List<Integer>> prerequisites_list) {
+		Map<Integer, List<Integer>> adjacency_list = new HashMap<>();
+		for (int node_1 = 0; (node_1 < N); node_1++) {
+			for (int node_2: prerequisites_list.get(node_1)) {	
+				if (choice == 1) {
+					adjacency_list.computeIfAbsent(node_2,((k) -> {(new ArrayList<>())})).add(node_1);
+				}
+				if ((choice == 2) && (groups_array[node_1] != groups_array[node_2])) {
+					int node_3 = groups_array[node_1];
+					int node_4 = groups_array[node_2];
+					adjacency_list.computeIfAbsent(node_4,((k) -> {(new ArrayList<>())})).add(node_3);
+				}
+			}
+		}
+		return adjacency_list;
+	}
+	int[] build_indegree_array(int N, Map<Integer, List<Integer>> adjacency_list) {
+		int[] indegree_array = new int[N];
+		for (int current_node = 0; (current_node < N); current_node++) {
+			for (int neighbour_node: adjacency_list.getOrDefault(current_node,List.of())) {	
+				indegree_array[neighbour_node]++;
+			}
+		}
+		return indegree_array;
+	}
+	int give_unique_ID_for_independent_groups(int N, int current_group_ID, int[] groups_array) {
+		for (int node = 0; (node < N); node++) {
+			if (groups_array[node] == -1) {
+				groups_array[node] = current_group_ID++;
+			}
+		}
+		return current_group_ID;
+	}
+	int[] sortItems(int N, int M, int[] groups_array, List<List<Integer>> before_items_list) {
+		int new_M = give_unique_ID_for_independent_groups(N,M,groups_array);
+		List<Integer> topologically_sorted_based_on_nodes_list = Topological_Sort(N,build_adjacency_list(1,N,groups_array,before_items_list));
+		List<Integer> topologically_sorted_based_on_groups_list = Topological_Sort(new_M,build_adjacency_list(2,N,groups_array,before_items_list));
+		if ((topologically_sorted_based_on_nodes_list.size() == 0) || (topologically_sorted_based_on_groups_list.size() == 0)) {
+			return (new int[0]);
+		}
+		Map<Integer, List<Integer>> ordered_groups_map = new HashMap<>();
+		for (int node_1: topologically_sorted_based_on_nodes_list) {	
+			int node_2 = groups_array[node_1];
+			ordered_groups_map.computeIfAbsent(node_2,((k) -> {(new ArrayList<>())})).add(node_1);
+		}
+		int[] answer_array = new int[N];
+		int index = 0;
+		for (int node_1: topologically_sorted_based_on_groups_list) {	
+			for (int node_2: ordered_groups_map.getOrDefault(node_1,List.of())) {	
+				answer_array[index++] = node_2;
+			}
+		}
+		return answer_array;
+	}
+}

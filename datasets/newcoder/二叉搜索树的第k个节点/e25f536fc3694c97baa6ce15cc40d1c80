@@ -1,0 +1,31 @@
+class Solution {
+	int KthNode(TreeNode proot, int k) {
+		if (null == proot || 0 == k) {
+			return -1;
+		}
+		Stack<TreeNode> stack = new Stack<>();
+		TreeNode tmpNode = proot;
+		int p = 0;
+		int rs = Integer.MAX_VALUE;
+		while (null != tmpNode) {
+			stack.push(tmpNode);
+			tmpNode = tmpNode.left;
+		}
+		while (!stack.isEmpty()) {
+			tmpNode = stack.pop();
+			p++;
+			if (p == k) {
+				rs = tmpNode.val;
+				break;
+			}
+			if (null != tmpNode.right) {
+				tmpNode = tmpNode.right;
+				while (null != tmpNode) {
+					stack.push(tmpNode);
+					tmpNode = tmpNode.left;
+				}
+			}
+		}
+		return rs == Integer.MAX_VALUE ? -1 : rs;
+	}
+}

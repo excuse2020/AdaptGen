@@ -1,0 +1,40 @@
+class Solution {
+	int[][] levelOrderBottom(TreeNode root) {
+		ArrayList<ArrayList<TreeNode>> res = sol(root);
+		Collections.reverse(res);
+		int[][] ans = new int[res.size()];
+		for (int i = 0; i < res.size(); i++) {
+			ArrayList<TreeNode> temp = res.get(i);
+			int[] arr = new int[temp.size()];
+			for (int j = 0; j < temp.size(); j++) {
+				arr[j] = temp.get(j).val;
+			}
+			ans[i] = arr;
+		}
+		return ans;
+	}
+	ArrayList<ArrayList<TreeNode>> sol(TreeNode root) {
+		ArrayList<ArrayList<TreeNode>> res = new ArrayList<ArrayList<TreeNode>>();
+		if (root == null) {
+			return res;
+		}
+		Deque<TreeNode> deq = new ArrayDeque<TreeNode>();
+		deq.add(root);
+		while (!deq.isEmpty()) {
+			int len = deq.size();
+			ArrayList<TreeNode> temp = new ArrayList<TreeNode>();
+			for (int i = 0; i < len; i++) {
+				TreeNode node = deq.remove();
+				temp.add(node);
+				if (node.left != null) {
+					deq.add(node.left);
+				}
+				if (node.right != null) {
+					deq.add(node.right);
+				}
+			}
+			res.add(temp);
+		}
+		return res;
+	}
+}

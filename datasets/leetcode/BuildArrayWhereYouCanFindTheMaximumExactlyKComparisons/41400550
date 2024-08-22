@@ -1,0 +1,47 @@
+class Solution {
+	int MOD = 1_000_000_007;
+	int k;
+	int m;
+	Integer[][][] memo;
+	int n;
+	int findWays(int currIndex, int currMax, int kLeft) {
+		if (currIndex == n - 1) {
+			if (kLeft == 0) {
+				return 1;
+			} 
+			else {
+				return 0;
+			}
+		}
+		if (memo[currIndex][currMax][kLeft] != null) {
+			return memo[currIndex][currMax][kLeft];
+		}
+		int ways = 0;
+		for (int nextNum = 1; nextNum <= m; nextNum++) {
+			if (nextNum > currMax) {
+				if (kLeft == 0) {
+					break;
+				}
+				ways += findWays(currIndex + 1,nextNum,kLeft - 1);
+			} 
+			else {
+				ways += findWays(currIndex + 1,currMax,kLeft);
+			}
+			ways %= MOD;
+		}
+		memo[currIndex][currMax][kLeft] = ways;
+		return memo[currIndex][currMax][kLeft];
+	}
+	int numOfArrays(int n, int m, int k) {
+		this.n = n;
+		this.m = m;
+		this.k = k;
+		this.memo = new Integer[n][m + 1][k];
+		int ways = 0;
+		for (int firstNum = 1; firstNum <= m; firstNum++) {
+			ways += findWays(0,firstNum,k - 1);
+			ways %= MOD;
+		}
+		return ways;
+	}
+}

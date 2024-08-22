@@ -1,0 +1,39 @@
+class Solution {
+	int maxDepth = Integer.MIN_VALUE;
+	Map<Integer, List<TreeNode>> nodes = new HashMap<>();
+	void dfs(TreeNode node, int depth) {
+		if (node == null) {
+			return;
+		}
+		nodes.putIfAbsent(depth,new ArrayList<>());
+		nodes.get(depth).add(node);
+		maxDepth = Math.max(maxDepth,depth);
+		dfs(node.left,depth + 1);
+		dfs(node.right,depth + 1);
+	}
+	TreeNode lca(TreeNode node, TreeNode node1, TreeNode node2) {
+		if (node == null) {
+			return node;
+		}
+		if (node == node1 || node == node2) {
+			return node;
+		}
+		TreeNode left = lca(node.left,node1,node2);
+		TreeNode right = lca(node.right,node1,node2);
+		if (left != null && right != null) {
+			return node;
+		}
+		if (left != null) {
+			return left;
+		}
+		return right;
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		dfs(root,0);
+		List<TreeNode> deepestNodes = nodes.get(maxDepth);
+		return lca(root,deepestNodes.get(0),deepestNodes.get(deepestNodes.size() - 1));
+	}
+}

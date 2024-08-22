@@ -1,0 +1,48 @@
+class Solution {
+	int getMinSwaps(ArrayList<Integer> al) {
+		int count = 0;
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < al.size(); i++) {
+			map.put(al.get(i),i);
+		}
+		Collections.sort(al);
+		for (int i = 0; i < al.size(); i++) {
+			if (map.get(al.get(i)) == i) {
+				continue;
+			} 
+			else {
+				count++;
+				swap(al,map.get(al.get(i)),i);
+			}
+			i--;
+		}
+		return count;
+	}
+	int minimumOperations(TreeNode root) {
+		Queue<TreeNode> q = new LinkedList<>();
+		q.offer(root);
+		int ans = 0;
+		ArrayList<Integer> al = new ArrayList<>();
+		while (!q.isEmpty()) {
+			int size = q.size();
+			for (int i = 0; i < size; i++) {
+				TreeNode pop = q.remove();
+				al.add(pop.val);
+				if (pop.left != null) {
+					q.offer(pop.left);
+				}
+				if (pop.right != null) {
+					q.offer(pop.right);
+				}
+			}
+			ans += getMinSwaps(al);
+			al = new ArrayList<>();
+		}
+		return ans;
+	}
+	void swap(ArrayList<Integer> al, int i, int j) {
+		int temp = al.get(i);
+		al.set(i,al.get(j));
+		al.set(j,temp);
+	}
+}

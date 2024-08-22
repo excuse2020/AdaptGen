@@ -1,0 +1,62 @@
+class Solution {
+	int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+		int n = amount.length;
+		List<List<Integer>> g = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			g.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			g.get(edges[i][0]).add(edges[i][1]);
+			g.get(edges[i][1]).add(edges[i][0]);
+		}
+		Map<Integer, Integer> map = new HashMap<>();
+		boolean[] vis = new boolean[n];
+		nodeToRoot(g,0,bob,map,vis);
+		vis = new boolean[n];
+		Queue<int[]> q = new ArrayDeque<>();
+		q.add(new int{0, 0, 0});
+		vis[0] = true;
+		int res = Integer.MIN_VALUE;
+		while (q.size() > 0) {
+			int size = q.size();
+			while (size-- > 0) {
+				int[] tmp = q.remove();
+				if (tmp[1] < map.getOrDefault(tmp[0],Integer.MAX_VALUE)) {
+					tmp[2] += amount[tmp[0]];
+				} 
+				else if (tmp[1] == map.getOrDefault(tmp[0],-1)) {
+					tmp[2] += amount[tmp[0]] / 2;
+				}
+				int c = 0;
+				for (int nbr: g.get(tmp[0])) {	
+					if (!vis[nbr]) {
+						q.add(new int{nbr, tmp[1] + 1, tmp[2]});
+						vis[nbr] = true;
+						c++;
+					}
+				}
+				if (c == 0) {
+					res = Math.max(res,tmp[2]);
+				}
+			}
+		}
+		return res;
+	}
+	int nodeToRoot(List<List<Integer>> g, int nd, int tar, Map<Integer, Integer> set, boolean[] vis) {
+		if (nd == tar) {
+			set.put(tar,0);
+			return 0;
+		}
+		vis[nd] = true;
+		for (int nbr: g.get(nd)) {	
+			if (!vis[nbr]) {
+				int res = nodeToRoot(g,nbr,tar,set,vis);
+				if (res != -1) {
+					set.put(nd,res + 1);
+					return res + 1;
+				}
+			}
+		}
+		return -1;
+	}
+}

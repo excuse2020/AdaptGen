@@ -1,0 +1,46 @@
+class Solution {
+	boolean checkBiPartite(HashMap<Integer, ArrayList<Integer>> map, int node, int[] color) {
+		Queue<Integer> queue = new ArrayDeque<>();
+		queue.add(node);
+		color[node] = 1;
+		while (!queue.isEmpty()) {
+			int current = queue.poll();
+			for (var item: map.get(current)) {	
+				if (color[item] == color[current]) {
+					return false;
+				}
+				if (color[item] == -1) {
+					queue.add(item);
+					color[item] = 1 - color[current];
+				}
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+		for (int i = 0; i <= n; i++) {
+			map.put(i,new ArrayList<>());
+		}
+		for (int[] edge: dislikes) {	
+			int u = edge[0];
+			int v = edge[1];
+			if (map.containsKey(u)) {
+				map.get(u).add(v);
+			}
+			if (map.containsKey(v)) {
+				map.get(v).add(u);
+			}
+		}
+		int[] color = new int[n + 1];
+		Arrays.fill(color,-1);
+		for (int i = 1; i <= n; i++) {
+			if (color[i] == -1) {
+				if (!checkBiPartite(map,i,color)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

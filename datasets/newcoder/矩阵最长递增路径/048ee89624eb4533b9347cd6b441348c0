@@ -1,0 +1,32 @@
+class Solution {
+	int[][] memory;
+	int getPath(int[][] matrix, int row, int col, int pre_val) {
+		if (row < 0 || row >= matrix.length || col < 0 || col >= matrix[0].length) {
+			return 0;
+		}
+		if (matrix[row][col] <= pre_val) {
+			return 0;
+		}
+		if (memory[row][col] != 0) {
+			return memory[row][col];
+		}
+		int path = 0;
+		int cur_val = matrix[row][col];
+		path = Math.max(getPath(matrix,row + 1,col,cur_val),path);
+		path = Math.max(getPath(matrix,row - 1,col,cur_val),path);
+		path = Math.max(getPath(matrix,row,col + 1,cur_val),path);
+		path = Math.max(getPath(matrix,row,col - 1,cur_val),path);
+		memory[row][col] = 1 + path;
+		return memory[row][col];
+	}
+	int solve(int[][] matrix) {
+		memory = new int[matrix.length][matrix[0].length];
+		int ans = 0;
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix[0].length; j++) {
+				ans = Math.max(ans,getPath(matrix,i,j,-1));
+			}
+		}
+		return ans;
+	}
+}

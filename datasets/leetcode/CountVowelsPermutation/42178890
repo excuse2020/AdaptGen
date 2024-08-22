@@ -1,0 +1,41 @@
+class Solution {
+	int a = 0, e = 1, i = 2, o = 3, u = 4;
+	long[][] dp;
+	int mod = (int) (1e9 + 7);
+	int countVowelPermutation(int n) {
+		dp = new long[6][n + 1];
+		for (long[] row: dp) {	
+			Arrays.fill(row,-1);
+		}
+		long ans = 0;
+		ans = (ans + solve(a,n - 1)) % mod;
+		ans = (ans + solve(e,n - 1)) % mod;
+		ans = (ans + solve(i,n - 1)) % mod;
+		ans = (ans + solve(o,n - 1)) % mod;
+		ans = (ans + solve(u,n - 1)) % mod;
+		return (int) ans;
+	}
+	long solve(int ch, int n) {
+		if (n == 0) {
+			return 1;
+		}
+		if (dp[ch][n] != -1) {
+			return dp[ch][n];
+		}
+		if (ch == a) {
+			return dp[ch][n] = solve(e,n - 1) % mod;
+		} 
+		else if (ch == e) {
+			return dp[ch][n] = (solve(a,n - 1) + solve(i,n - 1)) % mod;
+		} 
+		else if (ch == i) {
+			return dp[ch][n] = (solve(a,n - 1) + solve(e,n - 1)) % mod;
+		} 
+		else if (ch == o) {
+			return dp[ch][n] = (solve(i,n - 1) + solve(u,n - 1)) % mod;
+		} 
+		else {
+			return dp[ch][n] = solve(a,n - 1) % mod;
+		}
+	}
+}

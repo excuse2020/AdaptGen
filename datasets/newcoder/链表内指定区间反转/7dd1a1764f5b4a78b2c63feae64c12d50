@@ -1,0 +1,43 @@
+class Solution {
+	ListNode reverseBetween(ListNode head, int m, int n) {
+		if (m == n || head == null || m > n) {
+			return head;
+		}
+		ListNode temp = new ListNode(-1);
+		ListNode currentNode = head;
+		int count = 0;
+		ListNode first = null, last = null;
+		ListNode before = null, after = null;
+		while (currentNode != null) {
+			count++;
+			ListNode next = currentNode.next;
+			if (count == m - 1) {
+				before = currentNode;
+			}
+			if (count == n + 1) {
+				after = currentNode;
+			}
+			if (count >= m && count <= n) {
+				ListNode pre = temp.next;
+				if (pre == null) {
+					first = currentNode;
+				}
+				temp.next = currentNode;
+				currentNode.next = pre;
+			}
+			currentNode = next;
+		}
+		if (first != null && before != null) {
+			last = temp.next;
+			before.next = last;
+			first.next = after;
+			return head;
+		}
+		if (before == null) {
+			last = temp.next;
+			first.next = after;
+			return last;
+		}
+		return head;
+	}
+}

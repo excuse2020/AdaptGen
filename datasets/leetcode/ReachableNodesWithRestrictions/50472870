@@ -1,0 +1,33 @@
+class Solution {
+	int reachableNodes(int n, int[][] edges, int[] restricted) {
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int[] edge: edges) {	
+			int node1 = edge[0];
+			int node2 = edge[1];
+			map.putIfAbsent(node1,new ArrayList<>());
+			map.get(node1).add(node2);
+			map.putIfAbsent(node2,new ArrayList<>());
+			map.get(node2).add(node1);
+		}
+		Set<Integer> restrictednodes = new HashSet<>();
+		for (int node: restricted) {	
+			restrictednodes.add(node);
+		}
+		Set<Integer> visited = new HashSet<>();
+		Queue<Integer> queue = new ArrayDeque<>();
+		int count = 0;
+		queue.offer(0);
+		while (!queue.isEmpty()) {
+			int current = queue.poll();
+			visited.add(current);
+			count++;
+			List<Integer> neighbors = map.get(current);
+			for (int nei: neighbors) {	
+				if (!visited.contains(nei) && !restrictednodes.contains(nei)) {
+					queue.offer(nei);
+				}
+			}
+		}
+		return count;
+	}
+}

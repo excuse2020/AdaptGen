@@ -1,0 +1,47 @@
+class Solution {
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		List<Integer> a = new ArrayList<>();
+		dfs(root,a);
+		System.out.println(a);
+		int n = a.size();
+		int[] nums = new int[n];
+		for (int i = 0; i < nums.length; ++i) {
+			nums[i] = a.get(i);
+		}
+		List<List<Integer>> ans = new ArrayList<>();
+		for (Integer q: queries) {	
+			int j = lowerBound(nums,q);
+			if (q == 16) {
+				System.out.println(j);
+			}
+			int mx = j == n ? -1 : nums[j];
+			if (j == n || nums[j] != q) {
+				--j;
+			}
+			int mn = j < 0 ? -1 : nums[j];
+			ans.add(List.of(mn,mx));
+		}
+		return ans;
+	}
+	void dfs(TreeNode root, List<Integer> a) {
+		if (root == null) {
+			return;
+		}
+		dfs(root.left,a);
+		a.add(root.val);
+		dfs(root.right,a);
+	}
+	int lowerBound(int[] nums, int target) {
+		int l = 0, r = nums.length;
+		while (l < r) {
+			int mid = (l + r) >>> 1;
+			if (nums[mid] < target) {
+				l = mid + 1;
+			} 
+			else {
+				r = mid;
+			}
+		}
+		return l;
+	}
+}

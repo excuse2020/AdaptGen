@@ -1,0 +1,38 @@
+class Solution {
+	int[] bitmap = new int[100000 / 32 + 1];
+	void addToMap(int index, int offset) {
+		bitmap[index] = bitmap[index] | (1 << offset);
+	}
+	boolean ifExist(int index, int offset) {
+		return (bitmap[index] & (1 << offset)) > 0;
+	}
+	int maxLength(int[] arr) {
+		int pre = 0;
+		int post = 0;
+		int max = 1;
+		int count = 1;
+		addToMap(arr[0] / 32,arr[0] % 32);
+		while (post < arr.length - 1) {
+			post++;
+			int index = arr[post] / 32;
+			int offset = arr[post] % 32;
+			if (ifExist(index,offset)) {
+				while (arr[pre] != arr[post]) {
+					removeFromMap(arr[pre] / 32,arr[pre] % 32);
+					pre++;
+					count--;
+				}
+				pre++;
+			} 
+			else {
+				addToMap(index,offset);
+				count++;
+				max = Math.max(count,max);
+			}
+		}
+		return max;
+	}
+	void removeFromMap(int index, int offset) {
+		bitmap[index] -= (1 << offset);
+	}
+}

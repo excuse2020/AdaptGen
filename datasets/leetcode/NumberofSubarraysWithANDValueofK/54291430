@@ -1,0 +1,25 @@
+class Solution {
+	long countSubarrays(int[] nums, int k) {
+		int l = nums.length;
+		long t = 0;
+		Map<Long, Long> h = new HashMap<>();
+		for (int i = 0; i < l; ++i) {
+			Map<Long, Long> c = new HashMap<>();
+			if (nums[i] == k) {
+				t++;
+			}
+			c.put((long) nums[i],1L);
+			for (Map.Entry<Long, Long> entry: h.entrySet()) {	
+				long v = entry.getKey();
+				long f = entry.getValue();
+				long R = v & nums[i];
+				if (R == k) {
+					t += f;
+				}
+				c.put(R,c.getOrDefault(R,0L) + f);
+			}
+			h = c;
+		}
+		return t;
+	}
+}

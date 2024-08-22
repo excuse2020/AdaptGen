@@ -1,0 +1,31 @@
+class Solution {
+	int maxLoot(int[] nums, int idx, int end, HashMap<Integer, Integer> map) {
+		if (idx >= end) {
+			return 0;
+		}
+		if (map.containsKey(idx)) {
+			return map.get(idx);
+		}
+		if (idx == nums.length - 1) {
+			if (map.containsKey(0)) {
+				return 0;
+			}
+		}
+		int includeIdx = nums[idx];
+		includeIdx += maxLoot(nums,idx + 2,end,map);
+		int notIncludeIdx = maxLoot(nums,idx + 1,end,map);
+		int result = includeIdx > notIncludeIdx ? includeIdx : notIncludeIdx;
+		map.put(idx,result);
+		return result;
+	}
+	int rob(int[] nums) {
+		if (nums.length == 1) {
+			return nums[0];
+		}
+		HashMap<Integer, Integer> map1 = new HashMap();
+		HashMap<Integer, Integer> map2 = new HashMap();
+		int a = maxLoot(nums,0,nums.length - 1,map1);
+		int b = maxLoot(nums,1,nums.length,map2);
+		return a > b ? a : b;
+	}
+}

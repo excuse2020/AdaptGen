@@ -1,0 +1,38 @@
+class Solution {
+	boolean flag = true;
+	int helper(int[] rating, int index, int prevIndex, int len, int[][][] dp) {
+		if (len == 3) {
+			return 1;
+		}
+		if (index == rating.length) {
+			return 0;
+		}
+		if (dp[index][prevIndex + 1][len] != -1) {
+			return dp[index][prevIndex + 1][len];
+		}
+		int count = 0;
+		if (prevIndex == -1 || (flag ? rating[index] > rating[prevIndex] : rating[index] < rating[prevIndex])) {
+			count += helper(rating,index + 1,index,len + 1,dp);
+		}
+		count += helper(rating,index + 1,prevIndex,len,dp);
+		return dp[index][prevIndex + 1][len] = count;
+	}
+	int numTeams(int[] rating) {
+		int count = 0;
+		int[][][] dp = new int[rating.length][rating.length + 1][4];
+		for (int[][] arr: dp) {	
+			for (int[] ar: arr) {	
+				Arrays.fill(ar,-1);
+			}
+		}
+		count += helper(rating,0,-1,0,dp);
+		flag = false;
+		for (int[][] arr: dp) {	
+			for (int[] ar: arr) {	
+				Arrays.fill(ar,-1);
+			}
+		}
+		count += helper(rating,0,-1,0,dp);
+		return count;
+	}
+}

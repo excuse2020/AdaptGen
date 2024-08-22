@@ -1,0 +1,53 @@
+class Solution {
+	int minReorder(int n, int[][] connections) {
+		boolean[] vis = new boolean[n];
+		List<Integer>[] inGraph = new ArrayList[n];
+		List<Integer>[] outGraph = new ArrayList[n];
+		for (int[] con: connections) {	
+			if (outGraph[con[0]] == null) {
+				outGraph[con[0]] = new ArrayList<>();
+			}
+			if (inGraph[con[1]] == null) {
+				inGraph[con[1]] = new ArrayList<>();
+			}
+			outGraph[con[0]].add(con[1]);
+			inGraph[con[1]].add(con[0]);
+		}
+		Queue<Integer> queue = new ArrayDeque<>();
+		visit(0,inGraph,vis,queue);
+		int res = 0;
+		while (!queue.isEmpty()) {
+			int node = queue.poll();
+			if (inGraph[node] != null) {
+				for (int nei: inGraph[node]) {	
+					if (!vis[nei]) {
+						vis[nei] = true;
+						queue.offer(nei);
+					}
+				}
+			}
+			if (outGraph[node] != null) {
+				for (int nei: outGraph[node]) {	
+					if (!vis[nei]) {
+						vis[nei] = true;
+						res++;
+						queue.offer(nei);
+					}
+				}
+			}
+		}
+		return res;
+	}
+	void visit(int idx, List<Integer>[] inGraph, boolean[] cache, Queue<Integer> queue) {
+		if (cache[idx]) {
+			return;
+		}
+		cache[idx] = true;
+		queue.offer(idx);
+		if (inGraph[idx] != null) {
+			for (int nei: inGraph[idx]) {	
+				visit(nei,inGraph,cache,queue);
+			}
+		}
+	}
+}

@@ -1,0 +1,62 @@
+class Solution {
+	String addition(String str1, String str2) {
+		StringBuffer sb = new StringBuffer("");
+		int carrayBit = 0;
+		int unit = 0;
+		int total = 0;
+		for (int i = str1.length() - 1; i > -1; i--) {
+			total = Integer.valueOf(str1.charAt(i) + "") + Integer.valueOf(str2.charAt(i) + "");
+			carrayBit = total / 10;
+			unit = total % 10;
+			sb.append(unit);
+		}
+		if (carrayBit != 0) {
+			sb.append(carrayBit);
+		}
+		return new String(sb.reverse());
+	}
+	String multiplication(String str1, int num2) {
+		StringBuffer sb = new StringBuffer("");
+		int carryBit = 0;
+		int unit = 0;
+		int product = 0;
+		for (int i = str1.length() - 1; i > -1; i--) {
+			product = Integer.valueOf(str1.charAt(i) + "") * num2 + carryBit;
+			carryBit = product / 10;
+			unit = product % 10;
+			sb.append(unit);
+		}
+		if (carryBit != 0) {
+			sb.append(carryBit);
+		}
+		return new String(sb.reverse());
+	}
+	String solve(String s, String t) {
+		if ((1 == s.length() && 0 == Integer.valueOf(s)) || (1 == t.length() && 0 == Integer.valueOf(t))) {
+			return "0";
+		}
+		int len1 = s.length();
+		int len2 = t.length();
+		String curS = "";
+		String preS = "";
+		int num = 1;
+		for (int i = len1 - 1; i > -1; i--) {
+			curS = multiplication(t,Integer.valueOf(s.charAt(i) + ""));
+			if (i == len1 - 1) {
+				preS = curS;
+			} 
+			else {
+				StringBuffer tmpCurS = new StringBuffer(curS);
+				for (int j = 1; j <= num; j++) {
+					tmpCurS.append("0");
+				}
+				while (preS.length() != tmpCurS.length()) {
+					preS = "0" + preS;
+				}
+				preS = addition(new String(tmpCurS),preS);
+				num++;
+			}
+		}
+		return preS;
+	}
+}

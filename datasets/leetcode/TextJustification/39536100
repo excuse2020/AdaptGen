@@ -1,0 +1,77 @@
+class Solution {
+	List<String> fullJustify(String[] words, int maxWidth) {
+		int start = -1;
+		int end = -1;
+		List<String> res = new ArrayList<>();
+		while (end != words.length - 1) {
+			start = end + 1;
+			end = helper(start,start,words,maxWidth,0);
+			int net = 0;
+			for (int j = start; j <= end; j++) {
+				net += words[j].length();
+			}
+			int spaces = end - start;
+			int rem = maxWidth - (net + spaces);
+			int common = 0;
+			int extra = 0;
+			if (spaces != 0 && end != words.length - 1) {
+				common = rem / spaces;
+				extra = rem % spaces;
+			} 
+			else {
+				common = rem;
+			}
+			StringBuilder sb = new StringBuilder();
+			String temp = "";
+			for (int i = 1; i <= common; i++) {
+				temp += " ";
+			}
+			if (end == words.length - 1) {
+				for (int i = start; i <= end; i++) {
+					sb.append(words[i]);
+					if (i != end) {
+						sb.append(" ");
+					} 
+					else {
+						sb.append(temp);
+					}
+				}
+			} 
+			else {
+				for (int i = start; i <= end; i++) {
+					sb.append(words[i]);
+					if (i != end) {
+						sb.append(" ");
+						sb.append(temp);
+					}
+					if (extra > 0) {
+						sb.append(" ");
+						extra--;
+					}
+				}
+				if (spaces == 0) {
+					sb.append(temp);
+				}
+			}
+			res.add(sb.toString());
+		}
+		return res;
+	}
+	int helper(int i, int start, String[] words, int maxWidth, int acc_len) {
+		if (i == words.length) {
+			return i - 1;
+		}
+		if (i != start) {
+			acc_len += 1;
+		}
+		int curr = words[i].length();
+		acc_len += curr;
+		if (acc_len > maxWidth) {
+			return i - 1;
+		}
+		if (acc_len == maxWidth) {
+			return i;
+		}
+		return helper(i + 1,start,words,maxWidth,acc_len);
+	}
+}

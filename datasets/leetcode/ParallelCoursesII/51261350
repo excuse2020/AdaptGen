@@ -1,0 +1,72 @@
+class Solution {
+	ArrayList<ArrayList<Integer>> graph;
+	HashMap<Integer, Integer> map = new HashMap<>();
+	int n, k;
+	List<List<Integer>> generateCombinations(List<Integer> nodes, int k) {
+		List<List<Integer>> result = new ArrayList<>();
+		generateHelper(nodes,k,0,new ArrayList<>(),result);
+		return result;
+	}
+	void generateHelper(List<Integer> nodes, int k, int start, List<Integer> list, List<List<Integer>> result) {
+		if (k == 0) {
+			result.add(new ArrayList<>(list));
+			return;
+		}
+		for (int i = start; i < nodes.size(); i++) {
+			list.add(nodes.get(i));
+			generateHelper(nodes,k - 1,i + 1,list,result);
+			list.remove(list.size() - 1);
+		}
+	}
+	int minNumberOfSemesters(int n, int[][] relations, int k) {
+		this.n = n;
+		this.k = k;
+		ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(i,new ArrayList<>());
+		}
+		for (int relation: relations) {	
+			graph.get(relation[0] - 1).add(relation[1] - 1);
+		}
+		this.graph = graph;
+		int indegree = new int[n];
+		for (int i = 0; i < n; i++) {
+			for (int child: graph.get(i)) {	
+				indegree[child] += 1;
+			}
+		}
+		int mask = 0;
+		for (int i = 0; i < n; i++) {
+			mask |= 1 << i;
+		}
+		return recurse(mask,indegree);
+	}
+	int recurse(int mask, int indegree) {
+		if (mask == 0) {
+			return 0;
+		}
+		if (map.containsKey(mask)) {
+			return map.get(mask);
+		}
+		List<Integer> nodes = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			if ((mask & (1 << i)) != 0 && indegree[i] == 0) {
+				nodes.add(i);
+			}
+		}
+		int ans = Integer.MAX_VALUE;
+		for (List<Integer> kNodes: generateCombinations(nodes,Math.min(k,nodes.size()))) {	
+			int newMask = mask;
+			int newIndegree = indegree.clone();
+			for (int node: kNodes) {	
+				newMask ^= (1 << node);
+				for (int child: graph.get(node)) {	
+					newIndegree[child]--;
+				}
+			}
+			ans = Math.min(ans,1 + recurse(newMask,newIndegree));
+		}
+		map.put(mask,ans);
+		return ans;
+	}
+}

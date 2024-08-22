@@ -1,0 +1,38 @@
+class Solution {
+	boolean VerifySquenceOfBST(int[] sequence) {
+		int l = sequence.length;
+		if (l == 0) {
+			return false;
+		}
+		return f(sequence,0,l - 1);
+	}
+	boolean f(int[] sequence, int start, int end) {
+		if (start >= end) {
+			return true;
+		}
+		int root = sequence[end];
+		int index = 0;
+		int flag = 0;
+		for (int i = start; i < end; i++) {
+			if (flag == 0 && sequence[i] > root) {
+				flag = 1;
+				index = i;
+				break;
+			}
+		}
+		if (flag == 1) {
+			for (int i = index; i < end; i++) {
+				if (sequence[i] < root) {
+					return false;
+				}
+			}
+			boolean b1 = f(sequence,start,index - 1);
+			boolean b2 = f(sequence,index,end - 1);
+			return b1 && b2;
+		} 
+		else {
+			boolean b1 = f(sequence,start,end - 1);
+			return b1;
+		}
+	}
+}

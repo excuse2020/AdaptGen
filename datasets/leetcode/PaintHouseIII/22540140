@@ -1,0 +1,47 @@
+class Solution {
+	int[][] cost;
+	Integer[][][] dp;
+	int[] houses;
+	int m, n, targetCount;
+	int minCost(int[] houses, int[][] cost, int m, int n, int target) {
+		if (target > m) {
+			return -1;
+		}
+		this.houses = houses;
+		this.cost = cost;
+		this.m = m;
+		this.n = n;
+		this.targetCount = target;
+		this.dp = new Integer[m][n + 1][targetCount + 1];
+		int answer = minCost(0,0,0);
+		return answer == Integer.MAX_VALUE ? -1 : answer;
+	}
+	int minCost(int houseNo, int prevHouseColor, int neighbourHoodCount) {
+		if (houseNo == m) {
+			return neighbourHoodCount == targetCount ? 0 : Integer.MAX_VALUE;
+		}
+		if (neighbourHoodCount > targetCount) {
+			return Integer.MAX_VALUE;
+		}
+		if (dp[houseNo][prevHouseColor][neighbourHoodCount] != null) {
+			return dp[houseNo][prevHouseColor][neighbourHoodCount];
+		}
+		int minCostToPaint = Integer.MAX_VALUE;
+		if (houses[houseNo] != 0) {
+			int newNeighbourHoodCount = neighbourHoodCount + ((houses[houseNo] != prevHouseColor) ? 1 : 0);
+			minCostToPaint = minCost(houseNo + 1,houses[houseNo],newNeighbourHoodCount);
+		} 
+		else {
+			int colorLength = cost[0].length;
+			for (int color = 1; color <= colorLength; color++) {
+				int newNeighbourHoodCount = neighbourHoodCount + ((prevHouseColor != color) ? 1 : 0);
+				int minCostToPaintCurrentHouse = minCost(houseNo + 1,color,newNeighbourHoodCount);
+				if (minCostToPaintCurrentHouse != Integer.MAX_VALUE) {
+					minCostToPaintCurrentHouse += cost[houseNo][color - 1];
+				}
+				minCostToPaint = Math.min(minCostToPaintCurrentHouse,minCostToPaint);
+			}
+		}
+		return dp[houseNo][prevHouseColor][neighbourHoodCount] = minCostToPaint;
+	}
+}

@@ -1,0 +1,25 @@
+class Solution {
+	Integer[][] memo;
+	int n;
+	int[] satisfaction;
+	int getMaxSatisfaction(int position, int dishNo) {
+		if (position == n) {
+			return 0;
+		}
+		if (memo[position][dishNo] != null) {
+			return memo[position][dishNo];
+		}
+		int currentLikeTimeCoef = dishNo * satisfaction[position];
+		int satisfactionIfChooseCurrent = currentLikeTimeCoef + getMaxSatisfaction(position + 1,dishNo + 1);
+		int satisfactionIfChooseNext = getMaxSatisfaction(position + 1,dishNo);
+		memo[position][dishNo] = Math.max(satisfactionIfChooseCurrent,satisfactionIfChooseNext);
+		return memo[position][dishNo];
+	}
+	int maxSatisfaction(int[] satisfaction) {
+		this.satisfaction = satisfaction;
+		n = satisfaction.length;
+		Arrays.sort(this.satisfaction);
+		memo = new Integer[n][n + 1];
+		return getMaxSatisfaction(0,1);
+	}
+}

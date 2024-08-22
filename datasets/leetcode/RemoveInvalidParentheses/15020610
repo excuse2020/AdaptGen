@@ -1,0 +1,68 @@
+class Solution {
+	boolean isValid(StringBuilder s) {
+		int v = 0;
+		int i = 0;
+	}
+	int numberOfBits(long n) {
+		int numberOfBits = 0;
+		while (n > 0) {
+			if ((n & 1) == 1) {
+				numberOfBits++;
+			}
+			n = n >>> 1;
+		}
+		return numberOfBits;
+	}
+	List<String> removeInvalidParentheses(String s) {
+		Set<String> res = new HashSet<>();
+		int v = 0, numberOfExtraOpeningBrackets = 0, numberOfExtraClosingBrackets = 0;
+		HashSet<Integer> openingBracketsIndexes = new HashSet<>();
+		HashSet<Integer> closingBracketsIndexes = new HashSet<>();
+		HashSet<Integer> potentialllyBadClosingIndexes = new HashSet<>();
+		int i = 0;
+	}
+	Set<Set<Integer>> subsets(Set<Integer> nums, int k) {
+		Set<Set<Integer>> res = new HashSet<>();
+		ArrayList<Integer> numsList = new ArrayList<>(nums);
+		for (long i = 0; i < (long) Math.pow(2,nums.size()); i++) {
+			if (numberOfBits(i) == k) {
+				Set<Integer> curRes = new HashSet<>();
+				for (int j = 0; j < numsList.size(); j++) {
+					long bitN = 1L << j;
+					if ((bitN & i) != 0) {
+						curRes.add(numsList.get(j));
+					}
+				}
+				res.add(curRes);
+			}
+		}
+		return res;
+	}
+	Set<Set<Integer>> subsets2(Set<Integer> nums, int k) {
+		Set<Set<Integer>> res = new HashSet<>();
+		if (nums.size() == k) {
+			res.add(nums);
+			return res;
+		}
+		if (k == 1) {
+			for (int n: nums) {	
+				Set<Integer> hs = new HashSet<>();
+				hs.add(n);
+				res.add(hs);
+			}
+		} 
+		else {
+			Set<Set<Integer>> subsets = subsets(nums,k - 1);
+			for (int n: nums) {	
+				for (Set<Integer> subset: subsets) {	
+					if (!subset.contains(n)) {
+						HashSet<Integer> newSubset = new HashSet<>(subset);
+						newSubset.add(n);
+						res.add(newSubset);
+					}
+				}
+			}
+		}
+		return res;
+	}
+}

@@ -1,0 +1,71 @@
+class Solution {
+	boolean find(int root, int parent, List<List<Integer>> Graph, int dis, int target, int min, int[] amount) {
+		if (root == target) {
+			if (dis == 0) {
+				amount[root] /= 2;
+			} 
+			else {
+				amount[root] = 0;
+			}
+			return true;
+		}
+		for (int nbr: Graph.get(root)) {	
+			if (nbr != parent) {
+				boolean f = find(nbr,root,Graph,dis + 1,target,min,amount);
+				if (f) {
+					if (dis > min / 2) {
+						amount[root] = 0;
+					}
+					if (dis == min / 2) {
+						if (min % 2 == 0) {
+							amount[root] /= 2;
+						}
+					}
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	int minDistance(int root, int parent, List<List<Integer>> Graph, int dis, int target) {
+		if (root == target) {
+			return dis;
+		}
+		int max = Integer.MIN_VALUE;
+		for (int nbr: Graph.get(root)) {	
+			if (nbr != parent) {
+				max = Math.max(max,minDistance(nbr,root,Graph,dis + 1,target));
+			}
+		}
+		return max;
+	}
+	int minScore(int root, int parent, List<List<Integer>> Graph, int[] amount) {
+		if (parent != -1 && Graph.get(root).size() == 1) {
+			return amount[root];
+		}
+		int max = Integer.MIN_VALUE;
+		for (int nbr: Graph.get(root)) {	
+			if (nbr != parent) {
+				int x1 = amount[root] + minScore(nbr,root,Graph,amount);
+				max = Math.max(max,x1);
+			}
+		}
+		return max;
+	}
+	int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+		List<List<Integer>> Graph = new ArrayList<>();
+		int n = edges.length;
+		for (int i = 0; i <= n; i++) {
+			Graph.add(new ArrayList<Integer>());
+		}
+		for (int[] e: edges) {	
+			int u = e[0];
+			int v = e[1];
+			Graph.get(u).add(v);
+			Graph.get(v).add(u);
+		}
+		int min = minDistance(0,-1,Graph,0,bob);
+		find(0,-1,Graph,0,bob,min,amount);
+		return minScore(0,-1,Graph,amount);
+	}
+}

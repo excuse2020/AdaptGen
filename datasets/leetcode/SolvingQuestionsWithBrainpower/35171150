@@ -1,0 +1,21 @@
+class Solution {
+	long helper(long dp, int questions, int questionNo, int size) {
+		if (questionNo >= size) {
+			return 0;
+		}
+		if (dp[questionNo] != -1) {
+			return dp[questionNo];
+		}
+		int jumpToNextQuestion = (questionNo + questions[questionNo][1] < size) ? questionNo + questions[questionNo][1] : size;
+		long solvesCurrentQuestion = questions[questionNo][0] + helper(dp,questions,jumpToNextQuestion,size);
+		long skipsCurrentQuestion = 0 + helper(dp,questions,questionNo + 1,size);
+		dp[questionNo] = Math.max(solvesCurrentQuestion,skipsCurrentQuestion);
+		return dp[questionNo];
+	}
+	long mostPoints(int[][] questions) {
+		int n = questions.length;
+		long dp = new long[n];
+		Arrays.fill(dp,-1);
+		return helper(dp,questions,0,n);
+	}
+}

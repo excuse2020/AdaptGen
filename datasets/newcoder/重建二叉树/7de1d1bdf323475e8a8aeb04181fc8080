@@ -1,0 +1,29 @@
+class Solution {
+	TreeNode reConstructBinaryTree(int[] pre, int[] in) {
+		int len = pre.length;
+		if (len == 0) {
+			return null;
+		}
+		TreeNode root = new TreeNode(pre[0]);
+		Stack<TreeNode> s = new Stack<>();
+		s.push(root);
+		int inIndex = 0;
+		for (int i = 1; i < len; i++) {
+			int val = pre[i];
+			TreeNode node = s.peek();
+			if (node.val != in[inIndex]) {
+				node.left = new TreeNode(val);
+				s.push(node.left);
+			} 
+			else {
+				while (!s.isEmpty() && s.peek().val == in[inIndex]) {
+					node = s.pop();
+					inIndex++;
+				}
+				node.right = new TreeNode(val);
+				s.push(node.right);
+			}
+		}
+		return root;
+	}
+}

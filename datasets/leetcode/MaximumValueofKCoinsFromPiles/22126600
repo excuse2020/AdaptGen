@@ -1,0 +1,20 @@
+class Solution {
+	int maxValueOfCoins(List<List<Integer>> piles, int k) {
+		int pilesSize = piles.size();
+		return maxValueOfCoinsRecursion(piles,k,pilesSize);
+	}
+	int maxValueOfCoinsRecursion(List<List<Integer>> piles, int k, int pilesSize) {
+		if (k == 0 || pilesSize == 0) {
+			return 0;
+		}
+		int maxValueBySkippingCurrentPile = maxValueOfCoinsRecursion(piles,k,pilesSize - 1);
+		List<Integer> currPile = piles.get(pilesSize - 1);
+		int sum = 0, maxValueByAdding = 0, max = Integer.MIN_VALUE;
+		for (int i = 0; i < k && i < currPile.size(); i++) {
+			sum += currPile.get(i);
+			maxValueByAdding = sum + maxValueOfCoinsRecursion(piles,k - (i + 1),pilesSize - 1);
+			max = Math.max(max,Math.max(maxValueBySkippingCurrentPile,maxValueByAdding));
+		}
+		return max;
+	}
+}

@@ -1,0 +1,49 @@
+class Solution {
+	void dfs(int node, int[] leftChild, int[] rightChild, boolean[] visited) {
+		if (node == -1 || visited[node]) {
+			return;
+		}
+		visited[node] = true;
+		dfs(leftChild[node],leftChild,rightChild,visited);
+		dfs(rightChild[node],leftChild,rightChild,visited);
+	}
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		int[] inDegrees = new int[n];
+		for (int i = 0; i < n; i++) {
+			if (leftChild[i] != -1) {
+				inDegrees[leftChild[i]]++;
+				if (inDegrees[leftChild[i]] > 1) {
+					return false;
+				}
+			}
+			if (rightChild[i] != -1) {
+				inDegrees[rightChild[i]]++;
+				if (inDegrees[rightChild[i]] > 1) {
+					return false;
+				}
+			}
+		}
+		int rootCount = 0;
+		int rootIndex = -1;
+		for (int i = 0; i < n; i++) {
+			if (inDegrees[i] == 0) {
+				rootCount++;
+				rootIndex = i;
+				if (rootCount > 1) {
+					return false;
+				}
+			}
+		}
+		if (rootCount != 1) {
+			return false;
+		}
+		boolean[] visited = new boolean[n];
+		dfs(rootIndex,leftChild,rightChild,visited);
+		for (boolean visit: visited) {	
+			if (!visit) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

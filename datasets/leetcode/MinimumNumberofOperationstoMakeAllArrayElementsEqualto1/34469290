@@ -1,0 +1,30 @@
+class Solution {
+	int findGCD(int a, int b) {
+		if (a == 0) {
+			return b;
+		}
+		return findGCD(b % a,a);
+	}
+	int minOperations(int[] nums) {
+		int noOfOnes = 0;
+		for (int num: nums) {	
+			if (num == 1) {
+				noOfOnes++;
+			}
+		}
+		if (noOfOnes > 0) {
+			return nums.length - noOfOnes;
+		}
+		int ans = Integer.MAX_VALUE;
+		for (int i = 0; i < nums.length; i++) {
+			int gcd = nums[i];
+			for (int j = i + 1; j < nums.length; j++) {
+				gcd = findGCD(gcd,nums[j]);
+				if (gcd == 1) {
+					ans = Math.min(ans,j - i + nums.length - 1);
+				}
+			}
+		}
+		return ans == Integer.MAX_VALUE ? -1 : ans;
+	}
+}

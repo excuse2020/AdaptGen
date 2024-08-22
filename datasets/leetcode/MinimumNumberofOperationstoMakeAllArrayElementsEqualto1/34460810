@@ -1,0 +1,42 @@
+class Solution {
+	boolean computeGCD(int[] nums, int i, int j) {
+		int t = nums[i];
+		for (int itr = i + 1; itr <= j; itr++) {
+			t = getgcd(t,nums[itr]);
+			if (t == 1) {
+				return true;
+			}
+		}
+		return false;
+	}
+	int getgcd(int a, int b) {
+		int soln = 1;
+		for (int i = 1; i <= a && i <= b; ++i) {
+			if (a % i == 0 && b % i == 0) {
+				soln = i;
+			}
+		}
+		return soln;
+	}
+	int minOperations(int[] nums) {
+		int onecount = 0;
+		for (int i: nums) {	
+			if (i == 1) {
+				onecount++;
+			}
+		}
+		if (onecount != 0) {
+			return nums.length - onecount;
+		}
+		int min = Integer.MAX_VALUE;
+		for (int i = 0; i < nums.length; i++) {
+			for (int j = i + 1; j < nums.length; j++) {
+				if (computeGCD(nums,i,j)) {
+					min = Math.min(min,j - i + nums.length);
+					break;
+				}
+			}
+		}
+		return min == Integer.MAX_VALUE ? -1 : min;
+	}
+}

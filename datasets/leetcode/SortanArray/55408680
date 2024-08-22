@@ -1,0 +1,41 @@
+class Solution {
+	void conquer(int nums, int s, int m, int e) {
+		int merge = new int[e - s + 1];
+		int idx1 = s;
+		int idx2 = m + 1;
+		int x = 0;
+		while (idx1 <= m && idx2 <= e) {
+			if (nums[idx1] < nums[idx2]) {
+				merge[x++] = nums[idx1++];
+			} 
+			else {
+				merge[x++] = nums[idx2++];
+			}
+		}
+		while (idx1 <= m) {
+			merge[x++] = nums[idx1++];
+		}
+		while (idx2 <= e) {
+			merge[x++] = nums[idx2++];
+		}
+		for (int i = 0, j = s; i < merge.length; i++, j++) {
+			nums[j] = merge[i];
+		}
+	}
+	void divide(int nums, int s, int e) {
+		if (s >= e) {
+			return;
+		}
+		int mid = s + (e - s) / 2;
+		divide(nums,s,mid);
+		divide(nums,mid + 1,e);
+		conquer(nums,s,mid,e);
+	}
+	int[] sortArray(int[] nums) {
+		int size = nums.length;
+		int s = 0;
+		int l = size - 1;
+		divide(nums,s,l);
+		return nums;
+	}
+}

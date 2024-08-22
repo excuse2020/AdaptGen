@@ -1,0 +1,20 @@
+class Solution {
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		HashMap<Integer, Integer> hm = new HashMap<>();
+		for (int i = 0; i < postorder.length; i++) {
+			hm.put(inorder[i],i);
+		}
+		return finder(inorder,postorder,0,inorder.length - 1,0,inorder.length - 1,hm);
+	}
+	TreeNode finder(int in, int post, int is, int ie, int ps, int pe, HashMap<Integer, Integer> hm) {
+		if (is > ie || ps > pe) {
+			return null;
+		}
+		TreeNode node = new TreeNode(post[pe]);
+		int currIndex = hm.get(post[pe]);
+		int left = currIndex - is;
+		node.left = finder(in,post,is,currIndex - 1,ps,ps + left - 1,hm);
+		node.right = finder(in,post,currIndex + 1,ie,ps + left,pe - 1,hm);
+		return node;
+	}
+}

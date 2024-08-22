@@ -1,0 +1,59 @@
+class Solution {
+	TreeNode canMerge(List<TreeNode> trees) {
+		Map<Integer, TreeNode> map = new HashMap<>();
+		Set<Integer> nodevalues = new HashSet<>();
+		int n = trees.size();
+		for (TreeNode root: trees) {	
+			map.put(root.val,root);
+			helper(nodevalues,root.left);
+			helper(nodevalues,root.right);
+		}
+		TreeNode root = null;
+		int count = 0;
+		for (int i = 0; i < n; i++) {
+			if (!nodevalues.contains(trees.get(i).val)) {
+				count++;
+				root = trees.get(i);
+			}
+		}
+		if (count != 1) {
+			return null;
+		}
+		Set<Integer> visited = new HashSet<>();
+		visited.add(root.val);
+		boolean check = dfs(root,visited,map,Integer.MIN_VALUE,Integer.MAX_VALUE);
+		if (check && visited.size() == n) {
+			return root;
+		}
+		return null;
+	}
+	boolean dfs(TreeNode root, Set<Integer> visited, Map<Integer, TreeNode> map, int min, int max) {
+		if (root == null) {
+			return true;
+		}
+		if (root.val < min || root.val > max) {
+			return false;
+		}
+		int val = root.val;
+		if (root.left != null || root.right != null) {
+			return dfs(root.left,visited,map,min,val - 1) && dfs(root.right,visited,map,val + 1,max);
+		} 
+		else if (map.containsKey(val)) {
+			TreeNode node = map.get(val);
+			root.left = node.left;
+			root.right = node.right;
+			root = node;
+			visited.add(val);
+			return dfs(root.left,visited,map,min,val - 1) && dfs(root.right,visited,map,val + 1,max);
+		}
+		return true;
+	}
+	void helper(Set<Integer> nodevalues, TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		nodevalues.add(root.val);
+		helper(nodevalues,root.left);
+		helper(nodevalues,root.right);
+	}
+}

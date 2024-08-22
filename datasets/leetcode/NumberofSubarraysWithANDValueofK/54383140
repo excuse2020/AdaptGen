@@ -1,0 +1,47 @@
+class Solution {
+	int calcANDValue(int[] freq, int windowSize) {
+		int ans = 0;
+		for (int i = 0; i < 32; i++) {
+			if (freq[i] == windowSize) {
+				ans += (1 << i);
+			}
+		}
+		return ans;
+	}
+	long countK(int[] nums, int k) {
+		long ans = 0;
+		int[] freq = new int[32];
+		int n = nums.length;
+		int l = 0;
+		for (int i = 0; i < n; i++) {
+			int num = nums[i];
+			getFreq(freq,num);
+			while ((i - l + 1) > 0 && calcANDValue(freq,(i - l + 1)) < k) {
+				removeFreq(freq,nums[l]);
+				l++;
+			}
+			ans += (i - l + 1);
+		}
+		return ans;
+	}
+	long countSubarrays(int[] nums, int k) {
+		long a = countK(nums,k);
+		long b = countK(nums,k + 1);
+		return a - b;
+	}
+	void getFreq(int[] freq, int num) {
+		for (int i = 0; i < 32; i++) {
+			int val = 1 << i;
+			if ((val & num) >= 1) {
+				freq[i]++;
+			}
+		}
+	}
+	void removeFreq(int[] freq, int num) {
+		for (int i = 0; i < 32; i++) {
+			if (((1 << i) & (num)) >= 1) {
+				freq[i]--;
+			}
+		}
+	}
+}

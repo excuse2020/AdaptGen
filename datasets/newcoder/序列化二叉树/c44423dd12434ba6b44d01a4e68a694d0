@@ -1,0 +1,30 @@
+class Solution {
+	TreeNode Deserialize(String str) {
+		if (str == null || str.length() == 0) {
+			return null;
+		}
+		String[] split = str.split(",");
+		return build(split,0);
+	}
+	String Serialize(TreeNode root) {
+		Integer[] arr = new Integer[100];
+		ser(root,0,arr);
+	}
+	TreeNode build(String[] split, int idx) {
+		int size = split.length;
+		if (idx < size && !"#".equals(split[idx])) {
+			TreeNode node = new TreeNode(Integer.parseInt(split[idx]));
+			node.left = build(split,2 * idx + 1);
+			node.right = build(split,2 * idx + 2);
+			return node;
+		}
+		return null;
+	}
+	void ser(TreeNode node, int idx, Integer[] arr) {
+		if (node != null) {
+			arr[idx] = node.val;
+			ser(node.left,2 * idx + 1,arr);
+			ser(node.right,2 * idx + 2,arr);
+		}
+	}
+}

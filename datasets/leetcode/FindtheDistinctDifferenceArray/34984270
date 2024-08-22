@@ -1,0 +1,23 @@
+class Solution {
+	int[] distinctDifferenceArray(int[] nums) {
+		Set<Integer> set = new HashSet<>();
+		int[] leftToRight = new int[nums.length];
+		for (int i = 0; i < nums.length; ++i) {
+			if (set.add(nums[i])) {
+				leftToRight[i] = i > 0 ? leftToRight[i - 1] + 1 : 1;
+			} 
+			else {
+				leftToRight[i] = leftToRight[i - 1];
+			}
+		}
+		set.clear();
+		int rightToLeft = 0;
+		for (int i = nums.length - 1; i >= 0; --i) {
+			leftToRight[i] -= rightToLeft;
+			if (set.add(nums[i])) {
+				rightToLeft = i == nums.length - 1 ? 1 : rightToLeft + 1;
+			}
+		}
+		return leftToRight;
+	}
+}

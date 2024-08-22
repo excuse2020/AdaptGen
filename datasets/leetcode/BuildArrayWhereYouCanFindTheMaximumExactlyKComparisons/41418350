@@ -1,0 +1,38 @@
+class Solution {
+	int M, N, K;
+	int numOfArrays(int n, int m, int k) {
+		Integer[][][] dp = new Integer[51][51][101];
+		M = m;
+		N = n;
+		K = k;
+		return solve(0,0,0,dp);
+	}
+	int solve(int ind, int lenLis, int lar, Integer[][][] dp) {
+		if (lenLis > K) {
+			return 0;
+		}
+		if (ind == N) {
+			if (lenLis == K) {
+				return 1;
+			} 
+			else {
+				return 0;
+			}
+		}
+		if (dp[ind][lenLis][lar] != null) {
+			return dp[ind][lenLis][lar];
+		}
+		int ans = 0;
+		for (int i = 1; i <= M; i++) {
+			if (i > lar) {
+				ans += solve(ind + 1,lenLis + 1,i,dp);
+			} 
+			else {
+				ans += solve(ind + 1,lenLis,lar,dp);
+			}
+			ans = ans % 1000000007;
+		}
+		dp[ind][lenLis][lar] = ans;
+		return ans;
+	}
+}

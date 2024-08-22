@@ -1,0 +1,72 @@
+class Solution {
+	boolean union(int root, int[] parents) {
+		boolean result = false;
+		parents[root] = -1;
+		for (int i = 0; i < parents.length; i++) {
+			if (parents[i] == root) {
+				parents[i] = -1;
+				union(i,parents);
+			}
+		}
+		for (int i = 0; i < parents.length; i++) {
+			if (parents[i] != -1) {
+				result = false;
+				break;
+			} 
+			else {
+				result = true;
+			}
+		}
+		return result;
+	}
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		boolean result1 = false;
+		boolean result2 = false;
+		boolean result3 = false;
+		int position = 0;
+		int node = 0;
+		int[] numparents = new int[n];
+		int[] parents = new int[n];
+		int numroot = 0;
+		int root = 0;
+		for (node = 0; node < n; node++) {
+			for (position = 0; position < n; position++) {
+				if (leftChild[position] == node) {
+					numparents[node]++;
+					parents[node] = position;
+				}
+			}
+		}
+		for (node = 0; node < n; node++) {
+			for (position = 0; position < n; position++) {
+				if (rightChild[position] == node) {
+					numparents[node]++;
+					parents[node] = position;
+				}
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			if (numparents[i] == 0) {
+				numroot++;
+				root = i;
+			}
+		}
+		if (numroot == 1) {
+			result1 = true;
+		} 
+		else {
+			result1 = false;
+		}
+		for (int i = 0; i < n; i++) {
+			if (numparents[i] > 1) {
+				result2 = false;
+				break;
+			} 
+			else {
+				result2 = true;
+			}
+		}
+		result3 = union(root,parents);
+		return result1 && result2;
+	}
+}

@@ -1,0 +1,19 @@
+class Solution {
+	int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
+		TreeMap<Integer, List<List<Integer>>> sortedJobs = new TreeMap<>();
+		for (int i = 0; i < startTime.length; i++) {
+			sortedJobs.putIfAbsent(endTime[i],new ArrayList<>());
+			sortedJobs.get(endTime[i]).add(List.of(startTime[i],profit[i]));
+		}
+		TreeMap<Integer, Integer> dp = new TreeMap<>();
+		dp.put(0,0);
+		for (Map.Entry<Integer, List<List<Integer>>> entry: sortedJobs.entrySet()) {	
+			Integer key = entry.getKey();
+			dp.put(key,dp.lowerEntry(key).getValue());
+			for (List<Integer> job: entry.getValue()) {	
+				dp.put(key,Math.max(dp.get(key),dp.floorEntry(job.get(0)).getValue() + job.get(1)));
+			}
+		}
+		return dp.lastEntry().getValue();
+	}
+}

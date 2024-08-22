@@ -1,0 +1,40 @@
+class Solution {
+	PriorityQueue<Integer> leftMaxQueue = new PriorityQueue<Integer>((a, b) -> {b - a});
+	PriorityQueue<Integer> rightMinQueue = new PriorityQueue<Integer>((a, b) -> {a - b});
+	Double GetMedian() {
+		int len1 = leftMaxQueue.size();
+		int len2 = rightMinQueue.size();
+		if (len1 == len2) {
+			double left = leftMaxQueue.peek();
+			double right = rightMinQueue.peek();
+			double mid = (left + right) * 0.5;
+			return mid;
+		} 
+		else {
+			double lVal = (double) leftMaxQueue.peek();
+			return lVal;
+		}
+	}
+	void Insert(Integer num) {
+		int len1 = leftMaxQueue.size();
+		int len2 = rightMinQueue.size();
+		if (len1 == len2) {
+			if (rightMinQueue.isEmpty() || num <= rightMinQueue.peek()) {
+				leftMaxQueue.add(num);
+			} 
+			else {
+				leftMaxQueue.add(rightMinQueue.poll());
+				rightMinQueue.add(num);
+			}
+		} 
+		else {
+			if (leftMaxQueue.peek() <= num) {
+				rightMinQueue.add(num);
+			} 
+			else {
+				rightMinQueue.add(leftMaxQueue.poll());
+				leftMaxQueue.add(num);
+			}
+		}
+	}
+}

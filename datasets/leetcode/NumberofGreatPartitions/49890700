@@ -1,0 +1,38 @@
+class Solution {
+	Integer[][] memo;
+	int mod = 1_0000_0000_7;
+	int countPartitions(int[] nums, int k) {
+		int sum = 0;
+		for (int num: nums) {	
+			sum = (sum + num) % mod;
+		}
+		if (sum < 2 * k) {
+			return 0;
+		}
+		memo = new Integer[nums.length][k];
+		long pow = power(nums.length);
+		return (int) (pow - 2 * helper(nums,k,0,0) + mod) % mod;
+	}
+	int helper(int[] nums, int k, int s, int index) {
+		if (index >= nums.length) {
+			return s < k ? 1 : 0;
+		}
+		if (s >= k) {
+			return 0;
+		}
+		if (memo[index][s] != null) {
+			return memo[index][s];
+		}
+		int pick1 = helper(nums,k,(s + nums[index]) % mod,index + 1);
+		int pick2 = helper(nums,k,s,index + 1);
+		int res = (pick1 + pick2) % mod;
+		return memo[index][s] = res;
+	}
+	long power(int n) {
+		long ans = 1;
+		while (n-- > 0) {
+			ans = (ans * 2) % mod;
+		}
+		return ans;
+	}
+}

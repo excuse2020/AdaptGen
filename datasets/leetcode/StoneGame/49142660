@@ -1,0 +1,24 @@
+class Solution {
+	int recursive(int[][] dp, int[] piles, int l, int r) {
+		if (l > r || l >= piles.length || r < 0) {
+			return 0;
+		}
+		if (dp[l][r] > 0) {
+			return dp[l][r];
+		}
+		boolean isAlice = (r - l) % 2 == 0;
+		int left = isAlice ? piles[l] : 0;
+		int right = isAlice ? piles[r] : 0;
+		return dp[l][r] = Math.max(recursive(dp,piles,l + 1,r) + left,recursive(dp,piles,l,r - 1) + right);
+	}
+	boolean stoneGame(int[] piles) {
+		int l = 0, r = piles.length - 1;
+		int[][] dp = new int[r + 1][r + 1];
+		int sum = 0;
+		for (int p: piles) {	
+			sum += p;
+		}
+		int s = recursive(dp,piles,l,r);
+		return s > sum / 2;
+	}
+}

@@ -1,0 +1,68 @@
+class Solution {
+	int findLeftMid(int start, int end, int[] prefix, int threshold) {
+		int left = start;
+		int right = end - 1;
+		while (right - left > 1) {
+			int mid = left + (right - left) / 2;
+			int sum = prefix[mid] - (start == 0 ? 0 : prefix[start - 1]);
+			if (threshold <= sum) {
+				right = mid;
+			} 
+			else {
+				left = mid;
+			}
+		}
+		if (threshold <= prefix[left] - (start == 0 ? 0 : prefix[start - 1])) {
+			return left;
+		}
+		if (threshold <= prefix[right] - (start == 0 ? 0 : prefix[start - 1])) {
+			return right;
+		}
+		return -1;
+	}
+	int findRightMid(int start, int end, int[] prefix) {
+		int left = start;
+		int right = end - 1;
+		while (right - left > 1) {
+			int mid = left + (right - left) / 2;
+			int leftSum = prefix[mid] - (start == 0 ? 0 : prefix[start - 1]);
+			int rightSum = prefix[end] - prefix[mid];
+			if (leftSum <= rightSum) {
+				left = mid;
+			} 
+			else {
+				right = mid;
+			}
+		}
+		int leftSum = prefix[right] - (start == 0 ? 0 : prefix[start - 1]);
+		int rightSum = prefix[end] - prefix[right];
+		if (leftSum <= rightSum) {
+			return right;
+		}
+		leftSum = prefix[left] - (start == 0 ? 0 : prefix[start - 1]);
+		rightSum = prefix[end] - prefix[left];
+		if (leftSum <= rightSum) {
+			return left;
+		}
+		return -1;
+	}
+	int waysToSplit(int[] nums) {
+		int n = nums.length;
+		int[] prefix = new int[n];
+		for (int i = 0; i < n; i++) {
+			prefix[i] = nums[i] + (i > 0 ? prefix[i - 1] : 0);
+		}
+		long result = 0;
+		long MOD = 1000000007;
+		for (int i = 0; i < n - 2; i++) {
+			int left = findLeftMid(i + 1,n - 1,prefix,prefix[i]);
+			int right = findRightMid(i + 1,n - 1,prefix);
+			if (left != -1 && right != -1 && right >= left) {
+				int temp = right - left + 1;
+				result += ((long) temp % MOD);
+				result %= MOD;
+			}
+		}
+		return (int) result;
+	}
+}

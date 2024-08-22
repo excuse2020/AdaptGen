@@ -1,0 +1,40 @@
+class Solution {
+	int findBiggestElement(int[] arr, int[] indexArray) {
+		int max = -1;
+		indexArray[1] = 0;
+		for (int j = 0; j < arr.length; j++) {
+			if (max < arr[j]) {
+				max = arr[j];
+				indexArray[1] = j;
+			}
+		}
+		return max;
+	}
+	boolean hasElementsLeft(int[][] nums) {
+		int row = nums.length - 1;
+		int[] arr = nums[row];
+		for (int j = 0; j < arr.length; j++) {
+			if (arr[j] != -1) {
+				return true;
+			}
+		}
+		return false;
+	}
+	int matrixSum(int[][] nums) {
+		int row = nums.length;
+		int col = nums[0].length;
+		int MaxSum = 0;
+		int[] indexArray = new int[2];
+		while (hasElementsLeft(nums)) {
+			int BiggestElementInRow = 0;
+			for (int i = 0; i < row; i++) {
+				indexArray[0] = i;
+				int[] arr = nums[i];
+				BiggestElementInRow = Math.max(BiggestElementInRow,findBiggestElement(arr,indexArray));
+				nums[indexArray[0]][indexArray[1]] = -1;
+			}
+			MaxSum += BiggestElementInRow;
+		}
+		return MaxSum;
+	}
+}

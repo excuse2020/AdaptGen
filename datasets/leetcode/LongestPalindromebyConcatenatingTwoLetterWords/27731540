@@ -1,0 +1,28 @@
+class Solution {
+	int longestPalindrome(String[] words) {
+		Map<String, Long> wordFreq = Arrays.stream(words).collect(Collectors.groupingBy((x) -> {x},Collectors.counting()));
+		int result = 0;
+		boolean foundLeftOut = false;
+		for (String word: wordFreq.keySet()) {	
+			String reverseWord = reverse(word);
+			Long occurrencesOfWord = wordFreq.get(word);
+			if (word.equals(reverseWord)) {
+				result += 4 * (occurrencesOfWord / 2);
+				if (occurrencesOfWord % 2 == 1) {
+					foundLeftOut = true;
+				}
+				continue;
+			}
+			if (wordFreq.containsKey(reverseWord) && wordFreq.get(reverseWord) > 0) {
+				long pairsToTake = Math.min(wordFreq.get(word),wordFreq.get(reverseWord));
+				result += 4 * pairsToTake;
+				wordFreq.put(word,wordFreq.get(word) - pairsToTake);
+				wordFreq.put(reverseWord,wordFreq.get(reverseWord) - pairsToTake);
+			}
+		}
+		return foundLeftOut ? result + 2 : result;
+	}
+	String reverse(String word) {
+		return new StringBuilder(word).reverse().toString();
+	}
+}

@@ -1,0 +1,34 @@
+class Solution {
+	int findKthLargest(int[] nums, int k) {
+		int n = nums.length - k;
+		return getKthSmallestElement(nums,n + 1,0,nums.length - 1);
+	}
+	int getKthSmallestElement(int[] arr, int k, int low, int high) {
+		int pivotPoint = getPivotPoint(arr,low,high);
+		if (pivotPoint == k - 1) {
+			return arr[pivotPoint];
+		} 
+		else if (pivotPoint < k - 1) {
+			return getKthSmallestElement(arr,k,pivotPoint + 1,high);
+		} 
+		else {
+			return getKthSmallestElement(arr,k,low,pivotPoint - 1);
+		}
+	}
+	int getPivotPoint(int[] arr, int low, int high) {
+		int pivotElement = arr[high];
+		int pivotPoint = low;
+		for (int i = low; i <= high; i++) {
+			if (arr[i] < pivotElement) {
+				int tmp = arr[i];
+				arr[i] = arr[pivotPoint];
+				arr[pivotPoint] = tmp;
+				pivotPoint++;
+			}
+		}
+		int tmp = arr[pivotPoint];
+		arr[pivotPoint] = arr[high];
+		arr[high] = tmp;
+		return pivotPoint;
+	}
+}

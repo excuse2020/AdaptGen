@@ -1,0 +1,36 @@
+class Solution {
+	List<Integer>[] buildGraph(int n, int[][] relations) {
+		List<Integer>[] graph = new ArrayList[n + 1];
+		for (int i = 1; i <= n; i++) {
+			graph[i] = new ArrayList<Integer>();
+		}
+		for (int[] relation: relations) {	
+			graph[relation[0]].add(relation[1]);
+		}
+		return graph;
+	}
+	int minimumTime(int n, int[][] relations, int[] time) {
+		List<Integer>[] graph = buildGraph(n,relations);
+		int[] calculated = new int[n + 1];
+		Arrays.fill(calculated,-1);
+		int minTime = Integer.MIN_VALUE;
+		for (int i = 1; i <= n; i++) {
+			minTime = Math.max(minTime,runDFS(graph,time,i,calculated));
+		}
+		return minTime;
+	}
+	int runDFS(List<Integer>[] graph, int[] time, int id, int[] calculated) {
+		if (graph[id].size() == 0) {
+			return time[id - 1];
+		}
+		if (calculated[id] != -1) {
+			return calculated[id];
+		}
+		int minTime = Integer.MIN_VALUE;
+		for (int next: graph[id]) {	
+			minTime = Math.max(minTime,time[id - 1] + runDFS(graph,time,next,calculated));
+		}
+		calculated[id] = minTime;
+		return minTime;
+	}
+}

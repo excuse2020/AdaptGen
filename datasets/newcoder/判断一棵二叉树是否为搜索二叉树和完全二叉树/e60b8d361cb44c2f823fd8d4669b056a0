@@ -1,0 +1,68 @@
+class Solution {
+	int lastVal;
+	int order;
+	boolean bfs(TreeNode root) {
+		if (root == null) {
+			return true;
+		}
+		Deque<TreeNode> queue = new ArrayDeque<>();
+		queue.add(root);
+		int lastState = 1;
+		while (!queue.isEmpty()) {
+			TreeNode currNode = queue.remove();
+			if (currNode.left == null) {
+				lastState = 0;
+			} 
+			else {
+				if (lastState == 0) {
+					return false;
+				}
+				queue.add(currNode.left);
+			}
+			if (currNode.right == null) {
+				lastState = 0;
+			} 
+			else {
+				if (lastState == 0) {
+					return false;
+				}
+				queue.add(currNode.right);
+			}
+		}
+		return true;
+	}
+	boolean dfs(TreeNode root) {
+		if (root == null) {
+			return true;
+		}
+		if (!dfs(root.left)) {
+			return false;
+		}
+		int currOrder = Integer.signum(lastVal - root.val);
+		if (currOrder != 0 && order != currOrder) {
+			return false;
+		}
+		lastVal = root.val;
+		return dfs(root.right);
+	}
+	boolean[] judgeIt(TreeNode root) {
+		TreeNode p = root;
+		int min = 0;
+		int max = 0;
+		while (p != null) {
+			min = p.val;
+			p = p.left;
+		}
+		p = root;
+		while (p != null) {
+			max = p.val;
+			p = p.right;
+		}
+		order = Integer.signum(min - max);
+		lastVal = min;
+		boolean[] result = new boolean[2];
+		result[0] = dfs(root);
+		result[1] = bfs(root);
+		return result;
+	}
+}

@@ -1,0 +1,55 @@
+class Solution {
+	Map<Integer, Set<Integer>> buildGraph(int[][] bombs) {
+		Map<Integer, Set<Integer>> graph = new HashMap<>();
+		for (int i = 0; i < bombs.length; i++) {
+			for (int j = i; j < bombs.length; j++) {
+				if (i == j) {
+					continue;
+				}
+				int x1 = bombs[i][0];
+				int y1 = bombs[i][1];
+				int r1 = bombs[i][2];
+				int x2 = bombs[j][0];
+				int y2 = bombs[j][1];
+				int r2 = bombs[j][2];
+				int absX = Math.abs(x1 - x2);
+				int absY = Math.abs(y1 - y2);
+				if ((long) r1 * r1 >= (long) absX * absX + (long) absY * absY) {
+					if (!graph.containsKey(i)) {
+						graph.put(i,new HashSet<>());
+					}
+					graph.get(i).add(j);
+				}
+				if ((long) r2 * r2 >= (long) absX * absX + (long) absY * absY) {
+					if (!graph.containsKey(j)) {
+						graph.put(j,new HashSet<>());
+					}
+					graph.get(j).add(i);
+				}
+			}
+		}
+		return graph;
+	}
+	int helper(HashSet<Integer> visited, Map<Integer, Set<Integer>> graph, int node) {
+		if (visited.contains(node)) {
+			return 0;
+		}
+		int res = 1;
+		visited.add(node);
+		if (graph.containsKey(node)) {
+			for (Integer adjNode: graph.get(node)) {	
+				res += helper(visited,graph,adjNode);
+			}
+		}
+		return res;
+	}
+	int maximumDetonation(int[][] bombs) {
+		int n = bombs.length;
+		Map<Integer, Set<Integer>> graph = buildGraph(bombs);
+		int count = Integer.MIN_VALUE;
+		for (int i = 0; i < n; i++) {
+			count = Math.max(count,helper(new HashSet<>(),graph,i));
+		}
+		return count;
+	}
+}

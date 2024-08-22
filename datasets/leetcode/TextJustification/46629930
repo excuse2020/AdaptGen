@@ -1,0 +1,38 @@
+class Solution {
+	List<String> fullJustify(String[] words, int maxWidth) {
+		int start = 0;
+		int lengthSoFar = words[0].length();
+		List<String> res = new ArrayList<>();
+		for (int i = 1; i < words.length; ++i) {
+			if (words[i].length() + lengthSoFar > maxWidth) {
+				res.add(makeString(words,start,i - 1,maxWidth,lengthSoFar,false));
+				start = i;
+				lengthSoFar = words[i].length();
+			} 
+			else {
+				lengthSoFar += words[i].length();
+			}
+		}
+		res.add(makeString(words,start,words.length - 1,maxWidth,lengthSoFar,true));
+		return res;
+	}
+	String makeString(String[] words, int start, int end, int maxLength, int length, boolean lastRow) {
+		StringBuilder sb = new StringBuilder();
+		int remainLength = maxLength - length;
+		int space = lastRow || start == end ? 1 : remainLength / (end - start);
+		int remainder = lastRow || start == end ? 0 : remainLength % (end - start);
+		for (int i = start; i < end; ++i) {
+			sb.append(words[i]);
+			pad(sb," ",space + (remainder > 0 ? 1 : 0));
+			remainder--;
+		}
+		sb.append(words[end]);
+		pad(sb," ",maxLength - sb.length());
+		return sb.toString();
+	}
+	void pad(StringBuilder sb, String pad, int count) {
+		for (int i = 0; i < count; ++i) {
+			sb.append(pad);
+		}
+	}
+}

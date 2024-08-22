@@ -1,0 +1,36 @@
+class Solution {
+	TreeNode reConstructBinaryTree(int[] preOrder, int[] vinOrder) {
+		if (vinOrder.length == 0) {
+			return null;
+		}
+		int preIndex = 0;
+		int vinIndex = 0;
+		while (preOrder[preIndex] != vinOrder[vinIndex]) {
+			if (vinIndex == (vinOrder.length - 1)) {
+				preIndex++;
+				vinIndex = 0;
+			} 
+			else {
+				vinIndex++;
+			}
+		}
+		TreeNode root = new TreeNode(preOrder[preIndex]);
+		int[] left;
+		int[] right;
+		if (vinIndex == 0) {
+			left = new int[0];
+		} 
+		else {
+			left = Arrays.copyOfRange(vinOrder,0,vinIndex);
+		}
+		if (vinIndex == vinOrder.length - 1) {
+			right = new int[0];
+		} 
+		else {
+			right = Arrays.copyOfRange(vinOrder,vinIndex + 1,vinOrder.length);
+		}
+		root.left = reConstructBinaryTree(preOrder,left);
+		root.right = reConstructBinaryTree(preOrder,right);
+		return root;
+	}
+}

@@ -1,0 +1,57 @@
+class Solution {
+	int helper(int stoneVal, int index, int aliceAllowed, int len, Integer dp) {
+		if (index >= len) {
+			return 0;
+		}
+		if (dp[index][aliceAllowed] != null) {
+			return dp[index][aliceAllowed];
+		}
+		int totalVal;
+		if (aliceAllowed == 1) {
+			int option1 = stoneVal[index] + helper(stoneVal,index + 1,0,len,dp);
+			int i;
+			int sum = 0;
+			for (i = index; i < len && i < index + 2; i++) {
+				sum = sum + stoneVal[i];
+			}
+			int option2 = sum + helper(stoneVal,i,0,len,dp);
+			sum = 0;
+			for (i = index; i < len && i < index + 3; i++) {
+				sum = sum + stoneVal[i];
+			}
+			int option3 = sum + helper(stoneVal,i,0,len,dp);
+			sum = 0;
+			totalVal = Math.max(option1,Math.max(option2,option3));
+		} 
+		else {
+			int option1 = -stoneVal[index] + helper(stoneVal,index + 1,1,len,dp);
+			int i;
+			int sum = 0;
+			for (i = index; i < len && i < index + 2; i++) {
+				sum = sum + stoneVal[i];
+			}
+			int option2 = -sum + helper(stoneVal,i,1,len,dp);
+			sum = 0;
+			for (i = index; i < len && i < index + 3; i++) {
+				sum = sum + stoneVal[i];
+			}
+			int option3 = -sum + helper(stoneVal,i,1,len,dp);
+			sum = 0;
+			totalVal = Math.min(option1,Math.min(option2,option3));
+		}
+		return dp[index][aliceAllowed] = totalVal;
+	}
+	String stoneGameIII(int[] stoneValue) {
+		int len = stoneValue.length;
+		int val = helper(stoneValue,0,1,len,new Integer[len][2]);
+		if (val == 0) {
+			return "Tie";
+		} 
+		else if (val > 0) {
+			return "Alice";
+		} 
+		else {
+			return "Bob";
+		}
+	}
+}

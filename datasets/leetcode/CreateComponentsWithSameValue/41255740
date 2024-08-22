@@ -1,0 +1,45 @@
+class Solution {
+	int components = 0;
+	int componentValue(int[] nums, int[][] edges) {
+		ArrayList<Integer>[] graph = new ArrayList[nums.length];
+		for (int i = 0; i < nums.length; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int[] e: edges) {	
+			int u = e[0];
+			int v = e[1];
+			graph[u].add(v);
+			graph[v].add(u);
+		}
+		int sum = 0;
+		int maxm = 0;
+		for (int ele: nums) {	
+			sum += ele;
+			maxm = Math.max(maxm,ele);
+		}
+		int maxComponents = 0;
+		for (int i = maxm; i <= sum; i++) {
+			components = 0;
+			if (sum % i == 0) {
+				int x = getans(graph,0,-1,nums,i);
+				if (x == 0) {
+					maxComponents = Math.max(maxComponents,components);
+				}
+			}
+		}
+		return maxComponents - 1;
+	}
+	int getans(ArrayList<Integer>[] graph, int src, int par, int[] nums, int k) {
+		int sum = 0;
+		for (int nbr: graph[src]) {	
+			if (nbr != par) {
+				sum += getans(graph,nbr,src,nums,k);
+			}
+		}
+		sum += nums[src];
+		if (sum == k) {
+			components++;
+		}
+		return sum == k ? 0 : sum;
+	}
+}

@@ -1,0 +1,34 @@
+class Solution {
+	Map<Integer, List<Integer>> m;
+	void constructGraph(int n, int[][] edges) {
+		m = new HashMap();
+		for (int i = 0; i < n; i++) {
+			m.put(i,new ArrayList());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			int fromNodeVal = edges[i][0];
+			int toNodeVal = edges[i][1];
+			m.get(fromNodeVal).add(toNodeVal);
+			m.get(toNodeVal).add(fromNodeVal);
+		}
+	}
+	int dfs(int nodeVal, List<Boolean> hasApple, boolean[] visited) {
+		visited[nodeVal] = true;
+		int count = 0;
+		for (int neighbor: m.get(nodeVal)) {	
+			if (!visited[neighbor]) {
+				count += dfs(neighbor,hasApple,visited);
+			}
+		}
+		if ((count > 0 || hasApple.get(nodeVal)) && nodeVal > 0) {
+			count += 2;
+		}
+		return count;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		constructGraph(n,edges);
+		boolean[] visited = new boolean[n];
+		int count = dfs(0,hasApple,visited);
+		return count;
+	}
+}

@@ -1,0 +1,50 @@
+class Solution {
+	String LCS(String s1, String s2) {
+		int length1 = s1.length();
+		int length2 = s2.length();
+		if (length1 == 0 || length2 == 0) {
+			return "-1";
+		}
+		int[][] dp = new int[length1 + 1][length2 + 1];
+		for (int i = 0; i < length1 + 1; i++) {
+			dp[i][0] = 0;
+		}
+		for (int i = 0; i < length2 + 1; i++) {
+			dp[0][i] = 0;
+		}
+		char[] cha1 = s1.toCharArray();
+		char[] cha2 = s2.toCharArray();
+		String str = "";
+		int length = 0;
+		for (int i = 0; i < length1; i++) {
+			for (int j = 0; j < length2; j++) {
+				if (cha1[i] == cha2[j]) {
+					dp[i + 1][j + 1] = dp[i][j] + 1;
+					length++;
+				} 
+				else {
+					dp[i + 1][j + 1] = Math.max(dp[i][j + 1],dp[i + 1][j]);
+				}
+			}
+		}
+		int i = length1 - 1;
+		int j = length2 - 1;
+		while (i >= 0 && j >= 0) {
+			if (cha1[i] == cha2[j]) {
+				str += cha1[i];
+				i--;
+				j--;
+			} 
+			else {
+				if (dp[i + 1][j] > dp[i][j + 1]) {
+					j--;
+				} 
+				else {
+					i--;
+				}
+			}
+		}
+		String str0 = new StringBuffer(str).reverse().toString();
+		return length > 0 ? str0 : "-1";
+	}
+}

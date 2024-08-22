@@ -1,0 +1,80 @@
+class Solution {
+	int postCompute(String s) {
+		Stack<Integer> stack = new Stack<>();
+		int i = 0;
+		while (i < s.length()) {
+			char c = s.charAt(i++);
+			if (c == ' ') {
+				continue;
+			} 
+			else if (c == '*') {
+				int multi = stack.pop() * stack.pop();
+				stack.add(multi);
+			} 
+			else if (c == '-') {
+				int a = stack.pop();
+				int b = stack.pop();
+				stack.add(b - a);
+			} 
+			else if (c == '+') {
+				int sum = stack.pop() + stack.pop();
+				stack.add(sum);
+			} 
+			else {
+				StringBuilder num = new StringBuilder();
+				num.append(c);
+				c = s.charAt(i++);
+				while (c >= '0' && c <= '9') {
+					num.append(c);
+					c = s.charAt(i++);
+				}
+				--i;
+				stack.add(Integer.valueOf(num.toString()));
+			}
+		}
+		return stack.pop();
+	}
+	String postfix(String s) {
+		StringBuilder sb = new StringBuilder();
+		Stack<Character> ops = new Stack<>();
+		int i = 0;
+		while (i < s.length()) {
+			char c = s.charAt(i++);
+			if (c == '(' || c == '+' || c == '-' || c == '*') {
+				sb.append(" ");
+				pushOP(sb,c,ops);
+				continue;
+			}
+			if (c == ')') {
+				while (ops.peek() != '(') {
+					sb.append(ops.pop());
+				}
+				ops.pop();
+				continue;
+			}
+			sb.append(c);
+		}
+		while (!ops.isEmpty()) {
+			sb.append(ops.pop());
+		}
+		return sb.toString();
+	}
+	void pushOP(StringBuilder sb, char op, Stack<Character> ops) {
+		if (ops.isEmpty() || ops.peek() == '(' || op == '(') {
+			ops.add(op);
+			return;
+		}
+		char c = ops.peek();
+		if (c != '*' && op == '*') {
+			ops.add(op);
+			return;
+		}
+		c = ops.pop();
+		sb.append(c);
+		pushOP(sb,op,ops);
+	}
+	int solve(String s) {
+		s = postfix(s);
+		return postCompute(s);
+	}
+}

@@ -1,0 +1,48 @@
+class Solution {
+	Map<Integer, List<Integer>> graph;
+	int amountOfTime(TreeNode root, int start) {
+		graph = new HashMap<>();
+		util(root);
+		Queue<Integer> queue = new LinkedList<>();
+		Set<Integer> visited = new HashSet<>();
+		queue.offer(start);
+		visited.add(start);
+		int time = 0;
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			while (size-- > 0) {
+				int cur = queue.element();
+				queue.poll();
+				for (int neigh: graph.getOrDefault(cur,new ArrayList<>())) {	
+					if (!visited.contains(neigh)) {
+						queue.offer(neigh);
+						visited.add(neigh);
+					}
+				}
+			}
+			time++;
+		}
+		return time - 1;
+	}
+	void util(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		int left = root.left != null ? root.left.val : -1;
+		int right = root.right != null ? root.right.val : -1;
+		if (left != -1) {
+			graph.computeIfAbsent(root.val,(k) -> {new ArrayList<>()});
+			graph.get(root.val).add(left);
+			graph.computeIfAbsent(left,(k) -> {new ArrayList<>()});
+			graph.get(left).add(root.val);
+		}
+		if (right != -1) {
+			graph.computeIfAbsent(root.val,(k) -> {new ArrayList<>()});
+			graph.get(root.val).add(right);
+			graph.computeIfAbsent(right,(k) -> {new ArrayList<>()});
+			graph.get(right).add(root.val);
+		}
+		util(root.left);
+		util(root.right);
+	}
+}

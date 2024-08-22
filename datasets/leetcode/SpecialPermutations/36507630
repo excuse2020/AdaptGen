@@ -1,0 +1,50 @@
+class Solution {
+	boolean checkAll(int[] nums) {
+		for (int i = 0; i < nums.length; i++) {
+			for (int j = i + 1; j < nums.length; j++) {
+				if (nums[i] % nums[j] != 0 && nums[j] % nums[i] != 0) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	long factorial(int n) {
+		if (n == 1 || n == 0) {
+			return 1;
+		} 
+		else {
+			return n * factorial(n - 1);
+		}
+	}
+	void permute(int index, int[] nums, int[] result) {
+		if (index == nums.length) {
+			result[0] = (result[0] + 1) % 1000000007;
+		}
+		for (int i = index; i < nums.length; i++) {
+			swap(nums,i,index);
+			if (index > 0) {
+				if ((nums[index] % nums[index - 1]) == 0 || (nums[index - 1] % nums[index]) == 0) {
+					permute(index + 1,nums,result);
+				}
+			} 
+			else {
+				permute(index + 1,nums,result);
+			}
+			swap(nums,i,index);
+		}
+	}
+	int specialPerm(int[] nums) {
+		if (checkAll(nums)) {
+			return (int) (factorial(nums.length) % 1000000007L);
+		}
+		int result = new int[1];
+		permute(0,nums,result);
+		return result[0];
+	}
+	void swap(int[] nums, int i1, int i2) {
+		int temp = nums[i1];
+		nums[i1] = nums[i2];
+		nums[i2] = temp;
+	}
+}

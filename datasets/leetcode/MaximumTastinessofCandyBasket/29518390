@@ -1,0 +1,33 @@
+class Solution {
+	boolean isValid(int[] prices, int k, int val) {
+		int prev = prices[0];
+		k--;
+		for (int i = 1; i < prices.length && k > 0; i++) {
+			if (prev + val <= prices[i]) {
+				k--;
+				prev = prices[i];
+			}
+		}
+		if (k == 0) {
+			return true;
+		}
+		return false;
+	}
+	int maximumTastiness(int[] price, int k) {
+		Arrays.sort(price);
+		int low = 0;
+		int hi = price[price.length - 1] - price[0];
+		int ans = 0;
+		while (low <= hi) {
+			int mid = low + (hi - low) / 2;
+			if (isValid(price,k,mid)) {
+				low = mid + 1;
+				ans = Math.max(ans,mid);
+			} 
+			else {
+				hi = mid - 1;
+			}
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,40 @@
+class Solution {
+	int numRescueBoats(int[] people, int limit) {
+		int[] buckets = new int[limit + 1];
+		for (int i = 0; i < people.length; i++) {
+			buckets[people[i]]++;
+		}
+		int boat = 0;
+		int l = 1, r = limit;
+		int aboard = 0;
+		while (l <= r && aboard != people.length) {
+			while (buckets[r] == 0) {
+				r--;
+			}
+			while (buckets[l] == 0) {
+				l++;
+			}
+			if (l == r) {
+				if (l > limit / 2) {
+					boat += buckets[l];
+				} 
+				else {
+					boat += ((buckets[l] + 1) / 2);
+				}
+				break;
+			}
+			if (l + r <= limit) {
+				buckets[l]--;
+				buckets[r]--;
+				aboard += 2;
+				boat += 1;
+			} 
+			else {
+				buckets[r]--;
+				aboard += 1;
+				boat += 1;
+			}
+		}
+		return boat;
+	}
+}

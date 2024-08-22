@@ -1,0 +1,23 @@
+class Solution {
+	int getMinimumSum(List<List<Integer>> triangle, int rowMaxIndex, int colMaxIndex, int rowindex, int colIndex, int dp) {
+		if (rowindex == rowMaxIndex || colIndex == colMaxIndex) {
+			return 0;
+		}
+		if (dp[rowindex][colIndex] != Integer.MAX_VALUE) {
+			return dp[rowindex][colIndex];
+		}
+		int num = triangle.get(rowindex).get(colIndex);
+		int minimum = num + Math.min(getMinimumSum(triangle,rowMaxIndex,colMaxIndex,rowindex + 1,colIndex,dp),getMinimumSum(triangle,rowMaxIndex,colMaxIndex,rowindex + 1,colIndex + 1,dp));
+		dp[rowindex][colIndex] = minimum;
+		return dp[rowindex][colIndex];
+	}
+	int minimumTotal(List<List<Integer>> triangle) {
+		int maxIndex = triangle.size();
+		int colMaxIndex = triangle.get(maxIndex - 1).size();
+		int dp = new int[maxIndex][colMaxIndex];
+		for (int i = 0; i < maxIndex; i++) {
+			Arrays.fill(dp[i],Integer.MAX_VALUE);
+		}
+		return getMinimumSum(triangle,maxIndex,colMaxIndex,0,0,dp);
+	}
+}

@@ -1,0 +1,43 @@
+class Solution {
+	int DFS(Map<Integer, List<Integer>> inGraph, Map<Integer, List<Integer>> outGraph, boolean[] visited, int city) {
+		int change = 0;
+		if (inGraph.containsKey(city)) {
+			for (int next: inGraph.get(city)) {	
+				if (visited[next]) {
+					continue;
+				}
+				visited[next] = true;
+				change += DFS(inGraph,outGraph,visited,next);
+			}
+		}
+		if (outGraph.containsKey(city)) {
+			for (int next: outGraph.get(city)) {	
+				if (visited[next]) {
+					continue;
+				}
+				visited[next] = true;
+				change += 1 + DFS(inGraph,outGraph,visited,next);
+			}
+		}
+		return change;
+	}
+	int minReorder(int n, int[][] connections) {
+		Map<Integer, List<Integer>> inGraph = new HashMap<>();
+		Map<Integer, List<Integer>> outGraph = new HashMap<>();
+		for (int[] conn: connections) {	
+			int from = conn[0];
+			int to = conn[1];
+			if (!inGraph.containsKey(to)) {
+				inGraph.put(to,new ArrayList<>());
+			}
+			inGraph.get(to).add(from);
+			if (!outGraph.containsKey(from)) {
+				outGraph.put(from,new ArrayList<>());
+			}
+			outGraph.get(from).add(to);
+		}
+		boolean[] visited = new boolean[n];
+		visited[0] = true;
+		return DFS(inGraph,outGraph,visited,0);
+	}
+}

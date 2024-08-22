@@ -1,0 +1,31 @@
+class Solution {
+	int[] cost;
+	void complete() {
+		for (int i = 1; i < cost.length; i++) {
+			cost[i] += cost[i - 1];
+		}
+	}
+	void inc(int left, int right, int inc) {
+		if (left > right) {
+			return;
+		}
+		cost[left] += inc;
+		if (right + 1 < cost.length) {
+			cost[right + 1] -= inc;
+		}
+	}
+	int minChanges(int[] nums, int k) {
+		cost = new int[k + 1];
+		int n = nums.length;
+		for (int i = 0; i < n / 2; i++) {
+			int min = Math.min(nums[i],nums[n - i - 1]);
+			int max = Math.max(nums[i],nums[n - i - 1]);
+			int oneCostX = Math.max(max,k - min);
+			inc(0,oneCostX,1);
+			inc(oneCostX + 1,k,2);
+			inc(max - min,max - min,-1);
+		}
+		complete();
+		return Arrays.stream(cost).min().getAsInt();
+	}
+}

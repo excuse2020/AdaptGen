@@ -1,0 +1,51 @@
+class Solution {
+	List<Integer>[] adj;
+	List<Boolean> hasApple;
+	boolean[] visited;
+	int dfs(int node) {
+		if (node == -1) {
+			return -1;
+		}
+		if (visited[node]) {
+			return -1;
+		}
+		visited[node] = true;
+		int totalTime = 0;
+		for (int child: adj[node]) {	
+			int childTime = dfs(child);
+			if (childTime != -1) {
+				totalTime += childTime + 2;
+			}
+		}
+		if (totalTime != 0) {
+			return totalTime;
+		}
+		return hasApple.get(node) ? 0 : -1;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		boolean hasApples = false;
+		for (Boolean a: hasApple) {	
+			if (a) {
+				hasApples = true;
+				break;
+			}
+		}
+		if (!hasApples) {
+			return 0;
+		}
+		this.hasApple = hasApple;
+		visited = new boolean[n];
+		adj = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			adj[i] = new ArrayList();
+		}
+		for (int i = 0; i < edges.length; i++) {
+			int u = edges[i][0];
+			int v = edges[i][1];
+			adj[u].add(v);
+			adj[v].add(u);
+		}
+		int result = dfs(0);
+		return result != -1 ? result : 0;
+	}
+}

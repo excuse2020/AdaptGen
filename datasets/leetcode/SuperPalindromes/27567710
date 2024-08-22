@@ -1,0 +1,66 @@
+class Solution {
+	boolean isPalindrom(BigInteger number) {
+		String reverse = new StringBuilder(number.toString()).reverse().toString();
+		return reverse.equals(number.toString());
+	}
+	int superpalindromesInRange(String left, String right) {
+		int count = 0;
+		BigInteger bLeft = new BigInteger(left);
+		BigInteger bRight = new BigInteger(right);
+		ArrayList<String> list = new ArrayList<>();
+		for (int i = 1; i <= 1e4; i++) {
+			list.add(String.valueOf(i));
+		}
+		for (int i = 1; i < 10; i++) {
+			BigInteger pow = new BigInteger(String.valueOf((int) Math.pow(i,2)));
+			if (pow.compareTo(bLeft) < 0) {
+				continue;
+			}
+			if (pow.compareTo(bRight) > 0) {
+				break;
+			}
+			boolean isPalindromVar = isPalindrom(pow);
+			if (isPalindromVar) {
+				count++;
+			}
+		}
+		for (int i = 0; i < list.size(); i++) {
+			StringBuilder str = new StringBuilder(list.get(i));
+			StringBuilder reversedStr = new StringBuilder(str.toString()).reverse();
+			str.append(reversedStr);
+			BigInteger pow = new BigInteger(str.toString()).pow(2);
+			if (pow.compareTo(bLeft) < 0) {
+				continue;
+			}
+			boolean isPalindromVar = isPalindrom(pow);
+			if (pow.compareTo(bRight) > 0) {
+				break;
+			}
+			if (isPalindromVar) {
+				count++;
+			}
+		}
+		for (int i = 0; i < list.size(); i++) {
+			StringBuilder str = new StringBuilder(list.get(i));
+			StringBuilder reversedStr = new StringBuilder(str).reverse();
+			for (int j = 0; j < 10; j++) {
+				StringBuilder sb = new StringBuilder();
+				sb.append(str.toString());
+				sb.append(j);
+				sb.append(reversedStr.toString());
+				BigInteger pow = new BigInteger(sb.toString()).pow(2);
+				if (pow.compareTo(bLeft) < 0) {
+					continue;
+				}
+				boolean isPalindromVar = isPalindrom(pow);
+				if (pow.compareTo(bRight) > 0) {
+					break;
+				}
+				if (isPalindromVar) {
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+}

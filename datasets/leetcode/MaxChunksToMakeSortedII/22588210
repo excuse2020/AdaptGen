@@ -1,0 +1,39 @@
+class Solution {
+	int binarySearch(int a, int target, int start) {
+		int end = a.length - 1;
+		int ans = -1;
+		while (start <= end) {
+			int mid = start + (end - start) / 2;
+			if (a[mid] < target) {
+				start = mid + 1;
+			} 
+			else {
+				ans = mid;
+				end = mid - 1;
+			}
+		}
+		return ans;
+	}
+	int maxChunksToSorted(int[] arr) {
+		int n = arr.length;
+		int a = new int[n];
+		for (int i = 0; i < n; i++) {
+			a[i] = arr[i];
+		}
+		Arrays.sort(a);
+		int ans = 0;
+		int max = binarySearch(a,arr[0],0);
+		Map<Integer, Integer> map = new HashMap<>();
+		map.put(arr[0],max);
+		for (int i = 1; i < n; i++) {
+			if (max < i) {
+				ans++;
+			}
+			int reach = binarySearch(a,arr[i],map.getOrDefault(arr[i],-1) + 1);
+			map.put(arr[i],reach);
+			max = Math.max(max,reach);
+		}
+		ans = max == n - 1 ? ++ans : ans;
+		return ans;
+	}
+}

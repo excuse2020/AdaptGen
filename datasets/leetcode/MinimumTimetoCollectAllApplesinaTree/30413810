@@ -1,0 +1,35 @@
+class Solution {
+	int time = 0;
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			adj.get(edges[i][0]).add(edges[i][1]);
+			adj.get(edges[i][1]).add(edges[i][0]);
+		}
+		traverse(0,-1,adj,hasApple);
+		time -= 1;
+		return time;
+	}
+	boolean traverse(int vert, int parent, ArrayList<ArrayList<Integer>> adj, List<Boolean> hasApple) {
+		boolean containsApple = false;
+		int currTime = time;
+		for (int i = 0; i < adj.get(vert).size(); i++) {
+			if (adj.get(vert).get(i) != parent) {
+				time += 1;
+				boolean res = traverse(adj.get(vert).get(i),vert,adj,hasApple);
+				if (res == true) {
+					currTime = time;
+				} 
+				else {
+					time = currTime;
+				}
+				containsApple = (containsApple || res);
+			}
+		}
+		time += 1;
+		return containsApple || hasApple.get(vert);
+	}
+}

@@ -1,0 +1,56 @@
+class Solution {
+	int backward;
+	int forward;
+	int target;
+	int getMinJumps(int index, boolean wasLastJumpBackward, int[] DP) {
+		if (index < 0) {
+			return -1;
+		}
+		if (index >= DP.length) {
+			return -1;
+		}
+		if (DP[index] == -2) {
+			return -1;
+		}
+		if (index == target) {
+			return 0;
+		}
+		if (DP[index] != 0) {
+			return DP[index];
+		}
+		DP[index] = -2;
+		if (wasLastJumpBackward) {
+			int moveForward = getMinJumps(index + forward,false,DP);
+			if (moveForward == -1) {
+				DP[index] = -1;
+			} 
+			else {
+				DP[index] = 1 + moveForward;
+			}
+		} 
+		else {
+			int moveBackward = getMinJumps(index - backward,true,DP);
+			int moveForward = getMinJumps(index + forward,false,DP);
+			if (moveBackward == -1 && moveForward == -1) {
+				DP[index] = -1;
+			} 
+			else if (moveBackward == -1 || moveForward == -1) {
+				DP[index] = 1 + Math.max(moveForward,moveBackward);
+			} 
+			else {
+				DP[index] = 1 + Math.min(moveForward,moveBackward);
+			}
+		}
+		return DP[index];
+	}
+	int minimumJumps(int[] forbidden, int a, int b, int x) {
+		target = x;
+		forward = a;
+		backward = b;
+		int[] DP = new int[6001];
+		for (int index: forbidden) {	
+			DP[index] = -1;
+		}
+		return getMinJumps(0,false,DP);
+	}
+}

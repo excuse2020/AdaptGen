@@ -1,0 +1,43 @@
+class Solution {
+	long countPairs(int n, int[][] edges) {
+		int[] union = new int[n];
+		int[] rank = new int[n];
+		for (int i = 0; i < n; i++) {
+			union[i] = i;
+			rank[i] = 1;
+		}
+		for (int[] e: edges) {	
+			union(union,rank,e[0],e[1]);
+		}
+		Map<Integer, Long> countsMap = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			int r = find(union,i);
+			countsMap.put(r,countsMap.getOrDefault(r,0L) + 1);
+		}
+		long res = 0;
+		for (long v: countsMap.values()) {	
+			res += (n - v) * v;
+		}
+		return res >> 1;
+	}
+	int find(int[] union, int u) {
+		if (union[u] == u) {
+			return u;
+		}
+		return union[u] = find(union,union[u]);
+	}
+	void union(int[] union, int[] rank, int u, int v) {
+		int ru = find(union,u);
+		int rv = find(union,v);
+		if (rank[ru] < rank[rv]) {
+			union[ru] = rv;
+		} 
+		else if (rank[ru] > rank[rv]) {
+			union[rv] = ru;
+		} 
+		else {
+			union[rv] = ru;
+			rank[ru]++;
+		}
+	}
+}

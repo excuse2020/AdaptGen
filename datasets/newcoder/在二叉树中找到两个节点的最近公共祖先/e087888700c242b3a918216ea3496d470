@@ -1,0 +1,47 @@
+class Solution {
+	boolean hasO1 = false;
+	boolean hasO2 = false;
+	ArrayList<treenode> getNode(TreeNode root) {
+		ArrayList<treenode> list = new ArrayList<>();
+		ArrayList<treenode> queue = new ArrayList<>();
+		queue.add(root);
+		while (queue.size() != 0) {
+			TreeNode node = queue.remove(0);
+			if (node.left != null || node.right != null) {
+				list.add(node);
+			}
+			if (node.left != null) {
+				queue.add(node.left);
+			}
+			if (node.right != null) {
+				queue.add(node.right);
+			}
+		}
+		return list;
+	}
+	int lowestCommonAncestor(TreeNode root, int o1, int o2) {
+		ArrayList<treenode> list = getNode(root);
+		for (int i = list.size() - 1; i >= 0; i--) {
+			TreeNode node = list.get(i);
+			hasO1 = false;
+			hasO2 = false;
+			preOrder(node,o1,o2);
+			if (hasO1 && hasO2) {
+				return node.val;
+			}
+		}
+		return -1;
+	}
+	void preOrder(TreeNode root, int o1, int o2) {
+		if (root != null) {
+			if (root.val == o1) {
+				hasO1 = true;
+			}
+			if (root.val == o2) {
+				hasO2 = true;
+			}
+			preOrder(root.left,o1,o2);
+			preOrder(root.right,o1,o2);
+		}
+	}
+}

@@ -1,0 +1,49 @@
+class Solution {
+	int compare(String version1, String version2) {
+		if (version1 == null && version2 == null) {
+			return 0;
+		}
+		if (version1 == null) {
+			return -1;
+		}
+		if (version2 == null) {
+			return 1;
+		}
+		String[] parts1 = version1.split("\\.");
+		String[] parts2 = version2.split("\\.");
+		int len1 = parts1.length;
+		int len2 = parts2.length;
+		int maxLen = Math.max(len1,len2);
+		for (int i = 0; i < maxLen; i++) {
+			String str1 = i < len1 ? parts1[i] : "0";
+			String str2 = i < len2 ? parts2[i] : "0";
+			int res = helper(str1,str2);
+			if (res != 0) {
+				return res;
+			}
+		}
+		return 0;
+	}
+	int helper(String str1, String str2) {
+		str1 = trimPrefixZero(str1);
+		str2 = trimPrefixZero(str2);
+		if (str1.equals(str2)) {
+			return 0;
+		}
+		if (Integer.parseInt(str1) > Integer.parseInt(str2)) {
+			return 1;
+		}
+		return -1;
+	}
+	String trimPrefixZero(String str) {
+		int i = 0;
+		int n = str.length();
+		while (i < n && str.charAt(i) == '0') {
+			i++;
+		}
+		if (i == n) {
+			return "0";
+		}
+		return str.substring(i);
+	}
+}

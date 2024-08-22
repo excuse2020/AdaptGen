@@ -1,0 +1,30 @@
+class Solution {
+	double getSlope(int[] point1, int[] point2) {
+		if (point1[0] == point2[0]) {
+			return Double.MAX_VALUE;
+		}
+		return (1.0 * point2[1] - point1[1]) / (point2[0] - point1[0]);
+	}
+	int maxPoints(int[][] points) {
+		int N = points.length;
+		if (N <= 2) {
+			return N;
+		}
+		int max = 1;
+		for (int i = 0; i < N; i++) {
+			int[] point = points[i];
+			Map<Double, Integer> mp = new HashMap<>();
+			int localMax = 1;
+			for (int j = 0; j < N; j++) {
+				if (i == j) {
+					continue;
+				}
+				double m = getSlope(point,points[j]);
+				mp.put(m,mp.getOrDefault(m,1) + 1);
+				localMax = Math.max(localMax,mp.get(m));
+			}
+			max = Math.max(max,localMax);
+		}
+		return max;
+	}
+}

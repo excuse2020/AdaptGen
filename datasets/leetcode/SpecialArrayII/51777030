@@ -1,0 +1,27 @@
+class Solution {
+	boolean[] isArraySpecial(int[] nums, int[][] queries) {
+		int n = nums.length;
+		boolean[] is_special = new boolean[n - 1];
+		for (int i = 0; i < n - 1; i++) {
+			is_special[i] = (nums[i] % 2 != nums[i + 1] % 2);
+		}
+		int[] prefix_special = new int[n];
+		for (int i = 1; i < n; i++) {
+			prefix_special[i] = prefix_special[i - 1] + (is_special[i - 1] ? 1 : 0);
+		}
+		int q = queries.length;
+		boolean[] result = new boolean[q];
+		for (int i = 0; i < q; i++) {
+			int from = queries[i][0];
+			int to = queries[i][1];
+			if (from == to) {
+				result[i] = true;
+			} 
+			else {
+				int special_pairs = prefix_special[to] - prefix_special[from];
+				result[i] = (special_pairs == (to - from));
+			}
+		}
+		return result;
+	}
+}

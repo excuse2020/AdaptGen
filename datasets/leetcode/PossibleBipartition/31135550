@@ -1,0 +1,52 @@
+class Solution {
+	boolean biPartite(List<List<Integer>> graph, int[] color, int src) {
+		Queue<Integer> q = new LinkedList<>();
+		q.add(src);
+		while (!q.isEmpty()) {
+			Integer node = q.poll();
+			if (node == null) {
+				return true;
+			}
+			for (int adj: graph.get(node)) {	
+				if (color[adj] == 0) {
+					color[adj] = color[node] == 2 ? 1 : 2;
+					q.add(adj);
+				} 
+				else if (color[adj] == color[node]) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	boolean checkBiPartite(List<List<Integer>> graph) {
+		int n = graph.size();
+		int[] color = new int[n];
+		for (int i = 1; i < n; i++) {
+			if (color[i] == 0) {
+				color[i] = 1;
+				if (!biPartite(graph,color,i)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		if (dislikes.length == 0) {
+			return true;
+		}
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int[] dislike: dislikes) {	
+			while (graph.size() <= dislike[0]) {
+				graph.add(new ArrayList<Integer>());
+			}
+			graph.get(dislike[0]).add(dislike[1]);
+			while (graph.size() <= dislike[1]) {
+				graph.add(new ArrayList<Integer>());
+			}
+			graph.get(dislike[1]).add(dislike[0]);
+		}
+		return checkBiPartite(graph);
+	}
+}

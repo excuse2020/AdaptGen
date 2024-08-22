@@ -1,0 +1,36 @@
+class Solution {
+	long countPairs(int n, int[][] edges) {
+		int[] parent = new int[n];
+		int[] size = new int[n];
+		for (int i = 0; i < n; i++) {
+			parent[i] = i;
+			size[i] = 1;
+		}
+		for (int[] edge: edges) {	
+			int p1 = findParent(edge[0],parent);
+			int p2 = findParent(edge[1],parent);
+			if (p1 != p2) {
+				if (size[p1] < size[p2]) {
+					size[p2] += size[p1];
+					parent[p1] = parent[p2];
+				} 
+				else {
+					size[p1] += size[p2];
+					parent[p2] = parent[p1];
+				}
+			}
+		}
+		long output = 0;
+		for (int i = 0; i < n; i++) {
+			output += (n - size[findParent(i,parent)]);
+		}
+		return output / 2;
+	}
+	int findParent(int node, int[] parent) {
+		if (node == parent[node]) {
+			return node;
+		}
+		parent[node] = findParent(parent[node],parent);
+		return parent[node];
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	int bsearch(int[] arr, int temp, int f, int l, long target) {
+		int ans = l + 1;
+		while (f <= l) {
+			int mid = (f + l) / 2;
+			if ((long) arr[mid] * temp >= (long) target) {
+				l = mid - 1;
+				ans = mid;
+			} 
+			else {
+				f = mid + 1;
+			}
+		}
+		return ans;
+	}
+	int[] successfulPairs(int[] spells, int[] potions, long success) {
+		Arrays.sort(potions);
+		int[] res = new int[spells.length];
+		for (int i = 0; i < spells.length; i++) {
+			if ((long) spells[i] * potions[potions.length - 1] < (long) success) {
+				res[i] = 0;
+			} 
+			else if ((long) spells[i] * potions[0] >= (long) success) {
+				res[i] = potions.length;
+			} 
+			else {
+				res[i] = potions.length - bsearch(potions,spells[i],0,potions.length - 1,success);
+			}
+		}
+		return res;
+	}
+}

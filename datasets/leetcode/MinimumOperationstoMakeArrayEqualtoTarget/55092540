@@ -1,0 +1,37 @@
+class Solution {
+	void flip(int[] diff) {
+		for (int i = 0; i < diff.length; i++) {
+			diff[i] = -diff[i];
+		}
+	}
+	long helper(int[] diff) {
+		long result = 0L;
+		int min = 0, max = 0;
+		int m = diff.length;
+		for (int i = 0; i < m; i++) {
+			if (diff[i] >= max) {
+				max = diff[i];
+				if (i == m - 1) {
+					result += (long) (max - min);
+				}
+			} 
+			else {
+				result += (long) (max - min);
+				min = Math.max(0,diff[i]);
+				max = min;
+			}
+		}
+		return result;
+	}
+	long minimumOperations(int[] nums, int[] target) {
+		long result = 0;
+		int n = nums.length;
+		int[] diff = new int[n];
+		for (int i = 0; i < n; i++) {
+			diff[i] = target[i] - nums[i];
+		}
+		result += helper(diff);
+		flip(diff);
+		return result + helper(diff);
+	}
+}

@@ -1,0 +1,28 @@
+class Solution {
+	int tallestBillboard(int[] rods) {
+		int maxLen = 0;
+		for (int i: rods) {	
+			maxLen += i;
+		}
+		maxLen = maxLen / 2;
+		HashMap<Integer, Integer> dp = new HashMap<Integer, Integer>();
+		dp.put(0,0);
+		for (int rod: rods) {	
+			HashMap<Integer, Integer> copy = new HashMap<Integer, Integer>(dp);
+			for (HashMap.Entry<Integer, Integer> hash: copy.entrySet()) {	
+				int diff = hash.getKey();
+				int height = hash.getValue();
+				if (height + rod <= maxLen) {
+					dp.put(diff + rod,Math.max(dp.getOrDefault(diff + rod,0),height + rod));
+				}
+				if (rod <= diff) {
+					dp.put(diff - rod,Math.max(dp.getOrDefault(diff - rod,0),height));
+				} 
+				else if (height - diff + rod <= maxLen) {
+					dp.put(rod - diff,Math.max(dp.getOrDefault(rod - diff,0),height - diff + rod));
+				}
+			}
+		}
+		return dp.get(0);
+	}
+}

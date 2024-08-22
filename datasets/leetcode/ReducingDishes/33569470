@@ -1,0 +1,23 @@
+class Solution {
+	int maxSatisfaction(int[] satisfaction) {
+		int n = satisfaction.length;
+		Arrays.sort(satisfaction);
+		int[][] memo = new int[n][n];
+		for (int i = 0; i < n; i++) {
+			Arrays.fill(memo[i],-1);
+		}
+		return maxSatisfaction(satisfaction,0,0,memo);
+	}
+	int maxSatisfaction(int[] satisfaction, int idx, int prevTime, int[][] memo) {
+		if (idx == satisfaction.length) {
+			return 0;
+		}
+		if (memo[idx][prevTime] != -1) {
+			return memo[idx][prevTime];
+		}
+		int ans = maxSatisfaction(satisfaction,idx + 1,prevTime,memo);
+		ans = Math.max(ans,satisfaction[idx] * (prevTime + 1) + maxSatisfaction(satisfaction,idx + 1,prevTime + 1,memo));
+		memo[idx][prevTime] = ans;
+		return ans;
+	}
+}

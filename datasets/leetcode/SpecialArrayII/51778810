@@ -1,0 +1,44 @@
+class Solution {
+	bool[] IsArraySpecial(int[] nums, int[][] q) {
+		if (nums.Length < 2) {
+		}
+		List<int[]> b = new List<int[]>();
+		for (int i = 0; i < nums.Length; i++) {
+			nums[i] %= 2;
+		}
+		for (int i = 0; i < nums.Length - 1; i++) {
+			if (nums[i] == nums[i + 1]) {
+				b.Add(new int{i, i + 1});
+			}
+		}
+		if (b.Count == 0) {
+			bool[] ans = new bool[q.Length];
+			Array.Fill(ans,true);
+			return ans;
+		}
+		if (b.Count == nums.Length - 1) {
+			bool[] ans = new bool[q.Length];
+			Array.Fill(ans,false);
+			for (int i = 0; i < q.Length; i++) {
+				if (q[i][0] == q[i][1]) {
+					ans[i] = true;
+				}
+			}
+			return ans;
+		}
+		bool[] ans1 = new bool[q.Length];
+		for (int i = 0; i < q.Length; i++) {
+			ans1[i] = true;
+			if (q[i][0] == q[i][1]) {
+				continue;
+			}
+			for (int j = 0; j < b.Count; j++) {
+				if (q[i][0] <= b[j][0] && q[i][1] >= b[j][1]) {
+					ans1[i] = false;
+					break;
+				}
+			}
+		}
+		return ans1;
+	}
+}

@@ -1,0 +1,54 @@
+class Solution {
+	int[] edgesInGroup;
+	int[] id;
+	int[] sz;
+	int countCompleteComponents(int n, int[][] edges) {
+		id = new int[n];
+		sz = new int[n];
+		edgesInGroup = new int[n];
+		for (int i = 0; i < n; i++) {
+			id[i] = i;
+			sz[i] = 1;
+		}
+		for (int[] edge: edges) {	
+			union(edge[0],edge[1]);
+		}
+		int componentsCnt = 0;
+		for (int i = 0; i < n; i++) {
+			if (find(i) == i && edgesInGroup[i] == ((sz[i] - 1) * (sz[i])) / 2) {
+				componentsCnt++;
+			}
+		}
+		return componentsCnt;
+	}
+	int find(int p) {
+		int root = p;
+		while (root != id[root]) {
+			root = id[root];
+		}
+		while (p != root) {
+			int next = id[p];
+			id[p] = root;
+			p = next;
+		}
+		return root;
+	}
+	void union(int p, int q) {
+		int pRoot = find(p);
+		int qRoot = find(q);
+		if (pRoot == qRoot) {
+			edgesInGroup[pRoot]++;
+			return;
+		}
+		if (sz[pRoot] < sz[qRoot]) {
+			id[pRoot] = qRoot;
+			sz[qRoot] += sz[pRoot];
+			edgesInGroup[qRoot] += edgesInGroup[pRoot] + 1;
+		} 
+		else {
+			id[qRoot] = pRoot;
+			sz[pRoot] += sz[qRoot];
+			edgesInGroup[pRoot] += edgesInGroup[qRoot] + 1;
+		}
+	}
+}

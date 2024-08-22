@@ -1,0 +1,55 @@
+class Solution {
+	int countCompleteComponents(int n, int[][] edges) {
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		for (int[] edge: edges) {	
+			List<Integer> endList;
+			if (graph.containsKey(edge[0])) {
+				endList = graph.get(edge[0]);
+			} 
+			else {
+				endList = new ArrayList<>();
+			}
+			endList.add(edge[1]);
+			graph.put(edge[0],endList);
+			List<Integer> startList;
+			if (graph.containsKey(edge[1])) {
+				startList = graph.get(edge[1]);
+			} 
+			else {
+				startList = new ArrayList<>();
+			}
+			startList.add(edge[0]);
+			graph.put(edge[1],startList);
+		}
+		int result = 0;
+		Set<Integer> visited = new HashSet<>();
+		for (int i = 0; i < n; i++) {
+			if (visited.contains(i)) {
+				continue;
+			}
+			int[] counts = new int[2];
+			countCompleteComponentsHelper(graph,i,visited,counts);
+			if (counts[1] == counts[0] * (counts[0] - 1)) {
+				result++;
+			}
+		}
+		return result;
+	}
+	void countCompleteComponentsHelper(Map<Integer, List<Integer>> graph, int currentNode, Set<Integer> visited, int[] counts) {
+		if (visited.contains(currentNode)) {
+			return;
+		}
+		List<Integer> neighbors = graph.get(currentNode);
+		visited.add(currentNode);
+		counts[0]++;
+		if (!graph.containsKey(currentNode)) {
+			return;
+		}
+		for (int i = 0; i < neighbors.size(); i++) {
+			int neighbor = neighbors.get(i);
+			counts[1]++;
+			countCompleteComponentsHelper(graph,neighbor,visited,counts);
+		}
+		return;
+	}
+}

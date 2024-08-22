@@ -1,0 +1,32 @@
+class Solution {
+	int find(int[] set, int i) {
+		if (set[i] == -1) {
+			return i;
+		}
+		return set[i] = find(set,set[i]);
+	}
+	String smallestStringWithSwaps(String s, List<List<Integer>> pairs) {
+		int[] set = new int[s.length()];
+		Arrays.fill(set,-1);
+		for (List<Integer> pair: pairs) {	
+			int x = find(set,pair.get(0)), y = find(set,pair.get(1));
+			if (x != y) {
+				set[y] = x;
+			}
+		}
+		Map<Integer, PriorityQueue<Character>> graph = new HashMap<>();
+		for (int i = 0; i < s.length(); i++) {
+			int v = find(set,i);
+			if (!graph.containsKey(v)) {
+				graph.put(v,new PriorityQueue<>());
+			}
+			graph.get(v).offer(s.charAt(i));
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < s.length(); i++) {
+			PriorityQueue<Character> q = graph.get(find(set,i));
+			sb.append(q.poll());
+		}
+		return sb.toString();
+	}
+}

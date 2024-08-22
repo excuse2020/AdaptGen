@@ -1,0 +1,39 @@
+class Solution {
+	List<Boolean> checkIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		Map<Integer, Set<Integer>> connections = new HashMap<>();
+		Queue<Integer> q = new LinkedList<>();
+		int[] indegree = new int[numCourses];
+		List<Boolean> res = new ArrayList<>();
+		for (int i = 0; i < numCourses; i++) {
+			map.put(i,new ArrayList<>());
+			connections.put(i,new HashSet<>());
+		}
+		for (int[] arr: prerequisites) {	
+			int prereq = arr[0];
+			int course = arr[1];
+			map.get(prereq).add(course);
+			indegree[course]++;
+		}
+		for (int i = 0; i < numCourses; i++) {
+			if (indegree[i] == 0) {
+				q.add(i);
+			}
+		}
+		while (!q.isEmpty()) {
+			int node = q.poll();
+			for (int next: map.get(node)) {	
+				connections.get(next).add(node);
+				connections.get(next).addAll(connections.get(node));
+				indegree[next]--;
+				if (indegree[next] == 0) {
+					q.add(next);
+				}
+			}
+		}
+		for (int[] query: queries) {	
+			res.add(connections.get(query[1]).contains(query[0]));
+		}
+		return res;
+	}
+}

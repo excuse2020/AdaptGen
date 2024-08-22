@@ -1,0 +1,47 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		Queue<Integer> q = new LinkedList<Integer>();
+		int distance = new int[edges.length];
+		Arrays.fill(distance,-1);
+		q.add(node1);
+		distance[node1] = 0;
+		int count = 0;
+		while (!q.isEmpty()) {
+			int size = q.size();
+			while (size-- > 0) {
+				int temp = q.element();
+				q.remove();
+				if (edges[temp] >= 0 && distance[edges[temp]] == -1) {
+					q.add(edges[temp]);
+					distance[edges[temp]] = count + 1;
+				}
+			}
+			count++;
+		}
+		int distance2 = new int[edges.length];
+		Arrays.fill(distance2,-1);
+		q.add(node2);
+		distance2[node2] = 0;
+		count = 0;
+		while (!q.isEmpty()) {
+			int size = q.size();
+			while (size-- > 0) {
+				int temp = q.element();
+				q.remove();
+				if (edges[temp] >= 0 && distance2[edges[temp]] == -1) {
+					q.add(edges[temp]);
+					distance2[edges[temp]] = count + 1;
+				}
+			}
+			count++;
+		}
+		int prev = Integer.MAX_VALUE, index = -1;
+		for (int i = 0; i < distance.length; i++) {
+			if (distance[i] >= 0 && distance2[i] >= 0 && Math.max(distance[i],distance2[i]) < prev) {
+				index = i;
+				prev = Math.max(distance[i],distance2[i]);
+			}
+		}
+		return index;
+	}
+}

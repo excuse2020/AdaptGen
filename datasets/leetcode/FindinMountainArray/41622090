@@ -1,0 +1,64 @@
+class Solution {
+	int fbinarySearch(MountainArray mounArr, int l, int r, int t) {
+		while (l <= r) {
+			int mid = l + (r - l) / 2;
+			int x = mounArr.get(mid);
+			if (x == t) {
+				return mid;
+			} 
+			else if (x > t) {
+				r = mid - 1;
+			} 
+			else {
+				l = mid + 1;
+			}
+		}
+		return -1;
+	}
+	int findInMountainArray(int target, MountainArray mounArr) {
+		int peak = findPeak(mounArr);
+		int first = fbinarySearch(mounArr,0,peak,target);
+		if (first != -1) {
+			return first;
+		} 
+		else {
+			int second = sbinarySearch(mounArr,peak,mounArr.length() - 1,target);
+			return second;
+		}
+	}
+	int findPeak(MountainArray mounArr) {
+		int l = 0, r = mounArr.length() - 1;
+		while (l < r) {
+			int mid = ((r - l) / 2) + l;
+			int a = mounArr.get(mid - 1);
+			int b = mounArr.get(mid);
+			int c = mounArr.get(mid + 1);
+			if (a < b && b > c) {
+				return mid;
+			} 
+			else if (a < b) {
+				l = mid + 1;
+			} 
+			else {
+				r = mid;
+			}
+		}
+		return l;
+	}
+	int sbinarySearch(MountainArray mounArr, int l, int r, int t) {
+		while (l <= r) {
+			int mid = l + (r - l) / 2;
+			int x = mounArr.get(mid);
+			if (x == t) {
+				return mid;
+			} 
+			else if (x > t) {
+				l = mid + 1;
+			} 
+			else {
+				r = mid - 1;
+			}
+		}
+		return -1;
+	}
+}

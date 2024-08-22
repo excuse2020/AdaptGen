@@ -1,0 +1,56 @@
+class Solution {
+	int si = 0, sj = 0, ei = 0, ej = 0;
+	int[][] findFarmland(int[][] land) {
+		ArrayList<Integer[]> arr = new ArrayList<>();
+		int m = land[0].length, n = land.length;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				if (land[i][j] == 1) {
+					si = ei = i;
+					sj = ej = j;
+					visited(land,i,j,m,n);
+					arr.add(new Integer{si, sj, ei, ej});
+				}
+			}
+		}
+		int res = new int[arr.size()][4];
+		for (int q = 0; q < arr.size(); q++) {
+			Integer[] inner = arr.get(q);
+			for (int r = 0; r < inner.length; r++) {
+				res[q][r] = inner[r];
+			}
+		}
+		return res;
+	}
+	void visited(int arr, int i, int j, int m, int n) {
+		if (i == n || j == m) {
+			return;
+		}
+		if (arr[i][j] == 1) {
+			if (i > ei && j > ej) {
+				ei = i;
+				ej = j;
+			} 
+			else if (i > ei || j > ej) {
+				ei = i;
+				ej = j;
+			}
+			arr[i][j] = 0;
+			if (j > 0 && arr[i][j - 1] == 1) {
+				visited(arr,i,j - 1,m,n);
+			}
+			if (j < m - 1 && arr[i][j + 1] == 1) {
+				visited(arr,i,j + 1,m,n);
+			}
+			if (i > 0 && arr[i - 1][j] == 1) {
+				visited(arr,i - 1,j,m,n);
+			}
+			if (i < n - 1 && arr[i + 1][j] == 1) {
+				visited(arr,i + 1,j,m,n);
+			}
+		} 
+		else {
+			return;
+		}
+	}
+}

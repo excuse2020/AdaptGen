@@ -1,0 +1,27 @@
+class Solution {
+	ArrayList<Integer> knapsack(int v, int n, ArrayList<ArrayList<Integer>> nums) {
+		int[] V = new int[n + 1];
+		int[] W = new int[n + 1];
+		for (int goods = 1; goods <= n; goods++) {
+			V[goods] = nums.get(goods - 1).get(0);
+			W[goods] = nums.get(goods - 1).get(1);
+		}
+		int[] dp1 = new int[v + 1];
+		int[] dp2 = new int[v + 1];
+		Arrays.fill(dp2,Integer.MIN_VALUE);
+		dp2[0] = 0;
+		for (int goods = 1; goods <= n; goods++) {
+			for (int capacity = V[goods]; capacity <= v; capacity++) {
+				dp1[capacity] = Math.max(dp1[capacity],dp1[capacity - V[goods]] + W[goods]);
+				dp2[capacity] = Math.max(dp2[capacity],dp2[capacity - V[goods]] + W[goods]);
+				if (dp2[capacity] < 0) {
+					dp2[capacity] = Integer.MIN_VALUE;
+				}
+			}
+		}
+		ArrayList<Integer> res = new ArrayList<>();
+		res.add(dp1[v]);
+		res.add(dp2[v] == Integer.MIN_VALUE ? 0 : dp2[v]);
+		return res;
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	LinkedList<Integer> adj;
+	int count = 0;
+	boolean[] visited;
+	void dfs(int vertex) {
+		visited[vertex] = true;
+		count++;
+		Iterator<Integer> ite = adj[vertex].listIterator();
+		while (ite.hasNext()) {
+			int ad = ite.next();
+			if (!visited[ad]) {
+				dfs(ad);
+			}
+		}
+	}
+	int reachableNodes(int n, int[][] edges, int[] restricted) {
+		adj = new LinkedList[n];
+		visited = new boolean[n];
+		for (int i = 0; i < restricted.length; i++) {
+			visited[restricted[i]] = true;
+		}
+		for (int i = 0; i < n; i++) {
+			adj[i] = new LinkedList<Integer>();
+		}
+		for (int a: edges) {	
+			adj[a[0]].add(a[1]);
+			adj[a[1]].add(a[0]);
+		}
+		dfs(0);
+		return count;
+	}
+}

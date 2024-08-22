@@ -1,0 +1,45 @@
+class Solution {
+	boolean isA(int threshold, int row, int col) {
+		int result = 0;
+		while (row > 0) {
+			result += row % 10;
+			row = row / 10;
+		}
+		while (col > 0) {
+			result += col % 10;
+			col = col / 10;
+		}
+		return threshold >= result;
+	}
+	int move(int threshold, int rows, int cols) {
+		int result = 0;
+		LinkedList<int[]> queue = new LinkedList<>();
+		boolean[][] isVisited = new boolean[rows][cols];
+		queue.add(new int{0, 0});
+		while (queue.size() > 0) {
+			int[] ij = queue.pop();
+			int i = ij[0];
+			int j = ij[1];
+			if (isVisited[i][j] || !isA(threshold,i,j)) {
+				continue;
+			} 
+			else {
+				result += 1;
+				isVisited[i][j] = true;
+			}
+			if (i + 1 < rows && j < cols) {
+				queue.add(new int{i + 1, j});
+			}
+			if (i < rows && j + 1 < cols) {
+				queue.add(new int{i, j + 1});
+			}
+		}
+		return result;
+	}
+	int movingCount(int threshold, int rows, int cols) {
+		if (rows > 0 && cols > 0) {
+			return move(threshold,rows,cols);
+		}
+		return 0;
+	}
+}

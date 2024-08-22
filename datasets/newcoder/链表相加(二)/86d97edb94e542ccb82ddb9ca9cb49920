@@ -1,0 +1,75 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		Stack<ListNode> s1 = new Stack<>();
+		Stack<ListNode> s2 = new Stack<>();
+		ListNode a1 = head1;
+		ListNode a2 = head2;
+		while (a1 != null) {
+			s1.push(a1);
+			a1 = a1.next;
+		}
+		while (a2 != null) {
+			s2.push(a2);
+			a2 = a2.next;
+		}
+		int carry = 0;
+		ListNode ans = new ListNode(0);
+		while (s1.size() != 0 && s2.size() != 0) {
+			int num = s1.pop().val + s2.pop().val;
+			carry = 0;
+			if (num > 9) {
+				num -= 10;
+				carry = 1;
+			}
+			ListNode tmp = new ListNode(num);
+			tmp.next = ans;
+			ans = tmp;
+		}
+		int an = 0;
+		if (s1.size() != 0) {
+			int n = s1.pop().val + carry;
+			if (n > 9) {
+				n -= 10;
+				an = 1;
+			}
+			ListNode tmp0 = new ListNode(n);
+			tmp0.next = ans;
+			ans = tmp0;
+			carry = 0;
+			while (s1.size() != 0) {
+				ListNode tmp1 = new ListNode(s1.pop().val + an);
+				tmp1.next = ans;
+				ans = tmp1;
+				an = 0;
+			}
+		}
+		if (s2.size() != 0) {
+			int n = s2.pop().val + carry;
+			if (n > 9) {
+				n -= 10;
+				an = 1;
+			}
+			ListNode tmp0 = new ListNode(n);
+			tmp0.next = ans;
+			ans = tmp0;
+			carry = 0;
+			while (s2.size() != 0) {
+				ListNode tmp1 = new ListNode(s2.pop().val + an);
+				tmp1.next = ans;
+				ans = tmp1;
+				an = 0;
+			}
+		}
+		if (an != 0) {
+			ListNode tmp0 = new ListNode(an);
+			tmp0.next = ans;
+			ans = tmp0;
+		}
+		ListNode hand = ans;
+		while (hand.next.next != null) {
+			hand = hand.next;
+		}
+		hand.next = null;
+		return ans;
+	}
+}

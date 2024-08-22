@@ -1,0 +1,52 @@
+class Solution {
+	int decreaseSearchBinary(int target, MountainArray mountainArr, int peakIndex) {
+		int left = peakIndex, right = mountainArr.length() - 1;
+		while (left <= right) {
+			int mid = (left + right) / 2;
+			if (mountainArr.get(mid) == target) {
+				return mid;
+			} 
+			else if (mountainArr.get(mid) > target) {
+				left = mid + 1;
+			} 
+			else {
+				right = mid - 1;
+			}
+		}
+		return -1;
+	}
+	int findInMountainArray(int target, MountainArray mountainArr) {
+		int low = 1, high = mountainArr.length() - 2;
+		while (low <= high) {
+			int testIndex = (low + high) / 2;
+			if (mountainArr.get(testIndex) < mountainArr.get(testIndex + 1)) {
+				low = testIndex + 1;
+			} 
+			else {
+				high = testIndex - 1;
+			}
+		}
+		int peakIndex = low;
+		int answer = this.increaseSearchBinary(target,mountainArr,peakIndex);
+		if (answer != -1) {
+			return answer;
+		}
+		return this.decreaseSearchBinary(target,mountainArr,peakIndex);
+	}
+	int increaseSearchBinary(int target, MountainArray mountainArr, int peakIndex) {
+		int left = 0, right = peakIndex - 1;
+		while (left <= right) {
+			int mid = (left + right) / 2;
+			if (mountainArr.get(mid) == target) {
+				return mid;
+			} 
+			else if (mountainArr.get(mid) < target) {
+				left = mid + 1;
+			} 
+			else {
+				right = mid - 1;
+			}
+		}
+		return -1;
+	}
+}

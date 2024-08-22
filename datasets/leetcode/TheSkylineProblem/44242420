@@ -1,0 +1,59 @@
+class Solution {
+	List<List<Integer>> getSkyline(int[][] buildings) {
+		LinkedList<int[]> list = new LinkedList<>();
+		PriorityQueue<int[]> q = new PriorityQueue<>((a, b) -> {a[0] != b[0] ? a[0] - b[0] : a[2] == b[2] ? a[1] - b[1] : b[2] - a[2]});
+		Collections.addAll(q,buildings);
+		TreeMap<Integer, Integer> map = new TreeMap<>();
+		while (!q.isEmpty()) {
+			int[] curr = q.poll();
+			if (list.isEmpty() || list.peekLast()[1] < curr[0]) {
+				list.add(curr);
+				continue;
+			}
+			int[] last = list.pollLast();
+			if (last[1] == curr[0]) {
+				if (last[2] == curr[2]) {
+					last[1] = curr[1];
+					list.add(last);
+				} 
+				else {
+					list.add(last);
+					list.add(curr);
+				}
+			} 
+			else if (last[2] == curr[2]) {
+				if (curr[1] > last[1]) {
+					last[1] = curr[1];
+				}
+				list.add(last);
+			} 
+			else if (last[2] > curr[2]) {
+				list.add(last);
+				if (curr[1] > last[1]) {
+					curr[0] = last[1];
+					q.offer(curr);
+				}
+			} 
+			else {
+				int lastEnd = last[1];
+				last[1] = curr[0];
+				if (last[1] > last[0]) {
+					list.add(last);
+				}
+				list.add(curr);
+				if (lastEnd > curr[1]) {
+					q.offer(new int{curr[1], lastEnd, last[2]});
+				}
+			}
+		}
+		LinkedList<List<Integer>> ans = new LinkedList<>();
+		for (int[] c: list) {	
+			if (!ans.isEmpty() && ans.peekLast().get(0) == c[0]) {
+				ans.pollLast();
+			}
+			ans.add(new ArrayList<>(Arrays.asList(c[0],c[2])));
+			ans.add(new ArrayList<>(Arrays.asList(c[1],0)));
+		}
+		return ans;
+	}
+}

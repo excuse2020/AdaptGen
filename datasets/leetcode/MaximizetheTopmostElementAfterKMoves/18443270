@@ -1,0 +1,32 @@
+class Solution {
+	int maximumTop(int[] nums, int k) {
+		if (k == 0) {
+			return nums[0];
+		}
+		if (nums.length == 1) {
+			return k % 2 == 0 ? nums[0] : -1;
+		}
+		int max = -1;
+		for (int n: nums) {	
+			max = Math.max(n,max);
+		}
+		if (k > nums.length) {
+			return max;
+		}
+		ArrayDeque<Integer> stack = new ArrayDeque<>();
+		int pos = 0;
+		while (k-- > 1) {
+			if (stack.isEmpty() || stack.peek() < nums[pos]) {
+				stack.push(nums[pos]);
+			}
+			pos++;
+		}
+		if (stack.isEmpty()) {
+			return nums[pos + 1];
+		}
+		if (pos == nums.length - 1) {
+			return stack.peek();
+		}
+		return Math.max(stack.peek(),nums[pos + 1]);
+	}
+}

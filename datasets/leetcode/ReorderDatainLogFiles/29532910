@@ -1,0 +1,46 @@
+class Solution {
+	String[] reorderLogFiles(String[] logs) {
+		List<String> digitLogs = new ArrayList<String>();
+		Map<String, PriorityQueue<String>> letterLogKey = new HashMap<String, PriorityQueue<String>>();
+		PriorityQueue<String> contentQueue = new PriorityQueue<String>();
+		for (String log: logs) {	
+			String key = log.substring(0,log.indexOf(" "));
+			String content = log.substring(log.indexOf(" ") + 1);
+			if (Character.isDigit(content.charAt(0))) {
+				digitLogs.add(log);
+			} 
+			else {
+				if (!contentQueue.contains(content)) {
+					contentQueue.add(content);
+				}
+				if (letterLogKey.containsKey(content)) {
+					PriorityQueue<String> keys = letterLogKey.get(content);
+					keys.add(key);
+					letterLogKey.put(content,keys);
+				} 
+				else {
+					PriorityQueue<String> keys = new PriorityQueue<String>((a, b) -> {a.compareTo(b)});
+					keys.add(key);
+					letterLogKey.put(content,keys);
+				}
+			}
+		}
+		String[] result = new String[logs.length];
+		int i = 0;
+		while (!contentQueue.isEmpty()) {
+			String content = contentQueue.remove();
+			PriorityQueue<String> keys = letterLogKey.get(content);
+			while (!keys.isEmpty()) {
+				String key = keys.remove();
+				String log = key + " ";
+				result[i] = log;
+				i++;
+			}
+		}
+		for (String log: digitLogs) {	
+			result[i] = log;
+			i++;
+		}
+		return result;
+	}
+}

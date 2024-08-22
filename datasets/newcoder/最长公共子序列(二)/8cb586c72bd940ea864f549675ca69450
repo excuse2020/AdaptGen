@@ -1,0 +1,53 @@
+class Solution {
+	int[][] dp;
+	String LCS(String s1, String s2) {
+		if (s1 == null || s2 == null || s1.length() == 0 || s2.length() == 0) {
+			return "-1";
+		}
+		char[] c1 = s1.toCharArray();
+		char[] c2 = s2.toCharArray();
+		int[][] dp = new int[s1.length() + 1][s2.length() + 1];
+		for (int i = 1; i <= s1.length(); i++) {
+			for (int j = 1; j <= s2.length(); j++) {
+				if (c1[i - 1] == c2[j - 1]) {
+					dp[i][j] = dp[i - 1][j - 1] + 1;
+				} 
+				else {
+					dp[i][j] = Math.max(dp[i - 1][j],dp[i][j - 1]);
+				}
+			}
+		}
+		if (dp[s1.length()][s2.length()] == 0) {
+			return "-1";
+		}
+		Set<String> ans = new HashSet<>();
+		this.dp = dp;
+		dfs(c1,c2,s1.length(),s2.length(),new StringBuilder(),ans);
+		System.out.println(ans);
+		Iterator<String> it = ans.iterator();
+		return it.next();
+	}
+	void dfs(char[] c1, char[] c2, int i, int j, StringBuilder sb, Set<String> ans) {
+		while (i > 0 && j > 0) {
+			if (c1[i - 1] == c2[j - 1]) {
+				sb.append(c1[i - 1]);
+				i--;
+				j--;
+			} 
+			else {
+				if (dp[i - 1][j] > dp[i][j - 1]) {
+					i--;
+				} 
+				else if (dp[i - 1][j] < dp[i][j - 1]) {
+					j--;
+				} 
+				else {
+					dfs(c1,c2,i - 1,j,new StringBuilder(sb),ans);
+					dfs(c1,c2,i,j - 1,new StringBuilder(sb),ans);
+					return;
+				}
+			}
+		}
+		ans.add(new StringBuilder(sb).reverse().toString());
+	}
+}

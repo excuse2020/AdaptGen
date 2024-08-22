@@ -1,0 +1,33 @@
+class Solution {
+	int minimumTime(int n, int[][] relations, int[] time) {
+		List<Integer>[] parent = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			parent[i] = new ArrayList<Integer>();
+		}
+		for (int i = 0; i < relations.length; i++) {
+			int par = relations[i][0];
+			int child = relations[i][1];
+			parent[child - 1].add(par - 1);
+		}
+		int min = new int[n];
+		Arrays.fill(min,-1);
+		int result = 0;
+		for (int i = 0; i < n; i++) {
+			result = Math.max(result,minimumTimeToCompleteACourse(time,parent,i,min));
+		}
+		return result;
+	}
+	int minimumTimeToCompleteACourse(int time, List<Integer>[] parent, int course, int min) {
+		if (parent[course].size() == 0) {
+			return min[course] = time[course];
+		}
+		int duration = 0;
+		if (min[course] != -1) {
+			return min[course];
+		}
+		for (int i: parent[course]) {	
+			duration = Math.max(duration,minimumTimeToCompleteACourse(time,parent,i,min));
+		}
+		return min[course] = duration + time[course];
+	}
+}

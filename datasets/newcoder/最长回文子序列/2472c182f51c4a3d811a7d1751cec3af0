@@ -1,0 +1,27 @@
+class Solution {
+	int[][] memo;
+	int dfs(char[] arr, int l, int r) {
+		if (memo[l][r] != 0) {
+			return memo[l][r];
+		}
+		if (l == r) {
+			memo[l][r] = 1;
+			return 1;
+		}
+		if (l + 1 == r && arr[l] == arr[r]) {
+			memo[l][r] = 2;
+			return 2;
+		}
+		if (arr[l] == arr[r]) {
+			memo[l][r] = dfs(arr,l + 1,r - 1) + 2;
+			return dfs(arr,l + 1,r - 1) + 2;
+		}
+		memo[l][r] = Math.max(dfs(arr,l + 1,r),dfs(arr,l,r - 1));
+		return Math.max(dfs(arr,l + 1,r),dfs(arr,l,r - 1));
+	}
+	int longestPalindromeSubSeq(String s) {
+		char[] arr = s.toCharArray();
+		memo = new int[arr.length][arr.length];
+		return dfs(arr,0,arr.length - 1);
+	}
+}

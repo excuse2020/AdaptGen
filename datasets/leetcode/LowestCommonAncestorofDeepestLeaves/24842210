@@ -1,0 +1,50 @@
+class Solution {
+	TreeNode lcaDeepestLeaves(TreeNode root) {
+		HashMap<TreeNode, List<TreeNode>> hm = new HashMap<>();
+		Queue<TreeNode> q = new LinkedList<>();
+		q.offer(root);
+		List<TreeNode> al = new ArrayList<>();
+		while (!q.isEmpty()) {
+			al = new ArrayList<>();
+			int size = q.size();
+			for (int i = 0; i < size; i++) {
+				TreeNode curr = q.poll();
+				List<TreeNode> al2 = new ArrayList<>();
+				al2.add(curr);
+				if (hm.containsKey(curr)) {
+					List<TreeNode> al1 = hm.get(curr);
+					for (TreeNode t: al1) {	
+						al2.add(t);
+					}
+				}
+				if (curr.left != null) {
+					q.offer(curr.left);
+					hm.put(curr.left,al2);
+				}
+				if (curr.right != null) {
+					q.offer(curr.right);
+					hm.put(curr.right,al2);
+				}
+				al.add(curr);
+			}
+		}
+		System.out.print(al.get(0).val);
+		if (al.size() == 1) {
+			return al.get(0);
+		}
+		if (hm.get(al.get(0)).get(0) == hm.get(al.get(al.size() - 1)).get(0)) {
+			return hm.get(al.get(0)).get(0);
+		}
+		List<TreeNode> res = hm.get(al.get(0));
+		List<TreeNode> res2 = hm.get(al.get(al.size() - 1));
+		int len = res.size() > res2.size() ? res2.size() : res.size();
+		TreeNode lca = null;
+		for (int i = 0; i < len; i++) {
+			if (res.get(i).val == res2.get(i).val) {
+				lca = res.get(i);
+				break;
+			}
+		}
+		return lca;
+	}
+}

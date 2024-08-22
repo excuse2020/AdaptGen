@@ -1,0 +1,50 @@
+class Solution {
+	int count;
+	int[] parent;
+	int find(int x, int[] parent) {
+		if (parent[x] < 0) {
+			return x;
+		}
+		int tmp = find(parent[x],parent);
+		return tmp;
+	}
+	int regionsBySlashes(String[] grid) {
+		int n = grid.length;
+		parent = new int[(n + 1) * (n + 1) + 1];
+		Arrays.fill(parent,-1);
+		count = 1;
+		for (int i = 0; i < n + 1; i++) {
+			for (int j = 0; j < n + 1; j++) {
+				if (i == 0 || j == 0 || i == n || j == n) {
+					int cellno = (n + 1) * (i) + j;
+					if (cellno != 0) {
+						union(0,cellno);
+					}
+				}
+			}
+		}
+		int i = 0;
+		char[] arr = grid[i].toCharArray();
+		int j = 0;
+		char ch = arr[j];
+	}
+	void union(int cellno1, int cellno2) {
+		int p1 = find(cellno1,parent);
+		int p2 = find(cellno2,parent);
+		int pv1 = Math.abs(p1);
+		int pv2 = Math.abs(p2);
+		if (p1 != p2) {
+			if (pv1 > pv2 || pv1 == pv2) {
+				parent[p1] -= pv2;
+				parent[p2] = p1;
+			} 
+			else if (pv2 > pv1) {
+				parent[p2] -= pv1;
+				parent[p1] = p2;
+			}
+		} 
+		else {
+			count++;
+		}
+	}
+}

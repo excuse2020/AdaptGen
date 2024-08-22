@@ -1,0 +1,32 @@
+class Solution {
+	int countNodes(TreeNode root) {
+		return root == null ? 0 : countNodes(root.left) + countNodes(root.right);
+	}
+	int populateDepths(int level, int[][] depths, TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		depths[root.val][0] = level + populateDepths(level + 1,levels,depths,root.left);
+		depths[root.val][1] = level + populateDepths(level + 1,levels,depths,root.right);
+		return Math.max(depths[root.val][0],depths[root.val][1]) - level + 1;
+	}
+	void populateDp(int value, int[] dp, int[][] depths, TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		dp[root.val] = value;
+		populateDp(Math.max(depths[root.val][1],value),dp,levels,depths,root.left);
+		populateDp(Math.max(depths[root.val][0],value),dp,levels,depths,root.right);
+	}
+	int[] treeQueries(TreeNode root, int[] queries) {
+		int m = countNodes(root), n = queries.length;
+		int[] output = new int[n], dp = new int[m + 1];
+		int[][] depths = new int[m + 1][2];
+		populateLevelsAndDepths(0,depths,root);
+		populateDp(0,dp,depths,root);
+		for (int i = 0; i < n; i++) {
+			output[i] = dp[queries[i]];
+		}
+		return output;
+	}
+}

@@ -1,0 +1,66 @@
+class Solution {
+	Map<Integer, Integer> dp = new HashMap<>();
+	List<List<Integer>> graph;
+	int n, k;
+	void generateCombinations(List<Integer> courses, int k, int start, List<Integer> tmp, List<List<Integer>> combinations) {
+		if (k == 0) {
+			combinations.add(new ArrayList<>(tmp));
+			return;
+		}
+		for (int i = start; i < courses.size(); i++) {
+			tmp.add(courses.get(i));
+			generateCombinations(courses,k - 1,i + 1,tmp,combinations);
+			tmp.remove(tmp.size() - 1);
+		}
+	}
+	List<List<Integer>> getCombination(List<Integer> courses, int k) {
+		List<List<Integer>> combinations = new ArrayList<>();
+		generateCombinations(courses,k,0,new ArrayList<>(),combinations);
+		return combinations;
+	}
+	int minNumberOfSemesters(int n, int[][] relations, int k) {
+		Map<Integer, Integer> indegrees = new HashMap<>();
+		graph = new ArrayList<>();
+		this.n = n;
+		this.k = k;
+		for (int i = 0; i < n; i++) {
+			indegrees.put(i,0);
+			graph.add(new ArrayList<>());
+		}
+		for (int[] relation: relations) {	
+			int prev = relation[0] - 1;
+			int curr = relation[1] - 1;
+			graph.get(prev).add(curr);
+			indegrees.put(curr,indegrees.get(curr) + 1);
+		}
+		return recurse((1 << n) - 1,indegrees);
+	}
+	int recurse(int mask, Map<Integer, Integer> indegrees) {
+		if (mask == 0) {
+			return 0;
+		}
+		if (dp.containsKey(mask)) {
+			return dp.get(mask);
+		}
+		List<Integer> avlCourses = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			if ((mask & (1 << i)) != 0 && indegrees.get(i) == 0) {
+				avlCourses.add(i);
+			}
+		}
+		int ans = Integer.MAX_VALUE;
+		for (List<Integer> combination: getCombination(avlCourses,Math.min(avlCourses.size(),k))) {	
+			int newMask = mask;
+			Map<Integer, Integer> newIndegrees = new HashMap<>(indegrees);
+			for (int course: combination) {	
+				newMask ^= (1 << course);
+				for (int child: graph.get(course)) {	
+					newIndegrees.put(child,newIndegrees.getOrDefault(child,0) - 1);
+				}
+			}
+			ans = Math.min(ans,1 + recurse(newMask,newIndegrees));
+		}
+		dp.put(mask,ans);
+		return ans;
+	}
+}

@@ -1,0 +1,30 @@
+class Solution {
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		Map<Integer, List<Integer>> managerReporteeMap = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			if (manager[i] != -1) {
+				List<Integer> temp = managerReporteeMap.getOrDefault(manager[i],new ArrayList<Integer>());
+				temp.add(i);
+				managerReporteeMap.put(manager[i],temp);
+			}
+		}
+		Queue<int[]> q = new LinkedList<>();
+		q.add(new int{headID, 0});
+		int maxTimeTaken = -1;
+		while (!q.isEmpty()) {
+			int[] employee = q.poll();
+			int eid = employee[0];
+			int tt = employee[1];
+			if (informTime[eid] == 0) {
+				maxTimeTaken = Math.max(maxTimeTaken,tt);
+			} 
+			else {
+				List<Integer> reportees = managerReporteeMap.get(eid);
+				for (int k: reportees) {	
+					q.add(new int{k, tt + informTime[eid]});
+				}
+			}
+		}
+		return maxTimeTaken;
+	}
+}

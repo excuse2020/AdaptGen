@@ -1,0 +1,22 @@
+class Solution {
+	boolean isPossible(int[] target) {
+		PriorityQueue<Integer> pq = new PriorityQueue<Integer>((a, b) -> {b - a});
+		int sum = 0, prev_sum = Integer.MAX_VALUE;
+		for (int targets: target) {	
+			pq.add(targets);
+			sum += targets;
+		}
+		while (pq.peek() > 1) {
+			int d = pq.poll();
+			sum -= d;
+			int prev_value = d - (int) ((Math.ceil((double) d / (double) sum) - 1.0)) * sum;
+			pq.add(prev_value);
+			sum += prev_value;
+			if (prev_sum == sum) {
+				return false;
+			}
+			prev_sum = sum;
+		}
+		return true;
+	}
+}

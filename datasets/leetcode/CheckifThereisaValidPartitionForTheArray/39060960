@@ -1,0 +1,42 @@
+class Solution {
+	boolean solve(int i, int arr, int dp) {
+		if (i >= arr.length) {
+			if (i == arr.length) {
+				return true;
+			}
+			if (i > arr.length) {
+				return false;
+			}
+		}
+		if (dp[i] != -1) {
+			return (dp[i] == 1);
+		}
+		boolean case1 = false;
+		boolean case2 = false;
+		if (i + 1 < arr.length && arr[i] == arr[i + 1]) {
+			case1 = solve(i + 2,arr,dp);
+		} 
+		else {
+			case1 = false;
+		}
+		if (((i + 2) < arr.length && arr[i] == arr[i + 1] && arr[i + 1] == arr[i + 2]) || ((i + 2) < arr.length && arr[i + 1] == arr[i] + 1 && arr[i + 2] == arr[i + 1] + 1)) {
+			case2 = solve(i + 3,arr,dp);
+		} 
+		else {
+			case2 = false;
+		}
+		boolean k = (case1 || case2);
+		if (k == true) {
+			dp[i] = 1;
+		} 
+		else {
+			dp[i] = 0;
+		}
+		return (dp[i] == 1);
+	}
+	boolean validPartition(int[] nums) {
+		int dp = new int[nums.length];
+		Arrays.fill(dp,-1);
+		return solve(0,nums,dp);
+	}
+}

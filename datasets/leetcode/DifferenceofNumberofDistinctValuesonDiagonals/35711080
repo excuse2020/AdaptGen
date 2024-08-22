@@ -1,0 +1,31 @@
+class Solution {
+	int ansGrid;
+	int[][] differenceOfDistinctValues(int[][] grid) {
+		int n = grid.length;
+		int m = grid[0].length;
+		ansGrid = new int[n][m];
+		for (int i = 0; i < n; i++) {
+			differenceOfDistinctValuesUtil(grid,n,m,i,0);
+		}
+		for (int j = 1; j < m; j++) {
+			differenceOfDistinctValuesUtil(grid,n,m,0,j);
+		}
+		return ansGrid;
+	}
+	void differenceOfDistinctValuesUtil(int[][] grid, int n, int m, int row, int col) {
+		Set<Integer> leftSet = new TreeSet<Integer>();
+		while (row < n && col < m) {
+			Set<Integer> rightSet = new TreeSet<>();
+			int x = row + 1, y = col + 1;
+			while (x < n && y < m) {
+				rightSet.add(grid[x][y]);
+				x++;
+				y++;
+			}
+			ansGrid[row][col] = Math.abs(rightSet.size() - leftSet.size());
+			leftSet.add(grid[row][col]);
+			row++;
+			col++;
+		}
+	}
+}

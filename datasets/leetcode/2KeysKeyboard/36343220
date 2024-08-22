@@ -1,0 +1,28 @@
+class Solution {
+	int minSteps(int n) {
+		if (n <= 1) {
+			return 0;
+		}
+		return operate(n,1,1,new HashMap<String, Integer>()) + 1;
+	}
+	int operate(int n, int clipBoard, int onScreen, Map<String, Integer> memo) {
+		if (onScreen == n) {
+			return 0;
+		}
+		if (onScreen > n || clipBoard > n) {
+			return Integer.MAX_VALUE;
+		}
+		String memoKey = clipBoard + "|";
+		if (memo.containsKey(memoKey)) {
+			return memo.get(memoKey);
+		}
+		int paste = operate(n,clipBoard,onScreen + clipBoard,memo);
+		int copyAll = (clipBoard == onScreen) ? Integer.MAX_VALUE : operate(n,onScreen,onScreen,memo);
+		int minOperate = Integer.MAX_VALUE;
+		if (paste != Integer.MAX_VALUE || copyAll != Integer.MAX_VALUE) {
+			minOperate = Math.min(paste,copyAll) + 1;
+		}
+		memo.put(memoKey,minOperate);
+		return minOperate;
+	}
+}

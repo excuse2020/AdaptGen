@@ -1,0 +1,22 @@
+class Solution {
+	int minReorder(int n, int[][] connections) {
+		Map<Integer, List<Integer>> roads = new HashMap<>();
+		for (int[] c: connections) {	
+			roads.computeIfAbsent(c[0],(city) -> {new ArrayList<>()});
+			roads.get(c[0]).add(c[1] + n);
+			roads.computeIfAbsent(c[1],(city) -> {new ArrayList<>()});
+			roads.get(c[1]).add(c[0]);
+		}
+		return reorderCounter(roads,0,new boolean[n],n);
+	}
+	int reorderCounter(Map<Integer, List<Integer>> roads, int i, boolean[] visited, int n) {
+		visited[i] = true;
+		int counter = 0;
+		for (int j: roads.getOrDefault(i,Collections.emptyList())) {	
+			if (!visited[j % n]) {
+				counter += j / n + reorderCounter(roads,j % n,visited,n);
+			}
+		}
+		return counter;
+	}
+}

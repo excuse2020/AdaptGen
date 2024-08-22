@@ -1,0 +1,44 @@
+class Solution {
+	int repeatedStringMatch(String a, String b) {
+		if (a.indexOf(b) != -1) {
+			return 1;
+		}
+		int repeats = 0;
+		int lenA = a.length();
+		int lenB = b.length();
+		int i = b.indexOf(a);
+		int startIndex = i;
+		int endIndex = -1;
+		if (i == -1) {
+			if ((a + a).indexOf(b) != -1) {
+				return 2;
+			}
+			return -1;
+		}
+		while (i != -1 && i < lenB) {
+			++repeats;
+			endIndex = i + lenA;
+			i = b.indexOf(a,endIndex);
+			if (i != -1 && i != endIndex) {
+				return -1;
+			}
+		}
+		if (startIndex != 0) {
+			if (a.lastIndexOf(b.substring(0,startIndex)) + startIndex == lenA) {
+				++repeats;
+			} 
+			else {
+				return -1;
+			}
+		}
+		if (endIndex < lenB) {
+			if (a.indexOf(b.substring(endIndex,lenB)) == 0) {
+				++repeats;
+			} 
+			else {
+				return -1;
+			}
+		}
+		return repeats;
+	}
+}

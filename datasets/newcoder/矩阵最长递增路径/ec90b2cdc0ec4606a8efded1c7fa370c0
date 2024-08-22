@@ -1,0 +1,42 @@
+class Solution {
+	int max = 0;
+	void dfs(int[][] matrix, boolean[][] booleans, int i, int j, int length) {
+		max = Math.max(length,max);
+		if (i >= matrix.length || i < 0) {
+			return;
+		}
+		if (j >= matrix.length || j < 0) {
+			return;
+		}
+		if (i + 1 < booleans.length && !booleans[i + 1][j] && matrix[i + 1][j] > matrix[i][j]) {
+			booleans[i + 1][j] = true;
+			dfs(matrix,booleans,i + 1,j,length + 1);
+			booleans[i + 1][j] = false;
+		}
+		if (j + 1 < booleans[0].length && !booleans[i][j + 1] && matrix[i][j + 1] > matrix[i][j]) {
+			booleans[i][j + 1] = true;
+			dfs(matrix,booleans,i,j + 1,length + 1);
+			booleans[i][j + 1] = false;
+		}
+		if (j - 1 >= 0 && (!booleans[i][j - 1]) && matrix[i][j - 1] > matrix[i][j]) {
+			booleans[i][j - 1] = true;
+			dfs(matrix,booleans,i,j - 1,length + 1);
+			booleans[i][j - 1] = false;
+		}
+		if (i - 1 >= 0 && !booleans[i - 1][j] && matrix[i - 1][j] > matrix[i][j]) {
+			booleans[i - 1][j] = true;
+			dfs(matrix,booleans,i - 1,j,length + 1);
+			booleans[i - 1][j] = false;
+		}
+		return;
+	}
+	int solve(int[][] matrix) {
+		boolean[][] booleans = new boolean[matrix.length][matrix[0].length];
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix[0].length; j++) {
+				dfs(matrix,booleans,i,j,1);
+			}
+		}
+		return max;
+	}
+}

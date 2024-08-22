@@ -1,0 +1,32 @@
+class Solution {
+	int[][] dp = new int[101][10001];
+	int solve(int e, int f) {
+		if (f == 0 || f == 1 || e == 1) {
+			return f;
+		}
+		if (dp[e][f] != -1) {
+			return dp[e][f];
+		}
+		int result = Integer.MAX_VALUE;
+		int low = 1, high = f;
+		while (low <= high) {
+			int k = (low + high) / 2;
+			int breaks = 1 + solve(e - 1,k - 1);
+			int nonBreaks = 1 + solve(e,f - k);
+			if (breaks > nonBreaks) {
+				high = k - 1;
+			} 
+			else {
+				low = k + 1;
+			}
+			result = Math.min(result,Math.max(breaks,nonBreaks));
+		}
+		return dp[e][f] = result;
+	}
+	int superEggDrop(int k, int n) {
+		for (int i = 0; i <= k; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		return solve(k,n);
+	}
+}

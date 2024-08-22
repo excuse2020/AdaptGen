@@ -1,0 +1,45 @@
+class Solution {
+	int[] maxSlidingWindow(int[] nums, int k) {
+		TreeMap<Integer, Integer> memory = new TreeMap<>();
+		int[] result = new int[nums.length - k + 1];
+		if (k == 1) {
+			return nums;
+		}
+		int max = Integer.MIN_VALUE;
+		int left = 0;
+		int right = k - 1;
+		for (int i = 0; i < k; i++) {
+			int num = nums[i];
+			max = Math.max(max,num);
+			int occurrence = memory.getOrDefault(num,0) + 1;
+			memory.put(num,occurrence);
+		}
+		result[0] = max;
+		int maxIndex = 1;
+		while (right < nums.length - 1) {
+			int removed = nums[left];
+			left++;
+			right++;
+			int added = nums[right];
+			int occurrence = memory.get(removed);
+			if (removed == max && occurrence == 1) {
+				memory.remove(removed);
+				max = memory.lastKey();
+			} 
+			else {
+				occurrence--;
+				if (occurrence == 0) {
+					memory.remove(removed);
+				} 
+				else {
+					memory.put(removed,occurrence);
+				}
+			}
+			max = Math.max(max,added);
+			memory.put(added,memory.getOrDefault(added,0) + 1);
+			result[maxIndex] = max;
+			maxIndex++;
+		}
+		return result;
+	}
+}

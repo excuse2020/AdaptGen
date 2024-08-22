@@ -1,0 +1,55 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		if (head1 == null) {
+			return head2;
+		}
+		if (head2 == null) {
+			return head1;
+		}
+		ListNode h1 = head1;
+		ListNode h2 = head2;
+		List<Integer> str1 = new ArrayList<>();
+		List<Integer> str2 = new ArrayList<>();
+		int ii = 0;
+		while (h1 != null) {
+			str1.add(h1.val);
+			h1 = h1.next;
+		}
+		ii = 0;
+		while (h2 != null) {
+			str2.add(h2.val);
+			h2 = h2.next;
+		}
+		int p = 0;
+		int index = 1;
+		int[] res = new int[Math.max(str1.size(),str2.size()) + 1];
+		int q = 0;
+		for (int i = str1.size() - 1, j = str2.size() - 1; i >= 0 || j >= 0; i--, j--, index *= 10, q++) {
+			if (i < 0) {
+				int i1 = (str2.get(j) + p);
+				res[q] = (i1 % 10);
+				p = i1 / 10;
+				continue;
+			}
+			if (j < 0) {
+				int i1 = (str1.get(i) + p);
+				res[q] = (i1 % 10);
+				p = i1 / 10;
+				continue;
+			}
+			int i1 = (str2.get(j)) + (str1.get(i));
+			res[q] = (i1 % 10);
+			p = i1 / 10;
+		}
+		if (p != 0) {
+			res[q] = p;
+		}
+		ListNode cur = new ListNode(-999);
+		ListNode head = cur;
+		for (int i = res.length - 1; i >= 0; i--) {
+			cur.next = new ListNode(res[i]);
+			cur = cur.next;
+		}
+		return head.next.val == 0 ? head.next.next : head.next;
+	}
+}

@@ -1,0 +1,51 @@
+class Solution {
+	boolean[] group;
+	boolean[] visited;
+	List<Integer>[] buildGraph(int n, int[][] dislikes) {
+		List<Integer>[] graph = new List[n + 1];
+		for (int i = 0; i <= n; i++) {
+			graph[i] = new ArrayList<Integer>();
+		}
+		for (int[] pair: dislikes) {	
+			int from = pair[0];
+			int to = pair[1];
+			graph[from].add(to);
+			graph[to].add(from);
+		}
+		return graph;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		List<Integer>[] graph = buildGraph(n,dislikes);
+		visited = new boolean[n + 1];
+		group = new boolean[n + 1];
+		boolean res = true;
+		for (int i = 1; i <= n; i++) {
+			if (!visited[i]) {
+				res = traverse(graph,i);
+				if (res == false) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	boolean traverse(List<Integer>[] graph, int v) {
+		visited[v] = true;
+		boolean res = true;
+		for (int node: graph[v]) {	
+			if (!visited[node]) {
+				group[node] = !group[v];
+				res = traverse(graph,node);
+				if (res == false) {
+					return false;
+				}
+			} 
+			else {
+				if (group[v] == group[node]) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

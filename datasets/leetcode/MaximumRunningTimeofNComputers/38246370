@@ -1,0 +1,36 @@
+class Solution {
+	boolean canRunAllComputers(int[] batteries, long time, int n) {
+		long timeTaken = 0, count = 0;
+		for (int battery: batteries) {	
+			if (timeTaken + battery < time) {
+				timeTaken += battery;
+			} 
+			else {
+				count++;
+				timeTaken = timeTaken + battery - time;
+			}
+			if (count >= n) {
+				return true;
+			}
+		}
+		return false;
+	}
+	long maxRunTime(int n, int[] batteries) {
+		long beg = 0, end = 0, ans = 0;
+		for (int battery: batteries) {	
+			end += battery;
+		}
+		Arrays.sort(batteries);
+		while (beg <= end) {
+			long time = (beg + end) / 2;
+			if (canRunAllComputers(batteries,time,n)) {
+				ans = time;
+				beg = time + 1;
+			} 
+			else {
+				end = time - 1;
+			}
+		}
+		return ans;
+	}
+}

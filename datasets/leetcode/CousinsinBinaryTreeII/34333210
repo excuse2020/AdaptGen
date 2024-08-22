@@ -1,0 +1,34 @@
+class Solution {
+	TreeNode replaceValueInTree(TreeNode root) {
+		TreeNode ans = root;
+		Queue<TreeNode> q = new LinkedList<>();
+		Queue<Integer> s = new LinkedList<>();
+		int prevSum = 0;
+		int currSum = 0;
+		ans.val = 0;
+		q.offer(root);
+		s.offer(0);
+		while (!q.isEmpty()) {
+			int d = q.size();
+			currSum = 0;
+			while (d-- > 0) {
+				TreeNode node = q.poll();
+				int v = s.poll();
+				node.val = (prevSum - v);
+				int temp = ((node.left != null) ? node.left.val : 0) + ((node.right != null) ? node.right.val : 0);
+				if (node.left != null) {
+					currSum += node.left.val;
+					q.offer(node.left);
+					s.offer(temp);
+				}
+				if (node.right != null) {
+					currSum += node.right.val;
+					q.offer(node.right);
+					s.offer(temp);
+				}
+			}
+			prevSum = currSum;
+		}
+		return ans;
+	}
+}

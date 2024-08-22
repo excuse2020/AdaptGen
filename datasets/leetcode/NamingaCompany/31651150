@@ -1,0 +1,25 @@
+class Solution {
+	long distinctNames(String[] ideas) {
+		TreeMap<Character, HashSet<String>> map = new TreeMap<>();
+		long ans = 0;
+		for (String s: ideas) {	
+			HashSet<String> temp = map.getOrDefault(s.charAt(0),new HashSet<>());
+			temp.add(s.substring(1));
+			map.put(s.charAt(0),temp);
+		}
+		while (!map.isEmpty()) {
+			HashSet<String> cur = map.get(map.firstKey());
+			map.remove(map.firstKey());
+			for (Map.Entry<Character, HashSet<String>> entry: map.entrySet()) {	
+				HashSet<String> temp = new HashSet<>();
+				HashSet<String> temp2 = new HashSet<>();
+				temp.addAll(cur);
+				temp2.addAll(entry.getValue());
+				temp.removeAll(temp2);
+				temp2.removeAll(cur);
+				ans += 2 * temp.size();
+			}
+		}
+		return ans;
+	}
+}

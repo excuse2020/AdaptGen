@@ -1,0 +1,55 @@
+class Solution {
+	int[] cycleLengthQueries(int n, int[][] queries) {
+		int res = new int[queries.length];
+		int i = 0;
+		for (int query: queries) {	
+			int a = query[0];
+			int b = query[1];
+			int[] m1 = findAncestors(a);
+			int[] m2 = findAncestors(b);
+			res[i++] = findLowestAncestor(m1,m2);
+		}
+		return res;
+	}
+	int[] findAncestors(int num) {
+		List<Integer> res = new ArrayList<Integer>();
+		res.add(num);
+		while (num != 1) {
+			int a = findMyAncestor(num);
+			res.add(a);
+			num = a;
+		}
+		int[] ans = new int[res.size()];
+		for (int i = 0; i < ans.length; i++) {
+			ans[i] = res.get(i);
+		}
+		return ans;
+	}
+	int findLowestAncestor(int[] a, int[] b) {
+		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+		for (int i = 0; i < a.length; i++) {
+			map.put(a[i],i);
+		}
+		for (int i = 0; i < b.length; i++) {
+			int val = b[i];
+			if (map.containsKey(val)) {
+				return (map.get(val) + 1);
+			}
+		}
+		return -1;
+	}
+	int findMyAncestor(int num) {
+		if (num % 2 == 1) {
+			return (num - 1) / 2;
+		} 
+		else {
+			return (num) / 2;
+		}
+	}
+	void print(int[] arr) {
+		for (int i = 0; i < arr.length; i++) {
+			System.out.print(arr[i] + ", ");
+		}
+		System.out.println();
+	}
+}

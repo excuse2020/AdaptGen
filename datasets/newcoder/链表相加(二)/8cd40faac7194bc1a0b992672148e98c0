@@ -1,0 +1,48 @@
+class Solution {
+	ListNode ReverseList(ListNode head) {
+		ListNode Pre = null;
+		ListNode Now = head;
+		ListNode Next = null;
+		while (Now != null) {
+			Next = Now.next;
+			Now.next = Pre;
+			Pre = Now;
+			Now = Next;
+		}
+		head = Pre;
+		return head;
+	}
+	ListNode addInList(ListNode head1, ListNode head2) {
+		head1 = ReverseList(head1);
+		head2 = ReverseList(head2);
+		ListNode res = new ListNode(0);
+		ListNode now = res;
+		int d = 0;
+		while (head1 != null || head2 != null) {
+			int num = d;
+			if (head1 != null) {
+				num += head1.val;
+				head1 = head1.next;
+			}
+			if (head2 != null) {
+				num += head2.val;
+				head2 = head2.next;
+			}
+			d = num / 10;
+			num = num % 10;
+			ListNode t = new ListNode(num);
+			now.next = t;
+			now = now.next;
+		}
+		if (d != 0) {
+			ListNode t = new ListNode(d);
+			t.next = null;
+			now.next = t;
+		} 
+		else {
+			now.next = null;
+		}
+		res = ReverseList(res.next);
+		return res;
+	}
+}

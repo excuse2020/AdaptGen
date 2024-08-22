@@ -1,0 +1,26 @@
+class Solution {
+	int MOD = (int) 1e9 + 7;
+	Long[][] dp;
+	long f1(int idx, int goal, int totalSongs, int totalGoalSongs, int k) {
+		int uniqueSongsTaken = totalGoalSongs - goal;
+		if (idx == totalGoalSongs) {
+			return uniqueSongsTaken == Math.min(totalGoalSongs,totalSongs) ? 1L : 0L;
+		} 
+		else if (idx >= totalGoalSongs || goal <= 0) {
+			return 0;
+		} 
+		else if (dp[idx][goal] != null) {
+			return dp[idx][goal];
+		}
+		long takeNewSong = f1(idx + 1,goal - 1,totalSongs,totalGoalSongs,k) * (totalSongs - uniqueSongsTaken);
+		long takeAlreadyTakenSong = 0;
+		if (uniqueSongsTaken > k) {
+			takeAlreadyTakenSong = f1(idx + 1,goal,totalSongs,totalGoalSongs,k) * (Math.max(0,uniqueSongsTaken - k));
+		}
+		return dp[idx][goal] = (takeAlreadyTakenSong + takeNewSong) % MOD;
+	}
+	int numMusicPlaylists(int n, int goal, int k) {
+		dp = new Long[102][102];
+		return (int) f1(0,goal,n,goal,k);
+	}
+}

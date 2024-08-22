@@ -1,0 +1,43 @@
+class Solution {
+	int backtracking(int i, int n, int[] stones, int p, Integer[][] memo) {
+		if (i == n) {
+			return 0;
+		} 
+		else if (memo[i][p] != null) {
+			return memo[i][p];
+		}
+		int maxStones = -50000000;
+		int minStones = 50000000;
+		int s = 0;
+		for (int j = i; j < Math.min(i + 3,n); j++) {
+			s += stones[j];
+			if (p == 0) {
+				maxStones = Math.max(maxStones,s + backtracking(j + 1,n,stones,1,memo));
+			} 
+			else {
+				minStones = Math.min(minStones,backtracking(j + 1,n,stones,0,memo));
+			}
+		}
+		memo[i][p] = p == 0 ? maxStones : minStones;
+		return memo[i][p];
+	}
+	String stoneGameIII(int[] stoneValue) {
+		int n = stoneValue.length;
+		int totalStones = 0;
+		for (int s: stoneValue) {	
+			totalStones += s;
+		}
+		Integer[][] memo = new Integer[n][2];
+		int a = backtracking(0,n,stoneValue,0,memo);
+		System.out.println(a);
+		if (totalStones - a < a) {
+			return "Alice";
+		} 
+		else if (totalStones - a > a) {
+			return "Bob";
+		} 
+		else {
+			return "Tie";
+		}
+	}
+}

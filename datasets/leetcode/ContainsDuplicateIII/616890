@@ -1,0 +1,33 @@
+class Solution {
+	boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
+		if (k <= 0) {
+			return false;
+		}
+		int st = 0;
+		long sum = 0;
+		long[] diffs = new long[nums.length];
+		for (int i = 0; i < nums.length - 1; i++) {
+			diffs[i] = (long) nums[i + 1] - nums[i];
+			if (diffs[i] >= -t && diffs[i] <= t) {
+				return true;
+			}
+			if (sum == 0) {
+				sum = diffs[i];
+			} 
+			else if ((double) sum / diffs[i] > 0) {
+				sum = diffs[i];
+				st = i;
+			} 
+			else {
+				sum += diffs[i];
+				if (sum >= -t && sum <= t) {
+					return true;
+				}
+			}
+			if (i - st == k - 1) {
+				sum -= diffs[st++];
+			}
+		}
+		return false;
+	}
+}

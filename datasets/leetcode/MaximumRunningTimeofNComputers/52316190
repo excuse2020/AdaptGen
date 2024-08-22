@@ -1,0 +1,37 @@
+class Solution {
+	boolean isPossible(long target, int n, int[] array) {
+		int m = array.length;
+		long extraNeeded = 0;
+		for (int index = 0; index < n; index += 1) {
+			if (array[index] < target) {
+				extraNeeded += target - array[index];
+			}
+		}
+		long extraHaving = 0;
+		for (int index = n; index < m; index += 1) {
+			extraHaving += array[index];
+		}
+		return extraHaving >= extraNeeded;
+	}
+	long maxRunTime(int n, int[] batteries) {
+		batteries = Arrays.stream(batteries).boxed().sorted(Collections.reverseOrder()).mapToInt().toArray();
+		int m = batteries.length;
+		long sum = 0;
+		for (int index = 0; index < m; index += 1) {
+			sum += (long) batteries[index];
+		}
+		long low = 0, high = sum;
+		long ans = 0;
+		while (low <= high) {
+			long mid = (low + high) / 2;
+			if (isPossible(mid,n,batteries)) {
+				ans = mid;
+				low = mid + 1;
+			} 
+			else {
+				high = mid - 1;
+			}
+		}
+		return ans;
+	}
+}

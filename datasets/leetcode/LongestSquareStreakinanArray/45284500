@@ -1,0 +1,46 @@
+class Solution {
+	int longestSquareStreak(int[] nums) {
+		int upperLimit = 100000;
+		int upperLimitSqrt = (int) Math.pow(upperLimit,0.5) + 1;
+		boolean[] nArr = new boolean[upperLimit + 1];
+		for (int num: nums) {	
+			nArr[num] = true;
+		}
+		int best = 1;
+		for (int num: nums) {	
+			int c = 0;
+			int n = num;
+			while (nArr[n]) {
+				c++;
+				if (n >= upperLimitSqrt) {
+					break;
+				}
+				n = n * n;
+			}
+			if (best < c) {
+				best = c;
+			}
+		}
+		return (best > 1) ? best : -1;
+	}
+	int longestSquareStreakAfterSorting(int[] nums) {
+		Arrays.sort(nums);
+		Set<Long> set = new HashSet<Long>();
+		for (int num: nums) {	
+			set.add((new Long(num)));
+		}
+		int best = 1;
+		for (int n: nums) {	
+			int c = 1;
+			long num = n;
+			while (set.contains(num * num)) {
+				c++;
+				num = num * num;
+			}
+			if (best < c) {
+				best = c;
+			}
+		}
+		return (best > 1) ? best : -1;
+	}
+}

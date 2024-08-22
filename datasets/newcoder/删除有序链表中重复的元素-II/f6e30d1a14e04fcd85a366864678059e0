@@ -1,0 +1,51 @@
+class Solution {
+	ListNode deleteDuplicates(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode dummy = new ListNode(-1);
+		dummy.next = head;
+		ListNode slow = dummy;
+		ListNode fast = head;
+		while (fast != null && fast.next != null) {
+			if (fast.val == fast.next.val) {
+				int tmp = fast.val;
+				while (fast != null && tmp == fast.val) {
+					fast = fast.next;
+				}
+			} 
+			else {
+				slow.next = fast;
+				slow = fast;
+				if (fast != null) {
+					fast = fast.next;
+				}
+			}
+		}
+		slow.next = fast;
+		return dummy.next;
+	}
+	ListNode deleteDuplicates2(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		Map<Integer, Integer> map = new HashMap<>();
+		ListNode dummy = new ListNode(-1);
+		ListNode tail = dummy;
+		ListNode cur = head;
+		while (cur != null) {
+			map.put(cur.val,map.getOrDefault(cur.val,0) + 1);
+			cur = cur.next;
+		}
+		cur = head;
+		while (cur != null) {
+			if (map.get(cur.val) == 1) {
+				tail.next = cur;
+				tail = cur;
+			}
+			cur = cur.next;
+		}
+		tail.next = null;
+		return dummy.next;
+	}
+}

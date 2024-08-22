@@ -1,0 +1,33 @@
+class Solution {
+	TreeNode replaceValueInTree(TreeNode root) {
+		var queue = new ArrayDeque<Pair<Integer, TreeNode>>();
+		queue.add(new Pair<>(null, root));
+		while (!queue.isEmpty()) {
+			int lvlSize = queue.size(), sum = 0;
+			var lvlNodes = new ArrayList<Pair<Integer, TreeNode>>();
+			var parSum = new HashMap<Integer, Integer>();
+			for (int i = 0; i < lvlSize; i++) {
+				var parToNode = queue.poll();
+				var node = parToNode.getValue();
+				Integer parId = parToNode.getKey();
+				sum += node.val;
+				if (parId != null) {
+					parSum.merge(parId,node.val,);
+				}
+				lvlNodes.add(parToNode);
+				if (parToNode.getValue().left != null) {
+					queue.add(new Pair<>(i, node.left));
+				}
+				if (parToNode.getValue().right != null) {
+					queue.add(new Pair<>(i, node.right));
+				}
+			}
+			for (var parToNode: lvlNodes) {	
+				var node = parToNode.getValue();
+				Integer parId = parToNode.getKey();
+				node.val = parId != null ? sum - parSum.get(parId) : 0;
+			}
+		}
+		return root;
+	}
+}

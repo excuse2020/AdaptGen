@@ -1,0 +1,48 @@
+class Solution {
+	int minCost(int[] houses, int[][] cost, int m, int n, int target) {
+		int[][][] dp = new int[m][n][target + 2];
+		int bigNumber = 10000000;
+		for (int i = 0; i < m; i++) {
+			for (int ni = 0; ni < n; ni++) {
+				Arrays.fill(dp[i][ni],bigNumber);
+			}
+		}
+		if (houses[0] == 0) {
+			for (int ni = 0; ni < n; ni++) {
+				dp[0][ni][1] = cost[0][ni];
+			}
+		} 
+		else {
+			dp[0][houses[0] - 1][1] = 0;
+		}
+		for (int i = 1; i < houses.length; i++) {
+			int curColor = houses[i];
+			if (curColor == 0) {
+				for (int ni = 0; ni < n; ni++) {
+					paint(dp,n,target,i,ni,cost[i][ni]);
+				}
+			} 
+			else {
+				curColor--;
+				paint(dp,n,target,i,curColor,0);
+			}
+		}
+		int min = bigNumber;
+		for (int ni = 0; ni < n; ni++) {
+			min = Math.min(min,dp[m - 1][ni][target]);
+		}
+		return (min == bigNumber) ? -1 : min;
+	}
+	void paint(int[][][] dp, int n, int target, int i, int currColor, int price) {
+		int bigNumber = 10000000;
+		for (int color = 0; color < n; color++) {
+			for (int ti = 1; ti <= target; ti++) {
+				if (dp[i - 1][color][ti] == bigNumber) {
+					continue;
+				}
+				int t = (currColor == color) ? ti : ti + 1;
+				dp[i][currColor][t] = Math.min(dp[i][currColor][t],dp[i - 1][color][ti] + price);
+			}
+		}
+	}
+}

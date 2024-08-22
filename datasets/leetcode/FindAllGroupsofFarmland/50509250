@@ -1,0 +1,41 @@
+class Solution {
+	int[][] findFarmland(int[][] land) {
+		int row = land.length;
+		int col = land[0].length;
+		List<List<Integer>> result = new ArrayList<>();
+		boolean visited = new boolean[row][col];
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < col; j++) {
+				if (land[i][j] == 1 && !visited[i][j]) {
+					List<Integer> list = new ArrayList<>();
+					list.add(i);
+					list.add(j);
+					int j1 = j;
+					while (j1 < col && land[i][j1] == 1) {
+						j1++;
+					}
+					int i1 = i;
+					while (i1 < row && land[i1][j] == 1) {
+						i1++;
+					}
+					j1 = j1 == 0 ? j1 : j1 - 1;
+					i1 = i1 == 0 ? i1 : i1 - 1;
+					for (int k = i; k <= i1; k++) {
+						for (int l = j; l <= j1; l++) {
+							visited[k][l] = true;
+						}
+					}
+					list.add(i1);
+					list.add(j1);
+					result.add(list);
+				}
+			}
+		}
+		int n = result.size();
+		int temp = new int[n][4];
+		for (int i = 0; i < n; i++) {
+			temp[i] = result.get(i).stream().mapToInt((x) -> {x}).toArray();
+		}
+		return temp;
+	}
+}

@@ -1,0 +1,30 @@
+class Solution {
+	int[] getSubarrayBeauty(int[] nums, int k, int x) {
+		var map = new TreeMap<Integer, Integer>();
+		int n = nums.length, res = 0;
+		var result = new int[n - k + 1];
+		for (int i = 0; i < n; i++) {
+			map.put(nums[i],map.getOrDefault(nums[i],0) + 1);
+			int out = i - k < 0 ? Integer.MAX_VALUE : nums[i - k];
+			map.put(out,map.getOrDefault(out,0) - 1);
+			if (i >= k - 1) {
+				result[res++] = getsnum(map,x);
+			}
+		}
+		return result;
+	}
+	int getsnum(TreeMap<Integer, Integer> map, int x) {
+		int run = 0;
+		for (var entry: map.entrySet()) {	
+			int key = entry.getKey();
+			int val = entry.getValue();
+			if (key < 0) {
+				run += val;
+			}
+			if (run >= x) {
+				return key;
+			}
+		}
+		return 0;
+	}
+}

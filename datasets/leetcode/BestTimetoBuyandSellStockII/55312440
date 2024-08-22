@@ -1,0 +1,22 @@
+class Solution {
+	int bstock(int ind, int[] prices, int bs, Integer[][] dp) {
+		if (ind == prices.length) {
+			return 0;
+		}
+		int profit = Integer.MIN_VALUE;
+		if (dp[ind][bs] != null) {
+			return dp[ind][bs];
+		}
+		if (bs == 1) {
+			profit = Math.max(-prices[ind] + bstock(ind + 1,prices,0,dp),bstock(ind + 1,prices,1,dp));
+		} 
+		else {
+			profit = Math.max(prices[ind] + bstock(ind + 1,prices,1,dp),bstock(ind + 1,prices,0,dp));
+		}
+		return dp[ind][bs] = profit;
+	}
+	int maxProfit(int[] prices) {
+		Integer[][] dp = new Integer[prices.length][2];
+		return bstock(0,prices,1,dp);
+	}
+}

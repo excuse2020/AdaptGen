@@ -1,0 +1,27 @@
+class Solution {
+	int mod = 1000000007;
+	int checkRecord(int n) {
+		int[][][] memo = new int[n][2][3];
+		for (int[][] mat: memo) {	
+			for (int[] row: mat) {	
+				Arrays.fill(row,-1);
+			}
+		}
+		return slv(0,0,0,n,memo);
+	}
+	int slv(int idx, int absent, int late, int n, int[][][] memo) {
+		if (absent >= 2 || late >= 3) {
+			return 0;
+		}
+		if (idx >= n) {
+			return 1;
+		}
+		if (memo[idx][absent][late] != -1) {
+			return memo[idx][absent][late];
+		}
+		int attend = slv(idx + 1,absent,0,n,memo) % mod;
+		int pass = slv(idx + 1,absent + 1,0,n,memo) % mod;
+		int sleep = slv(idx + 1,absent,late + 1,n,memo) % mod;
+		return memo[idx][absent][late] = (((attend + pass) % mod) + sleep) % mod;
+	}
+}

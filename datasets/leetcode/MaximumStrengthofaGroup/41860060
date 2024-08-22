@@ -1,0 +1,33 @@
+class Solution {
+	long maxStrength(int[] nums) {
+		boolean zero = false;
+		int i = 0;
+		while (i < nums.length && nums[i] == 0) {
+			zero = true;
+			i++;
+		}
+		if (i == nums.length) {
+			return 0;
+		}
+		long a = nums[i], b = nums[i++];
+		for (; i < nums.length; i++) {
+			int x = nums[i];
+			long temp = a;
+			if (x > 0) {
+				a = Math.max(x * a,x);
+				b *= x;
+			} 
+			else if (x < 0) {
+				a = Math.max(x,Math.max(a,b * x));
+				b = Math.min(x,Math.min(b,temp * x));
+			} 
+			else {
+				zero = true;
+			}
+		}
+		if (a > 0 || !zero) {
+			return a;
+		}
+		return 0;
+	}
+}

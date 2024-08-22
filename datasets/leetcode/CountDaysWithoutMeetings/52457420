@@ -1,0 +1,34 @@
+class Solution {
+	int countDays(int days, int[][] m) {
+		Arrays.sort(m,(a, b) -> {Integer.compare(a[0],b[0])});
+		ArrayList<int[]> l = new ArrayList<>();
+		int cur = m[0];
+		for (int a: m) {	
+			int curI = cur[0];
+			int curJ = cur[1];
+			int nxtI = a[0];
+			int nxtJ = a[1];
+			if (nxtI >= curI && nxtI <= curJ) {
+				cur[1] = Math.max(nxtJ,curJ);
+			} 
+			else {
+				l.add(cur);
+				cur = a;
+			}
+		}
+		l.add(cur);
+		int day = 1;
+		int ans = 0;
+		for (int i = 0; i < l.size(); i++) {
+			int a = l.get(i);
+			int len = a[1] - day + 1;
+			int diff = a[1] - a[0] + 1;
+			ans += Math.abs(len - diff);
+			day = a[1] + 1;
+		}
+		if (day <= days) {
+			ans += days - day + 1;
+		}
+		return ans;
+	}
+}

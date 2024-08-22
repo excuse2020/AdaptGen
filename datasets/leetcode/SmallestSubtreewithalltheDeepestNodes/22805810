@@ -1,0 +1,46 @@
+class Solution {
+	TreeNode getCommon(TreeNode root, int a, int b) {
+		if (root == null) {
+			return null;
+		}
+		if (root.val == a || root.val == b) {
+			return root;
+		}
+		TreeNode left = getCommon(root.left,a,b);
+		TreeNode right = getCommon(root.right,a,b);
+		if (left != null && right != null) {
+			return root;
+		}
+		if (left == null && right == null) {
+			return null;
+		}
+		return right == null ? left : right;
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		List<List<Integer>> list = new ArrayList<>();
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(root);
+		while (!q.isEmpty()) {
+			int size = q.size();
+			List<Integer> list1 = new ArrayList<>();
+			for (int i = 0; i < size; i++) {
+				TreeNode curr = q.poll();
+				list1.add(curr.val);
+				if (curr.left != null) {
+					q.add(curr.left);
+				}
+				if (curr.right != null) {
+					q.add(curr.right);
+				}
+			}
+			list.add(new ArrayList<>(list1));
+		}
+		List<Integer> curr = list.get(list.size() - 1);
+		if (curr.size() == 1) {
+			return new TreeNode(curr.get(curr.size() - 1));
+		}
+		int n1 = curr.get(0);
+		int n2 = curr.get(curr.size() - 1);
+		return getCommon(root,n1,n2);
+	}
+}

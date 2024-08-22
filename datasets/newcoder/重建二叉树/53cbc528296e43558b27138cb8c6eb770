@@ -1,0 +1,32 @@
+class Solution {
+	TreeNode partition(int[] pre, int preleft, int preright, int[] vin, int vinleft, int vinright) {
+		if (preleft == preright || vinleft == vinright) {
+			return null;
+		}
+		int rootval = pre[preleft];
+		TreeNode root = new TreeNode(rootval);
+		int index = -1;
+		for (int i = vinleft; i < vinright; i++) {
+			if (vin[i] == rootval) {
+				index = i;
+				break;
+			}
+		}
+		int leftvin = vinleft;
+		int rightvin = index;
+		int leftpre = preleft + 1;
+		int rightpre = rightvin - leftvin + leftpre;
+		TreeNode left = partition(pre,leftpre,rightpre,vin,leftvin,rightvin);
+		root.left = left;
+		leftvin = index + 1;
+		rightvin = vinright;
+		rightpre = preright;
+		leftpre = rightpre - (rightvin - leftvin);
+		TreeNode right = partition(pre,leftpre,rightpre,vin,leftvin,rightvin);
+		root.right = right;
+		return root;
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] vin) {
+		return partition(pre,0,pre.length,vin,0,vin.length);
+	}
+}

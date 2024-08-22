@@ -1,0 +1,50 @@
+class Solution {
+	HashSet<String> seen = new HashSet<>();
+	void calculate(int[] arr, int index) {
+		if (index == arr.length) {
+			if (isValid(arr)) {
+				StringBuilder sb = new StringBuilder();
+				for (int i = 0; i < arr.length; i++) {
+					sb.append(arr[i]);
+				}
+				seen.add(sb.toString());
+			}
+			return;
+		}
+		for (int i = 0; i < arr.length; i++) {
+			swap(arr,index,i);
+			calculate(arr,index + 1);
+			swap(arr,index,i);
+		}
+	}
+	boolean isValid(int[] arr) {
+		if (arr[0] > 2) {
+			return false;
+		}
+		if (arr[0] >= 2 && arr[1] >= 4) {
+			return false;
+		}
+		if (arr[2] >= 6) {
+			return false;
+		}
+		return true;
+	}
+	String largestTimeFromDigits(int[] arr) {
+		calculate(arr,0);
+		if (seen.isEmpty()) {
+			return "";
+		}
+		List<String> list = new ArrayList<>();
+		list.addAll(seen);
+		Collections.sort(list);
+		int index = list.size() - 1;
+		String s = list.get(index);
+		s = s.substring(0,2) + ":";
+		return s;
+	}
+	void swap(int[] arr, int i, int j) {
+		int tmp = arr[i];
+		arr[i] = arr[j];
+		arr[j] = tmp;
+	}
+}

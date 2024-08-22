@@ -1,0 +1,27 @@
+class Solution {
+	int dpRecurse(Map<Integer, List<Integer>> relation, int currentEmp, int[] informTime) {
+		List<Integer> subordinates = relation.get(currentEmp);
+		int maxTimeNeeded = 0;
+		if (subordinates != null) {
+			for (int i = 0; i < subordinates.size(); i++) {
+				int timeNeeded = dpRecurse(relation,subordinates.get(i),informTime);
+				maxTimeNeeded = Math.max(maxTimeNeeded,timeNeeded);
+			}
+		}
+		return maxTimeNeeded + informTime[currentEmp];
+	}
+	void initMap(Map<Integer, List<Integer>> relation, int[] manager) {
+		for (int i = 0; i < manager.length; i++) {
+			if (relation.get(manager[i]) == null) {
+				relation.put(manager[i],new ArrayList<>());
+			}
+			List<Integer> employeeList = relation.get(manager[i]);
+			employeeList.add(i);
+		}
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		Map<Integer, List<Integer>> relation = new HashMap<>();
+		initMap(relation,manager);
+		return dpRecurse(relation,headID,informTime);
+	}
+}

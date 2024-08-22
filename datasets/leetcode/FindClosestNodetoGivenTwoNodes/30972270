@@ -1,0 +1,44 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		int nodes = edges.length;
+		ArrayList<Integer> graph = new ArrayList[nodes];
+		for (int i = 0; i < graph.length; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < edges.length; i++) {
+			if (edges[i] == -1) {
+				continue;
+			}
+			int v = i;
+			int ngh = edges[i];
+			graph[v].add(ngh);
+		}
+		int visited1 = new int[nodes];
+		int visited2 = new int[nodes];
+		Arrays.fill(visited1,-1);
+		Arrays.fill(visited2,-1);
+		dfs(graph,node1,visited1,0);
+		dfs(graph,node2,visited2,0);
+		int ans = -1;
+		int min = Integer.MAX_VALUE;
+		for (int i = 0; i < nodes; i++) {
+			if (visited1[i] != -1 && visited2[i] != -1) {
+				int max = Math.max(visited1[i],visited2[i]);
+				if (min > max) {
+					min = max;
+					ans = i;
+				}
+			}
+		}
+		return ans;
+	}
+	void dfs(ArrayList<Integer> graph, int src, int visited, int d) {
+		visited[src] = d;
+		for (int i = 0; i < graph[src].size(); i++) {
+			int ngh = graph[src].get(i);
+			if (visited[ngh] == -1) {
+				dfs(graph,ngh,visited,d + 1);
+			}
+		}
+	}
+}

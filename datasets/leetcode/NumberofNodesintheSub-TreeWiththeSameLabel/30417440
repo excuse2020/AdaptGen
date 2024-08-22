@@ -1,0 +1,44 @@
+class Solution {
+	int MAX_NODE;
+	int[] ans;
+	String label;
+	HashMap<Integer, List<Integer>> tre;
+	int[] visited;
+	int[] countSubTrees(int n, int[][] edges, String labels) {
+		List<HashMap<Integer, Integer>> list = new ArrayList<>();
+		tre = new HashMap<>();
+		MAX_NODE = n;
+		visited = new int[n];
+		label = labels;
+		for (int[] e: edges) {	
+			pair(e[0],e[1]);
+			pair(e[1],e[0]);
+		}
+		ans = new int[n];
+		HashMap<Character, Integer> map = recurcount(0);
+		return ans;
+	}
+	void pair(int a, int b) {
+		List<Integer> list = tre.getOrDefault(a,new ArrayList<>());
+		list.add(b);
+		tre.put(a,list);
+	}
+	HashMap<Character, Integer> recurcount(int n) {
+		if (n > MAX_NODE) {
+			return new HashMap<Character, Integer>();
+		}
+		if (visited[n] == 1) {
+			return new HashMap<Character, Integer>();
+		}
+		visited[n] = 1;
+		HashMap<Character, Integer> hashmap = new HashMap<Character, Integer>();
+		hashmap.put(label.charAt(n),hashmap.getOrDefault(label.charAt(n),0) + 1);
+		List<Integer> list = tre.getOrDefault(n,new ArrayList<>());
+		for (Integer ig: list) {	
+			HashMap<Character, Integer> next = recurcount(ig);
+			next.forEach((key, value) -> {hashmap.merge(key,value,(v1, v2) -> {v1 + v2})});
+		}
+		ans[n] = hashmap.getOrDefault(label.charAt(n),0);
+		return hashmap;
+	}
+}

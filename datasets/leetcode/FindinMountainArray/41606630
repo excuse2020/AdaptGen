@@ -1,0 +1,82 @@
+class Solution {
+	int binarySearchLeft(int target, MountainArray mountainArr, int left, int right) {
+		if (left > right) {
+			return -1;
+		}
+		int mid = (right + left) / 2;
+		int elMid = mountainArr.get(mid);
+		if (elMid == target) {
+			return mid;
+		}
+		if (elMid > target) {
+			return binarySearchLeft(target,mountainArr,left,mid - 1);
+		}
+		return binarySearchLeft(target,mountainArr,mid + 1,right);
+	}
+	int binarySearchRight(int target, MountainArray mountainArr, int left, int right) {
+		if (right < left) {
+			return -1;
+		}
+		int mid = (right + left) / 2;
+		int elMid = mountainArr.get(mid);
+		if (elMid == target) {
+			return mid;
+		}
+		if (elMid > target) {
+			return binarySearchRight(target,mountainArr,mid + 1,right);
+		}
+		return binarySearchRight(target,mountainArr,left,mid - 1);
+	}
+	int findInMountainArray(int target, MountainArray mountainArr) {
+		int length = mountainArr.length();
+		if (length <= 100) {
+			for (int i = 0; i < length; i++) {
+				if (target == mountainArr.get(i)) {
+					return i;
+				}
+			}
+		}
+		int maxIndex = findMax(mountainArr,0,length - 1);
+		if (mountainArr.get(maxIndex) == target) {
+			return maxIndex;
+		}
+		int ans = binarySearchLeft(target,mountainArr,0,maxIndex);
+		if (ans != -1) {
+			return ans;
+		}
+		ans = binarySearchRight(target,mountainArr,maxIndex,length - 1);
+		return ans;
+	}
+	int findMax(MountainArray mountainArr, int left, int right) {
+		if (left > right) {
+			return -1;
+		}
+		int mid = (right + left) / 2;
+		int elMid = mountainArr.get(mid);
+		if (mid - 1 < 0) {
+			int elMidRight = mountainArr.get(mid + 1);
+			int elMidRight2 = mountainArr.get(mid + 2);
+			if (elMid < elMidRight && elMidRight2 < elMidRight) {
+				return mid + 1;
+			}
+		}
+		int elMidLeft = mountainArr.get(mid - 1);
+		if (mid + 1 >= mountainArr.length()) {
+			int elMidLeft2 = mountainArr.get(mid - 2);
+			if (elMid < elMidLeft && elMidLeft2 < elMidLeft) {
+				return mid - 1;
+			}
+		}
+		int elMidRight = mountainArr.get(mid + 1);
+		if (elMid > elMidLeft && elMid > elMidRight) {
+			return mid;
+		}
+		if (elMid > elMidLeft && elMid < elMidRight) {
+			return findMax(mountainArr,mid + 1,right);
+		}
+		if (elMid < elMidLeft && elMid > elMidRight) {
+			return findMax(mountainArr,left,mid - 1);
+		}
+		return -1;
+	}
+}

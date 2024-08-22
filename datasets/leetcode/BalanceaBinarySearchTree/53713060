@@ -1,0 +1,25 @@
+class Solution {
+	TreeNode balanceBST(TreeNode root) {
+		List<Integer> sortedList = new ArrayList<>();
+		inorderTraversal(root,sortedList);
+		return buildBalancedBST(sortedList,0,sortedList.size() - 1);
+	}
+	TreeNode buildBalancedBST(List<Integer> sortedList, int start, int end) {
+		if (start > end) {
+			return null;
+		}
+		int mid = start + (end - start) / 2;
+		TreeNode node = new TreeNode(sortedList.get(mid));
+		node.left = buildBalancedBST(sortedList,start,mid - 1);
+		node.right = buildBalancedBST(sortedList,mid + 1,end);
+		return node;
+	}
+	void inorderTraversal(TreeNode root, List<Integer> sortedList) {
+		if (root == null) {
+			return;
+		}
+		inorderTraversal(root.left,sortedList);
+		sortedList.add(root.val);
+		inorderTraversal(root.right,sortedList);
+	}
+}

@@ -1,0 +1,35 @@
+class Solution {
+	int maxSubArray(int[] arr) {
+		int sum = arr[0];
+		int maxSum = arr[0];
+		if (arr.length == 1) {
+			return arr[0];
+		}
+		for (int i = 1; i < arr.length; i++) {
+			if (sum > 0) {
+				sum = sum + arr[i];
+				if (sum > maxSum) {
+					maxSum = sum;
+				}
+			} 
+			else if (sum <= 0) {
+				sum = arr[i];
+				maxSum = Math.max(maxSum,sum);
+			}
+		}
+		return maxSum;
+	}
+	int maxSubarraySumCircular(int[] nums) {
+		int nonCsum = maxSubArray(nums);
+		int totSum = 0;
+		for (int i = 0; i < nums.length; i++) {
+			totSum = totSum + nums[i];
+			nums[i] = nums[i] * (-1);
+		}
+		int minSum = maxSubArray(nums);
+		if (totSum + minSum == 0) {
+			return nonCsum;
+		}
+		return Math.max(nonCsum,(totSum + minSum));
+	}
+}

@@ -1,0 +1,44 @@
+class Solution {
+	int MOD = 1000000007;
+	int helper(String[] pizza, int startRow, int endRow, int startCol, int endCol, int k, int[][][] dp) {
+		if (k == 0) {
+			if (isValid(pizza,startRow,endRow,startCol,endCol)) {
+				return 1;
+			} 
+			else {
+				return 0;
+			}
+		}
+		if (dp[startRow][startCol][k] != -1) {
+			return dp[startRow][startCol][k];
+		}
+		int count = 0;
+		for (int i = startRow + 1; i < endRow; i++) {
+			if (isValid(pizza,startRow,i,startCol,endCol)) {
+				count = (count % MOD) + helper(pizza,i,endRow,startCol,endCol,k - 1,dp);
+			}
+		}
+		for (int j = startCol + 1; j < endCol; j++) {
+			if (isValid(pizza,startRow,endRow,startCol,j)) {
+				count = (count % MOD) + helper(pizza,startRow,endRow,j,endCol,k - 1,dp);
+			}
+		}
+		dp[startRow][startCol][k] = count;
+		return dp[startRow][startCol][k];
+	}
+	boolean isValid(String[] pizza, int startRow, int endRow, int startCol, int endCol) {
+		int i = startRow;
+		int j = startCol;
+	}
+	int ways(String[] pizza, int k) {
+		int m = pizza.length;
+		int n = pizza[0].length();
+		int[][][] dp = new int[m][n][k];
+		for (int i = 0; i < m; i++) {
+			for (int[] j: dp[i]) {	
+				Arrays.fill(j,-1);
+			}
+		}
+		return helper(pizza,0,m,0,n,k - 1,dp);
+	}
+}

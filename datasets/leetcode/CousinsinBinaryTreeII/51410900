@@ -1,0 +1,47 @@
+class Solution {
+	void containsCousins(Map<TreeNode, Integer> sumMap, Deque<TreeNode> q, Map<TreeNode, TreeNode> childParent) {
+		int totalSum = sumMap.values().stream().mapToInt().sum();
+		for (TreeNode curr: q) {	
+			TreeNode parent = childParent.get(curr);
+			int parentSum = sumMap.get(parent);
+			int newSum = totalSum - parentSum;
+			curr.val = newSum;
+		}
+	}
+	void hasNoCousins(Deque<TreeNode> q) {
+		for (TreeNode curr: q) {	
+			curr.val = 0;
+		}
+	}
+	TreeNode replaceValueInTree(TreeNode root) {
+		Deque<TreeNode> q = new ArrayDeque<>();
+		Map<TreeNode, Integer> sumMap = new HashMap<>();
+		Map<TreeNode, TreeNode> childParent = new HashMap<>();
+		q.offer(root);
+		while (!q.isEmpty()) {
+			int currSize = q.size();
+			if (sumMap.size() > 1) {
+				containsCousins(sumMap,q,childParent);
+			}
+			if (sumMap.size() < 2) {
+				hasNoCousins(q);
+			}
+			sumMap.clear();
+			childParent.clear();
+			for (int i = 0; i < currSize; i++) {
+				TreeNode curr = q.poll();
+				if (curr.left != null) {
+					childParent.put(curr.left,curr);
+					sumMap.put(curr,sumMap.getOrDefault(curr,0) + curr.left.val);
+					q.add(curr.left);
+				}
+				if (curr.right != null) {
+					childParent.put(curr.right,curr);
+					sumMap.put(curr,sumMap.getOrDefault(curr,0) + curr.right.val);
+					q.add(curr.right);
+				}
+			}
+		}
+		return root;
+	}
+}

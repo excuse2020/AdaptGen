@@ -1,0 +1,45 @@
+class Solution {
+	int count = 0;
+	int edge = new int[50];
+	int nodes = 0;
+	ArrayList<Integer> temp = new ArrayList<>();
+	int countCompleteComponents(int n, int[][] edges) {
+		ArrayList<ArrayList<Integer>> list = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			list.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			list.get(edges[i][0]).add(edges[i][1]);
+			list.get(edges[i][1]).add(edges[i][0]);
+		}
+		boolean[] vis = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			if (vis[i] == false) {
+				dfs(i,-1,list,vis);
+				int see = 0;
+				for (int k = 0; k < temp.size(); k++) {
+					if (edge[temp.get(k)] == (nodes - 1)) {
+						see++;
+					}
+				}
+				if (see == nodes) {
+					count++;
+				}
+				nodes = 0;
+				temp.clear();
+			}
+		}
+		return count;
+	}
+	void dfs(int i, int parent, ArrayList<ArrayList<Integer>> list, boolean[] vis) {
+		vis[i] = true;
+		nodes++;
+		temp.add(i);
+		for (int j: list.get(i)) {	
+			edge[i] = list.get(i).size();
+			if (parent != j && vis[j] == false) {
+				dfs(j,i,list,vis);
+			}
+		}
+	}
+}

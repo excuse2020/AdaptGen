@@ -1,0 +1,32 @@
+class Solution {
+	int dfs(Map<Integer, ArrayList<Integer>> map, int[] time, int cur) {
+		if (map.get(cur).size() == 0) {
+			return 0;
+		}
+		int ans = 0;
+		for (int i: map.get(cur)) {	
+			ans = Math.max(ans,time[cur] + dfs(map,time,i));
+		}
+		return ans;
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		Map<Integer, ArrayList<Integer>> map = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			map.put(i,new ArrayList<Integer>());
+		}
+		int start = 0;
+		int m = manager.length;
+		for (int i = 0; i < m; i++) {
+			if (manager[i] == -1) {
+				start = i;
+			} 
+			else {
+				map.get(manager[i]).add(i);
+			}
+		}
+		for (int key: map.keySet()) {	
+			System.out.println(map.get(key).toString());
+		}
+		return dfs(map,informTime,start);
+	}
+}

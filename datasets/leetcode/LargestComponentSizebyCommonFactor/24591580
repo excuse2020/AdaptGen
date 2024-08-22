@@ -1,0 +1,53 @@
+class Solution {
+	int findParent(int num, int p) {
+		int x = p[num];
+		if (x == num) {
+			return num;
+		}
+		p[num] = findParent(x,p);
+		return p[num];
+	}
+	int largestComponentSize(int[] a) {
+		Arrays.sort(a);
+		int max = a[a.length - 1];
+		Set<Integer> set = new HashSet<>();
+		for (int i = 0; i < a.length; i++) {
+			set.add(a[i]);
+		}
+		int num = new int[Math.min(max + 3,(int) (Math.pow(10,5)) + 3)];
+		int parent = new int[num.length];
+		for (int i = 0; i < parent.length; i++) {
+			parent[i] = i;
+		}
+		for (int i = 2; i < num.length; i++) {
+			if (num[i] == 1) {
+				continue;
+			}
+			int f = i;
+			for (int j = f + f; j < num.length; j += f) {
+				num[j] = 1;
+				if (!set.contains(j)) {
+					continue;
+				}
+				int p1 = findParent(j,parent);
+				int p2 = findParent(f,parent);
+				if (p1 != p2) {
+					parent[p1] = p2;
+				}
+			}
+		}
+		int size = new int[num.length];
+		for (int i = 0; i < num.length; i++) {
+			if (!set.contains(i)) {
+				continue;
+			}
+			int p1 = findParent(i,parent);
+			size[p1] += 1;
+		}
+		int ans = 0;
+		for (int i = 0; i < num.length; i++) {
+			ans = Math.max(ans,size[i]);
+		}
+		return ans;
+	}
+}

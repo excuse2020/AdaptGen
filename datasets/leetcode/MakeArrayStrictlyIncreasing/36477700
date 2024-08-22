@@ -1,0 +1,52 @@
+class Solution {
+	Integer dp;
+	int binarySearch(List<Integer> arr2, int target) {
+		int l = -1;
+		int h = arr2.size();
+		while (l + 1 < h) {
+			int mid = (l + h) / 2;
+			if (arr2.get(mid) <= target) {
+				l = mid;
+			} 
+			else {
+				h = mid;
+			}
+		}
+		return h;
+	}
+	int makeArrayIncreasing(int[] arr1, int[] arr2) {
+		Set<Integer> set = new HashSet<>();
+		for (int x: arr2) {	
+			set.add(x);
+		}
+		List<Integer> list = new ArrayList<>(set);
+		Collections.sort(list);
+		dp = new Integer[arr1.length][list.size() + 1];
+		int ret = util(arr1,list,0,-1);
+		return (ret >= Integer.MAX_VALUE / 2) ? -1 : ret;
+	}
+	int util(int arr1, List<Integer> arr2, int i, int j) {
+		if (i == arr1.length) {
+			return 0;
+		}
+		if (dp[i][j + 1] != null) {
+			return dp[i][j + 1];
+		}
+		int prev = i == 0 ? Integer.MIN_VALUE : (j == -1 ? arr1[i - 1] : arr2.get(j));
+		int getIndex = binarySearch(arr2,prev);
+		if (arr1[i] > prev) {
+			if (getIndex == arr2.size()) {
+				return dp[i][j + 1] = util(arr1,arr2,i + 1,-1);
+			}
+			int ret1 = 1 + util(arr1,arr2,i + 1,getIndex);
+			int ret2 = util(arr1,arr2,i + 1,-1);
+			return dp[i][j + 1] = Math.min(ret1,ret2);
+		} 
+		else {
+			if (getIndex == arr2.size()) {
+				return Integer.MAX_VALUE / 2;
+			}
+			return dp[i][j + 1] = 1 + util(arr1,arr2,i + 1,getIndex);
+		}
+	}
+}

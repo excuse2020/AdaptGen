@@ -1,0 +1,75 @@
+class Solution {
+	boolean HasSubtree(TreeNode root1, TreeNode root2) {
+		if (root1 == null || root2 == null) {
+			return false;
+		}
+		TreeNode root = root1;
+		boolean b = false;
+		TreeNode uu = null;
+		TreeNode yy = null;
+		Queue<TreeNode> queue = new LinkedList<TreeNode>();
+		Queue<TreeNode> queue1 = new LinkedList<TreeNode>();
+		Queue<TreeNode> queue2 = new LinkedList<TreeNode>();
+		queue.offer(root1);
+		while (true) {
+			root1 = queue.element();
+			if (root1.val == root2.val) {
+				queue1.offer(root1);
+				queue2.offer(root2);
+				while (true) {
+					uu = queue1.poll();
+					yy = queue2.poll();
+					if (uu.left != null && yy.left != null) {
+						if (uu.left.val != yy.left.val) {
+							break;
+						}
+					}
+					if (uu.left == null) {
+						if (yy.left != null) {
+							break;
+						}
+					}
+					if (uu.right != null && yy.right != null) {
+						if (uu.right.val != yy.right.val) {
+							break;
+						}
+					}
+					if (uu.right == null) {
+						if (yy.right != null) {
+							break;
+						}
+					}
+					if (uu.left != null) {
+						queue1.offer(uu.left);
+					}
+					if (uu.right != null) {
+						queue1.offer(uu.right);
+					}
+					if (yy.left != null) {
+						queue2.offer(yy.left);
+					}
+					if (yy.right != null) {
+						queue2.offer(yy.right);
+					}
+					if (queue2.isEmpty()) {
+						b = true;
+						break;
+					}
+				}
+			}
+			queue2.clear();
+			queue1.clear();
+			root1 = queue.poll();
+			if (root1.left != null) {
+				queue.offer(root1.left);
+			}
+			if (root1.right != null) {
+				queue.offer(root1.right);
+			}
+			if (queue.isEmpty() || b == true) {
+				break;
+			}
+		}
+		return b;
+	}
+}

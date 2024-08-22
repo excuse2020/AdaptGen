@@ -1,0 +1,47 @@
+class Solution {
+	int snakesAndLadders(int[][] board) {
+		int moves = 0;
+		int n = board.length;
+		int[] position = new int[(n * n) + 1];
+		int k = 1;
+		int isLeftToRight = 1;
+		for (int i = n - 1; i >= 0; i--, isLeftToRight++) {
+			if (isLeftToRight % 2 != 0) {
+				for (int j = 0; j < n; j++, k++) {
+					position[k] = board[i][j];
+				}
+			} 
+			else {
+				for (int j = n - 1; j >= 0; j--, k++) {
+					position[k] = board[i][j];
+				}
+			}
+		}
+		Deque<Integer> queue = new LinkedList<>();
+		queue.add(1);
+		Set<Integer> visited = new HashSet<>();
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				int current = queue.poll();
+				if (current == n * n) {
+					return moves;
+				}
+				for (int j = 1; j < 7; j++) {
+					int next = current + j;
+					if (next <= n * n && !visited.contains(next)) {
+						visited.add(next);
+						if (position[next] != -1) {
+							queue.add(position[next]);
+						} 
+						else {
+							queue.add(next);
+						}
+					}
+				}
+			}
+			moves++;
+		}
+		return -1;
+	}
+}

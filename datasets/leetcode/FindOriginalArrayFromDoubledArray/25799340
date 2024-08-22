@@ -1,0 +1,40 @@
+class Solution {
+	int[] findOriginalArray(int[] changed) {
+		int n = changed.length;
+		if ((n & 1) != 0) {
+			return new int[0];
+		}
+		int max = changed[0];
+		for (int i: changed) {	
+			max = Math.max(max,i);
+		}
+		int[] count = new int[max + 1];
+		int count_zero = 0;
+		for (int i: changed) {	
+			if (i == 0) {
+				count_zero++;
+				continue;
+			}
+			count[i]++;
+		}
+		if ((count_zero & 1) != 0) {
+			return new int[0];
+		}
+		int[] original = new int[n / 2];
+		int k = count_zero / 2;
+		for (int i = 1; i < count.length; i++) {
+			if (count[i] == 0) {
+				continue;
+			}
+			if (2 * i > max || count[i] > count[2 * i]) {
+				return new int[0];
+			}
+			int x = count[i];
+			while (x-- > 0) {
+				original[k++] = i;
+				count[2 * i]--;
+			}
+		}
+		return original;
+	}
+}

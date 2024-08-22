@@ -1,0 +1,32 @@
+class Solution {
+	int groupDist(int left, int right, int[] ps, int[] houses) {
+		int mid = (left + right) >> 1, midHouse = houses[mid], psMid = ps[mid];
+		int leftDist = midHouse * (mid - left + 1) - psMid + (left == 0 ? 0 : ps[left - 1]);
+		int rightDist = ps[right] - psMid;
+		return leftDist + rightDist;
+	}
+	int minDistance(int[] houses, int k) {
+		Arrays.sort(houses);
+		int[] ps = new int[houses.length];
+		ps[0] = houses[0];
+		for (int i = 1; i < ps.length; i++) {
+			ps[i] = ps[i - 1] + houses[i];
+		}
+		int[] memo = new int[houses.length + 1], tmp = new int[memo.length];
+		Arrays.fill(memo,Integer.MAX_VALUE / 2);
+		memo[0] = 0;
+		for (int i = 0; i < k; i++) {
+			for (int j = i + 1; j <= houses.length; j++) {
+				int min = Integer.MAX_VALUE / 2;
+				for (int g = i; g < j; g++) {
+					min = Math.min(min,memo[g] + groupDist(g,j - 1,ps,houses));
+				}
+				tmp[j] = min;
+			}
+			int[] t = tmp;
+			tmp = memo;
+			memo = t;
+		}
+		return memo[memo.length - 1];
+	}
+}

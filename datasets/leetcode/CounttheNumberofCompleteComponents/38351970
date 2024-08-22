@@ -1,0 +1,40 @@
+class Solution {
+	int countCompleteComponents(int n, int[][] edges) {
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		Queue<Integer> q = new LinkedList<>();
+		for (int[] i: edges) {	
+			int u = i[0];
+			int v = i[1];
+			adj.get(u).add(v);
+			adj.get(v).add(u);
+		}
+		int c = 0;
+		Set<Integer> s = new HashSet<>();
+		for (int i = 0; i < n; i++) {
+			if (!s.contains(i)) {
+				int ed = 0;
+				int node = 0;
+				q.add(i);
+				s.add(i);
+				while (!q.isEmpty()) {
+					int val = q.poll();
+					node++;
+					for (int v: adj.get(val)) {	
+						ed++;
+						if (!s.contains(v)) {
+							s.add(v);
+							q.add(v);
+						}
+					}
+				}
+				if (ed / 2 == node * (node - 1) / 2) {
+					c++;
+				}
+			}
+		}
+		return c;
+	}
+}

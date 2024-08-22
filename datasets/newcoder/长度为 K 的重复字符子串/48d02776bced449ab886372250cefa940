@@ -1,0 +1,31 @@
+class Solution {
+	boolean hasRepeat(Map<Character, Integer> map) {
+		for (int count: map.values()) {	
+			if (count > 1) {
+				return true;
+			}
+		}
+		return false;
+	}
+	int numKLenSubstrRepeats(String str, int k) {
+		int count = 0;
+		Map<Character, Integer> map = new HashMap<>();
+		for (int i = 0; i < k; i++) {
+			char c = str.charAt(i);
+			map.put(c,map.getOrDefault(c,0) + 1);
+		}
+		if (hasRepeat(map)) {
+			count++;
+		}
+		for (int i = k; i < str.length(); i++) {
+			char tail = str.charAt(i);
+			char head = str.charAt(i - k);
+			map.put(tail,map.getOrDefault(tail,0) + 1);
+			map.put(head,map.get(head) - 1);
+			if (hasRepeat(map)) {
+				count++;
+			}
+		}
+		return count;
+	}
+}

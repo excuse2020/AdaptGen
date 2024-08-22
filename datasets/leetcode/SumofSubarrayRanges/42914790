@@ -1,0 +1,83 @@
+class Solution {
+	void get_max_ids(int nums, int prev_max_id, int next_max_id, int n) {
+		Stack<Integer> st = new Stack<>();
+		for (int i = 0; i < n; i++) {
+			while (!st.isEmpty() && nums[st.peek()] <= nums[i]) {
+				st.pop();
+			}
+			if (st.isEmpty()) {
+				prev_max_id[i] = -1;
+			} 
+			else {
+				prev_max_id[i] = st.peek();
+			}
+			st.push(i);
+		}
+		st.clear();
+		for (int i = n - 1; i >= 0; i--) {
+			while (!st.isEmpty() && nums[st.peek()] < nums[i]) {
+				st.pop();
+			}
+			if (st.isEmpty()) {
+				next_max_id[i] = n;
+			} 
+			else {
+				next_max_id[i] = st.peek();
+			}
+			st.push(i);
+		}
+	}
+	void get_min_ids(int nums, int prev_min_id, int next_min_id, int n) {
+		Stack<Integer> st = new Stack<>();
+		for (int i = 0; i < n; i++) {
+			while (!st.isEmpty() && nums[st.peek()] >= nums[i]) {
+				st.pop();
+			}
+			if (st.isEmpty()) {
+				prev_min_id[i] = -1;
+			} 
+			else {
+				prev_min_id[i] = st.peek();
+			}
+			st.push(i);
+		}
+		st.clear();
+		for (int i = n - 1; i >= 0; i--) {
+			while (!st.isEmpty() && nums[st.peek()] > nums[i]) {
+				st.pop();
+			}
+			if (st.isEmpty()) {
+				next_min_id[i] = n;
+			} 
+			else {
+				next_min_id[i] = st.peek();
+			}
+			st.push(i);
+		}
+	}
+	long subArrayRanges(int[] nums) {
+		int n = nums.length;
+		int prev_min_id = new int[n];
+		int next_min_id = new int[n];
+		get_min_ids(nums,prev_min_id,next_min_id,n);
+		int prev_max_id = new int[n];
+		int next_max_id = new int[n];
+		get_max_ids(nums,prev_max_id,next_max_id,n);
+		long mini = 0, maxi = 0;
+		long res = 0;
+		for (int i = 0; i < n; i++) {
+			int ls_min = i - prev_min_id[i];
+			int rs_min = next_min_id[i] - i;
+			long total_el_min = ls_min * rs_min;
+			total_el_min *= nums[i];
+			mini += total_el_min;
+			int ls_max = i - prev_max_id[i];
+			int rs_max = next_max_id[i] - i;
+			long total_el_max = ls_max * rs_max;
+			total_el_max *= nums[i];
+			maxi += total_el_max;
+		}
+		res = maxi - mini;
+		return res;
+	}
+}

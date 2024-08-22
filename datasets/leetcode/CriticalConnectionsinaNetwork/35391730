@@ -1,0 +1,41 @@
+class Solution {
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		int time = new int[n];
+		int low = new int[n];
+		boolean visited = new boolean[n];
+		List<List<Integer>> graph = new ArrayList<>();
+		List<List<Integer>> ans = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int i = 0; i < connections.size(); i++) {
+			graph.get(connections.get(i).get(0)).add(connections.get(i).get(1));
+			graph.get(connections.get(i).get(1)).add(connections.get(i).get(0));
+		}
+		for (int i = 0; i < n; i++) {
+			System.out.println(i + " : ");
+		}
+		dfs(graph,0,time,1,low,visited,ans,-1);
+		return ans;
+	}
+	void dfs(List<List<Integer>> graph, int source, int[] time, int prevtime, int[] low, boolean[] visited, List<List<Integer>> ans, int parent) {
+		visited[source] = true;
+		time[source] = prevtime;
+		low[source] = prevtime;
+		for (int ele: graph.get(source)) {	
+			if (!visited[ele]) {
+				dfs(graph,ele,time,prevtime + 1,low,visited,ans,source);
+			}
+			if (time[source] < low[ele]) {
+				List<Integer> temp = new ArrayList<>();
+				temp.add(source);
+				temp.add(ele);
+				ans.add(temp);
+				System.out.println(temp);
+			}
+			if (low[source] > low[ele] & ele != parent) {
+				low[source] = low[ele];
+			}
+		}
+	}
+}

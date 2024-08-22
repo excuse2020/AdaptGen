@@ -1,0 +1,28 @@
+class Solution {
+	TreeNode dfs(int l1, int r1, int l2, int r2, int[] pre, int[] in) {
+		int a = pre[l1], b = 0;
+		for (int i = l2; i <= r2; i++) {
+			if (in[i] == a) {
+				b = i;
+			}
+		}
+		TreeNode t = new TreeNode(in[b]);
+		if (b == l2) {
+			t.left = null;
+		} 
+		else {
+			t.left = dfs(l1 + 1,l1 + (b - l2),l2,b - 1,pre,in);
+		}
+		if (b == r2) {
+			t.right = null;
+		} 
+		else {
+			t.right = dfs(l1 + b - l2 + 1,r1,b + 1,r2,pre,in);
+		}
+		return t;
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] in) {
+		TreeNode t = dfs(0,pre.length - 1,0,in.length - 1,pre,in);
+		return t;
+	}
+}

@@ -1,0 +1,26 @@
+class Solution {
+	void AddingToList(TreeNode root, List<Integer> list) {
+		if (root == null) {
+			return;
+		}
+		AddingToList(root.left,list);
+		list.add(root.val);
+		AddingToList(root.right,list);
+	}
+	TreeNode balanceBST(TreeNode root) {
+		List<Integer> list = new ArrayList<>();
+		AddingToList(root,list);
+		TreeNode root1 = new TreeNode();
+		return generatingBST(list,root1,0,list.size() - 1);
+	}
+	TreeNode generatingBST(List<Integer> list, TreeNode root, int i, int j) {
+		if (i > j) {
+			return null;
+		}
+		int mid = (i + j) / 2;
+		root = new TreeNode(list.get(mid));
+		root.left = generatingBST(list,root.left,i,mid - 1);
+		root.right = generatingBST(list,root.right,mid + 1,j);
+		return root;
+	}
+}

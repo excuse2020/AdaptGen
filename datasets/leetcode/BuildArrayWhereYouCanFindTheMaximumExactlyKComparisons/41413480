@@ -1,0 +1,27 @@
+class Solution {
+	Integer[][][] dp;
+	int f(int idx, int n, int m, int k, int maxTill) {
+		if (idx == n && k == 0) {
+			return 1;
+		} 
+		else if (idx >= n || k < 0 || maxTill > m) {
+			return 0;
+		} 
+		else if (dp[idx][k][maxTill + 1] != null) {
+			return dp[idx][k][maxTill + 1];
+		}
+		int ans = 0;
+		for (int i = 1; i <= m; i++) {
+			if (i > maxTill) {
+				ans = ans + f(idx + 1,n,m,k - 1,i);
+			} 
+			else {
+				ans += f(idx + 1,n,m,k,maxTill);
+			}
+		}
+		return dp[idx][k][maxTill + 1] = ans;
+	}
+	int numOfArrays(int n, int m, int k) {
+		return f(0,n,m,k,-1);
+	}
+}

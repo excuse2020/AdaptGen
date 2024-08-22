@@ -1,0 +1,50 @@
+class Solution {
+	boolean[] primes;
+	int primeFactors(int n) {
+		int sum = 0;
+		while (n % 2 == 0) {
+			sum += 2;
+			n /= 2;
+		}
+		for (int i = 3; i <= Math.sqrt(n); i += 2) {
+			while (n % i == 0) {
+				sum += i;
+				n /= i;
+			}
+		}
+		if (n > 2) {
+			sum += n;
+		}
+		return sum;
+	}
+	int smallestValue(int n) {
+		if (primes[n]) {
+			return n;
+		}
+		while (!primes[n]) {
+			int sum = primeFactors(n);
+			if (sum == n) {
+				return sum;
+			} 
+			else {
+				n = sum;
+			}
+		}
+		return n;
+	}
+	boolean[] soe(int n) {
+		boolean[] primes = new boolean[n];
+		Arrays.fill(primes,true);
+		primes[0] = false;
+		primes[1] = false;
+		int sqrt = (int) Math.sqrt(n);
+		for (int i = 2; i <= sqrt; i++) {
+			if (primes[i]) {
+				for (int j = i * i; j < n; j = j + i) {
+					primes[j] = false;
+				}
+			}
+		}
+		return primes;
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	ArrayList<ArrayList<Integer>> ans;
+	boolean[] st;
+	void dfs(int[] num, ArrayList<Integer> temp) {
+		if (temp.size() == num.length) {
+			ans.add(new ArrayList<>(temp));
+			return;
+		}
+		HashSet<Integer> set = new HashSet<>();
+		for (int i = 0; i < num.length; i++) {
+			if (set.contains(num[i])) {
+				continue;
+			}
+			if (st[i]) {
+				continue;
+			}
+			temp.add(num[i]);
+			set.add(num[i]);
+			st[i] = true;
+			dfs(num,temp);
+			st[i] = false;
+			temp.remove(temp.size() - 1);
+		}
+	}
+	ArrayList<ArrayList<Integer>> permuteUnique(int[] num) {
+		ans = new ArrayList<>();
+		Arrays.sort(num);
+		st = new boolean[num.length];
+		dfs(num,new ArrayList<>());
+		return ans;
+	}
+}

@@ -1,0 +1,61 @@
+class Solution {
+	int bottomUp(int n, int dice, int target) {
+		int[][] dp = new int[n + 1][target + 1];
+		int mod = (int) (1e9 + 7);
+		dp[0][0] = 1;
+		for (int i = 1; i <= n; i++) {
+			for (int j = 1; j <= target && j <= i * dice; j++) {
+				int ways = 0;
+				for (int k = 1; k <= dice && k <= j; k++) {
+					ways = (ways + dp[i - 1][j - k]) % mod;
+					ways = (ways + mod) % mod;
+				}
+				dp[i][j] = ways;
+			}
+		}
+		return dp[n][target];
+	}
+	int bottomUpSpaceOptimized(int n, int dice, int target) {
+		int[] dp = new int[target + 1];
+		int mod = (int) (1e9 + 7);
+		dp[0] = 1;
+		for (int i = 1; i <= n; i++) {
+			int[] cur = new int[target + 1];
+			for (int j = 1; j <= target && j <= i * dice; j++) {
+				int ways = 0;
+				for (int k = 1; k <= dice && k <= j; k++) {
+					ways = (ways + dp[j - k]) % mod;
+					ways = (ways + mod) % mod;
+				}
+				cur[j] = ways;
+			}
+			dp = cur;
+		}
+		return dp[target];
+	}
+	long helper(int n, int k, int target, Long[][] dp) {
+		if (n == 0) {
+			return target == 0 ? 1 : 0;
+		}
+		if (n < 0 || target == 0 || n * k < target) {
+			return 0;
+		}
+		if (dp[n][target] != null) {
+			return dp[n][target];
+		}
+		long mod = (long) (1e9 + 7);
+		long ways = 0;
+		for (int i = 1; i <= k && i <= target; i++) {
+			ways = (ways + helper(n - 1,k,target - i,dp)) % mod;
+			ways = (ways + mod) % mod;
+		}
+		return dp[n][target] = ways;
+	}
+	int numRollsToTarget(int n, int k, int target) {
+		return bottomUp(n,k,target);
+	}
+	int topDown(int n, int k, int target) {
+		Long[][] dp = new Long[n + 1][target + 1];
+		return (int) helper(n,k,target,dp);
+	}
+}

@@ -1,0 +1,47 @@
+class Solution {
+	long mod = 998244353;
+	long Pow(long x, long y) {
+		long res = 1;
+		while (y != 0) {
+			if ((y & 1L) != 0) {
+				res = fast(res,x);
+			}
+			x = fast(x,x);
+			y = y >> 1;
+		}
+		return res;
+	}
+	long cutRope(long number) {
+		if (number <= 3) {
+			return number - 1;
+		}
+		if (number % 3 == 0) {
+			return Pow(3,number / 3);
+		} 
+		else if (number % 3 == 1) {
+			return fast(Pow(3,number / 3 - 1),4);
+		} 
+		else {
+			return fast(Pow(3,number / 3),2);
+		}
+	}
+	long fast(long x, long y) {
+		long res = 0;
+		x %= mod;
+		y %= mod;
+		while (y != 0) {
+			if ((y & 1L) != 0) {
+				res += x;
+				if (res >= mod) {
+					res -= mod;
+				}
+			}
+			y = y >> 1;
+			x = x << 1;
+			if (x >= mod) {
+				x -= mod;
+			}
+		}
+		return res;
+	}
+}

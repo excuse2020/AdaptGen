@@ -1,0 +1,29 @@
+class Solution {
+	void addEdge(ArrayList<ArrayList<Integer>> adj, int u, int v) {
+		adj.get(u).add(v);
+		adj.get(v).add(u);
+	}
+	int dfs(ArrayList<ArrayList<Integer>> adj, int curr, int parent, List<Boolean> hasApple) {
+		int time = 0;
+		for (int child: adj.get(curr)) {	
+			if (child == parent) {
+				continue;
+			}
+			int timeforc = dfs(adj,child,curr,hasApple);
+			if (timeforc > 0 || hasApple.get(child) == true) {
+				time += timeforc + 2;
+			}
+		}
+		return time;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<ArrayList<Integer>>(n);
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<Integer>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			addEdge(adj,edges[i][0],edges[i][1]);
+		}
+		return dfs(adj,0,-1,hasApple);
+	}
+}

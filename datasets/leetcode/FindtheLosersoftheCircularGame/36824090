@@ -1,0 +1,23 @@
+class Solution {
+	int[] circularGameLosers(int n, int k) {
+		long friends = 2L, mask = 0L;
+		int resultI = 0, turn = 1;
+		for (int currFriend = 1, nextFriend = 0; ; friends |= mask, currFriend = nextFriend) {
+			nextFriend = (currFriend + k * turn++) % n;
+			if (nextFriend == 0) {
+				nextFriend = n;
+			}
+			mask = 1L << nextFriend;
+			if ((friends & mask) == mask) {
+				break;
+			}
+		}
+		int[] result = new int[n - turn + 1];
+		for (int i = 1; i <= n; i++) {
+			if (((friends >> i) & 1L) != 1L) {
+				result[resultI++] = i;
+			}
+		}
+		return result;
+	}
+}

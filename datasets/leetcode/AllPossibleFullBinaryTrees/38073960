@@ -1,0 +1,33 @@
+class Solution {
+	List<TreeNode>[] cache;
+	List<TreeNode> allPossibleFBT(int n) {
+		if (n % 2 == 0) {
+			return Collections.emptyList();
+		}
+		initCache();
+		return generateTree(n);
+	}
+	List<TreeNode> generateTree(int size) {
+		if (cache[size] == null) {
+			List<TreeNode> trees = new ArrayList<>();
+			for (int i = 1; i < size; i += 2) {
+				List<TreeNode> leftTrees = generateTree(i);
+				List<TreeNode> rightTrees = generateTree(size - (i + 1));
+				for (TreeNode leftTree: leftTrees) {	
+					for (TreeNode rightTree: rightTrees) {	
+						trees.add(new TreeNode(0, leftTree, rightTree));
+					}
+				}
+			}
+			cache[size] = trees;
+		}
+		return cache[size];
+	}
+	void initCache() {
+		if (cache == null) {
+			cache = new List[21];
+			cache[1] = List.of(new TreeNode(0));
+			cache[3] = List.of(new TreeNode(0, new TreeNode(0), new TreeNode(0)));
+		}
+	}
+}

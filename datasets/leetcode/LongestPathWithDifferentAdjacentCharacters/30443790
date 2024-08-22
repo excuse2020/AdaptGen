@@ -1,0 +1,33 @@
+class Solution {
+	int dfs(int node, List<List<Integer>> tree, String str, int[] maxLen) {
+		int max = 0;
+		int secondMax = 0;
+		for (Integer child: tree.get(node)) {	
+			int len = dfs(child,tree,str,maxLen);
+			if (str.charAt(node) == str.charAt(child)) {
+				continue;
+			}
+			if (len > max) {
+				secondMax = max;
+				max = len;
+			} 
+			else if (len > secondMax) {
+				secondMax = len;
+			}
+		}
+		maxLen[0] = Math.max(maxLen[0],1 + max);
+		return 1 + max;
+	}
+	int longestPath(int[] parent, String s) {
+		List<List<Integer>> tree = new ArrayList<>();
+		for (int i = 0; i < parent.length; i++) {
+			tree.add(new ArrayList<>());
+		}
+		for (int i = 1; i < parent.length; i++) {
+			tree.get(parent[i]).add(i);
+		}
+		int[] maxLen = new int[1];
+		dfs(0,tree,s,maxLen);
+		return maxLen[0];
+	}
+}

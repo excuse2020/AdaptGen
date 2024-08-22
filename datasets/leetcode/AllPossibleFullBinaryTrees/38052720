@@ -1,0 +1,30 @@
+class Solution {
+	HashMap<Integer, List<TreeNode>> dp = new HashMap<>();
+	List<TreeNode> allPossibleFBT(int n) {
+		List<TreeNode> curr = new ArrayList<>();
+		if (n == 0) {
+			return curr;
+		} 
+		else if (n == 1) {
+			curr.add(new TreeNode(0));
+			return curr;
+		}
+		if (dp.containsKey(n)) {
+			return dp.get(n);
+		}
+		for (int i = 1; i < n; ++i) {
+			List<TreeNode> left = allPossibleFBT(i);
+			List<TreeNode> right = allPossibleFBT(n - 1);
+			for (TreeNode l: left) {	
+				for (TreeNode r: right) {	
+					TreeNode newNode = new TreeNode(0);
+					newNode.left = l;
+					newNode.right = r;
+					curr.add(newNode);
+				}
+			}
+		}
+		dp.put(n,curr);
+		return curr;
+	}
+}

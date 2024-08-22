@@ -1,0 +1,59 @@
+class Solution {
+	long minimumTotalCost(int[] nums1, int[] nums2) {
+		int n = nums1.length;
+		HashMap<Integer, Integer> count1 = new HashMap<>();
+		HashMap<Integer, Integer> count2 = new HashMap<>();
+		for (int num: nums1) {	
+			count1.put(num,1 + count1.getOrDefault(num,0));
+		}
+		for (int num: nums2) {	
+			count2.put(num,1 + count2.getOrDefault(num,0));
+			if (count2.get(num) + count1.getOrDefault(num,0) > n) {
+				return -1;
+			}
+		}
+		int nOfDiff = 0;
+		int max = 0;
+		HashMap<Integer, ArrayList<Integer>> indexMap = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			if (nums1[i] == nums2[i]) {
+				indexMap.putIfAbsent(nums1[i],new ArrayList<>());
+				indexMap.get(nums1[i]).add(i);
+				if (max == 0 || indexMap.get(max).size() < indexMap.get(nums1[i]).size()) {
+					max = nums1[i];
+				}
+				nOfDiff++;
+			}
+		}
+		if (max == 0) {
+			return 0;
+		}
+		long res = 0;
+		if (indexMap.get(max).size() <= nOfDiff / 2) {
+			for (ArrayList<Integer> arr: indexMap.values()) {	
+				for (int i: arr) {	
+					res += i;
+				}
+			}
+			return res;
+		}
+		ArrayList<Integer> arr = indexMap.remove(max);
+		for (int k: indexMap.keySet()) {	
+			for (int index: indexMap.get(k)) {	
+				int j = arr.remove(arr.size() - 1);
+				nums1[j] = k;
+				nums1[index] = max;
+				res += j + index;
+			}
+		}
+		for (int i = 0; i < n && arr.size() > 0; i++) {
+			if (nums1[i] != max && nums2[i] != max) {
+				int j = arr.remove(arr.size() - 1);
+				nums1[j] = nums1[i];
+				nums1[i] = max;
+				res += i + j;
+			}
+		}
+		return res;
+	}
+}

@@ -1,0 +1,47 @@
+class Solution {
+	String smallestEquivalentString(String s1, String s2, String baseStr) {
+		HashMap<Character, TreeSet<Character>> map = new HashMap<>();
+		for (int i = 0; i < s1.length(); i++) {
+			char c = s1.charAt(i);
+			if (!map.containsKey(c)) {
+				map.put(c,new TreeSet<>());
+				map.get(c).add(c);
+				map.get(c).add(s2.charAt(i));
+			} 
+			else {
+				map.get(c).add(s2.charAt(i));
+			}
+			char c2 = s2.charAt(i);
+			if (!map.containsKey(c2)) {
+				map.put(c2,new TreeSet<>());
+				map.get(c2).add(c2);
+				map.get(c2).add(s1.charAt(i));
+			} 
+			else {
+				map.get(c).add(s1.charAt(i));
+			}
+			map.get(c).addAll(map.get(c2));
+			map.get(c2).addAll(map.get(c));
+		}
+		ArrayList<Character> al = new ArrayList<>(map.keySet());
+		for (char c: al) {	
+			ArrayList<Character> values = new ArrayList<>(map.get(c));
+			for (Character value: values) {	
+				map.get(c).addAll(map.get(value));
+				map.get(value).addAll(map.get(c));
+			}
+		}
+		StringBuilder sb = new StringBuilder("");
+		for (int i = 0; i < baseStr.length(); i++) {
+			char baseChar = baseStr.charAt(i);
+			if (map.containsKey(baseChar)) {
+				char c = (map.get(baseStr.charAt(i))).first();
+				sb.append(c);
+			} 
+			else {
+				sb.append(baseChar);
+			}
+		}
+		return sb.toString();
+	}
+}

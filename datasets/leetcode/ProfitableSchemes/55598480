@@ -1,0 +1,29 @@
+class Solution {
+	Integer dp;
+	int group;
+	int mod = 1000000007;
+	int profit;
+	int helper(int i, int n, int minProfit) {
+		if (n < 0) {
+			return 0;
+		}
+		if (i == group.length) {
+			return (minProfit <= 0) ? 1 : 0;
+		}
+		if (minProfit < 0) {
+			minProfit = 0;
+		}
+		if (dp[i][n][minProfit] != null) {
+			return dp[i][n][minProfit];
+		}
+		int take = helper(i + 1,n - group[i],minProfit - profit[i]);
+		int nottake = helper(i + 1,n,minProfit);
+		return dp[i][n][minProfit] = (take + nottake) % mod;
+	}
+	int profitableSchemes(int n, int minProfit, int[] group, int[] profit) {
+		this.group = group;
+		this.profit = profit;
+		dp = new Integer[group.length + 1][n + 1][minProfit + 1];
+		return helper(0,n,minProfit);
+	}
+}

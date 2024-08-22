@@ -1,0 +1,51 @@
+class Solution {
+	TreeNode Deserialize(String str) {
+		if (str.equals("{}")) {
+			return null;
+		}
+		String[] strs = str.substring(1,str.length() - 1).split(",");
+		Queue<TreeNode> queue = new LinkedList<>();
+		int i = 0;
+		TreeNode root = new TreeNode(Integer.parseInt(strs[i++]));
+		queue.add(root);
+		while (!queue.isEmpty() && i < strs.length) {
+			TreeNode node = queue.poll();
+			if (node == null) {
+				continue;
+			}
+			TreeNode leftNode = strs[i].equals("#") ? null : new TreeNode(Integer.parseInt(strs[i]));
+			i++;
+			node.left = leftNode;
+			queue.add(leftNode);
+			if (i >= strs.length) {
+				break;
+			}
+			TreeNode rightNode = strs[i].equals("#") ? null : new TreeNode(Integer.parseInt(strs[i]));
+			i++;
+			node.right = rightNode;
+			queue.add(rightNode);
+		}
+		return root;
+	}
+	String Serialize(TreeNode root) {
+		if (root == null) {
+			return "{}";
+		}
+		StringJoiner sj = new StringJoiner(",", "{", "}");
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(root);
+		while (!queue.isEmpty()) {
+			TreeNode node = queue.poll();
+			sj.add(node == null ? "#" : String.valueOf(node.val));
+			if (node != null) {
+				queue.add(node.left);
+				queue.add(node.right);
+			}
+		}
+		String res = sj.toString();
+		while (res.endsWith("#}")) {
+			res = res.substring(0,res.length() - 3) + "}";
+		}
+		return res;
+	}
+}

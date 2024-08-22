@@ -1,0 +1,36 @@
+class Solution {
+	int binarySearchMaxDistance(int[] positions, int balls) {
+		int maxDistance = 0;
+		int low = 1;
+		int high = positions[positions.length - 1] - positions[0];
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			if (canPlaceBalls(positions,balls,mid)) {
+				maxDistance = mid;
+				low = mid + 1;
+			} 
+			else {
+				high = mid - 1;
+			}
+		}
+		return maxDistance;
+	}
+	boolean canPlaceBalls(int[] positions, int balls, int minDistance) {
+		int count = 1;
+		int lastPosition = positions[0];
+		for (int i = 1; i < positions.length; i++) {
+			if (positions[i] - lastPosition >= minDistance) {
+				count++;
+				lastPosition = positions[i];
+				if (count == balls) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	int maxDistance(int[] position, int m) {
+		Arrays.sort(position);
+		return binarySearchMaxDistance(position,m);
+	}
+}

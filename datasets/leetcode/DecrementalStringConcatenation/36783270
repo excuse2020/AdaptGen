@@ -1,0 +1,37 @@
+class Solution {
+	String[] arr;
+	Map<String, Integer> map;
+	int dp(char st, char end, int idx) {
+		if (idx >= arr.length) {
+			return 0;
+		}
+		String key = st + "*";
+		if (map.containsKey(key)) {
+			return map.get(key);
+		}
+		String curr = arr[idx];
+		int res = Integer.MAX_VALUE;
+		int x = 0, y = 0;
+		if (curr.charAt(0) == end) {
+			x = dp(st,curr.charAt(curr.length() - 1),idx + 1) + curr.length() - 1;
+		} 
+		else {
+			x = dp(st,curr.charAt(curr.length() - 1),idx + 1) + curr.length();
+		}
+		if (curr.charAt(curr.length() - 1) == st) {
+			y = dp(curr.charAt(0),end,idx + 1) + curr.length() - 1;
+		} 
+		else {
+			y = dp(curr.charAt(0),end,idx + 1) + curr.length();
+		}
+		res = Math.min(x,y);
+		map.put(key,res);
+		return res;
+	}
+	int minimizeConcatenatedLength(String[] words) {
+		int n = words.length;
+		arr = words;
+		map = new HashMap<>();
+		return dp(words[0].charAt(0),words[0].charAt(words[0].length() - 1),1) + words[0].length();
+	}
+}

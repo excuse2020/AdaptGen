@@ -1,0 +1,70 @@
+class Solution {
+	void caclStack(Stack<String> stack, Character next) {
+		if (next == null || next == '+' || next == '-' || next == ')') {
+			while (stack.size() > 2) {
+				String v2 = stack.pop();
+				String op = stack.pop();
+				String v1 = stack.pop();
+				if (op.equals("+")) {
+					stack.push(String.valueOf(Integer.parseInt(v1) + Integer.parseInt(v2)));
+					continue;
+				}
+				if (op.equals("-")) {
+					stack.push(String.valueOf(Integer.parseInt(v1) - Integer.parseInt(v2)));
+					continue;
+				}
+				if (op.equals("*")) {
+					stack.push(String.valueOf(Integer.parseInt(v1) * Integer.parseInt(v2)));
+					continue;
+				}
+				stack.push(v1);
+				stack.push(op);
+				stack.push(v2);
+				return;
+			}
+		}
+	}
+	void cancelBracket(Stack<String> stack) {
+		String top = stack.pop();
+		if (top.equals(")")) {
+			top = stack.pop();
+			stack.pop();
+		}
+		stack.push(top);
+	}
+	int solve(String s) {
+		Stack<String> stack = new Stack<>();
+		for (int i = 0; i < s.length(); i++) {
+			char cur = s.charAt(i);
+			StringBuffer numBuf = new StringBuffer();
+			numBuf.append(cur);
+			if (cur >= '0' && cur <= '9') {
+				int pNext = i + 1;
+				while (pNext < s.length()) {
+					char c = s.charAt(pNext);
+					if (c >= '0' && c <= '9') {
+						numBuf.append(c);
+						i = pNext;
+						pNext++;
+					} 
+					else {
+						break;
+					}
+				}
+			}
+			Character next = (i + 1) == s.length() ? null : s.charAt(i + 1);
+			if (cur != '(' && cur != ')' && cur != '+' && cur != '-' && cur != '*' && cur != '/') {
+				stack.push(numBuf.toString());
+				caclStack(stack,next);
+			} 
+			else {
+				stack.push(numBuf.toString());
+				if (cur == ')') {
+					cancelBracket(stack);
+					caclStack(stack,next);
+				}
+			}
+		}
+		return Integer.parseInt(stack.pop());
+	}
+}

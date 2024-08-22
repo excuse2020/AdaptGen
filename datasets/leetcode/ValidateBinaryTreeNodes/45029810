@@ -1,0 +1,49 @@
+class Solution {
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		int[] inDegrees = new int[n];
+		for (int i = 0; i < n; i++) {
+			inDegrees[i] = 0;
+		}
+		for (int i = 0; i < n; i++) {
+			if (leftChild[i] != -1) {
+				inDegrees[leftChild[i]]++;
+			}
+			if (rightChild[i] != -1) {
+				inDegrees[rightChild[i]]++;
+			}
+		}
+		int zC = 0, idx = 0;
+		for (int i = 0; i < n; i++) {
+			if (inDegrees[i] == 0) {
+				zC++;
+				idx = i;
+			} 
+			else if (inDegrees[i] > 1) {
+				return false;
+			}
+		}
+		if (zC > 1 || zC == 0) {
+			return false;
+		}
+		Queue<Integer> q = new LinkedList<>();
+		q.add(idx);
+		boolean[] visited = new boolean[n];
+		while (!q.isEmpty()) {
+			int x = q.peek();
+			q.remove();
+			visited[x] = true;
+			if (leftChild[x] != -1) {
+				q.add(leftChild[x]);
+			}
+			if (rightChild[x] != -1) {
+				q.add(rightChild[x]);
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			if (visited[i] == false) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

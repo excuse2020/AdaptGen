@@ -1,0 +1,39 @@
+class Solution {
+	int f(int index, int prev, int count, int[] nums, int n, int[][][] dp) {
+		if (index == n) {
+			return 0;
+		}
+		int pick = Integer.MIN_VALUE;
+		int notPick = Integer.MIN_VALUE;
+		if (dp[index][prev + 1][count] != -1) {
+			return dp[index][prev + 1][count];
+		}
+		if (prev == -1) {
+			pick = 1 + f(index + 1,index,count,nums,n,dp);
+			notPick = f(index + 1,-1,count,nums,n,dp);
+		} 
+		else {
+			if (nums[prev] == nums[index]) {
+				pick = 1 + f(index + 1,index,count,nums,n,dp);
+				notPick = f(index + 1,prev,count,nums,n,dp);
+			} 
+			else {
+				notPick = f(index + 1,prev,count,nums,n,dp);
+				if (count > 0) {
+					pick = 1 + f(index + 1,index,count - 1,nums,n,dp);
+				}
+			}
+		}
+		return dp[index][prev + 1][count] = Math.max(pick,notPick);
+	}
+	int maximumLength(int[] nums, int k) {
+		int n = nums.length;
+		int[][][] dp = new int[n + 1][n + 1][k + 1];
+		for (int[][] matrix: dp) {	
+			for (int[] rows: matrix) {	
+				Arrays.fill(rows,-1);
+			}
+		}
+		return f(0,-1,k,nums,n,dp);
+	}
+}

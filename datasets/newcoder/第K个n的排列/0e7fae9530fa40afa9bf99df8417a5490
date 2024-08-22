@@ -1,0 +1,36 @@
+class Solution {
+	int k = 0;
+	int n = 0;
+	ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+	String KthPermutation(int n, int k) {
+		this.n = n;
+		this.k = k;
+		ArrayList<Integer> nums = new ArrayList<>();
+		for (int i = 1; i <= n; i++) {
+			nums.add(i);
+		}
+		ArrayList<Integer> currentArr = new ArrayList<>();
+		process(nums,currentArr);
+		StringBuffer sb = new StringBuffer("");
+		for (int num: res.get(k - 1)) {	
+			sb.append(num);
+		}
+		return new String(sb);
+	}
+	void process(ArrayList<Integer> nums, ArrayList<Integer> currentArr) {
+		if (currentArr.size() == n) {
+			ArrayList<Integer> copyArr = new ArrayList<>();
+			copyArr.addAll(currentArr);
+			res.add(copyArr);
+			return;
+		}
+		for (int i = 0; i < nums.size(); i++) {
+			ArrayList<Integer> copyArr = new ArrayList<>();
+			copyArr.addAll(nums);
+			copyArr.remove(i);
+			currentArr.add(nums.get(i));
+			process(copyArr,currentArr);
+			currentArr.remove(currentArr.size() - 1);
+		}
+	}
+}

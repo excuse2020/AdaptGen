@@ -1,0 +1,30 @@
+class Solution {
+	int countDays(int days, int[][] meetings) {
+		Comparator<int[]> comparator = (row1, row2) -> {Integer.compare(row1[0],row2[0])};
+		Arrays.sort(meetings,comparator);
+		int n = meetings.length, v1 = meetings[0][1], v0 = meetings[0][0], ct = v1 - v0 + 1;
+		for (int i = 1; i < n; i++) {
+			if (meetings[i][1] < v1) {
+				continue;
+			} 
+			else {
+				if (meetings[i][0] > v1) {
+					v0 = meetings[i][0];
+				} 
+				else {
+					v0 = v1 + 1;
+				}
+				v1 = meetings[i][1];
+			}
+			if (v1 < days) {
+				ct += v1 - v0 + 1;
+			} 
+			else {
+				v1 = days;
+				ct += v1 - v0 + 1;
+				break;
+			}
+		}
+		return days - ct;
+	}
+}

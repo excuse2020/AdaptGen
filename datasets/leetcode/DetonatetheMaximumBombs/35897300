@@ -1,0 +1,55 @@
+class Solution {
+	int ans = 0;
+	void dfs(ArrayList<ArrayList<Integer>> adj, boolean[] visited, int source, int count) {
+		visited[source] = true;
+		for (int it: adj.get(source)) {	
+			if (visited[it] == false) {
+				dfs(adj,visited,it,count + 1);
+			}
+		}
+	}
+	int maximumDetonation(int[][] bombs) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<ArrayList<Integer>>();
+		int N = bombs.length;
+		for (int i = 0; i < N; i++) {
+			adj.add(new ArrayList<Integer>());
+		}
+		boolean[] visited = new boolean[N];
+		for (int i = 0; i < N; i++) {
+			int x1 = bombs[i][0];
+			int y1 = bombs[i][1];
+			int r1 = bombs[i][2];
+			for (int j = 0; j < N; j++) {
+				int x2 = bombs[j][0];
+				int y2 = bombs[j][1];
+				if (i != j) {
+					long dx = (long) (x1 - x2);
+					long dy = (long) (y1 - y2);
+					long dist = dx * dx + dy * dy;
+					if (dist <= (long) r1 * r1) {
+						System.out.println(dist + " ");
+						adj.get(i).add(j);
+					}
+				}
+			}
+		}
+		for (int i = 0; i < adj.size(); i++) {
+			for (int j = 0; j < adj.get(i).size(); j++) {
+				System.out.print(adj.get(i).get(j) + " ");
+			}
+			System.out.println();
+		}
+		for (int i = 0; i < N; i++) {
+			dfs(adj,visited,i,1);
+			int count = 0;
+			for (int j = 0; j < N; j++) {
+				if (visited[j] == true) {
+					count++;
+				}
+			}
+			ans = Math.max(ans,count);
+			Arrays.fill(visited,false);
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,51 @@
+class Solution {
+	List<Integer>[] adj;
+	int max;
+	List<Integer> roots;
+	int findMax(int root) {
+		if (adj[root] == null) {
+			return 1;
+		}
+		int longest = 0;
+		int secondeLongest = 0;
+		for (int n: adj[root]) {	
+			int current = findMax(n);
+			if (current > longest) {
+				secondeLongest = longest;
+				longest = current;
+			} 
+			else if (current > secondeLongest) {
+				secondeLongest = current;
+			}
+		}
+		if (max < longest + secondeLongest) {
+			max = secondeLongest + longest;
+		}
+		return longest + 1;
+	}
+	int longestPath(int[] parent, String s) {
+		int n = parent.length;
+		adj = new List[n];
+		roots = new ArrayList();
+		roots.add(0);
+		for (int i = 1; i < n; i++) {
+			if (s.charAt(i) != s.charAt(parent[i])) {
+				if (adj[parent[i]] == null) {
+					adj[parent[i]] = new ArrayList();
+				}
+				adj[parent[i]].add(i);
+			} 
+			else {
+				roots.add(i);
+			}
+		}
+		max = 0;
+		int res = max;
+		for (int r: roots) {	
+			max = 0;
+			findMax(r);
+			res = res > max ? res : max;
+		}
+		return res == 0 ? 1 : res;
+	}
+}

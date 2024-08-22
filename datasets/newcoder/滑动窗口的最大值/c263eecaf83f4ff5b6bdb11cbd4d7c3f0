@@ -1,0 +1,43 @@
+class Solution {
+	ArrayList<Integer> maxInWindows(int[] num, int size) {
+		ArrayList<Integer> list = new ArrayList<>();
+		if (size > num.length || num.length == 0 || size == 0) {
+			return list;
+		}
+		int max = Integer.MIN_VALUE;
+		int maxIndex = 0;
+		for (int i = 0; i < size; i++) {
+			if (num[i] > max) {
+				max = num[i];
+				maxIndex = i;
+			}
+		}
+		list.add(max);
+		int lastMax = max;
+		int lastMaxIndex = maxIndex;
+		for (int i = 1; i < num.length - size + 1; i++) {
+			if (num[i + size - 1] >= lastMax) {
+				list.add(num[i + size - 1]);
+				lastMaxIndex = i + size - 1;
+				lastMax = num[i + size - 1];
+			} 
+			else if (num[i + size - 1] < lastMax && lastMaxIndex >= i) {
+				list.add(lastMax);
+			} 
+			else {
+				int tempMax = Integer.MIN_VALUE;
+				int tempIndex = Integer.MIN_VALUE;
+				for (int j = i; j < i + size; j++) {
+					if (num[j] > tempMax) {
+						tempMax = num[j];
+						tempIndex = j;
+					}
+				}
+				list.add(tempMax);
+				lastMax = tempMax;
+				lastMaxIndex = tempIndex;
+			}
+		}
+		return list;
+	}
+}

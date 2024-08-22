@@ -1,0 +1,27 @@
+class Solution {
+	int minRefuelStops(int target, int startFuel, int[][] stations) {
+		if (startFuel >= target) {
+			return 0;
+		}
+		int MILE = 0, FUEL = 1;
+		int fuelStop = 0;
+		int maxTravelPossible = startFuel;
+		int currentStation = 0;
+		int totalStations = stations.length;
+		PriorityQueue<Integer> maxHeapFuelCapacity = new PriorityQueue<>(Comparator.reverseOrder());
+		while (maxTravelPossible < target) {
+			if (currentStation < totalStations && maxTravelPossible >= stations[currentStation][MILE]) {
+				maxHeapFuelCapacity.offer(stations[currentStation][FUEL]);
+				currentStation++;
+			} 
+			else if (maxHeapFuelCapacity.isEmpty()) {
+				return -1;
+			} 
+			else {
+				maxTravelPossible += maxHeapFuelCapacity.poll();
+				fuelStop++;
+			}
+		}
+		return fuelStop;
+	}
+}

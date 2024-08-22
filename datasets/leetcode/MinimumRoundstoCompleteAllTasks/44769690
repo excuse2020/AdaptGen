@@ -1,0 +1,31 @@
+class Solution {
+	int minimumRounds(int[] tasks) {
+		TreeMap<Integer, Integer> hm = new TreeMap<>();
+		for (int i = 0; i < tasks.length; i++) {
+			hm.put(tasks[i],hm.getOrDefault(tasks[i],0) + 1);
+		}
+		int round = 0;
+		Set<Integer> s = hm.keySet();
+		for (int currTask: s) {	
+			while (hm.get(currTask) != 0) {
+				if (hm.get(currTask) == 1) {
+					return -1;
+				}
+				if (hm.get(currTask) == 4) {
+					round += 2;
+					hm.put(currTask,0);
+				} 
+				else if (hm.get(currTask) == 2) {
+					round += 1;
+					hm.put(currTask,0);
+				} 
+				else {
+					int put = hm.get(currTask) - 3;
+					hm.put(currTask,put);
+					round++;
+				}
+			}
+		}
+		return round;
+	}
+}

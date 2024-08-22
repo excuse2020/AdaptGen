@@ -1,0 +1,42 @@
+class Solution {
+	int countMinRounds(int noOfLevel) {
+		int minRounds = 0;
+		if (noOfLevel == 1) {
+			return -1;
+		}
+		if (noOfLevel % 3 == 0) {
+			minRounds = noOfLevel / 3;
+		} 
+		else if (noOfLevel % 3 == 1) {
+			minRounds = (noOfLevel - 4) / 3 + 2;
+		} 
+		else if (noOfLevel % 3 == 2) {
+			minRounds = (noOfLevel - 2) / 3 + 1;
+		}
+		return minRounds;
+	}
+	int minimumRounds(int[] tasks) {
+		if (tasks.length == 1) {
+			return -1;
+		}
+		Map<Integer, Integer> countMap = new HashMap<>();
+		int minRounds = 0;
+		for (int i = 0; i < tasks.length; i++) {
+			int task = tasks[i];
+			countMap.put(task,countMap.getOrDefault(task,0) + 1);
+		}
+		for (Map.Entry<Integer, Integer> entry: countMap.entrySet()) {	
+			int task = entry.getKey();
+			int noOfTask = entry.getValue();
+			int minRound = countMinRounds(noOfTask);
+			if (minRound == -1) {
+				minRounds = -1;
+				break;
+			} 
+			else {
+				minRounds += minRound;
+			}
+		}
+		return minRounds;
+	}
+}

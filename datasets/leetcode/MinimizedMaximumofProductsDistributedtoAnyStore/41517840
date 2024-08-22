@@ -1,0 +1,38 @@
+class Solution {
+	boolean isPossible(int productsToDistribute, int n, int[] quantities) {
+		int shops = 0;
+		for (int i: quantities) {	
+			if (productsToDistribute != 0) {
+				if (i % productsToDistribute == 0) {
+					shops = shops + i / productsToDistribute;
+				} 
+				else {
+					shops = shops + 1;
+				}
+			} 
+			else if (productsToDistribute == 0 && i != 0) {
+				return false;
+			}
+		}
+		return shops <= n ? true : false;
+	}
+	int minimizedMaximum(int n, int[] quantities) {
+		int high = 0;
+		for (int i: quantities) {	
+			high = Math.max(high,i);
+		}
+		int low = 0;
+		int ans = high;
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			if (isPossible(mid,n,quantities)) {
+				ans = mid;
+				high = mid - 1;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		return ans;
+	}
+}

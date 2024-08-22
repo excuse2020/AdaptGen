@@ -1,0 +1,74 @@
+class Solution {
+	int map(int val, int[] mapping) {
+		if (val == 0) {
+			return mapping[val];
+		}
+		int res = 0;
+		int r = 1;
+		while (val > 0) {
+			res += mapping[val % 10] * r;
+			val /= 10;
+			r *= 10;
+		}
+		return res;
+	}
+	void merge(int[] keys, int arr, int l, int m, int r) {
+		int n1 = m - l + 1;
+		int n2 = r - m;
+		int[] L = new int[n1];
+		int[] L1 = new int[n1];
+		int[] R = new int[n2];
+		int[] R1 = new int[n2];
+		for (int i = 0; i < n1; ++i) {
+			L[i] = arr[l + i];
+			L1[i] = keys[l + i];
+		}
+		for (int j = 0; j < n2; ++j) {
+			R[j] = arr[m + 1 + j];
+			R1[j] = keys[m + 1 + j];
+		}
+		int i = 0, j = 0;
+		int k = l;
+		while (i < n1 && j < n2) {
+			if (L1[i] <= R1[j]) {
+				arr[k] = L[i];
+				keys[k] = L1[i];
+				i++;
+			} 
+			else {
+				arr[k] = R[j];
+				keys[k] = R1[j];
+				j++;
+			}
+			k++;
+		}
+		while (i < n1) {
+			arr[k] = L[i];
+			keys[k] = L1[i];
+			i++;
+			k++;
+		}
+		while (j < n2) {
+			arr[k] = R[j];
+			keys[k] = R1[j];
+			j++;
+			k++;
+		}
+	}
+	void sort(int[] keys, int arr, int l, int r) {
+		if (l < r) {
+			int m = (l + r) / 2;
+			sort(keys,arr,l,m);
+			sort(keys,arr,m + 1,r);
+			merge(keys,arr,l,m,r);
+		}
+	}
+	int[] sortJumbled(int[] mapping, int[] nums) {
+		int[] keys = new int[nums.length];
+		for (int i = 0; i < nums.length; i++) {
+			keys[i] = map(nums[i],mapping);
+		}
+		sort(keys,nums,0,nums.length - 1);
+		return nums;
+	}
+}

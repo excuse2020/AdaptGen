@@ -1,0 +1,65 @@
+class Solution {
+	int bfs(TreeNode node, Map<TreeNode, TreeNode> parentMap, Set<TreeNode> leafNodeSet, int distance) {
+		Queue<TreeNode> q = new LinkedList<>();
+		Set<TreeNode> visited = new HashSet<>();
+		q.offer(node);
+		visited.add(node);
+		int curDistance = 0;
+		int count = 0;
+		while (!q.isEmpty() && curDistance <= distance) {
+			int size = q.size();
+			while (size-- > 0) {
+				TreeNode curNode = q.poll();
+				if (curNode != node && leafNodeSet.contains(curNode)) {
+					count++;
+				}
+				TreeNode parent = parentMap.get(curNode);
+				TreeNode leftChild = curNode.left;
+				TreeNode rightChild = curNode.right;
+				if (parent != null && !visited.contains(parent)) {
+					visited.add(parent);
+					q.offer(parent);
+				}
+				if (leftChild != null && !visited.contains(leftChild)) {
+					visited.add(leftChild);
+					q.offer(leftChild);
+				}
+				if (rightChild != null && !visited.contains(rightChild)) {
+					visited.add(rightChild);
+					q.offer(rightChild);
+				}
+			}
+			curDistance++;
+		}
+		return count;
+	}
+	int countPairs(TreeNode root, int distance) {
+		if (root == null) {
+			return 0;
+		}
+		Map<TreeNode, TreeNode> parentMap = new HashMap<>();
+		Set<TreeNode> leafNodeSet = new HashSet<>();
+		dfs(root,parentMap,leafNodeSet,null);
+		Iterator<TreeNode> it = leafNodeSet.iterator();
+		int numOfPairs = 0;
+		while (it.hasNext()) {
+			TreeNode node = it.next();
+			numOfPairs += bfs(node,parentMap,leafNodeSet,distance);
+			it.remove();
+		}
+		return numOfPairs;
+	}
+	void dfs(TreeNode node, Map<TreeNode, TreeNode> parentMap, Set<TreeNode> leafNodeSet, TreeNode parent) {
+		if (node == null) {
+			return;
+		}
+		if (parent != null) {
+			parentMap.put(node,parent);
+		}
+		if (node.left == null && node.right == null) {
+			leafNodeSet.add(node);
+		}
+		dfs(node.left,parentMap,leafNodeSet,node);
+		dfs(node.right,parentMap,leafNodeSet,node);
+	}
+}

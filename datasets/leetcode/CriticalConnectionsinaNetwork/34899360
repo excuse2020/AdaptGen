@@ -1,0 +1,44 @@
+class Solution {
+	List<List<Integer>> a = new ArrayList<>();
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		int[] delay = new int[n];
+		int[] lowdelay = new int[n];
+		boolean vis = new boolean[n];
+		List<Integer>[] graph = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (List<Integer> oneConnection: connections) {	
+			graph[oneConnection.get(0)].add(oneConnection.get(1));
+			graph[oneConnection.get(1)].add(oneConnection.get(0));
+		}
+		for (int i = 0; i < n; i++) {
+			if (!vis[i]) {
+				dfs(graph,i,-1,delay,lowdelay,vis,0);
+			}
+		}
+		return a;
+	}
+	void dfs(List<Integer>[] graph, int curr, int par, int[] delay, int[] lowdelay, boolean vis, int time) {
+		vis[curr] = true;
+		lowdelay[curr] = delay[curr] = time++;
+		for (int newnode: graph[curr]) {	
+			if (newnode == par) {
+				continue;
+			}
+			if (!vis[newnode]) {
+				dfs(graph,newnode,curr,delay,lowdelay,vis,time);
+				lowdelay[curr] = Math.min(lowdelay[curr],lowdelay[newnode]);
+				if (delay[curr] < lowdelay[newnode]) {
+					List<Integer> b = new ArrayList<>();
+					b.add(curr);
+					b.add(newnode);
+					a.add(b);
+				}
+			} 
+			else {
+				lowdelay[curr] = Math.min(lowdelay[curr],delay[newnode]);
+			}
+		}
+	}
+}

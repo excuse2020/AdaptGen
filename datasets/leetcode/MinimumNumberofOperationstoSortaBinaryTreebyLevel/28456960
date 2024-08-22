@@ -1,0 +1,45 @@
+class Solution {
+	int getSwapCount(List<Integer> origList, Map<Integer, Integer> valMap) {
+		List<Integer> sortList = new ArrayList<>(origList);
+		Collections.sort(sortList);
+		int n = origList.size();
+		int count = 0;
+		for (int i = 0; i < n; i++) {
+			int sortVal = sortList.get(i);
+			int origVal = origList.get(i);
+			if (sortVal != origVal) {
+				int j = valMap.get(sortVal);
+				valMap.put(sortVal,i);
+				valMap.put(origVal,j);
+				origList.set(i,sortVal);
+				origList.set(j,origVal);
+				count++;
+			}
+		}
+		return count;
+	}
+	int minimumOperations(TreeNode root) {
+		Queue<TreeNode> q = new LinkedList<>();
+		int count = 0;
+		q.offer(root);
+		while (!q.isEmpty()) {
+			int size = q.size();
+			int index = 0;
+			Map<Integer, Integer> valMap = new HashMap<>();
+			List<Integer> list = new ArrayList<>();
+			for (int i = 0; i < size; i++) {
+				TreeNode node = q.poll();
+				if (node.left != null) {
+					q.offer(node.left);
+				}
+				if (node.right != null) {
+					q.offer(node.right);
+				}
+				valMap.put(node.val,i);
+				list.add(node.val);
+			}
+			count += getSwapCount(list,valMap);
+		}
+		return count;
+	}
+}

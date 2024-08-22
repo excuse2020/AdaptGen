@@ -1,0 +1,67 @@
+class Solution {
+	boolean checkCycle(int node, HashMap<Integer, List<Integer>> mp, int vis, int dfsVis) {
+		vis[node] = 1;
+		dfsVis[node] = 1;
+		if (mp.get(node) != null) {
+			for (int neighbor: mp.get(node)) {	
+				if (vis[neighbor] == 0) {
+					if (checkCycle(neighbor,mp,vis,dfsVis) == true) {
+						return true;
+					}
+				} 
+				else if (dfsVis[neighbor] == 1) {
+					return true;
+				}
+			}
+		}
+		dfsVis[node] = 0;
+		return false;
+	}
+	void dfs(HashMap<Integer, List<Integer>> mp, int[] visited, int n, Queue<Integer> queue) {
+		visited[n] = 1;
+		if (mp.get(n) != null) {
+			for (int i: mp.get(n)) {	
+				if (visited[i] == 0) {
+					dfs(mp,visited,i,queue);
+				}
+			}
+		}
+		queue.add(n);
+	}
+	int[] findOrder(int numCourses, int[][] prerequisites) {
+		HashMap<Integer, List<Integer>> mp = new HashMap<>();
+		int[] visited = new int[numCourses], res = new int[numCourses];
+		int ctr = 0;
+		Queue<Integer> q = new LinkedList<>();
+		for (int[] row: prerequisites) {	
+			if (mp.get(row[0]) == null) {
+				mp.put(row[0],new ArrayList<>());
+			}
+			mp.get(row[0]).add(row[1]);
+		}
+		if (isCyclic(numCourses,mp)) {
+			return new int[0];
+		}
+		for (int i = 0; i < numCourses; i++) {
+			if (visited[i] == 0) {
+				dfs(mp,visited,i,q);
+			}
+		}
+		for (int i: q) {	
+			res[ctr++] = i;
+		}
+		return res;
+	}
+	boolean isCyclic(int N, HashMap<Integer, List<Integer>> mp) {
+		int vis = new int[N];
+		int dfsVis = new int[N];
+		for (int i = 0; i < N; i++) {
+			if (vis[i] == 0) {
+				if (checkCycle(i,mp,vis,dfsVis) == true) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+}

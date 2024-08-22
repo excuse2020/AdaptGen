@@ -1,0 +1,32 @@
+class Solution {
+	int nextGreaterElement(int m) {
+		int[] count = new int[10];
+		long n = m;
+		int currentRem = -1;
+		int previousRem = -1;
+		if (n >= Integer.MAX_VALUE) {
+			return -1;
+		}
+		while (n > 0) {
+			currentRem = (int) n % 10;
+			n = n / 10;
+			count[currentRem]++;
+			if (previousRem > currentRem) {
+				int num = currentRem + 1;
+				while (count[num] == 0) {
+					num++;
+				}
+				count[num]--;
+				n = n * 10 + num;
+				for (int i = 0; i < 10; i++) {
+					while (count[i]-- > 0) {
+						n = n * 10 + i;
+					}
+				}
+				return n > Integer.MAX_VALUE ? -1 : (int) n;
+			}
+			previousRem = currentRem;
+		}
+		return -1;
+	}
+}

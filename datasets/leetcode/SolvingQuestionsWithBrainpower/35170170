@@ -1,0 +1,22 @@
+class Solution {
+	long mostPoints(int[][] questions) {
+		int n = questions.length;
+		long[] memo = new long[n];
+		Arrays.fill(memo,-1);
+		return recursion(0,questions,memo);
+	}
+	long recursion(int idx, int[][] questions, long[] memo) {
+		if (idx >= questions.length) {
+			return 0;
+		}
+		if (memo[idx] != -1) {
+			return memo[idx];
+		}
+		int point = questions[idx][0];
+		int brainpower = questions[idx][1];
+		long maxPointTake = point + recursion(idx + brainpower,questions,memo);
+		long maxPointLeave = recursion(idx + 1,questions,memo);
+		memo[idx] = Math.max(maxPointTake,maxPointLeave);
+		return memo[idx];
+	}
+}

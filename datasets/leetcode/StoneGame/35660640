@@ -1,0 +1,34 @@
+class Solution {
+	Boolean[][][] dp;
+	boolean canReachable(int sumToAcheve, int i, int j, int aliceTurn, int[] piles) {
+		if (sumToAcheve <= 0) {
+			return true;
+		}
+		if (dp[aliceTurn][i][j] != null) {
+			return dp[aliceTurn][i][j];
+		}
+		if (i == j) {
+			if (aliceTurn == 1) {
+				return true;
+			} 
+			else {
+				return false;
+			}
+		}
+		if (aliceTurn == 1) {
+			return dp[aliceTurn][i][j] = canReachable(sumToAcheve - piles[i],i + 1,j,0,piles) || canReachable(sumToAcheve - piles[j],i,j - 1,0,piles);
+		} 
+		else {
+			return dp[aliceTurn][i][j] = canReachable(sumToAcheve,i + 1,j,1,piles) || canReachable(sumToAcheve,i,j - 1,1,piles);
+		}
+	}
+	boolean stoneGame(int[] piles) {
+		dp = new Boolean[2][piles.length][piles.length];
+		int sum = 0;
+		for (int num: piles) {	
+			sum += num;
+		}
+		int sumToAchieve = sum / 2;
+		return canReachable(sumToAchieve,0,piles.length - 1,1,piles);
+	}
+}

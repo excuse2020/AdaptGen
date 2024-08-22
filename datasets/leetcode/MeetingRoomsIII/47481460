@@ -1,0 +1,48 @@
+class Solution {
+	int getMostUsed(int n, int[] roomUsage) {
+		int max = roomUsage[0];
+		int maxPos = 0;
+		for (int i = 1; i < n; ++i) {
+			int cur = roomUsage[i];
+			if (cur > max) {
+				max = cur;
+				maxPos = i;
+			}
+		}
+		return maxPos;
+	}
+	int mostBooked(int n, int[][] meetings) {
+		int len = meetings.length;
+		Arrays.sort(meetings,(a, b) -> {a[0] - b[0]});
+		PriorityQueue<int[]> booked = new PriorityQueue<>(n, (a, b) -> {a[1] != b[1] ? a[1] - b[1] : a[0] - b[0]});
+		PriorityQueue<Integer> freeRooms = new PriorityQueue<>(n, (a, b) -> {a - b});
+		for (int i = 0; i < n; ++i) {
+			freeRooms.add(i);
+		}
+		int[] roomsUsage = new int[n];
+		for (int i = 0; i < len; ++i) {
+			int[] next = meetings[i];
+			int nextStart = next[0];
+			while (true) {
+				int[] finished = booked.peek();
+				if (finished == null || finished[1] > nextStart) {
+					break;
+				}
+				freeRooms.add(finished[0]);
+				booked.poll();
+			}
+			Integer nextRoom = freeRooms.poll();
+			if (nextRoom == null) {
+				int[] inProgress = booked.poll();
+				next[1] += inProgress[1] - nextStart;
+				next[0] = inProgress[0];
+			} 
+			else {
+				next[0] = nextRoom;
+			}
+			booked.add(next);
+			++roomsUsage[next[0]];
+		}
+		return getMostUsed(n,roomsUsage);
+	}
+}

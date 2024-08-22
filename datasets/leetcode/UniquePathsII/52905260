@@ -1,0 +1,26 @@
+class Solution {
+	int[][] dp;
+	int tracePath(int i, int j, int[][] matrix) {
+		if (i == 0 && j == 0) {
+			return matrix[i][j] == 1 ? 0 : 1;
+		}
+		if (i >= 0 && j >= 0 && matrix[i][j] == 1) {
+			return 0;
+		}
+		if (i < 0 || j < 0) {
+			return 0;
+		}
+		if (dp[i][j] != -1) {
+			return dp[i][j];
+		}
+		return dp[i][j] = tracePath(i - 1,j,matrix) + tracePath(i,j - 1,matrix);
+	}
+	int uniquePathsWithObstacles(int[][] obstacleGrid) {
+		int m = obstacleGrid[0].length, n = obstacleGrid.length;
+		dp = new int[n][m];
+		for (int[] i: dp) {	
+			Arrays.fill(i,-1);
+		}
+		return tracePath(n - 1,m - 1,obstacleGrid);
+	}
+}

@@ -1,0 +1,27 @@
+class Solution {
+	int offset = 5000;
+	int fun(int[] rods, int n, int diff, int idx, int[][] dp) {
+		if (idx == n) {
+			if (diff == 0) {
+				return 0;
+			}
+			return Integer.MIN_VALUE;
+		}
+		if (dp[idx][diff + offset] != -1) {
+			return dp[idx][diff + offset];
+		}
+		int opt1 = fun(rods,n,diff,idx + 1,dp);
+		int opt2 = rods[idx] + fun(rods,n,diff + rods[idx],idx + 1,dp);
+		int opt3 = fun(rods,n,diff - rods[idx],idx + 1,dp);
+		return dp[idx][diff + offset] = Math.max(opt1,Math.max(opt2,opt3));
+	}
+	int tallestBillboard(int[] rods) {
+		int n = rods.length;
+		int[][] dp = new int[n][2 * 5000 + 1];
+		for (int i = 0; i < n; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		int result = fun(rods,n,0,0,dp);
+		return result < 0 ? 0 : result;
+	}
+}

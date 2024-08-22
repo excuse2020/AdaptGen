@@ -1,0 +1,49 @@
+class Solution {
+	int countSubstrings(String s, String t) {
+		Map<Integer, List<String>> subS = new HashMap<>();
+		Map<Integer, List<String>> subT = new HashMap<>();
+		populateMap(subS,s);
+		populateMap(subT,t);
+		int result = 0;
+		int len = Math.max(s.length(),t.length());
+		for (int i = 1; i <= len; i++) {
+			List<String> allS = subS.get(i);
+			List<String> allT = subT.get(i);
+			if (allS != null && allT != null) {
+				for (String substringS: allS) {	
+					for (String substringT: allT) {	
+						int diffs = 0;
+						for (int j = 0; j < i; j++) {
+							if (substringS.charAt(j) != substringT.charAt(j)) {
+								diffs++;
+								if (diffs == 2) {
+									break;
+								}
+							}
+						}
+						if (diffs == 1) {
+							result++;
+						}
+					}
+				}
+			}
+		}
+		return result;
+	}
+	void populateMap(Map<Integer, List<String>> map, String target) {
+		for (int i = 0; i < target.length(); i++) {
+			for (int j = i + 1; j <= target.length(); j++) {
+				String sub = target.substring(i,j);
+				int subLength = sub.length();
+				if (map.get(subLength) == null) {
+					List<String> list = new LinkedList<>();
+					list.add(sub);
+					map.put(subLength,list);
+				} 
+				else {
+					map.get(subLength).add(sub);
+				}
+			}
+		}
+	}
+}

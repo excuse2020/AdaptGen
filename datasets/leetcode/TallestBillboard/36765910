@@ -1,0 +1,32 @@
+class Solution {
+	int min = (int) -1e4;
+	int calTallestHeight(int idx, int diff, int[] rods, int[][] dp) {
+		if (idx == rods.length) {
+			if (diff == 0) {
+				return 0;
+			}
+			return min;
+		}
+		int ans = dp[idx][diff + 5000];
+		if (ans != -1) {
+			return ans;
+		}
+		int a = calTallestHeight(idx + 1,diff,rods,dp);
+		int b = rods[idx] + calTallestHeight(idx + 1,diff + rods[idx],rods,dp);
+		int c = calTallestHeight(idx + 1,diff - rods[idx],rods,dp);
+		dp[idx][diff + 5000] = Math.max(a,Math.max(b,c));
+		return dp[idx][diff + 5000];
+	}
+	int tallestBillboard(int[] rods) {
+		int sum = 0;
+		for (int i = 0; i < rods.length; i++) {
+			sum += rods[i];
+		}
+		int[][] dp = new int[rods.length + 1][2 * 5000 + 1];
+		for (int i = 0; i < dp.length; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		int ans = calTallestHeight(0,0,rods,dp);
+		return ans < 0 ? 0 : ans;
+	}
+}

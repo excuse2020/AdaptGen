@@ -1,0 +1,33 @@
+class Solution {
+	int max = -1;
+	int longestCycle(int[] edges) {
+		int[] len = new int[edges.length];
+		Arrays.fill(len,-1);
+		int[] mem = new int[edges.length];
+		Arrays.fill(mem,-1);
+		for (int i = 0; i < edges.length; i++) {
+			recur(i,edges,len,mem,0);
+		}
+		return max;
+	}
+	int recur(int id, int[] edges, int[] len, int[] mem, int deep) {
+		if (mem[id] != -1) {
+			return mem[id];
+		}
+		if (len[id] != -1) {
+			max = Math.max(max,deep - len[id]);
+			mem[id] = deep - len[id];
+			return deep - len[id];
+		}
+		if (edges[id] != -1) {
+			len[id] = deep;
+			int res = recur(edges[id],edges,len,mem,deep + 1);
+			len[id] = -1;
+			if (res != -1) {
+				mem[id] = res;
+				return res;
+			}
+		}
+		return -1;
+	}
+}

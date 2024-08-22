@@ -1,0 +1,64 @@
+class Solution {
+	boolean HasSubtree(TreeNode root1, TreeNode root2) {
+		TreeNode A = root1;
+		TreeNode B = root2;
+		if (B == null || A == null) {
+			return false;
+		}
+		Queue<TreeNode> queue = new LinkedList<>();
+		Queue<TreeNode> queueB = new LinkedList<>();
+		Queue<TreeNode> queueA = new LinkedList<>();
+		TreeNode op;
+		TreeNode opA;
+		TreeNode opB = B;
+		queue.offer(A);
+		while (true) {
+			op = queue.poll();
+			if (op.left != null) {
+				queue.offer(op.left);
+			}
+			if (op.right != null) {
+				queue.offer(op.right);
+			}
+			opA = op;
+			queueA.offer(opA);
+			queueB.offer(B);
+			while (true) {
+				opA = queueA.poll();
+				opB = queueB.poll();
+				if (opA.val != opB.val) {
+					break;
+				}
+				if (opA.left == null && opB.left != null) {
+					break;
+				}
+				if (opA.right == null && opB.right != null) {
+					break;
+				}
+				if (opA.left != null && opB.left != null) {
+					queueA.offer(opA.left);
+					queueB.offer(opB.left);
+				}
+				if (opA.right != null && opB.right != null) {
+					queueA.offer(opA.right);
+					queueB.offer(opB.right);
+				}
+				if (queueA.isEmpty() && !queueB.isEmpty()) {
+					return false;
+				} 
+				else if (!queueA.isEmpty() && queueB.isEmpty()) {
+					return true;
+				} 
+				else if (queueA.isEmpty() && queueB.isEmpty()) {
+					return true;
+				}
+			}
+			queueA.clear();
+			queueB.clear();
+			if (queue.isEmpty()) {
+				break;
+			}
+		}
+		return false;
+	}
+}

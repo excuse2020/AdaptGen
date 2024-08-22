@@ -1,0 +1,37 @@
+class Solution {
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		List<List<Integer>> result = new ArrayList<>();
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (List<Integer> connection: connections) {	
+			int a = connection.get(0);
+			int b = connection.get(1);
+			map.putIfAbsent(a,new ArrayList<>());
+			map.get(a).add(b);
+			map.putIfAbsent(b,new ArrayList<>());
+			map.get(b).add(a);
+		}
+		int[] min_depth = new int[n];
+		Arrays.fill(min_depth,-1);
+		helper(-1,0,0,result,map,min_depth);
+		return result;
+	}
+	void helper(int pre, int current, int depth, List<List<Integer>> result, Map<Integer, List<Integer>> map, int[] min_depth) {
+		if (min_depth[current] != -1) {
+			return;
+		}
+		min_depth[current] = depth;
+		List<Integer> neighbors = map.get(current);
+		for (int nei: neighbors) {	
+			if (nei == pre) {
+				continue;
+			}
+			if (min_depth[nei] == -1) {
+				helper(current,nei,depth + 1,result,map,min_depth);
+			}
+			if (min_depth[nei] > depth) {
+				result.add(Arrays.asList(nei,current));
+			}
+			min_depth[current] = Math.min(min_depth[current],min_depth[nei]);
+		}
+	}
+}

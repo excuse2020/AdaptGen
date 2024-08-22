@@ -1,0 +1,33 @@
+class Solution {
+	int countTopLeft(int[][] grid, int r, int c, HashSet<Integer> set) {
+		r--;
+		c--;
+		if (r < 0 || c < 0 || r >= grid.length || c >= grid[0].length) {
+			return set.size();
+		}
+		set.add(grid[r][c]);
+		return countTopLeft(grid,r,c,set);
+	}
+	int countbottomRight(int[][] grid, int r, int c, HashSet<Integer> set) {
+		r++;
+		c++;
+		if (r < 0 || c < 0 || r >= grid.length || c >= grid[0].length) {
+			return set.size();
+		}
+		set.add(grid[r][c]);
+		return countbottomRight(grid,r,c,set);
+	}
+	int[][] differenceOfDistinctValues(int[][] grid) {
+		int m = grid.length;
+		int n = grid[0].length;
+		int[][] ans = new int[m][n];
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				HashSet<Integer> leftSet = new HashSet<>();
+				HashSet<Integer> rightSet = new HashSet<>();
+				ans[i][j] = Math.abs(countTopLeft(grid,i,j,leftSet) - countbottomRight(grid,i,j,rightSet));
+			}
+		}
+		return ans;
+	}
+}

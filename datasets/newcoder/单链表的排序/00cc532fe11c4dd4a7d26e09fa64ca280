@@ -1,0 +1,42 @@
+class Solution {
+	ListNode sortInList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode slow = head;
+		ListNode tail = slow;
+		ListNode fast = head;
+		while (fast != null) {
+			tail = slow;
+			slow = slow.next;
+			fast = fast.next;
+			if (fast != null) {
+				fast = fast.next;
+			}
+		}
+		tail.next = null;
+		ListNode sortedLeft = sortInList(head);
+		ListNode sortedRight = sortInList(slow);
+		ListNode hair = new ListNode(0);
+		ListNode pointer = hair;
+		while (sortedLeft != null && sortedRight != null) {
+			if (sortedLeft.val < sortedRight.val) {
+				pointer.next = sortedLeft;
+				sortedLeft = sortedLeft.next;
+				pointer = pointer.next;
+			} 
+			else {
+				pointer.next = sortedRight;
+				sortedRight = sortedRight.next;
+				pointer = pointer.next;
+			}
+		}
+		if (sortedLeft != null) {
+			pointer.next = sortedLeft;
+		}
+		if (sortedRight != null) {
+			pointer.next = sortedRight;
+		}
+		return hair.next;
+	}
+}

@@ -1,0 +1,60 @@
+class Solution {
+	int[][] dp;
+	void dfs(int node, int target, ArrayList<Integer> arr, int[] fre, Map<Integer, List<Integer>> map) {
+		if (node == target) {
+			for (int i: arr) {	
+				fre[i]++;
+			}
+			fre[target]++;
+			return;
+		}
+		arr.add(node);
+		for (int next: map.get(node)) {	
+			if (arr.size() <= 1 || next != arr.get(arr.size() - 2)) {
+				dfs(next,target,arr,fre,map);
+			}
+		}
+		arr.remove(arr.size() - 1);
+	}
+	int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
+		if (n == 1) {
+			return trips.length * price[0] / 2;
+		}
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int[] ed: edges) {	
+			map.put(ed[0],map.computeIfAbsent(ed[0],(k) -> {new ArrayList<>()})).add(ed[1]);
+			map.put(ed[1],map.computeIfAbsent(ed[1],(k) -> {new ArrayList<>()})).add(ed[0]);
+		}
+		int[] fre = new int[n];
+		for (int[] tr: trips) {	
+			dfs(tr[0],tr[1],new ArrayList<>(),fre,map);
+		}
+		dp = new int[n][n];
+		for (int i: dp) {	
+			Arrays.fill(i,-1);
+		}
+		int ans = select(0,-1,1,fre,price,map);
+		return ans;
+	}
+	int select(int node, int par, int f, int[] fre, int[] price, Map<Integer, List<Integer>> map) {
+		if (dp[node][f] != -1) {
+			return dp[node][f];
+		}
+		int pick = Integer.MAX_VALUE, nopick = Integer.MAX_VALUE;
+		if (f == 1) {
+			pick = fre[node] * (price[node] / 2);
+			for (int next: map.get(node)) {	
+				if (next != par) {
+					pick += select(next,node,0,fre,price,map);
+				}
+			}
+		}
+		nopick = fre[node] * (price[node]);
+		for (int next: map.get(node)) {	
+			if (next != par) {
+				nopick += select(next,node,1,fre,price,map);
+			}
+		}
+		return dp[node][f] = Math.min(pick,nopick);
+	}
+}

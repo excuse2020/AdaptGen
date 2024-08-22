@@ -1,0 +1,50 @@
+class Solution {
+	List<String> invalidTransactions(String[] transactions) {
+		Set<Integer> trans = new HashSet<>();
+		if (transactions.length > 1) {
+			for (int i = 0; i < transactions.length; i++) {
+				var str = transactions[i];
+				var arr = str.split(",");
+				var name = arr[0];
+				int time = Integer.parseInt(arr[1]);
+				int money = Integer.parseInt(arr[2]);
+				var city = arr[3];
+				if (money > 1000) {
+					if (!trans.contains(str)) {
+						trans.add(i);
+					}
+				}
+				for (int j = 0; j != transactions.length; j++) {
+					var str2 = transactions[j];
+					var arr2 = str2.split(",");
+					var name2 = arr2[0];
+					int time2 = Integer.parseInt(arr2[1]);
+					int money2 = Integer.parseInt(arr2[2]);
+					var city2 = arr2[3];
+					if (name2.equals(name) && !city2.equals(city)) {
+						if (!trans.contains(str)) {
+							trans.add(i);
+							trans.add(j);
+						} 
+						else if (!trans.contains(str2)) {
+							trans.add(j);
+						}
+					}
+					if (money2 > 1000) {
+						if (!trans.contains(str2)) {
+							trans.add(j);
+						}
+					}
+				}
+			}
+		} 
+		else {
+			var str = transactions[0];
+			var arr = str.split(",");
+			if (Integer.valueOf(arr[2]) > 1000) {
+				trans.add(0);
+			}
+		}
+		return trans.stream().map((x) -> {transactions[x]}).toList();
+	}
+}

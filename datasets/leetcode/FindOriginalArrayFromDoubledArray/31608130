@@ -1,0 +1,42 @@
+class Solution {
+	int[] findOriginalArray(int[] changed) {
+		if ((changed.length & 1) != 0) {
+			return new int[0];
+		}
+		int[] ans = new int[changed.length / 2];
+		Arrays.sort(changed);
+		Set<Integer> visited = new HashSet<>();
+		int p = changed.length - 1;
+		int i = changed.length / 2 - 1;
+		int right = changed.length - 1;
+		for (; i >= 0; i--) {
+			while (visited.contains(p) && p >= 0) {
+				p--;
+			}
+			if (p < 0 || (changed[p] & 1) != 0) {
+				break;
+			}
+			int index = higher(changed,0,right,changed[p] / 2);
+			if (index == 0 || changed[index - 1] != changed[p] / 2) {
+				break;
+			}
+			visited.add(--index);
+			visited.add(p);
+			right = index;
+			ans[i] = changed[index];
+		}
+		return i == -1 ? ans : new int[0];
+	}
+	int higher(int[] nums, int left, int right, int target) {
+		while (left < right) {
+			int mid = left + (right - left) / 2;
+			if (nums[mid] <= target) {
+				left = mid + 1;
+			} 
+			else {
+				right = mid;
+			}
+		}
+		return left;
+	}
+}

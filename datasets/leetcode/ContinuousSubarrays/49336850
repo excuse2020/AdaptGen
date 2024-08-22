@@ -1,0 +1,26 @@
+class Solution {
+	long continuousSubarrays(int[] nums) {
+		TreeSet<Integer> ts = new TreeSet<>((a, b) -> {nums[a] == nums[b] ? a - b : nums[a] - nums[b]});
+		ts.add(0);
+		long len = 1l;
+		int left = 0;
+		long ans = 0;
+		for (int right = 1; right < nums.length; right++) {
+			ts.add(right);
+			int out = 0;
+			while (nums[ts.last()] - nums[ts.first()] > 2) {
+				out++;
+				ts.remove(left++);
+			}
+			if (out > 0) {
+				long inCycle = len - out;
+				System.out.println("incycle->" + inCycle);
+				long temp = (len * (len + 1)) / 2 - (inCycle * (inCycle + 1)) / 2;
+				ans += temp;
+			}
+			len = right - left + 1;
+		}
+		ans += (len * (len + 1)) / 2;
+		return ans;
+	}
+}

@@ -1,0 +1,75 @@
+class Solution {
+	HashMap<Integer, ArrayList<Integer>> depth;
+	HashMap<Integer, Integer> maxDepth;
+	int dfs(TreeNode root, int d) {
+		int maxV = d;
+		if (root.left != null) {
+			if (!depth.containsKey(d + 1)) {
+				depth.put(d + 1,new ArrayList<>());
+			}
+			depth.get(d + 1).add(root.left.val);
+			maxV = Math.max(maxV,dfs(root.left,d + 1));
+		}
+		if (root.right != null) {
+			if (!depth.containsKey(d + 1)) {
+				depth.put(d + 1,new ArrayList<>());
+			}
+			depth.get(d + 1).add(root.right.val);
+			maxV = Math.max(maxV,dfs(root.right,d + 1));
+		}
+		maxDepth.put(root.val,maxV);
+		return maxV;
+	}
+	int[] treeQueries(TreeNode root, int[] queries) {
+		depth = new HashMap<>();
+		maxDepth = new HashMap<>();
+		depth.put(1,new ArrayList<>());
+		depth.get(1).add(root.val);
+		dfs(root,1);
+		HashMap<Integer, Integer> ans = new HashMap<>();
+		for (Map.Entry<Integer, ArrayList<Integer>> e: depth.entrySet()) {	
+			ArrayList<Integer> p = e.getValue();
+			if (p.size() == 0) {
+				continue;
+			}
+			if (p.size() == 1) {
+				ans.put(p.get(0),e.getKey() - 1);
+			} 
+			else {
+				int max = 0;
+				ArrayList<int[]> arr = new ArrayList<>();
+				for (int v: p) {	
+					arr.add(new int{maxDepth.get(v), v});
+				}
+				Collections.sort(arr,new ArrayComparator());
+				for (int v: p) {	
+					if (arr.get(0)[1] == v) {
+						ans.put(v,arr.get(1)[0]);
+					} 
+					else {
+						ans.put(v,arr.get(0)[0]);
+					}
+				}
+			}
+		}
+		int n = queries.length;
+		int[] ret = new int[n];
+		for (int i = 0; i < n; i++) {
+			ret[i] = ans.get(queries[i]) - 1;
+		}
+		return ret;
+	}
+	class ArrayComparator {
+		int compare(int[] a1, int[] a2) {
+			for (int i = 0; i < a1.length; i++) {
+				if (a1[i] > a2[i]) {
+					return -1;
+				} 
+				else if (a1[i] < a2[i]) {
+					return 1;
+				}
+			}
+			return 0;
+		}
+	}
+}

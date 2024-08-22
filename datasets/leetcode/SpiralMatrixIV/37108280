@@ -1,0 +1,52 @@
+class Solution {
+	int[][] spiral(int m, int n, ListNode head, int[][] matrix) {
+		int left = 0;
+		int right = n - 1;
+		int top = 0;
+		int bottom = m - 1;
+		int d = 0;
+		while (head != null && left <= right && top <= bottom) {
+			if (d == 0) {
+				for (int i = left; i <= right && head != null; i++) {
+					matrix[top][i] = head.val;
+					head = head.next;
+				}
+				top++;
+				d = 1;
+			} 
+			else if (d == 1) {
+				for (int i = top; i <= bottom && head != null; i++) {
+					matrix[i][right] = head.val;
+					head = head.next;
+				}
+				right--;
+				d = 2;
+			} 
+			else if (d == 2) {
+				for (int i = right; i >= left && head != null; i--) {
+					matrix[bottom][i] = head.val;
+					head = head.next;
+				}
+				bottom--;
+				d = 3;
+			} 
+			else if (d == 3) {
+				for (int i = bottom; i >= top && head != null; i--) {
+					matrix[i][left] = head.val;
+					head = head.next;
+				}
+				left++;
+				d = 0;
+			}
+		}
+		return matrix;
+	}
+	int[][] spiralMatrix(int m, int n, ListNode head) {
+		int[][] matrix = new int[m][n];
+		for (int[] arr: matrix) {	
+			Arrays.fill(arr,-1);
+		}
+		spiral(m,n,head,matrix);
+		return matrix;
+	}
+}

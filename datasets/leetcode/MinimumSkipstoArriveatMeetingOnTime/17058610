@@ -1,0 +1,29 @@
+class Solution {
+	int minSkip(int[] dist, int speed, int hoursBefore, int curr, double currTime, int skipsCount) {
+		if (currTime > hoursBefore) {
+			return 10000;
+		}
+		if (curr == dist.length - 1) {
+			if (currTime % 1 == 0) {
+				double totalTime = currTime + dist[curr] / speed;
+				return totalTime <= hoursBefore ? skipsCount : 10000;
+			} 
+			else {
+				double totalTime = currTime + dist[curr] / speed + 1 - (currTime % 1);
+				return totalTime <= hoursBefore ? skipsCount : 10000;
+			}
+		} 
+		else {
+			if (currTime % 1 == 0) {
+				return minSkip(dist,speed,hoursBefore,curr + 1,currTime + dist[curr] / speed,skipsCount);
+			} 
+			else {
+				return Math.min(minSkip(dist,speed,hoursBefore,curr + 1,currTime + dist[curr] / speed,skipsCount + 1),minSkip(dist,speed,hoursBefore,curr,currTime + 1 - (currTime % 1),skipsCount));
+			}
+		}
+	}
+	int minSkips(int[] dist, int speed, int hoursBefore) {
+		int result = minSkip(dist,speed,hoursBefore,0,0,0);
+		return result == 10000 ? -1 : result;
+	}
+}

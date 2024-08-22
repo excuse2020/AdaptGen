@@ -1,0 +1,24 @@
+class Solution {
+	double dp = new double[100][100];
+	double algo(int[] nums, int k, int strt) {
+		if (k == 0) {
+			return strt < nums.length ? -10000000 : 0;
+		}
+		if (strt >= nums.length) {
+			return 0;
+		}
+		if (dp[strt][k] != 0) {
+			return dp[strt][k];
+		}
+		double sumd = 0.0, res = 0.0;
+		for (int i = strt; i < nums.length; i++) {
+			sumd += nums[i];
+			res = Math.max(res,sumd / (i - strt + 1) + algo(nums,k - 1,i + 1));
+		}
+		dp[strt][k] = res;
+		return res;
+	}
+	double largestSumOfAverages(int[] nums, int k) {
+		return algo(nums,k,0);
+	}
+}

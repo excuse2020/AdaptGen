@@ -1,0 +1,61 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+		int[] dis1 = new int[edges.length];
+		int[] dis2 = new int[edges.length];
+		Arrays.fill(dis1,-1);
+		Arrays.fill(dis2,-1);
+		HashSet<Integer> set = new HashSet<>();
+		for (int i = 0; i < edges.length; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			int v1 = i;
+			int v2 = edges[i];
+			if (v2 != -1) {
+				graph.get(v1).add(v2);
+			}
+		}
+		shortest_from_node(node1,dis1,graph,set);
+		set = new HashSet<>();
+		shortest_from_node(node2,dis2,graph,set);
+		int ret = Integer.MAX_VALUE;
+		int ans = -1;
+		for (int i = 0; i < dis1.length; i++) {
+			if (dis1[i] != -1 && dis2[i] != -1) {
+				int max = Math.max(dis1[i],dis2[i]);
+				if (max < ret) {
+					ret = max;
+					ans = i;
+				}
+			}
+		}
+		return ans;
+	}
+	void shortest_from_node(int node, int[] dis, ArrayList<ArrayList<Integer>> graph, HashSet<Integer> set) {
+		Queue<Integer> q = new LinkedList<>();
+		q.add(node);
+		dis[node] = 0;
+		set.add(node);
+		int moves = -1;
+		while (q.size() > 0) {
+			int size = q.size();
+			moves++;
+			while (size-- > 0) {
+				int p = q.poll();
+				for (int nbr: graph.get(p)) {	
+					if (!set.contains(nbr)) {
+						set.add(nbr);
+						if (dis[nbr] != -1) {
+							dis[nbr] = Math.min(moves + 1,dis[nbr]);
+						} 
+						else {
+							dis[nbr] = moves + 1;
+						}
+						q.add(nbr);
+					}
+				}
+			}
+		}
+	}
+}

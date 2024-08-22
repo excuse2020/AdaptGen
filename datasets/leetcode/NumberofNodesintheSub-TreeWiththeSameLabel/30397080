@@ -1,0 +1,32 @@
+class Solution {
+	List<List<Integer>> adj;
+	void bfs(int idx, String s, int[] ans, Map<Character, Integer> map, boolean[] vis) {
+		if (vis[idx]) {
+			return;
+		}
+		vis[idx] = true;
+		char ch = s.charAt(idx);
+		for (int num: adj.get(idx)) {	
+			Map<Character, Integer> tmp = new HashMap<>();
+			bfs(num,s,ans,tmp,vis);
+			for (Character c: tmp.keySet()) {	
+				map.put(c,map.getOrDefault(c,0) + tmp.get(c));
+			}
+		}
+		map.put(ch,map.getOrDefault(ch,0) + 1);
+		ans[idx] = map.get(ch);
+	}
+	int[] countSubTrees(int n, int[][] edges, String labels) {
+		adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int[] e: edges) {	
+			adj.get(e[0]).add(e[1]);
+			adj.get(e[1]).add(e[0]);
+		}
+		int[] ans = new int[n];
+		bfs(0,labels,ans,new HashMap<>(),new boolean[n]);
+		return ans;
+	}
+}

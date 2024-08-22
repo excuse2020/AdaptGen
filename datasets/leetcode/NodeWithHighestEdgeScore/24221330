@@ -1,0 +1,50 @@
+class Solution {
+	void dfs(Map<Integer, List<Integer>> map, int currentNode, int previousNode, long[] sums, Set<Integer> visited) {
+		if (previousNode != -1) {
+			sums[currentNode] = sums[currentNode] + previousNode;
+		}
+		if (visited.contains(currentNode)) {
+			return;
+		}
+		visited.add(currentNode);
+		if (!map.containsKey(currentNode)) {
+			return;
+		}
+		List<Integer> neighbors = map.get(currentNode);
+		for (int neighbor: neighbors) {	
+			dfs(map,neighbor,currentNode,sums,visited);
+		}
+	}
+	int edgeScore(int[] edges) {
+		int result = 0;
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int i = 0; i < edges.length; i++) {
+			int startNode = i;
+			int endNode = edges[i];
+			if (map.containsKey(startNode)) {
+				List<Integer> list = map.get(startNode);
+				list.add(endNode);
+				map.put(startNode,list);
+			} 
+			else {
+				List<Integer> list = new ArrayList<>();
+				list.add(endNode);
+				map.put(startNode,list);
+			}
+		}
+		long[] sums = new long[edges.length];
+		Set<Integer> visited = new HashSet<>();
+		for (int i = 0; i < edges.length; i++) {
+			dfs(map,i,-1,sums,visited);
+		}
+		long maxValue = Long.MIN_VALUE;
+		int minIndex = -1;
+		for (int i = 0; i < sums.length; i++) {
+			if (sums[i] > maxValue) {
+				maxValue = sums[i];
+				minIndex = i;
+			}
+		}
+		return minIndex;
+	}
+}

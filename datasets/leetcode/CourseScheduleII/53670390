@@ -1,0 +1,40 @@
+class Solution {
+	boolean findCycle(int node, ArrayList<ArrayList<Integer>> adj, boolean[] vis, boolean[] path, ArrayList<Integer> ans) {
+		if (path[node]) {
+			return true;
+		}
+		if (vis[node]) {
+			return false;
+		}
+		vis[node] = true;
+		path[node] = true;
+		for (int neighbor: adj.get(node)) {	
+			if (findCycle(neighbor,adj,vis,path,ans)) {
+				return true;
+			}
+		}
+		path[node] = false;
+		ans.add(node);
+		return false;
+	}
+	int[] findOrder(int numCourses, int[][] prerequisites) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < numCourses; i++) {
+			adj.add(new ArrayList<Integer>());
+		}
+		boolean[] vis = new boolean[numCourses];
+		boolean[] path = new boolean[numCourses];
+		for (int i = 0; i < prerequisites.length; i++) {
+			int[] sub = prerequisites[i];
+			adj.get(sub[0]).add(sub[1]);
+		}
+		ArrayList<Integer> ans = new ArrayList<>();
+		for (int i = 0; i < numCourses; i++) {
+			if (findCycle(i,adj,vis,path,ans)) {
+				return new int[0];
+			}
+		}
+		int[] arr = ans.stream().mapToInt((i) -> {i}).toArray();
+		return arr;
+	}
+}

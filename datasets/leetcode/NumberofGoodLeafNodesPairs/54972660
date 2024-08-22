@@ -1,0 +1,39 @@
+class Solution {
+	int pairs = 0;
+	int countPairs(TreeNode root, int distance) {
+		get_ans(root,distance + 1);
+		return pairs;
+	}
+	int[] get_ans(TreeNode root, int dis) {
+		if (root == null) {
+			return null;
+		}
+		int leftFreq = get_ans(root.left,dis), rightFreq = get_ans(root.right,dis), currentFreq = new int[dis];
+		if (leftFreq == null && rightFreq == null) {
+			currentFreq[0]++;
+		} 
+		else if (leftFreq != null && rightFreq != null) {
+			for (int i = 0; i < dis; i++) {
+				for (int j = 0; i + j < dis; j++) {
+					pairs += leftFreq[i] * rightFreq[j];
+				}
+				if (i + 1 != dis) {
+					currentFreq[i + 1] = leftFreq[i] + rightFreq[i];
+				}
+			}
+		} 
+		else {
+			if (leftFreq != null) {
+				for (int i = 0; i < dis - 1; i++) {
+					currentFreq[i + 1] += leftFreq[i];
+				}
+			} 
+			else if (rightFreq != null) {
+				for (int i = 0; i < dis - 1; i++) {
+					currentFreq[i + 1] += rightFreq[i];
+				}
+			}
+		}
+		return currentFreq;
+	}
+}

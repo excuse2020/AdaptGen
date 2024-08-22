@@ -1,0 +1,31 @@
+class Solution {
+	int strangePrinter(String s) {
+		StringBuilder sb = new StringBuilder();
+		int iter = 0;
+		while (iter < s.length()) {
+			char last = s.charAt(iter);
+			while (iter < s.length() && s.charAt(iter) == last) {
+				iter++;
+			}
+			sb.append(last);
+		}
+		return strangePrinter(sb.toString(),new HashMap());
+	}
+	int strangePrinter(String s, Map<String, Integer> mamo) {
+		if (s.length() <= 2) {
+			return s.length();
+		}
+		if (mamo.containsKey(s)) {
+			return mamo.get(s);
+		}
+		char first = s.charAt(0);
+		int bestScore = strangePrinter(s.substring(1),mamo) + 1;
+		for (int i = 1; i < s.length(); i++) {
+			if (s.charAt(i) == first) {
+				bestScore = Math.min(bestScore,strangePrinter(s.substring(1,i),mamo) + strangePrinter(s.substring(i),mamo));
+			}
+		}
+		mamo.put(s,bestScore);
+		return bestScore;
+	}
+}

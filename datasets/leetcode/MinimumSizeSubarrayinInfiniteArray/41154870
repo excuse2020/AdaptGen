@@ -1,0 +1,26 @@
+class Solution {
+	int minSizeSubarray(int[] nums, int target) {
+		long sm = 0;
+		int n = nums.length;
+		for (int i = 0; i < n; i++) {
+			sm += nums[i];
+		}
+		int base = (int) (target / sm) * n;
+		target %= sm;
+		if (target == 0) {
+			return base;
+		}
+		int l = 0, r = 0, curSum = 0;
+		int curMin = Integer.MAX_VALUE;
+		while (l < n && (r - l) < n) {
+			curSum += nums[(r++) % n];
+			while (curSum > target) {
+				curSum -= nums[(l++) % n];
+			}
+			if (curSum == target) {
+				curMin = Math.min(curMin,base + r - l);
+			}
+		}
+		return curMin == Integer.MAX_VALUE ? -1 : curMin;
+	}
+}

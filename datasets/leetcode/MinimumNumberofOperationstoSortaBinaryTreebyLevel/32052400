@@ -1,0 +1,49 @@
+class Solution {
+	int minimumOperations(TreeNode root) {
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(root);
+		int operation = 0;
+		while (!q.isEmpty()) {
+			int size = q.size();
+			int[] arr1 = new int[size];
+			int[] arr2 = new int[size];
+			for (int i = 0; i < size; i++) {
+				TreeNode last = q.poll();
+				arr1[i] = last.val;
+				arr2[i] = last.val;
+				if (last.left != null) {
+					q.add(last.left);
+				}
+				if (last.right != null) {
+					q.add(last.right);
+				}
+			}
+			operation += numberOfSwapsInLevel(arr1,arr2);
+		}
+		return operation;
+	}
+	int numberOfSwapsInLevel(int[] list1, int[] list2) {
+		int swap = 0;
+		Arrays.sort(list2);
+		Map<Integer, Integer> map = new HashMap<>();
+		int ind = 0;
+		for (int key: list1) {	
+			map.put(key,ind);
+			ind++;
+		}
+		int temp = 0;
+		int mapInd = 0;
+		for (int i = 0; i < list2.length; i++) {
+			if (list1[i] != list2[i]) {
+				mapInd = map.get(list2[i]);
+				map.put(list1[i],mapInd);
+				map.put(list1[mapInd],ind);
+				temp = list1[mapInd];
+				list1[mapInd] = list1[i];
+				list1[i] = temp;
+				swap++;
+			}
+		}
+		return swap;
+	}
+}

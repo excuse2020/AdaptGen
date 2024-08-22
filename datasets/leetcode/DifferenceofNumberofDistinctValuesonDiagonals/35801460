@@ -1,0 +1,77 @@
+class Solution {
+	int[][] differenceOfDistinctValues(int[][] grid) {
+		int m = grid.length;
+		int n = grid[0].length;
+		int[][] ans = new int[m][n];
+		for (int i = 0; i < n; i++) {
+			int[] freqRight = new int[51];
+			int[] freqLeft = new int[51];
+			int distinct = populate(0,i,freqRight,m,n,grid);
+			int rightDistinct = distinct;
+			int leftDistinct = 0;
+			int row = 0;
+			int col = i;
+			while (row < m && col < n) {
+				if (row + 1 < m && col + 1 < n) {
+					rightDistinct = rightDistinct - (freqRight[grid[row][col]] > 1 ? 0 : 1);
+					freqRight[grid[row][col]]--;
+				} 
+				else {
+					rightDistinct = 0;
+				}
+				if (row > 0 && col > 0) {
+					leftDistinct = leftDistinct + (freqLeft[grid[row - 1][col - 1]] == 0 ? 1 : 0);
+					freqLeft[grid[row - 1][col - 1]]++;
+				} 
+				else {
+					leftDistinct = 0;
+				}
+				ans[row][col] = Math.abs(rightDistinct - leftDistinct);
+				row++;
+				col++;
+			}
+		}
+		for (int i = 1; i < m; i++) {
+			int[] freqRight = new int[51];
+			int[] freqLeft = new int[51];
+			int distinct = populate(i,0,freqRight,m,n,grid);
+			int rightDistinct = distinct;
+			int leftDistinct = 0;
+			int row = i;
+			int col = 0;
+			while (row < m && col < n) {
+				if (row + 1 < m && col + 1 < n) {
+					rightDistinct = rightDistinct - (freqRight[grid[row][col]] > 1 ? 0 : 1);
+					freqRight[grid[row][col]]--;
+				} 
+				else {
+					rightDistinct = 0;
+				}
+				if (row > 0 && col > 0) {
+					leftDistinct = leftDistinct + (freqLeft[grid[row - 1][col - 1]] == 0 ? 1 : 0);
+					freqLeft[grid[row - 1][col - 1]]++;
+				} 
+				else {
+					leftDistinct = 0;
+				}
+				ans[row][col] = Math.abs(rightDistinct - leftDistinct);
+				row++;
+				col++;
+			}
+		}
+		System.gc();
+		return ans;
+	}
+	int populate(int row, int col, int[] freq, int m, int n, int[][] grid) {
+		int distinct = 0;
+		while (row < m && col < n) {
+			if (freq[grid[row][col]] == 0) {
+				distinct++;
+			}
+			freq[grid[row][col]]++;
+			row++;
+			col++;
+		}
+		return distinct;
+	}
+}

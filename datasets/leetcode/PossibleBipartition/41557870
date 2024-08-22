@@ -1,0 +1,34 @@
+class Solution {
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		ArrayList<Integer>[] adj = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			adj[i] = new ArrayList<>();
+		}
+		for (int[] edge: dislikes) {	
+			adj[edge[0] - 1].add(edge[1] - 1);
+			adj[edge[1] - 1].add(edge[0] - 1);
+		}
+		int[] vis = new int[n];
+		for (int i = 0; i < n; i++) {
+			if (vis[i] != 0) {
+				continue;
+			}
+			if (!possibleBipartition(i,adj,vis,1)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int u, ArrayList<Integer>[] adj, int[] vis, int c) {
+		if (vis[u] != 0) {
+			return vis[u] == c;
+		}
+		vis[u] = c;
+		for (int v: adj[u]) {	
+			if (!possibleBipartition(v,adj,vis,~c)) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

@@ -1,0 +1,36 @@
+class Solution {
+	int minOperations(int n) {
+		int res = 0;
+		List<Integer> set = new ArrayList();
+		for (int i = 0; (int) Math.pow(i,2) <= n * 2; i++) {
+			set.add((int) Math.pow(2,i));
+		}
+		if (set.contains(n)) {
+			return 1;
+		}
+		while (n != 0) {
+			int prev = -1;
+			int next = -1;
+			for (Integer key: set) {	
+				if (key > n) {
+					next = key;
+					break;
+				}
+				prev = key;
+			}
+			int up = next - n;
+			int down = n - prev;
+			res++;
+			if (set.contains(up) || set.contains(down)) {
+				return ++res;
+			}
+			if (up > down) {
+				n = n - prev;
+			} 
+			else {
+				n = next - n;
+			}
+		}
+		return res;
+	}
+}

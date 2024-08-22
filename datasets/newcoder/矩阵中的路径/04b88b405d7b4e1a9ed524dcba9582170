@@ -1,0 +1,35 @@
+class Solution {
+	boolean hasPath(char[][] matrix, String word) {
+		if (matrix.length == 0 || word == null) {
+			return false;
+		}
+		int row = matrix.length;
+		int col = matrix[0].length;
+		int[][] flag = new int[row][col];
+		char[] str = word.toCharArray();
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < col; j++) {
+				if (search(matrix,i,j,word,flag,0)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	boolean search(char[][] matrix, int i, int j, String word, int[][] flag, int index) {
+		int rows = matrix.length;
+		int cols = matrix[0].length;
+		if (i < 0 || j < 0 || i >= rows || j >= cols || flag[i][j] == 1 || matrix[i][j] != word.charAt(index)) {
+			return false;
+		}
+		if (index == word.length() - 1) {
+			return true;
+		}
+		flag[i][j] = 1;
+		if (search(matrix,i + 1,j,word,flag,index + 1) || search(matrix,i - 1,j,word,flag,index + 1)) {
+			return true;
+		}
+		flag[i][j] = 0;
+		return false;
+	}
+}

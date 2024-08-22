@@ -1,0 +1,36 @@
+class Solution {
+	int height = 0;
+	int getHeight(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		return 1 + Math.max(getHeight(root.left),getHeight(root.right));
+	}
+	TreeNode lcaDeepestLeaves(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		height = getHeight(root);
+		return searchDeepest(root,1);
+	}
+	TreeNode searchDeepest(TreeNode node, int currentLevel) {
+		if (node == null) {
+			return null;
+		}
+		if (currentLevel == height) {
+			return node;
+		}
+		TreeNode leftDeepest = searchDeepest(node.left,currentLevel + 1);
+		TreeNode rightDeepest = searchDeepest(node.right,currentLevel + 1);
+		if (leftDeepest != null && rightDeepest != null) {
+			return node;
+		}
+		if (leftDeepest != null) {
+			return leftDeepest;
+		}
+		if (rightDeepest != null) {
+			return rightDeepest;
+		}
+		return null;
+	}
+}

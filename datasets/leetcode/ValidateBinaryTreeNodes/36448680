@@ -1,0 +1,51 @@
+class Solution {
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		HashSet<Integer> rooter = new HashSet<>();
+		for (int i = 0; i < n; i++) {
+			rooter.add(i);
+		}
+		for (int i = 0; i < n; i++) {
+			if (leftChild[i] != -1) {
+				if (!rooter.contains(leftChild[i])) {
+					return false;
+				}
+				rooter.remove(leftChild[i]);
+			}
+			if (rightChild[i] != -1) {
+				if (!rooter.contains(rightChild[i])) {
+					return false;
+				}
+				rooter.remove(rightChild[i]);
+			}
+		}
+		ArrayList<Integer> root = new ArrayList<>(rooter);
+		if (root.size() != 1) {
+			return false;
+		}
+		Queue<Integer> q = new LinkedList<>();
+		q.add(root.get(0));
+		HashSet<Integer> set = new HashSet<>();
+		set.add(root.get(0));
+		while (!q.isEmpty()) {
+			int temp = q.poll();
+			if (leftChild[temp] != -1) {
+				q.add(leftChild[temp]);
+				if (set.contains(leftChild[temp])) {
+					return false;
+				}
+				set.add(leftChild[temp]);
+			}
+			if (rightChild[temp] != -1) {
+				q.add(rightChild[temp]);
+				if (set.contains(rightChild[temp])) {
+					return false;
+				}
+				set.add(rightChild[temp]);
+			}
+		}
+		if (set.size() != n) {
+			return false;
+		}
+		return true;
+	}
+}

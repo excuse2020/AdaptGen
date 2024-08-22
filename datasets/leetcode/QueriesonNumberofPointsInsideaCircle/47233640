@@ -1,0 +1,27 @@
+class Solution {
+	boolean check(int cx, int cy, int cr, int px, int py) {
+		double d2 = Math.pow(cx - px,2) + Math.pow(cy - py,2);
+		return d2 - Math.pow(cr,2) <= 0.1;
+	}
+	int[] countPoints(int[][] points, int[][] queries) {
+		int qn = queries.length;
+		int[] ans = new int[qn];
+		Arrays.sort(points,(o1, o2) -> {o1[0] - o2[0]});
+		for (int i = 0; i < qn; i++) {
+			int[] q = queries[i];
+			int idx = Arrays.binarySearch(points,new int{q[0] - q[2], q[1]},(o1, o2) -> {o1[0] - o2[0]});
+			idx = (idx >= 0) ? idx : -idx - 1;
+			while (idx > 0 && idx < points.length && points[idx][0] == q[0] - q[2]) {
+				idx--;
+			}
+			while (idx < points.length && points[idx][0] <= q[0] + q[2]) {
+				int[] p = points[idx];
+				if (check(q[0],q[1],q[2],p[0],p[1])) {
+					ans[i]++;
+				}
+				idx++;
+			}
+		}
+		return ans;
+	}
+}

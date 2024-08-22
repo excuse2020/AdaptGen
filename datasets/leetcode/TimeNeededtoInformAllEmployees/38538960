@@ -1,0 +1,29 @@
+class Solution {
+	int numOfMinutes(int employeeCount, int headID, int[] manager, int[] informTimes) {
+		Map<Integer, List<Integer>> positions = new HashMap<>();
+		List<Integer> indices;
+		for (int index = 0; index < manager.length; index++) {
+			if (positions.containsKey(manager[index])) {
+				indices = positions.get(manager[index]);
+				indices.add(index);
+			} 
+			else {
+				indices = new ArrayList<>();
+				indices.add(index);
+			}
+			positions.put(manager[index],indices);
+		}
+		return timeToInform(positions,headID,informTimes);
+	}
+	int timeToInform(Map<Integer, List<Integer>> positions, int employeeId, int[] informTimes) {
+		List<Integer> indices = positions.get(employeeId);
+		int maxTime = 0;
+		if (indices == null) {
+			return informTimes[employeeId];
+		}
+		for (Integer index: indices) {	
+			maxTime = Math.max(maxTime,timeToInform(positions,index,informTimes));
+		}
+		return maxTime + informTimes[employeeId];
+	}
+}

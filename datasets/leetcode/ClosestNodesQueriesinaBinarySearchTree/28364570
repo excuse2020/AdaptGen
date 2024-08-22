@@ -1,0 +1,56 @@
+class Solution {
+	List<Integer> list = new ArrayList<>();
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		List<List<Integer>> ans = new ArrayList<>();
+		inorder(root);
+		for (int val: queries) {	
+			int x = getLowerNumber(list,val);
+			int y = getHigherNumber(list,val);
+			ans.add(Arrays.asList(x,y));
+		}
+		return ans;
+	}
+	int getHigherNumber(List<Integer> list, int val) {
+		int low = 0;
+		int high = list.size() - 1;
+		while (low <= high) {
+			int mid = (low + high) / 2;
+			if (list.get(mid) == val) {
+				return val;
+			} 
+			else if (list.get(mid) > val) {
+				high = mid - 1;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		return low < list.size() ? list.get(low) : -1;
+	}
+	int getLowerNumber(List<Integer> list, int val) {
+		int ret = -1;
+		int low = 0;
+		int high = list.size() - 1;
+		while (low <= high) {
+			int mid = (low + high) / 2;
+			if (list.get(mid) == val) {
+				return val;
+			} 
+			else if (list.get(mid) > val) {
+				high = mid - 1;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		return high >= 0 ? list.get(high) : -1;
+	}
+	void inorder(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		inorder(root.left);
+		list.add(root.val);
+		inorder(root.right);
+	}
+}

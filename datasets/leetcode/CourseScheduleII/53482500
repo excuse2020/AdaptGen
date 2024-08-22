@@ -1,0 +1,44 @@
+class Solution {
+	boolean dfsCheck(int node, ArrayList<ArrayList<Integer>> adj, int[] visited, int[] pathVisited, Stack<Integer> stack) {
+		visited[node] = 1;
+		pathVisited[node] = 1;
+		for (int neighbor: adj.get(node)) {	
+			if (visited[neighbor] == 0) {
+				if (dfsCheck(neighbor,adj,visited,pathVisited,stack)) {
+					return true;
+				}
+			} 
+			else if (pathVisited[neighbor] == 1) {
+				return true;
+			}
+		}
+		pathVisited[node] = 0;
+		stack.push(node);
+		return false;
+	}
+	int[] findOrder(int numCourses, int[][] prerequisites) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < numCourses; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int[] prerequisite: prerequisites) {	
+			adj.get(prerequisite[1]).add(prerequisite[0]);
+		}
+		int[] visited = new int[numCourses];
+		int[] pathVisited = new int[numCourses];
+		Stack<Integer> stack = new Stack<>();
+		for (int i = 0; i < numCourses; i++) {
+			if (visited[i] == 0) {
+				if (dfsCheck(i,adj,visited,pathVisited,stack)) {
+					return new int[0];
+				}
+			}
+		}
+		int[] order = new int[numCourses];
+		int index = 0;
+		while (!stack.isEmpty()) {
+			order[index++] = stack.pop();
+		}
+		return order;
+	}
+}

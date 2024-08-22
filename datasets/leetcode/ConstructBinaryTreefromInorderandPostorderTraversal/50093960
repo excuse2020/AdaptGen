@@ -1,0 +1,20 @@
+class Solution {
+	TreeNode buildTree(int[] in, int[] pre) {
+		Map<Integer, Integer> hash = new HashMap<>();
+		for (int i = 0; i < in.length; i++) {
+			hash.put(in[i],i);
+		}
+		return create(hash,pre,in,0,pre.length - 1,0,in.length - 1);
+	}
+	TreeNode create(Map<Integer, Integer> hash, int pre, int in, int pstart, int pend, int istart, int iend) {
+		if (pstart > pend || istart > iend) {
+			return null;
+		}
+		TreeNode root = new TreeNode(pre[pend]);
+		int inroot = hash.get(pre[pend]);
+		int numsleft = inroot - istart;
+		root.right = create(hash,pre,in,pstart + numsleft,pend - 1,inroot + 1,iend);
+		root.left = create(hash,pre,in,pstart,pstart + numsleft - 1,istart,inroot - 1);
+		return root;
+	}
+}

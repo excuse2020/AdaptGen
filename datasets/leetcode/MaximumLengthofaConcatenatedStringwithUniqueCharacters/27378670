@@ -1,0 +1,37 @@
+class Solution {
+	int ans = 0;
+	int helper(List<String> arr, int idx, int count, HashSet<Character> hs) {
+		if (idx == arr.size()) {
+			return count;
+		}
+		for (int i = idx; i < arr.size(); i++) {
+			boolean flag = true;
+			HashSet<Character> temp = new HashSet<>();
+			for (int j = 0; j < arr.get(i).length(); j++) {
+				if (hs.contains(arr.get(i).charAt(j))) {
+					flag = false;
+					break;
+				}
+				temp.add(arr.get(i).charAt(j));
+			}
+			if (flag == true && temp.size() == arr.get(i).length()) {
+				for (int j = 0; j < arr.get(i).length(); j++) {
+					hs.add(arr.get(i).charAt(j));
+				}
+				ans = Math.max(ans,helper(arr,i + 1,count + arr.get(i).length(),hs));
+				for (int j = 0; j < arr.get(i).length(); j++) {
+					hs.remove(arr.get(i).charAt(j));
+				}
+			} 
+			else {
+				ans = Math.max(ans,helper(arr,i + 1,count,hs));
+			}
+		}
+		return ans;
+	}
+	int maxLength(List<String> arr) {
+		HashSet<Character> hs = new HashSet<>();
+		helper(arr,0,0,hs);
+		return ans;
+	}
+}

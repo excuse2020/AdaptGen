@@ -1,0 +1,29 @@
+class Solution {
+	int countTriplets(int[] arr) {
+		int n = arr.length;
+		int not = 0;
+		int[] prefixXor = new int[n + 1];
+		prefixXor[0] = 0;
+		for (int i = 0; i < n; i++) {
+			prefixXor[i + 1] = arr[i] ^ prefixXor[i];
+		}
+		System.out.println(Arrays.toString(prefixXor));
+		HashMap<Integer, List<Integer>> hm = new HashMap<>();
+		for (int i = 0; i < prefixXor.length; i++) {
+			if (hm.containsKey(prefixXor[i])) {
+				List<Integer> ll = hm.get(prefixXor[i]);
+				for (int p: ll) {	
+					not += (i - p);
+				}
+				ll.add(i);
+				hm.put(prefixXor[i],ll);
+			} 
+			else {
+				List<Integer> ll = new ArrayList<>();
+				ll.add(i);
+				hm.put(prefixXor[i],ll);
+			}
+		}
+		return not;
+	}
+}

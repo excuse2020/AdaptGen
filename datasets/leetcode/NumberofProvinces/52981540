@@ -1,0 +1,47 @@
+class Solution {
+	int[] parent;
+	int[] rank;
+	int find(int u) {
+		if (parent[u] != u) {
+			parent[u] = find(parent[u]);
+		}
+		return parent[u];
+	}
+	int findCircleNum(int[][] isConnected) {
+		int n = isConnected.length;
+		makeSet(n);
+		int p = n;
+		for (int i = 0; i < n; i++) {
+			for (int j = i + 1; j < n; j++) {
+				if (isConnected[i][j] == 1 && union(i,j)) {
+					p--;
+				}
+			}
+		}
+		return p;
+	}
+	void makeSet(int n) {
+		rank = new int[n];
+		parent = new int[n];
+		for (int i = 0; i < n; i++) {
+			parent[i] = i;
+		}
+	}
+	boolean union(int u, int v) {
+		int pu = find(u), pv = find(v);
+		if (pu == pv) {
+			return false;
+		}
+		if (rank[pu] < rank[pv]) {
+			parent[pu] = pv;
+		} 
+		else if (rank[pu] > rank[pv]) {
+			parent[pv] = pu;
+		} 
+		else {
+			parent[pv] = pu;
+			rank[pu]++;
+		}
+		return true;
+	}
+}

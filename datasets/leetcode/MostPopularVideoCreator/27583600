@@ -1,0 +1,59 @@
+class Solution {
+	List<List<String>> mostPopularCreator(String[] creators, String[] ids, int[] views) {
+		int N = creators.length;
+		Map<String, Long> creatorViewsMap = new HashMap<>();
+		long maxViews = 0;
+		for (int i = 0; i < N; i++) {
+			if (creatorViewsMap.containsKey(creators[i])) {
+				long updatedViews = creatorViewsMap.get(creators[i]) + views[i];
+				creatorViewsMap.put(creators[i],updatedViews);
+				maxViews = Math.max(maxViews,updatedViews);
+			} 
+			else {
+				creatorViewsMap.put(creators[i],(long) views[i]);
+				maxViews = Math.max(maxViews,views[i]);
+			}
+		}
+		List<String> popularCreatorsList = new ArrayList<>();
+		for (Map.Entry<String, Long> entry: creatorViewsMap.entrySet()) {	
+			long view = entry.getValue();
+			if (maxViews == view) {
+				popularCreatorsList.add(entry.getKey());
+			}
+		}
+		Map<String, Integer> creatorTopVideoMap = new HashMap<>();
+		for (int i = 0; i < N; i++) {
+			String creator = creators[i];
+			String currId = ids[i];
+			int currView = views[i];
+			if (creatorTopVideoMap.containsKey(creator)) {
+				int pos = creatorTopVideoMap.get(creator);
+				int prevView = views[pos];
+				String prevId = ids[pos];
+				if (currView > prevView) {
+					creatorTopVideoMap.put(creator,i);
+				}
+				if (currView == prevView) {
+					if (prevId.compareTo(currId) < 0) {
+						creatorTopVideoMap.put(creator,pos);
+					} 
+					else {
+						creatorTopVideoMap.put(creator,i);
+					}
+				}
+			} 
+			else {
+				creatorTopVideoMap.put(creator,i);
+			}
+		}
+		List<List<String>> ans = new ArrayList<>();
+		for (String creator: popularCreatorsList) {	
+			List<String> list = new ArrayList<>();
+			list.add(creator);
+			int videoPos = creatorTopVideoMap.get(creator);
+			list.add(ids[videoPos]);
+			ans.add(list);
+		}
+		return ans;
+	}
+}

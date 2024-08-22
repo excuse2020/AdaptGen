@@ -1,0 +1,50 @@
+class Solution {
+	int limit;
+	String message;
+	String[] assembleMessageArray(int n) {
+		String[] ret = new String[n];
+		for (int i = 1, index = 0; i <= n; ++i) {
+			int currLength = this.limit - String.valueOf(i).length();
+			if (index + currLength >= this.message.length()) {
+				currLength = this.message.length() - index;
+			}
+			ret[i - 1] = this.message.substring(index,index + currLength) + "<";
+			index += currLength;
+		}
+		return ret;
+	}
+	int calcPartsNum(int n) {
+		int numbers = String.valueOf(n).length();
+		int remainingMessageLength = message.length();
+		int currentSuffixLength = 1 + numbers;
+		int partNum = 0;
+		for (int i = 1; i < numbers; ++i) {
+			int currParts = (int) (Math.pow(10,i) - Math.pow(10,i - 1));
+			partNum += currParts;
+			remainingMessageLength -= currParts * (this.limit - currentSuffixLength);
+			currentSuffixLength += 1;
+			if (this.limit - currentSuffixLength <= 0) {
+				return 0;
+			}
+		}
+		remainingMessageLength -= (n - partNum) * (this.limit - currentSuffixLength);
+		return n + (int) Math.ceil((double) remainingMessageLength / (this.limit - currentSuffixLength));
+	}
+	String[] splitMessage(String message, int limit) {
+		if (limit - 5 <= 0) {
+			return new String[0];
+		}
+		this.message = message;
+		this.limit = limit - 3;
+		int n = 1;
+		int parts = calcPartsNum(n);
+		while (n < parts) {
+			n = parts;
+			parts = calcPartsNum(n);
+		}
+		if (parts <= 0) {
+			return new String[0];
+		}
+		return assembleMessageArray(parts);
+	}
+}

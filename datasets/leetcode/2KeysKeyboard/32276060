@@ -1,0 +1,32 @@
+class Solution {
+	int minSteps(int n) {
+		int[][] memo = new int[n][n];
+		for (int[] mem: memo) {	
+			Arrays.fill(mem,-1);
+		}
+		return recur(n,1,0,memo);
+	}
+	int recur(int n, int currLength, int copyLength, int[][] memo) {
+		if (currLength > n) {
+			return Integer.MAX_VALUE;
+		}
+		if (currLength == n) {
+			return 0;
+		}
+		if (memo[currLength][copyLength] != -1) {
+			return memo[currLength][copyLength];
+		}
+		int paste = Integer.MAX_VALUE;
+		if (copyLength > 0) {
+			paste = recur(n,currLength + copyLength,copyLength,memo);
+		}
+		if (paste != Integer.MAX_VALUE) {
+			paste += 1;
+		}
+		int copyPaste = recur(n,currLength + currLength,currLength,memo);
+		if (copyPaste != Integer.MAX_VALUE) {
+			copyPaste += 2;
+		}
+		return Math.min(paste,copyPaste);
+	}
+}

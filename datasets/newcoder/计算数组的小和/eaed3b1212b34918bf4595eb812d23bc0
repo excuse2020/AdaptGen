@@ -1,0 +1,45 @@
+class Solution {
+	long ans = 0l;
+	long calArray(ArrayList<Integer> nums) {
+		int[] copyNums = new int[nums.size()];
+		for (int i = 0; i < nums.size(); i++) {
+			copyNums[i] = nums.get(i);
+		}
+		mergeSort(copyNums);
+		return ans;
+	}
+	void merge(int[] nums, int start, int mid, int end) {
+		int[] help = new int[end - start + 1];
+		int i = 0;
+		int p1 = start;
+		int p2 = mid + 1;
+		while (p1 <= mid && p2 <= end) {
+			ans += (nums[p1] <= nums[p2] ? ((end - p2 + 1) * nums[p1]) : 0);
+			help[i++] = nums[p1] <= nums[p2] ? nums[p1++] : nums[p2++];
+		}
+		while (p1 <= mid) {
+			help[i++] = nums[p1++];
+		}
+		while (p2 <= end) {
+			help[i++] = nums[p2++];
+		}
+		for (i = 0; i < help.length; i++) {
+			nums[start + i] = help[i];
+		}
+	}
+	void mergeSort(int[] nums) {
+		if (0 == nums.length || 1 == nums.length) {
+			return;
+		}
+		process(nums,0,nums.length - 1);
+	}
+	void process(int[] nums, int start, int end) {
+		if (start >= end) {
+			return;
+		}
+		int mid = start + ((end - start) >> 1);
+		process(nums,start,mid);
+		process(nums,mid + 1,end);
+		merge(nums,start,mid,end);
+	}
+}

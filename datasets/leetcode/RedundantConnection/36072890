@@ -1,0 +1,59 @@
+class Solution {
+	int cycle;
+	boolean isBack = false;
+	Set<List<Integer>> dfs(HashMap<Integer, List<Integer>> graph, HashSet<Integer> visited, int prevNode, int curNode) {
+		if (graph.containsKey(curNode)) {
+			for (int nextNode: graph.get(curNode)) {	
+				int min = nextNode < curNode ? nextNode : curNode;
+				int max = min == nextNode ? curNode : nextNode;
+				if (!visited.contains(nextNode)) {
+					visited.add(nextNode);
+					Set<List<Integer>> set = dfs(graph,visited,curNode,nextNode);
+					if (set != null) {
+						if (!isBack) {
+							set.add(List.of(min,max));
+							if (min == cycle || max == cycle) {
+								isBack = true;
+							}
+						}
+						return set;
+					}
+				} 
+				else if (prevNode == nextNode) {
+					continue;
+				} 
+				else {
+					this.cycle = nextNode;
+					Set<List<Integer>> set = new HashSet<>();
+					set.add(List.of(min,max));
+					return set;
+				}
+			}
+		}
+		return null;
+	}
+	int[] findRedundantConnection(int[][] edges) {
+		HashMap<Integer, List<Integer>> graph = new HashMap<>();
+		for (int i = 0; i < edges.length; i++) {
+			graph.putIfAbsent(edges[i][0],new ArrayList<>());
+			graph.putIfAbsent(edges[i][1],new ArrayList<>());
+			graph.get(edges[i][0]).add(edges[i][1]);
+			graph.get(edges[i][1]).add(edges[i][0]);
+		}
+		HashSet<Integer> visited = new HashSet<>();
+		visited.add(edges[0][0]);
+		Set<List<Integer>> cyclicEdges = dfs(graph,visited,-1,edges[0][0]);
+		int size = cyclicEdges.size();
+		for (int i = 0; i < edges.length; i++) {
+			if (cyclicEdges.contains(List.of(edges[i][0],edges[i][1]))) {
+				size--;
+				if (size == 0) {
+					System.out.println(edges[i][0]);
+					System.out.println(edges[i][1]);
+					return edges[i];
+				}
+			}
+		}
+		return null;
+	}
+}

@@ -1,0 +1,24 @@
+class Solution {
+	int helper(int index, int[][] bombs, boolean[] visited) {
+		int count = 1;
+		visited[index] = true;
+		for (int i = 0; i < bombs.length; i++) {
+			if (!visited[i] && range(bombs[index],bombs[i])) {
+				count = count + helper(i,bombs,visited);
+			}
+		}
+		return count;
+	}
+	int maximumDetonation(int[][] bombs) {
+		int max = 0;
+		for (int i = 0; i < bombs.length; i++) {
+			max = Math.max(max,helper(i,bombs,new boolean[bombs.length]));
+		}
+		return max;
+	}
+	boolean range(int[] pt1, int[] pt2) {
+		long dx = pt1[0] - pt2[0], dy = pt1[1] - pt2[1], r = pt1[2];
+		long dis = dx * dx + dy * dy;
+		return dis <= r * r;
+	}
+}

@@ -1,0 +1,44 @@
+class Solution {
+	boolean isRectangleCover(int[][] rectangles) {
+		int x1 = 100001, x2 = -100001, y1 = 100001, y2 = -100001;
+		int areaSum = 0;
+		Set<String> points = new HashSet<String>();
+		for (int[] rec: rectangles) {	
+			x1 = Math.min(x1,rec[0]);
+			y1 = Math.min(y1,rec[1]);
+			x2 = Math.max(x2,rec[2]);
+			y2 = Math.max(y2,rec[3]);
+			areaSum = areaSum + (rec[2] - rec[0]) * (rec[3] - rec[1]);
+			String[] recPoints = new String[4];
+			recPoints[0] = rec[0] + "-";
+			recPoints[1] = rec[0] + "-";
+			recPoints[2] = rec[2] + "-";
+			recPoints[3] = rec[2] + "-";
+			for (String recPoint: recPoints) {	
+				if (points.contains(recPoint)) {
+					points.remove(recPoint);
+				} 
+				else {
+					points.add(recPoint);
+				}
+			}
+		}
+		if (areaSum != (x2 - x1) * (y2 - y1)) {
+			return false;
+		}
+		if (points.size() != 4) {
+			return false;
+		}
+		String[] recPoints = new String[4];
+		recPoints[0] = x1 + "-";
+		recPoints[1] = x1 + "-";
+		recPoints[2] = x2 + "-";
+		recPoints[3] = x2 + "-";
+		for (String recPoint: recPoints) {	
+			if (!points.contains(recPoint)) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

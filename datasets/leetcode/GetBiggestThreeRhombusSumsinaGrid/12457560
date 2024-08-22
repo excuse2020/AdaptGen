@@ -1,0 +1,57 @@
+class Solution {
+	int[] getBiggestThree(int[][] grid) {
+		List<Integer> res = new ArrayList<>();
+		int r = grid.length;
+		int c = grid[0].length;
+		int sizeLim = (int) (Math.ceil(Math.min(r,c) / 2.0));
+		for (int s = 1; s <= sizeLim; s++) {
+			for (int i = 0; i < r - (2 * (s - 1)); i++) {
+				for (int j = s - 1; j < c - s + 1; j++) {
+					int sum = 0;
+					int currI = i;
+					int currJ = j;
+					sum += grid[currI][currJ];
+					for (int k = 0; k < 4; k++) {
+						for (int l = 0; l < s - 1; l++) {
+							if (k == 0) {
+								currI++;
+								currJ++;
+							}
+							if (k == 1) {
+								currI++;
+								currJ--;
+							}
+							if (k == 2) {
+								currI--;
+								currJ--;
+							}
+							if (k == 3) {
+								currI--;
+								currJ++;
+							}
+							sum += grid[currI][currJ];
+						}
+					}
+					if (s > 1) {
+						sum -= grid[currI][currJ];
+					}
+					res.add(sum);
+				}
+			}
+		}
+		Collections.sort(res);
+		List<Integer> ans = new ArrayList<>();
+		int cnt = 0;
+		for (int i = res.size() - 1; i >= 0 && cnt < 3; i--) {
+			if (!ans.contains(res.get(i))) {
+				ans.add(res.get(i));
+				cnt++;
+			}
+		}
+		int[] ansArr = new int[ans.size()];
+		for (int i = 0; i < ans.size(); i++) {
+			ansArr[i] = ans.get(i);
+		}
+		return ansArr;
+	}
+}

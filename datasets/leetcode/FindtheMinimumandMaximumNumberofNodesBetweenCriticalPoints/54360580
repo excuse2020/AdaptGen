@@ -1,0 +1,51 @@
+class Solution {
+	boolean checkCritical(ListNode head, int prev) {
+		return ((prev < head.val && head.next.val < head.val) || (prev > head.val && head.next.val > head.val));
+	}
+	int[] nodesBetweenCriticalPoints(ListNode head) {
+		int[] ans = new int[2];
+		ans[0] = -1;
+		ans[1] = -1;
+		int min = Integer.MAX_VALUE;
+		int max = Integer.MIN_VALUE;
+		List<Integer> points = new ArrayList<>();
+		if (head == null || head.next == null) {
+			return ans;
+		}
+		int prev = head.val;
+		int first = -1;
+		int second = -1;
+		int third = -1;
+		int count = 2;
+		head = head.next;
+		while (head.next != null) {
+			if (checkCritical(head,prev)) {
+				if (first == -1) {
+					first = count;
+				} 
+				else if (second == -1) {
+					second = count;
+					min = Math.min(min,second - first);
+					max = Math.max(min,second - first);
+				} 
+				else {
+					if (third == -1) {
+						third = count;
+					} 
+					else {
+						second = third;
+						third = count;
+					}
+					min = Math.min(min,third - second);
+					max = Math.max(min,third - first);
+				}
+			}
+			prev = head.val;
+			head = head.next;
+			count++;
+		}
+		ans[0] = min == Integer.MAX_VALUE ? -1 : min;
+		ans[1] = max == Integer.MIN_VALUE ? -1 : max;
+		return ans;
+	}
+}

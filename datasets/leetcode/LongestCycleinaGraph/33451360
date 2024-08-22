@@ -1,0 +1,41 @@
+class Solution {
+	int longestCycle(int[] edges) {
+		int n = edges.length;
+		boolean[] visited = new boolean[n];
+		int longestCycleLength = -1;
+		for (int i = 0; i < n; i++) {
+			if (visited[i]) {
+				continue;
+			}
+			Queue<Integer> nodes = new LinkedList<>();
+			Map<Integer, Integer> traversalPositions = new HashMap<>();
+			int traversalPosition = 1;
+			nodes.add(i);
+			visited[i] = true;
+			traversalPositions.put(i,traversalPosition);
+			traversalPosition++;
+			while (!nodes.isEmpty()) {
+				int size = nodes.size();
+				while (size-- > 0) {
+					int node = nodes.poll();
+					int neighbor = edges[node];
+					if (neighbor == -1) {
+						continue;
+					}
+					if (visited[neighbor]) {
+						if (!traversalPositions.containsKey(neighbor)) {
+							continue;
+						}
+						longestCycleLength = Math.max(longestCycleLength,traversalPosition - traversalPositions.get(neighbor));
+						continue;
+					}
+					nodes.add(neighbor);
+					traversalPositions.put(neighbor,traversalPosition);
+					visited[neighbor] = true;
+				}
+				traversalPosition++;
+			}
+		}
+		return longestCycleLength;
+	}
+}

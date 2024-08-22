@@ -1,0 +1,20 @@
+class Solution {
+	int[] maxSlidingWindow(int[] nums, int k) {
+		int len = nums.length;
+		int[] output = new int[len - k + 1];
+		Deque<Integer> qu = new ArrayDeque<>();
+		for (int i = 0; i < len; i++) {
+			while (qu.size() > 0 && qu.peekFirst() <= i - k) {
+				qu.pollFirst();
+			}
+			while (qu.size() > 0 && nums[qu.peekLast()] < nums[i]) {
+				qu.pollLast();
+			}
+			qu.offerLast(i);
+			if (i >= k - 1) {
+				output[i - k + 1] = nums[qu.peekFirst()];
+			}
+		}
+		return output;
+	}
+}

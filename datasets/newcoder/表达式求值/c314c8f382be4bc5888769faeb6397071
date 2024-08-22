@@ -1,0 +1,78 @@
+class Solution {
+	boolean IsNum(char num) {
+		if ('0' <= num && num <= '9') {
+			return true;
+		} 
+		else {
+			return false;
+		}
+	}
+	int calculate(char op, int a, int b) {
+		if (op == '+') {
+			return a + b;
+		}
+		if (op == '-') {
+			return a - b;
+		}
+		if (op == '*') {
+			return a * b;
+		}
+		return 0;
+	}
+	int solve(String s) {
+		if (s.length() < 2) {
+			return (int) s.charAt(0);
+		}
+		Stack<Character> ops = new Stack<Character>();
+		Stack<Integer> num = new Stack<Integer>();
+		num.push(0);
+		for (int i = 0; i < s.length(); ) {
+			if (s.charAt(i) == '(') {
+				ops.push(s.charAt(i++));
+			} 
+			else if (s.charAt(i) == ')') {
+				while (ops.peek() != '(') {
+					char op = ops.pop();
+					int numb = num.pop();
+					int numa = num.pop();
+					num.push(calculate(op,numa,numb));
+				}
+				ops.pop();
+				i++;
+			} 
+			else if (s.charAt(i) == '*') {
+				ops.push('*');
+				i++;
+			} 
+			else if (s.charAt(i) == '+' || s.charAt(i) == '-') {
+				if (ops.isEmpty()) {
+					ops.push(s.charAt(i++));
+				} 
+				else if (ops.peek() == '*' || ops.peek() == '-' || ops.peek() == '+') {
+					char op = ops.pop();
+					int numb = num.pop();
+					int numa = num.pop();
+					num.push(calculate(op,numa,numb));
+				} 
+				else {
+					ops.push(s.charAt(i++));
+				}
+			} 
+			else {
+				int numa = 0;
+				while (i < s.length() && IsNum(s.charAt(i))) {
+					numa = 10 * numa + s.charAt(i++) - '0';
+				}
+				num.push(numa);
+			}
+		}
+		int res = 0;
+		while (!ops.isEmpty()) {
+			char op = ops.pop();
+			int numb = num.pop();
+			int numa = num.pop();
+			res = res + num.push(calculate(op,numa,numb));
+		}
+		return res;
+	}
+}

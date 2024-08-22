@@ -1,0 +1,55 @@
+class Solution {
+	int binary_Search(List<Integer> a, int key, int l, int h) {
+		int mid, c;
+		while (l <= h) {
+			mid = (l + h) / 2;
+			c = a.get(mid);
+			if (c == key) {
+				return mid;
+			} 
+			else if (c < key) {
+				l = mid + 1;
+			} 
+			else {
+				h = mid - 1;
+			}
+		}
+		return -1;
+	}
+	List<List<Integer>> findPrimePairs(int n) {
+		boolean[] p = new boolean[n + 1];
+		List<Integer> prime = get_prime(p);
+		int m = prime.size();
+		List<List<Integer>> ret = new ArrayList<List<Integer>>();
+		List<Integer> arr;
+		for (int i = 0; i < m; i++) {
+			int a = prime.get(i);
+			int b = binary_Search(prime,n - a,i,m - 1);
+			if (b != -1) {
+				arr = new ArrayList<Integer>();
+				arr.add(a);
+				arr.add(prime.get(b));
+				ret.add(arr);
+			}
+		}
+		return ret;
+	}
+	List<Integer> get_prime(boolean[] p) {
+		int n = p.length;
+		for (int k = 2; k * k < n; k++) {
+			if (p[k] == false) {
+				for (int j = k * k; j < n; j += k) {
+					p[j] = true;
+				}
+			}
+		}
+		List<Integer> ret = new ArrayList<Integer>();
+		int l = 0;
+		for (int i = 2; i < p.length; i++) {
+			if (p[i] == false) {
+				ret.add(i);
+			}
+		}
+		return ret;
+	}
+}

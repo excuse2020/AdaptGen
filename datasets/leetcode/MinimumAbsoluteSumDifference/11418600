@@ -1,0 +1,36 @@
+class Solution {
+	int minAbsoluteSumDiff(int[] nums1, int[] nums2) {
+		int sum = 0;
+		int mod = 1000000007;
+		int diffArr = new int[nums1.length];
+		for (int i = 0; i < nums1.length; i++) {
+			int dif = Math.abs(nums1[i] - nums2[i]);
+			diffArr[i] = dif;
+			sum = (sum + dif) % mod;
+		}
+		if (sum == 0) {
+			return 0;
+		}
+		int sortedNums1 = Arrays.copyOf(nums1,nums1.length);
+		Arrays.sort(sortedNums1);
+		int minSum = sum;
+		for (int i = 0; i < diffArr.length; i++) {
+			int left = 0, right = sortedNums1.length - 1;
+			while (left <= right) {
+				int mid = left + (right - left) / 2;
+				int diff = Math.abs(sortedNums1[mid] - nums2[i]);
+				int newSum = ((sum - diffArr[i]) + diff) % mod;
+				if (minSum > newSum) {
+					minSum = newSum;
+				}
+				if (nums2[i] < sortedNums1[mid]) {
+					right = mid - 1;
+				} 
+				else {
+					left = mid + 1;
+				}
+			}
+		}
+		return minSum % mod;
+	}
+}

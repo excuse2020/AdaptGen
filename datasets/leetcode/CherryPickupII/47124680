@@ -1,0 +1,40 @@
+class Solution {
+	Map<Integer, Integer> cache = new HashMap<Integer, Integer>();
+	int cherryPickup(int[][] grid) {
+		return pick(grid,0,0,grid[0].length - 1);
+	}
+	int maxValue(int items) {
+		int max = Integer.MIN_VALUE;
+		for (int val: items) {	
+			max = Math.max(max,val);
+		}
+		return max;
+	}
+	int pick(int[][] grid, int i, int rob1x, int rob2x) {
+		if (i >= grid.length) {
+			return 0;
+		}
+		if (rob1x < 0 || rob2x < 0 || rob1x >= grid[i].length || rob2x >= grid[i].length) {
+			return 0;
+		}
+		int cached = pickCacked(i,rob1x,rob2x);
+		if (cached != -1) {
+			return cached;
+		}
+		int sum;
+		if (rob1x == rob2x) {
+			sum = grid[i][rob1x];
+		} 
+		else {
+			sum = grid[i][rob1x] + grid[i][rob2x];
+		}
+		int val = sum + maxValue(pick(grid,i + 1,rob1x - 1,rob2x - 1),pick(grid,i + 1,rob1x - 1,rob2x),pick(grid,i + 1,rob1x - 1,rob2x + 1),pick(grid,i + 1,rob1x,rob2x - 1),pick(grid,i + 1,rob1x,rob2x),pick(grid,i + 1,rob1x,rob2x + 1),pick(grid,i + 1,rob1x + 1,rob2x - 1),pick(grid,i + 1,rob1x + 1,rob2x),pick(grid,i + 1,rob1x + 1,rob2x + 1));
+		int key = (i << 16) + (rob1x << 8);
+		cache.put(key,val);
+		return val;
+	}
+	int pickCacked(int i, int rob1x, int rob2x) {
+		int key = (i << 16) + (rob1x << 8);
+		return cache.getOrDefault(key,-1);
+	}
+}

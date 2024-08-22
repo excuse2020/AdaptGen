@@ -1,0 +1,46 @@
+class Solution {
+	int FillArray(int[] a, int k) {
+		long answer = 1;
+		int index = 0;
+		while (index < a.length) {
+			int zero_num = 0;
+			int min = 1;
+			int max = k;
+			if (index - 1 >= 0) {
+				min = a[index - 1];
+			}
+			if (a[index] == 0) {
+				while (a[index] == 0) {
+					zero_num++;
+					index++;
+					if (index >= a.length) {
+						break;
+					}
+				}
+				if (index < a.length) {
+					max = a[index];
+				}
+				int[] list = new int[max - min + 1];
+				for (int i = 0; i < list.length; i++) {
+					list[i] = 1;
+				}
+				for (int i = 1; i < zero_num; i++) {
+					for (int j = 0; j < list.length; j++) {
+						for (int j2 = j + 1; j2 < list.length; j2++) {
+							list[j] = (list[j] + list[j2]) % (int) (Math.pow(10,9) + 7);
+						}
+					}
+				}
+				int sum = 0;
+				for (int i = 0; i < list.length; i++) {
+					sum = (sum + list[i]) % (int) (Math.pow(10,9) + 7);
+				}
+				answer = (answer * sum) % (int) (Math.pow(10,9) + 7);
+			} 
+			else {
+				index++;
+			}
+		}
+		return (int) answer;
+	}
+}

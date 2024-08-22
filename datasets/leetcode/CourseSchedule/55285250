@@ -1,0 +1,36 @@
+class Solution {
+	boolean canFinish(int c, int[][] pre) {
+		List<List<Integer>> adjList = new ArrayList<>();
+		for (int i = 0; i < c; i++) {
+			adjList.add(new ArrayList<>());
+		}
+		for (int[] x: pre) {	
+			adjList.get(x[1]).add(x[0]);
+		}
+		boolean[] vis = new boolean[c];
+		boolean[] rec = new boolean[c];
+		for (int i = 0; i < c; i++) {
+			if (!vis[i] && cycle(i,adjList,vis,rec)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean cycle(int idx, List<List<Integer>> adj, boolean[] vis, boolean[] rec) {
+		if (rec[idx]) {
+			return true;
+		}
+		if (vis[idx]) {
+			return false;
+		}
+		vis[idx] = true;
+		rec[idx] = true;
+		for (int x: adj.get(idx)) {	
+			if (cycle(x,adj,vis,rec)) {
+				return true;
+			}
+		}
+		rec[idx] = false;
+		return false;
+	}
+}

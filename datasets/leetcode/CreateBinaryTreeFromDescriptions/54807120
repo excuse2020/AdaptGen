@@ -1,0 +1,60 @@
+class Solution {
+	TreeNode createBinaryTree(int[][] des) {
+		Map<Integer, TreeNode> mp = new HashMap<>();
+		Set<Integer> childs = new HashSet<>();
+		for (int[] a: des) {	
+			childs.add(a[1]);
+			if (!mp.containsKey(a[0])) {
+				TreeNode parent = new TreeNode(a[0]);
+				mp.put(a[0],parent);
+				if (!mp.containsKey(a[1])) {
+					if (a[2] == 1) {
+						parent.left = new TreeNode(a[1]);
+						mp.put(a[1],parent.left);
+					} 
+					else {
+						parent.right = new TreeNode(a[1]);
+						mp.put(a[1],parent.right);
+					}
+				} 
+				else {
+					if (a[2] == 1) {
+						parent.left = mp.get(a[1]);
+					} 
+					else {
+						parent.right = mp.get(a[1]);
+					}
+				}
+			} 
+			else {
+				TreeNode parent = mp.get(a[0]);
+				if (!mp.containsKey(a[1])) {
+					if (a[2] == 1) {
+						parent.left = new TreeNode(a[1]);
+						mp.put(a[1],parent.left);
+					} 
+					else {
+						parent.right = new TreeNode(a[1]);
+						mp.put(a[1],parent.right);
+					}
+				} 
+				else {
+					if (a[2] == 1) {
+						parent.left = mp.get(a[1]);
+					} 
+					else {
+						parent.right = mp.get(a[1]);
+					}
+				}
+			}
+		}
+		TreeNode root = new TreeNode();
+		for (var x: mp.keySet()) {	
+			if (!childs.contains(x)) {
+				root = mp.get(x);
+				break;
+			}
+		}
+		return root;
+	}
+}

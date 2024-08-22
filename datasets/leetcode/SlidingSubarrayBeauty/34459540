@@ -1,0 +1,40 @@
+class Solution {
+	int getKthSmallestNeg(TreeMap<Integer, Integer> treeMap, int k) {
+		int count = 0;
+		for (Map.Entry<Integer, Integer> entry: treeMap.entrySet()) {	
+			int key = entry.getKey();
+			int val = entry.getValue();
+			if (key < 0) {
+				count += val;
+				if (count >= k) {
+					return key;
+				}
+			}
+		}
+		return 0;
+	}
+	int[] getSubarrayBeauty(int[] nums, int k, int x) {
+		int[] res = new int[nums.length - k + 1];
+		TreeMap<Integer, Integer> treeMap = new TreeMap<>();
+		int i;
+		for (i = 0; i < k; i++) {
+			treeMap.put(nums[i],treeMap.getOrDefault(nums[i],0) + 1);
+		}
+		res[0] = getKthSmallestNeg(treeMap,x);
+		for (; i < nums.length; i++) {
+			int removed = nums[i - k];
+			int added = nums[i];
+			if (treeMap.containsKey(removed)) {
+				if (treeMap.get(removed) == 1) {
+					treeMap.remove(removed);
+				} 
+				else {
+					treeMap.put(removed,treeMap.get(removed) - 1);
+				}
+			}
+			treeMap.put(added,treeMap.getOrDefault(added,0) + 1);
+			res[i - k + 1] = getKthSmallestNeg(treeMap,x);
+		}
+		return res;
+	}
+}

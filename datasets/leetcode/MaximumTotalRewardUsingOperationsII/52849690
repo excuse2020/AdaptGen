@@ -1,0 +1,46 @@
+class Solution {
+	int get_ans(int rewards, int i, int validLimit) {
+		int res = 0, j = nextElemWithinLimits(rewards,i - 1,validLimit);
+		for (; j >= 0; j--) {
+			if (res >= rewards[j] + Math.min(validLimit - rewards[j],rewards[j] - 1)) {
+				break;
+			}
+			res = Math.max(res,rewards[j] + get_ans(rewards,j,Math.min(validLimit - rewards[j],rewards[j] - 1)));
+		}
+		return res;
+	}
+	int maxTotalReward(int[] rewardValues) {
+		int max = rewardValues[0], n = 0;
+		for (int i = 1; i < rewardValues.length; i++) {
+			max = Math.max(max,rewardValues[i]);
+		}
+		boolean vis = new boolean[max + 1];
+		for (int i: rewardValues) {	
+			if (!vis[i]) {
+				n++;
+				vis[i] = true;
+			}
+		}
+		int rew = new int[n], j = 0;
+		for (int i = 0; i <= max; i++) {
+			if (vis[i]) {
+				rew[j++] = i;
+			}
+		}
+		return rew[n - 1] + get_ans(rew,n - 1,rew[n - 1] - 1);
+	}
+	int nextElemWithinLimits(int[] rewards, int h, int k) {
+		int l = 0, resInd = -1;
+		while (l <= h) {
+			int m = (l + h) / 2;
+			if (rewards[m] <= k) {
+				resInd = m;
+				l = m + 1;
+			} 
+			else {
+				h = m - 1;
+			}
+		}
+		return resInd;
+	}
+}

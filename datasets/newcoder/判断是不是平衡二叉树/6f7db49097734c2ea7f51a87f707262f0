@@ -1,0 +1,58 @@
+class Solution {
+	boolean IsBalanced_Solution(TreeNode pRoot) {
+		if (pRoot == null) {
+			return true;
+		}
+		int left = getDepth(pRoot.left);
+		if (left < 0) {
+			return false;
+		}
+		int right = getDepth(pRoot.right);
+		if (right < 0) {
+			return false;
+		}
+		return Math.abs(left - right) < 2;
+	}
+	boolean IsBalanced_Solutionv1(TreeNode pRoot) {
+		if (pRoot == null) {
+			return true;
+		}
+		if (Math.abs(getTreeHigh(pRoot.left) - getTreeHigh(pRoot.right)) > 1) {
+			return false;
+		}
+		return IsBalanced_Solutionv1(pRoot.left) && IsBalanced_Solutionv1(pRoot.right);
+	}
+	int getDepth(TreeNode node) {
+		if (node == null) {
+			return 0;
+		}
+		int le = getDepth(node.left);
+		int ri = getDepth(node.right);
+		if (Math.abs(le - ri) > 1) {
+			return -100;
+		}
+		return 1 + Math.max(le,ri);
+	}
+	int getTreeHigh(TreeNode root) {
+		int level = 0;
+		if (root == null) {
+			return level;
+		}
+		Deque<TreeNode> deque = new LinkedList<TreeNode>();
+		deque.push(root);
+		while (!deque.isEmpty()) {
+			int count = deque.size();
+			for (int i = 0; i < count; i++) {
+				TreeNode node = deque.poll();
+				if (node.left != null) {
+					deque.offer(node.left);
+				}
+				if (node.right != null) {
+					deque.offer(node.right);
+				}
+			}
+			level++;
+		}
+		return level;
+	}
+}

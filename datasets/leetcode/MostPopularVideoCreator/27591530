@@ -1,0 +1,54 @@
+class Solution {
+	List<List<String>> mostPopularCreator(String[] creators, String[] ids, int[] views) {
+		Map<String, String> map = new HashMap<>();
+		LinkedHashMap<String, Integer> map2 = new LinkedHashMap<>();
+		Map<String, Integer> highest = new HashMap<>();
+		for (int i = 0; i < views.length; i++) {
+			if (highest.containsKey(creators[i])) {
+				if (highest.get(creators[i]) < views[i]) {
+					highest.put(creators[i],views[i]);
+				}
+			} 
+			else {
+				highest.put(creators[i],views[i]);
+			}
+		}
+		for (int i = 0; i < creators.length; i++) {
+			Integer highestNum = highest.get(creators[i]);
+			map2.put(creators[i],map2.getOrDefault(creators[i],0) + views[i]);
+			if (map.containsKey(creators[i])) {
+				if (highestNum == views[i]) {
+					String s = map.get(creators[i]);
+					map.put(creators[i],s.compareTo(ids[i]) > 0 ? ids[i] : s);
+				}
+			} 
+			else if (highestNum == views[i]) {
+				map.put(creators[i],ids[i]);
+			}
+		}
+		map2 = sortMap(map2);
+		List<List<String>> res = new ArrayList<>();
+		ArrayList<String> keys = new ArrayList<>(map2.keySet());
+		int num = map2.get(keys.get(keys.size() - 1));
+		for (int i = keys.size() - 1; i >= 0; i--) {
+			String s = keys.get(i);
+			Integer integer = map2.get(s);
+			if (num == integer) {
+				res.add(Arrays.asList(s,map.get(s)));
+			} 
+			else {
+				break;
+			}
+		}
+		return res;
+	}
+	LinkedHashMap<String, Integer> sortMap(LinkedHashMap<String, Integer> map) {
+		List<Map.Entry<String, Integer>> capitalList = new LinkedList<>(map.entrySet());
+		capitalList.sort(Map.Entry.comparingByValue());
+		LinkedHashMap<String, Integer> result = new LinkedHashMap<>();
+		for (Map.Entry<String, Integer> entry: capitalList) {	
+			result.put(entry.getKey(),entry.getValue());
+		}
+		return result;
+	}
+}

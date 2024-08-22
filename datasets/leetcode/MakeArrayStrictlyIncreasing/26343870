@@ -1,0 +1,36 @@
+class Solution {
+	int makeArrayIncreasing(int[] arr1, int[] arr2) {
+		TreeSet<Integer> s = new TreeSet<Integer>();
+		for (int n: arr2) {	
+			s.add(n);
+		}
+		PriorityQueue<int[]> reach = new PriorityQueue<int[]>((r1, r2) -> {2 * Integer.compare(r1[0],r2[0]) + Integer.compare(r1[1],r2[1])});
+		PriorityQueue<int[]> nr = new PriorityQueue<int[]>((r1, r2) -> {2 * Integer.compare(r1[0],r2[0]) + Integer.compare(r1[1],r2[1])});
+		reach.add(new int{0, arr1[0]});
+		if (s.first() < arr1[0]) {
+			reach.add(new int{1, s.first()});
+		}
+		for (int i = 1; i < arr1.length; i++) {
+			while (!reach.isEmpty()) {
+				int[] best = reach.poll();
+				if (arr1[i] > best[1]) {
+					nr.add(new int{best[0], arr1[i]});
+				}
+				if (s.higher(best[1]) != null) {
+					nr.add(new int{1 + best[0], s.higher(best[1])});
+				}
+				while (!reach.isEmpty() && reach.peek()[1] >= best[1]) {
+					reach.poll();
+				}
+			}
+			reach.clear();
+			if (nr.isEmpty()) {
+				return -1;
+			}
+			while (!nr.isEmpty()) {
+				reach.add(nr.poll());
+			}
+		}
+		return reach.peek()[0];
+	}
+}

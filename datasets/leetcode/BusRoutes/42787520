@@ -1,0 +1,39 @@
+class Solution {
+	int numBusesToDestination(int[][] routes, int source, int target) {
+		HashMap<Integer, HashSet<Integer>> toRoutes = new HashMap<>();
+		for (int i = 0; i < routes.length; i++) {
+			for (int j: routes[i]) {	
+				if (!toRoutes.containsKey(j)) {
+					toRoutes.put(j,new HashSet<Integer>());
+				}
+				toRoutes.get(j).add(i);
+			}
+		}
+		Queue<int[]> checkStops = new LinkedList<>();
+		checkStops.add(new int{source, 0});
+		HashSet<Integer> seen = new HashSet<>();
+		seen.add(source);
+		boolean[] seenRoutes = new boolean[routes.length];
+		while (!checkStops.isEmpty()) {
+			int stop = checkStops.peek()[0];
+			int busCount = checkStops.peek()[1];
+			checkStops.remove();
+			if (stop == target) {
+				return busCount;
+			}
+			for (int i: toRoutes.get(stop)) {	
+				if (seenRoutes[i]) {
+					continue;
+				}
+				for (int j: routes[i]) {	
+					if (!seen.contains(j)) {
+						seen.add(j);
+						checkStops.add(new int{j, busCount + 1});
+					}
+				}
+				seenRoutes[i] = true;
+			}
+		}
+		return -1;
+	}
+}

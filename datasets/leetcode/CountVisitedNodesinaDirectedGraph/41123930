@@ -1,0 +1,47 @@
+class Solution {
+	int[] countVisitedNodes(List<Integer> edges) {
+		List<Integer>[] reversedGraph = new List[edges.size()];
+		for (int i = 0; i < reversedGraph.length; i++) {
+			reversedGraph[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < edges.size(); i++) {
+			reversedGraph[edges.get(i)].add(i);
+		}
+		int[] counts = new int[edges.size()];
+		for (int i = 0; i < counts.length; i++) {
+			if (counts[i] == 0) {
+				visit(edges,i,reversedGraph,counts);
+			}
+		}
+		return counts;
+	}
+	void propagate(List<Integer>[] reversedGraph, int slow, int cycleSize, int[] counts) {
+		for (int next: reversedGraph[slow]) {	
+			if (counts[next] == 0) {
+				counts[next] = cycleSize + 1;
+				propagate(reversedGraph,next,cycleSize + 1,counts);
+			}
+		}
+	}
+	void visit(List<Integer> edges, int head, List<Integer>[] reversedGraph, int[] counts) {
+		int slow = edges.get(head);
+		int fast = edges.get(edges.get(head));
+		while (slow != fast) {
+			slow = edges.get(slow);
+			fast = edges.get(edges.get(fast));
+		}
+		int cycleSize = 1;
+		slow = edges.get(slow);
+		while (slow != fast) {
+			slow = edges.get(slow);
+			cycleSize++;
+		}
+		counts[slow] = cycleSize;
+		slow = edges.get(slow);
+		while (slow != fast) {
+			counts[slow] = cycleSize;
+			propagate(reversedGraph,slow,cycleSize,counts);
+			slow = edges.get(slow);
+		}
+	}
+}

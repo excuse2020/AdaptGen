@@ -1,0 +1,42 @@
+class Solution {
+	int getMax(int idx, int[] stones, int c, Integer[][] cache) {
+		if (idx == stones.length) {
+			return 0;
+		}
+		if (cache[idx][c] != null) {
+			return cache[idx][c];
+		}
+		if (c == 0) {
+			int res = Integer.MIN_VALUE;
+			int sum = 0;
+			for (int i = idx; i < Math.min(idx + 3,stones.length); i++) {
+				sum += stones[i];
+				res = Math.max(res,sum + getMax(i + 1,stones,1,cache));
+			}
+			cache[idx][c] = res;
+			return res;
+		} 
+		else {
+			int res = Integer.MAX_VALUE;
+			int sum = 0;
+			for (int i = idx; i < Math.min(idx + 3,stones.length); i++) {
+				sum -= stones[i];
+				res = Math.min(res,sum + getMax(i + 1,stones,0,cache));
+			}
+			cache[idx][c] = res;
+			return res;
+		}
+	}
+	String stoneGameIII(int[] stoneValue) {
+		int res = getMax(0,stoneValue,0,new Integer[stoneValue.length][2]);
+		if (res > 0) {
+			return "Alice";
+		} 
+		else if (res < 0) {
+			return "Bob";
+		} 
+		else {
+			return "Tie";
+		}
+	}
+}

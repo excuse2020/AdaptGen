@@ -1,0 +1,33 @@
+class Solution {
+	int[][][] dp;
+	int mod = (int) (1e9 + 7);
+	int dfs(int[][] grid, int i, int j, int k, int sum) {
+		if (i == grid.length || j == grid[0].length) {
+			return 0;
+		}
+		if (i == grid.length - 1 && j == grid[0].length - 1) {
+			if ((sum + grid[i][j]) % k == 0) {
+				return 1;
+			}
+			return 0;
+		}
+		if (dp[i][j][(sum + grid[i][j]) % k] != -1) {
+			return dp[i][j][(sum + grid[i][j]) % k];
+		}
+		int down = dfs(grid,i + 1,j,k,sum + grid[i][j]);
+		int right = dfs(grid,i,j + 1,k,sum + grid[i][j]);
+		dp[i][j][(sum + grid[i][j]) % k] = (down + right) % mod;
+		return dp[i][j][(sum + grid[i][j]) % k];
+	}
+	int numberOfPaths(int[][] grid, int k) {
+		int rows = grid.length;
+		int cols = grid[0].length;
+		dp = new int[rows][cols][k];
+		for (int[][] a: dp) {	
+			for (int[] b: a) {	
+				Arrays.fill(b,-1);
+			}
+		}
+		return dfs(grid,0,0,k,0);
+	}
+}

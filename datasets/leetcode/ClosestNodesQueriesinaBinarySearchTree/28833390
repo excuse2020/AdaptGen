@@ -1,0 +1,27 @@
+class Solution {
+	TreeSet<Integer> treeSet;
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		List<List<Integer>> result = new ArrayList<>();
+		treeSet = new TreeSet<>();
+		inorderBST(root);
+		for (int query: queries) {	
+			if (treeSet.contains(query)) {
+				result.add(Arrays.asList(query,query));
+			} 
+			else {
+				Integer min = treeSet.lower(query);
+				Integer max = treeSet.higher(query);
+				result.add(Arrays.asList(min == null ? -1 : min,max == null ? -1 : max));
+			}
+		}
+		return result;
+	}
+	void inorderBST(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		inorderBST(root.left);
+		treeSet.add(root.val);
+		inorderBST(root.right);
+	}
+}

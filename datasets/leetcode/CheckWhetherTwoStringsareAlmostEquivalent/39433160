@@ -1,0 +1,20 @@
+class Solution {
+	boolean checkAlmostEquivalent(String word1, String word2) {
+		int K = 3;
+		Map<Character, Integer> freq1 = new HashMap();
+		Map<Character, Integer> freq2 = new HashMap();
+		for (char c: word1.toCharArray()) {	
+			freq1.put(c,freq1.getOrDefault(c,0) + 1);
+		}
+		for (char c: word2.toCharArray()) {	
+			freq2.put(c,freq2.getOrDefault(c,0) + 1);
+		}
+		Map<Character, Integer> newMap = Stream.of(freq1,freq2).flatMap((map) -> {map.entrySet().stream()}).collect(Collectors.toMap(,,(o1, o2) -> {Math.abs(o1 - o2)}));
+		for (var entry: newMap.entrySet()) {	
+			if (entry.getValue() > K) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

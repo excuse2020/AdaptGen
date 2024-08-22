@@ -1,0 +1,50 @@
+class Solution {
+	long DP;
+	int N;
+	boolean delivery;
+	long mod = (long) 1e9 + 7;
+	boolean pick;
+	long Memoization(int p, int d) {
+		if (p == N && d == N) {
+			return 1;
+		}
+		long count = 0;
+		if (DP[p][d] != -1) {
+			return DP[p][d];
+		}
+		if (p < N) {
+			for (int i = 0; i < N; i++) {
+				if (!pick[i]) {
+					pick[i] = true;
+					count += Memoization(p + 1,d);
+					pick[i] = false;
+					DP[p][d] = count % mod;
+				}
+			}
+		}
+		if (d < N) {
+			for (int i = 0; i < N; i++) {
+				if (pick[i] && !delivery[i]) {
+					delivery[i] = true;
+					count += Memoization(p,d + 1);
+					delivery[i] = false;
+					DP[p][d] = count % mod;
+				}
+			}
+		}
+		return count;
+	}
+	int countOrders(int n) {
+		N = n;
+		pick = new boolean[n];
+		delivery = new boolean[n];
+		DP = new long[n + 1][n + 1];
+		for (int i = 0; i <= n; i++) {
+			for (int j = 0; j <= n; j++) {
+				DP[i][j] = -1;
+			}
+		}
+		long result = Memoization(0,0);
+		return (int) (result % mod);
+	}
+}

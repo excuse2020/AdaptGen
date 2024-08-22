@@ -1,0 +1,42 @@
+class Solution {
+	Map<Integer, Integer> dic;
+	TreeNode createTree(int[] xianxu, int l1, int r1, int[] zhongxu, int l2, int r2) {
+		if (l1 > r1 || l2 > r2) {
+			return null;
+		}
+		TreeNode root = new TreeNode(xianxu[l1]);
+		int i = dic.get(xianxu[l1]);
+		root.left = createTree(xianxu,l1 + 1,l1 + i - l2,zhongxu,l2,i - 1);
+		root.right = createTree(xianxu,l1 + i - l2 + 1,r1,zhongxu,i + 1,r2);
+		return root;
+	}
+	int[] solve(int[] xianxu, int[] zhongxu) {
+		dic = new HashMap<>();
+		for (int i = 0; i < zhongxu.length; i++) {
+			dic.put(zhongxu[i],i);
+		}
+		TreeNode root = createTree(xianxu,0,xianxu.length - 1,zhongxu,0,zhongxu.length - 1);
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.offer(root);
+		List<Integer> list = new ArrayList<>();
+		while (!queue.isEmpty()) {
+			int n = queue.size();
+			TreeNode node = null;
+			for (int i = 0; i < n; i++) {
+				node = queue.poll();
+				if (node.left != null) {
+					queue.offer(node.left);
+				}
+				if (node.right != null) {
+					queue.offer(node.right);
+				}
+			}
+			list.add(node.val);
+		}
+		int[] res = new int[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			res[i] = list.get(i);
+		}
+		return res;
+	}
+}

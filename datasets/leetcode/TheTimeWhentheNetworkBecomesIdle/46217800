@@ -1,0 +1,60 @@
+class Solution {
+	int[] getDistances(List<Integer>[] outgoing) {
+		int[] distances = new int[outgoing.length];
+		boolean[] visited = new boolean[distances.length];
+		LinkedList<int[]> onQueue = new LinkedList<>();
+		int[] head;
+		visited[0] = true;
+		onQueue.addLast(new int{0, 0});
+		while (!onQueue.isEmpty()) {
+			head = onQueue.removeFirst();
+			for (int neighbour: outgoing[head[0]]) {	
+				if (!visited[neighbour]) {
+					distances[neighbour] = head[1] + 1;
+					onQueue.addLast(new int{neighbour, head[1] + 1});
+					visited[neighbour] = true;
+				}
+			}
+		}
+		return distances;
+	}
+	int getEarliestTime(int[] distances, int[] patience) {
+		int finishingTime = -1;
+		for (int i = 1; i < distances.length; i++) {
+			finishingTime = Math.max(finishingTime,getFinishingTime(distances[i],patience[i]));
+		}
+		return finishingTime + 1;
+	}
+	int getFinishingTime(int distance, int patience) {
+		if (distance * 2 <= patience) {
+			return distance * 2;
+		}
+		int twoWay = distance * 2;
+		int mod = twoWay % patience;
+		if (mod == 0) {
+			return 2 * twoWay - patience;
+		} 
+		else {
+			return 2 * twoWay - mod;
+		}
+	}
+	List<Integer>[] getOutgoing(int n, int[][] edges) {
+		List<Integer>[] outgoing = new List[n];
+		for (int[] edge: edges) {	
+			if (outgoing[edge[0]] == null) {
+				outgoing[edge[0]] = new ArrayList<>();
+			}
+			if (outgoing[edge[1]] == null) {
+				outgoing[edge[1]] = new ArrayList<>();
+			}
+			outgoing[edge[0]].add(edge[1]);
+			outgoing[edge[1]].add(edge[0]);
+		}
+		return outgoing;
+	}
+	int networkBecomesIdle(int[][] edges, int[] patience) {
+		List<Integer>[] outgoing = getOutgoing(patience.length,edges);
+		int[] distances = getDistances(outgoing);
+		return getEarliestTime(distances,patience);
+	}
+}

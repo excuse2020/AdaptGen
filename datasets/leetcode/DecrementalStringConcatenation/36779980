@@ -1,0 +1,39 @@
+class Solution {
+	int minimizeConcatenatedLength(String[] words) {
+		int n = words.length;
+		Map<String, Integer>[] dp = new Map[n];
+		for (int i = 0; i < n; i++) {
+			dp[i] = new HashMap<>();
+		}
+		return solve(1,words[0],words,dp);
+	}
+	int solve(int idx, String str, String[] words, Map<String, Integer>[] dp) {
+		if (idx >= words.length) {
+			return str.length();
+		}
+		if (dp[idx].containsKey(str)) {
+			return dp[idx].get(str);
+		}
+		int ans = (int) 1e8;
+		StringBuilder sb = new StringBuilder(str);
+		if (str.charAt(str.length() - 1) == words[idx].charAt(0)) {
+			sb.deleteCharAt(sb.length() - 1);
+			sb.append(words[idx]);
+		} 
+		else {
+			sb.append(words[idx]);
+		}
+		ans = solve(idx + 1,sb.toString(),words,dp);
+		sb = new StringBuilder(words[idx]);
+		if (sb.charAt(sb.length() - 1) == str.charAt(0)) {
+			sb.deleteCharAt(sb.length() - 1);
+			sb.append(str);
+		} 
+		else {
+			sb.append(str);
+		}
+		ans = Math.min(ans,solve(idx + 1,sb.toString(),words,dp));
+		dp[idx].put(str,ans);
+		return ans;
+	}
+}

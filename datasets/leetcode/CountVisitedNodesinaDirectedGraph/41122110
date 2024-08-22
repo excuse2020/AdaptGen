@@ -1,0 +1,46 @@
+class Solution {
+	int[] countVisitedNodes(List<Integer> edges) {
+		int n = edges.size();
+		boolean[] visited = new boolean[n];
+		int[] ans = new int[n];
+		for (int i = 0; i < n; i++) {
+			if (visited[i]) {
+				continue;
+			}
+			dfs(i,edges,ans,visited);
+		}
+		return ans;
+	}
+	void dfs(int curr, List<Integer> edges, int[] ans, boolean[] visited) {
+		Set<Integer> inPath = new HashSet<>();
+		int prev = -1;
+		int head = curr;
+		while (!visited[curr]) {
+			visited[curr] = true;
+			inPath.add(curr);
+			ans[curr] = prev == -1 ? -1 : ans[prev] - 1;
+			prev = curr;
+			curr = edges.get(curr);
+		}
+		int tail = prev;
+		int c = ans[curr];
+		int t = ans[tail];
+		if (c > 0) {
+			for (int node: inPath) {	
+				ans[node] += c - t + 1;
+			}
+			return;
+		} 
+		else {
+			int cycle = c - t + 1;
+			for (int node: inPath) {	
+				if (ans[node] <= c) {
+					ans[node] = cycle;
+				} 
+				else {
+					ans[node] = ans[node] - c + cycle;
+				}
+			}
+		}
+	}
+}

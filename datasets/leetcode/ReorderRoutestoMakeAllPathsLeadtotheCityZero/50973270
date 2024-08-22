@@ -1,0 +1,30 @@
+class Solution {
+	int count = 0;
+	void addEdges(ArrayList<ArrayList<Pair<Integer, Integer>>> adj, int[][] connections) {
+		for (int[] arr: connections) {	
+			adj.get(arr[0]).add(new Pair<>(arr[1], 1));
+			adj.get(arr[1]).add(new Pair<>(arr[0], 0));
+		}
+	}
+	void dfs(ArrayList<ArrayList<Pair<Integer, Integer>>> adj, int src, int parent) {
+		for (Pair<Integer, Integer> pair: adj.get(src)) {	
+			Integer key = pair.getKey();
+			Integer check = pair.getValue();
+			if (key != parent) {
+				if (check == 1) {
+					count++;
+				}
+				dfs(adj,key,src);
+			}
+		}
+	}
+	int minReorder(int n, int[][] connections) {
+		ArrayList<ArrayList<Pair<Integer, Integer>>> adj = new ArrayList<ArrayList<Pair<Integer, Integer>>>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<Pair<Integer, Integer>>());
+		}
+		addEdges(adj,connections);
+		dfs(adj,0,-1);
+		return count;
+	}
+}

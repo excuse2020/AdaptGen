@@ -1,0 +1,40 @@
+class Solution {
+	int binarySearch(MountainArray A, int target, int left, int right, boolean isIncreasing) {
+		while (left <= right) {
+			int mid = left + (right - left) / 2;
+			int midValue = A.get(mid);
+			if (midValue == target) {
+				return mid;
+			} 
+			else if (midValue < target) {
+				left = isIncreasing ? mid + 1 : left;
+				right = isIncreasing ? right : mid - 1;
+			} 
+			else {
+				left = isIncreasing ? left : mid + 1;
+				right = isIncreasing ? mid - 1 : right;
+			}
+		}
+		return -1;
+	}
+	int findInMountainArray(int target, MountainArray A) {
+		int peak = findPeak(A,0,A.length() - 1);
+		int result = binarySearch(A,target,0,peak,true);
+		if (result != -1) {
+			return result;
+		}
+		return binarySearch(A,target,peak + 1,A.length() - 1,false);
+	}
+	int findPeak(MountainArray A, int left, int right) {
+		while (left < right) {
+			int mid = left + (right - left) / 2;
+			if (A.get(mid) < A.get(mid + 1)) {
+				left = mid + 1;
+			} 
+			else {
+				right = mid;
+			}
+		}
+		return left;
+	}
+}

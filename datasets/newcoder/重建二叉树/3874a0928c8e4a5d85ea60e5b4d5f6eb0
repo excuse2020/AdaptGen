@@ -1,0 +1,43 @@
+class Solution {
+	TreeNode reConstructBinaryTree(int[] pre, int[] vin) {
+		return reConstructBinaryTreeLeft(pre,vin);
+	}
+	TreeNode reConstructBinaryTreeLeft(int[] pre, int[] vin) {
+		TreeNode root;
+		if (pre.length > 0) {
+			root = new TreeNode(pre[0]);
+		} 
+		else {
+			root = null;
+			return root;
+		}
+		int[] preLeft = new int[10];
+		int[] vinLeft = new int[10];
+		int[] preRight = new int[10];
+		int[] vinRight = new int[10];
+		boolean flag = false;
+		int index = 0;
+		for (int i = 0, j = 0; i < vin.length; i++, j++) {
+			if (flag) {
+				preRight[j] = pre[i];
+				vinRight[j] = vin[i];
+			}
+			if (pre[0] == vin[i]) {
+				preLeft = new int[i];
+				vinLeft = new int[i];
+				preRight = new int[vin.length - i];
+				vinRight = new int[vin.length - i];
+				j = -1;
+				index = i;
+				flag = true;
+			}
+		}
+		for (int i = 0; i < index; i++) {
+			preLeft[i] = pre[i + 1];
+			vinLeft[i] = vin[i];
+		}
+		root.left = reConstructBinaryTreeLeft(preLeft,vinLeft);
+		root.right = reConstructBinaryTreeLeft(preRight,vinRight);
+		return root;
+	}
+}

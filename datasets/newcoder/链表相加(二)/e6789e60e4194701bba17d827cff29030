@@ -1,0 +1,40 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		Deque<Integer> keep1 = new LinkedList<Integer>();
+		Deque<Integer> keep2 = new LinkedList<Integer>();
+		ListNode head = new ListNode(-1);
+		while (head1 != null) {
+			keep1.offerLast(head1.val);
+			head1 = head1.next;
+		}
+		while (head2 != null) {
+			keep2.offerLast(head2.val);
+			head2 = head2.next;
+		}
+		int count = 0;
+		while (!keep1.isEmpty() && !keep2.isEmpty()) {
+			int a = keep1.pollLast();
+			int b = keep2.pollLast();
+			int sum = a + b;
+			count = sum / 10;
+			ListNode tmp = new ListNode(sum % 10);
+			tmp.next = head.next;
+			head.next = tmp;
+		}
+		Deque<Integer> keep = keep1.isEmpty() ? keep2 : keep1;
+		while (!keep.isEmpty()) {
+			int t = keep.pollLast();
+			int sum = t + count;
+			count = sum / 10;
+			ListNode tmp = new ListNode(sum % 10);
+			tmp.next = head.next;
+			head.next = tmp;
+		}
+		if (count != 0) {
+			ListNode tmp = new ListNode(1);
+			tmp.next = head.next;
+			head.next = tmp;
+		}
+		return head.next;
+	}
+}

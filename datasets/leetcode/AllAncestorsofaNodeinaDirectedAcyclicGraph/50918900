@@ -1,0 +1,39 @@
+class Solution {
+	Map<Integer, List<Integer>> canVisit = new HashMap<>();
+	void dfs(Map<Integer, List<Integer>> map, int n, int p, boolean[] visited) {
+		if (visited[n]) {
+			return;
+		}
+		visited[n] = true;
+		for (int nei: map.get(n)) {	
+			canVisit.get(p).add(nei);
+			dfs(map,nei,p,visited);
+		}
+	}
+	List<List<Integer>> getAncestors(int n, int[][] edges) {
+		Map<Integer, Set<Integer>> result = new HashMap<>();
+		Map<Integer, List<Integer>> map = new HashMap();
+		for (int i = 0; i < n; i++) {
+			map.put(i,new ArrayList<>());
+			canVisit.put(i,new ArrayList<>());
+			result.put(i,new TreeSet<>());
+		}
+		for (int[] edge: edges) {	
+			map.get(edge[0]).add(edge[1]);
+		}
+		for (int i = 0; i < n; i++) {
+			boolean[] visited = new boolean[n];
+			dfs(map,i,i,visited);
+		}
+		for (Map.Entry<Integer, List<Integer>> e: canVisit.entrySet()) {	
+			for (int nodeVisited: e.getValue()) {	
+				result.get(nodeVisited).add(e.getKey());
+			}
+		}
+		List<List<Integer>> finalResult = new ArrayList<>();
+		for (Set<Integer> val: result.values()) {	
+			finalResult.add(new ArrayList<>(val));
+		}
+		return finalResult;
+	}
+}

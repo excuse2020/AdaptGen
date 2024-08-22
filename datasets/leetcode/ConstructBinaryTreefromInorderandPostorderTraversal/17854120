@@ -1,0 +1,23 @@
+class Solution {
+	Map<Integer, Integer> map = new HashMap<>();
+	int postIdx = 0;
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		int n = inorder.length;
+		postIdx = n - 1;
+		for (int i = 0; i < n; i++) {
+			map.put(inorder[i],i);
+		}
+		return solve(postorder,inorder,0,n - 1);
+	}
+	TreeNode solve(int[] post, int[] in, int inStart, int inEnd) {
+		if (postIdx < 0 || inStart > inEnd) {
+			return null;
+		}
+		int val = post[postIdx--];
+		TreeNode root = new TreeNode(val);
+		int posOfValInInorder = map.get(val);
+		root.right = solve(post,in,posOfValInInorder + 1,inEnd);
+		root.left = solve(post,in,inStart,posOfValInInorder - 1);
+		return root;
+	}
+}

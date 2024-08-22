@@ -1,0 +1,28 @@
+class Solution {
+	int globalMax = 0;
+	Map<Integer, Set<Integer>> graph = new HashMap<>();
+	int getLongestPath(char[] arr, int node) {
+		int maxOne = 0, maxTwo = 0;
+		for (Integer child: graph.getOrDefault(node,new HashSet<>())) {	
+			int currResult = getLongestPath(arr,child);
+			if (currResult > maxTwo && arr[child] != arr[node]) {
+				maxTwo = currResult;
+				int tempMax = Math.max(maxOne,maxTwo);
+				maxTwo = Math.min(maxOne,maxTwo);
+				maxOne = tempMax;
+			}
+			globalMax = Math.max(globalMax,currResult);
+		}
+		int maxThroughNode = maxOne + 1;
+		globalMax = Math.max(globalMax,maxThroughNode);
+		return 1 + maxOne;
+	}
+	int longestPath(int[] parent, String s) {
+		for (int i = 1; i < parent.length; i++) {
+			graph.putIfAbsent(parent[i],new HashSet<>());
+			graph.get(parent[i]).add(i);
+		}
+		getLongestPath(s.toCharArray(),0);
+		return globalMax;
+	}
+}

@@ -1,0 +1,30 @@
+class Solution {
+	int[] fullBloomFlowers(int[][] flowers, int[] people) {
+		TreeMap<Integer, Integer> map = new TreeMap<>();
+		for (int[] ar: flowers) {	
+			map.put(ar[0],map.getOrDefault(ar[0],0) + 1);
+			map.put(ar[1] + 1,map.getOrDefault(ar[1] + 1,0) - 1);
+		}
+		int prevDay = -1;
+		for (Map.Entry<Integer, Integer> entry: map.entrySet()) {	
+			Integer key = entry.getKey();
+			Integer val = entry.getValue();
+			Integer floorKey = map.lowerKey(key);
+			if (floorKey != null && floorKey != key) {
+				map.put(key,map.get(floorKey) + val);
+			}
+		}
+		System.out.println(map);
+		int[] ans = new int[people.length];
+		for (int i = 0; i < people.length; i++) {
+			Integer floorKey = map.floorKey(people[i]);
+			if (floorKey != null) {
+				Integer count = map.get(floorKey);
+				if (count != null) {
+					ans[i] = count;
+				}
+			}
+		}
+		return ans;
+	}
+}

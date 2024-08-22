@@ -1,0 +1,41 @@
+class Solution {
+	int timer = 1;
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < connections.size(); i++) {
+			int u = connections.get(i).get(0);
+			int v = connections.get(i).get(1);
+			adj.get(u).add(v);
+			adj.get(v).add(u);
+		}
+		int[] lowestTimeOfInsertion = new int[n];
+		int[] timeOfInsertion = new int[n];
+		boolean[] visited = new boolean[n];
+		List<List<Integer>> bridges = new ArrayList<>();
+		dfs(0,-1,lowestTimeOfInsertion,timeOfInsertion,visited,bridges,adj);
+		return bridges;
+	}
+	void dfs(int node, int parent, int[] lowestTimeOfInsertion, int[] timeOfInsertion, boolean[] visited, List<List<Integer>> bridges, List<List<Integer>> adj) {
+		visited[node] = true;
+		timeOfInsertion[node] = lowestTimeOfInsertion[node] = timer;
+		timer++;
+		for (int adjNode: adj.get(node)) {	
+			if (adjNode == parent) {
+				continue;
+			}
+			if (visited[adjNode] == false) {
+				dfs(adjNode,node,lowestTimeOfInsertion,timeOfInsertion,visited,bridges,adj);
+				lowestTimeOfInsertion[node] = Math.min(lowestTimeOfInsertion[node],lowestTimeOfInsertion[adjNode]);
+				if (lowestTimeOfInsertion[adjNode] > timeOfInsertion[node]) {
+					bridges.add(new ArrayList<>(Arrays.asList(node,adjNode)));
+				}
+			} 
+			else {
+				lowestTimeOfInsertion[node] = Math.min(lowestTimeOfInsertion[node],lowestTimeOfInsertion[adjNode]);
+			}
+		}
+	}
+}

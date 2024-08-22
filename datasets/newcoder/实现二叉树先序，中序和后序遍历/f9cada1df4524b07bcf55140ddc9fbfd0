@@ -1,0 +1,57 @@
+class Solution {
+	List<Integer> list = new ArrayList<Integer>();
+	void midOlder(TreeNode root) {
+		if (root.left != null) {
+			midOlder(root.left);
+		}
+		list.add(root.val);
+		if (root.right != null) {
+			midOlder(root.right);
+		}
+	}
+	void postOlder(TreeNode root) {
+		if (root.left != null) {
+			postOlder(root.left);
+		}
+		if (root.right != null) {
+			postOlder(root.right);
+		}
+		list.add(root.val);
+	}
+	void preOlder(TreeNode root) {
+		list.add(root.val);
+		if (root.left != null) {
+			preOlder(root.left);
+		}
+		if (root.right != null) {
+			preOlder(root.right);
+		}
+	}
+	int[][] threeOrders(TreeNode root) {
+		preOlder(root);
+		int len = list.size();
+		int[][] nums = new int[3][len];
+		int i = 0;
+		for (int n: list) {	
+			nums[0][i] = n;
+			i++;
+		}
+		list.clear();
+		i = 0;
+		midOlder(root);
+		for (int n: list) {	
+			nums[1][i] = n;
+			i++;
+		}
+		list.clear();
+		i = 0;
+		postOlder(root);
+		for (int n: list) {	
+			nums[2][i] = n;
+			i++;
+		}
+		list.clear();
+		i = 0;
+		return nums;
+	}
+}

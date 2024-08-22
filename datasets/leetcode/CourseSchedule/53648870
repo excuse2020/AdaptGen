@@ -1,0 +1,39 @@
+class Solution {
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < numCourses; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < prerequisites.length; i++) {
+			adj.get(prerequisites[i][1]).add(prerequisites[i][0]);
+		}
+		int indeg = new int[numCourses];
+		for (int i = 0; i < prerequisites.length; i++) {
+			indeg[prerequisites[i][0]]++;
+		}
+		Queue<Integer> q = new LinkedList<>();
+		int cnt = 0;
+		for (int i = 0; i < numCourses; i++) {
+			if (indeg[i] == 0) {
+				q.add(i);
+				cnt++;
+			}
+		}
+		while (!q.isEmpty()) {
+			int curr = q.remove();
+			for (int i = 0; i < adj.get(curr).size(); i++) {
+				indeg[adj.get(curr).get(i)]--;
+				if (indeg[adj.get(curr).get(i)] == 0) {
+					q.add(adj.get(curr).get(i));
+					cnt++;
+				}
+			}
+		}
+		if (cnt < numCourses) {
+			return false;
+		} 
+		else {
+			return true;
+		}
+	}
+}

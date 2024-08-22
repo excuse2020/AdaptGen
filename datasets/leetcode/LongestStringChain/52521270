@@ -1,0 +1,43 @@
+class Solution {
+	boolean isSubsequence(String[] words, int n, int m) {
+		String curr = words[n];
+		String prev = words[m];
+		int i, j;
+		for (i = 0, j = 0; i < prev.length() && j < curr.length(); ) {
+			if (prev.charAt(i) == curr.charAt(j)) {
+				i++;
+				j++;
+			} 
+			else {
+				j++;
+			}
+		}
+		if (i == prev.length()) {
+			return true;
+		}
+		return false;
+	}
+	int longestStrChain(String[] words) {
+		Arrays.sort(words,new Comparator<String>());
+		int[][] dp = new int[words.length][words.length + 1];
+		for (int i = 0; i < words.length; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		int ans = solve(words,0,-1,dp);
+		return ans;
+	}
+	int solve(String[] words, int i, int prev, int[][] dp) {
+		if (i == words.length) {
+			return 0;
+		}
+		if (dp[i][prev + 1] != -1) {
+			return dp[i][prev + 1];
+		}
+		int inc = 0;
+		if (i == 0 || prev == -1 || (isSubsequence(words,i,prev) && words[i].length() - words[prev].length() == 1)) {
+			inc = 1 + solve(words,i + 1,i,dp);
+		}
+		int exc = 0 + solve(words,i + 1,prev,dp);
+		return dp[i][prev + 1] = Math.max(inc,exc);
+	}
+}

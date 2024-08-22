@@ -1,0 +1,28 @@
+class Solution {
+	int[] maximumBeauty(int[][] items, int[] queries) {
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < items.length; i++) {
+			map.put(items[i][0],Math.max(map.getOrDefault(items[i][0],0),items[i][1]));
+		}
+		TreeMap<Integer, Integer> mapSorted = new TreeMap<>();
+		for (int key: map.keySet()) {	
+			mapSorted.put(key,map.get(key));
+		}
+		int prev = 0, c = 0;
+		int[] arr = new int[mapSorted.size()], res = new int[queries.length];
+		for (int key: mapSorted.keySet()) {	
+			mapSorted.put(key,Math.max(mapSorted.get(key),prev));
+			prev = mapSorted.get(key);
+			arr[c++] = key;
+		}
+		for (int i = 0; i < queries.length; i++) {
+			Integer val = mapSorted.get(queries[i]);
+			if (val == null) {
+				Integer higherKey = mapSorted.lowerKey(queries[i]);
+				val = higherKey == null ? 0 : mapSorted.get(higherKey);
+			}
+			res[i] = val;
+		}
+		return res;
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	int getNextPos(int nextMove, int n) {
+		int r1 = (nextMove - 1) / n, c1 = (nextMove - 1) % n;
+		int row = n - 1;
+		int col = (n - 1) % 2 == 0 ? c1 : n - 1;
+		return row * n + col;
+	}
+	int snakesAndLadders(int[][] board) {
+		int n = board.length;
+		Map<Integer, Integer> distance = new HashMap<>();
+		Queue<Integer> queue = new LinkedList<>();
+		distance.put(1,0);
+		queue.add(1);
+		while (!queue.isEmpty()) {
+			int pos = queue.poll();
+			if (pos == n * n) {
+				return distance.get(pos);
+			}
+			for (int nextMove = pos + 1; nextMove <= Math.min(pos + 6,n * n); nextMove++) {
+				int nextPos = getNextPos(nextMove,n);
+				int nextRow = nextPos / n;
+				int nextCol = nextPos % n;
+				int suitablePos = board[nextRow][nextCol] == -1 ? nextMove : board[nextRow][nextCol];
+				if (!distance.containsKey(suitablePos)) {
+					distance.put(suitablePos,distance.get(pos) + 1);
+					queue.offer(suitablePos);
+				}
+			}
+		}
+		return -1;
+	}
+}

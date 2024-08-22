@@ -1,0 +1,33 @@
+class Solution {
+	TreeNode processRecursion(int[] pre, int[] in) {
+		int preEnd = pre.length - 1;
+		int inEnd = in.length - 1;
+		return recursion(pre,0,preEnd,in,0,inEnd);
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] in) {
+		if (pre == null || pre.length == 0) {
+			return null;
+		}
+		TreeNode root = processRecursion(pre,in);
+		return root;
+	}
+	TreeNode recursion(int[] pre, int preStart, int preEnd, int[] in, int inStart, int inEnd) {
+		if (preStart > preEnd) {
+			return null;
+		}
+		if (preStart == preEnd) {
+			return new TreeNode(pre[preStart]);
+		}
+		TreeNode currRoot = new TreeNode(pre[preStart]);
+		int index = 0;
+		for (int i = inStart; i <= inEnd; i++) {
+			if (in[i] == currRoot.val) {
+				index = i;
+				break;
+			}
+		}
+		currRoot.left = recursion(pre,preStart + 1,preStart + index - inStart,in,inStart,index - 1);
+		currRoot.right = recursion(pre,preStart + index - inStart + 1,preEnd,in,index + 1,inEnd);
+		return currRoot;
+	}
+}

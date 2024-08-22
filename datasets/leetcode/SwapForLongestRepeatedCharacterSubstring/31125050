@@ -1,0 +1,39 @@
+class Solution {
+	int maxRepOpt1(String text) {
+		Map<Character, List<Integer>> map = new HashMap<>();
+		int n = text.length();
+		for (int i = 0; i < n; i++) {
+			char letter = Character.toLowerCase(text.charAt(i));
+			map.putIfAbsent(letter,new ArrayList<>());
+			map.get(letter).add(i);
+		}
+		int result = 1;
+		for (char letter: map.keySet()) {	
+			int groupcount = 1;
+			int prevgroupcount = 0;
+			int maxlength = 0;
+			List<Integer> indices = map.get(letter);
+			for (int j = 1; j < indices.size(); j++) {
+				int distance = indices.get(j) - indices.get(j - 1);
+				if (distance == 1) {
+					groupcount++;
+				} 
+				else {
+					if (distance == 2) {
+						prevgroupcount = groupcount;
+					} 
+					else {
+						prevgroupcount = 0;
+					}
+					groupcount = 1;
+				}
+				maxlength = Math.max(maxlength,groupcount + prevgroupcount);
+			}
+			if (indices.size() > maxlength) {
+				maxlength++;
+			}
+			result = Math.max(result,maxlength);
+		}
+		return result;
+	}
+}

@@ -1,0 +1,37 @@
+class Solution {
+	int[][] findFarmland(int[][] land) {
+		int height = land.length;
+		int width = land[0].length;
+		List<int[]> ans = new ArrayList<>();
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				if (land[i][j] == 1) {
+					int[] cordinates = findMaxCordinates(land,i,j,height,width);
+					ans.add(cordinates);
+				}
+			}
+		}
+		return ans.toArray(new int[ans.size()]);
+	}
+	int[] findMaxCordinates(int[][] land, int i, int j, int height, int width) {
+		int[] cordinates = new int[4];
+		cordinates[0] = i;
+		cordinates[1] = j;
+		int maxRow = i;
+		int maxCol = j;
+		while (maxRow < height && land[maxRow][j] == 1) {
+			maxRow++;
+		}
+		while (maxCol < width && land[i][maxCol] == 1) {
+			maxCol++;
+		}
+		cordinates[2] = maxRow - 1;
+		cordinates[3] = maxCol - 1;
+		for (int temp1 = i; temp1 < maxRow; temp1++) {
+			for (int temp2 = j; temp2 < maxCol; temp2++) {
+				land[temp1][temp2] = 0;
+			}
+		}
+		return cordinates;
+	}
+}

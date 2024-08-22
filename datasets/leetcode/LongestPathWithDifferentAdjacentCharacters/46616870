@@ -1,0 +1,45 @@
+class Solution {
+	int longestPath(int[] parent, String s) {
+		int len = parent.length;
+		if (len == 1) {
+			return 1;
+		}
+		List<Integer>[] tree = new ArrayList[len];
+		for (int i = 0; i < len; i++) {
+			if (i == 0) {
+				continue;
+			}
+			if (tree[parent[i]] == null) {
+				tree[parent[i]] = new ArrayList<>();
+			}
+			tree[parent[i]].add(i);
+		}
+		int[] res = new int[1];
+		postOrder(tree,0,res,s);
+		return res[0];
+	}
+	int postOrder(List[] tree, int node, int[] res, String s) {
+		List<Integer> children = tree[node];
+		if (children == null) {
+			return 1;
+		}
+		int len1 = 0;
+		int len2 = 0;
+		for (int child: children) {	
+			int childLen = postOrder(tree,child,res,s);
+			if (s.charAt(child) == s.charAt(node)) {
+				continue;
+			}
+			if (childLen >= len1) {
+				len2 = len1;
+				len1 = childLen;
+			} 
+			else if (childLen > len2) {
+				len2 = childLen;
+			}
+		}
+		int sum = 1 + len1;
+		res[0] = Math.max(res[0],sum);
+		return 1 + Math.max(len1,len2);
+	}
+}

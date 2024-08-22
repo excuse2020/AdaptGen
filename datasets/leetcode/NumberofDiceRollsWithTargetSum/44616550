@@ -1,0 +1,81 @@
+class Solution {
+	int mod = (int) (Math.pow(10,9) + 7);
+	int numRollsToTarget(int n, int k, int target) {
+		return solveTab1(n,k,target) % mod;
+	}
+	int solve(int dice, int faces, int target) {
+		if (target < 0) {
+			return 0;
+		}
+		if (dice == 0 && target != 0 || dice != 0 && target == 0) {
+			return 0;
+		}
+		if (dice == 0 && target == 0) {
+			return 1;
+		}
+		int ans = 0;
+		for (int i = 1; i <= faces; i++) {
+			ans += solve(dice - 1,faces,target - i);
+			ans = ans % mod;
+		}
+		return ans % mod;
+	}
+	int solveMem(int dice, int faces, int target, int[][] dp) {
+		if (target < 0) {
+			return 0;
+		}
+		if (dice == 0 && target != 0 || dice != 0 && target == 0) {
+			return 0;
+		}
+		if (dice == 0 && target == 0) {
+			return 1;
+		}
+		if (dp[dice][target] == -1) {
+			int ans = 0;
+			for (int i = 1; i <= faces; i++) {
+				ans += solveMem(dice - 1,faces,target - i,dp);
+				ans = ans % mod;
+			}
+			dp[dice][target] = ans % mod;
+		}
+		return dp[dice][target] % mod;
+	}
+	int solveTab(int dice, int faces, int target) {
+		int[][] dp = new int[dice + 1][target + 1];
+		dp[0][0] = 1;
+		for (int d = 1; d <= dice; d++) {
+			for (int t = 1; t <= target; t++) {
+				int ans = 0;
+				for (int i = 1; i <= faces; i++) {
+					if (t - i >= 0) {
+						ans = ans + dp[d - 1][t - i];
+						ans = ans % mod;
+					}
+				}
+				dp[d][t] = ans;
+			}
+		}
+		return dp[dice][target] % mod;
+	}
+	int solveTab1(int dice, int faces, int target) {
+		int prev = new int[target + 1];
+		int current = new int[target + 1];
+		prev[0] = 1;
+		for (int d = 1; d <= dice; d++) {
+			for (int t = 1; t <= target; t++) {
+				int ans = 0;
+				for (int i = 1; i <= faces; i++) {
+					if (t - i >= 0) {
+						ans = ans + prev[t - i];
+						ans = ans % mod;
+					}
+				}
+				current[t] = ans;
+			}
+			for (int i = 0; i < prev.length; i++) {
+				prev[i] = current[i];
+			}
+		}
+		return prev[target] % mod;
+	}
+}

@@ -1,0 +1,51 @@
+class Solution {
+	int dec(int idx, int count, int arr, int[][] dpDec) {
+		int n = arr.length;
+		int ans = 0;
+		if (count == 3) {
+			return 1;
+		}
+		if (dpDec[idx][count] != -1) {
+			return dpDec[idx][count];
+		}
+		for (int i = idx + 1; i < n; i++) {
+			if (arr[i] <= arr[idx]) {
+				ans += dec(i,count + 1,arr,dpDec);
+			}
+		}
+		return dpDec[idx][count] = ans;
+	}
+	int inc(int idx, int count, int arr, int[][] dpInc) {
+		int n = arr.length;
+		int ans = 0;
+		if (count == 3) {
+			return 1;
+		}
+		if (dpInc[idx][count] != -1) {
+			return dpInc[idx][count];
+		}
+		for (int i = idx + 1; i < n; i++) {
+			if (arr[i] >= arr[idx]) {
+				ans += inc(i,count + 1,arr,dpInc);
+			}
+		}
+		return dpInc[idx][count] = ans;
+	}
+	int numTeams(int[] arr) {
+		int n = arr.length;
+		int ans = 0;
+		int[][] dpInc = new int[n][4];
+		int[][] dpDec = new int[n][4];
+		for (int[] row: dpInc) {	
+			Arrays.fill(row,-1);
+		}
+		for (int[] row: dpDec) {	
+			Arrays.fill(row,-1);
+		}
+		for (int i = 0; i < n; i++) {
+			ans += inc(i,1,arr,dpInc);
+			ans += dec(i,1,arr,dpDec);
+		}
+		return ans;
+	}
+}

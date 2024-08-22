@@ -1,0 +1,26 @@
+class Solution {
+	Integer dp;
+	int len;
+	int minSteps(int n) {
+		dp = new Integer[n + 1][2][n];
+		len = n;
+		return solve(1,0,0);
+	}
+	int solve(int currlen, int copied, int copiedlen) {
+		if (currlen > len) {
+			return 10000;
+		}
+		if (len == currlen) {
+			return 0;
+		}
+		if (dp[currlen][copied][copiedlen] != null) {
+			return dp[currlen][copied][copiedlen];
+		}
+		if (copied == 0) {
+			return dp[currlen][copied][copiedlen] = (1 + solve(currlen,1,currlen));
+		}
+		int pasteandmove = 1 + solve(currlen + copiedlen,0,0);
+		int pasteagain = 1 + solve(currlen + copiedlen,1,copiedlen);
+		return dp[currlen][copied][copiedlen] = Math.min(pasteandmove,pasteagain);
+	}
+}

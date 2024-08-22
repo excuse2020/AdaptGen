@@ -1,0 +1,42 @@
+class Solution {
+	long dp;
+	int mod = 1000000000 + 7;
+	int countVowelPermutation(int n) {
+		dp = new long[5][n + 1];
+		for (int i = 0; i < 5; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		int[][] Adj = new int[5][5];
+		Adj[0][1] = 1;
+		Adj[1][0] = 1;
+		Adj[1][2] = 1;
+		Adj[2][0] = 1;
+		Adj[2][1] = 1;
+		Adj[2][3] = 1;
+		Adj[2][4] = 1;
+		Adj[3][2] = 1;
+		Adj[3][4] = 1;
+		Adj[4][0] = 1;
+		long ans = 0;
+		for (int i = 0; i < 5; i++) {
+			long val = f(i,Adj,n);
+			ans = (ans + val) % mod;
+		}
+		return (int) ans;
+	}
+	long f(int node, int[][] Adj, int n) {
+		if (n == 1) {
+			return 1;
+		}
+		if (dp[node][n] != -1) {
+			return dp[node][n];
+		}
+		long ans = 0;
+		for (int i = 0; i < 5; i++) {
+			if (Adj[node][i] == 1) {
+				ans = (ans + f(i,Adj,n - 1)) % mod;
+			}
+		}
+		return dp[node][n] = ans;
+	}
+}

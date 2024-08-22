@@ -1,0 +1,41 @@
+class Solution {
+	int numBusesToDestination(int[][] routes, int source, int target) {
+		if (source == target) {
+			return 0;
+		}
+		int buses = 0;
+		HashMap<Integer, ArrayList<Integer>> graph = new HashMap<>();
+		HashSet<Integer> vis = new HashSet<>();
+		Queue<Integer> q = new LinkedList<>();
+		int n = routes.length;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < routes[i].length; j++) {
+				ArrayList<Integer> busroutes = graph.getOrDefault(routes[i][j],new ArrayList<>());
+				busroutes.add(i);
+				graph.put(routes[i][j],busroutes);
+			}
+		}
+		q.offer(source);
+		while (!q.isEmpty()) {
+			int size = q.size();
+			buses++;
+			for (int i = 0; i < size; i++) {
+				int temp = q.poll();
+				ArrayList<Integer> routlist = graph.get(temp);
+				for (int rout: routlist) {	
+					if (!vis.add(rout)) {
+						continue;
+					}
+					vis.add(rout);
+					for (int j = 0; j < routes[rout].length; j++) {
+						if (routes[rout][j] == target) {
+							return buses;
+						}
+						q.offer(routes[rout][j]);
+					}
+				}
+			}
+		}
+		return -1;
+	}
+}

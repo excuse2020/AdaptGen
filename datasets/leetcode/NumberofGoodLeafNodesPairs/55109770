@@ -1,0 +1,52 @@
+class Solution {
+	int cnt = 0;
+	Map<TreeNode, List<TreeNode>> graph;
+	Set<TreeNode> isLeaf;
+	int countPairs(TreeNode root, int distance) {
+		createGraph(root);
+		for (TreeNode leaf: isLeaf) {	
+			dfsHelper(leaf,null,distance);
+		}
+		return cnt / 2;
+	}
+	void createGraph(TreeNode root) {
+		graph = new HashMap<>();
+		isLeaf = new HashSet<>();
+		dfsGraph(root);
+	}
+	void dfsGraph(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		if (root.left == null && root.right == null) {
+			isLeaf.add(root);
+		}
+		graph.putIfAbsent(root,new ArrayList<>());
+		if (root.left != null) {
+			graph.get(root).add(root.left);
+			graph.putIfAbsent(root.left,new ArrayList<>());
+			graph.get(root.left).add(root);
+			dfsGraph(root.left);
+		}
+		if (root.right != null) {
+			graph.get(root).add(root.right);
+			graph.putIfAbsent(root.right,new ArrayList<>());
+			graph.get(root.right).add(root);
+			dfsGraph(root.right);
+		}
+	}
+	void dfsHelper(TreeNode curr, TreeNode par, int dist) {
+		if (dist == 0) {
+			return;
+		}
+		for (TreeNode child: graph.get(curr)) {	
+			if (child == par) {
+				continue;
+			}
+			if (isLeaf.contains(child)) {
+				cnt += 1;
+			}
+			dfsHelper(child,curr,dist - 1);
+		}
+	}
+}

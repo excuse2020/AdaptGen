@@ -1,0 +1,32 @@
+class Solution {
+	int ans;
+	int dfs(List<List<Integer>> g, int current, String s) {
+		int max1 = 0, max2 = 0;
+		for (int i: g.get(current)) {	
+			int st = dfs(g,i,s);
+			if (s.charAt(current) != s.charAt(i)) {
+				if (st > max1) {
+					max2 = max1;
+					max1 = st;
+				} 
+				else if (st > max2) {
+					max2 = st;
+				}
+			}
+		}
+		ans = Math.max(max1 + max2,ans);
+		return max1 + 1;
+	}
+	int longestPath(int[] parent, String s) {
+		List<List<Integer>> l = new ArrayList<>(parent.length);
+		for (int i = 0; i < parent.length; i++) {
+			l.add(new ArrayList<>());
+		}
+		for (int i = 1; i < parent.length; i++) {
+			l.get(parent[i]).add(i);
+		}
+		ans = Integer.MIN_VALUE;
+		dfs(l,0,s);
+		return ans;
+	}
+}

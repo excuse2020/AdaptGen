@@ -1,0 +1,33 @@
+class Solution {
+	int findMin(int[][] matrix, int i, int j, int curr) {
+		int min = curr + matrix[i + 1][j];
+		if (j + 1 < matrix.length) {
+			min = Math.min(min,(curr + matrix[i + 1][j + 1]));
+		}
+		if (j - 1 >= 0) {
+			min = Math.min(min,(curr + matrix[i + 1][j - 1]));
+		}
+		return min;
+	}
+	int minFallingPathSum(int[][] matrix) {
+		int[][] minSumMat = new int[matrix.length][matrix[0].length];
+		int min = Integer.MAX_VALUE;
+		for (int i = matrix[0].length - 1; i >= 0; i--) {
+			for (int j = 0; j < matrix.length; j++) {
+				if (i == matrix[0].length - 1) {
+					minSumMat[i][j] = matrix[i][j];
+					if (i == 0) {
+						min = Math.min(min,minSumMat[i][j]);
+					}
+				} 
+				else {
+					minSumMat[i][j] = findMin(minSumMat,i,j,matrix[i][j]);
+					if (i == 0) {
+						min = Math.min(min,minSumMat[i][j]);
+					}
+				}
+			}
+		}
+		return min;
+	}
+}

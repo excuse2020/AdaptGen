@@ -1,0 +1,32 @@
+class Solution {
+	String crackSafe(int n, int k) {
+		int totalCombinations = (int) Math.pow(k,n);
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < n; i++) {
+			sb.append("0");
+		}
+		Set<String> visited = new HashSet<>();
+		visited.add(sb.toString());
+		dfs(sb,visited,n,k,totalCombinations);
+		return sb.toString();
+	}
+	boolean dfs(StringBuilder sb, Set<String> visited, int n, int k, int totalCombinations) {
+		if (visited.size() == totalCombinations) {
+			return true;
+		}
+		String lastDigits = sb.substring(sb.length() - n + 1);
+		for (int i = 0; i < k; i++) {
+			String newDigits = lastDigits + i;
+			if (!visited.contains(newDigits)) {
+				sb.append(i);
+				visited.add(newDigits);
+				if (dfs(sb,visited,n,k,totalCombinations)) {
+					return true;
+				}
+				visited.remove(newDigits);
+				sb.deleteCharAt(sb.length() - 1);
+			}
+		}
+		return false;
+	}
+}

@@ -1,0 +1,30 @@
+class Solution {
+	int maxProfit(int[] prices) {
+		int[] next = new int[2];
+		for (int ind = prices.length - 1; ind >= 0; ind--) {
+			int curr = new int[2];
+			for (int flag = 0; flag <= 1; flag++) {
+				if (flag == 0) {
+					curr[flag] = Math.max(next[1 - flag] - prices[ind],next[flag]);
+				} 
+				else {
+					curr[flag] = Math.max(next[1 - flag] + prices[ind],next[flag]);
+				}
+			}
+			next = curr;
+		}
+		return next[0];
+	}
+	int task(int ind, int flag, int[] prices, int[][] dp) {
+		if (ind == prices.length) {
+			return 0;
+		}
+		if (dp[ind][flag] != -1) {
+			return dp[ind][flag];
+		}
+		if (flag == 0) {
+			return dp[ind][flag] = Math.max(task(ind + 1,1 - flag,prices,dp) - prices[ind],task(ind + 1,flag,prices,dp));
+		}
+		return dp[ind][flag] = Math.max(task(ind + 1,1 - flag,prices,dp) + prices[ind],task(ind + 1,flag,prices,dp));
+	}
+}

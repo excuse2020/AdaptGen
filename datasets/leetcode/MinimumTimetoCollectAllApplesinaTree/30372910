@@ -1,0 +1,31 @@
+class Solution {
+	List<List<Integer>> adjList = new ArrayList<>();
+	Set<Integer> visited = new HashSet<>();
+	int dfs(int node, List<Boolean> hasApple) {
+		visited.add(node);
+		int ans = 0;
+		for (int item: adjList.get(node)) {	
+			if (!visited.contains(item)) {
+				ans = ans + dfs(item,hasApple);
+			}
+		}
+		if (node != 0 && (hasApple.get(node) || ans > 0)) {
+			ans = ans + 2;
+		}
+		return ans;
+	}
+	void makeList(int[][] edges, int n) {
+		for (int i = 0; i < n; i++) {
+			adjList.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			adjList.get(edge[0]).add(edge[1]);
+			adjList.get(edge[1]).add(edge[0]);
+		}
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		makeList(edges,n);
+		int ans = dfs(0,hasApple);
+		return ans;
+	}
+}

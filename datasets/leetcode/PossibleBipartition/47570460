@@ -1,0 +1,46 @@
+class Solution {
+	LinkedList<Integer> adjList;
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		n = n + 1;
+		adjList = new LinkedList[n];
+		for (int idx = 0; idx < n; idx++) {
+			adjList[idx] = new LinkedList<>();
+		}
+		for (int[] edge: dislikes) {	
+			int u = edge[0], v = edge[1];
+			adjList[u].add(v);
+			adjList[v].add(u);
+		}
+		int[] colors = new int[n];
+		Arrays.fill(colors,-1);
+		boolean allColored = false;
+		int colorCount = 1;
+		Queue<Integer> queue = new LinkedList<>();
+		for (int v = 1; v < n; v++) {
+			if (colors[v] == -1) {
+				colors[v] = 1;
+				queue.add(v);
+				while (!queue.isEmpty()) {
+					int curVertex = queue.remove();
+					int curColor = colors[curVertex];
+					for (int child: adjList[curVertex]) {	
+						if (colors[child] == -1) {
+							if (curColor == 1) {
+								colors[child] = 2;
+							} 
+							else {
+								colors[child] = 1;
+							}
+							queue.add(child);
+							colorCount++;
+						} 
+						else if (colors[child] == curColor) {
+							return false;
+						}
+					}
+				}
+			}
+		}
+		return true;
+	}
+}

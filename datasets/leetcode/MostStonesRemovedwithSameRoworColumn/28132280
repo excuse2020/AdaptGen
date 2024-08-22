@@ -1,0 +1,55 @@
+class Solution {
+	void Union(int x, int y, int par, int rank) {
+		int lx = find(x,par);
+		int ly = find(y,par);
+		if (lx != ly) {
+			if (rank[lx] > rank[ly]) {
+				par[ly] = lx;
+			} 
+			else if (rank[ly] > rank[lx]) {
+				par[lx] = ly;
+			} 
+			else {
+				par[lx] = ly;
+				rank[ly]++;
+			}
+		}
+	}
+	int find(int x, int par) {
+		if (par[x] == x) {
+			return x;
+		}
+		int temp = find(par[x],par);
+		par[x] = temp;
+		return temp;
+	}
+	int removeStones(int[][] stones) {
+		int maxCol = 0;
+		int maxRow = 0;
+		for (int stone: stones) {	
+			maxCol = Math.max(maxCol,stone[1]);
+			maxRow = Math.max(maxRow,stone[0]);
+		}
+		int par = new int[maxRow + maxCol];
+		int rank = new int[maxRow + maxCol];
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < par.length; i++) {
+			par[i] = i;
+			rank[i] = 1;
+		}
+		for (int stone: stones) {	
+			int nodeRow = stone[0];
+			int nodeCol = stone[1] + maxRow;
+			Union(nodeRow,nodeCol,par,rank);
+			map.put(nodeRow,1);
+			map.put(nodeCol,1);
+		}
+		int cnt = 0;
+		for (int node: map.keySet()) {	
+			if (node == find(node,par)) {
+				cnt++;
+			}
+		}
+		return stones.length - cnt;
+	}
+}

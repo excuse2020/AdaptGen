@@ -1,0 +1,40 @@
+class Solution {
+	TreeNode bstToGst(TreeNode root) {
+		TreeNode ans = root;
+		recurFun(root,root);
+		return ans;
+	}
+	TreeNode inorderSuccessor(TreeNode root, TreeNode node) {
+		if (node.right != null) {
+			TreeNode temp = node.right;
+			while (temp.left != null) {
+				temp = temp.left;
+			}
+			return temp;
+		}
+		TreeNode succ = null;
+		while (root != null) {
+			if (root.val > node.val) {
+				succ = root;
+				root = root.left;
+			} 
+			else if (root.val < node.val) {
+				root = root.right;
+			} 
+			else {
+				break;
+			}
+		}
+		return succ;
+	}
+	void recurFun(TreeNode root, TreeNode node) {
+		if (node != null) {
+			recurFun(root,node.right);
+			TreeNode inSucc = inorderSuccessor(root,node);
+			if (inSucc != null) {
+				node.val += inSucc.val;
+			}
+			recurFun(root,node.left);
+		}
+	}
+}

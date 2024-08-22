@@ -1,0 +1,47 @@
+class Solution {
+	long calculateHours(long mid, int[] piles) {
+		long count = 0;
+		long complete_hours = 0;
+		for (int i = 0; i < piles.length; i++) {
+			if (piles[i] <= mid) {
+				count += 1;
+			} 
+			else {
+				complete_hours = piles[i] / mid;
+				count += complete_hours;
+				if (piles[i] % mid != 0) {
+					count += 1;
+				}
+			}
+		}
+		return count;
+	}
+	int minEatingSpeed(int[] piles, int h) {
+		int len = piles.length;
+		if (len > Math.pow(10,4) || h < len) {
+			return Integer.MAX_VALUE;
+		} 
+		else if (h == len) {
+			return Arrays.stream(piles).max().orElse(Integer.MAX_VALUE);
+		} 
+		else {
+			Arrays.sort(piles);
+			long low = 1l;
+			long high = piles[piles.length - 1];
+			long mid;
+			while (low <= high) {
+				mid = (low + high) / 2;
+				if (calculateHours(mid,piles) <= h) {
+					high = mid - 1;
+				} 
+				else {
+					low = mid + 1;
+				}
+			}
+			if (low > Integer.MAX_VALUE) {
+				return Integer.MAX_VALUE;
+			}
+			return (int) low;
+		}
+	}
+}

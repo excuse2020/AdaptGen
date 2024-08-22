@@ -1,0 +1,55 @@
+class Solution {
+	int minSwaps(List<Integer> list) {
+		int swaps = 0;
+		int[] sorted = new int[list.size()];
+		for (int i = 0; i < sorted.length; i++) {
+			sorted[i] = list.get(i);
+		}
+		Arrays.sort(sorted);
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < list.size(); i++) {
+			map.put(list.get(i),i);
+		}
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i) != sorted[i]) {
+				swaps++;
+				map.put(list.get(i),map.get(sorted[i]));
+				list.set(map.get(sorted[i]),list.get(i));
+			}
+		}
+		return swaps;
+	}
+	int minimumOperations(TreeNode root) {
+		List<List<Integer>> hs = new ArrayList<>();
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(root);
+		q.add(null);
+		List<Integer> h = new ArrayList<>();
+		while (q.size() > 0) {
+			TreeNode s = q.poll();
+			if (s != null) {
+				h.add(s.val);
+				if (s.left != null) {
+					q.add(s.left);
+				}
+				if (s.right != null) {
+					q.add(s.right);
+				}
+			} 
+			else {
+				if (!q.isEmpty()) {
+					q.add(null);
+				}
+				hs.add(h);
+				h = new ArrayList<>();
+			}
+		}
+		int count = 0;
+		for (List<Integer> sor: hs) {	
+			if (sor.size() > 1) {
+				count += minSwaps(sor);
+			}
+		}
+		return count;
+	}
+}

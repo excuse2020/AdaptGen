@@ -1,0 +1,37 @@
+class Solution {
+	int min(List<Integer> nums) {
+		if (nums.size() == 0) {
+			return Integer.MAX_VALUE;
+		}
+		int min = nums.get(0);
+		for (Integer num: nums) {	
+			min = Math.min(min,num);
+		}
+		return min;
+	}
+	int minimumNumbers(int num, int k) {
+		List<Integer> possibleNums = new LinkedList<Integer>();
+		int count = k;
+		while (count <= num) {
+			if (count != 0) {
+				possibleNums.add(count);
+			}
+			count += 10;
+		}
+		int length = sumLength(possibleNums,0,num,0);
+		return (length >= Integer.MAX_VALUE - 1) ? -1 : length;
+	}
+	int sumLength(List<Integer> nums, int runningSum, int target, int length) {
+		if (runningSum > target || length > target) {
+			return Integer.MAX_VALUE;
+		}
+		if (runningSum == target) {
+			return length;
+		}
+		List<Integer> lengths = new LinkedList<Integer>();
+		for (int num: nums) {	
+			lengths.add(sumLength(nums,runningSum + num,target,length + 1));
+		}
+		return min(lengths);
+	}
+}

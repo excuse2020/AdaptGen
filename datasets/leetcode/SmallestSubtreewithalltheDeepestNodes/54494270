@@ -1,0 +1,41 @@
+class Solution {
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		Queue<TreeNode> q = new LinkedList();
+		Map<TreeNode, TreeNode> map = new HashMap();
+		ArrayList<ArrayList<TreeNode>> list = new ArrayList<>();
+		q.add(root);
+		while (!q.isEmpty()) {
+			ArrayList<TreeNode> tempList = new ArrayList();
+			int size = q.size();
+			for (int i = 0; i < size; i++) {
+				TreeNode currNode = q.poll();
+				tempList.add(currNode);
+				if (currNode.left != null) {
+					map.put(currNode.left,currNode);
+					q.add(currNode.left);
+				}
+				if (currNode.right != null) {
+					map.put(currNode.right,currNode);
+					q.add(currNode.right);
+				}
+			}
+			list.add(new ArrayList(tempList));
+		}
+		int len = list.size() - 1;
+		ArrayList<TreeNode> temp = new ArrayList(list.get(len));
+		while (temp.size() != 1) {
+			ArrayList<TreeNode> l = new ArrayList<>();
+			for (int i = 0; i < temp.size(); i++) {
+				if (l.contains(map.get(temp.get(i)))) {
+					continue;
+				} 
+				else {
+					l.add(map.get(temp.get(i)));
+				}
+			}
+			temp.clear();
+			temp = new ArrayList(l);
+		}
+		return temp.get(0);
+	}
+}

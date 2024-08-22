@@ -1,0 +1,22 @@
+class Solution {
+	int informSubordinates(int currentEmployee, List<List<Integer>> employees, int[] informTime) {
+		int maxTime = 0;
+		for (int subordinate: employees.get(currentEmployee)) {	
+			int time = informSubordinates(subordinate,employees,informTime);
+			maxTime = Math.max(maxTime,time);
+		}
+		return maxTime + informTime[currentEmployee];
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		List<List<Integer>> employees = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			employees.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			if (manager[i] != -1) {
+				employees.get(manager[i]).add(i);
+			}
+		}
+		return informSubordinates(headID,employees,informTime);
+	}
+}

@@ -1,0 +1,30 @@
+class Solution {
+	int countTeams(int[] rating, int index, int length, int direction, int[][][] memo) {
+		if (length == 3) {
+			return 1;
+		}
+		if (index == rating.length) {
+			return 0;
+		}
+		if (memo[index][length][direction] != -1) {
+			return memo[index][length][direction];
+		}
+		int count = 0;
+		for (int i = index; i < rating.length; i++) {
+			if (length == 0 || (direction == 1 && rating[i] > rating[index - 1]) || (direction == 0 && rating[i] < rating[index - 1])) {
+				count += countTeams(rating,i + 1,length + 1,direction,memo);
+			}
+		}
+		memo[index][length][direction] = count;
+		return count;
+	}
+	int numTeams(int[] rating) {
+		int[][][] memo = new int[rating.length][3][2];
+		for (int[][] arr: memo) {	
+			for (int[] subArr: arr) {	
+				Arrays.fill(subArr,-1);
+			}
+		}
+		return countTeams(rating,0,0,1,memo) + countTeams(rating,0,0,0,memo);
+	}
+}

@@ -1,0 +1,35 @@
+class Solution {
+	int minStoneSum(int[] piles, int k) {
+		TreeMap<Integer, Integer> pile = new TreeMap<>();
+		for (int i = 0; i < piles.length; i++) {
+			pile.put(piles[i],pile.getOrDefault(piles[i],0) + 1);
+		}
+		Arrays.sort(piles);
+		int max = piles[piles.length - 1];
+		while (k > 0) {
+			Integer key = pile.floorKey(max);
+			if (key == null) {
+				break;
+			}
+			if (pile.get(key) == 1) {
+				pile.remove(key);
+			} 
+			else {
+				pile.put(key,pile.getOrDefault(key,0) - 1);
+			}
+			if (key % 2 == 0) {
+				key /= 2;
+			} 
+			else {
+				key = key / 2 + 1;
+			}
+			pile.put(key,pile.getOrDefault(key,0) + 1);
+			k--;
+		}
+		int stones = 0;
+		for (int x: pile.keySet()) {	
+			stones += x * pile.get(x);
+		}
+		return stones;
+	}
+}

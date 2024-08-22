@@ -1,0 +1,33 @@
+class Solution {
+	int max;
+	int go(Map<Integer, List<Integer>> maps, String str, int idx) {
+		if (!maps.containsKey(idx)) {
+			return 1;
+		}
+		PriorityQueue<Integer> queue = new PriorityQueue<>((a, b) -> {b - a});
+		for (int v: maps.get(idx)) {	
+			int pols = go(maps,str,v);
+			if (str.charAt(idx) != str.charAt(v)) {
+				queue.add(pols);
+			}
+		}
+		int left = 0, right = 0;
+		if (!queue.isEmpty()) {
+			left = queue.poll();
+		}
+		if (!queue.isEmpty()) {
+			right = queue.poll();
+		}
+		max = Math.max(max,left + right);
+		return Math.max(left,right) + 1;
+	}
+	int longestPath(int[] parent, String str) {
+		max = 1;
+		Map<Integer, List<Integer>> maps = new HashMap<>();
+		for (int i = 1; i < parent.length; i++) {
+			maps.computeIfAbsent(parent[i],(v) -> {new ArrayList<>()}).add(i);
+		}
+		go(maps,str,0);
+		return max;
+	}
+}

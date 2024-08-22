@@ -1,0 +1,22 @@
+class Solution {
+	int j = 0;
+	boolean[] marked;
+	HashMap<Integer, Integer> preMapVin = new HashMap<Integer, Integer>();
+	TreeNode f(int left, int right, int[] pre, int[] vin) {
+		if (left > right) {
+			return null;
+		}
+		int vinIndex = preMapVin.get(pre[j++]);
+		TreeNode node = new TreeNode(vin[vinIndex]);
+		node.left = f(left,vinIndex - 1,pre,vin);
+		node.right = f(vinIndex + 1,right,pre,vin);
+		return node;
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] vin) {
+		marked = new boolean[pre.length];
+		for (int i = 0; i < pre.length; i++) {
+			preMapVin.put(vin[i],i);
+		}
+		return f(0,pre.length - 1,pre,vin);
+	}
+}

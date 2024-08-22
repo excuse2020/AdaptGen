@@ -1,0 +1,32 @@
+class Solution {
+	void build(int[] xianxu, int[] zhongxu, int level, Map<Integer, List<Integer>> result) {
+		if (xianxu.length == 0 || zhongxu.length == 0) {
+			return;
+		}
+		for (int i = 0; i < zhongxu.length; i++) {
+			if (xianxu[0] == zhongxu[i]) {
+				int[] zx_left = Arrays.copyOfRange(zhongxu,0,i);
+				int[] zx_right = Arrays.copyOfRange(zhongxu,i + 1,zhongxu.length);
+				int[] xx_left = Arrays.copyOfRange(xianxu,1,i + 1);
+				int[] xx_right = Arrays.copyOfRange(xianxu,i + 1,xianxu.length);
+				build(xx_left,zx_left,level + 1,result);
+				if (!result.containsKey(level)) {
+					result.put(level,new ArrayList<>());
+				}
+				List<Integer> list = result.get(level);
+				list.add(xianxu[0]);
+				build(xx_right,zx_right,level + 1,result);
+				break;
+			}
+		}
+	}
+	int[] solve(int[] xianxu, int[] zhongxu) {
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		build(xianxu,zhongxu,0,map);
+		int[] result = new int[map.size()];
+		for (int i = 0; i < result.length; i++) {
+			result[i] = map.get(i).get(map.get(i).size() - 1);
+		}
+		return result;
+	}
+}

@@ -1,0 +1,52 @@
+class Solution {
+	int compareLetterLogs(String letterLog1, String letterLog2) {
+		String[] twoPart1 = letterLog1.split(" ",2);
+		String[] twoPart2 = letterLog2.split(" ",2);
+		return twoPart1[1].equals(twoPart2[1]) ? twoPart1[0].compareTo(twoPart2[0]) : twoPart1[1].compareTo(twoPart2[1]);
+	}
+	boolean isDigitLog(String log) {
+		return Character.isDigit(log.charAt(log.indexOf(" ") + 1));
+	}
+	int moveDigitLogsToRight(String[] logs) {
+		int right = logs.length - 1;
+		while (right >= 0 && isDigitLog(logs[right])) {
+			right--;
+		}
+		int left = right;
+		while (left >= 0) {
+			if (isDigitLog(logs[left])) {
+				swap(logs,left,right);
+				right--;
+			}
+			left--;
+		}
+		return right;
+	}
+	void quickSort(String[] logs, int left, int right) {
+		if (left >= right) {
+			return;
+		}
+		int mid = left + (right - left) / 2;
+		swap(logs,mid,right);
+		int insertPos = left;
+		for (int i = left; i < right; i++) {
+			if (compareLetterLogs(logs[i],logs[right]) < 0) {
+				swap(logs,i,insertPos);
+				insertPos++;
+			}
+		}
+		swap(logs,insertPos,right);
+		quickSort(logs,0,insertPos - 1);
+		quickSort(logs,insertPos + 1,right);
+	}
+	String[] reorderLogFiles(String[] logs) {
+		int right = moveDigitLogsToRight(logs);
+		quickSort(logs,0,right);
+		return logs;
+	}
+	void swap(String[] logs, int pos1, int pos2) {
+		String temp = logs[pos1];
+		logs[pos1] = logs[pos2];
+		logs[pos2] = temp;
+	}
+}

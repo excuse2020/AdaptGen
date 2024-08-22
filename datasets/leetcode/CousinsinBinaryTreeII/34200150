@@ -1,0 +1,46 @@
+class Solution {
+	TreeNode replaceValueInTree(TreeNode root) {
+		int lev = 0;
+		Map<Integer, Integer> mp = new HashMap<>();
+		Queue<TreeNode> q = new LinkedList<>();
+		q.offer(root);
+		mp.put(0,root.val);
+		Map<TreeNode, TreeNode> par = new HashMap<>();
+		while (!q.isEmpty()) {
+			lev++;
+			int sz = q.size();
+			for (int i = 0; i < sz; i++) {
+				TreeNode n = q.poll();
+				if (n.left != null) {
+					q.offer(n.left);
+					mp.put(lev,mp.getOrDefault(lev,0) + n.left.val);
+				}
+				if (n.right != null) {
+					q.offer(n.right);
+					mp.put(lev,mp.getOrDefault(lev,0) + n.right.val);
+				}
+			}
+		}
+		q.offer(root);
+		lev = 0;
+		root.val = 0;
+		while (!q.isEmpty()) {
+			lev++;
+			int sz = q.size();
+			for (int i = 0; i < sz; i++) {
+				TreeNode n = q.poll();
+				int lef = (n.left != null) ? n.left.val : 0;
+				int ri = (n.right != null) ? n.right.val : 0;
+				if (n.left != null) {
+					q.offer(n.left);
+					n.left.val = mp.get(lev) - lef;
+				}
+				if (n.right != null) {
+					q.offer(n.right);
+					n.right.val = mp.get(lev) - lef;
+				}
+			}
+		}
+		return root;
+	}
+}

@@ -1,0 +1,53 @@
+class Solution {
+	record CharFreq(char c, int freq) {
+	}
+	String removeDuplicates(String s, int k) {
+		if (s.length() <= 1) {
+			return s;
+		}
+		char currentChar = s.charAt(0);
+		int currentCount = 1;
+		LinkedList<CharFreq> list = new LinkedList();
+		for (int i = 1; i < s.length(); i++) {
+			char c = s.charAt(i);
+			if (c == currentChar) {
+				currentCount++;
+			} 
+			else {
+				int rem = currentCount % k;
+				if (rem > 0) {
+					list.addLast(new CharFreq(currentChar, rem));
+				} 
+				else {
+					if (!list.isEmpty() && c == list.getLast().c) {
+						CharFreq charFreq = list.removeLast();
+						currentChar = charFreq.c;
+						currentCount = charFreq.freq + 1;
+						continue;
+					}
+				}
+				currentChar = c;
+				currentCount = 1;
+			}
+		}
+		int rem = currentCount % k;
+		if (rem > 0) {
+			list.addLast(new CharFreq(currentChar, rem));
+		}
+		StringBuilder sb = new StringBuilder();
+		for (CharFreq charFreq: list) {	
+			int count = charFreq.freq;
+			while (count > 0) {
+				sb.append(charFreq.c);
+				count--;
+			}
+		}
+		return sb.toString();
+	}
+	void removeLast(StringBuilder sb, int k) {
+		while (k > 0) {
+			sb.deleteCharAt(sb.length() - 1);
+			k--;
+		}
+	}
+}

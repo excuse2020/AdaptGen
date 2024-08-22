@@ -1,0 +1,38 @@
+class Solution {
+	void add(int i, int j, PriorityQueue<int[]> pq, int n, int m, boolean[][] visited) {
+		if (i == n || i < 0 || j == m || j < 0 || visited[i][j]) {
+			return;
+		}
+		visited[i][j] = true;
+		pq.add(new int{i, j});
+	}
+	int[] maxPoints(int[][] grid, int[] queries) {
+		int[][] qs = new int[queries.length][2];
+		for (int i = 0; i < queries.length; i++) {
+			qs[i][0] = queries[i];
+			qs[i][1] = i;
+		}
+		Arrays.sort(qs,(v1, v2) -> {v1[0] - v2[0]});
+		PriorityQueue<int[]> pq = new PriorityQueue<>((v1, v2) -> {grid[v1[0]][v1[1]] - grid[v2[0]][v2[1]]});
+		int[] res = new int[qs.length];
+		boolean[][] visited = new boolean[grid.length][grid[0].length];
+		visited[0][0] = true;
+		pq.add(new int{0, 0});
+		int count = 0;
+		for (int[] q: qs) {	
+			int v = q[0];
+			while (!pq.isEmpty() && grid[pq.peek()[0]][pq.peek()[1]] < v) {
+				int[] next = pq.poll();
+				int i = next[0];
+				int j = next[1];
+				add(i + 1,j,pq,grid.length,grid[0].length,visited);
+				add(i - 1,j,pq,grid.length,grid[0].length,visited);
+				add(i,j + 1,pq,grid.length,grid[0].length,visited);
+				add(i,j - 1,pq,grid.length,grid[0].length,visited);
+				count++;
+			}
+			res[q[1]] = count;
+		}
+		return res;
+	}
+}

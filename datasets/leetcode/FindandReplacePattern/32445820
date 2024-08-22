@@ -1,0 +1,85 @@
+class Solution {
+	List<String> findAndReplacePattern(String[] words, String pattern) {
+		HashMap<Integer, List<Integer>> thePattern = new HashMap<Integer, List<Integer>>();
+		char[] pattern_arr = pattern.toCharArray();
+		List<Integer> checked = new ArrayList<Integer>();
+		List<Character> unique = new ArrayList<Character>();
+		int count = 0;
+		boolean terminate = false;
+		Set<Character> set = new HashSet<Character>();
+		for (char c: pattern_arr) {	
+			set.add(c);
+		}
+		for (int i = 0; i < pattern.length(); i++) {
+			char c = pattern_arr[i];
+			List<Integer> one = new ArrayList<Integer>();
+			if (!unique.contains(c)) {
+				one.add(i);
+				thePattern.put(i,one);
+				unique.add(c);
+			}
+			for (int j = i + 1; j < pattern.length(); j++) {
+				if (c == pattern_arr[j]) {
+					int pos = pattern.indexOf(c);
+					List<Integer> update = thePattern.get(pos);
+					update.add(j);
+					if (update.size() == pattern.length()) {
+						terminate = true;
+						break;
+					}
+					thePattern.put(i,update);
+				}
+			}
+			if (unique.size() == set.size()) {
+				break;
+			}
+			System.out.println(thePattern);
+		}
+		List<String> result = new ArrayList<String>();
+		for (String w: words) {	
+			HashMap<Integer, List<Integer>> fncRes = genPattern(w);
+			System.out.println("fncRes = " + fncRes);
+			boolean accept = true;
+			for (int key: fncRes.keySet()) {	
+				if (!thePattern.containsKey(key) || !(thePattern.get(key).equals(fncRes.get(key)))) {
+					accept = false;
+					break;
+				}
+			}
+			if (accept == true) {
+				result.add(w);
+			}
+		}
+		return result;
+	}
+	HashMap<Integer, List<Integer>> genPattern(String word) {
+		HashMap<Integer, List<Integer>> thePattern = new HashMap<Integer, List<Integer>>();
+		char[] pattern_arr = word.toCharArray();
+		List<Character> unique = new ArrayList<Character>();
+		int count = 0;
+		for (int i = 0; i < pattern_arr.length; i++) {
+			char c = pattern_arr[i];
+			List<Integer> one = new ArrayList<Integer>();
+			if (!unique.contains(c)) {
+				one.add(i);
+				thePattern.put(i,one);
+				unique.add(c);
+			}
+			System.out.println("word = " + word);
+			for (int j = i + 1; j < pattern_arr.length; j++) {
+				if (c == pattern_arr[j]) {
+					int pos = word.indexOf(c);
+					List<Integer> update = thePattern.get(pos);
+					update.add(j);
+					if (update.size() == word.length()) {
+						return thePattern;
+					}
+					thePattern.put(i,update);
+				}
+			}
+			List<Integer> x = thePattern.get(i);
+		}
+		System.out.println(thePattern);
+		return thePattern;
+	}
+}

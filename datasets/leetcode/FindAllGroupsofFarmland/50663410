@@ -1,0 +1,41 @@
+class Solution {
+	int x2 = 0;
+	int y2 = 0;
+	int[][] findFarmland(int[][] land) {
+		ArrayList<int[]> al = new ArrayList<>();
+		for (int i = 0; i < land.length; i++) {
+			for (int j = 0; j < land[i].length; j++) {
+				if (land[i][j] == 1) {
+					x2 = i;
+					y2 = j;
+					solve(land,i,j);
+					int[] arr = new int[4];
+					arr[0] = i;
+					arr[1] = j;
+					arr[2] = x2;
+					arr[3] = y2;
+					al.add(arr);
+				}
+			}
+		}
+		int[][] ans = new int[al.size()][4];
+		for (int i = 0; i < al.size(); i++) {
+			for (int j = 0; j < al.get(i).length; j++) {
+				ans[i][j] = al.get(i)[j];
+			}
+		}
+		return ans;
+	}
+	void solve(int[][] land, int i, int j) {
+		if (i < 0 || i >= land.length || j < 0 || j >= land[0].length || land[i][j] == 0) {
+			return;
+		}
+		x2 = Math.max(x2,i);
+		y2 = Math.max(y2,j);
+		land[i][j] = 0;
+		solve(land,i + 1,j);
+		solve(land,i - 1,j);
+		solve(land,i,j + 1);
+		solve(land,i,j - 1);
+	}
+}

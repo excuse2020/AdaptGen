@@ -1,0 +1,36 @@
+class Solution {
+	int binary(int[] arr, int spell, long success) {
+		int left = 0;
+		int right = arr.length - 1;
+		while (left <= right) {
+			int mid = left + (right - left) / 2;
+			long product = (long) arr[mid] * spell;
+			if (product >= success) {
+				if (mid == 0 || (long) arr[mid - 1] * spell < success) {
+					return mid;
+				} 
+				else {
+					right = mid - 1;
+				}
+			} 
+			else {
+				left = mid + 1;
+			}
+		}
+		return -1;
+	}
+	int[] successfulPairs(int[] spells, int[] potions, long success) {
+		int[] counts = new int[spells.length];
+		Arrays.sort(potions);
+		for (int i = 0; i < spells.length; i++) {
+			int index = binary(potions,spells[i],success);
+			if (index == -1) {
+				counts[i] = 0;
+			} 
+			else {
+				counts[i] = potions.length - index;
+			}
+		}
+		return counts;
+	}
+}

@@ -1,0 +1,68 @@
+class Solution {
+	int[] calcTime(boolean[] trndOn) {
+		int[] hm = new int[2];
+		if (trndOn[0]) {
+			hm[0] += 8;
+		}
+		if (trndOn[1]) {
+			hm[0] += 4;
+		}
+		if (trndOn[2]) {
+			hm[0] += 2;
+		}
+		if (trndOn[3]) {
+			hm[0] += 1;
+		}
+		if (trndOn[4]) {
+			hm[1] += 32;
+		}
+		if (trndOn[5]) {
+			hm[1] += 16;
+		}
+		if (trndOn[6]) {
+			hm[1] += 8;
+		}
+		if (trndOn[7]) {
+			hm[1] += 4;
+		}
+		if (trndOn[8]) {
+			hm[1] += 2;
+		}
+		if (trndOn[9]) {
+			hm[1] += 1;
+		}
+		return hm;
+	}
+	String convert(int[] hm) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(hm[0]);
+		sb.append(":");
+		if (hm[1] < 10) {
+			sb.append("0");
+			sb.append(hm[1]);
+		} 
+		else {
+			sb.append(hm[1]);
+		}
+		return sb.toString();
+	}
+	ArrayList<String> findTime(ArrayList<String> res, int max, int curLights, int curNum, boolean[] trndOn) {
+		if (curLights == max) {
+			int[] hm = calcTime(trndOn);
+			if (hm[0] < 12 && hm[1] < 60) {
+				res.add(convert(hm));
+			}
+			return res;
+		}
+		for (int i = curNum + 1; i < 10; i++) {
+			trndOn[i] = true;
+			findTime(res,max,curLights + 1,i,trndOn);
+			trndOn[i] = false;
+		}
+		return res;
+	}
+	List<String> readBinaryWatch(int turnedOn) {
+		boolean[] marked = new boolean[10];
+		return findTime(new ArrayList<String>(),turnedOn,0,-1,marked);
+	}
+}

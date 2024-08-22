@@ -1,0 +1,23 @@
+class Solution {
+	int getOperationsCount(int n, int copy, int count, int[][] DP) {
+		if (count == n) {
+			return 0;
+		} 
+		else if (count + copy == n) {
+			return 1;
+		} 
+		else if (count > n) {
+			return 1000;
+		} 
+		else if (DP[copy][count] == 0) {
+			int copyPath = (copy != count) ? getOperationsCount(n,count,count,DP) : 1000;
+			int pastePath = getOperationsCount(n,copy,count + copy,DP);
+			DP[copy][count] = 1 + Math.min(copyPath,pastePath);
+		}
+		return DP[copy][count];
+	}
+	int minSteps(int n) {
+		int[][] DP = new int[1000][1000];
+		return (n == 1) ? 0 : (1 + getOperationsCount(n,1,1,DP));
+	}
+}

@@ -1,0 +1,29 @@
+class Solution {
+	int mod = 1000000007;
+	int helper(int n, int k, int target, int sum, int[][] mat) {
+		if (n == 0 && sum == target) {
+			return 1;
+		}
+		if (n <= 0 || sum > target) {
+			return 0;
+		}
+		if (mat[n][sum] != -1) {
+			return mat[n][sum];
+		}
+		int ans = 0;
+		for (int i = 1; i <= k; i++) {
+			ans = (ans + helper(n - 1,k,target,sum + i,mat)) % mod;
+		}
+		mat[n][sum] = ans % mod;
+		return ans;
+	}
+	int numRollsToTarget(int n, int k, int target) {
+		int mat = new int[n + 1][target + 1];
+		for (int i = 0; i <= n; i++) {
+			for (int j = 0; j <= target; j++) {
+				mat[i][j] = -1;
+			}
+		}
+		return helper(n,k,target,0,mat);
+	}
+}

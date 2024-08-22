@@ -1,0 +1,25 @@
+class Solution {
+	int helper(int[] arr, int k, int index, int n, int[] dp) {
+		if (index == n) {
+			return 0;
+		}
+		if (dp[index] != -1) {
+			return dp[index];
+		}
+		int len = 0;
+		int maxAns = Integer.MIN_VALUE;
+		int maxi = Integer.MIN_VALUE;
+		for (int i = index; i < Math.min(n,index + k); i++) {
+			len++;
+			maxi = Math.max(maxi,arr[i]);
+			int sum = (len * maxi) + helper(arr,k,i + 1,n,dp);
+			maxAns = Math.max(maxAns,sum);
+		}
+		return dp[index] = maxAns;
+	}
+	int maxSumAfterPartitioning(int[] arr, int k) {
+		int dp = new int[arr.length];
+		Arrays.fill(dp,-1);
+		return helper(arr,k,0,arr.length,dp);
+	}
+}

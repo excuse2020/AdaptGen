@@ -1,0 +1,35 @@
+class Solution {
+	int[] memo;
+	void buildGraph(int[][] relations, Map<Integer, List<Integer>> graph) {
+		for (int[] edge: relations) {	
+			graph.computeIfAbsent(edge[1],(k) -> {new ArrayList()}).add(edge[0]);
+		}
+	}
+	int dp(Map<Integer, List<Integer>> graph, int[] time, int course) {
+		if (memo[course - 1] != -1) {
+			return memo[course - 1];
+		}
+		int curCourseCost = time[course - 1];
+		int maxCost = curCourseCost;
+		List<Integer> prerequisites = graph.getOrDefault(course,Collections.EMPTY_LIST);
+		if (prerequisites.size() == 0) {
+			return curCourseCost;
+		}
+		for (Integer pre: prerequisites) {	
+			maxCost = Math.max(maxCost,curCourseCost + dp(graph,time,pre));
+		}
+		memo[course - 1] = maxCost;
+		return maxCost;
+	}
+	int minimumTime(int n, int[][] relations, int[] time) {
+		int cost = 0;
+		Map<Integer, List<Integer>> graph = new HashMap();
+		buildGraph(relations,graph);
+		memo = new int[n];
+		Arrays.fill(memo,-1);
+		for (int i = 1; i <= n; i++) {
+			cost = Math.max(cost,dp(graph,time,i));
+		}
+		return cost;
+	}
+}

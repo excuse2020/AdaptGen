@@ -1,0 +1,38 @@
+class Solution {
+	ArrayList<String> dpBuild(int n) {
+		if (n == 1) {
+			return new ArrayList<String>(Arrays.asList("()"));
+		} 
+		else if (n == 2) {
+			return new ArrayList<String>(Arrays.asList("()()","(())"));
+		} 
+		else {
+			Set<String> result = new HashSet<String>();
+			for (int i = 1; i <= n - 1; i++) {
+				ArrayList<String> a = dpBuild(i);
+				ArrayList<String> b = dpBuild(n - i);
+				StringBuilder pbuider = new StringBuilder();
+				StringBuilder lbuider = new StringBuilder();
+				int k = i;
+				while (k-- > 0) {
+					pbuider.append("(");
+					lbuider.append(")");
+				}
+				String pre = pbuider.toString();
+				String last = lbuider.toString();
+				for (String aStr: a) {	
+					for (String bstr: b) {	
+						result.add(aStr + bstr);
+						result.add(bstr + aStr);
+						result.add(pre + bstr);
+					}
+				}
+			}
+			return new ArrayList<>(result);
+		}
+	}
+	ArrayList<String> generateParenthesis(int n) {
+		ArrayList<String> result = dpBuild(n);
+		return result;
+	}
+}

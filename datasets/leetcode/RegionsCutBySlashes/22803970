@@ -1,0 +1,47 @@
+class Solution {
+	int findParent(int x, int parent) {
+		int p = parent[x];
+		if (p == x) {
+			return p;
+		}
+		parent[x] = findParent(p,parent);
+		return parent[x];
+	}
+	int regionsBySlashes(String[] grid) {
+		int ans = 1;
+		int n = grid.length + 1;
+		int parent = new int[n * n];
+		int rank = new int[n * n];
+		for (int i = 0; i < (n * n); i++) {
+			parent[i] = i;
+		}
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (i == 0 || j == 0 || i == n - 1 || j == n - 1) {
+					parent[(i * n) + j] = 0;
+				}
+			}
+		}
+		int i = 0;
+		int j = 0;
+		int p1 = 0, p2 = 0;
+	}
+	boolean union(int x, int y, int parent, int rank) {
+		int p1 = findParent(x,parent);
+		int p2 = findParent(y,parent);
+		if (p1 == p2) {
+			return true;
+		}
+		if (rank[p1] > rank[p2]) {
+			parent[p2] = p1;
+		} 
+		else if (rank[p1] < rank[p2]) {
+			parent[p1] = p2;
+		} 
+		else {
+			parent[p1] = p2;
+			rank[p1] += 1;
+		}
+		return false;
+	}
+}

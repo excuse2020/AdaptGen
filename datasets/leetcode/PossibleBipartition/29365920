@@ -1,0 +1,59 @@
+class Solution {
+	boolean isbipartite(HashMap<Integer, ArrayList<Integer>> graph, int[] colors, int src) {
+		ArrayList<Integer> list = graph.get(src);
+		for (int i = 0; i < list.size(); i++) {
+			if (colors[list.get(i)] == -2) {
+				colors[list.get(i)] = colors[src] * -1;
+				if (!isbipartite(graph,colors,list.get(i))) {
+					return false;
+				}
+			} 
+			else if (colors[list.get(i)] == colors[src]) {
+				if (colors[list.get(i)] == colors[src]) {
+					return false;
+				} 
+				else {
+					continue;
+				}
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		if (n == 1) {
+			return true;
+		}
+		HashMap<Integer, ArrayList<Integer>> graph = new HashMap<>();
+		for (int i = 0; i < dislikes.length; i++) {
+			ArrayList<Integer> list1;
+			if (!graph.containsKey(dislikes[i][0])) {
+				list1 = new ArrayList<>();
+			} 
+			else {
+				list1 = graph.get(dislikes[i][0]);
+			}
+			list1.add(dislikes[i][1]);
+			ArrayList<Integer> list2;
+			if (!graph.containsKey(dislikes[i][1])) {
+				list2 = new ArrayList<>();
+			} 
+			else {
+				list2 = graph.get(dislikes[i][1]);
+			}
+			list2.add(dislikes[i][0]);
+			graph.put(dislikes[i][0],list1);
+			graph.put(dislikes[i][1],list2);
+		}
+		int[] color = new int[n + 1];
+		Arrays.fill(color,-2);
+		for (int i = 1; i <= n; i++) {
+			if (color[i] == -2 && graph.containsKey(i)) {
+				color[i] = 1;
+				if (!isbipartite(graph,color,i)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

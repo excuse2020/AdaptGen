@@ -1,0 +1,28 @@
+class Solution {
+	int maxTime(int i, int[] time, List<List<Integer>> adj, Map<Integer, Integer> timeComp) {
+		if (timeComp.containsKey(i)) {
+			return timeComp.get(i);
+		}
+		int max = 0;
+		for (int j: adj.get(i)) {	
+			max = Math.max(max,maxTime(j,time,adj,timeComp));
+		}
+		timeComp.put(i,max + time[i]);
+		return (max + time[i]);
+	}
+	int minimumTime(int n, int[][] relations, int[] time) {
+		int max = 0;
+		List<List<Integer>> adj = new ArrayList<>();
+		Map<Integer, Integer> timeComp = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<Integer>());
+		}
+		for (int i: relations) {	
+			adj.get(i[1] - 1).add(i[0] - 1);
+		}
+		for (int i = 0; i < n; i++) {
+			max = Math.max(max,maxTime(i,time,adj,timeComp));
+		}
+		return max;
+	}
+}

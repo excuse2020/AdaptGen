@@ -1,0 +1,21 @@
+class Solution {
+	long helper(int[] nums, int currInd, int prevInd, int count, int len) {
+		if (currInd >= len || currInd > prevInd + 1 || nums[currInd] != 0) {
+			return count;
+		}
+		nums[currInd] = -1;
+		long taken = helper(nums,currInd + 1,currInd,count + 1,len);
+		long notTaken = helper(nums,currInd + 1,currInd + 1,count,len);
+		return taken + notTaken;
+	}
+	long zeroFilledSubarray(int[] nums) {
+		int len = nums.length;
+		long counter = 0;
+		for (int i = 0; i < len; i++) {
+			if (nums[i] == 0) {
+				counter += helper(nums,i,i,0,len);
+			}
+		}
+		return counter;
+	}
+}

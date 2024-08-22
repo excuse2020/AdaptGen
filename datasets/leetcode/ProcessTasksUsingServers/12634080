@@ -1,0 +1,36 @@
+class Solution {
+	int[] assignTasks(int[] servers, int[] tasks) {
+		int n = servers.length, m = tasks.length;
+		int[] result = new int[m];
+		PriorityQueue<int[]> serverPQ = new PriorityQueue<>((a, b) -> {a[0] == b[0] ? a[1] - b[1] : a[0] - b[0]});
+		for (int i = 0; i < n; i++) {
+			serverPQ.offer(new int{servers[i], i});
+		}
+		Queue<Integer> taskQ = new LinkedList<>();
+		for (int i = 0; i < m; i++) {
+			taskQ.offer(i);
+		}
+		PriorityQueue<int[]> busyServerPQ = new PriorityQueue<>((a, b) -> {a[0] - b[0]});
+		int seconds = 0;
+		while (!taskQ.isEmpty()) {
+			while (!busyServerPQ.isEmpty() && busyServerPQ.peek()[0] <= seconds) {
+				int serverId = busyServerPQ.poll()[1];
+				serverPQ.offer(new int{servers[serverId], serverId});
+			}
+			while (!serverPQ.isEmpty() && !taskQ.isEmpty()) {
+				int[] vals = serverPQ.poll();
+				int weight = vals[0], serverId = vals[1];
+				int taskId = taskQ.poll();
+				result[taskId] = serverId;
+				busyServerPQ.offer(new int{seconds + tasks[taskId], serverId});
+			}
+			if (serverPQ.isEmpty()) {
+				seconds = busyServerPQ.peek()[0];
+			} 
+			else {
+				seconds++;
+			}
+		}
+		return result;
+	}
+}

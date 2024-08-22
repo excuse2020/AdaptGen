@@ -1,0 +1,54 @@
+class Solution {
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		List<Integer> list = new ArrayList<>();
+		inOrder(root,list);
+		List<List<Integer>> result = new ArrayList<>();
+		for (int query: queries) {	
+			result.add(findMinMaxTo(list,query));
+		}
+		return result;
+	}
+	List<Integer> findMinMaxTo(List<Integer> list, int target) {
+		int minIndex = 0;
+		int maxIndex = list.size() - 1;
+		while (minIndex <= maxIndex) {
+			int midIndex = minIndex + (maxIndex - minIndex) / 2;
+			int currentValue = list.get(midIndex);
+			if (currentValue == target) {
+				return List.of(target,target);
+			}
+			int previousValue = getValue(list,midIndex - 1);
+			int nextValue = getValue(list,midIndex + 1);
+			if (currentValue > target) {
+				if (previousValue < target) {
+					return List.of(previousValue,currentValue);
+				}
+			} 
+			else if (nextValue == -1 || nextValue > target) {
+				return List.of(currentValue,nextValue);
+			}
+			if (currentValue > target) {
+				maxIndex = midIndex - 1;
+			} 
+			else {
+				minIndex = midIndex + 1;
+			}
+		}
+		return List.of(-1,-1);
+	}
+	int getValue(List<Integer> list, int index) {
+		if (index >= 0 && index < list.size()) {
+			return list.get(index);
+		}
+		return -1;
+	}
+	void inOrder(TreeNode root, List<Integer> list) {
+		if (root == null) {
+			return;
+		}
+		inOrder(root.left,list);
+		list.add(root.val);
+		inOrder(root.right,list);
+		return;
+	}
+}

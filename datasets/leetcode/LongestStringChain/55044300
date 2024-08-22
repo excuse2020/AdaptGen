@@ -1,0 +1,39 @@
+class Solution {
+	boolean isPredecessor(String word1, String word2) {
+		if (word2.length() != word1.length() + 1) {
+			return false;
+		}
+		int i = 0, j = 0;
+		boolean foundDifference = false;
+		while (i < word1.length() && j < word2.length()) {
+			if (word1.charAt(i) != word2.charAt(j)) {
+				if (foundDifference) {
+					return false;
+				}
+				foundDifference = true;
+				j++;
+			} 
+			else {
+				i++;
+				j++;
+			}
+		}
+		return true;
+	}
+	int longestStrChain(String[] words) {
+		Arrays.sort(words,(a, b) -> {a.length() - b.length()});
+		int n = words.length;
+		int[] dp = new int[n];
+		Arrays.fill(dp,1);
+		int maxLength = 1;
+		for (int i = 1; i < n; i++) {
+			for (int j = 0; j < i; j++) {
+				if (isPredecessor(words[j],words[i])) {
+					dp[i] = Math.max(dp[i],dp[j] + 1);
+				}
+			}
+			maxLength = Math.max(maxLength,dp[i]);
+		}
+		return maxLength;
+	}
+}

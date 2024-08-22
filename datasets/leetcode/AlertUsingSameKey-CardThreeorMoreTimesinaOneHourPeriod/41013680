@@ -1,0 +1,54 @@
+class Solution {
+	List<String> alertNames(String[] keyName, String[] keyTime) {
+		HashMap<String, List<Integer>> m = new HashMap<>();
+		List<String> ans = new ArrayList<>();
+		for (int i = 0; i < keyName.length; i++) {
+			if (m.containsKey(keyName[i])) {
+				List<Integer> temp = m.get(keyName[i]);
+				temp.add(getTime(keyTime[i]));
+				Collections.sort(temp);
+				m.put(keyName[i],temp);
+			} 
+			else {
+				List<Integer> temp = new ArrayList<>();
+				temp.add(getTime(keyTime[i]));
+				Collections.sort(temp);
+				m.put(keyName[i],temp);
+			}
+		}
+		for (Map.Entry<String, List<Integer>> map: m.entrySet()) {	
+			String key = map.getKey();
+			List<Integer> val = map.getValue();
+			if (!isUsing(val)) {
+				ans.add(key);
+			}
+		}
+		Collections.sort(ans);
+		return ans;
+	}
+	int getTime(String t) {
+		String[] ss = t.split(":");
+		int n = Integer.parseInt(ss[1]) + 60 * Integer.parseInt(ss[0]);
+		return n;
+	}
+	boolean isUsing(List<Integer> l) {
+		for (int i = 0; i < l.size(); i++) {
+			int count = 1;
+			for (int j = i + 1; j < l.size(); j++) {
+				if (count == 3) {
+					return false;
+				} 
+				else if (l.get(j) - l.get(i) <= 60) {
+					count++;
+				} 
+				else {
+					break;
+				}
+			}
+			if (count == 3) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

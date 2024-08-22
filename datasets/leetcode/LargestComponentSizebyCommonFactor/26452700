@@ -1,0 +1,71 @@
+class Solution {
+	int parent;
+	int size;
+	void addFactors(int val, int seive, HashSet<Integer> set) {
+		while (val > 1) {
+			set.add(seive[val]);
+			val = val / seive[val];
+		}
+	}
+	int findparent(int node) {
+		if (parent[node] == node) {
+			return node;
+		}
+		return parent[node] = findparent(parent[node]);
+	}
+	int largestComponentSize(int[] nums) {
+		int max = nums[0];
+		HashMap<Integer, HashSet<Integer>> primeFactors = new HashMap<>();
+		for (int val: nums) {	
+			max = Math.max(max,val);
+		}
+		int seive = new int[max + 1];
+		parent = new int[max + 1];
+		size = new int[max + 1];
+		for (int i = 0; i < seive.length; i++) {
+			parent[i] = seive[i] = i;
+		}
+		for (int i = 2; i * i < seive.length; i++) {
+			if (seive[i] == i) {
+				for (int j = i; j < seive.length; j += i) {
+					if (seive[j] == j) {
+						seive[j] = i;
+					}
+				}
+			}
+		}
+		for (int i = 0; i < nums.length; i++) {
+			int val = nums[i];
+			size[val] = 1;
+			HashSet<Integer> set = new HashSet<>();
+			addFactors(val,seive,set);
+			primeFactors.put(val,set);
+		}
+		for (int val: nums) {	
+			for (int fac: primeFactors.get(val)) {	
+				if (val % fac == 0) {
+					if (findparent(fac) != findparent(val)) {
+						union(fac,val);
+					}
+				}
+			}
+		}
+		int ans = 1;
+		for (int val: size) {	
+			ans = Math.max(ans,val);
+		}
+		return ans;
+	}
+	void union(int u, int v) {
+		u = findparent(u);
+		v = findparent(v);
+		if (size[u] > size[v]) {
+			parent[v] = u;
+			size[u] += size[v];
+		} 
+		else {
+			parent[u] = v;
+			size[v] += size[u];
+		}
+	}
+}

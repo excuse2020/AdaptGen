@@ -1,0 +1,19 @@
+class Solution {
+	int maxPoints(int[][] points) {
+		int maxPoints = 0;
+		for (int i = 0; i < points.length; i++) {
+			Map<Float, Integer> track = new HashMap<>();
+			for (int j = i + 1; j < points.length; j++) {
+				float slope = ((float) points[j][1] - points[i][1]) / (points[j][0] - points[i][0]);
+				slope += 0.0F;
+				if (Float.isInfinite(slope)) {
+					slope = Math.abs(slope);
+				}
+				track.computeIfAbsent(slope,(k) -> {0});
+				int value = track.computeIfPresent(slope,(k, val) -> {val + 1});
+				maxPoints = Math.max(value,maxPoints);
+			}
+		}
+		return maxPoints + 1;
+	}
+}

@@ -1,0 +1,33 @@
+class Solution {
+	int[] assignTasks(int[] servers, int[] tasks) {
+		return solve(servers,tasks);
+	}
+	int[] solve(int[] servers, int[] tasks) {
+		int N = tasks.length;
+		int[] res = new int[N];
+		PriorityQueue<int[]> used = new PriorityQueue<>((a, b) -> {a[1] == b[1] ? (servers[a[0]] == servers[b[0]] ? a[0] - b[0] : servers[a[0]] - servers[b[0]]) : a[1] - b[1]});
+		PriorityQueue<int[]> unused = new PriorityQueue<>((a, b) -> {a[0] == b[0] ? a[1] - b[1] : a[0] - b[0]});
+		for (int i = 0; i < servers.length; i++) {
+			unused.add(new int{servers[i], i});
+		}
+		for (int time = 0; time < tasks.length; time++) {
+			while (!used.isEmpty() && used.peek()[1] <= time) {
+				int index = used.poll()[0];
+				unused.add(new int{servers[index], index});
+			}
+			if (unused.size() > 0) {
+				int index = unused.poll()[1];
+				used.add(new int{index, time + tasks[time]});
+				res[time] = index;
+			} 
+			else {
+				int[] obj = used.poll();
+				int firstFree = obj[0];
+				int newStart = obj[1];
+				res[time] = firstFree;
+				used.add(new int{firstFree, newStart + tasks[time]});
+			}
+		}
+		return res;
+	}
+}

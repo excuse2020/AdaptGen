@@ -1,0 +1,28 @@
+class Solution {
+	StringBuilder helper(StringBuilder maxTime, int[] arr, StringBuilder builder, boolean[] used) {
+		if (builder.length() == 4) {
+			if ((Integer.parseInt(builder.toString()) >= Integer.parseInt(maxTime.toString()) || maxTime.isEmpty()) && isValidTime(builder)) {
+				maxTime = new StringBuilder(builder);
+			}
+		}
+		for (int i = 0; i < arr.length; i++) {
+			if (!used[i]) {
+				builder.append(arr[i]);
+				used[i] = true;
+				maxTime = helper(maxTime,arr,builder,used);
+				builder.setLength(builder.length() - 1);
+				used[i] = false;
+			}
+		}
+		return maxTime;
+	}
+	boolean isValidTime(StringBuilder time) {
+		return Integer.parseInt(time.substring(0,2)) < 24 && Integer.parseInt(time.substring(2,4)) < 59;
+	}
+	String largestTimeFromDigits(int[] arr) {
+		boolean[] used = new boolean[4];
+		StringBuilder builder = new StringBuilder();
+		StringBuilder maxTime = helper(builder,arr,builder,used);
+		return maxTime.isEmpty() ? "" : maxTime.insert(2,":").toString();
+	}
+}

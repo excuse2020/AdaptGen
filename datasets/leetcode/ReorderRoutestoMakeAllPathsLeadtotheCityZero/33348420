@@ -1,0 +1,28 @@
+class Solution {
+	int dfs(HashMap<Integer, List<Integer>> graph, int node, int parentNode, Set<String> realDirection) {
+		int total = 0;
+		for (int adjNode: graph.get(node)) {	
+			if (parentNode == adjNode) {
+				continue;
+			}
+			if (realDirection.contains(node + "_")) {
+				total++;
+			}
+			total += dfs(graph,adjNode,node,realDirection);
+		}
+		return total;
+	}
+	int minReorder(int n, int[][] connections) {
+		HashMap<Integer, List<Integer>> graph = new HashMap<>();
+		Set<String> realDirection = new HashSet<>();
+		for (int i = 0; i < n; i++) {
+			graph.put(i,new ArrayList<>());
+		}
+		for (int[] connection: connections) {	
+			graph.get(connection[0]).add(connection[1]);
+			graph.get(connection[1]).add(connection[0]);
+			realDirection.add(connection[0] + "_");
+		}
+		return dfs(graph,0,-1,realDirection);
+	}
+}

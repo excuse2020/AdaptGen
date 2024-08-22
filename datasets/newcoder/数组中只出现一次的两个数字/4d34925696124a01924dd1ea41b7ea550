@@ -1,0 +1,36 @@
+class Solution {
+	int[] FindNumsAppearOnce(int[] array) {
+		int len = array.length;
+		if (len < 2) {
+			return new int[0];
+		}
+		int bitsum = 0;
+		for (int num: array) {	
+			bitsum ^= num;
+		}
+		int bitindex = 1;
+		while ((bitindex & bitsum) == 0) {
+			bitindex <<= 1;
+		}
+		int first = 0;
+		int second = 0;
+		for (int num: array) {	
+			if ((num & bitindex) == 0) {
+				first ^= num;
+			} 
+			else {
+				second ^= num;
+			}
+		}
+		int[] res = new int[2];
+		if (first < second) {
+			res[0] = first;
+			res[1] = second;
+		} 
+		else {
+			res[0] = second;
+			res[1] = first;
+		}
+		return res;
+	}
+}

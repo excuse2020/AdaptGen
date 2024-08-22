@@ -1,0 +1,20 @@
+class Solution {
+	int maximumWhiteTiles(int[][] tiles, int carpetLen) {
+		Arrays.sort(tiles,(a, b) -> {a[0] - b[0]});
+		int currNum = 0;
+		int maxNum = 0;
+		Queue<int[]> window = new LinkedList<>();
+		for (int i = 0; i < tiles.length; i++) {
+			int[] lastSerial = tiles[i];
+			currNum += lastSerial[1] - lastSerial[0] + 1;
+			window.offer(lastSerial);
+			while (window.peek()[1] <= lastSerial[1] - carpetLen) {
+				int[] excludedTile = window.poll();
+				currNum -= excludedTile[1] - excludedTile[0] + 1;
+			}
+			int covered = currNum - Math.max(0,lastSerial[1] - carpetLen + 1 - window.peek()[0]);
+			maxNum = Math.max(maxNum,covered);
+		}
+		return maxNum;
+	}
+}

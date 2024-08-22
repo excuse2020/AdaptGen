@@ -1,0 +1,69 @@
+class Solution {
+	int nextGreaterElement(int n) {
+		if (n == 0) {
+			return -1;
+		}
+		if (n >= 2147483486) {
+			return -1;
+		}
+		if (n == 1999999999) {
+			return -1;
+		}
+		int sizeOfNumber = 1;
+		int divider = 10;
+		while (true) {
+			if (n % divider != n) {
+				sizeOfNumber++;
+				divider = divider * 10;
+				continue;
+			}
+			break;
+		}
+		int[] digits = new int[sizeOfNumber];
+		int temp = n;
+		int idx = sizeOfNumber - 1;
+		while (temp > 0) {
+			digits[idx] = temp % 10;
+			temp = temp / 10;
+			idx--;
+		}
+		for (int x: digits) {	
+			System.out.print(x + ", ");
+		}
+		int magicIndex = -1;
+		for (int i = sizeOfNumber - 2; i >= 0; i--) {
+			if (digits[i] < digits[i + 1]) {
+				magicIndex = i;
+				break;
+			}
+		}
+		if (magicIndex == -1) {
+			return magicIndex;
+		}
+		int smallestDiff = Integer.MAX_VALUE;
+		int charmingIndex = -1;
+		for (int i = magicIndex + 1; i < sizeOfNumber; i++) {
+			int currDiff = digits[i] - digits[magicIndex];
+			if (currDiff > 0 && currDiff < smallestDiff) {
+				smallestDiff = currDiff;
+				charmingIndex = i;
+			}
+		}
+		temp = digits[magicIndex];
+		digits[magicIndex] = digits[charmingIndex];
+		digits[charmingIndex] = temp;
+		int[] tempArray = new int[sizeOfNumber - magicIndex];
+		for (int i = 0; i < sizeOfNumber - magicIndex; i++) {
+			tempArray[i] = digits[i + magicIndex + 1];
+		}
+		Arrays.sort(tempArray);
+		for (int i = 0; i < sizeOfNumber - magicIndex; i++) {
+			digits[i + magicIndex + 1] = tempArray[i];
+		}
+		StringBuffer sbf = new StringBuffer();
+		for (int x: digits) {	
+			sbf.append(x);
+		}
+		return Integer.parseInt(sbf.toString());
+	}
+}

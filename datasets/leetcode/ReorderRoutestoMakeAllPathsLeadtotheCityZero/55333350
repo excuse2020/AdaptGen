@@ -1,0 +1,33 @@
+class Solution {
+	int num = 0;
+	void dfs(int node, boolean[] visited, ArrayList<ArrayList<Integer>> adj) {
+		if (visited[node]) {
+			return;
+		}
+		visited[node] = true;
+		for (int it: adj.get(node)) {	
+			if (it > 0) {
+				if (visited[it] == false) {
+					num++;
+				}
+				dfs(it,visited,adj);
+			} 
+			else {
+				dfs(-it,visited,adj);
+			}
+		}
+	}
+	int minReorder(int n, int[][] connections) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int[] it: connections) {	
+			adj.get(it[0]).add(it[1]);
+			adj.get(it[1]).add(-it[0]);
+		}
+		boolean[] visited = new boolean[n];
+		dfs(0,visited,adj);
+		return num;
+	}
+}

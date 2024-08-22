@@ -1,0 +1,32 @@
+class Solution {
+	int minimumCost(int[] start, int[] target, int[][] specialRoads) {
+		int[] distTo = new int[specialRoads.length + 2];
+		Arrays.fill(distTo,Integer.MAX_VALUE);
+		distTo[0] = 0;
+		Queue<int[]> queue = new PriorityQueue<>(Comparator.comparingInt((i) -> {i[1]}));
+		queue.add(new int{0, 0});
+		while (!queue.isEmpty()) {
+			int[] curr = queue.poll();
+			if (curr[0] == 1) {
+				break;
+			}
+			int[] s = curr[0] == 0 ? start : (curr[0] == 1 ? target : specialRoads[curr[0] - 2]);
+			for (int next = 0; next < specialRoads.length + 2; next++) {
+				if (curr[0] == next) {
+					continue;
+				}
+				int[] t = next == 0 ? start : (next == 1 ? target : specialRoads[next - 2]);
+				int dist = Math.abs(s[0] - t[0]) + Math.abs(s[1] - t[1]);
+				if (curr[0] >= 2) {
+					int[] road = specialRoads[curr[0] - 2];
+					dist = Math.min(dist,Math.abs(road[2] - t[0]) + Math.abs(road[3] - t[1]));
+				}
+				if (distTo[next] > distTo[curr[0]] + dist && distTo[1] > distTo[curr[0]] + dist) {
+					distTo[next] = distTo[curr[0]] + dist;
+					queue.add(new int{next, distTo[next]});
+				}
+			}
+		}
+		return distTo[1];
+	}
+}

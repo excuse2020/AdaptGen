@@ -1,0 +1,26 @@
+class Solution {
+	int sumImbalanceNumbers(int[] nums) {
+		int n = nums.length;
+		int res = 0;
+		for (int i = 0; i < n; ++i) {
+			TreeSet<Integer> subarray = new TreeSet<>();
+			int imbalance = 0;
+			for (int j = i; j < n; ++j) {
+				Integer floor = subarray.floor(nums[j]);
+				Integer ceiling = subarray.ceiling(nums[j]);
+				if (floor != null && nums[j] - floor > 1) {
+					++imbalance;
+				}
+				if (ceiling != null && ceiling - nums[j] > 1) {
+					++imbalance;
+				}
+				if (floor != null && ceiling != null && ceiling - floor > 1) {
+					--imbalance;
+				}
+				res += imbalance;
+				subarray.add(nums[j]);
+			}
+		}
+		return res;
+	}
+}

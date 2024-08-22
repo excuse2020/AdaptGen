@@ -1,0 +1,47 @@
+class Solution {
+	Integer[][][] memo;
+	int f(List<int[]> count, int a, int i, int k) {
+		if (i == count.size()) {
+			return 0;
+		}
+		if (memo[i][k][a] != null) {
+			return memo[i][k][a];
+		}
+		int[] curr = count.get(i);
+		int c = curr[1] + a;
+		int best = l(c) + f(count,0,i + 1,k);
+		for (int q: new int{0, 1, 9}) {	
+			int toRemove = c - q;
+			if (toRemove <= k && q < c) {
+				best = Math.min(best,f(count,0,i + 1,k - toRemove) + l(q));
+			}
+		}
+		int res = k;
+		for (int j = i + 1; j < count.size() && res >= 0; j++) {
+			int[] next = count.get(j);
+			if (next[0] == curr[0]) {
+				best = Math.min(best,f(count,c,j,res));
+				break;
+			}
+			res -= next[1];
+		}
+		memo[i][k][a] = best;
+		return best;
+	}
+	int getLengthOfOptimalCompression(String s, int k) {
+		List<int[]> count = new ArrayList<>();
+		char lc;
+	}
+	int l(int n) {
+		if (n <= 1) {
+			return n;
+		}
+		if (n < 10) {
+			return 2;
+		}
+		if (n < 100) {
+			return 3;
+		}
+		return 4;
+	}
+}

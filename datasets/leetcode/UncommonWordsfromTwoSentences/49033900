@@ -1,0 +1,39 @@
+class Solution {
+	List<String> uncommonFromOneSentence(String s1, String s2) {
+		String[] words = s2.split(" ");
+		Set<String> s2DistinctWords = new HashSet<>();
+		for (String word: words) {	
+			s2DistinctWords.add(word);
+		}
+		words = s1.split(" ");
+		List<String> s1UncommonWords = new ArrayList<>();
+		if (words.length == 1) {
+			if (!s2DistinctWords.contains(words[0])) {
+				s1UncommonWords.add(words[0]);
+			}
+		} 
+		else {
+			Arrays.sort(words);
+			if (!words[0].equals(words[1]) && !s2DistinctWords.contains(words[0])) {
+				s1UncommonWords.add(words[0]);
+			}
+			if (!words[words.length - 1].equals(words[words.length - 2]) && !s2DistinctWords.contains(words[words.length - 1])) {
+				s1UncommonWords.add(words[words.length - 1]);
+			}
+			for (int currentWordIndex = 1; currentWordIndex < words.length - 1; currentWordIndex++) {
+				String currentWord = words[currentWordIndex];
+				String previousWord = words[currentWordIndex - 1];
+				String nextWord = words[currentWordIndex + 1];
+				if (!currentWord.equals(previousWord) && !currentWord.equals(nextWord)) {
+					s1UncommonWords.add(currentWord);
+				}
+			}
+		}
+		return s1UncommonWords;
+	}
+	String[] uncommonFromSentences(String s1, String s2) {
+		List<String> allUncommonWords = uncommonFromOneSentence(s1,s2);
+		allUncommonWords.addAll(uncommonFromOneSentence(s2,s1));
+		return allUncommonWords.toArray(new String[allUncommonWords.size()]);
+	}
+}

@@ -1,0 +1,64 @@
+class Solution {
+	Map<TreeNode, Set<TreeNode>> computedPairs;
+	Map<TreeNode, List<TreeNode>> graph;
+	int pairs;
+	void bfs(TreeNode source, int maxDistance) {
+		Deque<Pair<TreeNode, Integer>> queue = new ArrayDeque<>();
+		Set<TreeNode> visited = new HashSet<>();
+		queue.add(new Pair<>(source, 0));
+		visited.add(source);
+		while (!queue.isEmpty()) {
+			Pair<TreeNode, Integer> pair = queue.poll();
+			TreeNode node = pair.getKey();
+			int distance = pair.getValue();
+			if (distance < maxDistance) {
+				for (TreeNode neighbor: graph.get(node)) {	
+					if (!visited.contains(neighbor)) {
+						visited.add(neighbor);
+						if (!computedPairs.get(source).contains(neighbor) && (computedPairs.containsKey(neighbor) && !computedPairs.get(neighbor).contains(source)) && neighbor.right == null) {
+							pairs++;
+							computedPairs.get(source).add(neighbor);
+							computedPairs.putIfAbsent(neighbor,new HashSet<>());
+							computedPairs.get(neighbor).add(source);
+						}
+						queue.add(new Pair<>(neighbor, distance + 1));
+					}
+				}
+			}
+		}
+	}
+	int countPairs(TreeNode root, int distance) {
+		graph = new HashMap<>();
+		computedPairs = new HashMap<>();
+		pairs = 0;
+		dfs(root);
+		for (TreeNode node: graph.keySet()) {	
+			if (node.left == null && node.right == null) {
+				computedPairs.putIfAbsent(node,new HashSet<>());
+				bfs(node,distance);
+			}
+		}
+		return pairs;
+	}
+	void dfs(TreeNode node) {
+		if (node == null) {
+			return;
+		}
+		List<TreeNode> neighbors = graph.getOrDefault(node,new ArrayList<>());
+		if (node.left != null) {
+			neighbors.add(node.left);
+			List<TreeNode> leftNodeNeighbors = graph.getOrDefault(node.left,new ArrayList<>());
+			leftNodeNeighbors.add(node);
+			graph.put(node.left,leftNodeNeighbors);
+		}
+		if (node.right != null) {
+			neighbors.add(node.right);
+			List<TreeNode> rightNodeNeighbors = graph.getOrDefault(node.right,new ArrayList<>());
+			rightNodeNeighbors.add(node);
+			graph.put(node.right,rightNodeNeighbors);
+		}
+		graph.put(node,neighbors);
+		dfs(node.left);
+		dfs(node.right);
+	}
+}

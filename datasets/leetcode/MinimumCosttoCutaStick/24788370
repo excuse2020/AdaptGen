@@ -1,0 +1,22 @@
+class Solution {
+	Integer[][] dp;
+	int minC(int i, int j, int start, int end, int[] cuts) {
+		if (i > j) {
+			return 0;
+		}
+		if (dp[i][j] != null) {
+			return dp[i][j];
+		}
+		int min = Integer.MAX_VALUE;
+		int len = end - start;
+		for (int k = i; k <= j; k++) {
+			min = Math.min(min,minC(i,k - 1,start,cuts[k],cuts) + minC(k + 1,j,cuts[k],end,cuts));
+		}
+		return dp[i][j] = min + len;
+	}
+	int minCost(int n, int[] cuts) {
+		dp = new Integer[cuts.length][cuts.length];
+		Arrays.sort(cuts);
+		return minC(0,cuts.length - 1,0,n,cuts);
+	}
+}

@@ -1,0 +1,37 @@
+class Solution {
+	int expressiveWords(String s, String[] words) {
+		int count = 0;
+		for (String word: words) {	
+			if (isStretchy(s,word)) {
+				count++;
+			}
+		}
+		return count;
+	}
+	int helper(String s, int i) {
+		int n = s.length();
+		int start = i;
+		while (i < n && s.charAt(i) == s.charAt(start)) {
+			i++;
+		}
+		return i - start;
+	}
+	boolean isStretchy(String s, String word) {
+		int i = 0, j = 0;
+		int n = s.length();
+		int m = word.length();
+		while (i < n && j < m) {
+			if (s.charAt(i) != word.charAt(j)) {
+				return false;
+			}
+			int lenS = helper(s,i);
+			int lenW = helper(word,j);
+			if (lenS < lenW || (lenS < 3 && lenS != lenW)) {
+				return false;
+			}
+			i += lenS;
+			j += lenW;
+		}
+		return i == n && j == m;
+	}
+}

@@ -1,0 +1,30 @@
+class Solution {
+	List<TreeNode> findDuplicateSubtrees(TreeNode root) {
+		Set<TreeNode> result = new HashSet<>();
+		Map<String, TreeNode> map = new HashMap<>();
+		getDuplicate(result,root,map,false,false);
+		return new ArrayList<>(result);
+	}
+	String getDuplicate(Set<TreeNode> result, TreeNode root, Map<String, TreeNode> map, boolean left, boolean right) {
+		if (root == null && left) {
+			return "lnull";
+		}
+		if (root == null && right) {
+			return "rnull";
+		}
+		if (root == null) {
+			return "null";
+		}
+		int val = root.val;
+		String leftstr = getDuplicate(result,root.left,map,true,false);
+		String rightstr = getDuplicate(result,root.right,map,false,true);
+		String combined = leftstr + val;
+		if (map.containsKey(combined)) {
+			result.add(map.get(combined));
+		} 
+		else {
+			map.put(combined,root);
+		}
+		return combined;
+	}
+}

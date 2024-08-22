@@ -1,0 +1,21 @@
+class Solution {
+	int distributeCookies(int[] c, int k) {
+		int ans = new int[k];
+		if (k == c.length) {
+			return Arrays.stream(c).max().getAsInt();
+		}
+		return helper(c.length - 1,c,ans,k);
+	}
+	int helper(int index, int c, int ans, int k) {
+		if (index < 0) {
+			return Arrays.stream(ans).max().getAsInt();
+		}
+		int mina = Integer.MAX_VALUE;
+		for (int i = 0; i < k; i++) {
+			ans[i] = ans[i] + c[index];
+			mina = Math.min(mina,helper(index - 1,c,ans,k));
+			ans[i] = ans[i] - c[index];
+		}
+		return mina;
+	}
+}

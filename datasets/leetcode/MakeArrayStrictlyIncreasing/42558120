@@ -1,0 +1,31 @@
+class Solution {
+	int makeArrayIncreasing(int[] arr1, int[] arr2) {
+		TreeSet<Integer> set = new TreeSet<>();
+		for (int num: arr2) {	
+			set.add(num);
+		}
+		int m = arr1.length, n = set.size();
+		int[][] dp = new int[m + 1][Math.min(m,n) + 1];
+		for (int i = 0; i <= m; i++) {
+			Arrays.fill(dp[i],Integer.MAX_VALUE);
+		}
+		dp[0][0] = -1;
+		for (int i = 1; i <= m; i++) {
+			for (int j = 0; j <= Math.min(m,n); j++) {
+				if (arr1[i - 1] > dp[i - 1][j]) {
+					dp[i][j] = arr1[i - 1];
+				}
+				if (j > 0 && dp[i - 1][j - 1] != Integer.MAX_VALUE) {
+					Integer alt = set.higher(dp[i - 1][j - 1]);
+					if (alt != null) {
+						dp[i][j] = Math.min(dp[i][j],alt);
+					}
+				}
+				if (i == m && dp[i][j] != Integer.MAX_VALUE) {
+					return j;
+				}
+			}
+		}
+		return -1;
+	}
+}

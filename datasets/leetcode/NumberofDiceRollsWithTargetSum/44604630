@@ -1,0 +1,24 @@
+class Solution {
+	Integer memo(Integer DP, int diceNumber, int n, int k, int target) {
+		if (diceNumber == (n + 1) && target == 0) {
+			return 1;
+		} 
+		else if (target <= 0 || diceNumber == n + 1) {
+			return 0;
+		}
+		if (DP[diceNumber][target] != null) {
+			return DP[diceNumber][target];
+		}
+		int ans = 0;
+		int mod = (int) (1e9 + 7);
+		for (int diceFaceValue = 1; diceFaceValue <= k; diceFaceValue++) {
+			int count = memo(DP,diceNumber + 1,n,k,target - diceFaceValue) % mod;
+			ans = (ans + count) % mod;
+		}
+		return DP[diceNumber][target] = ans;
+	}
+	int numRollsToTarget(int n, int k, int target) {
+		Integer DP = new Integer[n + 1][target + 1];
+		return (int) memo(DP,1,n,k,target);
+	}
+}

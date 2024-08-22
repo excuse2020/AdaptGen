@@ -1,0 +1,33 @@
+class Solution {
+	boolean[] isArraySpecial(int[] nums, int[][] queries) {
+		int[] prefixSum = new int[nums.length];
+		for (int i = 0; i < nums.length - 1; i++) {
+			int num1 = nums[i];
+			int num2 = nums[i + 1];
+			if (num1 % 2 != num2 % 2) {
+				prefixSum[i + 1] = prefixSum[i] + 1;
+			} 
+			else {
+				prefixSum[i + 1] = 0;
+			}
+		}
+		boolean[] result = new boolean[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			int[] query = queries[i];
+			int start = query[0];
+			int end = query[1];
+			int diff = end - start;
+			if (diff == 0) {
+				result[i] = true;
+				continue;
+			}
+			if (diff <= prefixSum[end]) {
+				result[i] = true;
+			} 
+			else {
+				result[i] = false;
+			}
+		}
+		return result;
+	}
+}

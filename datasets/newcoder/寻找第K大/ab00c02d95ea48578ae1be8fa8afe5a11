@@ -1,0 +1,28 @@
+class Solution {
+	int findKth(int[] a, int n, int K) {
+		return quickFind(a,0,n - 1,K);
+	}
+	int quickFind(int[] a, int left, int right, int K) {
+		int lo = left, hi = right, base = a[left];
+		while (lo < hi) {
+			while (lo < hi && a[hi] <= base) {
+				hi--;
+			}
+			a[lo] = a[hi];
+			while (lo < hi && a[lo] >= base) {
+				lo++;
+			}
+			a[hi] = a[lo];
+		}
+		a[lo] = base;
+		if (lo == K - 1) {
+			return a[lo];
+		} 
+		else if (lo > K - 1) {
+			return quickFind(a,left,lo - 1,K);
+		} 
+		else {
+			return quickFind(a,lo + 1,right,K);
+		}
+	}
+}

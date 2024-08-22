@@ -1,0 +1,36 @@
+class Solution {
+	long[] fact;
+	long m = (long) Math.pow(10,9) + (long) 7;
+	int countHousePlacements(int n) {
+		long ans = (long) 0;
+		fact = new long[n + 1];
+		fact[0] = (long) 1;
+		fact[1] = (long) 1;
+		for (int i = 2; i <= n; i++) {
+			fact[i] = (fact[i - 1] * i) % m;
+		}
+		int i = 1;
+		while (n - i + 1 >= i) {
+			ans = (ans + factorial(n - i + 1,i)) % m;
+			i++;
+		}
+		ans++;
+		return (int) ((ans * ans) % m);
+	}
+	long factorial(int C, int r) {
+		long div = (fact[r] * fact[C - r]) % m;
+		long inv = power(div,m - 2);
+		return (fact[C] * inv) % m;
+	}
+	long power(long x, long y) {
+		if (y == (long) 0) {
+			return (long) 1;
+		}
+		long p = power(x,y / 2);
+		long mod = (p * p) % m;
+		if (y % 2 == (long) 0) {
+			return mod;
+		}
+		return (x * mod) % m;
+	}
+}

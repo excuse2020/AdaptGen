@@ -1,0 +1,35 @@
+class Solution {
+	List<Integer>[] adj;
+	boolean[] seen;
+	long countPairs(int n, int[][] edges) {
+		seen = new boolean[n];
+		adj = new ArrayList[n];
+		for (var i = 0; i < n; i++) {
+			adj[i] = new ArrayList<>();
+		}
+		for (var edge: edges) {	
+			adj[edge[0]].add(edge[1]);
+			adj[edge[1]].add(edge[0]);
+		}
+		var cnt = 0;
+		var ans = 0L;
+		for (var i = 0; i < n; i++) {
+			if (!seen[i]) {
+				var c = dfs(i);
+				ans += (long) cnt * c;
+				cnt += c;
+			}
+		}
+		return ans;
+	}
+	int dfs(int node) {
+		seen[node] = true;
+		var cnt = 1;
+		for (var neighbor: adj[node]) {	
+			if (!seen[neighbor]) {
+				cnt += dfs(neighbor);
+			}
+		}
+		return cnt;
+	}
+}

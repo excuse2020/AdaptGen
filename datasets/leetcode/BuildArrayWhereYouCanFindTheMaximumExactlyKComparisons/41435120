@@ -1,0 +1,42 @@
+class Solution {
+	HashMap<String, Long> hm;
+	int mod = 1000000007;
+	long helper(int n, int m, int search_cost, int prev_max) {
+		if (n == 0) {
+			if (search_cost == 0) {
+				return 1;
+			} 
+			else {
+				return 0;
+			}
+		}
+		String key = n + " ";
+		if (hm.containsKey(key)) {
+			return hm.get(key);
+		}
+		long ans = 0;
+		for (int i = 1; i <= m; i++) {
+			if (i > prev_max) {
+				if (search_cost - 1 >= 0) {
+					long smallAns = helper(n - 1,m,search_cost - 1,i) % mod;
+					ans += smallAns;
+					ans %= mod;
+				}
+			} 
+			else {
+				long smallAns = helper(n - 1,m,search_cost,prev_max) % mod;
+				ans += smallAns;
+				ans %= mod;
+			}
+		}
+		hm.put(key,ans);
+		return ans;
+	}
+	int numOfArrays(int n, int m, int k) {
+		return util1(n,m,k);
+	}
+	int util1(int n, int m, int k) {
+		hm = new HashMap<>();
+		return (int) helper(n,m,k,Integer.MIN_VALUE);
+	}
+}

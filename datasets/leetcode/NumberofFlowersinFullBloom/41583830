@@ -1,0 +1,23 @@
+class Solution {
+	int[] fullBloomFlowers(int[][] flowers, int[] people) {
+		Arrays.sort(flowers,(a, b) -> {a[0] != b[0] ? Integer.compare(a[0],b[0]) : Integer.compare(a[1],b[1])});
+		int mat = new int[people.length][2];
+		for (int i = 0; i < people.length; i++) {
+			mat[i][0] = people[i];
+			mat[i][1] = i;
+		}
+		Arrays.sort(mat,(a, b) -> {Integer.compare(a[0],b[0])});
+		int ans = new int[people.length];
+		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {Integer.compare(a[1],b[1])});
+		for (int i = 0, j = 0; i < mat.length; i++) {
+			for (; j < flowers.length && flowers[j][0] <= mat[i][0]; j++) {
+				pq.add(flowers[j]);
+			}
+			for (; !pq.isEmpty() && pq.peek()[1] < mat[i][0]; ) {
+				pq.poll();
+			}
+			ans[mat[i][1]] = pq.size();
+		}
+		return ans;
+	}
+}

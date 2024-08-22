@@ -1,0 +1,39 @@
+class Solution {
+	long mod;
+	long sum = 0;
+	int countPartitions(int[] nums, int k) {
+		mod = (int) 1e9 + 7;
+		int n = nums.length;
+		for (int i: nums) {	
+			sum += i;
+		}
+		if (sum < 2 * k) {
+			return 0;
+		}
+		long[][] dp = new long[n + 1][k + 1];
+		for (long[] i: dp) {	
+			Arrays.fill(i,-1);
+		}
+		long a = power(n) % mod;
+		long ans = (a - ((long) 2 * (solve(nums,0,k,dp)) % mod) % mod + mod) % mod;
+		return (int) ans;
+	}
+	long power(int n) {
+		long ans = 1;
+		while (n-- > 0) {
+			ans = (ans * 2) % mod;
+		}
+		return (ans % mod);
+	}
+	long solve(int[] nums, int ind, int k, long[][] dp) {
+		if (ind >= nums.length) {
+			return (k > 0) ? 1 : 0;
+		}
+		if (dp[ind][k] != -1) {
+			return dp[ind][k];
+		}
+		long take = solve(nums,ind + 1,Math.max(0,k - nums[ind]),dp) % mod;
+		long notake = solve(nums,ind + 1,k,dp) % mod;
+		return dp[ind][k] = (take + notake) % mod;
+	}
+}

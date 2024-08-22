@@ -1,0 +1,82 @@
+class Solution {
+	int[] id;
+	int[] sz;
+	int find(int p) {
+		int root = p;
+		while (root != id[root]) {
+			root = id[root];
+		}
+		while (p != root) {
+			int next = id[p];
+			id[p] = root;
+			p = next;
+		}
+		return root;
+	}
+	int[] findRedundantDirectedConnection(int[][] edges) {
+		int n = edges.length;
+		id = new int[n + 1];
+		sz = new int[n + 1];
+		for (int i = 1; i <= n; i++) {
+			id[i] = i;
+			sz[i] = 1;
+		}
+		int[] indegrees = new int[n + 1];
+		int excessIn = -1;
+		for (int i = 0; i < n; i++) {
+			if (++indegrees[edges[i][1]] > 1) {
+				excessIn = edges[i][1];
+				break;
+			}
+		}
+		int removeIndex = -1;
+		if (excessIn == -1) {
+			for (int i = 0; i < n; i++) {
+				if (find(edges[i][0]) == find(edges[i][1])) {
+					removeIndex = i;
+				} 
+				else {
+					union(edges[i][0],edges[i][1]);
+				}
+			}
+		} 
+		else {
+			for (int i = n - 1; i >= 0; i--) {
+				if (edges[i][1] == excessIn) {
+					removeIndex = i;
+					break;
+				}
+			}
+			for (int i = 0; i < n; i++) {
+				if (i == removeIndex) {
+					continue;
+				}
+				union(edges[i][0],edges[i][1]);
+			}
+			if (sz[find(1)] != n) {
+				for (int i = removeIndex - 1; i >= 0; i--) {
+					if (edges[i][1] == excessIn) {
+						removeIndex = i;
+						break;
+					}
+				}
+			}
+		}
+		return edges[removeIndex];
+	}
+	void union(int p, int q) {
+		int pRoot = find(p);
+		int qRoot = find(q);
+		if (pRoot == qRoot) {
+			return;
+		}
+		if (sz[pRoot] < sz[qRoot]) {
+			id[pRoot] = qRoot;
+			sz[qRoot] += sz[pRoot];
+		} 
+		else {
+			id[qRoot] = pRoot;
+			sz[pRoot] += sz[qRoot];
+		}
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	boolean check(int[] a, int k, int minDist) {
+		int i = 0;
+		k--;
+		while (i < a.length) {
+			int next = -1;
+			for (int j = i + 1; j < a.length; j++) {
+				if (a[i] + minDist <= a[j]) {
+					next = j;
+					k--;
+					break;
+				}
+			}
+			if (k == 0) {
+				return true;
+			}
+			if (next == -1) {
+				return false;
+			}
+			i = next;
+		}
+		return false;
+	}
+	int maximumTastiness(int[] price, int k) {
+		Arrays.sort(price);
+		int l = 0;
+		int r = price[price.length - 1] - price[0];
+		while (l < r) {
+			int mid = r - (r - l) / 2;
+			if (check(price,k,mid)) {
+				l = mid;
+			} 
+			else {
+				r = mid - 1;
+			}
+		}
+		return r;
+	}
+}

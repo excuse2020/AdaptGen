@@ -1,0 +1,36 @@
+class Solution {
+	int[] nodesBetweenCriticalPoints(ListNode head) {
+		int ans = new int[2];
+		ListNode t = head.next;
+		ListNode l = head;
+		ListNode r = t.next;
+		int minDist = Integer.MAX_VALUE, maxDist = Integer.MIN_VALUE;
+		int CI = 1;
+		int first_critical_idx = -1, last_critical_idx = -1, curr_critical_idx = -1;
+		while (r != null) {
+			if ((t.val < l.val && t.val < r.val) || (t.val > l.val && t.val > r.val)) {
+				if (first_critical_idx == -1) {
+					first_critical_idx = CI;
+					curr_critical_idx = CI;
+				} 
+				else {
+					last_critical_idx = CI;
+					minDist = Integer.min(minDist,last_critical_idx - curr_critical_idx);
+					curr_critical_idx = CI;
+				}
+			}
+			CI++;
+			t = t.next;
+			l = l.next;
+			r = r.next;
+		}
+		if (last_critical_idx == -1) {
+			ans[0] = -1;
+			ans[1] = -1;
+			return ans;
+		}
+		ans[0] = minDist;
+		ans[1] = last_critical_idx - first_critical_idx;
+		return ans;
+	}
+}

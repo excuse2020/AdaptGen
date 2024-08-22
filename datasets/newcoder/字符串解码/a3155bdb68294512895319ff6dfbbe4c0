@@ -1,0 +1,37 @@
+class Solution {
+	String decodeString(String s) {
+		if (1 == s.length()) {
+			return s;
+		}
+		Stack<Integer> numStack = new Stack<>();
+		Stack<String> strStack = new Stack<>();
+		StringBuffer res = new StringBuffer("");
+		char[] chrs = s.toCharArray();
+		for (int i = 0; i < chrs.length; i++) {
+			if (chrs[i] >= '0' && chrs[i] <= '9') {
+				int num = chrs[i] - '0';
+				while (i + 1 < chrs.length && chrs[i + 1] >= '0' && chrs[i + 1] <= '9') {
+					num = num * 10 + (chrs[i + 1] - '0');
+					i++;
+				}
+				numStack.push(num);
+			} 
+			else if (chrs[i] == '[') {
+				strStack.push(new String(res));
+				res = new StringBuffer("");
+			} 
+			else if (chrs[i] == ']') {
+				StringBuffer tmp = new StringBuffer(strStack.pop());
+				int num = numStack.pop();
+				for (int j = 0; j < num; j++) {
+					tmp.append(res);
+				}
+				res = tmp;
+			} 
+			else {
+				res.append(chrs[i]);
+			}
+		}
+		return new String(res);
+	}
+}

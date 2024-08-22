@@ -1,0 +1,55 @@
+class Solution {
+	int ans;
+	long[][][] dp;
+	int minCost(int[] houses, int[][] cost, int m, int n, int target) {
+		ans = Integer.MAX_VALUE;
+		dp = new long[m][m + 1][m + 1];
+		for (long[][] ro: dp) {	
+			for (long[] r: ro) {	
+				Arrays.fill(r,-1);
+			}
+		}
+		long x = recur(houses,cost,0,m,n,target,0,0,0);
+		if (x >= Integer.MAX_VALUE) {
+			return -1;
+		}
+		return (int) x;
+	}
+	long recur(int[] h, int[][] c, int i, int m, int n, int tar, int cost, int count, int pre) {
+		if (i == h.length) {
+			if (count == tar) {
+				return 0;
+			}
+			return Integer.MAX_VALUE;
+		}
+		if (count > tar) {
+			return Integer.MAX_VALUE;
+		}
+		if (dp[i][count][pre] != -1) {
+			return dp[i][count][pre];
+		}
+		int p = pre;
+		if (h[i] != 0) {
+			if (pre != h[i]) {
+				pre = h[i];
+				count++;
+			}
+			return recur(h,c,i + 1,m,n,tar,cost,count,pre);
+		}
+		long co = Integer.MAX_VALUE;
+		for (int j = 0; j < n; j++) {
+			h[i] = j + 1;
+			if (p != h[i]) {
+				count++;
+				pre = j + 1;
+			}
+			co = Math.min(co,c[i][j] + recur(h,c,i + 1,m,n,tar,cost + c[i][j],count,pre));
+			if (p != h[i]) {
+				count--;
+				pre = p;
+			}
+			h[i] = 0;
+		}
+		return dp[i][count][pre] = co;
+	}
+}

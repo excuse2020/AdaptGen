@@ -1,0 +1,18 @@
+class Solution {
+	int[] maxSlidingWindow(int[] nums, int k) {
+		int[] result = new int[nums.length - k + 1];
+		TreeMap<Integer, Integer> maxMap = new TreeMap<>(Collections.reverseOrder());
+		for (int i = 0; i < k; i++) {
+			maxMap.put(nums[i],maxMap.getOrDefault(nums[i],0) + 1);
+		}
+		int idx = 0;
+		result[idx++] = maxMap.firstKey();
+		for (int i = k; i < nums.length; i++) {
+			maxMap.put(nums[i - k],maxMap.get(nums[i - k]) - 1);
+			maxMap.remove(nums[i - k],0);
+			maxMap.put(nums[i],maxMap.getOrDefault(nums[i],0) + 1);
+			result[idx++] = maxMap.firstKey();
+		}
+		return result;
+	}
+}

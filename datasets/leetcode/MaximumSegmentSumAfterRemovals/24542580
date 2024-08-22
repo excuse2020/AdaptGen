@@ -1,0 +1,37 @@
+class Solution {
+	record Segment(int from, int to, long sum) {
+	}
+	int compareTo(Segment i) {
+		return Integer.compare(from,i.from);
+	}
+	long[] maximumSegmentSum(int[] nums, int[] removeQueries) {
+		TreeSet<Segment> segments = new TreeSet<>();
+		long[] maxSums = new long[nums.length];
+		for (int i = nums.length - 1; i > 0; i--) {
+			int addIndex = removeQueries[i];
+			Segment dummy = new Segment(addIndex, addIndex, 0);
+			Segment before = segments.lower(dummy);
+			Segment after = segments.higher(dummy);
+			Segment newSegment = mergeUpdate(before,after,addIndex,nums[addIndex],segments);
+			segments.add(newSegment);
+			maxSums[i - 1] = Math.max(maxSums[i],newSegment.sum);
+		}
+		return maxSums;
+	}
+	Segment mergeUpdate(Segment before, Segment after, int addIndex, int num, TreeSet<Segment> segments) {
+		int from = addIndex;
+		int to = addIndex;
+		long sum = num;
+		if (before != null && before.to == addIndex - 1) {
+			from = before.from;
+			sum += before.sum;
+			segments.remove(before);
+		}
+		if (after != null && after.from == addIndex + 1) {
+			to = after.to;
+			sum += after.sum;
+			segments.remove(after);
+		}
+		return new Segment(from, to, sum);
+	}
+}

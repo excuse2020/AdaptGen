@@ -1,0 +1,37 @@
+class Solution {
+	int[][] dp;
+	String str1, str2;
+	int dfs(int i, int j) {
+		if (i < 0 && j < 0) {
+			return 0;
+		}
+		if (i < 0) {
+			return j + 1;
+		}
+		if (j < 0) {
+			return i + 1;
+		}
+		if (dp[i][j] != -1) {
+			return dp[i][j];
+		}
+		if (str1.charAt(i) == str2.charAt(j)) {
+			dp[i][j] = dfs(i - 1,j - 1);
+		} 
+		else {
+			int ans = dfs(i,j - 1) + 1;
+			ans = Math.min(ans,dfs(i - 1,j) + 1);
+			ans = Math.min(ans,dfs(i - 1,j - 1) + 1);
+			dp[i][j] = ans;
+		}
+		return dp[i][j];
+	}
+	int editDistance(String str1, String str2) {
+		this.str1 = str1;
+		this.str2 = str2;
+		dp = new int[str1.length()][str2.length()];
+		for (int[] row: dp) {	
+			Arrays.fill(row,-1);
+		}
+		return dfs(str1.length() - 1,str2.length() - 1);
+	}
+}

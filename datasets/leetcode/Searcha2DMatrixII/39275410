@@ -1,0 +1,24 @@
+class Solution {
+	boolean searchMatrix(int[][] matrix, int target) {
+		int m = matrix.length;
+		int n = matrix[0].length;
+		return searchMatrixRecursive(matrix,target,0,m - 1,0,n - 1);
+	}
+	boolean searchMatrixRecursive(int[][] matrix, int target, int rowStart, int rowEnd, int colStart, int colEnd) {
+		if (rowStart > rowEnd || colStart > colEnd) {
+			return false;
+		}
+		int rowMid = rowStart + (rowEnd - rowStart) / 2;
+		int colMid = colStart + (colEnd - colStart) / 2;
+		int midElement = matrix[rowMid][colMid];
+		if (midElement == target) {
+			return true;
+		} 
+		else if (midElement < target) {
+			return searchMatrixRecursive(matrix,target,rowStart,rowEnd,colMid + 1,colEnd) || searchMatrixRecursive(matrix,target,rowMid + 1,rowEnd,colStart,colEnd);
+		} 
+		else {
+			return searchMatrixRecursive(matrix,target,rowStart,rowMid - 1,colStart,colEnd) || searchMatrixRecursive(matrix,target,rowMid,rowEnd,colStart,colMid - 1);
+		}
+	}
+}

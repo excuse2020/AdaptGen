@@ -1,0 +1,52 @@
+class Solution {
+	int idx = n - 1;
+	int j = 0;
+	int j = 0;
+	int n = prices.length;
+	int prev = new int[2][3];
+	int maxProfit(int[] prices) {
+		int n = prices.length;
+		int dp = new int[n + 1][2][3];
+		for (int j = 0; j < 2; j++) {
+			for (int z = 0; z < 3; z++) {
+				dp[n][j][z] = 0;
+			}
+		}
+		for (int i = 0; i <= n; i++) {
+			for (int j = 0; j < 2; j++) {
+				dp[i][j][0] = 0;
+			}
+		}
+		for (int idx = n - 1; idx >= 0; idx--) {
+			for (int buy = 0; buy < 2; buy++) {
+				for (int k = 1; k <= 2; k++) {
+					int profit = 0;
+					if (buy == 1) {
+						profit = Math.max(-prices[idx] + dp[idx + 1][0][k],dp[idx + 1][1][k]);
+					} 
+					else {
+						profit = Math.max(prices[idx] + dp[idx + 1][1][k - 1],dp[idx + 1][0][k]);
+					}
+					dp[idx][buy][k] = profit;
+				}
+			}
+		}
+		return dp[0][1][2];
+	}
+	int pro(int idx, int buy, int n, int prices, int dp, int k) {
+		if (k == 0 || idx == n) {
+			return 0;
+		}
+		if (dp[idx][buy][k] != -1) {
+			return dp[idx][buy][k];
+		}
+		int profit = 0;
+		if (buy == 1) {
+			profit = Math.max(-prices[idx] + pro(idx + 1,0,n,prices,dp,k),pro(idx + 1,1,n,prices,dp,k));
+		} 
+		else {
+			profit = Math.max(prices[idx] + pro(idx + 1,1,n,prices,dp,k - 1),pro(idx + 1,0,n,prices,dp,k));
+		}
+		return dp[idx][buy][k] = profit;
+	}
+}

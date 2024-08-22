@@ -1,0 +1,28 @@
+class Solution {
+	long maxDamage(NavigableMap<Integer, Integer> treeMp, Map<Integer, Long> dp) {
+		if (treeMp.isEmpty()) {
+			return 0L;
+		}
+		int key = treeMp.firstKey();
+		if (dp.containsKey(key)) {
+			return dp.get(key);
+		}
+		long includePower = (long) treeMp.get(key) * key;
+		if (treeMp.ceilingKey(key - 3) != null) {
+			includePower += maxDamage(treeMp.tailMap(treeMp.ceilingKey(key - 3),true),dp);
+		}
+		long excludePower = 0;
+		if (treeMp.ceilingKey(key - 1) != null) {
+			excludePower += maxDamage(treeMp.tailMap(treeMp.ceilingKey(key - 1),true),dp);
+		}
+		dp.put(key,Math.max(includePower,excludePower));
+		return dp.get(key);
+	}
+	long maximumTotalDamage(int[] power) {
+		TreeMap<Integer, Integer> treeMp = new TreeMap<>(Comparator.reverseOrder());
+		for (int i = 0; i < power.length; i++) {
+			treeMp.put(power[i],treeMp.getOrDefault(power[i],0) + 1);
+		}
+		return maxDamage(treeMp,new HashMap<>());
+	}
+}

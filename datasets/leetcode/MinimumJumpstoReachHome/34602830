@@ -1,0 +1,33 @@
+class Solution {
+	int minimumJumps(int[] forbidden, int a, int b, int x) {
+		Set<Integer> visited = new HashSet<>();
+		for (int f: forbidden) {	
+			visited.add(f * 2000);
+			visited.add(f * 2000 + 1);
+		}
+		Queue<int[]> q = new LinkedList<>();
+		q.add(new int{0, 0});
+		int level = 0;
+		while (!q.isEmpty()) {
+			int size = q.size();
+			for (int i = 0; i < size; ++i) {
+				int[] v = q.poll();
+				if (visited.contains(v[0] * 2000 + v[1])) {
+					continue;
+				}
+				visited.add(v[0] * 2000 + v[1]);
+				if (v[0] == x) {
+					return level;
+				}
+				if (v[0] - b >= 0 && v[1] == 0) {
+					q.add(new int{v[0] - b, 1});
+				}
+				if (v[0] < 4000) {
+					q.add(new int{v[0] + a, 0});
+				}
+			}
+			level++;
+		}
+		return -1;
+	}
+}

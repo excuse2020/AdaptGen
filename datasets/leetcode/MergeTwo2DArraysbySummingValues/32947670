@@ -1,0 +1,39 @@
+class Solution {
+	int[][] mergeArrays(int[][] nums1, int[][] nums2) {
+		boolean[] existingIds = new boolean[1001];
+		int commonIdsCount = 0;
+		for (int[] num: nums1) {	
+			existingIds[num[0]] = true;
+		}
+		for (int[] num: nums2) {	
+			if (existingIds[num[0]]) {
+				commonIdsCount++;
+			}
+		}
+		int index = 0;
+		int index1 = 0;
+		int index2 = 0;
+		int[][] mergedArray = new int[nums1.length + nums2.length - commonIdsCount][2];
+		while (index1 < nums1.length && index2 < nums2.length) {
+			if (nums1[index1][0] > nums2[index2][0]) {
+				mergedArray[index++] = nums2[index2++];
+			} 
+			else if (nums1[index1][0] < nums2[index2][0]) {
+				mergedArray[index++] = nums1[index1++];
+			} 
+			else {
+				nums1[index1][1] += nums2[index2][1];
+				mergedArray[index++] = nums1[index1];
+				index1++;
+				index2++;
+			}
+		}
+		while (index1 < nums1.length) {
+			mergedArray[index++] = nums1[index1++];
+		}
+		while (index2 < nums2.length) {
+			mergedArray[index++] = nums2[index2++];
+		}
+		return mergedArray;
+	}
+}

@@ -1,0 +1,31 @@
+class Solution {
+	int f(int i, int j, List<Integer> arr, int dp) {
+		if (i > j) {
+			return 0;
+		}
+		if (dp[i][j] != -1) {
+			return dp[i][j];
+		}
+		int mini = Integer.MAX_VALUE;
+		for (int ind = i; ind <= j; ind++) {
+			int cost = arr.get(j + 1) - arr.get(i - 1) + f(i,ind - 1,arr,dp) + f(ind + 1,j,arr,dp);
+			mini = Math.min(mini,cost);
+		}
+		return dp[i][j] = mini;
+	}
+	int minCost(int n, int[] cuts) {
+		int c = cuts.length;
+		List<Integer> ct = new ArrayList<>();
+		for (int i = 0; i < cuts.length; i++) {
+			ct.add(cuts[i]);
+		}
+		ct.add(0);
+		ct.add(n);
+		Collections.sort(ct);
+		int dp = new int[c + 1][c + 1];
+		for (int row: dp) {	
+			Arrays.fill(row,-1);
+		}
+		return f(1,c,ct,dp);
+	}
+}

@@ -1,0 +1,40 @@
+class Solution {
+	int minimumCost(int m, int n, int[] horizontalCut, int[] verticalCut) {
+		int h = new int[m - 1];
+		int v = new int[n - 1];
+		int ans = 0;
+		Arrays.fill(h,1);
+		Arrays.fill(v,1);
+		Arrays.sort(horizontalCut);
+		Arrays.sort(verticalCut);
+		int i = m - 2;
+		int j = n - 2;
+		while (i >= 0 && j >= 0 && (m - 1 > 0 && n - 1 > 0)) {
+			if (horizontalCut[i] > verticalCut[j]) {
+				ans += horizontalCut[i] * h[i];
+				Arrays.fill(v,v[0] + 1);
+				i--;
+			} 
+			else {
+				ans += verticalCut[j] * v[j];
+				Arrays.fill(h,h[0] + 1);
+				j--;
+			}
+		}
+		while (i >= 0) {
+			ans += horizontalCut[i] * h[i];
+			if (n - 1 > 0) {
+				Arrays.fill(v,v[0] + 1);
+			}
+			i--;
+		}
+		while (j >= 0) {
+			ans += verticalCut[j] * v[j];
+			if (m - 1 > 0) {
+				Arrays.fill(h,h[0] + 1);
+			}
+			j--;
+		}
+		return ans;
+	}
+}

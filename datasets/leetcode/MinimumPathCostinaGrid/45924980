@@ -1,0 +1,35 @@
+class Solution {
+	int minPathCost(int[][] grid, int[][] moveCost) {
+		int n = grid.length;
+		int m = grid[0].length;
+		int[][] dp = new int[n][m];
+		for (int i = 0; i < m; i++) {
+			dp[n - 1][i] = grid[n - 1][i];
+		}
+		for (int i = n - 2; i >= 0; i--) {
+			for (int j = 0; j < m; j++) {
+				int min = Integer.MAX_VALUE;
+				int v = grid[i][j];
+				for (int k = 0; k < m; k++) {
+					min = Math.min(moveCost[v][k] + dp[i + 1][k],min);
+				}
+				dp[i][j] = grid[i][j] + min;
+			}
+		}
+		int ans = Integer.MAX_VALUE;
+		for (int i = 0; i < m; i++) {
+			ans = Math.min(ans,dp[0][i]);
+		}
+		return ans;
+	}
+	void recur(int[][] g, int[][] mc, int i, int j, int cost) {
+		if (i == g.length - 1) {
+			min = Math.min(min,cost + g[i][j]);
+			return;
+		}
+		cost += g[i][j];
+		for (int k = 0; k < g[0].length; k++) {
+			recur(g,mc,i + 1,k,cost + mc[g[i][j]][k]);
+		}
+	}
+}

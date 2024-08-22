@@ -1,0 +1,31 @@
+class Solution {
+	int maxSumMinProduct(int[] nums) {
+		if (nums.length == 0) {
+			return 0;
+		}
+		int n = nums.length, M = (int) (1e9 + 7);
+		long max = 0;
+		long prefixSum = 0;
+		Deque<long[]> descStack = new ArrayDeque<>(n);
+		for (int i = 0; i < n; i++) {
+			long nextRightVal = nums[i];
+			while (!descStack.isEmpty() && nextRightVal < descStack.peek()[0]) {
+				long min = descStack.pop()[0];
+				long leftPrefix = descStack.isEmpty() ? 0 : descStack.peek()[1];
+				long rightPrefix = prefixSum;
+				long product = min * (rightPrefix - leftPrefix);
+				max = Math.max(max,product);
+			}
+			prefixSum += nextRightVal;
+			descStack.push(new long{nextRightVal, prefixSum});
+		}
+		while (!descStack.isEmpty()) {
+			long min = descStack.pop()[0];
+			long leftPrefix = descStack.isEmpty() ? 0 : descStack.peek()[1];
+			long rightPrefix = prefixSum;
+			long product = min * (rightPrefix - leftPrefix);
+			max = Math.max(max,product);
+		}
+		return (int) (max % M);
+	}
+}

@@ -1,0 +1,91 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		if (head1 == null && head2 == null) {
+			return null;
+		} 
+		else if (head1 == null) {
+			return head2;
+		} 
+		else if (head2 == null) {
+			return head1;
+		} 
+		else {
+			ArrayList<Integer> a1 = new ArrayList<>();
+			ArrayList<Integer> a2 = new ArrayList<>();
+			while (head1 != null) {
+				a1.add(head1.val);
+				head1 = head1.next;
+			}
+			while (head2 != null) {
+				a2.add(head2.val);
+				head2 = head2.next;
+			}
+			int s1 = a1.size();
+			int s2 = a2.size();
+			int jump = 0;
+			int t1;
+			int t2;
+			ListNode res;
+			if (s1 > s2) {
+				while (s2 > 0) {
+					t1 = a1.get(--s1);
+					t2 = a2.get(--s2);
+					a1.set(s1,(t1 + t2) % 10);
+					jump = t1 + t2 > 9 ? 1 : 0;
+				}
+				while (s1 > 0) {
+					--s1;
+					int tmp = a1.get(s1);
+					a1.set(s1,(tmp + jump) % 10);
+					jump = tmp + jump > 9 ? 1 : 0;
+				}
+				int index = 0;
+				if (jump == 1) {
+					res = new ListNode(jump);
+				} 
+				else {
+					res = new ListNode(a1.get(0));
+					index = 1;
+				}
+				s1 = a1.size();
+				ListNode next = res;
+				while (index < s1) {
+					next.next = new ListNode(a1.get(index));
+					next = next.next;
+					index++;
+				}
+				return res;
+			} 
+			else {
+				while (s1 > 0) {
+					t1 = a1.get(--s1);
+					t2 = a2.get(--s2);
+					a2.set(s2,(t1 + t2) % 10);
+					jump = t1 + t2 > 9 ? 1 : 0;
+				}
+				while (s2 > 0) {
+					--s2;
+					int tmp = a2.get(s2);
+					a2.set(s2,(tmp + jump) % 10);
+					jump = tmp + jump > 9 ? 1 : 0;
+				}
+				int index = 0;
+				if (jump == 1) {
+					res = new ListNode(jump);
+				} 
+				else {
+					res = new ListNode(a2.get(0));
+					index = 1;
+				}
+				ListNode next = res;
+				s2 = a2.size();
+				while (index < s2) {
+					next.next = new ListNode(a2.get(index));
+					next = next.next;
+					index++;
+				}
+				return res;
+			}
+		}
+	}
+}

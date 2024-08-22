@@ -1,0 +1,31 @@
+class Solution {
+	int dp;
+	int call(int a, int i, int n) {
+		if (i >= n) {
+			return 1;
+		}
+		if (dp[i] != -1) {
+			return dp[i];
+		}
+		if (i + 1 < n && i + 2 < n && a[i + 1] - a[i] == 1 && a[i + 2] - a[i + 1] == 1) {
+			dp[i] = call(a,i + 3,n);
+			return dp[i];
+		} 
+		else if (i + 1 < n && a[i] == a[i + 1]) {
+			if (i + 2 < n && a[i + 1] == a[i + 2]) {
+				dp[i] = (call(a,i + 2,n) == 1 || call(a,i + 3,n) == 1) ? 1 : 0;
+			} 
+			else {
+				dp[i] = call(a,i + 2,n);
+			}
+			return dp[i];
+		}
+		dp[i] = 0;
+		return dp[i];
+	}
+	boolean validPartition(int[] nums) {
+		dp = new int[nums.length];
+		Arrays.fill(dp,-1);
+		return call(nums,0,nums.length) == 1 ? true : false;
+	}
+}

@@ -1,0 +1,48 @@
+class Solution {
+	long continuousSubarrays(int[] nums) {
+		long result = 0;
+		int l = 0;
+		int r = 1;
+		int max = nums[l];
+		int min = nums[l];
+		Map<Integer, Integer> map = new HashMap<>();
+		map.put(nums[l],0);
+		while (r < nums.length) {
+			map.put(nums[r],r);
+			if (Math.abs(nums[r] - nums[r - 1]) > 2) {
+				l = r;
+				r = l + 1;
+				continue;
+			}
+			int curMax = Math.max(max,nums[r]);
+			int curMin = Math.min(min,nums[r]);
+			if (curMax - curMin <= 2) {
+				result += r - l;
+				r++;
+				max = curMax;
+				min = curMin;
+			} 
+			else {
+				int newMax = nums[r];
+				int newMin = nums[r];
+				for (int i = min; i <= max; i++) {
+					if (!map.containsKey(i)) {
+						continue;
+					}
+					if (Math.abs(i - nums[r]) > 2) {
+						l = Math.max(l,map.get(i) + 1);
+					} 
+					else {
+						newMax = Math.max(newMax,i);
+						newMin = Math.min(newMin,i);
+					}
+				}
+				result += r - l;
+				r++;
+				max = newMax;
+				min = newMin;
+			}
+		}
+		return result + nums.length;
+	}
+}

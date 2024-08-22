@@ -1,0 +1,32 @@
+class Solution {
+	ListNode mergeKLists(ArrayList<ListNode> lists) {
+		if (null == lists || lists.size() == 0) {
+			return null;
+		}
+		ListNode head = null;
+		ListNode minNode = null;
+		int minIndex = -1;
+		for (int i = 0; i < lists.size(); i++) {
+			ListNode node = lists.get(i);
+			if (null != node) {
+				if (null == minNode) {
+					minNode = node;
+					minIndex = i;
+				} 
+				else {
+					if (minNode.val > node.val) {
+						minNode = node;
+						minIndex = i;
+					}
+				}
+			}
+		}
+		if (minNode == null) {
+			return null;
+		}
+		lists.set(minIndex,minNode.next);
+		head = minNode;
+		head.next = mergeKLists(lists);
+		return head;
+	}
+}

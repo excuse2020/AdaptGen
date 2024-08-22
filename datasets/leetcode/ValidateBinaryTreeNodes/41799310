@@ -1,0 +1,46 @@
+class Solution {
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		int[] indegree = new int[n];
+		List[] graph = new ArrayList[n];
+		Queue<Integer> queue = new LinkedList<>();
+		for (int i = 0; i < n; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < n; i++) {
+			int left = leftChild[i];
+			int right = rightChild[i];
+			if (left != -1) {
+				indegree[left]++;
+				graph[i].add(left);
+			}
+			if (right != -1) {
+				indegree[right]++;
+				graph[i].add(right);
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			if (indegree[i] > 1) {
+				return false;
+			}
+			if (indegree[i] == 0) {
+				queue.offer(i);
+			}
+		}
+		if (queue.isEmpty() || queue.size() > 1) {
+			return false;
+		}
+		int nodeVisited = 0;
+		while (!queue.isEmpty()) {
+			int node = queue.poll();
+			nodeVisited++;
+			List<Integer> edge = graph[node];
+			for (int child: edge) {	
+				indegree[child]--;
+				if (indegree[child] == 0) {
+					queue.offer(child);
+				}
+			}
+		}
+		return nodeVisited == n;
+	}
+}

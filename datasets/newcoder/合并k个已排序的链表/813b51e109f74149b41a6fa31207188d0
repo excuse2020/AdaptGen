@@ -1,0 +1,42 @@
+class Solution {
+	ListNode findMin(ArrayList<ListNode> lists) {
+		ListNode min = null;
+		int minVal = Integer.MAX_VALUE;
+		int idx = 0;
+		for (int i = 0; i < lists.size(); i++) {
+			ListNode root = lists.get(i);
+			if (root != null) {
+				if (root.val < minVal) {
+					minVal = root.val;
+					min = root;
+					idx = i;
+				}
+			}
+		}
+		lists.remove(idx);
+		if (min.next != null) {
+			lists.add(idx,min.next);
+		}
+		return min;
+	}
+	ListNode mergeKLists(ArrayList<ListNode> lists) {
+		Iterator<ListNode> it = lists.iterator();
+		while (it.hasNext()) {
+			ListNode node = it.next();
+			if (node == null) {
+				it.remove();
+			}
+		}
+		if (lists.size() == 0) {
+			return null;
+		}
+		ListNode newHead = null;
+		newHead = findMin(lists);
+		ListNode cur = newHead;
+		while (lists.size() > 0) {
+			cur.next = findMin(lists);
+			cur = cur.next;
+		}
+		return newHead;
+	}
+}

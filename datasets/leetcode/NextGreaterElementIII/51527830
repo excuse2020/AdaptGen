@@ -1,0 +1,39 @@
+class Solution {
+	int nextGreaterElement(int n) {
+		if (n == Integer.MAX_VALUE) {
+			return -1;
+		}
+		int count = new int[10];
+		int prev = 0;
+		int lsd = 0;
+		while (n > 0) {
+			lsd = n % 10;
+			n = n / 10;
+			count[lsd]++;
+			if (lsd < prev) {
+				break;
+			}
+			prev = lsd;
+		}
+		int nextD = -1;
+		for (int i = lsd + 1; i < 10; i++) {
+			if (count[i] > 0) {
+				nextD = i;
+				count[i]--;
+				break;
+			}
+		}
+		if (nextD == -1) {
+			return -1;
+		}
+		long m = n;
+		m = 10 * m + nextD;
+		for (int i = 0; i < 10; i++) {
+			while (count[i] > 0) {
+				m = 10 * m + i;
+				count[i]--;
+			}
+		}
+		return (int) (m > Integer.MAX_VALUE ? -1 : m);
+	}
+}

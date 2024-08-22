@@ -1,0 +1,35 @@
+class Solution {
+	int secondMinimum(int n, int[][] edges, int time, int change) {
+		Map<Integer, List<Integer>> graph = new HashMap();
+		for (int[] edge: edges) {	
+			int u = edge[0], v = edge[1];
+			graph.computeIfAbsent(u,(x) -> {new ArrayList()}).add(v);
+			graph.computeIfAbsent(v,(x) -> {new ArrayList()}).add(u);
+		}
+		PriorityQueue<int[]> queue = new PriorityQueue<>((a, b) -> {a[1] - b[1]});
+		queue.offer(new int{1, 0});
+		int[] uniqueVisit = new int[n + 1];
+		int[] dis = new int[n + 1];
+		Arrays.fill(dis,-1);
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			int[] cur = queue.poll();
+			int node = cur[0], t = cur[1];
+			if (dis[node] == t || uniqueVisit[node] >= 2) {
+				continue;
+			}
+			uniqueVisit[node]++;
+			dis[node] = t;
+			if (node == n && uniqueVisit[node] == 2) {
+				return dis[node];
+			}
+			if ((t / change) % 2 != 0) {
+				t = (t / change + 1) * change;
+			}
+			for (int nei: graph.getOrDefault(node,new ArrayList<>())) {	
+				queue.offer(new int{nei, t + time});
+			}
+		}
+		return -1;
+	}
+}

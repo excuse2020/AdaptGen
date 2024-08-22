@@ -1,0 +1,26 @@
+class Solution {
+	List<List<Integer>> answer = new ArrayList<>();
+	List<Integer> combination = new LinkedList<>();
+	void backtracking(int[] candidates, int rest_target, int start_index) {
+		if (rest_target == 0) {
+			answer.add(new ArrayList<>(combination));
+			return;
+		}
+		for (int i = start_index; i < candidates.length; i++) {
+			if (i > start_index && candidates[i] == candidates[i - 1]) {
+				continue;
+			}
+			if (candidates[i] > rest_target) {
+				break;
+			}
+			combination.add(candidates[i]);
+			backtracking(candidates,rest_target - candidates[i],i + 1);
+			combination.removeLast();
+		}
+	}
+	List<List<Integer>> combinationSum2(int[] candidates, int target) {
+		Arrays.sort(candidates);
+		backtracking(candidates,target,0);
+		return answer;
+	}
+}

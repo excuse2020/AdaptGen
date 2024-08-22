@@ -1,0 +1,41 @@
+class Solution {
+	int findShortestSubarrayLength(int minSubarrayLength, int[] prefixSumExtended, int target) {
+		HashMap<Integer, Integer> prefixSumMap = new HashMap<>();
+		for (int right = 0; right < prefixSumExtended.length; right++) {
+			prefixSumMap.put(prefixSumExtended[right],right);
+			if (prefixSumExtended[right] >= target) {
+				if (prefixSumMap.containsKey(prefixSumExtended[right] - target)) {
+					minSubarrayLength = Math.min(minSubarrayLength,right - prefixSumMap.get(prefixSumExtended[right] - target));
+				}
+			}
+		}
+		return minSubarrayLength;
+	}
+	int minSizeSubarray(int[] nums, int target) {
+		int n = nums.length;
+		int[] extendedNums = new int[2 * n];
+		int[] prefixSumExtended = new int[2 * n];
+		for (int i = 0; i < n; i++) {
+			extendedNums[i] = nums[i];
+			extendedNums[i + n] = nums[i];
+		}
+		prefixSumExtended[0] = extendedNums[0];
+		for (int i = 1; i < 2 * n; i++) {
+			prefixSumExtended[i] = prefixSumExtended[i - 1] + extendedNums[i];
+		}
+		int sum = Arrays.stream(nums).sum();
+		int minSubarrayLength = (int) 1e9;
+		if (target < sum) {
+			minSubarrayLength = findShortestSubarrayLength(minSubarrayLength,prefixSumExtended,target);
+		} 
+		else if (target % sum == 0) {
+			minSubarrayLength = (target / sum) * n;
+		} 
+		else {
+			int newTarget = target % sum;
+			minSubarrayLength = findShortestSubarrayLength(minSubarrayLength,prefixSumExtended,newTarget);
+			minSubarrayLength = (target / sum) * n + minSubarrayLength;
+		}
+		return minSubarrayLength >= (int) 1e9 ? -1 : minSubarrayLength;
+	}
+}

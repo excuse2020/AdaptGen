@@ -1,0 +1,56 @@
+class Solution {
+	int snakesAndLadders(int[][] board) {
+		int n = board.length;
+		int endSquare = n * n;
+		short[] brd = new short[endSquare + 1];
+		int brdIdx = 1;
+		for (int row = n - 1; row >= 0; row--) {
+			for (int col = 0; col < n; col++) {
+				brd[brdIdx++] = (short) board[row][col];
+			}
+			if (--row < 0) {
+				break;
+			}
+			for (int col = n - 1; col >= 0; col--) {
+				brd[brdIdx++] = (short) board[row][col];
+			}
+		}
+		int bfsQueueLen = Math.min(n * n,8 * n);
+		short[] bfsQueue = new short[bfsQueueLen];
+		int bfsQueueRead = 0;
+		int bfsQueueWrite = 0;
+		bfsQueue[bfsQueueWrite++] = 1;
+		byte[] count = new byte[endSquare + 1];
+		count[1] = 1;
+		while (bfsQueueRead != bfsQueueWrite) {
+			int currSquare = bfsQueue[bfsQueueRead++];
+			bfsQueueRead %= bfsQueueLen;
+			if (currSquare + 6 >= endSquare) {
+				return count[currSquare];
+			}
+			int maxOpenMove = 0;
+			for (int move = 6; move >= 1; move--) {
+				int nextSquare = currSquare + move;
+				if (brd[nextSquare] >= 0) {
+					if ((nextSquare = brd[nextSquare]) == endSquare) {
+						return count[currSquare];
+					}
+				} 
+				else {
+					if (move < maxOpenMove) {
+						continue;
+					}
+					maxOpenMove = move;
+				}
+				if (count[nextSquare] == 0) {
+					count[nextSquare] = (byte) (count[currSquare] + 1);
+					bfsQueue[bfsQueueWrite++] = (short) nextSquare;
+					if ((bfsQueueWrite %= bfsQueueLen) == bfsQueueRead) {
+						return 0;
+					}
+				}
+			}
+		}
+		return -1;
+	}
+}

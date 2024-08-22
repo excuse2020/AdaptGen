@@ -1,0 +1,46 @@
+class Solution {
+	int calculate(int[] bomb1, int[] bomb2) {
+		if ((long) bomb1[2] * bomb1[2] >= (long) (bomb1[0] - bomb2[0]) * (bomb1[0] - bomb2[0]) + (long) (bomb1[1] - bomb2[1]) * (bomb1[1] - bomb2[1])) {
+			return 1;
+		} 
+		else {
+			return 0;
+		}
+	}
+	int dfs(int index, int[] visited, int[][] detonate) {
+		if (visited[index] == 1) {
+			return 0;
+		}
+		int[] candetonate = detonate[index];
+		int bombs = 0;
+		visited[index] = 1;
+		for (int i = 0; i < candetonate.length; ++i) {
+			if (i != index && candetonate[i] == 1) {
+				if (visited[i] != 1) {
+					bombs += 1;
+				}
+				int answer = dfs(i,visited,detonate);
+				bombs += answer;
+			}
+		}
+		return bombs;
+	}
+	int maximumDetonation(int[][] bombs) {
+		int[][] detonate = new int[bombs.length][bombs.length];
+		for (int i = 0; i < bombs.length; ++i) {
+			for (int j = 0; j < bombs.length; ++j) {
+				int[] bomb1 = bombs[i];
+				int[] bomb2 = bombs[j];
+				detonate[i][j] = calculate(bomb1,bomb2);
+			}
+		}
+		int maxmbombs = 0;
+		int numberofbombs = 0;
+		for (int i = 0; i < bombs.length; ++i) {
+			int[] visited = new int[bombs.length];
+			numberofbombs = dfs(i,visited,detonate);
+			maxmbombs = Math.max(maxmbombs,numberofbombs);
+		}
+		return maxmbombs + 1;
+	}
+}

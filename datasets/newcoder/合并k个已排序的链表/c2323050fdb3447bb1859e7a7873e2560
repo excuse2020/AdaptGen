@@ -1,0 +1,43 @@
+class Solution {
+	ListNode merge(ListNode l1, ListNode l2) {
+		ListNode dummy = new ListNode(-1001);
+		dummy.next = l1;
+		ListNode head = dummy;
+		while (l1 != null && l2 != null) {
+			if (l1.val < l2.val) {
+				head.next = l1;
+				l1 = l1.next;
+			} 
+			else {
+				head.next = l2;
+				l2 = l2.next;
+			}
+			head = head.next;
+		}
+		if (l1 == null) {
+			head.next = l2;
+		}
+		if (l2 == null) {
+			head.next = l1;
+		}
+		return dummy.next;
+	}
+	ListNode mergeKLists(ArrayList<ListNode> lists) {
+		if (lists.size() == 0) {
+			return null;
+		} 
+		else if (lists.size() == 1) {
+			return lists.get(0);
+		}
+		return mergeKLists2(lists,0,lists.size() - 1);
+	}
+	ListNode mergeKLists2(ArrayList<ListNode> lists, int low, int high) {
+		if (low < high) {
+			int idx = (low + high) / 2;
+			ListNode l1 = mergeKLists2(lists,low,idx);
+			ListNode l2 = mergeKLists2(lists,idx + 1,high);
+			return merge(l1,l2);
+		}
+		return lists.get(low);
+	}
+}

@@ -1,0 +1,38 @@
+class Solution {
+	int minAbsoluteSumDiff(int[] nums1, int[] nums2) {
+		long sum = 0l;
+		int mod = 1000000007, n = nums1.length;
+		TreeSet<Integer> s = new TreeSet<>();
+		Queue<int[]> q = new PriorityQueue<>((a, b) -> {b[0] - a[0]});
+		for (int i = 0; i < n; i++) {
+			q.add(new int{(int) Math.abs(nums1[i] - nums2[i]), nums2[i]});
+			s.add(nums1[i]);
+		}
+		int max = 0;
+		while (!q.isEmpty()) {
+			int[] curr = q.poll();
+			int diff = curr[0], x = curr[1];
+			if (diff == 0) {
+				continue;
+			}
+			if (s.contains(x)) {
+				max = Math.max(max,diff);
+			} 
+			else {
+				Integer l = s.lower(x), h = s.higher(x);
+				int min = diff;
+				if (l != null) {
+					min = Math.min(min,x - l);
+				}
+				if (h != null) {
+					min = Math.min(min,h - x);
+				}
+				if (min < diff) {
+					max = Math.max(max,diff - min);
+				}
+			}
+			sum += diff;
+		}
+		return (int) ((sum - max) % mod);
+	}
+}

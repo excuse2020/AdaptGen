@@ -1,0 +1,43 @@
+class Solution {
+	Map<Integer, Map<Integer, Integer>> buildGraph(int[][] edges, int[] val) {
+		Map<Integer, Map<Integer, Integer>> graph = new HashMap<>();
+		for (int[] edge: edges) {	
+			if (!graph.containsKey(edge[0])) {
+				graph.put(edge[0],new HashMap<>());
+			}
+			if (!graph.containsKey(edge[1])) {
+				graph.put(edge[1],new HashMap<>());
+			}
+			graph.get(edge[0]).put(edge[1],val[edge[1]]);
+			graph.get(edge[1]).put(edge[0],val[edge[0]]);
+		}
+		return graph;
+	}
+	int maxStarSum(int[] vals, int[][] edges, int k) {
+		Map<Integer, Map<Integer, Integer>> graph = buildGraph(edges,vals);
+		long maxSum = Long.MIN_VALUE;
+		if (edges.length == 0) {
+			Arrays.sort(vals);
+			return vals[vals.length - 1];
+		} 
+		else {
+			for (int node = 0; node < vals.length; node++) {
+				PriorityQueue<Integer> pq = new PriorityQueue<Integer>((a, b) -> {b - a});
+				Map<Integer, Integer> pathMap = graph.get(node);
+				if (pathMap != null) {
+					for (Integer childNode: pathMap.keySet()) {	
+						pq.offer(pathMap.get(childNode));
+					}
+				}
+				int sum = vals[node];
+				maxSum = Math.max(sum,maxSum);
+				int index = k;
+				while (index-- > 0 && !pq.isEmpty()) {
+					sum += pq.poll();
+					maxSum = Math.max(sum,maxSum);
+				}
+			}
+		}
+		return (int) maxSum;
+	}
+}

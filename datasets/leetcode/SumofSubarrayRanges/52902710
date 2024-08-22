@@ -1,0 +1,59 @@
+class Solution {
+	long subArrayRanges(int[] nums) {
+		long sumOfMaxs = sumSubarrayMaxs(nums);
+		long sumOfMins = sumSubarrayMins(nums);
+		return sumOfMaxs - sumOfMins;
+	}
+	long sumSubarrayMaxs(int arr) {
+		int n = arr.length;
+		Stack<Integer> stp = new Stack<>();
+		Stack<Integer> stn = new Stack<>();
+		int[] left = new int[n];
+		int[] right = new int[n];
+		for (int i = 0; i < n; i++) {
+			while (!stp.isEmpty() && arr[i] > arr[stp.peek()]) {
+				stp.pop();
+			}
+			left[i] = stp.isEmpty() ? i + 1 : i - stp.peek();
+			stp.push(i);
+		}
+		for (int i = n - 1; i >= 0; i--) {
+			while (!stn.isEmpty() && arr[i] >= arr[stn.peek()]) {
+				stn.pop();
+			}
+			right[i] = stn.isEmpty() ? n - i : stn.peek() - i;
+			stn.push(i);
+		}
+		long ans = 0;
+		for (int i = 0; i < n; i++) {
+			ans = ans + (long) arr[i] * left[i];
+		}
+		return ans;
+	}
+	long sumSubarrayMins(int arr) {
+		int n = arr.length;
+		Stack<Integer> stp = new Stack<>();
+		Stack<Integer> stn = new Stack<>();
+		int[] left = new int[n];
+		int[] right = new int[n];
+		for (int i = 0; i < n; i++) {
+			while (!stp.isEmpty() && arr[i] < arr[stp.peek()]) {
+				stp.pop();
+			}
+			left[i] = stp.isEmpty() ? i + 1 : i - stp.peek();
+			stp.push(i);
+		}
+		for (int i = n - 1; i >= 0; i--) {
+			while (!stn.isEmpty() && arr[i] <= arr[stn.peek()]) {
+				stn.pop();
+			}
+			right[i] = stn.isEmpty() ? n - i : stn.peek() - i;
+			stn.push(i);
+		}
+		long ans = 0;
+		for (int i = 0; i < n; i++) {
+			ans = ans + (long) arr[i] * left[i];
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,59 @@
+class Solution {
+	int bs_Dec(MountainArray m, int t, int l, int r) {
+		int mid, k;
+		while (l <= r) {
+			mid = (l + r) / 2;
+			k = m.get(mid);
+			if (k == t) {
+				return mid;
+			}
+			if (k < t) {
+				r = mid - 1;
+			} 
+			else {
+				l = mid + 1;
+			}
+		}
+		return -1;
+	}
+	int bs_Inc(MountainArray m, int t, int l, int r) {
+		int mid, k;
+		while (l <= r) {
+			mid = (l + r) / 2;
+			k = m.get(mid);
+			if (k == t) {
+				return mid;
+			}
+			if (k < t) {
+				l = mid + 1;
+			} 
+			else {
+				r = mid - 1;
+			}
+		}
+		return bs_Dec(m,t,r + 1,m.length() - 1);
+	}
+	int findInMountainArray(int t, MountainArray m) {
+		return bs_Inc(m,t,0,peak(m));
+	}
+	int peak(MountainArray m) {
+		int l = 1, r = m.length() - 2, mid;
+		int p, pLeft, pRight;
+		while (l <= r) {
+			mid = (l + r) / 2;
+			p = m.get(mid);
+			pLeft = m.get(mid - 1);
+			pRight = m.get(mid + 1);
+			if (pLeft < p && p > pRight) {
+				return mid;
+			}
+			if (pLeft < pRight) {
+				l = mid + 1;
+			} 
+			else {
+				r = mid - 1;
+			}
+		}
+		return 1;
+	}
+}

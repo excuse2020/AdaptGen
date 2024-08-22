@@ -1,0 +1,32 @@
+class Solution {
+	int minAbsoluteSumDiff(int[] nums1, int[] nums2) {
+		int n = nums1.length;
+		long diff = 0;
+		TreeSet<Integer> nums = new TreeSet<>();
+		long mod = 1_000_000_007;
+		for (int num: nums1) {	
+			nums.add(num);
+		}
+		for (int i = 0; i < n; i++) {
+			diff = (diff + Math.abs(nums1[i] - nums2[i]));
+		}
+		long ans = diff;
+		for (int i = 0; i < n; i++) {
+			Integer sub = Math.abs(nums1[i] - nums2[i]);
+			Integer upperDiff = Integer.MAX_VALUE;
+			Integer lowerDiff = Integer.MAX_VALUE;
+			if (nums.ceiling(nums2[i]) != null) {
+				upperDiff = nums.ceiling(nums2[i]) - nums2[i];
+			}
+			if (nums.floor(nums2[i]) != null) {
+				lowerDiff = nums2[i] - nums.floor(nums2[i]);
+			}
+			Integer min = Math.min(sub,Math.min(upperDiff,lowerDiff));
+			long modified = diff + (min - sub);
+			if (modified < ans) {
+				ans = modified;
+			}
+		}
+		return (int) (ans % mod);
+	}
+}

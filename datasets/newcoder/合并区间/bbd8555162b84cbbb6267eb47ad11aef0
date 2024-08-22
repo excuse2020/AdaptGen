@@ -1,0 +1,28 @@
+class Solution {
+	ArrayList<Interval> merge(ArrayList<Interval> intervals) {
+		ArrayList<Interval> res = new ArrayList<>();
+		if (intervals.size() == 0) {
+			return res;
+		}
+		Collections.sort(intervals,new Comparator<Interval>());
+		res.add(intervals.get(0));
+		int count = 0;
+		for (int i = 1; i < intervals.size(); i++) {
+			Interval o = intervals.get(i);
+			Interval temp = res.get(count);
+			if (o.start > temp.end) {
+				res.add(o);
+				count++;
+			} 
+			else {
+				res.remove(count);
+				Interval newInterval = new Interval(temp.start, o.end);
+				if (o.end < temp.end) {
+					newInterval.end = temp.end;
+				}
+				res.add(newInterval);
+			}
+		}
+		return res;
+	}
+}

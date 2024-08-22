@@ -1,0 +1,48 @@
+class Solution {
+	ListNode dfs(ListNode p, int m, int n) {
+		if (m == n) {
+			return p;
+		}
+		ListNode p1 = dfs(p.next,m + 1,n);
+		p.next.next = p;
+		p.next = null;
+		return p1;
+	}
+	ListNode reverseBetween(ListNode head, int m, int n) {
+		if (m - n == 0) {
+			return head;
+		}
+		int i = 1;
+		ListNode l1 = new ListNode(0), l2 = new ListNode(0);
+		ListNode p = head;
+		while (head != null) {
+			if (i == m - 1) {
+				l1 = head;
+			}
+			if (i == n) {
+				l2 = head.next;
+				break;
+			}
+			head = head.next;
+			i++;
+		}
+		if (m == 1) {
+			ListNode n1 = dfs(p,m,n);
+			ListNode k = n1;
+			while (n1.next != null) {
+				n1 = n1.next;
+			}
+			n1.next = l2;
+			return k;
+		} 
+		else {
+			ListNode k = dfs(l1.next,m,n);
+			l1.next = k;
+			while (k.next != null) {
+				k = k.next;
+			}
+			k.next = l2;
+		}
+		return p;
+	}
+}

@@ -1,0 +1,43 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		ListNode dummy = new ListNode(0);
+		ListNode p = dummy;
+		ListNode r1 = reverseListNode(head1);
+		ListNode r2 = reverseListNode(head2);
+		int extra = 0;
+		while (r1 != null || r2 != null) {
+			int num1 = r1 == null ? 0 : r1.val;
+			int num2 = r2 == null ? 0 : r2.val;
+			int sum = num1 + num2;
+			if (extra == 1) {
+				extra = 0;
+			}
+			extra += (sum / 10);
+			ListNode newNode = new ListNode(sum % 10);
+			p.next = newNode;
+			p = p.next;
+			if (r1 != null) {
+				r1 = r1.next;
+			}
+			if (r2 != null) {
+				r2 = r2.next;
+			}
+		}
+		if (extra > 0) {
+			ListNode newNode = new ListNode(extra);
+			p.next = newNode;
+			p = p.next;
+		}
+		return reverseListNode(dummy.next);
+	}
+	ListNode reverseListNode(ListNode head) {
+		ListNode pre = null, cur = head, nxt = null;
+		while (cur != null) {
+			nxt = cur.next;
+			cur.next = pre;
+			pre = cur;
+			cur = nxt;
+		}
+		return pre;
+	}
+}

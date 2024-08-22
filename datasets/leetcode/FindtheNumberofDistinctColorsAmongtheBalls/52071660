@@ -1,0 +1,43 @@
+class Solution {
+	int[] queryResults(int limit, int[][] queries) {
+		Set<Integer> uniqueColor = new HashSet<>();
+		Map<Integer, Set<Integer>> colorNBall = new HashMap<>();
+		Map<Integer, Integer> ballNColor = new HashMap<>();
+		int[] ans = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			int[] a = queries[i];
+			int ball = a[0];
+			int color = a[1];
+			int removeColor = -1;
+			if (ballNColor.containsKey(ball)) {
+				removeColor = ballNColor.get(ball);
+				ballNColor.put(ball,color);
+				Set<Integer> temp = colorNBall.get(removeColor);
+				if (temp.size() == 1) {
+					uniqueColor.remove(removeColor);
+					colorNBall.remove(removeColor);
+				} 
+				else {
+					temp.remove(ball);
+					colorNBall.put(removeColor,temp);
+				}
+			} 
+			else {
+				ballNColor.put(ball,color);
+			}
+			uniqueColor.add(color);
+			ans[i] = uniqueColor.size();
+			if (colorNBall.containsKey(color)) {
+				Set<Integer> set = colorNBall.get(color);
+				set.add(ball);
+				colorNBall.put(color,set);
+			} 
+			else {
+				Set<Integer> set = new HashSet<>();
+				set.add(ball);
+				colorNBall.put(color,set);
+			}
+		}
+		return ans;
+	}
+}

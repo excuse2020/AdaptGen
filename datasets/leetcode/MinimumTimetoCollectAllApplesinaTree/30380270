@@ -1,0 +1,29 @@
+class Solution {
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		Map<Integer, List<Integer>> edgeMap = new HashMap<>();
+		for (int[] i: edges) {	
+			int key = i[0], value = i[1];
+			if (edgeMap.containsKey(i[1])) {
+				key = i[1];
+				value = i[0];
+			}
+			edgeMap.putIfAbsent(key,new ArrayList<Integer>());
+			edgeMap.get(key).add(value);
+			edgeMap.putIfAbsent(value,new ArrayList<Integer>());
+		}
+		return minTime(0,edgeMap,hasApple);
+	}
+	int minTime(int vertex, Map<Integer, List<Integer>> edgeMap, List<Boolean> hasApple) {
+		if (!edgeMap.containsKey(vertex) || edgeMap.get(vertex).isEmpty()) {
+			return 0;
+		}
+		int count = 0;
+		for (int v: edgeMap.get(vertex)) {	
+			int subCount = minTime(v,edgeMap,hasApple);
+			if (subCount > 0 || hasApple.get(v)) {
+				count += subCount + 2;
+			}
+		}
+		return count;
+	}
+}

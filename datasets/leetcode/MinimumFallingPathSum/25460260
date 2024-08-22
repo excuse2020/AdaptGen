@@ -1,0 +1,33 @@
+class Solution {
+	int f(int i, int j, int[][] matrix, int[][] dp, int n) {
+		if (i < 0 || j < 0 || i > n - 1 || j > n - 1) {
+			return 1000000000;
+		}
+		if (i == n - 1) {
+			return matrix[i][j];
+		}
+		if (dp[i][j] != -1) {
+			return dp[i][j];
+		}
+		int d = matrix[i][j] + f(i + 1,j,matrix,dp,n);
+		int dl = matrix[i][j] + f(i + 1,j - 1,matrix,dp,n);
+		int dr = matrix[i][j] + f(i + 1,j + 1,matrix,dp,n);
+		dp[i][j] = Math.min(Math.min(d,dl),dr);
+		return dp[i][j];
+	}
+	int minFallingPathSum(int[][] matrix) {
+		int n = matrix.length;
+		int[][] dp = new int[n][n];
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				dp[i][j] = -1;
+			}
+		}
+		int ans = Integer.MAX_VALUE;
+		for (int k = 0; k < n; k++) {
+			int check = f(0,k,matrix,dp,n);
+			ans = Math.min(ans,check);
+		}
+		return ans;
+	}
+}

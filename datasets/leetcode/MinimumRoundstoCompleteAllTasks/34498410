@@ -1,0 +1,37 @@
+class Solution {
+	int minimumRounds(int[] tasks) {
+		if (tasks == null || tasks.length < 2) {
+			return -1;
+		}
+		Map<Integer, Integer> freqMap = new HashMap<>();
+		int maxFreq = 0;
+		for (int task: tasks) {	
+			int freq = freqMap.getOrDefault(task,0) + 1;
+			freqMap.put(task,freq);
+			maxFreq = Math.max(maxFreq,freq);
+		}
+		int minRounds = 0;
+		int[] minRoundArr = new int[maxFreq + 1];
+		for (int i = 2; i < maxFreq + 1; i++) {
+			if (i == 2) {
+				minRoundArr[i] = 1;
+			} 
+			else if (i == 3) {
+				minRoundArr[i] = 1;
+			} 
+			else if (i == 4) {
+				minRoundArr[i] = 2;
+			} 
+			else {
+				minRoundArr[i] = Math.min(minRoundArr[i - 3],minRoundArr[i - 2]) + 1;
+			}
+		}
+		for (int value: freqMap.values()) {	
+			if (value < 2) {
+				return -1;
+			}
+			minRounds += minRoundArr[value];
+		}
+		return minRounds;
+	}
+}

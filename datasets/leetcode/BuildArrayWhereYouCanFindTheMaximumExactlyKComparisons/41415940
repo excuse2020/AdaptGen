@@ -1,0 +1,29 @@
+class Solution {
+	int MOD = 1_000_000_007;
+	int numOfArrays(int length, int maxVal, int cost) {
+		if (cost == 0) {
+			return 0;
+		}
+		long[][] prevDp = new long[cost + 1][maxVal + 1];
+		for (int q = 1; q <= maxVal; q++) {
+			prevDp[1][q] = 1;
+		}
+		for (int i = 2; i <= length; i++) {
+			long[][] curDp = new long[cost + 1][maxVal + 1];
+			for (int p = 1; p <= cost; p++) {
+				long sumNewQ = 0;
+				for (int q = 1; q <= maxVal; q++) {
+					long sameQ = (q * prevDp[p][q]) % MOD;
+					sumNewQ = (sumNewQ + prevDp[p - 1][q - 1]) % MOD;
+					curDp[p][q] = (sameQ + sumNewQ) % MOD;
+				}
+			}
+			prevDp = curDp;
+		}
+		long sumOfWays = 0;
+		for (int q = 1; q <= maxVal; q++) {
+			sumOfWays = (sumOfWays + prevDp[cost][q]) % MOD;
+		}
+		return (int) sumOfWays;
+	}
+}

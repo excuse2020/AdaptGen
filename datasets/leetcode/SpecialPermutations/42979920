@@ -1,0 +1,31 @@
+class Solution {
+	int mod = (int) 1e9 + 7;
+	int solve(int[] nums, int mask, int prev, Integer[][] dp) {
+		int n = nums.length;
+		if (mask == (1 << n) - 1) {
+			return 1;
+		}
+		if (prev != -1 && dp[mask][prev] != null) {
+			return dp[mask][prev];
+		}
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			if (prev == -1) {
+				ans = (ans + solve(nums,mask | 1 << i,i,dp)) % mod;
+			} 
+			else if ((mask & (1 << i)) == 0) {
+				if (nums[i] % nums[prev] == 0 || nums[prev] % nums[i] == 0) {
+					ans = (ans + solve(nums,mask | 1 << i,i,dp)) % mod;
+				}
+			}
+		}
+		if (prev != -1) {
+			dp[mask][prev] = ans;
+		}
+		return ans;
+	}
+	int specialPerm(int[] nums) {
+		int n = nums.length;
+		return solve(nums,0,-1,new Integer[(1 << n)][n]);
+	}
+}

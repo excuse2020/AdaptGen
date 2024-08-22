@@ -1,0 +1,60 @@
+class Solution {
+	HashSet<String> dict;
+	HashMap<String, Integer> dist = new HashMap<>();
+	HashMap<String, Set<String>> from = new HashMap<>();
+	List<List<String>> res = new ArrayList<>();
+	void dfs(List<String> track, String start, String cur) {
+		if (cur.equals(start)) {
+			res.add(new ArrayList<>(track));
+			return;
+		}
+		if (from.containsKey(cur)) {
+			for (String pre: from.get(cur)) {	
+				track.add(0,pre);
+				dfs(track,start,pre);
+				track.remove(0);
+			}
+		}
+	}
+	List<List<String>> findLadders(String start, String end, List<String> wordList) {
+		dict = new HashSet<>(wordList);
+		if (!dict.contains(end)) {
+			return res;
+		}
+		Queue<String> q = new LinkedList<>();
+		q.offer(start);
+		dict.remove(start);
+		dist.put(start,0);
+		boolean found = false;
+		int step = 0;
+		while (q.size() > 0 && !found) {
+			int size = q.size();
+			step++;
+			while (size-- > 0) {
+				String cur = q.poll();
+				List<String> next = getNext(cur,step);
+				for (String x: next) {	
+					if (x.equals(end)) {
+						found = true;
+					} 
+					else {
+						q.offer(x);
+					}
+				}
+			}
+		}
+		if (found) {
+			List<String> track = new ArrayList<>();
+			track.add(end);
+			dfs(track,start,end);
+		}
+		return res;
+	}
+	List<String> getNext(String x, int steps) {
+		char[] arr = x.toCharArray();
+		List<String> list = new ArrayList<>();
+		int i = 0;
+		char ori = arr[i];
+		char c;
+	}
+}

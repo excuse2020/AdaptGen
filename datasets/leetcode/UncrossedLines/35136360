@@ -1,0 +1,76 @@
+class Solution {
+	int maxUncrossedLines(int[] nums1, int[] nums2) {
+		int len1 = nums1.length, len2 = nums2.length;
+		int[][] dp = new int[len1][len2];
+		for (int[] arr: dp) {	
+			Arrays.fill(arr,-1);
+		}
+		return solveMem(0,0,nums1,nums2,len1,len2,dp);
+	}
+	int search(int[] nums2, int start, int target) {
+		for (int i = start; i < nums2.length; i++) {
+			if (nums2[i] == target) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	int solveMem(int i, int j, int[] nums1, int[] nums2, int len1, int len2, int[][] dp) {
+		if (i >= len1 || j >= len2) {
+			return 0;
+		}
+		if (dp[i][j] != -1) {
+			return dp[i][j];
+		}
+		int pick = 0;
+		int index = search(nums2,j,nums1[i]);
+		if (index != -1) {
+			pick = 1 + solveMem(i + 1,index + 1,nums1,nums2,len1,len2,dp);
+		}
+		int notPick = solveMem(i + 1,j,nums1,nums2,len1,len2,dp);
+		return dp[i][j] = Math.max(pick,notPick);
+	}
+	int solveRec(int i, int j, int[] nums1, int[] nums2, int len1, int len2) {
+		if (i >= len1 || j >= len2) {
+			return 0;
+		}
+		int pick = 0;
+		int index = search(nums2,j,nums1[i]);
+		if (index != -1) {
+			pick = 1 + solveRec(i + 1,index + 1,nums1,nums2,len1,len2);
+		}
+		int notPick = solveRec(i + 1,j,nums1,nums2,len1,len2);
+		return Math.max(pick,notPick);
+	}
+}
+class Solution {
+	int maxUncrossedLines(int[] nums1, int[] nums2) {
+		int len1 = nums1.length, len2 = nums2.length;
+		int[][] dp = new int[len1][len2];
+		for (int[] arr: dp) {	
+			Arrays.fill(arr,-1);
+		}
+		return solveMem(0,0,nums1,nums2,len1,len2,dp);
+	}
+	int solveMem(int i, int j, int[] nums1, int[] nums2, int len1, int len2, int[][] dp) {
+		if (i >= len1 || j >= len2) {
+			return 0;
+		}
+		if (dp[i][j] != -1) {
+			return dp[i][j];
+		}
+		if (nums1[i] == nums2[j]) {
+			return dp[i][j] = 1 + solveMem(i + 1,j + 1,nums1,nums2,len1,len2,dp);
+		}
+		return dp[i][j] = Math.max(solveMem(i,j + 1,nums1,nums2,len1,len2,dp),solveMem(i + 1,j,nums1,nums2,len1,len2,dp));
+	}
+	int solveRec(int i, int j, int[] nums1, int[] nums2, int len1, int len2) {
+		if (i >= len1 || j >= len2) {
+			return 0;
+		}
+		if (nums1[i] == nums2[j]) {
+			return 1 + solveRec(i + 1,j + 1,nums1,nums2,len1,len2);
+		}
+		return Math.max(solveRec(i,j + 1,nums1,nums2,len1,len2),solveRec(i + 1,j,nums1,nums2,len1,len2));
+	}
+}

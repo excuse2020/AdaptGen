@@ -1,0 +1,68 @@
+class Solution {
+	int firstOcc(int x, int nums2) {
+		int low = 0;
+		int up = nums2.length - 1;
+		int index = -1;
+		while (low <= up) {
+			int mid = low + (up - low) / 2;
+			if (nums2[mid] == x) {
+				index = mid;
+				up = mid - 1;
+			} 
+			else if (nums2[mid] < x) {
+				low = mid + 1;
+			} 
+			else {
+				up = mid - 1;
+			}
+		}
+		return index;
+	}
+	long getCount(int x, int nums2) {
+		long count = 0;
+		for (int i = 1; i <= Math.sqrt(x); i++) {
+			if (x % i == 0) {
+				if (x / i == i) {
+					count += lastOcc(i,nums2) - firstOcc(i,nums2) + 1;
+				} 
+				else {
+					count += lastOcc(i,nums2) - firstOcc(i,nums2) + 1;
+					count += lastOcc(x / i,nums2) - firstOcc(x / i,nums2) + 1;
+				}
+			}
+		}
+		return count;
+	}
+	int lastOcc(int x, int nums2) {
+		int low = 0;
+		int up = nums2.length - 1;
+		int count = 0;
+		int index = -2;
+		while (low <= up) {
+			int mid = low + (up - low) / 2;
+			if (nums2[mid] == x) {
+				index = mid;
+				low = mid + 1;
+			} 
+			else if (nums2[mid] < x) {
+				low = mid + 1;
+			} 
+			else {
+				up = mid - 1;
+			}
+		}
+		return index;
+	}
+	long numberOfPairs(int[] nums1, int[] nums2, int k) {
+		Arrays.sort(nums2);
+		int n1 = nums1.length;
+		long count = 0;
+		for (int i = 0; i < n1; i++) {
+			if (nums1[i] % k == 0) {
+				long tmp = getCount(nums1[i] / k,nums2);
+				count += tmp;
+			}
+		}
+		return count;
+	}
+}

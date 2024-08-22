@@ -1,0 +1,56 @@
+class Solution {
+	ListNode Merge(ListNode pHead1, ListNode pHead2) {
+		if (pHead1 == null) {
+			return pHead2;
+		}
+		if (pHead2 == null) {
+			return pHead1;
+		}
+		int loop1HeadValue = pHead1.val;
+		ListNode beforeLoop2 = pHead2;
+		System.out.println("loop1HeadValue：" + loop1HeadValue);
+		if (pHead2.val < pHead1.val) {
+			while (beforeLoop2 != null) {
+				int loop2HeadValue = beforeLoop2.val;
+				System.out.println("loop2HeadValue: " + loop2HeadValue);
+				if (loop2HeadValue < loop1HeadValue && beforeLoop2.next != null && beforeLoop2.next.val < loop1HeadValue) {
+					beforeLoop2 = beforeLoop2.next;
+				} 
+				else {
+					ListNode loop2Head = beforeLoop2;
+					beforeLoop2 = beforeLoop2.next;
+					loop2Head.next = pHead1;
+					pHead1 = pHead2;
+					pHead2 = beforeLoop2;
+					break;
+				}
+			}
+		}
+		if (pHead2 == null) {
+			return pHead1;
+		}
+		ListNode loop1 = pHead1;
+		ListNode loop2 = pHead2;
+		while (true) {
+			System.out.println("outside loop1:" + loop1.val);
+			while (loop2 != null) {
+				if (loop2.val >= loop1.val && (loop1.next == null || loop2.val <= loop1.next.val)) {
+					ListNode swapTemp1 = loop1.next;
+					ListNode loop2Head = loop2;
+					loop2 = loop2.next;
+					loop1.next = loop2Head;
+					loop2Head.next = swapTemp1;
+					loop1 = loop1.next;
+				} 
+				else {
+					break;
+				}
+			}
+			loop1 = loop1.next;
+			if (loop1 == null) {
+				break;
+			}
+		}
+		return pHead1;
+	}
+}

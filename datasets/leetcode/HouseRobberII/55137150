@@ -1,0 +1,36 @@
+class Solution {
+	int rob(int[] nums) {
+		int[] dp = new int[nums.length + 1];
+		Arrays.fill(dp,-1);
+		int ans1 = solveUsingMem(nums,0,nums.length - 2,dp);
+		Arrays.fill(dp,-1);
+		int ans2 = solveUsingMem(nums,1,nums.length - 1,dp);
+		return Math.max(ans1,ans2);
+	}
+	int solveUsingMem(int[] nums, int s, int e, int[] dp) {
+		if (nums.length == 1) {
+			return nums[0];
+		}
+		if (s > e) {
+			return 0;
+		}
+		if (dp[s] != -1) {
+			return dp[s];
+		}
+		int ans1 = nums[s] + solveUsingMem(nums,s + 2,e,dp);
+		int ans2 = solveUsingMem(nums,s + 1,e,dp);
+		dp[s] = Math.max(ans1,ans2);
+		return dp[s];
+	}
+	int solveUsingRec(int[] nums, int s, int e) {
+		if (nums.length == 1) {
+			return nums[0];
+		}
+		if (s > e) {
+			return 0;
+		}
+		int ans1 = nums[s] + solveUsingRec(nums,s + 2,e);
+		int ans2 = solveUsingRec(nums,s + 1,e);
+		return Math.max(ans1,ans2);
+	}
+}

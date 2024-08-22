@@ -1,0 +1,34 @@
+class Solution {
+	List<List<Integer>> list = new ArrayList<>();
+	List<Integer> path = new ArrayList<>();
+	void dfs(TreeNode root) {
+		if (root.left == null && root.right == null) {
+			path.add(root.val);
+			list.add(new ArrayList<>(path));
+			path.remove(path.size() - 1);
+			return;
+		}
+		path.add(root.val);
+		if (root.left != null) {
+			dfs(root.left);
+		}
+		if (root.right != null) {
+			dfs(root.right);
+		}
+		path.remove(path.size() - 1);
+	}
+	int sumRootToLeaf(TreeNode root) {
+		dfs(root);
+		int sum = 0;
+		for (List<Integer> l: list) {	
+			int decimal = 0;
+			for (int i = 0; i < l.size(); i++) {
+				int bitValue = l.get(l.size() - 1);
+				decimal += bitValue * Math.pow(2,i);
+			}
+			sum += decimal;
+		}
+		System.out.println(list);
+		return sum;
+	}
+}

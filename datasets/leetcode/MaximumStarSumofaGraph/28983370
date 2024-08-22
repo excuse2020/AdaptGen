@@ -1,0 +1,58 @@
+class Solution {
+	int maxStarSum(int[] vals, int[][] edges, int k) {
+		HashMap<Integer, PriorityQueue<Integer>> hm = new HashMap<>();
+		if (vals.length == 1) {
+			return vals[0];
+		}
+		int min = Integer.MIN_VALUE;
+		if (edges.length == 0) {
+			for (int i = 0; i < vals.length; i++) {
+				min = Math.max(min,vals[i]);
+			}
+			return min;
+		}
+		for (int i = 0; i < edges.length; i++) {
+			int x = edges[i][0];
+			int y = edges[i][1];
+			if (hm.containsKey(x)) {
+				PriorityQueue<Integer> pq = hm.get(x);
+				pq.add(vals[y]);
+				hm.put(x,pq);
+			} 
+			else {
+				PriorityQueue<Integer> maxPQ = new PriorityQueue<>(Collections.reverseOrder());
+				maxPQ.add(vals[y]);
+				hm.put(x,maxPQ);
+			}
+			if (hm.containsKey(y)) {
+				PriorityQueue<Integer> pq = hm.get(y);
+				pq.add(vals[x]);
+				hm.put(y,pq);
+			} 
+			else {
+				PriorityQueue<Integer> maxPQ = new PriorityQueue<>(Collections.reverseOrder());
+				maxPQ.add(vals[x]);
+				hm.put(y,maxPQ);
+			}
+		}
+		int maxVal = Integer.MIN_VALUE;
+		for (Map.Entry<Integer, PriorityQueue<Integer>> entry: hm.entrySet()) {	
+			int key = entry.getKey();
+			PriorityQueue<Integer> pq = entry.getValue();
+			int num = k;
+			int sum = vals[key];
+			while (pq.size() > 0 && num > 0) {
+				int val = pq.poll();
+				if (sum + val < sum) {
+					break;
+				} 
+				else {
+					sum = sum + val;
+					num--;
+				}
+			}
+			maxVal = Math.max(maxVal,sum);
+		}
+		return maxVal == Integer.MIN_VALUE ? 0 : maxVal;
+	}
+}

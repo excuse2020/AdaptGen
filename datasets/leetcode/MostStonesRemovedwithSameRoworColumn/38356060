@@ -1,0 +1,34 @@
+class Solution {
+	int getParent(int a, int[] parent) {
+		while (parent[a] != a) {
+			parent[a] = parent[parent[a]];
+			a = parent[a];
+		}
+		return a;
+	}
+	int removeStones(int[][] stones) {
+		int[] parent = IntStream.range(0,stones.length + 1).toArray();
+		for (int i = 0; i < stones.length; i++) {
+			for (int j = 0; j < stones.length; j++) {
+				if ((stones[i][0] == stones[j][0]) || (stones[i][1] == stones[j][1])) {
+					union(i,j,parent);
+				}
+			}
+		}
+		int count = 0;
+		for (int i = 0; i < parent.length; i++) {
+			if (parent[i] != i) {
+				count++;
+			}
+		}
+		return count;
+	}
+	void union(int a, int b, int[] parent) {
+		int pA = getParent(a,parent);
+		int pB = getParent(b,parent);
+		if (pA == pB) {
+			return;
+		}
+		parent[pB] = pA;
+	}
+}

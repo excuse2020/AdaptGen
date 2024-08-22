@@ -1,0 +1,51 @@
+class Solution {
+	ArrayList<Integer> GetLeastNumbers_Solution(int[] input, int k) {
+		return bigHeap(input,k);
+	}
+	ArrayList<Integer> bigHeap(int[] input, int k) {
+		ArrayList<Integer> result = new ArrayList<>(k);
+		if (k > input.length || k == 0) {
+			return result;
+		}
+		PriorityQueue<Integer> bigHeap = new PriorityQueue<>(new Comparator<Integer>());
+		for (int i = 0; i < k; i++) {
+			bigHeap.offer(input[i]);
+		}
+		for (int j = k; j < input.length; j++) {
+			if (bigHeap.peek() > input[j]) {
+				bigHeap.poll();
+				bigHeap.offer(input[j]);
+			}
+		}
+		for (int h = k - 1; h >= 0; h--) {
+			result.add(bigHeap.poll());
+		}
+		return result;
+	}
+	void quickSort(int[] arr, int low, int high) {
+		int i, j, temp;
+		if (low > high) {
+			return;
+		}
+		i = low;
+		j = high;
+		temp = arr[low];
+		while (i < j) {
+			while (i < j && temp <= arr[j]) {
+				j--;
+			}
+			while (i < j && temp >= arr[i]) {
+				i++;
+			}
+			if (i < j) {
+				int tmp = arr[j];
+				arr[j] = arr[i];
+				arr[i] = tmp;
+			}
+		}
+		arr[low] = arr[i];
+		arr[i] = temp;
+		quickSort(arr,low,i - 1);
+		quickSort(arr,i + 1,high);
+	}
+}

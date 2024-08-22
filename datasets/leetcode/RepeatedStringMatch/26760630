@@ -1,0 +1,53 @@
+class Solution {
+	int BASE = 1000000;
+	boolean Rabin_Karp(String source, String target) {
+		if (source == "" || target == "") {
+			return false;
+		}
+		int m = target.length();
+		int targetCode = 0, power = 0;
+		for (int i = 0; i < m; i++) {
+			targetCode = ((targetCode * 10) + (target.charAt(i) - 96)) % BASE;
+		}
+		power = (int) (Math.log10(targetCode));
+		int i = 0, j = 0, hashCode = 0;
+		while (i <= j && j < source.length()) {
+			hashCode = ((hashCode * 10) + (source.charAt(j) - 96)) % BASE;
+			j++;
+			if (hashCode == targetCode && source.substring(i,j).equalsIgnoreCase(target)) {
+				return true;
+			}
+			if (j - i + 1 > m) {
+				int p = (int) (hashCode / (int) (Math.pow(10,power + 1)));
+				int check = (hashCode - (int) (p * Math.pow(10,power + 1)));
+				hashCode = check;
+				if (hashCode == targetCode && source.substring(i,j).equalsIgnoreCase(target)) {
+					return true;
+				}
+				i++;
+			}
+		}
+		return false;
+	}
+	int repeatedStringMatch(String a, String b) {
+		if (a == b) {
+			return 1;
+		}
+		int count = 1;
+		String source = a;
+		while (source.length() < b.length()) {
+			count++;
+			source += a;
+		}
+		if (source == b) {
+			return count;
+		}
+		if (Rabin_Karp(source,b)) {
+			return count;
+		}
+		if (Rabin_Karp(source + a,b)) {
+			return count + 1;
+		}
+		return -1;
+	}
+}

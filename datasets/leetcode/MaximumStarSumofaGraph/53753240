@@ -1,0 +1,29 @@
+class Solution {
+	int maxStarSum(int[] v, int[][] edges, int k) {
+		List<PriorityQueue> adjList = new ArrayList<>();
+		int max_node = v[0];
+		for (int i = 0; i < v.length; i++) {
+			max_node = Math.max(v[i],max_node);
+			adjList.add(new PriorityQueue<Integer>(Collections.reverseOrder()));
+		}
+		for (int i = 0; i < edges.length; i++) {
+			adjList.get(edges[i][0]).add(v[edges[i][1]]);
+			adjList.get(edges[i][1]).add(v[edges[i][0]]);
+		}
+		int max_sum = max_node;
+		for (int i = 0; i < v.length; i++) {
+			int edges_count = 0;
+			int curr_sum = v[i];
+			while (edges_count < k) {
+				PriorityQueue<Integer> pq = adjList.get(i);
+				if (pq.isEmpty() || pq.peek() < 0) {
+					break;
+				}
+				curr_sum += pq.poll();
+				++edges_count;
+			}
+			max_sum = Math.max(curr_sum,max_sum);
+		}
+		return max_sum;
+	}
+}

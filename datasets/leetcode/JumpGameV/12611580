@@ -1,0 +1,24 @@
+class Solution {
+	int jumps(int[] arr, int d, int idx, int[] dp) {
+		if (dp[idx] != 0) {
+			return dp[idx];
+		}
+		int max = 0;
+		for (int i = 1; i <= d && idx + i < arr.length && arr[idx + i] < arr[idx]; i++) {
+			max = Math.max(max,jumps(arr,d,idx + i,dp));
+		}
+		for (int i = 1; i <= d && idx - i >= 0 && arr[idx - i] < arr[idx]; i++) {
+			max = Math.max(max,jumps(arr,d,idx - i,dp));
+		}
+		return dp[idx] = max + 1;
+	}
+	int maxJumps(int[] arr, int d) {
+		int max = 0;
+		int[] dp = new int[arr.length];
+		for (int i = 0; i < arr.length; i++) {
+			int temp = jumps(arr,d,i,dp);
+			max = Math.max(max,temp);
+		}
+		return max;
+	}
+}

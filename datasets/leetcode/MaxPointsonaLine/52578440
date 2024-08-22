@@ -1,0 +1,46 @@
+class Solution {
+	int check(int[][] point, int start, int suba, int lowa, int subb, boolean flag) {
+		int sub = 0;
+		double f;
+		for (int i = start; i < point.length; i++) {
+			f = ((suba * point[i][0] + subb) / (double) (lowa));
+			if (flag && suba == 0 && lowa == 1) {
+				if (f == (double) point[i][0]) {
+					sub++;
+				}
+			} 
+			else {
+				if (f == (double) point[i][1]) {
+					sub++;
+				}
+			}
+		}
+		return sub;
+	}
+	int maxPoints(int[][] points) {
+		int suba, lowa, subb;
+		int max = 1;
+		int submax = 0;
+		boolean flag = false;
+		for (int i = 0; i < points.length; i++) {
+			for (int j = i + 1; j < points.length; j++) {
+				if (points[j][0] - points[i][0] == 0) {
+					suba = 0;
+					lowa = 1;
+					subb = points[i][0];
+					flag = true;
+				} 
+				else {
+					suba = points[j][1] - points[i][1];
+					lowa = points[j][0] - points[i][0];
+					subb = (points[i][1] * lowa - suba * points[i][0]);
+				}
+				submax = check(points,i,suba,lowa,subb,flag);
+				if (submax > max) {
+					max = submax;
+				}
+			}
+		}
+		return max;
+	}
+}

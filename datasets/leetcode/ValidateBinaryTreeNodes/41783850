@@ -1,0 +1,51 @@
+class Solution {
+	int BFS(int[] left, int[] right, int root, int nodes) {
+		Queue<Integer> queue = new LinkedList<>();
+		queue.add(root);
+		while (!queue.isEmpty()) {
+			int node = queue.poll();
+			if (left[node] != -1) {
+				queue.add(left[node]);
+				nodes++;
+			}
+			if (right[node] != -1) {
+				queue.add(right[node]);
+				nodes++;
+			}
+		}
+		return nodes;
+	}
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		int[] parent = new int[n];
+		for (int i = 0; i < n; i++) {
+			parent[i] = -1;
+		}
+		for (int i = 0; i < n; i++) {
+			if (leftChild[i] != -1 && parent[leftChild[i]] != -1) {
+				return false;
+			}
+			if (rightChild[i] != -1 && parent[rightChild[i]] != -1) {
+				return false;
+			}
+			if (leftChild[i] != -1) {
+				parent[leftChild[i]] = i;
+			}
+			if (rightChild[i] != -1) {
+				parent[rightChild[i]] = i;
+			}
+		}
+		int count = 0;
+		int root = -1;
+		for (int i = 0; i < n; i++) {
+			if (parent[i] == -1) {
+				count++;
+				root = i;
+			}
+		}
+		if (count == 0 || count >= 2) {
+			return false;
+		}
+		int nodes = BFS(leftChild,rightChild,root,1);
+		return nodes == n ? true : false;
+	}
+}

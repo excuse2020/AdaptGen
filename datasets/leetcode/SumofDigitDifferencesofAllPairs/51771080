@@ -1,0 +1,29 @@
+class Solution {
+	int getDigit(int num, int position) {
+		return (num / (int) Math.pow(10,position)) % 10;
+	}
+	long sumDigitDifferences(int[] nums) {
+		int n = nums.length;
+		if (n == 0) {
+			return 0;
+		}
+		int numDigits = String.valueOf(nums[0]).length();
+		int[][] digitCount = new int[numDigits][10];
+		for (int num: nums) {	
+			for (int pos = 0; pos < numDigits; pos++) {
+				int digit = getDigit(num,pos);
+				digitCount[pos][digit]++;
+			}
+		}
+		long totalDifference = 0;
+		for (int pos = 0; pos < numDigits; pos++) {
+			for (int digit = 0; digit < 10; digit++) {
+				int count = digitCount[pos][digit];
+				if (count > 0) {
+					totalDifference += count * (n - count);
+				}
+			}
+		}
+		return totalDifference / 2;
+	}
+}

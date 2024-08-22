@@ -1,0 +1,33 @@
+class Solution {
+	boolean isPossible(long mid, int[] batteries, int n) {
+		long countTime = 0;
+		for (int i: batteries) {	
+			countTime += i;
+			if (countTime >= mid) {
+				countTime -= mid;
+				n--;
+			}
+			if (n == 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+	long maxRunTime(int n, int[] batteries) {
+		long ans = 0;
+		long left = 1;
+		long right = Arrays.stream(batteries).mapToLong((i) -> {i}).sum() / n;
+		Arrays.sort(batteries);
+		while (left <= right) {
+			long mid = left + (right - left) / 2;
+			if (isPossible(mid,batteries,n)) {
+				ans = mid;
+				left = mid + 1;
+			} 
+			else {
+				right = mid - 1;
+			}
+		}
+		return ans;
+	}
+}

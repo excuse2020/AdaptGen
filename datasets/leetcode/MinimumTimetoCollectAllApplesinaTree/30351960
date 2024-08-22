@@ -1,0 +1,28 @@
+class Solution {
+	int dfs(int node, List<List<Integer>> tree, List<Boolean> hasApple, boolean[] visited) {
+		visited[node] = true;
+		int totalTime = 0;
+		for (Integer child: tree.get(node)) {	
+			if (visited[child] == false) {
+				totalTime += dfs(child,tree,hasApple,visited);
+			}
+		}
+		if (totalTime > 0 || hasApple.get(node) == true) {
+			totalTime += 2;
+		}
+		return totalTime;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		List<List<Integer>> tree = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			tree.add(new ArrayList<>());
+		}
+		for (int[] e: edges) {	
+			tree.get(e[0]).add(e[1]);
+			tree.get(e[1]).add(e[0]);
+		}
+		boolean[] visited = new boolean[n];
+		int res = dfs(0,tree,hasApple,visited) - 2;
+		return res > 0 ? res : 0;
+	}
+}

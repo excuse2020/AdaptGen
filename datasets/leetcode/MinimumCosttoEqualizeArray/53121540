@@ -1,0 +1,21 @@
+class Solution {
+	int minCostToEqualizeArray(int[] nums, int cost1, int cost2) {
+		int kMod = 1_000_000_007;
+		int n = nums.length;
+		int minNum = Arrays.stream(nums).min().getAsInt();
+		int maxNum = Arrays.stream(nums).max().getAsInt();
+		long sum = Arrays.stream(nums).asLongStream().sum();
+		long ans = Long.MAX_VALUE;
+		if (cost1 * 2 <= cost2 || n < 3) {
+			long totalGap = 1L * maxNum - sum;
+			return (int) ((cost1 * totalGap) % kMod);
+		}
+		for (int target = maxNum; target < 2 * maxNum; ++target) {
+			int maxGap = target - minNum;
+			long totalGap = 1L * target - sum;
+			long pairs = Math.min(totalGap / 2,totalGap - maxGap);
+			ans = Math.min(ans,cost1 * (totalGap - 2 * pairs) + cost2 * pairs);
+		}
+		return (int) (ans % kMod);
+	}
+}

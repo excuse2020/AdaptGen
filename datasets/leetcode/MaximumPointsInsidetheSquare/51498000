@@ -1,0 +1,46 @@
+class Solution {
+	int maxPointsInsideSquare(int[][] points, String s) {
+		int result = 0;
+		Set<Character> set = new HashSet<>();
+		Map<String, Character> map = new HashMap<>();
+		Map<Integer, Integer> freqMap = new HashMap<>();
+		for (int i = 0; i < points.length; i++) {
+			StringBuilder key = new StringBuilder();
+			key.append(points[i][0]).append(",").append(points[i][1]);
+			char tag = s.charAt(i);
+			map.put(key.toString(),tag);
+		}
+		Arrays.sort(points,new MyComparator());
+		for (int[] point: points) {	
+			StringBuilder key = new StringBuilder();
+			key.append(point[0]).append(",").append(point[1]);
+			String keyString = key.toString();
+			char tag = map.get(keyString);
+			int squareSide = Math.max(Math.abs(point[0]),Math.abs(point[1])) * 2;
+			if (!set.contains(tag)) {
+				set.add(tag);
+				if (!freqMap.containsKey(squareSide)) {
+					freqMap.put(squareSide,1);
+				} 
+				else {
+					freqMap.put(squareSide,freqMap.get(squareSide) + 1);
+				}
+			} 
+			else {
+				freqMap.remove(squareSide);
+				break;
+			}
+		}
+		for (int key: freqMap.keySet()) {	
+			result += freqMap.get(key);
+		}
+		return result;
+	}
+}
+class MyComparator {
+	int compare(int[] first, int[] second) {
+		int maxFirst = Math.max(Math.abs(first[0]),Math.abs(first[1]));
+		int maxSecond = Math.max(Math.abs(second[0]),Math.abs(second[1]));
+		return Integer.compare(maxFirst,maxSecond);
+	}
+}

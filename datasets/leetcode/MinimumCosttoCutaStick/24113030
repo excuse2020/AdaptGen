@@ -1,0 +1,25 @@
+class Solution {
+	int f(int i, int j, int[] arr) {
+		if (i > j) {
+			return 0;
+		}
+		int mini = (int) 1e8;
+		for (int k = i; k <= j; k++) {
+			int cost = arr[j + 1] - arr[i - 1] + f(i,k - 1,arr) + f(k + 1,j,arr);
+			mini = Math.min(cost,mini);
+		}
+		return mini;
+	}
+	int minCost(int n, int[] cuts) {
+		int finalSize = cuts.length + 2;
+		int[] arr = new int[finalSize];
+		arr[0] = 0;
+		arr[finalSize - 1] = n;
+		for (int i = 1; i < arr.length - 1; i++) {
+			arr[i] = cuts[i - 1];
+		}
+		int len = arr.length;
+		Arrays.sort(arr);
+		return f(1,len - 2,arr);
+	}
+}

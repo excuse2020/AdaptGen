@@ -1,0 +1,35 @@
+class Solution {
+	int fillCups(int[] a) {
+		int dp = new int[a[0] + 1][a[1] + 1][a[2] + 1];
+		for (int[][] r: dp) {	
+			for (int[] c: r) {	
+				Arrays.fill(c,-1);
+			}
+		}
+		return helper(a[0],a[1],a[2],dp);
+	}
+	int helper(int c, int w, int h, int dp) {
+		if (c == 0 && w == 0 && h == 0) {
+			return 0;
+		}
+		if (c == 0 && w == 0) {
+			return h;
+		}
+		if (c == 0 && h == 0) {
+			return w;
+		}
+		if (h == 0 && w == 0) {
+			return c;
+		}
+		if (c < 0 || w < 0 || h < 0) {
+			return 100000;
+		}
+		if (dp[c][w][h] != -1) {
+			return dp[c][w][h];
+		}
+		int cw = 1 + helper(c - 1,w - 1,h,dp);
+		int ch = 1 + helper(c - 1,w,h - 1,dp);
+		int wh = 1 + helper(c,w - 1,h - 1,dp);
+		return dp[c][w][h] = Math.min(Math.min(cw,ch),wh);
+	}
+}

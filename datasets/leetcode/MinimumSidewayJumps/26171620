@@ -1,0 +1,37 @@
+class Solution {
+	Integer[][] dp;
+	int minSideJumps(int[] obstacles) {
+		dp = new Integer[obstacles.length + 1][4];
+		return solve(2,obstacles,0);
+	}
+	int solve(int lane, int[] obs, int i) {
+		if (i + 1 == obs.length - 1) {
+			return 0;
+		}
+		if (dp[i][lane] != null) {
+			return dp[i][lane];
+		}
+		int a = Integer.MAX_VALUE;
+		int b = Integer.MAX_VALUE;
+		int c = Integer.MAX_VALUE;
+		int d = Integer.MAX_VALUE;
+		if (i + 1 < obs.length && obs[i + 1] == lane) {
+			if (lane - 1 > 0 && obs[i] != lane - 1) {
+				a = 1 + solve(lane - 1,obs,i + 1);
+			}
+			if (lane - 2 > 0 && obs[i] != lane - 2) {
+				b = 1 + solve(lane - 2,obs,i + 1);
+			}
+			if (lane + 1 <= 3 && obs[i] != lane + 1) {
+				c = 1 + solve(lane + 1,obs,i + 1);
+			}
+			if (lane + 2 <= 3 && obs[i] != lane + 2) {
+				d = 1 + solve(lane + 2,obs,i + 1);
+			}
+			return dp[i][lane] = Math.min(Math.min(a,b),Math.min(c,d));
+		} 
+		else {
+			return dp[i][lane] = solve(lane,obs,i + 1);
+		}
+	}
+}

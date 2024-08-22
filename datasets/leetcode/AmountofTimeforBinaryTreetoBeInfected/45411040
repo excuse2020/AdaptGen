@@ -1,0 +1,42 @@
+class Solution {
+	Map<Integer, ArrayList<TreeNode>> adj = new HashMap<>();
+	int t = 0;
+	Map<Integer, Boolean> visited = new HashMap<>();
+	int amountOfTime(TreeNode root, int start) {
+		createAdj(root,adj,null);
+		dfs(adj.get(start),t,start);
+		return t;
+	}
+	void createAdj(TreeNode root, Map<Integer, ArrayList<TreeNode>> adj, TreeNode parent) {
+		if (root == null) {
+			return;
+		}
+		adj.put(root.val,new ArrayList<TreeNode>());
+		List<TreeNode> s = adj.get(root.val);
+		if (s == null) {
+			s = new ArrayList<>();
+		}
+		if (parent != null) {
+			s.add(parent);
+		}
+		if (root.left != null) {
+			s.add(root.left);
+			createAdj(root.left,adj,root);
+		}
+		if (root.right != null) {
+			s.add(root.right);
+			createAdj(root.right,adj,root);
+		}
+	}
+	void dfs(List<TreeNode> list, int time, int node) {
+		visited.put(node,true);
+		if (list != null) {
+			for (TreeNode neighbours: list) {	
+				if (visited.get(neighbours.val) == null) {
+					dfs(adj.get(neighbours.val),time + 1,neighbours.val);
+				}
+				t = Math.max(time,t);
+			}
+		}
+	}
+}

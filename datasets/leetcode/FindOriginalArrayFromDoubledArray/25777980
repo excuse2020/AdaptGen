@@ -1,0 +1,26 @@
+class Solution {
+	int[] findOriginalArray(int[] nums) {
+		if (nums.length % 2 != 0) {
+			return new int[0];
+		}
+		HashMap<Integer, Integer> hm = new HashMap<Integer, Integer>();
+		int[] arr = new int[(nums.length / 2)];
+		for (int i = 0; i < nums.length; i++) {
+			hm.put(nums[i],hm.getOrDefault(nums[i],0) + 1);
+		}
+		int limit = 0;
+		Arrays.sort(nums);
+		for (int i: nums) {	
+			if (hm.get(i) <= 0) {
+				continue;
+			}
+			if (hm.getOrDefault(2 * i,0) <= 0) {
+				return new int[0];
+			}
+			arr[limit++] = i;
+			hm.put(i,hm.get(i) - 1);
+			hm.put(2 * i,hm.get(2 * i) - 1);
+		}
+		return arr;
+	}
+}

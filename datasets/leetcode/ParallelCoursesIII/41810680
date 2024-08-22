@@ -1,0 +1,28 @@
+class Solution {
+	int minTimeDfs(int idx, int[] dp, Map<Integer, List<Integer>> graph, int[] time) {
+		if (dp[idx] != 0) {
+			return dp[idx];
+		}
+		if (!graph.containsKey(idx)) {
+			return dp[idx] = time[idx - 1];
+		}
+		int max = 0;
+		for (int course: graph.get(idx)) {	
+			max = Math.max(max,minTimeDfs(course,dp,graph,time));
+		}
+		return dp[idx] = max + time[idx - 1];
+	}
+	int minimumTime(int n, int[][] relations, int[] time) {
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		for (int[] rel: relations) {	
+			graph.putIfAbsent(rel[0],new ArrayList<>());
+			graph.get(rel[0]).add(rel[1]);
+		}
+		int[] dp = new int[n + 1];
+		int minTime = 0;
+		for (int i = 1; i <= n; i += 1) {
+			minTime = Math.max(minTime,minTimeDfs(i,dp,graph,time));
+		}
+		return minTime;
+	}
+}

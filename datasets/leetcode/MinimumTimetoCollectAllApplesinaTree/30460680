@@ -1,0 +1,44 @@
+class Solution {
+	int dfs(List<List<Integer>> g, List<Boolean> hasApple, boolean[] visited, int u) {
+		int distance = 0;
+		for (int v: g.get(u)) {	
+			if (visited[v]) {
+				continue;
+			}
+			visited[v] = true;
+			distance += dfs(g,hasApple,visited,v);
+		}
+		if (distance == 0) {
+			if (hasApple.get(u)) {
+				return 1;
+			} 
+			else {
+				return 0;
+			}
+		}
+		return distance + 1;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		boolean[] visited = new boolean[n];
+		List<List<Integer>> g = new ArrayList<List<Integer>>(n);
+		for (int i = 0; i < n; i++) {
+			g.add(new ArrayList<Integer>());
+		}
+		for (int[] edge: edges) {	
+			g.get(edge[0]).add(edge[1]);
+			g.get(edge[1]).add(edge[0]);
+		}
+		int numApple = 0;
+		for (Boolean apple: hasApple) {	
+			if (apple) {
+				numApple++;
+			}
+		}
+		if (numApple == 0) {
+			return 0;
+		}
+		visited[0] = true;
+		int distance = dfs(g,hasApple,visited,0);
+		return (distance - 1) * 2;
+	}
+}

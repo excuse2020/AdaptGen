@@ -1,0 +1,49 @@
+class Solution {
+	double possible = 0.0;
+	double valid = 0.0;
+	void dfs(int[] balls, int[] first, int[] second, int num1, int num2, int idx) {
+		if (idx == balls.length) {
+			if (num1 == num2) {
+				double distrib = permFake(first) * permFake(second);
+				possible += distrib;
+				if (unique(first) == unique(second)) {
+					valid += distrib;
+				}
+			}
+			return;
+		}
+		for (int b = 0; b <= balls[idx]; b++) {
+			first[idx] = b;
+			second[idx] = balls[idx] - b;
+			dfs(balls,first,second,num1 + first[idx],num2 + second[idx],idx + 1);
+		}
+	}
+	int factorial(int n) {
+		int ret = 1;
+		while (n > 0) {
+			ret *= n;
+			n--;
+		}
+		return ret;
+	}
+	double getProbability(int[] balls) {
+		int[] first = new int[balls.length];
+		int[] second = new int[balls.length];
+		dfs(balls,first,second,0,0,0);
+		return valid / possible;
+	}
+	double permFake(int[] balls) {
+		double ret = 1.0;
+		for (int b: balls) {	
+			ret /= factorial(b);
+		}
+		return ret;
+	}
+	int unique(int[] balls) {
+		int unique = 0;
+		for (int b: balls) {	
+			unique += b > 0 ? 1 : 0;
+		}
+		return unique;
+	}
+}

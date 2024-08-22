@@ -1,0 +1,35 @@
+class Solution {
+	long maxPoints(int[][] M) {
+		int rows = M.length;
+		int cols = M[0].length;
+		long best = M[0][0];
+		long[] maxLeft = new long[cols];
+		maxLeft[0] = M[0][0] + 0;
+		long[] maxRight = new long[cols];
+		maxRight[cols - 1] = M[0][cols - 1] - (cols - 1);
+		for (int c = 1; c < cols; c++) {
+			maxLeft[c] = Math.max(maxLeft[c - 1],M[0][c] + c);
+			best = Math.max(best,M[0][c]);
+		}
+		for (int c = cols - 2; c >= 0; c--) {
+			maxRight[c] = Math.max(maxRight[c + 1],M[0][c] - c);
+		}
+		long[] dp = new long[cols];
+		for (int r = 1; r < rows; r++) {
+			for (int c = 0; c < cols; c++) {
+				long case1 = (M[r][c] - c) + maxLeft[c];
+				long case2 = (M[r][c] + c) + maxRight[c];
+				dp[c] = Math.max(case1,case2);
+				maxLeft[c] = c == 0 ? dp[c] : Math.max(maxLeft[c - 1],dp[c] + c);
+				if (r == rows - 1) {
+					best = Math.max(best,dp[c]);
+				}
+			}
+			maxRight[cols - 1] = dp[cols - 1] - (cols - 1);
+			for (int c = cols - 2; c >= 0; c--) {
+				maxRight[c] = Math.max(maxRight[c + 1],dp[c] - c);
+			}
+		}
+		return best;
+	}
+}

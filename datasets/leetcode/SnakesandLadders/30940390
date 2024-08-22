@@ -1,0 +1,56 @@
+class Solution {
+	int board(int[][] board, int square) {
+		int n = board.length;
+		if (square >= n * n) {
+			return -1;
+		}
+		int row = (n - 1) - (square - 1) / n;
+		int col = (square - 1) % n;
+		if (((square - 1) / n) % 2 == 1) {
+			col = (n - 1) - col;
+		}
+		return board[row][col];
+	}
+	int snakesAndLadders(int[][] board) {
+		int n = board.length;
+		int finish = n * n;
+		Queue<Integer> queue = new LinkedList<>();
+		queue.add(1);
+		boolean[] visited = new boolean[finish + 5];
+		visited[0] = true;
+		int moves = 1;
+		while (!queue.isEmpty()) {
+			int queueN = queue.size();
+			for (int i = 0; i < queueN; i++) {
+				int current = queue.poll();
+				int maxNormal = -1;
+				for (int next = current + 1; next <= current + 6; next++) {
+					int event = board(board,next);
+					if (event == -1) {
+						maxNormal = next;
+					} 
+					else {
+						if (!visited[event - 1]) {
+							if (event >= finish) {
+								return moves;
+							}
+							visited[event - 1] = true;
+							queue.add(event);
+						}
+					}
+				}
+				if (maxNormal != -1) {
+					if (!visited[maxNormal - 1]) {
+						if (maxNormal >= finish) {
+							return moves;
+						}
+						visited[maxNormal - 1] = true;
+						queue.add(maxNormal);
+					}
+				}
+			}
+			moves++;
+		}
+		return -1;
+	}
+}

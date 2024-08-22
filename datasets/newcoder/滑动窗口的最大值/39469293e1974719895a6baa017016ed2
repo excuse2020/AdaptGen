@@ -1,0 +1,27 @@
+class Solution {
+	ArrayList<Integer> maxInWindows(int[] num, int size) {
+		ArrayList<Integer> ret = new ArrayList<>();
+		PriorityQueue<Integer> queue = new PriorityQueue<>((n1, n2) -> {num[n2] - num[n1]});
+		queue.offer(0);
+		for (int i = 1; i < size; i++) {
+			if (num[queue.peek()] < num[i]) {
+				queue.clear();
+			}
+			queue.offer(i);
+		}
+		for (int i = size - 1; i < num.length; i++) {
+			if (num[queue.peek()] < num[i]) {
+				queue.clear();
+				queue.offer(i);
+			} 
+			else {
+				queue.offer(i);
+				while (queue.peek() <= i - size) {
+					queue.poll();
+				}
+			}
+			ret.add(num[queue.peek()]);
+		}
+		return ret;
+	}
+}

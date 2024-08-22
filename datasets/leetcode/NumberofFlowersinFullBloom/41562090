@@ -1,0 +1,24 @@
+class Solution {
+	int[] fullBloomFlowers(int[][] f, int[] a) {
+		TreeMap<Integer, Integer> map = new TreeMap<>();
+		for (int x: f) {	
+			map.put(x[0],map.getOrDefault(x[0],0) + 1);
+			map.put(x[1] + 1,map.getOrDefault(x[1] + 1,0) - 1);
+		}
+		for (int x: map.keySet()) {	
+			Integer pre = map.lowerKey(x);
+			if (pre != null) {
+				map.put(x,map.get(x) + map.get(pre));
+			}
+		}
+		int n = a.length;
+		int ans = new int[n];
+		for (int i = 0; i < n; i++) {
+			Integer val = map.floorKey(a[i]);
+			if (val != null) {
+				ans[i] = map.get(val);
+			}
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,30 @@
+class Solution {
+	int FindNumberOfPotions(int[] potions, int minStrength) {
+		int low = 0;
+		int high = potions.length - 1;
+		int ans = -1;
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			if (potions[mid] >= minStrength) {
+				ans = mid;
+				high = mid - 1;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		if (ans == -1) {
+			return 0;
+		}
+		return potions.length - ans;
+	}
+	int[] successfulPairs(int[] spells, int[] potions, long success) {
+		Arrays.sort(potions);
+		int[] ans = new int[spells.length];
+		for (int i = 0; i < spells.length; i++) {
+			int minPotionStrength = (int) Math.ceil((double) success / spells[i]);
+			ans[i] = FindNumberOfPotions(potions,minPotionStrength);
+		}
+		return ans;
+	}
+}

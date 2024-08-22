@@ -1,0 +1,55 @@
+class Solution {
+	int[] root;
+	int[] size;
+	int countCompleteComponents(int n, int[][] edges) {
+		root = new int[n];
+		size = new int[n];
+		for (int i = 0; i < n; i++) {
+			root[i] = i;
+			size[i] = 1;
+		}
+		for (int[] edge: edges) {	
+			union(edge[0],edge[1]);
+		}
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int r: root) {	
+			map.put(find(r),0);
+		}
+		for (int[] edge: edges) {	
+			int u = edge[0];
+			map.put(find(u),map.get(find(u)) + 1);
+		}
+		int cnt = 0;
+		Set<Integer> visited = new HashSet<>();
+		for (Integer r: map.keySet()) {	
+			if (visited.contains(r)) {
+				continue;
+			}
+			visited.add(r);
+			int edgeCnt = map.get(r);
+			int expected = (size[r] - 1) * size[r] / 2;
+			if (edgeCnt == expected) {
+				cnt++;
+			}
+		}
+		return cnt;
+	}
+	int find(int x) {
+		while (root[x] != x) {
+			int fa = root[x];
+			int ga = root[fa];
+			root[x] = ga;
+			x = fa;
+		}
+		return root[x];
+	}
+	void union(int x, int y) {
+		int rx = find(x);
+		int ry = find(y);
+		if (rx == ry) {
+			return;
+		}
+		root[rx] = ry;
+		size[ry] += size[rx];
+	}
+}

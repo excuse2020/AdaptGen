@@ -1,0 +1,42 @@
+class Solution {
+	boolean isBiparTite(ArrayList<Integer> g, int dislikes, int col, int ix) {
+		Queue<Integer> q = new LinkedList<>();
+		q.add(ix);
+		col[ix] = 0;
+		while (!q.isEmpty()) {
+			int curr = q.remove();
+			for (int i = 0; i < g[curr].size(); i++) {
+				Integer neighbour = g[curr].get(i);
+				if (col[neighbour] == -1) {
+					int newCol = col[curr] == 0 ? 1 : 0;
+					col[neighbour] = newCol;
+					q.add(neighbour);
+				} 
+				else if (col[neighbour] != -1 && col[neighbour] == col[curr]) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		ArrayList<Integer> g = new ArrayList[n + 1];
+		for (int i = 0; i <= n; i++) {
+			g[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < dislikes.length; i++) {
+			g[dislikes[i][0]].add(dislikes[i][1]);
+			g[dislikes[i][1]].add(dislikes[i][0]);
+		}
+		int col = new int[n + 1];
+		Arrays.fill(col,-1);
+		for (int i = 1; i <= n; i++) {
+			if (col[i] == -1) {
+				if (!isBiparTite(g,dislikes,col,i)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

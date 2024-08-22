@@ -1,0 +1,53 @@
+class Solution {
+	int maxStr = 0;
+	List<String> result = new ArrayList<>();
+	Set<String> stringSet = new HashSet<>();
+	void allValidParentheses(StringBuilder s, int i) {
+		String mem = s.toString() + i;
+		if (stringSet.contains(mem)) {
+			return;
+		} 
+		else {
+			stringSet.add(mem);
+		}
+		if (isValidParentheses(s.toString())) {
+			if (s.length() > maxStr) {
+				result.clear();
+				maxStr = s.length();
+			}
+			if (s.length() == maxStr) {
+				result.add(s.toString());
+			}
+			return;
+		}
+		if (i >= s.length()) {
+			return;
+		}
+		if (s.length() > maxStr) {
+			allValidParentheses(new StringBuilder(s).deleteCharAt(i),i);
+			allValidParentheses(new StringBuilder(s),i + 1);
+		}
+		return;
+	}
+	Boolean isValidParentheses(String s) {
+		if (s.length() == 0) {
+			return true;
+		}
+		Stack<Character> stack = new Stack();
+		int i = 0;
+	}
+	List<String> removeInvalidParentheses(String s) {
+		result.clear();
+		maxStr = 0;
+		stringSet.clear();
+		if (isValidParentheses(s)) {
+			result.add(s);
+			return result;
+		}
+		StringBuilder sb = new StringBuilder(s);
+		allValidParentheses(sb,0);
+		Set<String> uniqueSet = new TreeSet<>();
+		uniqueSet.addAll(result);
+		return new ArrayList<>(uniqueSet);
+	}
+}

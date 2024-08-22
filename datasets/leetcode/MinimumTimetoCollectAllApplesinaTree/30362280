@@ -1,0 +1,30 @@
+class Solution {
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		List<List<Integer>> visit = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			visit.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			int a = edge[0];
+			int b = edge[1];
+			visit.get(a).add(b);
+			visit.get(b).add(a);
+		}
+		int ind = 0;
+		int parentNode = 0;
+		return minTimeToCollectApple(ind,visit,hasApple,parentNode);
+	}
+	int minTimeToCollectApple(int ind, List<List<Integer>> visit, List<Boolean> hasApple, int parentNode) {
+		int time = 0;
+		for (int listind: visit.get(ind)) {	
+			if (listind == parentNode) {
+				continue;
+			}
+			time += minTimeToCollectApple(listind,visit,hasApple,ind);
+		}
+		if (ind != 0 && (hasApple.get(ind) == true || time > 0)) {
+			time += 2;
+		}
+		return time;
+	}
+}

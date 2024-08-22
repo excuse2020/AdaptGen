@@ -1,0 +1,30 @@
+class Solution {
+	int[] findThePrefixCommonArray(int[] A, int[] b) {
+		int n = A.length;
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int i = 0; i < n; ++i) {
+			map.putIfAbsent(A[i],new LinkedList<>());
+			map.get(A[i]).add(i);
+		}
+		int[] res = new int[n];
+		for (int i = 0; i < n; ++i) {
+			LinkedList<Integer> l = (LinkedList) map.get(b[i]);
+			if (l != null) {
+				int idx = l.removeFirst();
+				if (idx >= i) {
+					res[idx]++;
+				} 
+				else {
+					res[i]++;
+				}
+				if (l.size() == 0) {
+					map.remove(b[i]);
+				}
+			}
+		}
+		for (int i = 1; i < n; ++i) {
+			res[i] += res[i - 1];
+		}
+		return res;
+	}
+}

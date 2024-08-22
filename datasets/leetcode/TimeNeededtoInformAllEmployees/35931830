@@ -1,0 +1,28 @@
+class Solution {
+	int ans = Integer.MIN_VALUE;
+	HashMap<Integer, ArrayList<Integer>> hash = new HashMap<>();
+	void dfs(int index, int sum, int[] informTime) {
+		if (informTime[index] == 0) {
+			ans = Math.max(ans,sum);
+			return;
+		}
+		for (int i: hash.get(index)) {	
+			dfs(i,sum + informTime[index],informTime);
+		}
+		return;
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		for (int i = 0; i < manager.length; i++) {
+			if (hash.containsKey(manager[i])) {
+				hash.get(manager[i]).add(i);
+			} 
+			else {
+				ArrayList<Integer> arr = new ArrayList<>();
+				arr.add(i);
+				hash.put(manager[i],arr);
+			}
+		}
+		dfs(headID,0,informTime);
+		return ans;
+	}
+}

@@ -1,0 +1,27 @@
+class Solution {
+	Map<Integer, List<Integer>> graph = new HashMap<>();
+	int[] countSubTrees(int n, int[][] edges, String labels) {
+		for (int i = 0; i < n; i++) {
+			graph.put(i,new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			graph.get(edge[0]).add(edge[1]);
+			graph.get(edge[1]).add(edge[0]);
+		}
+		int[] result = new int[n];
+		dfs(result,labels,0,-1);
+		return result;
+	}
+	Map<Character, Integer> dfs(int[] result, String labels, int node, int prev) {
+		Map<Character, Integer> cache = new HashMap<>();
+		cache.put(labels.charAt(node),1);
+		for (int next: graph.get(node)) {	
+			if (next != prev) {
+				Map<Character, Integer> childCache = dfs(result,labels,next,node);
+				childCache.forEach((k, v) -> {cache.merge(k,v,(v1, v2) -> {v1 + v2})});
+			}
+		}
+		result[node] = cache.get(labels.charAt(node));
+		return cache;
+	}
+}

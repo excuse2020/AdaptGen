@@ -1,0 +1,66 @@
+class Solution {
+	boolean buildNeighborsMap(Map<String, List<String>> neighborsMap, Map<String, Integer> distanceMap, String beginWord, String endWord, Set<String> dict) {
+		Queue<String> que = new ArrayDeque<>();
+		que.add(beginWord);
+		distanceMap.put(beginWord,0);
+		boolean foundEnd = false;
+		int level = 1;
+		while (!foundEnd && !que.isEmpty()) {
+			int size = que.size();
+			for (int k = 0; k < size; k++) {
+				String word = que.poll();
+				List<String> neighbors = getNeighbors(word,dict);
+				neighborsMap.put(word,neighbors);
+				for (String neighbor: neighbors) {	
+					if (!distanceMap.containsKey(neighbor)) {
+						distanceMap.put(neighbor,level);
+						if (neighbor.equals(endWord)) {
+							foundEnd = true;
+						} 
+						else {
+							que.add(neighbor);
+						}
+					}
+				}
+			}
+			level++;
+		}
+		return foundEnd;
+	}
+	void buildPaths(Map<String, List<String>> neighborsMap, Map<String, Integer> distanceMap, String beginWord, String endWord, Set<String> dict, List<List<String>> res, List<String> path) {
+		if (beginWord.equals(endWord)) {
+			path.add(endWord);
+			res.add(new ArrayList<>(path));
+			path.remove(path.size() - 1);
+			return;
+		}
+		path.add(beginWord);
+		List<String> neighbors = neighborsMap.getOrDefault(beginWord,new ArrayList<>());
+		Integer distance = distanceMap.getOrDefault(beginWord,-1) + 1;
+		for (String neighbor: neighbors) {	
+			if (distanceMap.getOrDefault(neighbor,-1) == distance) {
+				buildPaths(neighborsMap,distanceMap,neighbor,endWord,dict,res,path);
+			}
+		}
+		path.remove(path.size() - 1);
+	}
+	List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+		List<List<String>> res = new ArrayList<>();
+		Set<String> dict = new HashSet<>(wordList);
+		Map<String, List<String>> neighborsMap = new HashMap<>();
+		Map<String, Integer> distanceMap = new HashMap<>();
+		boolean foundEnd = buildNeighborsMap(neighborsMap,distanceMap,beginWord,endWord,dict);
+		if (!foundEnd) {
+			return res;
+		}
+		buildPaths(neighborsMap,distanceMap,beginWord,endWord,dict,res,new ArrayList<>());
+		return res;
+	}
+	List<String> getNeighbors(String word, Set<String> dict) {
+		char[] chs = word.toCharArray();
+		List<String> neighbors = new ArrayList<>();
+		int i = 0;
+		char origin = chs[i];
+		char ch;
+	}
+}

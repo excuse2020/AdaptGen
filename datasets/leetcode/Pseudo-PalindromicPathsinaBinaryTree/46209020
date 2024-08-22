@@ -1,0 +1,24 @@
+class Solution {
+	int dfs(TreeNode node, HashSet<Integer> pathSet) {
+		if (node == null) {
+			return 0;
+		}
+		if (pathSet.contains(node.val)) {
+			pathSet.remove(node.val);
+		} 
+		else {
+			pathSet.add(node.val);
+		}
+		if (node.left == null && node.right == null) {
+			int pathCount = (pathSet.size() <= 1) ? 1 : 0;
+			pathSet.remove(node.val);
+			return pathCount;
+		}
+		int leftCount = dfs(node.left,new HashSet<>(pathSet));
+		int rightCount = dfs(node.right,new HashSet<>(pathSet));
+		return leftCount + rightCount;
+	}
+	int pseudoPalindromicPaths(TreeNode root) {
+		return dfs(root,new HashSet<>());
+	}
+}

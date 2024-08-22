@@ -1,0 +1,39 @@
+class Solution {
+	int index = 0;
+	TreeNode Deserialize(String str) {
+		String[] nodeArray = str.split(",");
+		TreeNode root = deserializeFuction(nodeArray);
+		return root;
+	}
+	String Serialize(TreeNode root) {
+		StringBuilder str = new StringBuilder();
+		serializeFunction(root,str);
+		return str.toString();
+	}
+	TreeNode deserializeFuction(String[] nodeArray) {
+		if (nodeArray[index].equals("#")) {
+			index++;
+			return null;
+		}
+		TreeNode root = new TreeNode(Integer.parseInt(nodeArray[index++]));
+		System.out.println(index);
+		if (index == nodeArray.length) {
+			return root;
+		} 
+		else {
+			root.left = deserializeFuction(nodeArray);
+			root.right = deserializeFuction(nodeArray);
+		}
+		return root;
+	}
+	void serializeFunction(TreeNode root, StringBuilder str) {
+		if (root == null) {
+			str.append("#").append(",");
+			return;
+		}
+		str.append(root.val).append(",");
+		serializeFunction(root.left,str);
+		serializeFunction(root.right,str);
+		return;
+	}
+}

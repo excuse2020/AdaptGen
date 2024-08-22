@@ -1,0 +1,38 @@
+class Solution {
+	int count = 0;
+	int distance = 0;
+	int countPairs(TreeNode root, int dist) {
+		count = 0;
+		distance = dist;
+		postOrderTraverse(root);
+		return count;
+	}
+	Map<Integer, Integer> postOrderTraverse(TreeNode node) {
+		Map<Integer, Integer> distanceMap = new HashMap<>();
+		if (node == null) {
+			return distanceMap;
+		}
+		if (node.left == null && node.right == null) {
+			distanceMap.put(1,1);
+			return distanceMap;
+		}
+		Map<Integer, Integer> left = postOrderTraverse(node.left);
+		Map<Integer, Integer> right = postOrderTraverse(node.right);
+		for (Map.Entry<Integer, Integer> entry: left.entrySet()) {	
+			distanceMap.computeIfPresent(entry.getKey() + 1,(k, v) -> {v += entry.getValue()});
+			distanceMap.computeIfAbsent(entry.getKey() + 1,(k) -> {entry.getValue()});
+		}
+		for (Map.Entry<Integer, Integer> entry: right.entrySet()) {	
+			distanceMap.computeIfPresent(entry.getKey() + 1,(k, v) -> {v += entry.getValue()});
+			distanceMap.computeIfAbsent(entry.getKey() + 1,(k) -> {entry.getValue()});
+		}
+		for (Map.Entry<Integer, Integer> leftEntry: left.entrySet()) {	
+			for (Map.Entry<Integer, Integer> rightEntry: right.entrySet()) {	
+				if (leftEntry.getKey() + rightEntry.getKey() <= distance) {
+					count += leftEntry.getValue() * rightEntry.getValue();
+				}
+			}
+		}
+		return distanceMap;
+	}
+}

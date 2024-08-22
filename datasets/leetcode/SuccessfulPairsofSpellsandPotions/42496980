@@ -1,0 +1,29 @@
+class Solution {
+	int leftSearch(int[] potions, int spell, long success) {
+		int left = 0;
+		int right = potions.length - 1;
+		while (left < right) {
+			int mid = left + (right - left) / 2;
+			if ((long) potions[mid] * (long) spell >= success) {
+				right = mid;
+			} 
+			else {
+				left = mid + 1;
+			}
+		}
+		return left;
+	}
+	int[] successfulPairs(int[] spells, int[] potions, long success) {
+		Arrays.sort(potions);
+		int[] pairs = new int[spells.length];
+		for (int s = 0; s < spells.length; s++) {
+			if ((long) spells[s] * (long) potions[potions.length - 1] < success) {
+				pairs[s] = 0;
+			} 
+			else {
+				pairs[s] = potions.length - leftSearch(potions,spells[s],success);
+			}
+		}
+		return pairs;
+	}
+}

@@ -1,0 +1,36 @@
+class Solution {
+	int bs(int a, int target, int low, int high) {
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			if (a[mid] == target) {
+				return mid;
+			} 
+			else if (a[mid] > target) {
+				high = mid - 1;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		return -1;
+	}
+	int longestSquareStreak(int[] nums) {
+		Arrays.sort(nums);
+		int n = nums.length;
+		int max = Integer.MIN_VALUE;
+		for (int i = 0; i < n; i++) {
+			int start = nums[i];
+			int next = start * start;
+			int count = 1;
+			while (bs(nums,next,i + 1,nums.length - 1) != -1) {
+				count++;
+				next = next * next;
+			}
+			if (count == 1) {
+				count = -1;
+			}
+			max = Math.max(count,max);
+		}
+		return max;
+	}
+}

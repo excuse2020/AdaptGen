@@ -1,0 +1,49 @@
+class Solution {
+	int[] spf = new int[x + 1];
+	int x = 100000;
+	int getSum(ArrayList<Integer> list) {
+		int sum = 0;
+		for (int i = 0; i < list.size(); i++) {
+			sum += list.get(i);
+		}
+		return sum;
+	}
+	void printFactorisation(int n, ArrayList<Integer> res) {
+		while (n != 1) {
+			res.add(spf[n]);
+			n = n / spf[n];
+		}
+	}
+	void seive(int n) {
+		for (int i = 0; i <= x; i++) {
+			spf[i] = i;
+		}
+		for (int i = 2; i * i <= n; i++) {
+			if (spf[i] == i) {
+				for (int j = i * i; j <= n; j += i) {
+					if (spf[j] == j) {
+						spf[j] = i;
+					}
+				}
+			}
+		}
+	}
+	int smallestValue(int n) {
+		if (n == 4) {
+			return 4;
+		}
+		seive(n);
+		int ans = 0;
+		int temp = n;
+		while (true) {
+			ArrayList<Integer> list = new ArrayList<>();
+			printFactorisation(temp,list);
+			if (list.size() == 1) {
+				ans = list.get(0);
+				break;
+			}
+			temp = getSum(list);
+		}
+		return ans;
+	}
+}

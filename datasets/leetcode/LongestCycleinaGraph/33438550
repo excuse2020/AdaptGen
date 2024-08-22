@@ -1,0 +1,25 @@
+class Solution {
+	int longestCycle(int[] edges) {
+		int[] visited = new int[edges.length];
+		int maxCycle = -1;
+		LinkedList<Integer> inPath = new LinkedList<>();
+		for (int i = 0; i < edges.length; i++) {
+			if (visited[i] < 0) {
+				continue;
+			}
+			int currentNode = i;
+			while (currentNode > -1 && visited[currentNode] == 0) {
+				inPath.add(currentNode);
+				visited[currentNode] = inPath.size();
+				currentNode = edges[currentNode];
+			}
+			if (currentNode > -1 && visited[currentNode] > 0) {
+				maxCycle = Math.max(maxCycle,inPath.size() - visited[currentNode] + 1);
+			}
+			while (!inPath.isEmpty()) {
+				visited[inPath.poll()] = -1;
+			}
+		}
+		return maxCycle;
+	}
+}

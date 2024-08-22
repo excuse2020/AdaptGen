@@ -1,0 +1,40 @@
+class Solution {
+	List<Integer> hrs = new ArrayList<>();
+	List<Integer> min = new ArrayList<>();
+	List<String> readBinaryWatch(int turnedOn) {
+		List<String> ans = new ArrayList<>();
+		if (turnedOn == 0) {
+			return Arrays.asList("0:00");
+		}
+		for (int i = 0; i <= turnedOn; i++) {
+			hrs = new ArrayList<>();
+			min = new ArrayList<>();
+			solve(i,0,0,true);
+			solve(turnedOn - i,0,0,false);
+			for (int k: hrs) {	
+				for (int j: min) {	
+					if (k == 0 && j == 0) {
+						continue;
+					}
+					String toAdd = j <= 9 ? "0" + j : j + "";
+					ans.add(k + ":");
+				}
+			}
+		}
+		return ans;
+	}
+	void solve(int bits, int ind, int val, boolean hr) {
+		if (bits == 0) {
+			if (val < 12 && hr) {
+				hrs.add(val);
+			}
+			if (val < 60 && !hr) {
+				min.add(val);
+			}
+			return;
+		}
+		for (int i = ind; i <= 6; i++) {
+			solve(bits - 1,i + 1,val + (1 << i),hr);
+		}
+	}
+}

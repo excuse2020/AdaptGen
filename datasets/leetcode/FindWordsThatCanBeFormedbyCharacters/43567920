@@ -1,0 +1,33 @@
+class Solution {
+	int countCharacters(String[] words, String chars) {
+		int n = words.length;
+		int k = chars.length();
+		int sum = 0;
+		Map<Character, Integer> map = new HashMap<>();
+		for (int i = 0; i < k; i++) {
+			map.put(chars.charAt(i),map.getOrDefault(chars.charAt(i),0) + 1);
+		}
+		for (String word: words) {	
+			if (isGoodWord(word,map)) {
+				sum += word.length();
+			}
+		}
+		return sum;
+	}
+	boolean isGoodWord(String w, Map<Character, Integer> map) {
+		int m = w.length();
+		Map<Character, Integer> freq = new HashMap<>();
+		for (int i = 0; i < m; i++) {
+			char ch = w.charAt(i);
+			freq.put(ch,freq.getOrDefault(ch,0) + 1);
+		}
+		for (Map.Entry<Character, Integer> entry: freq.entrySet()) {	
+			char ch = entry.getKey();
+			int count = entry.getValue();
+			if (!map.containsKey(ch) || map.get(ch) < count) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

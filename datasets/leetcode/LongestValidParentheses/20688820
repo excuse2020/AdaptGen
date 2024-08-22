@@ -1,0 +1,29 @@
+class Solution {
+	boolean isValidParentheses(String s, int left, int right) {
+		Stack<Character> stack = new Stack<>();
+		String str = s.substring(left,right + 1);
+		int i = 0;
+	}
+	int longestValidParentheses(String s) {
+		int[][] dp = new int[s.length() + 1][s.length() + 1];
+		for (int[] temp: dp) {	
+			Arrays.fill(temp,-1);
+		}
+		return longestValidParentheses(s,0,s.length() - 1,dp);
+	}
+	int longestValidParentheses(String s, int i, int j, int[][] dp) {
+		if (i >= j) {
+			return 0;
+		}
+		if (i < 0 || j < 0 || i > s.length() - 1) {
+			return 0;
+		}
+		if (dp[i][j] != -1) {
+			return dp[i][j];
+		}
+		if (isValidParentheses(s,i,j)) {
+			return j - i + 1;
+		}
+		return dp[i][j] = Math.max(longestValidParentheses(s,i + 1,j,dp),longestValidParentheses(s,i,j - 1,dp));
+	}
+}

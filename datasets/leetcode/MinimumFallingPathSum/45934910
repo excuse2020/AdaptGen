@@ -1,0 +1,30 @@
+class Solution {
+	int fallPath(int[][] mat, int row, int col, int sum, int[][] dp) {
+		if (row == mat.length) {
+			return 0;
+		}
+		if (col == mat[0].length || col == -1) {
+			return Integer.MAX_VALUE;
+		}
+		if (dp[row][col] != Integer.MAX_VALUE) {
+			return dp[row][col];
+		}
+		sum = mat[row][col];
+		sum += Math.min(fallPath(mat,row + 1,col - 1,sum,dp),Math.min(fallPath(mat,row + 1,col,sum,dp),fallPath(mat,row + 1,col + 1,sum,dp)));
+		return dp[row][col] = sum;
+	}
+	int minFallingPathSum(int[][] matrix) {
+		int row = 0;
+		int col = 0;
+		int min = Integer.MAX_VALUE;
+		int[][] dp = new int[matrix.length][matrix[0].length];
+		for (int[] r: dp) {	
+			Arrays.fill(r,Integer.MAX_VALUE);
+		}
+		for (int i = 0; i < matrix.length; i++) {
+			int sum = 0;
+			min = Math.min(fallPath(matrix,row,i,sum,dp),min);
+		}
+		return min;
+	}
+}

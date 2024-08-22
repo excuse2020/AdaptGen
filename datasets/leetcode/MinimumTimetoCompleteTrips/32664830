@@ -1,0 +1,33 @@
+class Solution {
+	boolean compute(int[] time, long key, int totalTrips) {
+		long trips = 0;
+		for (int x: time) {	
+			trips += key / x;
+			if (trips >= totalTrips) {
+				break;
+			}
+		}
+		if (trips >= totalTrips) {
+			return true;
+		}
+		return false;
+	}
+	long minimumTime(int[] time, int totalTrips) {
+		long l = 1;
+		long max = 0;
+		for (int x: time) {	
+			max = Math.max(max,x);
+		}
+		long h = max * totalTrips;
+		while (l < h) {
+			long mid = l + (h - l) / 2;
+			if (compute(time,mid,totalTrips)) {
+				h = mid;
+			} 
+			else {
+				l = mid + 1;
+			}
+		}
+		return h;
+	}
+}

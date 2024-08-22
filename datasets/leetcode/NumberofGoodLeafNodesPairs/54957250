@@ -1,0 +1,30 @@
+class Solution {
+	int res = 0;
+	int countPairs(TreeNode root, int distance) {
+		solve(root,distance);
+		return res;
+	}
+	int[] solve(TreeNode root, int distance) {
+		int dist = new int[11];
+		if (root == null) {
+			return dist;
+		} 
+		else if (root.left == null && root.right == null) {
+			dist[1] = 1;
+			return dist;
+		}
+		int left = solve(root.left,distance);
+		int right = solve(root.right,distance);
+		for (int i = 1; i < distance; i++) {
+			for (int j = 1; j < distance; j++) {
+				if (i + j <= distance && left[i] != 0 && right[j] != 0) {
+					res += (left[i] * right[j]);
+				}
+			}
+		}
+		for (int i = 1; i < 11; i++) {
+			dist[i] = left[i - 1] + right[i - 1];
+		}
+		return dist;
+	}
+}

@@ -1,0 +1,41 @@
+class Solution {
+	int Mod = (int) (1000000000 + 7);
+	int numOfArrays(int n, int m, int k) {
+		int[][][] dp = new int[n + 1][m + 1][k + 1];
+		for (int[][] twoD: dp) {	
+			for (int[] oneD: twoD) {	
+				Arrays.fill(oneD,-1);
+			}
+		}
+		return numOfArrays(n,0,1,m,k,dp);
+	}
+	int numOfArrays(int n, int currN, int lb, int ub, int k, int[][][] dp) {
+		if (lb > ub) {
+			return 0;
+		} 
+		else if (currN == n) {
+			if (k == 0) {
+				return 1;
+			}
+			return 0;
+		} 
+		else if (dp[currN][lb][k] != -1) {
+			return dp[currN][lb][k];
+		}
+		int i = lb;
+		if (currN > 0) {
+			i = lb + 1;
+		}
+		long sum = 0;
+		for (; i <= ub && k > 0; i++) {
+			sum = (sum + numOfArrays(n,currN + 1,i,ub,k - 1,dp)) % Mod;
+		}
+		if (currN > 0) {
+			int temp = numOfArrays(n,currN + 1,lb,ub,k,dp);
+			for (i = 0; i < lb && temp > 0; i++) {
+				sum = (sum + temp) % Mod;
+			}
+		}
+		return dp[currN][lb][k] = (int) (sum);
+	}
+}

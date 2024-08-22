@@ -1,0 +1,51 @@
+class Solution {
+	boolean isSmall(String a, String b) {
+		for (int i = 0; i < Math.min(a.length(),b.length()); i++) {
+			if ((int) a.charAt(i) < (int) b.charAt(i)) {
+				return true;
+			}
+			if ((int) a.charAt(i) > (int) b.charAt(i)) {
+				return false;
+			}
+		}
+		return a.length() < b.length();
+	}
+	List<List<String>> mostPopularCreator(String[] creators, String[] ids, int[] views) {
+		Map<String, Long> map = new HashMap<>();
+		for (int i = 0; i < views.length; i++) {
+			map.put(creators[i],map.getOrDefault(creators[i],(long) 0) + (long) views[i]);
+		}
+		Map<String, Pair<String, Integer>> count = new HashMap<>();
+		for (int i = 0; i < views.length; i++) {
+			if (count.containsKey(creators[i])) {
+				if (count.get(creators[i]).getValue() < views[i]) {
+					count.put(creators[i],new Pair<>(ids[i], views[i]));
+				} 
+				else if (count.get(creators[i]).getValue() == views[i]) {
+					if (isSmall(ids[i],count.get(creators[i]).getKey())) {
+						count.put(creators[i],new Pair<>(ids[i], views[i]));
+					}
+				}
+			} 
+			else {
+				count.put(creators[i],new Pair<>(ids[i], views[i]));
+			}
+		}
+		long maxViews = map.values().stream().mapToLong().max().orElse(0);
+		List<String> directors = new ArrayList<>();
+		for (String key: map.keySet()) {	
+			if (map.get(key) == maxViews) {
+				directors.add(key);
+			}
+		}
+		System.out.println(map.get("a") + " ");
+		List<List<String>> ans = new ArrayList<>();
+		for (String dir: directors) {	
+			List<String> temp = new ArrayList<>();
+			temp.add(dir);
+			temp.add(count.get(dir).getKey());
+			ans.add(new ArrayList<>(temp));
+		}
+		return ans;
+	}
+}

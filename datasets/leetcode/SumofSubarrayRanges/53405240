@@ -1,0 +1,95 @@
+class Solution {
+	int[] maxleft(int[] nums) {
+		Stack<Integer> st = new Stack<Integer>();
+		int arr = new int[nums.length];
+		for (int i = 0; i < nums.length; i++) {
+			int num = nums[i];
+			while (!st.isEmpty() && nums[st.peek()] < num) {
+				st.pop();
+			}
+			if (st.isEmpty()) {
+				arr[i] = -1;
+			} 
+			else {
+				arr[i] = st.peek();
+			}
+			st.push(i);
+		}
+		return arr;
+	}
+	int[] maxright(int[] nums) {
+		Stack<Integer> st = new Stack<Integer>();
+		int arr = new int[nums.length];
+		for (int i = nums.length - 1; i >= 0; i--) {
+			int num = nums[i];
+			while (!st.isEmpty() && nums[st.peek()] <= num) {
+				st.pop();
+			}
+			if (st.isEmpty()) {
+				arr[i] = nums.length;
+			} 
+			else {
+				arr[i] = st.peek();
+			}
+			st.push(i);
+		}
+		return arr;
+	}
+	int[] minleft(int[] nums) {
+		Stack<Integer> st = new Stack<Integer>();
+		int arr = new int[nums.length];
+		for (int i = 0; i < nums.length; i++) {
+			int num = nums[i];
+			while (!st.isEmpty() && nums[st.peek()] > num) {
+				st.pop();
+			}
+			if (st.isEmpty()) {
+				arr[i] = -1;
+			} 
+			else {
+				arr[i] = st.peek();
+			}
+			st.push(i);
+		}
+		return arr;
+	}
+	int[] minright(int[] nums) {
+		Stack<Integer> st = new Stack<Integer>();
+		int arr = new int[nums.length];
+		for (int i = nums.length - 1; i >= 0; i--) {
+			int num = nums[i];
+			while (!st.isEmpty() && nums[st.peek()] >= num) {
+				st.pop();
+			}
+			if (st.isEmpty()) {
+				arr[i] = nums.length;
+			} 
+			else {
+				arr[i] = st.peek();
+			}
+			st.push(i);
+		}
+		return arr;
+	}
+	long subArrayRanges(int[] nums) {
+		int[] minle = minleft(nums);
+		int[] minri = minright(nums);
+		int[] maxle = maxleft(nums);
+		int[] maxri = maxright(nums);
+		long min = 0;
+		long max = 0;
+		for (int i = 0; i < nums.length; i++) {
+			long first = i - minle[i];
+			long second = minri[i] - i;
+			long pro = first * second;
+			pro = pro * nums[i];
+			min = min + pro;
+			first = i - maxle[i];
+			second = maxri[i] - i;
+			pro = first * second;
+			pro = pro * nums[i];
+			max = max + pro;
+		}
+		return max - min;
+	}
+}

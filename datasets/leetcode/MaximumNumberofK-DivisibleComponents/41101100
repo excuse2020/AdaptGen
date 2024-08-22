@@ -1,0 +1,32 @@
+class Solution {
+	int maxComponents = 0;
+	int dfs(int node, List<List<Integer>> adjacencyList, int[] values, int k, boolean[] visited) {
+		visited[node] = true;
+		int componentValue = values[node];
+		for (int neighbor: adjacencyList.get(node)) {	
+			if (!visited[neighbor]) {
+				componentValue += dfs(neighbor,adjacencyList,values,k,visited);
+			}
+		}
+		if (componentValue % k == 0) {
+			maxComponents++;
+			return 0;
+		}
+		return componentValue;
+	}
+	int maxKDivisibleComponents(int n, int[][] edges, int[] values, int k) {
+		List<List<Integer>> adjacencyList = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adjacencyList.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			int u = edge[0];
+			int v = edge[1];
+			adjacencyList.get(u).add(v);
+			adjacencyList.get(v).add(u);
+		}
+		boolean[] visited = new boolean[n];
+		dfs(0,adjacencyList,values,k,visited);
+		return maxComponents;
+	}
+}

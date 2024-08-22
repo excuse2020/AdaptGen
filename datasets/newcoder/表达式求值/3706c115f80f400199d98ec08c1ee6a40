@@ -1,0 +1,71 @@
+class Solution {
+	Stack<Integer> nums = new Stack();
+	Stack<Character> ops = new Stack();
+	Map<Character, Integer> priorityMap = new HashMap<>();
+	void cal(Stack<Integer> nums, Stack<Character> ops) {
+		if (nums.isEmpty() || nums.size() < 2) {
+			return;
+		}
+		if (ops.isEmpty()) {
+			return;
+		}
+		int a = nums.pop();
+		int b = nums.pop();
+		Character c = ops.pop();
+		System.out.print("a:" + a);
+		if (c == '-') {
+			nums.add(b - a);
+		} 
+		else if (c == '+') {
+			nums.add(b + a);
+		} 
+		else if (c == '*') {
+			nums.add(a * b);
+		}
+	}
+	boolean isNums(String s, Integer index) {
+		return Character.isDigit(s.charAt(index));
+	}
+	int solve(String s) {
+		priorityMap.put('+',1);
+		priorityMap.put('-',1);
+		priorityMap.put('*',2);
+		priorityMap.put('(',0);
+		s += ")";
+		ops.add('(');
+		int i = 0;
+		int n = s.length();
+		while (i < n) {
+			if (s.charAt(i) == '(') {
+				ops.add('(');
+			} 
+			else if (isNums(s,i)) {
+				int num = 0;
+				int j = i;
+				while (j < n && isNums(s,j)) {
+					num = num * 10 + Integer.valueOf(s.charAt(j) - '0');
+					j++;
+				}
+				i = --j;
+				nums.add(num);
+			} 
+			else {
+				System.out.print("----" + s.charAt(i));
+				if (s.charAt(i) == ')') {
+					while (ops.peek() != '(') {
+						cal(nums,ops);
+					}
+					ops.pop();
+				} 
+				else {
+					while (priorityMap.get(s.charAt(i)) <= priorityMap.get(ops.peek())) {
+						cal(nums,ops);
+					}
+					ops.add(s.charAt(i));
+				}
+			}
+			i++;
+		}
+		return nums.peek();
+	}
+}

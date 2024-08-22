@@ -1,0 +1,54 @@
+class Solution {
+	boolean hasGap(int time1, int time2) {
+		return Math.abs(time1 - time2) > 1;
+	}
+	int latestTimeCatchTheBus(int[] buses, int[] passengers, int capacity) {
+		Arrays.sort(buses);
+		Arrays.sort(passengers);
+		int[] passengersOnBuses = new int[buses.length];
+		int busIdx = 0;
+		int passengerIdx = 0;
+		int totalOnBus = 0;
+		while (passengerIdx < passengers.length && busIdx < buses.length) {
+			if (buses[busIdx] >= passengers[passengerIdx]) {
+				passengerIdx++;
+				passengersOnBuses[busIdx]++;
+				totalOnBus++;
+				if (passengersOnBuses[busIdx] == capacity) {
+					busIdx++;
+				}
+			} 
+			else {
+				busIdx++;
+			}
+		}
+		int lastBoardingTime = 0;
+		int currentBoardingTime = 0;
+		int pasIdx = totalOnBus - 1;
+		int pasOnBus = 0;
+		for (int i = buses.length - 1; i >= 0; i--) {
+			pasOnBus = passengersOnBuses[i];
+			if (passengersOnBuses[i] == 0) {
+				return lastBoardingTime != 0 ? lastBoardingTime - 1 : buses[i];
+			}
+			pasOnBus--;
+			currentBoardingTime = passengers[pasIdx--];
+			if (lastBoardingTime != 0 && hasGap(currentBoardingTime,lastBoardingTime)) {
+				return lastBoardingTime - 1;
+			}
+			if (passengersOnBuses[i] < capacity && buses[i] != currentBoardingTime) {
+				return buses[i];
+			}
+			lastBoardingTime = currentBoardingTime;
+			while (pasOnBus > 0) {
+				currentBoardingTime = passengers[pasIdx--];
+				if (hasGap(currentBoardingTime,lastBoardingTime)) {
+					return lastBoardingTime - 1;
+				}
+				lastBoardingTime = currentBoardingTime;
+				pasOnBus--;
+			}
+		}
+		return lastBoardingTime - 1;
+	}
+}

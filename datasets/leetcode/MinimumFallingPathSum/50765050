@@ -1,0 +1,38 @@
+class Solution {
+	int minFallingPathSum(int[][] matrix) {
+		int n = matrix.length;
+		int[][] dp = new int[n][n];
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				dp[i][j] = -1000;
+			}
+		}
+		int min = Integer.MAX_VALUE;
+		for (int i = 0; i < n; i++) {
+			min = Math.min(minFallingPathSumDp(matrix,dp,0,i),min);
+		}
+		return min;
+	}
+	int minFallingPathSumDp(int[][] matrix, int[][] dp, int row, int col) {
+		if (row == matrix.length - 1) {
+			return matrix[row][col];
+		}
+		if (dp[row][col] != -1000) {
+			return dp[row][col];
+		}
+		int diagonallyLeft = Integer.MAX_VALUE;
+		if (col - 1 >= 0 && row + 1 < matrix.length) {
+			diagonallyLeft = minFallingPathSumDp(matrix,dp,row + 1,col - 1);
+		}
+		int diagonallyRight = Integer.MAX_VALUE;
+		if (col + 1 < matrix.length && row + 1 < matrix.length) {
+			diagonallyRight = minFallingPathSumDp(matrix,dp,row + 1,col + 1);
+		}
+		int down = Integer.MAX_VALUE;
+		if (row + 1 < matrix.length) {
+			down = minFallingPathSumDp(matrix,dp,row + 1,col);
+		}
+		dp[row][col] = Math.min(Math.min(diagonallyLeft,down),diagonallyRight) + matrix[row][col];
+		return dp[row][col];
+	}
+}

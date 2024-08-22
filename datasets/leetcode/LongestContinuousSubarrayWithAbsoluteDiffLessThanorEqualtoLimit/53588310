@@ -1,0 +1,25 @@
+class Solution {
+	int longestSubarray(int[] nums, int limit) {
+		var treeMap = new TreeMap<Integer, Integer>();
+		int i = 0;
+		int len = nums.length;
+		int left = 0;
+		int res = 0;
+		while (i < len) {
+			treeMap.put(nums[i],treeMap.getOrDefault(nums[i],0) + 1);
+			while (left < i && treeMap.size() > 0 && (treeMap.lastKey() - treeMap.firstKey() > limit)) {
+				var count = treeMap.getOrDefault(nums[left],0);
+				if (count > 1) {
+					treeMap.put(nums[left],count - 1);
+				} 
+				else {
+					treeMap.remove(nums[left]);
+				}
+				left++;
+			}
+			res = Math.max(res,i - left + 1);
+			i++;
+		}
+		return res;
+	}
+}

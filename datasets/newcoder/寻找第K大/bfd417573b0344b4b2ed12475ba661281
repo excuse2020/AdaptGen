@@ -1,0 +1,44 @@
+class Solution {
+	int Partition(int[] a, int start, int end) {
+		int left = start;
+		int right = end;
+		int pivot = a[left];
+		while (left < right) {
+			while (left < right && a[right] <= pivot) {
+				right--;
+			}
+			while (left < right && a[left] >= pivot) {
+				left++;
+			}
+			if (a[left] < a[right]) {
+				int temp = a[left];
+				a[left] = a[right];
+				a[right] = temp;
+			}
+		}
+		a[start] = a[left];
+		a[left] = pivot;
+		return left;
+	}
+	int findKth(int[] a, int n, int K) {
+		if (n < K) {
+			return -1;
+		}
+		return findKth(a,0,a.length - 1,K);
+	}
+	int findKth(int[] a, int start, int end, int k) {
+		if (start <= end) {
+			int pivot = Partition(a,start,end);
+			if (k - 1 == pivot) {
+				return a[pivot];
+			} 
+			else if (pivot < k - 1) {
+				return findKth(a,pivot + 1,end,k);
+			} 
+			else {
+				return findKth(a,start,pivot - 1,k);
+			}
+		}
+		return -1;
+	}
+}

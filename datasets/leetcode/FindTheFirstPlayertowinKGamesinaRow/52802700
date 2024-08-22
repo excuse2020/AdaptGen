@@ -1,0 +1,38 @@
+class Solution {
+	int findWinningPlayer(int[] skills, int k) {
+		int n = skills.length;
+		int maxSkill = -1;
+		int maxSkillIndex = -1;
+		for (int i = 0; i < n; i++) {
+			if (skills[i] > maxSkill) {
+				maxSkill = skills[i];
+				maxSkillIndex = i;
+			}
+		}
+		if (k >= n - 1) {
+			return maxSkillIndex;
+		}
+		Queue<Integer> queue = new LinkedList<>();
+		for (int i = 0; i < n; i++) {
+			queue.add(i);
+		}
+		int currentWinner = queue.poll();
+		int winStreak = 0;
+		while (winStreak < k) {
+			int challenger = queue.poll();
+			if (skills[currentWinner] > skills[challenger]) {
+				queue.add(challenger);
+				winStreak++;
+			} 
+			else {
+				queue.add(currentWinner);
+				currentWinner = challenger;
+				winStreak = 1;
+			}
+			if (winStreak == n - 1) {
+				return currentWinner;
+			}
+		}
+		return currentWinner;
+	}
+}

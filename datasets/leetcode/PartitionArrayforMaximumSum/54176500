@@ -1,0 +1,25 @@
+class Solution {
+	int finder(int idx, int arr, int k, int dp) {
+		if (idx == arr.length) {
+			return 0;
+		}
+		if (dp[idx] != -1) {
+			return dp[idx];
+		}
+		int cost = Integer.MIN_VALUE;
+		int len = 0;
+		int max = Integer.MIN_VALUE;
+		for (int p = idx; p < Math.min(idx + k,arr.length); p++) {
+			max = Math.max(max,arr[p]);
+			len++;
+			int curr = (len * max) + finder(p + 1,arr,k,dp);
+			cost = Math.max(cost,curr);
+		}
+		return dp[idx] = cost;
+	}
+	int maxSumAfterPartitioning(int[] arr, int k) {
+		int dp = new int[arr.length];
+		Arrays.fill(dp,-1);
+		return finder(0,arr,k,dp);
+	}
+}

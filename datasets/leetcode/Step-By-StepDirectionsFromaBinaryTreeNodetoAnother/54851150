@@ -1,0 +1,48 @@
+class Solution {
+	String findPath(TreeNode root, int val, StringBuilder path) {
+		if (root == null) {
+			return "";
+		}
+		if (root.val == val) {
+			return path.toString();
+		}
+		path.append("L");
+		String leftPath = findPath(root.left,val,path);
+		if (!leftPath.isEmpty()) {
+			return leftPath;
+		}
+		path.deleteCharAt(path.length() - 1);
+		path.append("R");
+		String rightPath = findPath(root.right,val,path);
+		if (!rightPath.isEmpty()) {
+			return rightPath;
+		}
+		path.deleteCharAt(path.length() - 1);
+		return "";
+	}
+	String getDirections(TreeNode root, int sv, int en) {
+		TreeNode lca = getlca(root,sv,en);
+		String pathToSv = findPath(lca,sv,new StringBuilder());
+		String pathToEn = findPath(lca,en,new StringBuilder());
+		StringBuilder result = new StringBuilder();
+		for (int i = 0; i < pathToSv.length(); i++) {
+			result.append("U");
+		}
+		result.append(pathToEn);
+		return result.toString();
+	}
+	TreeNode getlca(TreeNode root, int sv, int en) {
+		if (root == null || root.val == sv || root.val == en) {
+			return root;
+		}
+		TreeNode leftlca = getlca(root.left,sv,en);
+		TreeNode rightlca = getlca(root.right,sv,en);
+		if (leftlca == null) {
+			return rightlca;
+		}
+		if (rightlca == null) {
+			return leftlca;
+		}
+		return root;
+	}
+}

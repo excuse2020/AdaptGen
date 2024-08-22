@@ -1,0 +1,74 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		Stack<Integer> listAStack = new Stack<Integer>();
+		Stack<Integer> listBStack = new Stack<Integer>();
+		ListNode current = head1;
+		while (null != current) {
+			listAStack.add(current.val);
+			current = current.next;
+		}
+		current = head2;
+		while (null != current) {
+			listBStack.add(current.val);
+			current = current.next;
+		}
+		ListNode newHead = new ListNode(-1);
+		current = newHead;
+		int aListNodeVal = 0;
+		int bListNodeVal = 0;
+		int abNodeSum = 0;
+		int carry = 0;
+		while (!listAStack.isEmpty() || !listBStack.isEmpty()) {
+			if (listAStack.isEmpty()) {
+				aListNodeVal = 0;
+			} 
+			else {
+				aListNodeVal = listAStack.pop();
+			}
+			if (listBStack.isEmpty()) {
+				bListNodeVal = 0;
+			} 
+			else {
+				bListNodeVal = listBStack.pop();
+			}
+			abNodeSum = aListNodeVal + bListNodeVal;
+			if (abNodeSum >= 10) {
+				abNodeSum = abNodeSum - 10;
+				carry = 1;
+			} 
+			else {
+				carry = 0;
+			}
+			current.next = new ListNode(abNodeSum);
+			current = current.next;
+		}
+		if (0 != carry) {
+			current.next = new ListNode(carry);
+		}
+		newHead = reverse(newHead.next);
+		return newHead;
+	}
+	ListNode reverse(ListNode head) {
+		Stack<ListNode> intStack = new Stack<>();
+		ListNode current = head;
+		ListNode tempNode = null;
+		while (null != current) {
+			tempNode = current;
+			current = current.next;
+			tempNode.next = null;
+			intStack.add(tempNode);
+		}
+		head = null;
+		while (!intStack.isEmpty()) {
+			if (null == head) {
+				current = intStack.pop();
+				head = current;
+			} 
+			else {
+				current.next = intStack.pop();
+				current = current.next;
+			}
+		}
+		return head;
+	}
+}

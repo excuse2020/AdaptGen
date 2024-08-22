@@ -1,0 +1,32 @@
+class Solution {
+	int helper(int k, int power, int backJump, int backJumpCount, int[][][] dp) {
+		if (((int) Math.pow(2,power - 1) - backJumpCount) > k + 100) {
+			return 0;
+		}
+		if (dp[power][backJumpCount][backJump] != -1) {
+			return dp[power][backJumpCount][backJump];
+		}
+		int currVal = 1;
+		for (int i = 0; i < power; i++) {
+			currVal += (int) Math.pow(2,i);
+		}
+		int ans = ((currVal - backJumpCount) == k ? 1 : 0);
+		if (backJump == 1) {
+			ans += helper(k,power,0,backJumpCount + 1,dp);
+		}
+		ans += helper(k,power + 1,1,backJumpCount,dp);
+		return dp[power][backJumpCount][backJump] = ans;
+	}
+	double logB(int x) {
+		return Math.log(x) / Math.log(2);
+	}
+	int waysToReachStair(int k) {
+		int[][][] dp = new int[32][100][2];
+		for (int[][] i: dp) {	
+			for (int[] j: i) {	
+				Arrays.fill(j,-1);
+			}
+		}
+		return helper(k,0,1,0,dp);
+	}
+}

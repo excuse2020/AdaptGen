@@ -1,0 +1,34 @@
+class Solution {
+	int[] distinctDifferenceArray(int[] nums) {
+		Map<Integer, Integer> frequency = new HashMap<Integer, Integer>();
+		Set<Integer> visitedMap = new HashSet<Integer>();
+		int n = nums.length;
+		int[] result = new int[n];
+		int remaining = 0;
+		int visited = 0;
+		for (int i = 0; i < n; i++) {
+			Integer count = frequency.get(nums[i]);
+			if (count == null) {
+				remaining++;
+				count = 0;
+			}
+			frequency.put(nums[i],count + 1);
+		}
+		for (int i = 0; i < n; i++) {
+			int freq = frequency.get(nums[i]);
+			if (freq == 1) {
+				remaining--;
+				frequency.remove(nums[i]);
+			} 
+			else {
+				frequency.put(nums[i],freq - 1);
+			}
+			if (!visitedMap.contains(nums[i])) {
+				visitedMap.add(nums[i]);
+				visited++;
+			}
+			result[i] = visited - remaining;
+		}
+		return result;
+	}
+}

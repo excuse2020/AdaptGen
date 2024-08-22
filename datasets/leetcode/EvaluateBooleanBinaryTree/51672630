@@ -1,0 +1,34 @@
+class Solution {
+	Stack<Integer> stck = new Stack<Integer>();
+	void evalTree(TreeNode node) {
+		if (node.left != null) {
+			evalTree(node.left);
+		}
+		if (node.right != null) {
+			evalTree(node.right);
+		}
+		int data = node.val;
+		if (data == 0 || data == 1) {
+			stck.push(data);
+		} 
+		else {
+			int a = stck.pop();
+			int b = stck.pop();
+			if (data == 2) {
+				int c = a | b;
+				stck.push(c);
+			} 
+			else {
+				int c = a & b;
+				stck.push(c);
+			}
+		}
+	}
+	boolean evaluateTree(TreeNode root) {
+		evalTree(root);
+		if (stck.peek() == 1) {
+			return true;
+		}
+		return false;
+	}
+}

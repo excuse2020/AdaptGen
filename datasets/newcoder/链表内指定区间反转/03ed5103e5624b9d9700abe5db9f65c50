@@ -1,0 +1,73 @@
+class Solution {
+	ListNode addFirst(ListNode head, int data) {
+		ListNode curNode = new ListNode(data);
+		curNode.next = head;
+		head = curNode;
+		return head;
+	}
+	ListNode addLast(ListNode head, int data) {
+		ListNode addNode = new ListNode(data);
+		if (head == null) {
+			head = addNode;
+			return head;
+		}
+		ListNode curNode = head;
+		while (curNode.next != null) {
+			curNode = curNode.next;
+		}
+		curNode.next = addNode;
+		return head;
+	}
+	ListNode reverseBetween(ListNode head, int m, int n) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode cycleNode = head;
+		ListNode curNode = null;
+		int size = size(cycleNode);
+		ListNode frontNode = null;
+		ListNode afterNode = null;
+		boolean afterFlag = true;
+		for (int i = 0; i < size; i++) {
+			if ((i + 1) < m) {
+				frontNode = addLast(frontNode,cycleNode.val);
+			}
+			if ((i + 1) >= m && (i + 1) <= n) {
+				curNode = addFirst(curNode,cycleNode.val);
+			}
+			if (i + 1 > n && afterFlag) {
+				afterNode = cycleNode;
+				afterFlag = false;
+			}
+			cycleNode = cycleNode.next;
+		}
+		ListNode resultNode = null;
+		if (frontNode != null) {
+			resultNode = frontNode;
+			while (curNode != null) {
+				addLast(resultNode,curNode.val);
+				curNode = curNode.next;
+			}
+		} 
+		else {
+			resultNode = curNode;
+		}
+		while (afterNode != null) {
+			addLast(resultNode,afterNode.val);
+			afterNode = afterNode.next;
+		}
+		return resultNode;
+	}
+	int size(ListNode head) {
+		ListNode node = head;
+		int index = 0;
+		if (node == null) {
+			return index;
+		}
+		while (node != null) {
+			index++;
+			node = node.next;
+		}
+		return index;
+	}
+}

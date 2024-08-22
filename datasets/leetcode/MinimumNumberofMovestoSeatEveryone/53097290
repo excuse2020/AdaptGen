@@ -1,0 +1,40 @@
+class Solution {
+	int minMovesToSeat(int[] seats, int[] students) {
+		var maxS = 0;
+		for (int student: students) {	
+			maxS = Math.max(maxS,student);
+		}
+		for (int seat: seats) {	
+			maxS = Math.max(maxS,seat);
+		}
+		var diffArray = new int[maxS + 1];
+		for (int student: students) {	
+			diffArray[student] -= 1;
+		}
+		for (int seat: seats) {	
+			diffArray[seat] += 1;
+		}
+		var move = 0;
+		var unmatched = 0;
+		for (int diff: diffArray) {	
+			move += Math.abs(unmatched);
+			unmatched += diff;
+		}
+		return move;
+	}
+	int minMovesToSeatII(int[] seats, int[] students) {
+		var result = 0;
+		Arrays.sort(seats);
+		Arrays.sort(students);
+		var hashMap = new HashMap<Integer, Integer>();
+		int j = 0;
+		for (int i = 0; i < seats.length; i++) {
+			if (hashMap.containsKey(seats[i])) {
+				continue;
+			}
+			result += Math.abs(students[j] - seats[i]);
+			j++;
+		}
+		return result;
+	}
+}

@@ -1,0 +1,37 @@
+class Solution {
+	int max;
+	int longestPath(int[] parent, String s) {
+		List<List<Integer>> adj = new ArrayList<>();
+		int n = parent.length;
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 1; i < n; i++) {
+			adj.get(parent[i]).add(i);
+		}
+	}
+	int path(List<List<Integer>> adj, char[] ch, int idx, char prev) {
+		if (idx >= ch.length) {
+			return 0;
+		}
+		int firstMax = 0, secondMax = 0;
+		for (int ele: adj.get(idx)) {	
+			int dist = path(adj,ch,ele,ch[idx]);
+			if (ch[idx] != ch[ele]) {
+				dist += 1;
+			} 
+			else {
+				dist = 0;
+			}
+			if (firstMax < dist) {
+				secondMax = firstMax;
+				firstMax = dist;
+			} 
+			else if (secondMax < dist) {
+				secondMax = dist;
+			}
+			max = Math.max(max,firstMax + secondMax);
+		}
+		return firstMax;
+	}
+}

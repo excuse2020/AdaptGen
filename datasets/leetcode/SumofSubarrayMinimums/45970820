@@ -1,0 +1,78 @@
+class Solution {
+	int mod = 1000000000 + 7;
+	int[] getNSL(int[] arr) {
+		int n = arr.length;
+		int[] res = new int[n];
+		Stack<Integer> stack = new Stack();
+		for (int i = 0; i < n; i++) {
+			if (stack.isEmpty()) {
+				res[i] = -1;
+			} 
+			else {
+				while (!stack.isEmpty() && arr[stack.peek()] >= arr[i]) {
+					stack.pop();
+				}
+				if (stack.isEmpty()) {
+					res[i] = -1;
+				} 
+				else {
+					res[i] = stack.peek();
+				}
+			}
+			stack.push(i);
+		}
+		return res;
+	}
+	int[] getNSR(int[] arr) {
+		int n = arr.length;
+		int[] res = new int[n];
+		Stack<Integer> stack = new Stack();
+		for (int i = n - 1; i >= 0; i--) {
+			if (stack.isEmpty()) {
+				res[i] = n;
+			} 
+			else {
+				while (!stack.isEmpty() && arr[stack.peek()] > arr[i]) {
+					stack.pop();
+				}
+				if (stack.isEmpty()) {
+					res[i] = n;
+				} 
+				else {
+					res[i] = stack.peek();
+				}
+			}
+			stack.push(i);
+		}
+		return res;
+	}
+	int method1(int[] arr) {
+		int n = arr.length;
+		int sum = 0;
+		for (int i = 0; i < n; i++) {
+			int mn = Integer.MAX_VALUE;
+			for (int j = i; j < n; j++) {
+				mn = Math.min(mn,arr[j]);
+				sum += mn % mod;
+				sum = sum % mod;
+			}
+		}
+		return sum % mod;
+	}
+	int method2(int[] arr) {
+		int[] NSL = getNSL(arr);
+		int[] NSR = getNSR(arr);
+		long sum = 0;
+		for (int i = 0; i < arr.length; i++) {
+			long d1 = i - NSL[i];
+			long d2 = NSR[i] - i;
+			long totalWaysForIMin = d1 * d2;
+			long sumIInTotalWays = arr[i] * totalWaysForIMin;
+			sum = (sum + sumIInTotalWays) % mod;
+		}
+		return (int) sum;
+	}
+	int sumSubarrayMins(int[] arr) {
+		return method2(arr);
+	}
+}

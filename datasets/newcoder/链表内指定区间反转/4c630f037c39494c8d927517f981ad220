@@ -1,0 +1,86 @@
+class Solution {
+	ListNode deleteFirstNode(ListNode listNode) {
+		if (listNode != null) {
+			ListNode newNode = listNode.next;
+			listNode.next = null;
+			listNode = newNode;
+		}
+		return listNode;
+	}
+	ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+		if (list1 == null) {
+			return list2;
+		} 
+		else if (list2 == null) {
+			return list1;
+		} 
+		else {
+			list1.next = mergeTwoLists(list1.next,list2);
+			return list1;
+		}
+	}
+	void print(ListNode p) {
+		while (p != null) {
+			System.out.println(p.val);
+			p = p.next;
+		}
+		System.out.println("------------------------");
+	}
+	ListNode reverseBetween(ListNode head, int m, int n) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode left = new ListNode(-1);
+		ListNode head1 = splitListNode(left,head,m);
+		left = deleteFirstNode(left);
+		ListNode middle = new ListNode(-1);
+		int num = 0;
+		if (n - m <= 0) {
+			num = 0;
+		} 
+		else {
+			num = n - m + 2;
+		}
+		ListNode head2 = splitListNode(middle,head1,num);
+		middle = deleteFirstNode(middle);
+		ListNode right = new ListNode(-1);
+		ListNode head3 = splitListNode(right,head2,Integer.MAX_VALUE);
+		print(left);
+		print(middle);
+		print(right);
+		right = deleteFirstNode(right);
+		ListNode leftMerge = mergeTwoLists(left,reverseList(middle));
+		ListNode rightMerge = mergeTwoLists(leftMerge,right);
+		return rightMerge;
+	}
+	ListNode reverseList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode temp = head.next;
+		ListNode nextNode = temp.next;
+		head.next = null;
+		while (temp != null) {
+			temp.next = head;
+			head = temp;
+			temp = nextNode;
+			if (nextNode != null) {
+				nextNode = nextNode.next;
+			}
+		}
+		return head;
+	}
+	ListNode splitListNode(ListNode node, ListNode head, int n) {
+		ListNode currentNode = node;
+		for (int i = 1; i < n; i++) {
+			if (head == null) {
+				break;
+			}
+			currentNode.next = head;
+			currentNode = head;
+			head = head.next;
+		}
+		currentNode.next = null;
+		return head;
+	}
+}

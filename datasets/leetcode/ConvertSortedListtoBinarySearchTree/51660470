@@ -1,0 +1,34 @@
+class Solution {
+	TreeNode fn(ListNode head) {
+		ListNode prev = null;
+		if (head == null) {
+			return null;
+		}
+		ListNode slow = head, fast = head.next;
+		while (fast != null && fast.next != null) {
+			prev = slow;
+			slow = slow.next;
+			fast = fast.next.next;
+		}
+		TreeNode root = new TreeNode(slow.val);
+		if (prev != null) {
+			prev.next = null;
+		}
+		ListNode curr = slow.next;
+		slow.next = null;
+		if (prev != null) {
+			root.left = fn(head);
+		} 
+		else {
+			root.left = fn(null);
+		}
+		root.right = fn(curr);
+		return root;
+	}
+	TreeNode sortedListToBST(ListNode head) {
+		if (head == null) {
+			return null;
+		}
+		return fn(head);
+	}
+}

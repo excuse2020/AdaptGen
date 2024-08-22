@@ -1,0 +1,61 @@
+class Solution {
+	ListNode reverseBetween(ListNode head, int m, int n) {
+		if (head == null || n - m == 0) {
+			return head;
+		}
+		ListNode newhead = head;
+		int i = 1;
+		Stack<ListNode> stack = new Stack<>();
+		ListNode temp;
+		ListNode mid1 = null, mid2 = null;
+		while (head != null) {
+			temp = head.next;
+			if (i == m - 1) {
+				mid1 = head;
+				mid1.next = null;
+			}
+			if (i == n + 1) {
+				mid2 = head;
+			}
+			if (i >= m && i <= n) {
+				ListNode node = head;
+				node.next = null;
+				stack.add(node);
+			}
+			head = temp;
+			i++;
+		}
+		if (n - m + 1 == i - 1) {
+			newhead = stack.pop();
+			ListNode new1Node = newhead;
+			while (m <= n - 1) {
+				newhead.next = stack.pop();
+				newhead = newhead.next;
+				m++;
+			}
+			return new1Node;
+		}
+		if (m <= n && mid1 == null) {
+			newhead = stack.pop();
+			ListNode new1Node = newhead;
+			while (m <= n - 1) {
+				newhead.next = stack.pop();
+				newhead = newhead.next;
+				if (m == n - 1) {
+					newhead.next = mid2;
+				}
+				m++;
+			}
+			return new1Node;
+		}
+		while (m <= n && mid1 != null) {
+			mid1.next = stack.pop();
+			mid1 = mid1.next;
+			if (m == n) {
+				mid1.next = mid2;
+			}
+			m++;
+		}
+		return newhead;
+	}
+}

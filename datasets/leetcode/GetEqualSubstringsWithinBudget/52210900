@@ -1,0 +1,40 @@
+class Solution {
+	int equalSubstring(String s, String t, int maxCost) {
+		int sLen = s.length();
+		char[] sChar = s.toCharArray();
+		char[] tChar = t.toCharArray();
+		int[] cost = new int[sLen];
+		for (int i = 0; i < sLen; i++) {
+			cost[i] = Math.abs(tChar[i] - sChar[i]);
+		}
+		int[] myQ = new int[sLen];
+		int back = 0;
+		int front = -1;
+		int maxSubString = 0;
+		int start = 0;
+		for (int i = 0; i < sLen; i++) {
+			while (cost[i] != 0) {
+				if (maxCost >= cost[i]) {
+					maxCost -= cost[i];
+					break;
+				} 
+				else {
+					if (back - front == 0) {
+						start = i + 1;
+						break;
+					} 
+					else {
+						int lastFix = myQ[++front];
+						start = lastFix + 1;
+						maxCost += cost[lastFix];
+					}
+				}
+			}
+			maxSubString = Math.max(maxSubString,i - start + 1);
+			if (start <= i && cost[i] != 0) {
+				myQ[back++] = i;
+			}
+		}
+		return maxSubString;
+	}
+}

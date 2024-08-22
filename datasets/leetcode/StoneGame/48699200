@@ -1,0 +1,26 @@
+class Solution {
+	int helper(int[] piles, int sell, int s, int e, int[][] dp) {
+		if (sell >= (piles.length / 2)) {
+			return 0;
+		}
+		if (dp[s][e] != -1) {
+			return dp[s][e];
+		}
+		return dp[s][e] = Math.max(piles[s] + helper(piles,sell + 1,s + 1,e,dp),piles[e] + helper(piles,sell + 1,s,e - 1,dp));
+	}
+	boolean stoneGame(int[] piles) {
+		int sum = 0;
+		for (int val: piles) {	
+			sum += val;
+		}
+		int[][] dp = new int[piles.length + 1][piles.length + 1];
+		for (int ar: dp) {	
+			Arrays.fill(ar,-1);
+		}
+		int alexsum = helper(piles,0,0,piles.length - 1,dp);
+		if (alexsum > (sum / 2)) {
+			return true;
+		}
+		return false;
+	}
+}

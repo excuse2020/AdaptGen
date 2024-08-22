@@ -1,0 +1,21 @@
+class Solution {
+	int handleOverflow(int product, int prevProduct) {
+		if (prevProduct == Integer.MIN_VALUE) {
+			return product;
+		}
+		return product + prevProduct;
+	}
+	int maxDotProduct(int[] nums1, int[] nums2) {
+		int[] prev = new int[nums2.length + 1];
+		Arrays.fill(prev,Integer.MIN_VALUE);
+		for (int i = 1; i <= nums1.length; i++) {
+			int[] current = new int[nums2.length + 1];
+			current[0] = Integer.MIN_VALUE;
+			for (int j = 1; j <= nums2.length; j++) {
+				current[j] = Math.max(Math.max(Math.max(prev[j],current[j - 1]),Math.max(handleOverflow(nums1[i - 1] * nums2[j - 1],prev[j - 1]),nums1[i - 1] * nums2[j - 1])),prev[j - 1]);
+			}
+			prev = current;
+		}
+		return prev[prev.length - 1];
+	}
+}

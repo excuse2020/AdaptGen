@@ -1,0 +1,28 @@
+class Solution {
+	int maximumRows(int[][] matrix, int numSelect) {
+		int m = matrix.length;
+		int n = matrix[0].length;
+		List<Integer> rows = new ArrayList<>();
+		for (int i = 0; i < m; i++) {
+			int num = 0;
+			for (int j = 0; j < n; j++) {
+				num = num * 2 + matrix[i][j];
+			}
+			rows.add(num);
+		}
+		int result = 0;
+		for (int state = 0; state < (1 << n); state++) {
+			if (Integer.bitCount(state) != numSelect) {
+				continue;
+			}
+			int count = 0;
+			for (int row: rows) {	
+				if ((row & state) == row) {
+					count++;
+				}
+			}
+			result = Math.max(result,count);
+		}
+		return result;
+	}
+}

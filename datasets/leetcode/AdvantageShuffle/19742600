@@ -1,0 +1,47 @@
+class Solution {
+	int[] advantageCount(int[] nums1, int[] nums2) {
+		PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> {nums2[b] - nums2[a]});
+		for (int i = 0; i < nums2.length; i++) {
+			pq.add(i);
+		}
+		Arrays.sort(nums1);
+		int left = 0;
+		int right = nums1.length - 1;
+		int v = new int[nums1.length];
+		while (!pq.isEmpty()) {
+			int index = pq.poll();
+			if (nums1[right] > nums2[index]) {
+				v[index] = nums1[right--];
+			} 
+			else {
+				v[index] = nums1[left++];
+			}
+		}
+		return v;
+	}
+}
+class Solution {
+	int[] advantageCount(int[] nums1, int[] nums2) {
+		TreeMap<Integer, Integer> map = new TreeMap();
+		for (int n: nums1) {	
+			map.put(n,map.getOrDefault(n,0) + 1);
+		}
+		int v = new int[nums1.length];
+		for (int i = 0; i < nums2.length; i++) {
+			Integer key = map.higherKey(nums2[i]);
+			int count = 0;
+			if (key == null) {
+				key = map.firstKey();
+			}
+			count = map.get(key) - 1;
+			if (count == 0) {
+				map.remove(key);
+			} 
+			else {
+				map.put(key,count);
+			}
+			v[i] = key;
+		}
+		return v;
+	}
+}

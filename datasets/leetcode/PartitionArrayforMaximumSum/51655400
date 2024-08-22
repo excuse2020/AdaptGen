@@ -1,0 +1,28 @@
+class Solution {
+	int maxSumAfterPartitioning(int[] arr, int k) {
+		int[] dp = new int[arr.length + 1];
+		Arrays.fill(dp,-1);
+		return rec(arr,k,0,dp);
+	}
+	int rec(int[] arr, int k, int idx, int[] dp) {
+		int n = arr.length;
+		if (idx == n) {
+			dp[idx] = 0;
+			return dp[idx];
+		}
+		if (dp[idx] != -1) {
+			return dp[idx];
+		}
+		int maxAns = Integer.MIN_VALUE;
+		int len = 0;
+		int max = Integer.MIN_VALUE;
+		for (int i = idx; i < Math.min(idx + k,n); i++) {
+			len++;
+			max = Math.max(max,arr[i]);
+			int sum = (len * max) + rec(arr,k,i + 1,dp);
+			maxAns = Math.max(maxAns,sum);
+		}
+		dp[idx] = maxAns;
+		return dp[idx];
+	}
+}

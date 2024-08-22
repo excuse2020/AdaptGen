@@ -1,0 +1,58 @@
+class Solution {
+	int[] A;
+	long[][] comb = new long[9][9];
+	double good, all;
+	ArrayList<Integer> left = new ArrayList<>(8);
+	int n;
+	ArrayList<Integer> right = new ArrayList<>(8);
+	void dfsSolve(int color) {
+		if (color == n) {
+			int cntBallsLeft = 0, cntBallsRight = 0, cntColorsLeft = 0, cntColorsRight = 0;
+			long combsLeft = 1;
+			for (int i = 0; i < left.size(); i++) {
+				combsLeft *= comb[A[i]][left.get(i)];
+				cntBallsLeft += left.get(i);
+				cntBallsRight += right.get(i);
+				if (left.get(i) > 0) {
+					cntColorsLeft++;
+				}
+				if (right.get(i) > 0) {
+					cntColorsRight++;
+				}
+			}
+			if (cntBallsLeft != cntBallsRight) {
+				return;
+			}
+			if (cntColorsLeft == cntColorsRight) {
+				good += combsLeft;
+			}
+			all += combsLeft;
+			return;
+		}
+		for (int i = 0; i <= A[color]; i++) {
+			left.add(i);
+			right.add(A[color] - i);
+			dfsSolve(color + 1);
+			left.remove(left.size() - 1);
+			right.remove(right.size() - 1);
+		}
+	}
+	double getProbability(int[] A) {
+		this.n = A.length;
+		this.A = A;
+		precomputeComb();
+		dfsSolve(0);
+		return good / all;
+	}
+	void precomputeComb() {
+		for (int i = 0; i < 9; i++) {
+			comb[i][i] = comb[i][0] = 1;
+			if (i == 0) {
+				continue;
+			}
+			for (int j = 1; j < 9; j++) {
+				comb[i][j] = comb[i - 1][j - 1] + comb[i - 1][j];
+			}
+		}
+	}
+}

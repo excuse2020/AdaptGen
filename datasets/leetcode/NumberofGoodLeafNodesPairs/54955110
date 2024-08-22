@@ -1,0 +1,32 @@
+class Solution {
+	int res = 0;
+	int countPairs(TreeNode root, int distance) {
+		helper(root,distance);
+		return res;
+	}
+	Map<Integer, Integer> helper(TreeNode node, int distance) {
+		if (node == null) {
+			return new HashMap<>();
+		}
+		if (node.left == null && node.right == null) {
+			return Map.of(1,1);
+		}
+		Map<Integer, Integer> leftMap = helper(node.left,distance);
+		Map<Integer, Integer> rightMap = helper(node.right,distance);
+		Map<Integer, Integer> newMap = new HashMap<>();
+		for (int disL: leftMap.keySet()) {	
+			for (int disR: rightMap.keySet()) {	
+				if (disL + disR <= distance) {
+					res += (leftMap.get(disL) * rightMap.get(disR));
+				}
+			}
+		}
+		for (int disL: leftMap.keySet()) {	
+			newMap.put(disL + 1,leftMap.get(disL));
+		}
+		for (int disR: rightMap.keySet()) {	
+			newMap.put(disR + 1,newMap.getOrDefault(disR + 1,0) + rightMap.get(disR));
+		}
+		return newMap;
+	}
+}

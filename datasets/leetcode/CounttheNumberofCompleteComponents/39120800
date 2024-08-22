@@ -1,0 +1,51 @@
+class Solution {
+	int edgeCount = 0;
+	int nodeCount = 0;
+	int countCompleteComponents(int n, int[][] edges) {
+		int count = 0;
+		HashMap<Integer, List<Integer>> adjacencyList = prepareAdjacencyList(edges,n);
+		HashSet<Integer> visited = new HashSet<>();
+		for (int currentNode: adjacencyList.keySet()) {	
+			if (visited.contains(currentNode)) {
+				continue;
+			}
+			nodeCount = 0;
+			edgeCount = 0;
+			if (exploreByDfs(currentNode,adjacencyList,visited) == true) {
+				if (edgeCount == nodeCount * (nodeCount - 1)) {
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+	boolean exploreByDfs(int currentNode, HashMap<Integer, List<Integer>> adjacencyList, HashSet<Integer> visited) {
+		if (visited.contains(currentNode)) {
+			return false;
+		}
+		nodeCount++;
+		visited.add(currentNode);
+		for (int neighbour: adjacencyList.get(currentNode)) {	
+			edgeCount++;
+			exploreByDfs(neighbour,adjacencyList,visited);
+		}
+		return true;
+	}
+	HashMap<Integer, List<Integer>> prepareAdjacencyList(int[][] edges, int n) {
+		HashMap<Integer, List<Integer>> adjacencyList = new HashMap<>();
+		for (int[] edge: edges) {	
+			int node1 = edge[0];
+			int node2 = edge[1];
+			adjacencyList.putIfAbsent(node1,new ArrayList<>());
+			adjacencyList.get(node1).add(node2);
+			adjacencyList.putIfAbsent(node2,new ArrayList<>());
+			adjacencyList.get(node2).add(node1);
+		}
+		for (int node = 0; node < n; node++) {
+			if (!adjacencyList.containsKey(node)) {
+				adjacencyList.putIfAbsent(node,new ArrayList<>());
+			}
+		}
+		return adjacencyList;
+	}
+}

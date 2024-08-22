@@ -1,0 +1,61 @@
+class Solution {
+	int[][] threeOrders(TreeNode root) {
+		if (root == null) {
+			return new int[0][0];
+		}
+		List<List<Integer>> l = new ArrayList<>();
+		Stack<TreeNode> s = new Stack<>();
+		List<Integer> preArr = new ArrayList<Integer>();
+		s.push(root);
+		while (!s.isEmpty()) {
+			TreeNode temp = s.pop();
+			preArr.add(temp.val);
+			if (temp.right != null) {
+				s.push(temp.right);
+			}
+			if (temp.left != null) {
+				s.push(temp.left);
+			}
+		}
+		l.add(preArr);
+		List<Integer> inArr = new ArrayList<Integer>();
+		TreeNode tem = root;
+		while (!s.isEmpty() || tem != null) {
+			if (tem != null) {
+				s.push(tem);
+				tem = tem.left;
+			} 
+			else {
+				tem = s.pop();
+				inArr.add(tem.val);
+				tem = tem.right;
+			}
+		}
+		l.add(inArr);
+		Stack<TreeNode> assistant = new Stack<>();
+		s.push(root);
+		while (!s.isEmpty()) {
+			TreeNode temp = s.pop();
+			assistant.push(temp);
+			if (temp.left != null) {
+				s.push(temp.left);
+			}
+			if (temp.right != null) {
+				s.push(temp.right);
+			}
+		}
+		List<Integer> posArr = new ArrayList<Integer>();
+		while (!assistant.isEmpty()) {
+			posArr.add(assistant.pop().val);
+		}
+		l.add(posArr);
+		int len = posArr.size();
+		int[][] res = new int[l.size()][len];
+		for (int i = 0; i < l.size(); i++) {
+			for (int j = 0; j < len; j++) {
+				res[i][j] = l.get(i).get(j);
+			}
+		}
+		return res;
+	}
+}

@@ -1,0 +1,38 @@
+class Solution {
+	int jobScheduling(int[] startTime, int[] endTime, int[] profits) {
+		int n = startTime.length;
+		int jobs = new int[n][3];
+		for (int i = 0; i < n; i++) {
+			jobs[i][0] = startTime[i];
+			jobs[i][1] = endTime[i];
+			jobs[i][2] = profits[i];
+		}
+		Arrays.sort(jobs,(x, y) -> {x[0] - y[0]});
+		TreeMap<Integer, Integer> map = new TreeMap<>();
+		map.put(0,0);
+		int ans = 0;
+		for (int job: jobs) {	
+			int start = job[0];
+			int end = job[1];
+			int profit = job[2];
+			int prevEnd = map.floorKey(start);
+			int profitWithJob = map.get(prevEnd) + profit;
+			if (map.get(map.floorKey(end)) >= profitWithJob) {
+				continue;
+			}
+			while (map.ceilingKey(end) != null) {
+				int ceil = map.ceilingKey(end);
+				if (map.get(ceil) >= profitWithJob) {
+					break;
+				}
+				map.remove(ceil);
+			}
+			if (map.get(end) != null) {
+				profitWithJob = Math.max(profitWithJob,map.get(end));
+			}
+			map.put(end,profitWithJob);
+			ans = Math.max(profitWithJob,ans);
+		}
+		return ans;
+	}
+}

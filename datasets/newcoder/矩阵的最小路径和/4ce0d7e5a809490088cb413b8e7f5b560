@@ -1,0 +1,30 @@
+class Solution {
+	int getMin(int num1, int num2) {
+		return num1 > num2 ? num2 : num1;
+	}
+	int minPathSum(int[][] matrix) {
+		int ylen = matrix.length;
+		int xlen = matrix[0].length;
+		if (ylen == 0 || xlen == 0) {
+			return 0;
+		}
+		int[][] path = new int[ylen][xlen];
+		for (int y = 0; y < ylen; y++) {
+			for (int x = 0; x < xlen; x++) {
+				if (y == 0 && x == 0) {
+					path[y][x] = matrix[y][x];
+				} 
+				else if (y == 0 && x != 0) {
+					path[y][x] = matrix[y][x] + path[y][x - 1];
+				} 
+				else if (y != 0 && x == 0) {
+					path[y][x] = matrix[y][x] + path[y - 1][x];
+				} 
+				else {
+					path[y][x] = getMin(path[y][x - 1] + matrix[y][x],path[y - 1][x] + matrix[y][x]);
+				}
+			}
+		}
+		return path[ylen - 1][xlen - 1];
+	}
+}

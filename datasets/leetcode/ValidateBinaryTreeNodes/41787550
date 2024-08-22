@@ -1,0 +1,45 @@
+class Solution {
+	boolean dfs(int n, int[] leftChild, int[] rightChild, HashSet<Integer> set) {
+		if (n == -1) {
+			return true;
+		}
+		if (!set.add(n)) {
+			return false;
+		}
+		return dfs(leftChild[n],leftChild,rightChild,set) && dfs(rightChild[n],leftChild,rightChild,set);
+	}
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		HashSet<Integer> set = new HashSet<Integer>();
+		int indegree = new int[n];
+		for (int i = 0; i < n; i++) {
+			if (leftChild[i] != -1) {
+				indegree[leftChild[i]]++;
+				if (indegree[leftChild[i]] > 1) {
+					return false;
+				}
+			}
+			if (rightChild[i] != -1) {
+				indegree[rightChild[i]]++;
+				if (indegree[rightChild[i]] > 1) {
+					return false;
+				}
+			}
+		}
+		int root = -1;
+		for (int i = 0; i < n; i++) {
+			if (indegree[i] == 0) {
+				if (root == -1) {
+					root = i;
+				} 
+				else {
+					return false;
+				}
+			}
+		}
+		if (root == -1) {
+			return false;
+		}
+		boolean bool = dfs(root,leftChild,rightChild,set);
+		return set.size() == n && bool;
+	}
+}

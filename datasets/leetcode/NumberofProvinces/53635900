@@ -1,0 +1,39 @@
+class Solution {
+	void bfs(int node, ArrayList<ArrayList<Integer>> adj, boolean[] visited) {
+		Queue<Integer> q = new LinkedList<>();
+		q.add(node);
+		visited[node] = true;
+		while (!q.isEmpty()) {
+			int current = q.poll();
+			for (int neighbor: adj.get(current)) {	
+				if (!visited[neighbor]) {
+					visited[neighbor] = true;
+					q.add(neighbor);
+				}
+			}
+		}
+	}
+	int findCircleNum(int[][] isConnected) {
+		int V = isConnected.length;
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < V; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < V; i++) {
+			for (int j = 0; j < V; j++) {
+				if (isConnected[i][j] == 1 && i != j) {
+					adj.get(i).add(j);
+				}
+			}
+		}
+		boolean[] visited = new boolean[V];
+		int provinces = 0;
+		for (int i = 0; i < V; i++) {
+			if (!visited[i]) {
+				bfs(i,adj,visited);
+				provinces++;
+			}
+		}
+		return provinces;
+	}
+}

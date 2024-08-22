@@ -1,0 +1,51 @@
+class Solution {
+	Map<Integer, Integer> indexForInOrders = new HashMap<>();
+	TreeNode dfs(int[] pre, int preL, int preR, int inL) {
+		if (preL > preR) {
+			return null;
+		}
+		TreeNode root = new TreeNode(pre[preL]);
+		int indexZhong = indexForInOrders.get(pre[preL]);
+		int leftTreeSize = indexZhong - inL;
+		root.left = dfs(pre,preL + 1,preL + leftTreeSize,inL);
+		root.right = dfs(pre,preL + leftTreeSize,preR,inL + leftTreeSize);
+		return root;
+	}
+	List<Integer> rightView(TreeNode root) {
+		List<Integer> ret = new ArrayList<>();
+		if (root == null) {
+			return ret;
+		}
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(root);
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			while (size > 0) {
+				TreeNode node = queue.poll();
+				if (size == 1) {
+					ret.add(node.val);
+				}
+				if (node.left != null) {
+					queue.add(node.left);
+				}
+				if (node.right != null) {
+					queue.add(node.right);
+				}
+				size--;
+			}
+		}
+		return ret;
+	}
+	int[] solve(int[] xianxu, int[] zhongxu) {
+		for (int i = 0; i < zhongxu.length; i++) {
+			indexForInOrders.put(zhongxu[i],i);
+		}
+		List<Integer> lists = rightView(dfs(xianxu,0,xianxu.length - 1,0));
+		int[] result = new int[lists.size()];
+		int len = lists.size();
+		for (int i = 0; i < len; i++) {
+			result[i] = lists.get(i);
+		}
+		return result;
+	}
+}

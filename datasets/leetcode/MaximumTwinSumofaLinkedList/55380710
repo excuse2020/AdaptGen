@@ -1,0 +1,43 @@
+class Solution {
+	ListNode fmiddle(ListNode head) {
+		ListNode hare = head;
+		ListNode turtle = head;
+		while (hare.next != null && hare.next.next != null) {
+			turtle = turtle.next;
+			hare = hare.next.next;
+		}
+		return turtle;
+	}
+	ListNode freverse(ListNode head) {
+		ListNode prev = null;
+		ListNode curr = head;
+		while (curr != null) {
+			ListNode temp = curr.next;
+			curr.next = prev;
+			prev = curr;
+			curr = temp;
+		}
+		return prev;
+	}
+	int pairSum(ListNode head) {
+		if (head == null) {
+			return 0;
+		}
+		if (head.next == null) {
+			return head.val;
+		}
+		ListNode start = head;
+		ListNode middle = fmiddle(head);
+		ListNode reverse = freverse(middle.next);
+		int maxsum = 0;
+		while (reverse != null) {
+			int sum = start.val + reverse.val;
+			if (maxsum < sum) {
+				maxsum = sum;
+			}
+			start = start.next;
+			reverse = reverse.next;
+		}
+		return maxsum;
+	}
+}

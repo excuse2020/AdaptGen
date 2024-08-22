@@ -1,0 +1,33 @@
+class Solution {
+	int ans = 1;
+	Map<Integer, List<Integer>> g = new HashMap<>();
+	int dfs(int cur, String s) {
+		if (!g.containsKey(cur)) {
+			return 1;
+		}
+		int fst = 0, snd = 0;
+		for (int next: g.get(cur)) {	
+			int len = dfs(next,s);
+			if (s.charAt(next) == s.charAt(cur)) {
+				continue;
+			}
+			if (len >= fst) {
+				snd = fst;
+				fst = len;
+			} 
+			else {
+				snd = Math.max(snd,len);
+			}
+		}
+		ans = Math.max(ans,fst + snd);
+		return fst + 1;
+	}
+	int longestPath(int[] parent, String s) {
+		for (int i = 1; i < parent.length; i++) {
+			g.putIfAbsent(parent[i],new ArrayList<>());
+			g.get(parent[i]).add(i);
+		}
+		dfs(0,s);
+		return ans;
+	}
+}

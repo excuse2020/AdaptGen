@@ -1,0 +1,45 @@
+class Solution {
+	int minFallingPathSum(int[][] mat) {
+		int n = mat.length;
+		int max = Integer.MAX_VALUE;
+		int[][] dp = new int[n][n];
+		for (int row = 0; row < n; row++) {
+			for (int col = 0; col < n; col++) {
+				if (row == 0) {
+					dp[row][col] = mat[row][col];
+				} 
+				else {
+					dp[row][col] = max;
+				}
+			}
+		}
+		for (int row = 0; row < n - 1; row++) {
+			for (int col = 0; col < n; col++) {
+				int val = dp[row][col];
+				int val1 = val + mat[row + 1][col];
+				int val2 = max;
+				if (col - 1 >= 0) {
+					val2 = val + mat[row + 1][col - 1];
+					if (val2 < dp[row + 1][col - 1]) {
+						dp[row + 1][col - 1] = val2;
+					}
+				}
+				int val3 = max;
+				if (col + 1 < n) {
+					val3 = val + mat[row + 1][col + 1];
+					if (val3 < dp[row + 1][col + 1]) {
+						dp[row + 1][col + 1] = val3;
+					}
+				}
+				if (val1 < dp[row + 1][col]) {
+					dp[row + 1][col] = val1;
+				}
+			}
+		}
+		int min = max;
+		for (int col = 0; col < n; col++) {
+			min = Math.min(dp[n - 1][col],min);
+		}
+		return min;
+	}
+}

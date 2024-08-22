@@ -1,0 +1,84 @@
+class Solution {
+	int maxSum(int[] nums1, int[] nums2) {
+		int mod = (int) (1e9) + 7;
+		int n1 = nums1.length;
+		int n2 = nums2.length;
+		long res = 0;
+		int preI = -1;
+		int preJ = -1;
+		for (int i = 0; i < n1; i++) {
+			int num1 = nums1[i];
+			int j = twoDiSearch(num1,n2,nums2);
+			if (j == -1) {
+				continue;
+			}
+			res = reachSharePoint(i,j,preI,preJ,res,nums1,nums2);
+			res = res % mod;
+			preI = i;
+			preJ = j;
+		}
+		long add1 = 0;
+		while (preI + 1 < n1) {
+			add1 += nums1[preI + 1];
+			preI++;
+		}
+		long add2 = 0;
+		while (preJ + 1 < n2) {
+			add2 += nums2[preJ + 1];
+			preJ++;
+		}
+		long add = add1;
+		if (add2 > add) {
+			add = add2;
+		}
+		res += add;
+		res = res % mod;
+		return (int) res;
+	}
+	long reachSharePoint(int i, int j, int preI, int preJ, long res, int[] nums1, int[] nums2) {
+		long add1 = 0;
+		while (preI + 1 < i) {
+			add1 += nums1[preI + 1];
+			preI++;
+		}
+		long add2 = 0;
+		while (preJ + 1 < j) {
+			add2 += nums2[preJ + 1];
+			preJ++;
+		}
+		long add = add1;
+		if (add2 > add) {
+			add = add2;
+		}
+		add += nums1[i];
+		res += add;
+		return res;
+	}
+	int twoDiSearch(int num1, int n2, int[] nums2) {
+		if (num1 < nums2[0] || num1 > nums2[n2 - 1]) {
+			return -1;
+		}
+		int l = 0;
+		int r = n2 - 1;
+		while (l < r) {
+			int mid = (l + r) / 2;
+			int num2 = nums2[mid];
+			if (num2 == num1) {
+				l = mid;
+				break;
+			} 
+			else if (num2 > num1) {
+				r = mid - 1;
+			} 
+			else {
+				l = mid + 1;
+			}
+		}
+		if (nums2[l] != num1) {
+			return -1;
+		} 
+		else {
+			return l;
+		}
+	}
+}

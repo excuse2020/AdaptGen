@@ -1,0 +1,48 @@
+class Solution {
+	int[] deckRevealedIncreasing(int[] deck) {
+		int n = deck.length;
+		int low = 0;
+		int high = n - 1;
+		quickSort(deck,low,high);
+		Queue<Integer> queue = new LinkedList<>();
+		for (int i = 0; i < n; i++) {
+			queue.add(i);
+		}
+		int ans = new int[n];
+		for (int i = 0; i < n; i++) {
+			ans[queue.poll()] = deck[i];
+			queue.add(queue.poll());
+		}
+		return ans;
+	}
+	int partition(int[] deck, int low, int high) {
+		int pivot = deck[low];
+		int i = low;
+		int j = high;
+		while (i < j) {
+			while (i < high && deck[i] <= pivot) {
+				i++;
+			}
+			while (j > low && deck[j] > pivot) {
+				j--;
+			}
+			if (i < j) {
+				swap(deck,i,j);
+			}
+		}
+		swap(deck,low,j);
+		return j;
+	}
+	void quickSort(int[] deck, int low, int high) {
+		if (low < high) {
+			int pi = partition(deck,low,high);
+			quickSort(deck,low,pi - 1);
+			quickSort(deck,pi + 1,high);
+		}
+	}
+	void swap(int[] deck, int i, int j) {
+		int temp = deck[i];
+		deck[i] = deck[j];
+		deck[j] = temp;
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	List<String> subdomainVisits(String[] cpdomains) {
+		List<String> ans = new ArrayList<>();
+		for (int i = 0; i < cpdomains.length; i++) {
+			String domain = cpdomains[i];
+			String[] splitter = domain.split(" ");
+			int value = Integer.valueOf(splitter[0]);
+			String onlyDomain = splitter[1];
+			String[] subDomainList = onlyDomain.split("\\\\.");
+			StringBuilder tmp = new StringBuilder();
+			for (int j = subDomainList.length - 1; j >= 0; j--) {
+				boolean isFound = false;
+				if (tmp.isEmpty()) {
+					tmp.append(subDomainList[j]);
+				} 
+				else {
+					String newVal = subDomainList[j] + ".";
+					tmp.setLength(0);
+					tmp.append(newVal);
+				}
+				for (int k = 0; k < ans.size(); k++) {
+					String domainvalue = ans.get(k);
+					if (domainvalue.endsWith(" " + tmp)) {
+						isFound = true;
+						String[] newDomainSplit = domainvalue.split(" ");
+						int newValue = Integer.valueOf(newDomainSplit[0]) + value;
+						String newString = newValue + " ";
+						ans.set(k,newString);
+						break;
+					}
+				}
+				if (!isFound) {
+					ans.add(value + " ");
+				}
+			}
+		}
+		return ans;
+	}
+}

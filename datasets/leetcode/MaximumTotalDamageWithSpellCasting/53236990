@@ -1,0 +1,28 @@
+class Solution {
+	long maximumTotalDamage(int[] power) {
+		Map<Integer, Integer> frequencyMap = new HashMap<>();
+		for (int p: power) {	
+			frequencyMap.put(p,frequencyMap.getOrDefault(p,0) + 1);
+		}
+		List<Integer> uniquePower = new ArrayList<>(frequencyMap.keySet());
+		Collections.sort(uniquePower);
+		Map<Integer, Long> dp = new HashMap<>();
+		long maxDamage = 0;
+		for (int i = 0; i < uniquePower.size(); i++) {
+			int damage = uniquePower.get(i);
+			long currentDamage = (long) damage * frequencyMap.get(damage);
+			long excludeCurrent = (i > 0) ? dp.get(uniquePower.get(i - 1)) : 0;
+			long includeCurrent = currentDamage;
+			int previousNonConflictingIndex = Collections.binarySearch(uniquePower,damage - 3);
+			if (previousNonConflictingIndex < 0) {
+				previousNonConflictingIndex = -previousNonConflictingIndex - 2;
+			}
+			if (previousNonConflictingIndex >= 0) {
+				includeCurrent += dp.get(uniquePower.get(previousNonConflictingIndex));
+			}
+			dp.put(damage,Math.max(excludeCurrent,includeCurrent));
+			maxDamage = Math.max(maxDamage,dp.get(damage));
+		}
+		return maxDamage;
+	}
+}

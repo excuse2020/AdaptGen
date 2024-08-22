@@ -1,0 +1,32 @@
+class Solution {
+	Map<Integer, HashMap<Integer, Integer>> dp;
+	int getMinCost(int min, int max, int[] cuts) {
+		if (min >= max || min + 1 == max) {
+			return 0;
+		}
+		if (dp.get(min) != null && dp.get(min).get(max) != null) {
+			return dp.get(min).get(max);
+		}
+		int result = Integer.MAX_VALUE;
+		for (int i = 0; i < cuts.length; i++) {
+			if (cuts[i] == -1 || cuts[i] > max || cuts[i] < min) {
+				continue;
+			}
+			int prev = cuts[i];
+			cuts[i] = -1;
+			int cutCost = (max - min) + getMinCost(min,prev,cuts);
+			cuts[i] = prev;
+			result = Math.min(result,cutCost);
+		}
+		int res = result == Integer.MAX_VALUE ? 0 : result;
+		if (dp.get(min) == null) {
+			dp.put(min,new HashMap<Integer, Integer>());
+		}
+		dp.get(min).put(max,res);
+		return res;
+	}
+	int minCost(int n, int[] cuts) {
+		dp = new HashMap<>();
+		return getMinCost(0,n,cuts);
+	}
+}

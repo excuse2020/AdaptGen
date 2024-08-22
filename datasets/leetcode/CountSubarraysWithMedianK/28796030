@@ -1,0 +1,47 @@
+class Solution {
+	int countSubarrays(int[] nums, int k) {
+		int indexK = -1;
+		for (int i = 0; i < nums.length; ++i) {
+			if (nums[i] == k) {
+				indexK = i;
+				break;
+			}
+		}
+		int prevSum = 0, leftAns = 0;
+		Map<Integer, Integer> leftMap = new HashMap<>();
+		for (int i = indexK - 1; i >= 0; --i) {
+			if (nums[i] < k) {
+				prevSum -= 1;
+			} 
+			else {
+				prevSum += 1;
+			}
+			leftMap.put(prevSum,leftMap.getOrDefault(prevSum,0) + 1);
+			if (prevSum == 0 || prevSum == 1) {
+				leftAns += 1;
+			}
+		}
+		int postSum = 0, rightAns = 0;
+		Map<Integer, Integer> rightMap = new HashMap<>();
+		for (int i = indexK + 1; i < nums.length; ++i) {
+			if (nums[i] < k) {
+				postSum -= 1;
+			} 
+			else {
+				postSum += 1;
+			}
+			rightMap.put(postSum,rightMap.getOrDefault(postSum,0) + 1);
+			if (postSum == 0 || postSum == 1) {
+				rightAns += 1;
+			}
+		}
+		int centralAns = 0;
+		for (Map.Entry<Integer, Integer> entry: rightMap.entrySet()) {	
+			int val = entry.getKey();
+			int compTimes = leftMap.getOrDefault(0 - val,0) + leftMap.getOrDefault(1 - val,0);
+			centralAns += entry.getValue() * compTimes;
+		}
+		int ans = leftAns + centralAns;
+		return ans;
+	}
+}

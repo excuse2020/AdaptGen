@@ -1,0 +1,27 @@
+class Solution {
+	int[] distinctDifferenceArray(int[] nums) {
+		var set = new HashSet<Integer>();
+		int[] leftDistincts = new int[nums.length + 1];
+		for (int i = 0; i < nums.length; i++) {
+			leftDistincts[i + 1] = leftDistincts[i];
+			if (!set.contains(nums[i])) {
+				leftDistincts[i + 1]++;
+			}
+			set.add(nums[i]);
+		}
+		set.clear();
+		int[] rightDistincts = new int[nums.length + 1];
+		for (int i = nums.length - 2; i >= 0; i--) {
+			rightDistincts[i + 1] = rightDistincts[i + 2];
+			if (!set.contains(nums[i + 1])) {
+				rightDistincts[i + 1]++;
+			}
+			set.add(nums[i + 1]);
+		}
+		int[] ans = new int[nums.length];
+		for (int i = 0; i < ans.length; i++) {
+			ans[i] = leftDistincts[i + 1] - rightDistincts[i + 1];
+		}
+		return ans;
+	}
+}

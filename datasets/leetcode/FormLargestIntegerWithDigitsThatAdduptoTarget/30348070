@@ -1,0 +1,27 @@
+class Solution {
+	String largestNum(int[] cost, int target, int start, String[][] memo) {
+		if (target <= -1) {
+			return "";
+		}
+		if (start - 1 >= 9) {
+			return "";
+		}
+		if (target == 0) {
+			return String.valueOf(start);
+		}
+		if (memo[start][target] != null) {
+			return memo[start][target];
+		}
+		String str = largestNum(cost,target - cost[start - 1],start,memo);
+		if (!str.isEmpty() && target - cost[start - 1] > 0) {
+			str = str.concat(String.valueOf(start));
+		}
+		String str2 = largestNum(cost,target,start + 1,memo);
+		return memo[start][target] = str.length() < str2.length() ? str2 : str.length() > str2.length() ? str : str.compareTo(str2) >= 0 ? str : str2;
+	}
+	String largestNumber(int[] cost, int target) {
+		String[][] memo = new String[cost.length + 1][target + 1];
+		String str = largestNum(cost,target,1,memo);
+		return !str.isEmpty() ? str : "0";
+	}
+}

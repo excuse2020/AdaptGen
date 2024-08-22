@@ -1,0 +1,41 @@
+class Solution {
+	long minimumCost(int m, int n, int[] horizontalCut, int[] verticalCut) {
+		Integer[] horizontalCuts = Arrays.stream(horizontalCut).boxed().toArray();
+		Integer[] verticalCuts = Arrays.stream(verticalCut).boxed().toArray();
+		Arrays.sort(horizontalCuts,Collections.reverseOrder());
+		Arrays.sort(verticalCuts,Collections.reverseOrder());
+		int vpiece = 1, hpiece = 1;
+		int i = 0, j = 0;
+		long res = 0;
+		while (i < m - 1 && j < n - 1) {
+			if (vpiece == n && hpiece == m) {
+				return res;
+			}
+			if (horizontalCuts[i] < verticalCuts[j]) {
+				res += hpiece * verticalCuts[j];
+				vpiece++;
+				j++;
+			} 
+			else {
+				res += vpiece * horizontalCuts[i];
+				hpiece++;
+				i++;
+			}
+		}
+		while (i < m - 1) {
+			if (vpiece == n && hpiece == m) {
+				return res;
+			}
+			res += vpiece * horizontalCuts[i++];
+			hpiece++;
+		}
+		while (j < n - 1) {
+			if (vpiece == n && hpiece == m) {
+				return res;
+			}
+			res += hpiece * verticalCuts[j++];
+			vpiece++;
+		}
+		return res;
+	}
+}

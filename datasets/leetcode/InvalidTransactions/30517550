@@ -1,0 +1,27 @@
+class Solution {
+	List<String> invalidTransactions = new ArrayList<>();
+	Map<String, List<String>> userTransactions = new HashMap<>();
+	List<String> invalidTransactions(String[] transactions) {
+		for (String transaction: transactions) {	
+			String[] transactionInfo = transaction.split(",");
+			List<String> allTransactions = userTransactions.getOrDefault(transactionInfo[0],new ArrayList<>());
+			allTransactions.add(transaction);
+			userTransactions.put(transactionInfo[0],allTransactions);
+		}
+		for (String ts: transactions) {	
+			String[] transactionInfo = ts.split(",");
+			if (Integer.parseInt(transactionInfo[2]) > 1000) {
+				invalidTransactions.add(ts);
+			} 
+			else {
+				for (String transaction: userTransactions.get(transactionInfo[0])) {	
+					if (Math.abs(Integer.parseInt(transaction.split(",")[1]) - Integer.parseInt(transactionInfo[1])) <= 60 && !transaction.split(",")[3].equals(transactionInfo[3])) {
+						invalidTransactions.add(ts);
+						break;
+					}
+				}
+			}
+		}
+		return invalidTransactions;
+	}
+}

@@ -1,0 +1,27 @@
+class Solution {
+	int countPrimeSetBits(int left, int right) {
+		int result = 0;
+		boolean[] nonPrime = new boolean[32];
+		nonPrime[1] = true;
+		for (int num = 2; num < 32; num++) {
+			if (nonPrime[num]) {
+				continue;
+			}
+			for (int multiplier = 2; num * multiplier < 32; multiplier++) {
+				nonPrime[num * multiplier] = true;
+			}
+		}
+		while (left <= right) {
+			int num = left++;
+			int countBits = 0;
+			while (num != 0) {
+				countBits++;
+				num = num & (num - 1);
+			}
+			if (!nonPrime[countBits]) {
+				result++;
+			}
+		}
+		return result;
+	}
+}

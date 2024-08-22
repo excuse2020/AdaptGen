@@ -1,0 +1,72 @@
+class Solution {
+	TreeNode ancestor = null;
+	void FindDeepestCommonAncestor(TreeNode root, List<TreeNode> nodes) {
+		if (root == null) {
+			return;
+		}
+		boolean flag = true;
+		for (int i = 0; i < nodes.size(); i++) {
+			flag = NodeFound(root,nodes.get(i));
+			if (!flag) {
+				break;
+			}
+		}
+		if (flag) {
+			ancestor = root;
+		}
+		FindDeepestCommonAncestor(root.left,nodes);
+		FindDeepestCommonAncestor(root.right,nodes);
+		return;
+	}
+	List<TreeNode> GroupDeepestLeafNodes(TreeNode root, int depth) {
+		List<TreeNode> leaves = new ArrayList<TreeNode>();
+		Queue<TreeNode> queue = new LinkedList<TreeNode>();
+		queue.add(root);
+		while (!queue.isEmpty()) {
+			depth--;
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				TreeNode node = queue.poll();
+				if (depth == 0) {
+					leaves.add(node);
+				}
+				if (node.left != null) {
+					queue.add(node.left);
+				}
+				if (node.right != null) {
+					queue.add(node.right);
+				}
+			}
+		}
+		return leaves;
+	}
+	int MaxDepth(TreeNode root, int depth) {
+		if (root == null) {
+			return depth;
+		}
+		return Math.max(MaxDepth(root.left,depth + 1),MaxDepth(root.right,depth + 1));
+	}
+	boolean NodeFound(TreeNode root, TreeNode target) {
+		if (root == null) {
+			return false;
+		}
+		if (root == target) {
+			return true;
+		}
+		return NodeFound(root.left,target) || NodeFound(root.right,target);
+	}
+	TreeNode lcaDeepestLeaves(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		int maxDepth = MaxDepth(root,0);
+		List<TreeNode> nodes = GroupDeepestLeafNodes(root,maxDepth);
+		if (nodes.size() == 1) {
+			return nodes.get(0);
+		} 
+		else {
+			FindDeepestCommonAncestor(root,nodes);
+		}
+		return ancestor;
+	}
+}

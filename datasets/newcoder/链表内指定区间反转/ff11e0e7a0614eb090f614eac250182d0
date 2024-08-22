@@ -1,0 +1,68 @@
+class Solution {
+	ListNode ReverseList(ListNode head) {
+		if (head == null) {
+			return null;
+		}
+		if (head.next == null) {
+			return head;
+		}
+		ListNode p = head;
+		ListNode q = p.next;
+		if (q.next == null) {
+			q.next = p;
+			p.next = null;
+			head = q;
+			return head;
+		}
+		ListNode r = q.next;
+		p.next = null;
+		while (r.next != null) {
+			q.next = p;
+			p = q;
+			q = r;
+			r = q.next;
+		}
+		r.next = q;
+		q.next = p;
+		head = r;
+		return head;
+	}
+	ListNode reverseBetween(ListNode head, int m, int n) {
+		if (m == n) {
+			return head;
+		}
+		if (m == 1) {
+			head = this.reverseLift(head,n);
+			return head;
+		}
+		int i = 0;
+		ListNode p = head;
+		while (i < m - 2) {
+			p = p.next;
+			i++;
+		}
+		p.next = this.reverseLift(p.next,n - m + 1);
+		return head;
+	}
+	ListNode reverseLift(ListNode head, int n) {
+		ListNode p = head;
+		int i = 0;
+		while (i < n - 1) {
+			p = p.next;
+			i++;
+		}
+		ListNode q = p.next;
+		if (q != null) {
+			p.next = null;
+		}
+		head = this.ReverseList(head);
+		if (q != null) {
+			p = head;
+			while (p.next != null) {
+				p = p.next;
+			}
+			p.next = q;
+		}
+		return head;
+	}
+}

@@ -1,0 +1,89 @@
+class Solution {
+	List<List<Integer>> findDifference(int[] nums1, int[] nums2) {
+		boolean freq1 = new boolean[2001];
+		boolean freq2 = new boolean[2001];
+		List<List<Integer>> result = new ArrayList<>();
+		List<Integer> list1 = new ArrayList<>();
+		List<Integer> list2 = new ArrayList<>();
+		for (int i = 0; i < 2001; i++) {
+			freq1[i] = false;
+		}
+		for (int i = 0; i < 2001; i++) {
+			freq2[i] = false;
+		}
+		int index;
+		for (int num: nums1) {	
+			if (num < 0) {
+				index = -1 * num;
+				if (freq1[index] == false) {
+					freq1[index] = true;
+				}
+			} 
+			else if (num > 0) {
+				index = num + 1000;
+				if (freq1[index] == false) {
+					freq1[index] = true;
+				}
+			} 
+			else {
+				if (freq1[0] == false) {
+					freq1[0] = true;
+				}
+			}
+		}
+		for (int num: nums2) {	
+			if (num < 0) {
+				index = -1 * num;
+				if (freq2[index] == false) {
+					freq2[index] = true;
+				}
+			} 
+			else if (num > 0) {
+				index = num + 1000;
+				if (freq2[index] == false) {
+					freq2[index] = true;
+				}
+			} 
+			else {
+				if (freq2[0] == false) {
+					freq2[0] = true;
+				}
+			}
+		}
+		for (int i = 0; i < 2001; i++) {
+			if (freq1[i] == false) {
+				continue;
+			}
+			if (freq2[i] == false && i > 1000) {
+				list1.add(i - 1000);
+			} 
+			else if (freq2[i] == false && i <= 1000) {
+				list1.add(-i);
+			} 
+			else if (i == 0) {
+				if (freq2[0] == false) {
+					list1.add(0);
+				}
+			}
+		}
+		for (int i = 0; i < 2001; i++) {
+			if (freq2[i] == false) {
+				continue;
+			}
+			if (freq1[i] == false && i > 1000) {
+				list2.add(i - 1000);
+			} 
+			else if (freq1[i] == false && i <= 1000) {
+				list2.add(-i);
+			} 
+			else if (i == 0) {
+				if (freq1[0] == false) {
+					list2.add(0);
+				}
+			}
+		}
+		result.add(list1);
+		result.add(list2);
+		return result;
+	}
+}

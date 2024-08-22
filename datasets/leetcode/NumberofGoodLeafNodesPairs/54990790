@@ -1,0 +1,48 @@
+class Solution {
+	int countPairs(TreeNode root, int distance) {
+		Map<TreeNode, List<TreeNode>> graph = new HashMap<>();
+		Set<TreeNode> leafNodes = new HashSet<>();
+		createGraph(root,null,graph,leafNodes);
+		int count = 0;
+		for (TreeNode leaf: leafNodes) {	
+			Queue<TreeNode> bfs = new LinkedList<>();
+			Set<TreeNode> visited = new HashSet<>();
+			bfs.add(leaf);
+			visited.add(leaf);
+			for (int i = 0; i <= distance; i++) {
+				int size = bfs.size();
+				for (int j = 0; j < size; j++) {
+					TreeNode curr = bfs.poll();
+					if (leafNodes.contains(curr) && curr != leaf) {
+						count++;
+					}
+					if (graph.containsKey(curr)) {
+						for (TreeNode nbr: graph.get(curr)) {	
+							if (!visited.contains(nbr)) {
+								bfs.add(nbr);
+								visited.add(nbr);
+							}
+						}
+					}
+				}
+			}
+		}
+		return count / 2;
+	}
+	void createGraph(TreeNode root, TreeNode prev, Map<TreeNode, List<TreeNode>> graph, Set<TreeNode> leafNodes) {
+		if (root == null) {
+			return;
+		}
+		if (root.left == null && root.right == null) {
+			leafNodes.add(root);
+		}
+		if (prev != null) {
+			graph.computeIfAbsent(root,(k) -> {new ArrayList<TreeNode>()});
+			graph.get(root).add(prev);
+			graph.computeIfAbsent(prev,(k) -> {new ArrayList<TreeNode>()});
+			graph.get(prev).add(root);
+		}
+		createGraph(root.left,root,graph,leafNodes);
+		createGraph(root.right,root,graph,leafNodes);
+	}
+}

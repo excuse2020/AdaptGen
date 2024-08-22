@@ -1,0 +1,33 @@
+class Solution {
+	int maxPoints(int[][] points) {
+		if (points.length <= 2) {
+			return points.length;
+		}
+		int maxPoints = 0;
+		for (int i = 0; i < points.length; i++) {
+			Map<Double, Integer> slopeCount = new HashMap<>();
+			int samePoint = 0;
+			int verticalPoints = 1;
+			for (int j = 0; j < points.length; j++) {
+				if (i != j) {
+					if (points[i][0] == points[j][0] && points[i][1] == points[j][1]) {
+						samePoint++;
+					} 
+					else if (points[i][0] == points[j][0]) {
+						verticalPoints++;
+					} 
+					else {
+						double slope = (double) (points[j][1] - points[i][1]) / (double) (points[j][0] - points[i][0]);
+						slopeCount.put(slope,slopeCount.getOrDefault(slope,1) + 1);
+					}
+				}
+			}
+			maxPoints = Math.max(maxPoints,samePoint);
+			for (int count: slopeCount.values()) {	
+				maxPoints = Math.max(maxPoints,count + samePoint);
+			}
+			maxPoints = Math.max(maxPoints,verticalPoints);
+		}
+		return maxPoints;
+	}
+}

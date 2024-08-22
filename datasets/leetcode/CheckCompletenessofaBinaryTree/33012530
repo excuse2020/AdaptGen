@@ -1,0 +1,46 @@
+class Solution {
+	int height(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		int left = height(root.left), right = height(root.right);
+		return 1 + Math.max(left,right);
+	}
+	boolean isCompleteTree(TreeNode root) {
+		int h = height(root) - 1, size = 0;
+		Queue<TreeNode> q = new LinkedList<>();
+		q.offer(root);
+		while (h > 0) {
+			int n = q.size();
+			if ((1 << size) != n) {
+				return false;
+			}
+			for (int i = 0; i < n; i++) {
+				TreeNode curr = q.poll();
+				if (h == 1) {
+					q.offer(curr.left);
+					q.offer(curr.right);
+					continue;
+				}
+				if (curr.left != null) {
+					q.offer(curr.left);
+				}
+				if (curr.right != null) {
+					q.offer(curr.right);
+				}
+			}
+			size++;
+			h--;
+		}
+		while (!q.isEmpty() && q.peek() != null) {
+			q.poll();
+		}
+		while (!q.isEmpty()) {
+			if (q.peek() != null) {
+				return false;
+			}
+			q.poll();
+		}
+		return true;
+	}
+}

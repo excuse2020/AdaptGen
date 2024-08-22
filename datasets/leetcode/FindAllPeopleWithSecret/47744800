@@ -1,0 +1,41 @@
+class Solution {
+	List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		Arrays.sort(meetings,(a, b) -> {Integer.compare(a[2],b[2])});
+		Set<Integer> set = new HashSet<>();
+		for (int[] m: meetings) {	
+			if (map.containsKey(m[2])) {
+				map.get(m[2]).add(m[0]);
+				map.get(m[2]).add(m[1]);
+			} 
+			else {
+				List<Integer> list = new ArrayList<>();
+				list.add(m[0]);
+				list.add(m[1]);
+				map.put(m[2],list);
+			}
+		}
+		set.add(0);
+		set.add(firstPerson);
+		for (int[] m: meetings) {	
+			if (map.containsKey(m[2])) {
+				boolean found = false;
+				List<Integer> mlist = map.get(m[2]);
+				for (int k = 0; k < mlist.size() - 1; k = k + 2) {
+					if (set.contains(mlist.get(k)) || set.contains(mlist.get(k + 1))) {
+						set.add(mlist.get(k));
+						set.add(mlist.get(k + 1));
+						mlist.remove(k + 1);
+						mlist.remove(k);
+					}
+				}
+				if (map.get(m[2]).size() == 0) {
+					map.remove(m[2]);
+				}
+			}
+		}
+		List<Integer> mainList = new ArrayList<Integer>();
+		mainList.addAll(set);
+		return mainList;
+	}
+}

@@ -1,0 +1,52 @@
+class Solution {
+	int[] children = new int[100_000];
+	Map<Integer, Integer> nodePos = new HashMap<>();
+	int[] st = new int[200_002];
+	int get(int left, int right) {
+		left += st.length / 2;
+		right += st.length / 2;
+		int max = Integer.MIN_VALUE;
+		while (left < right) {
+			if (left % 2 == 1) {
+				max = Math.max(max,st[left++]);
+			}
+			left >>= 1;
+			if (right % 2 == 0) {
+				max = Math.max(max,st[right--]);
+			}
+			right >>= 1;
+		}
+		if (left == right) {
+			return Math.max(max,st[right]);
+		}
+		return max;
+	}
+	int helper(TreeNode root, int depth) {
+		if (root == null) {
+			return 0;
+		}
+		int np = nodePos.size();
+		nodePos.put(root.val,np);
+		update(np,depth);
+		int left = helper(root.left,depth + 1), right = helper(root.right,depth + 1);
+		children[np] = left + right;
+		return left + right;
+	}
+	int[] treeQueries(TreeNode root, int[] queries) {
+		Arrays.fill(st,Integer.MIN_VALUE);
+		helper(root,0);
+		int[] r = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			int pos = nodePos.get(queries[i]);
+			r[i] = Math.max(get(0,pos - 1),get(pos + children[pos],nodePos.size()));
+		}
+		return r;
+	}
+	void update(int pos, int val) {
+		pos += st.length / 2;
+		st[pos] = val;
+		for (int i = pos >> 1; i > 0; i >>= 1) {
+			st[i] = Math.max(st[i << 1],st[(i << 1) + 1]);
+		}
+	}
+}

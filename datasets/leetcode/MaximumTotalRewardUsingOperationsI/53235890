@@ -1,0 +1,29 @@
+class Solution {
+	int dfs(int r, int cur, int n, int rew) {
+		if (cur > n) {
+			return r;
+		}
+		int pick = 0;
+		if (r < rew[cur]) {
+			pick = dfs(r + rew[cur],cur + 1,n,rew);
+		}
+		int notpick = dfs(r,cur + 1,n,rew);
+		return Math.max(pick,notpick);
+	}
+	int maxTotalReward(int[] rew) {
+		int res = 0;
+		int n = rew.length - 1;
+		Arrays.sort(rew);
+		boolean dp = new boolean[rew[n] * 2 + 1];
+		dp[0] = true;
+		for (int x: rew) {	
+			for (int j = 0; j < x; j++) {
+				if (dp[j]) {
+					dp[x + j] = true;
+					res = Math.max(res,x + j);
+				}
+			}
+		}
+		return res;
+	}
+}

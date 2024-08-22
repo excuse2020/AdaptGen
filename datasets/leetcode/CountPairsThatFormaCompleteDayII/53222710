@@ -1,0 +1,31 @@
+class Solution {
+	long countCompleteDayPairs(int[] hours) {
+		int n = hours.length;
+		long ans = 0;
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			int rem = hours[i] % 24;
+			map.put(rem,map.getOrDefault(rem,0) + 1);
+		}
+		for (int rem: map.keySet()) {	
+			if (rem == 0) {
+				int count = map.get(rem);
+				ans += (long) ((long) (count) * (long) (count - 1)) / 2;
+			} 
+			else if (rem * 2 == 24) {
+				int count = map.get(rem);
+				ans += (long) ((long) (count) * (long) (count - 1)) / 2;
+			} 
+			else {
+				int remCount = map.get(rem);
+				int restCount = map.getOrDefault(24 - rem,0);
+				if (restCount > 0) {
+					map.put(24 - rem,0);
+					map.put(rem,0);
+					ans += (long) (remCount) * (long) (restCount);
+				}
+			}
+		}
+		return ans;
+	}
+}

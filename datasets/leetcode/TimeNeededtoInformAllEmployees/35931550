@@ -1,0 +1,19 @@
+class Solution {
+	Map<Integer, List<Integer>> map = new HashMap<>();
+	int dfs(int i, int[] informTime) {
+		if (!map.containsKey(i)) {
+			return 0;
+		}
+		int maxTime = 0;
+		for (int curr: map.get(i)) {	
+			maxTime = Math.max(maxTime,dfs(curr,informTime));
+		}
+		return maxTime + informTime[i];
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		for (int i = 0; i < n; i++) {
+			map.computeIfAbsent(manager[i],(k) -> {new ArrayList<>()}).add(i);
+		}
+		return dfs(headID,informTime);
+	}
+}

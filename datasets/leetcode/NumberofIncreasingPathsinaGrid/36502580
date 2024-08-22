@@ -1,0 +1,40 @@
+class Solution {
+	int MOD = 1000000007;
+	int countPaths(int[][] grid) {
+		int m = grid.length;
+		int n = grid[0].length;
+		int ans = 0;
+		Integer[][] memo = new Integer[m][n];
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				if (memo[i][j] == null) {
+					dfs(i,j,grid,memo);
+				}
+				ans = (ans + memo[i][j]) % MOD;
+			}
+		}
+		return ans;
+	}
+	int dfs(int x, int y, int[][] grid, Integer[][] memo) {
+		if (x < 0 || y < 0 || x >= grid.length || y >= grid[0].length) {
+			return 0;
+		}
+		if (memo[x][y] != null) {
+			return memo[x][y];
+		}
+		int total = 0;
+		if (x + 1 < grid.length && grid[x][y] < grid[x + 1][y]) {
+			total += dfs(x + 1,y,grid,memo) % MOD;
+		}
+		if (x - 1 >= 0 && grid[x][y] < grid[x - 1][y]) {
+			total += dfs(x - 1,y,grid,memo) % MOD;
+		}
+		if (y + 1 < grid[0].length && grid[x][y] < grid[x][y + 1]) {
+			total += dfs(x,y + 1,grid,memo) % MOD;
+		}
+		if (y - 1 >= 0 && grid[x][y] < grid[x][y - 1]) {
+			total += dfs(x,y - 1,grid,memo) % MOD;
+		}
+		return memo[x][y] = (total + 1) % MOD;
+	}
+}

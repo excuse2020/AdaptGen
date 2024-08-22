@@ -1,0 +1,41 @@
+class Solution {
+	int timestamp = 0;
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		List<List<Integer>> output = new ArrayList<>();
+		List<List<Integer>> adjList = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adjList.add(new ArrayList<>());
+		}
+		for (List<Integer> conn: connections) {	
+			adjList.get(conn.get(0)).add(conn.get(1));
+			adjList.get(conn.get(1)).add(conn.get(0));
+		}
+		int[] parent = new int[n];
+		Arrays.fill(parent,-1);
+		boolean[] visited = new boolean[n];
+		int[] arrival = new int[n];
+		int[] departure = new int[n];
+		int[] lowestArrivalTime = new int[n];
+		dfs(0,adjList,parent,visited,arrival,departure,lowestArrivalTime,output);
+		return output;
+	}
+	int dfs(int node, List<List<Integer>> adjList, int[] parent, boolean[] visited, int[] arrival, int[] departure, int[] lowestArrivalTime, List<List<Integer>> output) {
+		arrival[node] = ++timestamp;
+		visited[node] = true;
+		lowestArrivalTime[node] = arrival[node];
+		for (int neighbor: adjList.get(node)) {	
+			if (!visited[neighbor]) {
+				parent[neighbor] = node;
+				lowestArrivalTime[node] = Math.min(lowestArrivalTime[node],dfs(neighbor,adjList,parent,visited,arrival,departure,lowestArrivalTime,output));
+			} 
+			else if (neighbor != parent[node]) {
+				lowestArrivalTime[node] = Math.min(arrival[neighbor],lowestArrivalTime[node]);
+			}
+		}
+		if (lowestArrivalTime[node] == arrival[node] && parent[node] > -1) {
+			output.add(new ArrayList<>(Arrays.asList(node,parent[node])));
+		}
+		departure[node] = ++timestamp;
+		return lowestArrivalTime[node];
+	}
+}

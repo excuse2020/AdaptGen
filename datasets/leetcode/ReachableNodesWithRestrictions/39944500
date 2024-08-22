@@ -1,0 +1,30 @@
+class Solution {
+	int dfs(int N, Map<Integer, List<Integer>> adj, HashSet<Integer> R) {
+		if (R.contains(N)) {
+			return 0;
+		}
+		R.add(N);
+		int max = 1;
+		for (int n: adj.getOrDefault(N,new ArrayList<>())) {	
+			max += dfs(n,adj,R);
+		}
+		return max;
+	}
+	int reachableNodes(int n, int[][] edges, int[] restricted) {
+		Map<Integer, List<Integer>> adj = new HashMap<>();
+		HashSet<Integer> R = new HashSet<>();
+		int maxNodes = 0;
+		for (int[] edge: edges) {	
+			List<Integer> p1 = adj.getOrDefault(edge[0],new ArrayList<>());
+			List<Integer> p2 = adj.getOrDefault(edge[1],new ArrayList<>());
+			p1.add(edge[1]);
+			p2.add(edge[0]);
+			adj.put(edge[0],p1);
+			adj.put(edge[1],p2);
+		}
+		for (int k: restricted) {	
+			R.add(k);
+		}
+		return dfs(0,adj,R);
+	}
+}

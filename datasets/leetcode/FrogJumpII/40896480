@@ -1,0 +1,59 @@
+class Solution {
+	boolean helper(int mid, int[] stones) {
+		HashSet<Integer> set = new HashSet<>();
+		int cur = 0;
+		while (cur < stones.length) {
+			int next = cur + 1;
+			if (next == stones.length) {
+				break;
+			}
+			while (next <= stones.length - 1 && stones[next] - stones[cur] <= mid) {
+				next += 1;
+			}
+			if (next == cur + 1) {
+				return false;
+			}
+			cur = next - 1;
+			set.add(cur);
+		}
+		List<Integer> list = new ArrayList<>();
+		for (int i = 0; i < stones.length; i++) {
+			if (!set.contains(i)) {
+				list.add(stones[i]);
+			}
+		}
+		list.add(stones[stones.length - 1]);
+		cur = list.size() - 1;
+		while (cur > 0) {
+			int next = cur - 1;
+			if (next == -1) {
+				return true;
+			}
+			while (next >= 0 && list.get(cur) - list.get(next) <= mid) {
+				next -= 1;
+			}
+			if (next == cur - 1) {
+				return false;
+			}
+			cur = next + 1;
+		}
+		return true;
+	}
+	int maxJump(int[] stones) {
+		int lo = 0;
+		int hi = stones[stones.length - 1];
+		while (lo < hi - 1) {
+			int mid = lo + (hi - lo) / 2;
+			if (helper(mid,stones)) {
+				hi = mid;
+			} 
+			else {
+				lo = mid;
+			}
+		}
+		if (helper(lo,stones)) {
+			return lo;
+		}
+		return hi;
+	}
+}

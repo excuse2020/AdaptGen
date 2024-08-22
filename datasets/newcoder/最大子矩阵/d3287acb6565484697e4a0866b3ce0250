@@ -1,0 +1,37 @@
+class Solution {
+	int f(int[] arr, int max) {
+		int tmp = 0;
+		for (int i = 0; i < arr.length; i++) {
+			if (tmp > 0) {
+				tmp += arr[i];
+			} 
+			else {
+				tmp = arr[i];
+			}
+			max = Math.max(max,tmp);
+		}
+		return max;
+	}
+	int getMaxMatrix(ArrayList<ArrayList<Integer>> matrix) {
+		int n = matrix.size();
+		int m = matrix.get(0).size();
+		int ans = matrix.get(0).get(0);
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				ans = Math.min(ans,matrix.get(i).get(j));
+			}
+		}
+		int mostmin = ans;
+		for (int i = 0; i < n; i++) {
+			int[] help = new int[m];
+			for (int row = i; row < n; row++) {
+				for (int col = 0; col < m; col++) {
+					help[col] += matrix.get(row).get(col);
+				}
+				int cursum = f(help,mostmin);
+				ans = Math.max(ans,cursum);
+			}
+		}
+		return ans;
+	}
+}

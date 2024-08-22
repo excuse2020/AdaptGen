@@ -1,0 +1,32 @@
+class Solution {
+	Map<Integer, Integer> map;
+	List<Integer> res;
+	void dfs(int[] myPre, int start1, int end1, int[] myIn, int start2, int end2, int level) {
+		if (start1 > end1) {
+			return;
+		}
+		int rootVal = myPre[start1];
+		if (res.size() <= level) {
+			res.add(rootVal);
+		} 
+		else {
+			res.set(level,rootVal);
+		}
+		int i = map.get(rootVal);
+		dfs(myPre,start1 + 1,start1 + i - start2,myIn,start2,i - 1,level + 1);
+		dfs(myPre,start1 + i - start2 + 1,end1,myIn,i + 1,end2,level + 1);
+	}
+	int[] solve(int[] pre, int[] in) {
+		res = new ArrayList<>();
+		map = new HashMap<>();
+		for (int i = 0; i < in.length; i++) {
+			map.put(in[i],i);
+		}
+		dfs(pre,0,pre.length - 1,in,0,in.length - 1,0);
+		int[] ans = new int[res.size()];
+		for (int i = 0; i < res.size(); i++) {
+			ans[i] = res.get(i);
+		}
+		return ans;
+	}
+}

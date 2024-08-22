@@ -1,0 +1,36 @@
+class Solution {
+	List<Integer> peopleIndexes(List<List<String>> favoriteCompanies) {
+		HashMap<String, Set<Integer>> companyMap = new HashMap<>();
+		for (int i = 0; i < favoriteCompanies.size(); i++) {
+			List<String> person = favoriteCompanies.get(i);
+			for (int j = 0; j < person.size(); j++) {
+				String company = person.get(j);
+				if (!companyMap.containsKey(company)) {
+					companyMap.put(company,new HashSet<Integer>());
+				}
+				Set<Integer> personId = companyMap.get(company);
+				personId.add(i);
+			}
+		}
+		System.out.println(companyMap);
+		List<Integer> result = new ArrayList<>();
+		for (int i = 0; i < favoriteCompanies.size(); i++) {
+			List<String> person = favoriteCompanies.get(i);
+			Set<Integer> common = null;
+			for (int j = 0; j < person.size(); j++) {
+				String company = person.get(j);
+				if (common == null) {
+					common = new HashSet<>(companyMap.get(company));
+				} 
+				else {
+					common.retainAll(companyMap.get(company));
+				}
+			}
+			if (common.size() == 1 && common.contains(i)) {
+				result.add(i);
+			}
+			System.out.println(common);
+		}
+		return result;
+	}
+}

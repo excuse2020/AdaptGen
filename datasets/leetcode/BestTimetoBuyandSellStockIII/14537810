@@ -1,0 +1,31 @@
+class Solution {
+	int[][][] memo;
+	int helper(int[] prices, int idx, boolean isBought, int tran) {
+		if (idx >= prices.length || tran == 0) {
+			return 0;
+		}
+		int bought = isBought == true ? 1 : 0;
+		if (memo[idx][tran][bought] != -1) {
+			return memo[idx][tran][bought];
+		}
+		int profit = helper(prices,idx + 1,isBought,tran);
+		if (isBought) {
+			profit = Math.max(profit,helper(prices,idx + 1,false,tran - 1) + prices[idx]);
+		}
+		profit = Math.max(profit,helper(prices,idx + 1,true,tran) - prices[idx]);
+		memo[idx][tran][bought] = profit;
+		return profit;
+	}
+	int maxProfit(int[] prices) {
+		int k = 2;
+		memo = new int[prices.length][k + 1][2];
+		for (int i = 0; i < prices.length; i++) {
+			for (int j = 0; j < k + 1; j++) {
+				for (int m = 0; m < 2; m++) {
+					memo[i][j][m] = -1;
+				}
+			}
+		}
+		return helper(prices,0,false,2);
+	}
+}

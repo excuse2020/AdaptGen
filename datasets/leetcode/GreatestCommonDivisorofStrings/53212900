@@ -1,0 +1,60 @@
+class Solution {
+	Stack<Integer> findDivisor(int smallLength) {
+		Stack<Integer> Divisor = new Stack<>();
+		int factor = 1;
+		while (factor <= smallLength / 2) {
+			if (smallLength % factor == 0) {
+				Divisor.add(factor);
+			}
+			factor++;
+		}
+		return Divisor;
+	}
+	String gcd(String str2, String str1) {
+		int n = str1.length() / str2.length();
+		String str2Multiple = str2;
+		for (int i = 1; i < n; i++) {
+			str2Multiple = str2Multiple + str2;
+		}
+		if (str1.equals(str2Multiple)) {
+			return str2;
+		} 
+		else {
+			return "";
+		}
+	}
+	String gcdOfStrings(String str1, String str2) {
+		if (str1.length() == 0 || str2.length() == 0) {
+			return "";
+		}
+		if (str1.length() < str2.length()) {
+			String temp = str1;
+			str1 = str2;
+			str2 = temp;
+		}
+		int smallLength = str2.length();
+		String smallestCommonString = "";
+		Stack<Integer> divisor = new Stack();
+		Queue<String> divisorString = new LinkedList();
+		divisor = findDivisor(smallLength);
+		while (!divisor.isEmpty()) {
+			String temp = str2.substring(0,divisor.pop());
+			smallestCommonString = gcd(temp,str2);
+			if (!smallestCommonString.equals("")) {
+				divisorString.add(smallestCommonString);
+			}
+		}
+		String result = "";
+		result = gcd(str2,str1);
+		if (!result.equals("")) {
+			return result;
+		}
+		while (!divisorString.isEmpty()) {
+			result = gcd(divisorString.remove(),str1);
+			if (!result.equals("")) {
+				return result;
+			}
+		}
+		return result;
+	}
+}

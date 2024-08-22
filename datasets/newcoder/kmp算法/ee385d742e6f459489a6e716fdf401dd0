@@ -1,0 +1,42 @@
+class Solution {
+	void getNext(int[] next, String str) {
+		next[0] = -1;
+		int k = 0;
+		int index = 0;
+		while (index < str.length() - 1) {
+			if (k == -1 || str.charAt(k) == str.charAt(index)) {
+				next[++index] = ++k;
+			} 
+			else {
+				k = next[k];
+			}
+		}
+	}
+	int kmp(String S, String T) {
+		if (S == null || S == "" || T == null || T == "") {
+			return 0;
+		}
+		int[] next = new int[T.length()];
+		getNext(next,S);
+		int i = 0, j = 0;
+		int count = 0;
+		while (j < T.length()) {
+			if (S.charAt(i) == T.charAt(j)) {
+				i++;
+				j++;
+			} 
+			else if (next[i] == -1) {
+				j++;
+			} 
+			else {
+				i = next[i];
+			}
+			if (i == S.length()) {
+				count++;
+				j = j - S.length() + 1;
+				i = 0;
+			}
+		}
+		return count;
+	}
+}

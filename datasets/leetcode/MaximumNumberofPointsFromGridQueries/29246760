@@ -1,0 +1,46 @@
+class Solution {
+	PriorityQueue<Pair<Integer, Pair<Integer, Integer>>> pq = new PriorityQueue<Pair<Integer, Pair<Integer, Integer>>>((a, b) -> {a.getKey() - b.getKey()});
+	int tot = 0;
+	boolean[][] visited;
+	int getAnswer(int query, int[][] grid) {
+		int rows = grid.length, cols = grid[0].length;
+		while (!pq.isEmpty() && pq.peek().getKey() < query) {
+			tot++;
+			Pair<Integer, Integer> point = pq.poll().getValue();
+			int row = point.getKey(), col = point.getValue();
+			if (row > 0 && !visited[row - 1][col]) {
+				pq.offer(new Pair<>(grid[row - 1][col], new Pair<>(row - 1, col)));
+				visited[row - 1][col] = true;
+			}
+			if (row < (rows - 1) && !visited[row + 1][col]) {
+				pq.offer(new Pair<>(grid[row + 1][col], new Pair<>(row + 1, col)));
+				visited[row + 1][col] = true;
+			}
+			if (col > 0 && !visited[row][col - 1]) {
+				pq.offer(new Pair<>(grid[row][col - 1], new Pair<>(row, col - 1)));
+				visited[row][col - 1] = true;
+			}
+			if (col < (cols - 1) && !visited[row][col + 1]) {
+				pq.offer(new Pair<>(grid[row][col + 1], new Pair<>(row, col + 1)));
+				visited[row][col + 1] = true;
+			}
+		}
+		return tot;
+	}
+	int[] maxPoints(int[][] grid, int[] queries) {
+		visited = new boolean[grid.length][grid[0].length];
+		int[] answer = new int[queries.length];
+		ArrayList<Pair<Integer, Integer>> queryArr = new ArrayList<>();
+		for (int i = 0; i < queries.length; ++i) {
+			queryArr.add(new Pair<>(queries[i], i));
+		}
+		Collections.sort(queryArr,(a, b) -> {a.getKey() - b.getKey()});
+		pq.offer(new Pair<>(grid[0][0], new Pair<>(0, 0)));
+		visited[0][0] = true;
+		for (Pair<Integer, Integer> query: queryArr) {	
+			int ans = getAnswer(query.getKey(),grid);
+			answer[query.getValue()] = ans;
+		}
+		return answer;
+	}
+}

@@ -1,0 +1,52 @@
+class Solution {
+	int count;
+	boolean[] visited;
+	void dfs(int[] edges, int source, Stack<Integer> stack) {
+		visited[source] = true;
+		int child = edges[source];
+		if (child != -1 && !visited[child]) {
+			dfs(edges,child,stack);
+		}
+		stack.push(source);
+	}
+	int longestCycle(int[] edges) {
+		int len = edges.length;
+		Stack<Integer> stack = new Stack();
+		visited = new boolean[len];
+		for (int i = 0; i < len; i++) {
+			if (edges[i] != -1 && !visited[i]) {
+				dfs(edges,i,stack);
+			}
+		}
+		ArrayList<ArrayList<Integer>> graph = new ArrayList();
+		for (int i = 0; i < len; i++) {
+			graph.add(new ArrayList());
+		}
+		for (int i = 0; i < len; i++) {
+			if (edges[i] != -1) {
+				graph.get(edges[i]).add(i);
+			}
+		}
+		visited = new boolean[len];
+		int maxCycle = 0;
+		while (!stack.isEmpty()) {
+			int top = stack.pop();
+			if (visited[top]) {
+				continue;
+			}
+			count = 0;
+			specialDfs(graph,top);
+			maxCycle = Math.max(maxCycle,count);
+		}
+		return maxCycle > 1 ? maxCycle : -1;
+	}
+	void specialDfs(ArrayList<ArrayList<Integer>> graph, int source) {
+		visited[source] = true;
+		count++;
+		for (int child: graph.get(source)) {	
+			if (!visited[child]) {
+				specialDfs(graph,child);
+			}
+		}
+	}
+}

@@ -1,0 +1,42 @@
+class Solution {
+	int minimumOperations(TreeNode root) {
+		Queue<TreeNode> q = new LinkedList<TreeNode>();
+		q.add(root);
+		int res = 0;
+		while (!q.isEmpty()) {
+			int size = q.size();
+			ArrayList<Integer> list = new ArrayList<>();
+			for (int i = 0; i < size; i++) {
+				TreeNode temp = q.remove();
+				list.add(temp.val);
+				if (temp.left != null) {
+					q.add(temp.left);
+				}
+				if (temp.right != null) {
+					q.add(temp.right);
+				}
+			}
+			res += swapped(list);
+		}
+		return res;
+	}
+	int swapped(ArrayList<Integer> list) {
+		int ans = 0;
+		ArrayList<Integer> temp = new ArrayList<>(list);
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < list.size(); i++) {
+			map.put(list.get(i),i);
+		}
+		Collections.sort(temp);
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i) != temp.get(i)) {
+				ans++;
+				int init = list.get(i);
+				Collections.swap(list,i,map.get(temp.get(i)));
+				map.put(init,map.get(temp.get(i)));
+				map.put(temp.get(i),i);
+			}
+		}
+		return ans;
+	}
+}

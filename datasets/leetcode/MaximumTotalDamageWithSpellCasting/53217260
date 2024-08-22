@@ -1,0 +1,37 @@
+class Solution {
+	long[] dp;
+	Map<Integer, Integer> m;
+	long helper(int i, int[] p) {
+		if (i >= p.length) {
+			return 0;
+		}
+		if (dp[i] != -1) {
+			return dp[i];
+		}
+		long with = 0, wo = 0;
+		with = (long) p[i] * m.get(p[i]);
+		int j = i + 1;
+		while (j < p.length && p[j] <= p[i] + 2) {
+			j++;
+		}
+		with += helper(j,p);
+		wo = helper(i + 1,p);
+		return dp[i] = Math.max(with,wo);
+	}
+	long maximumTotalDamage(int[] p) {
+		m = new HashMap<>();
+		for (int v: p) {	
+			m.put(v,m.getOrDefault(v,0) + 1);
+		}
+		int[] a = new int[m.keySet().size()];
+		int j = 0;
+		for (int v: m.keySet()) {	
+			a[j++] = v;
+		}
+		Arrays.sort(a);
+		int n = a.length;
+		dp = new long[n];
+		Arrays.fill(dp,-1 * 1l);
+		return helper(0,a);
+	}
+}

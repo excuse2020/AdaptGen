@@ -1,0 +1,41 @@
+class Solution {
+	void bfs(char[][] grid, int i, int j, int row, int columns) {
+		Queue<Integer> queue = new LinkedList<>();
+		queue.add(i * columns + j);
+		while (!queue.isEmpty()) {
+			int id = queue.remove();
+			int r = id / columns, c = id % columns;
+			if (r - 1 >= 0 && grid[r - 1][c] == '1') {
+				queue.add((r - 1) * columns + c);
+				grid[r - 1][c] = '0';
+			}
+			if (r + 1 < row && grid[r + 1][c] == '1') {
+				queue.add((r + 1) * columns + c);
+				grid[r + 1][c] = '0';
+			}
+			if (c - 1 >= 0 && grid[r][c - 1] == '1') {
+				queue.add(r * columns + c - 1);
+				grid[r][c - 1] = '0';
+			}
+			if (c + 1 < columns && grid[r][c + 1] == '1') {
+				queue.add(r * columns + c + 1);
+				grid[r][c + 1] = '0';
+			}
+		}
+	}
+	int solve(char[][] grid) {
+		if (grid == null || grid.length == 0) {
+			return 0;
+		}
+		int row = grid.length, columns = grid[0].length, count = 0;
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < columns; j++) {
+				if (grid[i][j] == '1') {
+					bfs(grid,i,j,row,columns);
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+}

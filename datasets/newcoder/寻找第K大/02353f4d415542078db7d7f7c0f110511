@@ -1,0 +1,40 @@
+class Solution {
+	int findKth(int[] a, int n, int K) {
+		int low = 0;
+		int high = n - 1;
+		int index = partition(a,low,high);
+		while (index != K - 1) {
+			if (index > K - 1) {
+				high = index - 1;
+				index = partition(a,low,high);
+			} 
+			else if (index < K - 1) {
+				low = index + 1;
+				index = partition(a,low,high);
+			} 
+			else {
+				break;
+			}
+		}
+		return a[index];
+	}
+	int partition(int[] nums, int low, int high) {
+		int pivot = nums[low];
+		while (low < high) {
+			while (low < high && nums[high] <= pivot) {
+				high--;
+			}
+			swap(nums,low,high);
+			while (low < high && nums[low] >= pivot) {
+				low++;
+			}
+			swap(nums,low,high);
+		}
+		return low;
+	}
+	void swap(int[] nums, int low, int high) {
+		int temp = nums[low];
+		nums[low] = nums[high];
+		nums[high] = temp;
+	}
+}

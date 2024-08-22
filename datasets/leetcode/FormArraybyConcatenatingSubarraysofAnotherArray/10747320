@@ -1,0 +1,49 @@
+class Solution {
+	boolean canChoose(int[][] groups, int[] nums) {
+		int start = 0;
+		for (int[] group: groups) {	
+			int index = subString(group,nums,start);
+			if (index == -1) {
+				return false;
+			}
+			start = index + group.length;
+		}
+		return true;
+	}
+	int[] createPrefixArray(int[] group) {
+		int[] prefixArr = new int[group.length];
+		int i = 0, j = 1;
+		while (j < group.length) {
+			if (group[i] == group[j]) {
+				prefixArr[j++] = prefixArr[i++] + 1;
+			} 
+			else if (i != 0) {
+				i = prefixArr[i - 1];
+			} 
+			else {
+				++j;
+			}
+		}
+		return prefixArr;
+	}
+	int subString(int[] group, int[] nums, int i) {
+		int[] prefixArr = createPrefixArray(group);
+		int j = 0;
+		while (i < nums.length && j < group.length) {
+			if (nums[i] == group[j]) {
+				++i;
+				++j;
+			} 
+			else if (j != 0) {
+				j = prefixArr[j - 1];
+			} 
+			else {
+				++i;
+			}
+			if (j == group.length) {
+				return i - group.length;
+			}
+		}
+		return -1;
+	}
+}

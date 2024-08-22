@@ -1,0 +1,23 @@
+class Solution {
+	int ch(int i, int[] n, int[] s, int min, int pre, int sum) {
+		if (i >= n.length) {
+			return 0;
+		}
+		if ((sum + (pre & n[i])) + s[i + 1] <= min) {
+			return 1 + ch(i + 1,n,s,min,Integer.MAX_VALUE,sum + pre & n[i]);
+		}
+		return ch(i + 1,n,s,min,pre & n[i],sum);
+	}
+	int maxSubarrays(int[] nums) {
+		int min = Integer.MAX_VALUE;
+		for (int i: nums) {	
+			min &= i;
+		}
+		int[] s = new int[nums.length + 1];
+		s[nums.length - 1] = nums[nums.length - 1];
+		for (int i = nums.length - 2; i >= 0; i--) {
+			s[i] = s[i + 1] & nums[i];
+		}
+		return ch(0,nums,s,min,Integer.MAX_VALUE,0);
+	}
+}

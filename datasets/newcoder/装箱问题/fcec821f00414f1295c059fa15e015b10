@@ -1,0 +1,25 @@
+class Solution {
+	int boxin(int V, ArrayList<Integer> num) {
+		int n = num.size();
+		num.sort(new ComparaInteger());
+		int[][] remainSpaces = new int[n + 1][V + 1];
+		for (int currentSpace = 0; currentSpace <= V; currentSpace++) {
+			remainSpaces[0][currentSpace] = currentSpace;
+		}
+		for (int currentGoods = 1; currentGoods <= n; currentGoods++) {
+			int currentGoodsSpace = num.get(currentGoods - 1);
+			for (int currentSpace = 1; currentSpace <= V; currentSpace++) {
+				remainSpaces[currentGoods][currentSpace] = remainSpaces[currentGoods - 1][currentSpace];
+				if (currentGoodsSpace <= currentSpace) {
+					remainSpaces[currentGoods][currentSpace] = Math.min(remainSpaces[currentGoods][currentSpace],remainSpaces[currentGoods - 1][currentSpace - currentGoodsSpace]);
+				}
+			}
+		}
+		return remainSpaces[n][V];
+	}
+	class ComparaInteger {
+		int compare(Integer num1, Integer num2) {
+			return num1 - num2;
+		}
+	}
+}

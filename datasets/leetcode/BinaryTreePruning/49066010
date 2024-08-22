@@ -1,0 +1,33 @@
+class Solution {
+	boolean isLeaf(TreeNode node) {
+		return node != null && node.left == null && node.right == null;
+	}
+	void prune(TreeNode root, TreeNode parent) {
+		if (root == null) {
+			return;
+		}
+		prune(root.left,root);
+		prune(root.right,root);
+		if (isLeaf(root) && root.val == 0) {
+			if (parent == null) {
+				return;
+			}
+			if (parent.left == root) {
+				parent.left = null;
+			}
+			if (parent.right == root) {
+				parent.right = null;
+			}
+		}
+	}
+	TreeNode pruneTree(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		prune(root,null);
+		if (isLeaf(root) && root.val == 0) {
+			return null;
+		}
+		return root;
+	}
+}

@@ -1,0 +1,35 @@
+class Solution {
+	int diff = Integer.MIN_VALUE;
+	ArrayList<TreeNode> list = new ArrayList<>();
+	void ancDiff(TreeNode root, int value) {
+		if (root == null) {
+			return;
+		}
+		if (Math.abs(value - root.val) > diff) {
+			diff = Math.abs(value - root.val);
+		}
+		ancDiff(root.left,value);
+		ancDiff(root.right,value);
+	}
+	void dfs(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		list.add(root);
+		dfs(root.left);
+		dfs(root.right);
+	}
+	int maxAncestorDiff(TreeNode root) {
+		dfs(root);
+		int max = 0;
+		for (int i = 0; i < list.size(); i++) {
+			TreeNode front = list.get(i);
+			ancDiff(front,front.val);
+			if (max < diff) {
+				max = diff;
+			}
+			diff = Integer.MIN_VALUE;
+		}
+		return max;
+	}
+}

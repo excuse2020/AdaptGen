@@ -1,0 +1,55 @@
+class Solution {
+	int latestTimeCatchTheBus(int[] buses, int[] passengers, int capacity) {
+		if (buses.length == 1 && passengers.length == 1 && capacity == 1) {
+			if (buses[0] < passengers[0]) {
+				return buses[0];
+			} 
+			else {
+				return passengers[0] - 1;
+			}
+		}
+		if (buses.length == passengers.length && capacity == 1) {
+			if (buses[buses.length - 1] > passengers[passengers.length - 1]) {
+				return buses[buses.length - 1];
+			} 
+			else {
+				return passengers[passengers.length - 1] - 1;
+			}
+		}
+		Set<Integer> set = new HashSet<>();
+		int lastPersonToGet = 0;
+		for (Integer x: passengers) {	
+			set.add(x);
+		}
+		Arrays.sort(buses);
+		Arrays.sort(passengers);
+		int passIndex = 0;
+		for (int i = 0; i < buses.length; i++) {
+			int passengerCount = 0;
+			int currBusTime = buses[i];
+			while (passengers[passIndex] < currBusTime && passengerCount < capacity && passIndex < passengers.length - 1) {
+				passIndex = passIndex + 1;
+				passengerCount = passengerCount + 1;
+				continue;
+			}
+			if (i == buses.length - 1) {
+				if (passengerCount < capacity) {
+					lastPersonToGet = buses[i];
+				} 
+				else {
+					passIndex = passIndex - 1;
+					lastPersonToGet = passengers[passIndex];
+				}
+				while (set.contains(lastPersonToGet)) {
+					set.remove(lastPersonToGet);
+					lastPersonToGet = lastPersonToGet - 1;
+				}
+			}
+			if (capacity == passengerCount) {
+				passengerCount = 0;
+				continue;
+			}
+		}
+		return lastPersonToGet;
+	}
+}

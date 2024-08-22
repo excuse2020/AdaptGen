@@ -1,0 +1,27 @@
+class Solution {
+	List<List<Integer>> adjGraph = new ArrayList<>();
+	int answer = 0;
+	Boolean doesAppleExist(int root, List<Boolean> hasApple, int parent) {
+		Boolean hasAppleHere = hasApple.get(root);
+		for (int i = 0; i < adjGraph.get(root).size(); ++i) {
+			if (adjGraph.get(root).get(i) != parent) {
+				if (doesAppleExist(adjGraph.get(root).get(i),hasApple,root)) {
+					answer += 2;
+					hasAppleHere = true;
+				}
+			}
+		}
+		return hasAppleHere;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		for (int i = 0; i < n; ++i) {
+			adjGraph.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			adjGraph.get(edge[0]).add(edge[1]);
+			adjGraph.get(edge[1]).add(edge[0]);
+		}
+		doesAppleExist(0,hasApple,-1);
+		return answer;
+	}
+}

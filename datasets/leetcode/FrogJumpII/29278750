@@ -1,0 +1,31 @@
+class Solution {
+	int helper(int index, int[] stones, int[] dp, ArrayList<Integer> list) {
+		if (index == 0) {
+			return 0;
+		}
+		if (dp[index] != -1) {
+			return dp[index];
+		}
+		list.add(Math.abs(stones[index] - stones[index - 1]));
+		int left = helper(index - 1,stones,dp,list) + Math.abs(stones[index] - stones[index - 1]);
+		int right = Integer.MAX_VALUE;
+		if (index > 1) {
+			list.add(Math.abs(stones[index] - stones[index - 2]));
+			right = helper(index - 2,stones,dp,list) + Math.abs(stones[index] - stones[index - 2]);
+		}
+		return dp[index] = Math.min(left,right);
+	}
+	int maxJump(int[] stones) {
+		int[] dp = new int[stones.length + 1];
+		ArrayList<Integer> list = new ArrayList<>();
+		Arrays.fill(dp,-1);
+		int max = Integer.MIN_VALUE;
+		helper(stones.length - 1,stones,dp,list);
+		for (int val: list) {	
+			if (val > max) {
+				max = val;
+			}
+		}
+		return max;
+	}
+}

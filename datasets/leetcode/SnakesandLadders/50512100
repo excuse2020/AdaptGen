@@ -1,0 +1,37 @@
+class Solution {
+	int snakesAndLadders(int[][] board) {
+		int n = board.length;
+		if (n <= 2) {
+			return 1;
+		}
+		boolean[] visited = new boolean[n * n + 1];
+		int[] dp = new int[n * n + 1];
+		for (int i = 0; i <= n * n; i++) {
+			dp[i] = -1;
+		}
+		dp[1] = 0;
+		Queue<Integer> queue = new LinkedList<>();
+		queue.add(1);
+		visited[1] = true;
+		int row = 0, col = 0;
+		int next = 0;
+		while (!queue.isEmpty()) {
+			int currIndex = queue.poll();
+			if (currIndex == n * n) {
+				return dp[currIndex];
+			}
+			for (int i = currIndex + 1; i <= (Math.min(n * n,currIndex + 6)); i++) {
+				row = (n - 1) - ((i - 1) / n);
+				col = (((i - 1) / n) % 2 == 0) ? ((i - 1) % n) : (n - 1);
+				next = (board[row][col] != -1) ? board[row][col] : i;
+				if (visited[next]) {
+					continue;
+				}
+				visited[next] = true;
+				dp[next] = dp[currIndex] + 1;
+				queue.add(next);
+			}
+		}
+		return dp[n * n];
+	}
+}

@@ -1,0 +1,41 @@
+class Solution {
+	void dfs(HashMap<Integer, Set<Integer>> mapR, HashMap<Integer, Set<Integer>> mapC, int r, int c, HashSet<String> v) {
+		for (int col: mapR.get(r)) {	
+			String s = r + ",";
+			if (!v.contains(s)) {
+				v.add(s);
+				dfs(mapR,mapC,r,col,v);
+			}
+		}
+		for (int row: mapC.get(c)) {	
+			String s = row + ",";
+			if (!v.contains(s)) {
+				v.add(s);
+				dfs(mapR,mapC,row,c,v);
+			}
+		}
+	}
+	int removeStones(int[][] stones) {
+		HashMap<Integer, Set<Integer>> mapR = new HashMap();
+		HashMap<Integer, Set<Integer>> mapC = new HashMap();
+		for (int[] e: stones) {	
+			int r = e[0];
+			int c = e[1];
+			mapR.putIfAbsent(r,new HashSet());
+			mapC.putIfAbsent(c,new HashSet());
+			mapR.get(r).add(c);
+			mapC.get(c).add(r);
+		}
+		int c = 0;
+		HashSet<String> v = new HashSet();
+		for (int[] e: stones) {	
+			String s = e[0] + ",";
+			if (!v.contains(s)) {
+				c++;
+				v.add(s);
+				dfs(mapR,mapC,e[0],e[1],v);
+			}
+		}
+		return stones.length - c;
+	}
+}

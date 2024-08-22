@@ -1,0 +1,36 @@
+class Solution {
+	int n;
+	int[] stoneValue;
+	int dfs(int sta, Integer[] dp) {
+		if (sta == n) {
+			return 0;
+		}
+		if (dp[sta] != null) {
+			return dp[sta];
+		}
+		int rslt = stoneValue[sta] - dfs(sta + 1,dp);
+		if (sta + 1 < n) {
+			rslt = Math.max(rslt,stoneValue[sta] + stoneValue[sta + 1] - dfs(sta + 2,dp));
+		}
+		if (sta + 2 < n) {
+			rslt = Math.max(rslt,stoneValue[sta] + stoneValue[sta + 1] - dfs(sta + 3,dp));
+		}
+		dp[sta] = rslt;
+		return rslt;
+	}
+	String stoneGameIII(int[] stoneValue) {
+		this.stoneValue = stoneValue;
+		this.n = stoneValue.length;
+		Integer[] dp = new Integer[n + 1];
+		int x = dfs(0,dp);
+		if (x > 0) {
+			return "Alice";
+		} 
+		else if (x < 0) {
+			return "Bob";
+		} 
+		else {
+			return "Tie";
+		}
+	}
+}

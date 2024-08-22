@@ -1,0 +1,31 @@
+class Solution {
+	int maxSatisfaction(int[] satisfaction) {
+		Arrays.sort(satisfaction);
+		int result = 0;
+		int number_of_positives = 0;
+		int number_of_negatives = 0;
+		int sum_of_positives = 0;
+		int sum_of_negatives = 0;
+		int effect_of_negatives = 0;
+		for (int a: satisfaction) {	
+			if (a >= 0) {
+				sum_of_positives += a;
+				number_of_positives++;
+				result += number_of_positives * a;
+			}
+		}
+		for (int i = satisfaction.length - 1; i >= 0; i--) {
+			if (satisfaction[i] < 0) {
+				sum_of_negatives += satisfaction[i];
+				if (Math.abs(sum_of_negatives) > sum_of_positives) {
+					sum_of_negatives -= satisfaction[i];
+					break;
+				}
+				number_of_negatives++;
+				effect_of_negatives += sum_of_negatives;
+			}
+		}
+		result += effect_of_negatives + sum_of_positives * number_of_negatives;
+		return result;
+	}
+}

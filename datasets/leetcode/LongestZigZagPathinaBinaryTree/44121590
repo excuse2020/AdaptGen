@@ -1,0 +1,31 @@
+class Solution {
+	int longestZigZag(TreeNode root) {
+		if (root == null || (root.left == null && root.right == null)) {
+			return 0;
+		}
+		return pathlength(root,0,0);
+	}
+	int pathlength(TreeNode root, int turn, int count) {
+		int cl = count, cr = count;
+		if (root == null) {
+			return Math.max(cl,cr);
+		}
+		if (turn > 0 && root.left != null) {
+			cl = Math.max(cl,pathlength(root.left,-1,++count));
+			if (root.right != null) {
+				cr = Math.max(cr,pathlength(root.right,1,1));
+			}
+		} 
+		else if (turn < 0 && root.right != null) {
+			cr = Math.max(cr,pathlength(root.right,1,++count));
+			if (root.left != null) {
+				cl = Math.max(cl,pathlength(root.left,-1,1));
+			}
+		} 
+		else {
+			cl = Math.max(cl,pathlength(root.left,-1,1));
+			cr = Math.max(cr,pathlength(root.right,1,1));
+		}
+		return Math.max(cl,cr);
+	}
+}

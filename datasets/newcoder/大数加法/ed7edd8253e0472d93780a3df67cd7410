@@ -1,0 +1,52 @@
+class Solution {
+	void handler(StringBuilder sb1, int len1, StringBuilder temp, int cnt, int i) {
+		int a;
+		while (i < len1) {
+			a = sb1.charAt(i) - '0';
+			temp.append((char) ((a + cnt) % 10 + '0'));
+			cnt = (a + cnt) / 10;
+			i++;
+		}
+		if (cnt != 0) {
+			temp.append((char) (cnt + '0'));
+		}
+	}
+	String solve(String s, String t) {
+		if (s.isEmpty() || t.isEmpty()) {
+			return s.isEmpty() ? t : s;
+		}
+		StringBuilder sb1 = new StringBuilder(new StringBuilder(s).reverse());
+		StringBuilder sb2 = new StringBuilder(new StringBuilder(t).reverse());
+		int len1 = sb1.length();
+		int len2 = sb2.length();
+		StringBuilder temp = new StringBuilder();
+		int cnt = 0, a, b;
+		int i = 0, j = 0;
+		for (; i < len1 && j < len2; ++i, ++j) {
+			a = sb1.charAt(i) - '0';
+			b = sb2.charAt(j) - '0';
+			temp.append((char) ((a + b) % 10 + '0'));
+			cnt = (a + b) / 10;
+		}
+		if (cnt != 0) {
+			if (len1 == len2) {
+				temp.append((char) (cnt + '0'));
+			} 
+			else if (len1 < len2) {
+				handler(sb2,len2,temp,cnt,j);
+			} 
+			else {
+				handler(sb1,len1,temp,cnt,i);
+			}
+		} 
+		else {
+			if (len1 < len2) {
+				temp.append(sb2.substring(j));
+			} 
+			else if (len1 > len2) {
+				temp.append(sb1.substring(i));
+			}
+		}
+		return temp.reverse().toString();
+	}
+}

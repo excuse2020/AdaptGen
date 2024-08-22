@@ -1,0 +1,31 @@
+class Solution {
+	boolean canReorderDoubled(int[] arr) {
+		int[] po = new int[100001];
+		int[] ne = new int[100001];
+		for (int val: arr) {	
+			if (val < 0) {
+				ne[-val]++;
+			} 
+			else {
+				po[val]++;
+			}
+		}
+		return valid(ne) && valid(po);
+	}
+	boolean valid(int[] nums) {
+		if (nums[0] != 0 && nums[0] % 2 != 0) {
+			return false;
+		}
+		for (int i = 1; i < nums.length; i++) {
+			if (nums[i] == 0) {
+				continue;
+			}
+			if (i * 2 >= nums.length || nums[i * 2] < nums[i]) {
+				return false;
+			}
+			nums[i * 2] -= nums[i];
+			nums[i] = 0;
+		}
+		return true;
+	}
+}

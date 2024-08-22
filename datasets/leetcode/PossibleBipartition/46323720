@@ -1,0 +1,36 @@
+class Solution {
+	Map<Integer, List<Integer>> map;
+	boolean dfs(int node, int color, int[] curr_visited, int[] visited) {
+		if (visited[node] == 1) {
+			return curr_visited[node] != -color;
+		}
+		visited[node] = 1;
+		curr_visited[node] = color;
+		for (int num: map.get(node)) {	
+			if (!dfs(num,-1 * color,curr_visited,visited)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		int[] visited = new int[n + 1];
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		this.map = map;
+		for (int i = 1; i <= n; i++) {
+			map.put(i,new ArrayList<>());
+		}
+		for (int[] dislike: dislikes) {	
+			map.get(dislike[0]).add(dislike[1]);
+		}
+		for (int i = 1; i <= n; i++) {
+			if (visited[i] == 0) {
+				boolean ans = dfs(i,1,new int[n + 1],visited);
+				if (!ans) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

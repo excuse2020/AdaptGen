@@ -1,0 +1,39 @@
+class Solution {
+	List<TreeNode> allPossibleFBT(int n) {
+		List<TreeNode>[] matrix = new ArrayList[n + 1];
+		return allPossibleFBT(n,matrix);
+	}
+	List<TreeNode> allPossibleFBT(int n, List<TreeNode>[] matrix) {
+		List<TreeNode> result = new ArrayList<>();
+		if (matrix[n] != null) {
+			return matrix[n];
+		}
+		if (n <= 0 || n % 2 == 0) {
+			return matrix[n] = result;
+		}
+		if (n == 1) {
+			TreeNode root = new TreeNode(0);
+			result.add(root);
+			return matrix[n] = result;
+		}
+		for (int h = 1; h < n - 1; h = h + 2) {
+			int first = h;
+			int second = n - 1;
+			List<TreeNode> left = allPossibleFBT(first);
+			List<TreeNode> right = allPossibleFBT(second);
+			if (left.size() == 0 || right.size() == 0) {
+				TreeNode root = new TreeNode(0);
+				result.add(root);
+			}
+			for (int i = 0; i < left.size(); i++) {
+				for (int j = 0; j < right.size(); j++) {
+					TreeNode root = new TreeNode(0);
+					root.left = left.get(i);
+					root.right = right.get(j);
+					result.add(root);
+				}
+			}
+		}
+		return matrix[n] = result;
+	}
+}

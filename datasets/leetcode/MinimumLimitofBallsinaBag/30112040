@@ -1,0 +1,31 @@
+class Solution {
+	int minimumSize(int[] nums, int maxOperations) {
+		int max = 0;
+		for (int num: nums) {	
+			max = Math.max(max,num);
+		}
+		int penalty = max;
+		int l = 1, h = max;
+		while (l <= h) {
+			int mid = l + (h - l) / 2;
+			if (possible_penalty(nums,maxOperations,mid)) {
+				penalty = mid;
+				h = mid - 1;
+			} 
+			else {
+				l = mid + 1;
+			}
+		}
+		return penalty;
+	}
+	boolean possible_penalty(int nums, int op, int min_penalty) {
+		int curr_op = 0;
+		for (int num: nums) {	
+			curr_op += (num - 1) / min_penalty;
+			if (curr_op > op) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

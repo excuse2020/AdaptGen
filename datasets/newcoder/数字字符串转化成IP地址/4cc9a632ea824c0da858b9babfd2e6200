@@ -1,0 +1,36 @@
+class Solution {
+	ArrayList<String> arr = new ArrayList<String>();
+	void find(String s, int start, int num, LinkedList<String> list) {
+		if (num == 4) {
+			if (start == s.length()) {
+				arr.add(String.join(".",list));
+			}
+			return;
+		}
+		for (int i = 3; i > 0; --i) {
+			if ((i + start) > s.length()) {
+				continue;
+			}
+			String sub = s.substring(start,(start + i));
+			if (isInvild(sub)) {
+				list.add(sub);
+				find(s,start + i,num + 1,list);
+				list.removeLast();
+			}
+		}
+	}
+	boolean isInvild(String str) {
+		int val = Integer.valueOf(str);
+		if (val > 255) {
+			return false;
+		}
+		if (str.charAt(0) == '0' && str.length() > 1) {
+			return false;
+		}
+		return true;
+	}
+	ArrayList<String> restoreIpAddresses(String s) {
+		find(s,0,0,new LinkedList<>());
+		return arr;
+	}
+}

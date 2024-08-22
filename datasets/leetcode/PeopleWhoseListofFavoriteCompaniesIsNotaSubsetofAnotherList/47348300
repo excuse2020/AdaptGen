@@ -1,0 +1,46 @@
+class Solution {
+	List<Integer> peopleIndexes(List<List<String>> favoriteCompanies) {
+		int indexPtr = 0;
+		Map<String, Integer> indexes = new HashMap<>();
+		for (List<String> fav: favoriteCompanies) {	
+			for (String s: fav) {	
+				if (!indexes.containsKey(s)) {
+					indexes.put(s,indexPtr++);
+				}
+			}
+		}
+		int peopleCnt = favoriteCompanies.size();
+		boolean[][] hasFav = new boolean[peopleCnt][indexPtr + 1];
+		for (int i = 0; i < peopleCnt; i++) {
+			List<String> fav = favoriteCompanies.get(i);
+			for (String s: fav) {	
+				int idx = indexes.get(s);
+				hasFav[i][idx] = true;
+			}
+		}
+		List<Integer> res = new ArrayList<>();
+		for (int i = 0; i < peopleCnt; i++) {
+			int currFavCnt = favoriteCompanies.get(i).size();
+			boolean include = true;
+			for (int j = 0; j < peopleCnt; j++) {
+				if (i == j) {
+					continue;
+				}
+				int nextPersonCnt = 0;
+				for (int k = 0; k <= indexPtr; k++) {
+					if (hasFav[i][k] && hasFav[j][k]) {
+						nextPersonCnt++;
+					}
+				}
+				if (nextPersonCnt == currFavCnt) {
+					include = false;
+					break;
+				}
+			}
+			if (include) {
+				res.add(i);
+			}
+		}
+		return res;
+	}
+}

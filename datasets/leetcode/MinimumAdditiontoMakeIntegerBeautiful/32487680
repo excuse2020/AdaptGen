@@ -1,0 +1,40 @@
+class Solution {
+	long digitAt(long n, int place) {
+		long rem = n % 10;
+		if (place == 0) {
+			return rem;
+		} 
+		else {
+			n -= rem;
+			n /= 10;
+			return digitAt(n,place - 1);
+		}
+	}
+	long makeIntegerBeautiful(long n, int target) {
+		int sum = sumOfDigits(n);
+		if (sum <= target) {
+			return 0L;
+		}
+		long increase = 0;
+		int place = 0;
+		while (sum > target) {
+			long digitAtPlace = digitAt(n + increase,place);
+			long placeIncrease = digitAtPlace == 0L ? 0 : 10L - digitAtPlace;
+			increase += placeIncrease * Math.pow(10,place);
+			sum = sumOfDigits(n + increase);
+			place++;
+		}
+		return increase;
+	}
+	int sumOfDigits(long n) {
+		if (n < 10) {
+			return (int) n;
+		} 
+		else {
+			int rem = (int) (n % 10L);
+			n -= rem;
+			n /= 10;
+			return rem + sumOfDigits(n);
+		}
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	List<List<Integer>> getSkyline(int[][] buildings) {
+		List<List<Integer>> res = new ArrayList<>();
+		PriorityQueue<int[]> PQ = new PriorityQueue<>((a, b) -> {b[1] - a[1]});
+		Arrays.sort(buildings,(a, b) -> {a[0] - b[0]});
+		int count = 0, height = 0, left = buildings[0][0];
+		while (true) {
+			while (!PQ.isEmpty() && PQ.peek()[0] <= left) {
+				PQ.poll();
+			}
+			while (count < buildings.length && buildings[count][0] == left) {
+				PQ.add(new int{buildings[count][1], buildings[count][2]});
+				count++;
+			}
+			if (PQ.isEmpty()) {
+				if (height != 0) {
+					height = 0;
+					res.add(Arrays.asList(left,height));
+				}
+			} 
+			else if (PQ.peek()[1] != height) {
+				height = PQ.peek()[1];
+				res.add(Arrays.asList(left,height));
+			}
+			if (!PQ.isEmpty() && count < buildings.length) {
+				left = Math.min(PQ.peek()[0],buildings[count][0]);
+			} 
+			else if (!PQ.isEmpty()) {
+				left = PQ.peek()[0];
+			} 
+			else if (count < buildings.length) {
+				left = buildings[count][0];
+			} 
+			else {
+				return res;
+			}
+		}
+	}
+}

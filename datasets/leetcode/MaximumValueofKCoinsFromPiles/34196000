@@ -1,0 +1,35 @@
+class Solution {
+	int maxProfit(List<List<Integer>> piles, int k, int i, int dp) {
+		if (k == 0) {
+			return 0;
+		}
+		if (i < 0) {
+			return 0;
+		}
+		if (k < 0) {
+			return Integer.MIN_VALUE;
+		}
+		if (dp[i][k] != -1) {
+			return dp[i][k];
+		}
+		int picked = 0;
+		List<Integer> curPile = piles.get(i);
+		int sum = 0;
+		for (int ind = 0; ind < k && ind < curPile.size(); ind++) {
+			sum += curPile.get(ind);
+			picked = Math.max(sum + maxProfit(piles,k - (ind + 1),i - 1,dp),picked);
+		}
+		int notPick = maxProfit(piles,k,i - 1,dp);
+		return dp[i][k] = Math.max(picked,notPick);
+	}
+	int maxValueOfCoins(List<List<Integer>> piles, int k) {
+		int numOfPiles = piles.size();
+		int dp = new int[numOfPiles][k + 1];
+		for (int i = 0; i < numOfPiles; i++) {
+			for (int j = 0; j <= k; j++) {
+				dp[i][j] = -1;
+			}
+		}
+		return maxProfit(piles,k,piles.size() - 1,dp);
+	}
+}

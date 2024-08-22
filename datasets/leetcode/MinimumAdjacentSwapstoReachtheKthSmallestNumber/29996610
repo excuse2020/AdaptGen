@@ -1,0 +1,57 @@
+class Solution {
+	int count(char[] src, char[] dest) {
+		int count = 0;
+		for (int i = 0; i < src.length; i++) {
+			if (src[i] != dest[i]) {
+				for (int j = i + 1; j < src.length; j++) {
+					if (src[j] == dest[i]) {
+						for (int k = j; k > i; k--) {
+							swap(src,k,k - 1);
+							count++;
+						}
+						break;
+					}
+				}
+			}
+		}
+		return count;
+	}
+	int getMinSwaps(String num, int k) {
+		char[] cnum = num.toCharArray();
+		int right = cnum.length - 1;
+		while (k > 0) {
+			right = cnum.length - 1;
+			TreeMap<Character, Integer> numberLine = new TreeMap<>();
+			while (right > 0) {
+				numberLine.put(cnum[right],numberLine.getOrDefault(cnum[right],0) + 1);
+				if (cnum[right - 1] < cnum[right]) {
+					char next = numberLine.ceilingKey((char) (cnum[right - 1] + 1));
+					numberLine.put(next,numberLine.get(next) - 1);
+					if (numberLine.get(next) == 0) {
+						numberLine.remove(next);
+					}
+					numberLine.put(cnum[right - 1],numberLine.getOrDefault(cnum[right - 1],0) + 1);
+					cnum[right - 1] = next;
+					for (char ch: numberLine.keySet()) {	
+						int n = numberLine.get(ch);
+						while (n > 0) {
+							cnum[right++] = ch;
+							n--;
+						}
+					}
+					break;
+				}
+				right--;
+			}
+			k--;
+		}
+		char[] src = num.toCharArray();
+		char[] dest = cnum;
+		return count(src,dest);
+	}
+	void swap(char[] src, int i, int j) {
+		char temp = src[i];
+		src[i] = src[j];
+		src[j] = temp;
+	}
+}

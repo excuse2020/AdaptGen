@@ -1,0 +1,56 @@
+class Solution {
+	long calculate(int node, long[][] nodeVsleftRight) {
+		if (node == 0) {
+			long left = nodeVsleftRight[node][0] == 0 ? 1 : nodeVsleftRight[node][0];
+			long right = nodeVsleftRight[node][1] == 0 ? 1 : nodeVsleftRight[node][1];
+			return left * right;
+		} 
+		else {
+			long fromZero = (nodeVsleftRight[0][0] + nodeVsleftRight[0][1]) - (nodeVsleftRight[node][0] + nodeVsleftRight[node][1]);
+			long left = nodeVsleftRight[node][0] == 0 ? 1 : nodeVsleftRight[node][0];
+			long right = nodeVsleftRight[node][1] == 0 ? 1 : nodeVsleftRight[node][1];
+			return left * right;
+		}
+	}
+	int countHighestScoreNodes(int[] parents) {
+		HashMap<Integer, HashSet<Integer>> childMap = new HashMap<>();
+		for (int i = 1; i < parents.length; i++) {
+			if (!childMap.containsKey(parents[i])) {
+				childMap.put(parents[i],new HashSet<>());
+			}
+			if (!childMap.containsKey(i)) {
+				childMap.put(i,new HashSet<>());
+			}
+			childMap.get(parents[i]).add(i);
+		}
+		long[][] nodeVsleftRight = new long[parents.length][2];
+		helper(nodeVsleftRight,childMap,0);
+		long max = Integer.MIN_VALUE;
+		long count = 1L;
+		for (int i = 0; i < parents.length; i++) {
+			long res = calculate(i,nodeVsleftRight);
+			if (res > max) {
+				count = 1L;
+				max = res;
+			} 
+			else if (res == max) {
+				count++;
+			}
+		}
+		return (int) count;
+	}
+	long helper(long[][] res, HashMap<Integer, HashSet<Integer>> childMap, int node) {
+		if (childMap.get(node).size() == 0) {
+			res[node][0] = 0;
+			res[node][1] = 0;
+			return 1L;
+		}
+		int i = 0;
+		for (int adjNode: childMap.get(node)) {	
+			long ans = helper(res,childMap,adjNode);
+			res[node][i] = ans;
+			i++;
+		}
+		return res[node][0] + res[node][1];
+	}
+}

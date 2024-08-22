@@ -1,0 +1,62 @@
+class Solution {
+	int[][] factory;
+	List<Integer> robot;
+	int dist(int robotIdx, int factoryIdx) {
+		return Math.abs(robot.get(robotIdx) - factory[factoryIdx][0]);
+	}
+	Set<Integer> getFactoriesOverLimit(List<Set<Integer>> factoryToRobots) {
+		Set<Integer> factoriesOverLimit = new HashSet<>();
+		for (int i = 0; i < factoryToRobots.size(); i++) {
+			if (factoryToRobots.get(i).size() > factory[i][1]) {
+				factoriesOverLimit.add(i);
+			}
+		}
+		return factoriesOverLimit;
+	}
+	long minimumTotalDistance(List<Integer> robot, int[][] factory) {
+		this.robot = robot;
+		this.factory = factory;
+		long total = 0;
+		int n = robot.size();
+		int[] robotToFactory = new int[n];
+		List<PriorityQueue<int[]>> distances = new ArrayList<>();
+		for (int robotIdx = 0; robotIdx < n; robotIdx++) {
+			PriorityQueue<int[]> heap = new PriorityQueue<>((a, b) -> {a[0] - b[0]});
+			for (int factoryIdx = 0; factoryIdx < factory.length; factoryIdx++) {
+				heap.offer(new int{dist(robotIdx,factoryIdx), factoryIdx});
+			}
+			distances.add(heap);
+		}
+		List<Set<Integer>> factoryToRobots = new ArrayList<>();
+		for (int i = 0; i < factory.length; i++) {
+			factoryToRobots.add(new HashSet<>());
+		}
+		for (int robotIdx = 0; robotIdx < n; robotIdx++) {
+			int[] entry = distances.get(robotIdx).poll();
+			total += entry[0];
+			robotToFactory[robotIdx] = entry[0];
+			factoryToRobots.get(entry[1]).add(robotIdx);
+		}
+		Set<Integer> factoriesOverLimit = getFactoriesOverLimit(factoryToRobots);
+		while (!factoriesOverLimit.isEmpty()) {
+			for (int factoryIdx: factoriesOverLimit) {	
+				int minDistIncrease = Integer.MAX_VALUE;
+				int reassignRobotIdx = -1;
+				for (int robotIdx: factoryToRobots.get(factoryIdx)) {	
+					int distIncrease = distances.get(robotIdx).peek()[0] - robotToFactory[robotIdx];
+					if (distIncrease < minDistIncrease) {
+						minDistIncrease = distIncrease;
+						reassignRobotIdx = robotIdx;
+					}
+				}
+				int[] entry = distances.get(reassignRobotIdx).poll();
+				total += minDistIncrease;
+				robotToFactory[reassignRobotIdx] = entry[0];
+				factoryToRobots.get(factoryIdx).remove(reassignRobotIdx);
+				factoryToRobots.get(entry[1]).add(reassignRobotIdx);
+			}
+			factoriesOverLimit = getFactoriesOverLimit(factoryToRobots);
+		}
+		return total;
+	}
+}

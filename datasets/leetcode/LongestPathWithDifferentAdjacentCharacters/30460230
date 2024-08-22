@@ -1,0 +1,41 @@
+class Solution {
+	int maxLen = 0;
+	int Solve(int index, List<List<Integer>> Adj, boolean[] visited, String s) {
+		visited[index] = true;
+		PriorityQueue<Integer> pq = new PriorityQueue();
+		for (int Adjacent: Adj.get(index)) {	
+			if (!visited[Adjacent]) {
+				int len = Solve(Adjacent,Adj,visited,s);
+				if (s.charAt(index) != s.charAt(Adjacent)) {
+					pq.add(len);
+					if (pq.size() > 2) {
+						pq.poll();
+					}
+				}
+			}
+		}
+		int ans = 1;
+		int max = 0;
+		while (pq.size() != 0) {
+			int val = pq.poll();
+			max = Math.max(max,val);
+			ans += val;
+		}
+		maxLen = Math.max(maxLen,ans);
+		return max + 1;
+	}
+	int longestPath(int[] parent, String s) {
+		int totalNodes = parent.length;
+		List<List<Integer>> Adj = new ArrayList();
+		for (int i = 0; i < totalNodes; i++) {
+			Adj.add(new ArrayList());
+		}
+		for (int i = 1; i < parent.length; i++) {
+			Adj.get(i).add(parent[i]);
+			Adj.get(parent[i]).add(i);
+		}
+		boolean[] visited = new boolean[parent.length];
+		Solve(0,Adj,visited,s);
+		return maxLen;
+	}
+}

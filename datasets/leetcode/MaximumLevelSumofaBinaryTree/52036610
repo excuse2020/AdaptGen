@@ -1,0 +1,30 @@
+class Solution {
+	void calculateSumForLevel(TreeNode root, List<Integer> sumsList, int level) {
+		if (root == null) {
+			return;
+		}
+		if (sumsList.size() < level) {
+			sumsList.add(root.val);
+		} 
+		else {
+			int currentSum = sumsList.get(level - 1);
+			int newSum = currentSum + root.val;
+			sumsList.set(level - 1,newSum);
+		}
+		calculateSumForLevel(root.right,sumsList,level + 1);
+		calculateSumForLevel(root.left,sumsList,level + 1);
+	}
+	int maxLevelSum(TreeNode root) {
+		List<Integer> sumsList = new ArrayList<>();
+		int maxSum = Integer.MIN_VALUE;
+		int maxIndex = 0;
+		calculateSumForLevel(root,sumsList,1);
+		for (int i = 0; i < sumsList.size(); i++) {
+			if (sumsList.get(i) > maxSum) {
+				maxSum = sumsList.get(i);
+				maxIndex = i + 1;
+			}
+		}
+		return maxIndex;
+	}
+}

@@ -1,0 +1,25 @@
+class Solution {
+	double maxProbability(int n, int[][] edges, double[] succProb, int start, int end) {
+		double ans = new double[n];
+		ans[start] = 1.0000;
+		for (int i = 0; i < n - 1; i++) {
+			boolean hasChanged = false;
+			for (int j = 0; j < edges.length; j++) {
+				int u = edges[j][0], v = edges[j][1];
+				double prob = succProb[j];
+				if (ans[u] * prob > ans[v]) {
+					ans[v] = ans[u] * prob;
+					hasChanged = true;
+				}
+				if (ans[v] * prob > ans[u]) {
+					ans[u] = ans[v] * prob;
+					hasChanged = true;
+				}
+			}
+			if (!hasChanged) {
+				break;
+			}
+		}
+		return ans[end];
+	}
+}

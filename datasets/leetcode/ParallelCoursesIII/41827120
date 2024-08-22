@@ -1,0 +1,27 @@
+class Solution {
+	int minimumTime(int n, int[][] relations, int[] time) {
+		List<Integer>[] graph = new List[n];
+		int[] inDegree = new int[n];
+		int[] dist = time.clone();
+		for (int i = 0; i < n; ++i) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int[] r: relations) {	
+			int u = r[0] - 1;
+			int v = r[1] - 1;
+			graph[u].add(v);
+			++inDegree[v];
+		}
+		Queue<Integer> q = IntStream.range(0,n).filter((i) -> {inDegree[i] == 0}).boxed().collect(Collectors.toCollection());
+		while (!q.isEmpty()) {
+			int u = q.poll();
+			for (int v: graph[u]) {	
+				dist[v] = Math.max(dist[v],dist[u] + time[v]);
+				if (--inDegree[v] == 0) {
+					q.offer(v);
+				}
+			}
+		}
+		return Arrays.stream(dist).max().getAsInt();
+	}
+}

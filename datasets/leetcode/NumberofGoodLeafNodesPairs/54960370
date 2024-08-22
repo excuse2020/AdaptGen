@@ -1,0 +1,43 @@
+class Solution {
+	int distance;
+	int pairs;
+	int countPairs(TreeNode root, int distance) {
+		if (distance <= 1) {
+			return 0;
+		}
+		this.distance = distance;
+		this.pairs = 0;
+		countPairsAt(root);
+		return this.pairs;
+	}
+	int[] countPairsAt(TreeNode node) {
+		if (node == null) {
+			return new int[0];
+		}
+		int[] numberOfLeaves = new int[distance - 1];
+		if (node.left == null && node.right == null) {
+			numberOfLeaves[0] = 1;
+			return numberOfLeaves;
+		}
+		int[] left = countPairsAt(node.left);
+		int[] right = countPairsAt(node.right);
+		if (left.length != 0) {
+			for (int i = 1; i < distance - 1; i++) {
+				numberOfLeaves[i] += left[i - 1];
+			}
+		}
+		if (right.length != 0) {
+			for (int i = 1; i < distance - 1; i++) {
+				numberOfLeaves[i] += right[i - 1];
+			}
+		}
+		if (left.length != 0 && right.length != 0) {
+			for (int i = 0; i <= distance - 2; i++) {
+				for (int j = 0; i + j <= distance - 2; j++) {
+					pairs += left[i] * right[j];
+				}
+			}
+		}
+		return numberOfLeaves;
+	}
+}

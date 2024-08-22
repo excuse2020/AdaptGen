@@ -1,0 +1,70 @@
+class Solution {
+	int getQuery(int cur, int[] segmentTree, int start, int end, int l, int r) {
+		if (start > end) {
+			return -1;
+		}
+		if (start == l && end == r) {
+			return segmentTree[cur];
+		}
+		int mid = (l + r) / 2;
+		return Math.max(getQuery(cur * 2,segmentTree,start,Math.min(mid,end),l,mid),getQuery(cur * 2 + 1,segmentTree,Math.max(mid + 1,start),end,mid + 1,r));
+	}
+	int[] maximumSumQueries(int[] nums1, int[] nums2, int[][] queries) {
+		int n = nums1.length;
+		int[][] arr = new int[n][2];
+		int q = queries.length;
+		int[][] procesedQueries = new int[q][3];
+		Set<Integer> points = new TreeSet<>();
+		for (int i = 0; i < nums1.length; i++) {
+			arr[i][0] = nums1[i];
+			arr[i][1] = nums2[i];
+			points.add(arr[i][1]);
+		}
+		Arrays.sort(arr,(a, b) -> {b[0] - a[0]});
+		for (int i = 0; i < queries.length; i++) {
+			procesedQueries[i][0] = queries[i][0];
+			procesedQueries[i][1] = queries[i][1];
+			points.add(procesedQueries[i][1]);
+			procesedQueries[i][2] = i;
+		}
+		int start = 0;
+		Map<Integer, Integer> hash = new HashMap<>();
+		for (int a: points) {	
+			hash.put(a,start);
+			start++;
+		}
+		int limit = (int) Math.ceil((double) (Math.log(start) / Math.log(2)));
+		int range = (1 << (limit));
+		int[] segmentTree = new int[range * 2 + 4];
+		Arrays.fill(segmentTree,-1);
+		Arrays.sort(procesedQueries,(a, b) -> {b[0] - a[0]});
+		int j = 0;
+		int[] answer = new int[q];
+		for (int i = 0; i < procesedQueries.length; i++) {
+			while (j < arr.length && arr[j][0] >= procesedQueries[i][0]) {
+				int res = hash.get(arr[j][1]);
+				propagate(1,res,segmentTree,0,range - 1,arr[j][0] + arr[j][1]);
+				j++;
+			}
+			int ans = getQuery(1,segmentTree,hash.get(procesedQueries[i][1]),range - 1,0,range - 1);
+			answer[procesedQueries[i][2]] = ans;
+		}
+		return answer;
+	}
+	void propagate(int cur, int res, int[] segmentTree, int start, int end, int value) {
+		if (start == end) {
+			segmentTree[cur] = Math.max(segmentTree[cur],value);
+			return;
+		} 
+		else {
+			int mid = (start + end) / 2;
+			if (mid >= res) {
+				propagate(cur * 2,res,segmentTree,start,mid,value);
+			} 
+			else {
+				propagate(cur * 2 + 1,res,segmentTree,mid + 1,end,value);
+			}
+			segmentTree[cur] = Math.max(segmentTree[cur * 2],segmentTree[cur * 2 + 1]);
+		}
+	}
+}

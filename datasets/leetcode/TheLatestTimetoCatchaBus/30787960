@@ -1,0 +1,38 @@
+class Solution {
+	int latestTimeCatchTheBus(int[] buses, int[] passengers, int capacity) {
+		Arrays.sort(buses);
+		Arrays.sort(passengers);
+		Set<Integer> allPassengers = Arrays.stream(passengers).boxed().collect(Collectors.toCollection());
+		int pasPtr = 0;
+		for (int b = 0; b < buses.length - 1; b++) {
+			int departureTime = buses[b];
+			int goingCounter = 0;
+			while (pasPtr < passengers.length && passengers[pasPtr] <= departureTime && goingCounter < capacity) {
+				pasPtr++;
+				goingCounter++;
+			}
+		}
+		if (pasPtr >= passengers.length) {
+			return buses[buses.length - 1];
+		}
+		int lastDeparture = buses[buses.length - 1];
+		int firstWaitingPas = passengers[pasPtr];
+		if (firstWaitingPas > lastDeparture) {
+			return lastDeparture;
+		}
+		int latest = firstWaitingPas - 1;
+		while (allPassengers.contains(latest)) {
+			latest--;
+		}
+		int goingCounter = 0;
+		for (int i = firstWaitingPas + 1; i <= lastDeparture && goingCounter < capacity - 1; i++) {
+			if (!allPassengers.contains(i)) {
+				latest = i;
+			} 
+			else {
+				goingCounter++;
+			}
+		}
+		return latest;
+	}
+}

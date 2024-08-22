@@ -1,0 +1,31 @@
+class Solution {
+	int twoCitySchedCost(int[][] costs) {
+		if (null == costs || 0 == costs.length) {
+			return 0;
+		}
+		int n = costs.length / 2;
+		return twoCitySchedCost(costs,0,n,n);
+	}
+	int twoCitySchedCost(int[][] costs, int idx, int city1, int city2) {
+		if (idx >= costs.length) {
+			return 0;
+		}
+		int resForCity1 = 0;
+		if (city1 > 0) {
+			resForCity1 = costs[idx][0] + twoCitySchedCost(costs,idx + 1,city1 - 1,city2);
+		}
+		int resForCity2 = 0;
+		if (city2 > 0) {
+			resForCity2 = costs[idx][1] + twoCitySchedCost(costs,idx + 1,city1,city2 - 1);
+		}
+		if (city1 > 0 && city2 > 0) {
+			return Math.min(resForCity1,resForCity2);
+		} 
+		else if (city1 > 0) {
+			return resForCity1;
+		} 
+		else {
+			return resForCity2;
+		}
+	}
+}

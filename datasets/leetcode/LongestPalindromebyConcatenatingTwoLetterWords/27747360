@@ -1,0 +1,54 @@
+class Solution {
+	int longestPalindrome(String[] words) {
+		int ans = 0, t = words.length, l = 0, p = 0, v = 0;
+		HashMap<String, Integer> hm = new HashMap<>();
+		int[] arr = new int[t];
+		for (int i = 0; i < t; i++) {
+			if (words[i].charAt(0) == words[i].charAt(1)) {
+				arr[i] = 1;
+			}
+			if (hm.containsKey(words[i])) {
+				hm.put(words[i],hm.get(words[i]) + 1);
+			} 
+			else {
+				hm.put(words[i],1);
+			}
+		}
+		for (int i = 0; i < t; i++) {
+			if (!hm.containsKey(words[i])) {
+				continue;
+			}
+			String s = "";
+			char ch = words[i].charAt(1);
+			s += ch;
+			ch = words[i].charAt(0);
+			s += ch;
+			if (hm.containsKey(s)) {
+				if (arr[i] == 1) {
+					if (hm.get(s) == 1) {
+						v = 1;
+						hm.remove(s);
+						continue;
+					}
+				}
+				ans += 4;
+				if (hm.get(s) != 1) {
+					hm.put(s,hm.get(s) - 1);
+				} 
+				else {
+					hm.remove(s);
+				}
+				if (hm.get(words[i]) != 1) {
+					hm.put(words[i],hm.get(words[i]) - 1);
+				} 
+				else {
+					hm.remove(words[i]);
+				}
+			}
+		}
+		if (v == 1) {
+			ans += 2;
+		}
+		return ans;
+	}
+}

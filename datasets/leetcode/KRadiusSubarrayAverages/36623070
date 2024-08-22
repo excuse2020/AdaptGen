@@ -1,0 +1,52 @@
+class Solution {
+	int[] getAverages(int[] nums, int k) {
+		if (k == 0) {
+			return nums;
+		}
+		int k2 = k + k;
+		if (nums.length < k2) {
+			Arrays.fill(nums,-1);
+			return nums;
+		}
+		if (k > 10000) {
+			long curTotal = 0L;
+			for (int i = 0; i < nums.length; i++) {
+				if (i < k2) {
+					curTotal += nums[i];
+					continue;
+				}
+				int indexRemove = i - k2;
+				int tem = (int) (curTotal / (k2));
+				curTotal = curTotal + nums[i] - nums[indexRemove];
+				nums[indexRemove] = tem;
+			}
+			nums[nums.length - k2] = (int) (curTotal / (k2));
+			for (int i = nums.length - k; i >= k; i--) {
+				nums[i] = nums[i - k];
+			}
+			Arrays.fill(nums,0,k,-1);
+			Arrays.fill(nums,nums.length - k,nums.length,-1);
+			return nums;
+		} 
+		else {
+			int curTotal = 0;
+			for (int i = 0; i < nums.length; i++) {
+				if (i < k2) {
+					curTotal += nums[i];
+					continue;
+				}
+				int indexRemove = i - k2;
+				int tem = curTotal / (k2);
+				curTotal = curTotal + nums[i] - nums[indexRemove];
+				nums[indexRemove] = tem;
+			}
+			nums[nums.length - k2] = curTotal / (k2);
+			for (int i = nums.length - k; i >= k; i--) {
+				nums[i] = nums[i - k];
+			}
+			Arrays.fill(nums,0,k,-1);
+			Arrays.fill(nums,nums.length - k,nums.length,-1);
+			return nums;
+		}
+	}
+}

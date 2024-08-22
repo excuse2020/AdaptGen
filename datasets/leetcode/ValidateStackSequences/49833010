@@ -1,0 +1,42 @@
+class Solution {
+	boolean validateStackSequences(int[] push, int[] pop) {
+		int idx1 = 0;
+		int idx2 = 0;
+		Stack<Integer> st = new Stack<>();
+		while (idx1 < push.length && idx2 < pop.length) {
+			int a = push[idx1];
+			int b = pop[idx2];
+			if (a == b) {
+				idx1++;
+				idx2++;
+			} 
+			else {
+				if (st.size() != 0 && st.peek() == b) {
+					st.pop();
+					idx2++;
+				} 
+				else {
+					st.push(a);
+					idx1++;
+				}
+			}
+		}
+		if (idx1 == push.length && idx2 == pop.length) {
+			return true;
+		} 
+		else {
+			if (idx1 == push.length) {
+				if (st.size() != pop.length - idx2) {
+					return false;
+				}
+				while (st.size() != 0) {
+					if (pop[idx2++] != st.pop()) {
+						return false;
+					}
+				}
+				return true;
+			}
+			return true;
+		}
+	}
+}

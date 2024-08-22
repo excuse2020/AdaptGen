@@ -1,0 +1,43 @@
+class Solution {
+	void printLL(ListNode head) {
+		ListNode curr = head;
+		while (curr != null) {
+			System.out.print(curr.val + " ");
+			curr = curr.next;
+		}
+		System.out.println();
+	}
+	ListNode removeZeroSumSublists(ListNode head) {
+		HashMap<Integer, ListNode> hm = new HashMap<>();
+		ListNode curr = head;
+		int sum = 0;
+		while (curr != null) {
+			sum += curr.val;
+			if (sum == 0) {
+				head = curr.next;
+				curr = curr.next;
+				hm.clear();
+				continue;
+			}
+			ListNode x = hm.getOrDefault(sum,null);
+			if (x != null) {
+				ListNode tmp = x.next;
+				x.next = curr.next;
+				int k = sum;
+				while (tmp != x.next) {
+					k = k + tmp.val;
+					if (k != sum) {
+						hm.remove(k);
+					}
+					tmp = tmp.next;
+				}
+				curr = x.next;
+			} 
+			else {
+				hm.put(sum,curr);
+				curr = curr.next;
+			}
+		}
+		return head;
+	}
+}

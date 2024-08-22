@@ -1,0 +1,32 @@
+class Solution {
+	boolean[] discard;
+	int[] mask;
+	boolean canMatch(int m1, int m2) {
+		return ((m1 & m2) == 0);
+	}
+	int helper(int i, int curMask, List<String> arr, int n) {
+		if (i >= n) {
+			return 0;
+		}
+		if (discard[i]) {
+			return helper(i + 1,curMask,arr,n);
+		}
+		if (canMatch(curMask,mask[i])) {
+			String s = arr.get(i);
+			return Math.max(helper(i + 1,curMask,arr,n),s.length() + helper(i + 1,curMask ^ mask[i],arr,n));
+		}
+		return helper(i + 1,curMask,arr,n);
+	}
+	int maxLength(List<String> arr) {
+		mask = new int[arr.size()];
+		discard = new boolean[arr.size()];
+		int res = 0;
+		for (int j = 0; j < arr.size(); j++) {
+			mask[j] = updateMask(mask[j],arr.get(j),j);
+		}
+		return helper(0,0,arr,arr.size());
+	}
+	int updateMask(int m, String s, int j) {
+		int i = 0;
+	}
+}

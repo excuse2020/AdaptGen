@@ -1,0 +1,28 @@
+class Solution {
+	int solveMem(int eggs, int floors, int[][] dp) {
+		if (eggs == 0 || floors == 0) {
+			return 0;
+		}
+		if (eggs == 1) {
+			return floors;
+		}
+		if (floors == 1) {
+			return 1;
+		}
+		if (dp[eggs][floors] != -1) {
+			return dp[eggs][floors];
+		}
+		int ans = Integer.MAX_VALUE;
+		for (int k = 1; k <= floors; k++) {
+			ans = Math.min(ans,1 + Math.max(solveMem(eggs - 1,k - 1,dp),solveMem(eggs,floors - k,dp)));
+		}
+		return dp[eggs][floors] = ans;
+	}
+	int twoEggDrop(int n) {
+		int[][] dp = new int[3][n + 1];
+		for (int[] arr: dp) {	
+			Arrays.fill(arr,-1);
+		}
+		return solveMem(2,n,dp);
+	}
+}

@@ -1,0 +1,28 @@
+class Solution {
+	boolean isPossible(int[] target) {
+		if (target.length == 1 && target[0] != 1) {
+			return false;
+		}
+		long sum = 0;
+		PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+		for (int i = 0; i < target.length; i++) {
+			pq.offer(target[i]);
+			sum += target[i];
+		}
+		while (pq.size() > 0) {
+			int mx = pq.poll();
+			if (mx == 1 || mx + 1 == sum) {
+				continue;
+			}
+			int lsum = (int) sum - mx;
+			if (lsum <= 0 || lsum >= mx) {
+				return false;
+			}
+			int q = mx / lsum;
+			int nt = mx % lsum;
+			pq.offer(nt);
+			sum = sum - (lsum * q);
+		}
+		return true;
+	}
+}

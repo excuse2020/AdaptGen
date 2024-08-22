@@ -1,0 +1,48 @@
+class Solution {
+	List<Integer> lastTree(TreeNode root) {
+		if (root == null) {
+			return new ArrayList<Integer>();
+		}
+		List<Integer> treeList = new ArrayList<>();
+		treeList.addAll(lastTree(root.left));
+		treeList.addAll(lastTree(root.right));
+		treeList.add(root.val);
+		return treeList;
+	}
+	List<Integer> midTree(TreeNode root) {
+		if (root == null) {
+			return new ArrayList<Integer>();
+		}
+		List<Integer> treeList = new ArrayList<>();
+		treeList.addAll(midTree(root.left));
+		treeList.add(root.val);
+		treeList.addAll(midTree(root.right));
+		return treeList;
+	}
+	List<Integer> preTree(TreeNode root) {
+		if (root == null) {
+			return new ArrayList<Integer>();
+		}
+		List<Integer> treeList = new ArrayList<>();
+		treeList.add(root.val);
+		treeList.addAll(preTree(root.left));
+		treeList.addAll(preTree(root.right));
+		return treeList;
+	}
+	int[][] threeOrders(TreeNode root) {
+		int result = new int[3];
+		List<Integer> pre = preTree(root);
+		int preArr = new int[pre.size()];
+		preArr = pre.stream().mapToInt().toArray();
+		result[0] = preArr;
+		List<Integer> mid = midTree(root);
+		int midArr = new int[mid.size()];
+		midArr = mid.stream().mapToInt().toArray();
+		result[1] = midArr;
+		List<Integer> last = lastTree(root);
+		int lastArr = new int[last.size()];
+		lastArr = last.stream().mapToInt().toArray();
+		result[2] = lastArr;
+		return result;
+	}
+}

@@ -1,0 +1,37 @@
+class Solution {
+	Integer dp = new Integer[101][10001];
+	int superEggDrop(int k, int n) {
+		if (n == 0 || n == 1) {
+			return n;
+		}
+		if (k == 1) {
+			return n;
+		}
+		int min = Integer.MAX_VALUE;
+		if (dp[k][n] != null) {
+			return dp[k][n];
+		} 
+		else {
+			int l = 1;
+			int h = n;
+			while (l <= h) {
+				int mid = l + (h - l) / 2;
+				int low = superEggDrop(k - 1,mid - 1);
+				int high = superEggDrop(k,n - mid);
+				int temp = 1 + Math.max(low,high);
+				if (low > high) {
+					h = mid - 1;
+				} 
+				else {
+					l = mid + 1;
+				}
+				min = Math.min(temp,min);
+			}
+		}
+		dp[k][n] = min;
+		return min;
+	}
+	int twoEggDrop(int n) {
+		return superEggDrop(2,n);
+	}
+}

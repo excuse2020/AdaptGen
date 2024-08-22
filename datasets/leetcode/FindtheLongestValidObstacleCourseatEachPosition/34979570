@@ -1,0 +1,55 @@
+class Solution {
+	int seg;
+	int[] longestObstacleCourseAtEachPosition(int[] o) {
+		HashMap<Integer, Integer> hm = new HashMap<>();
+		int nw = new int[o.length];
+		for (int i = 0; i < o.length; i++) {
+			nw[i] = o[i];
+		}
+		Arrays.sort(nw);
+		for (int i = 0; i < o.length; i++) {
+			hm.put(nw[i],i);
+		}
+		int n = o.length;
+		int ans = new int[n];
+		int mx = Integer.MIN_VALUE;
+		for (int i: hm.values()) {	
+			mx = Math.max(mx,i);
+		}
+		seg = new int[4 * mx];
+		ans[0] = 1;
+		update(0,0,mx,hm.get(o[0]),1);
+		for (int i = 1; i < n; i++) {
+			int val = query(0,0,mx,0,hm.get(o[i]));
+			ans[i] = val + 1;
+			update(0,0,mx,hm.get(o[i]),ans[i]);
+		}
+		return ans;
+	}
+	int query(int si, int ss, int se, int qs, int qe) {
+		if (qs > se || qe < ss) {
+			return -1;
+		}
+		if (ss >= qs && se <= qe) {
+			return seg[si];
+		}
+		int mid = (ss + se) / 2;
+		int p1 = query(2 * si + 1,ss,mid,qs,qe);
+		int p2 = query(2 * si + 2,mid + 1,se,qs,qe);
+		return Math.max(p1,p2);
+	}
+	void update(int si, int ss, int se, int pos, int val) {
+		if (ss == se) {
+			seg[si] = val;
+			return;
+		}
+		int mid = (ss + se) / 2;
+		if (pos <= mid) {
+			update(2 * si + 1,ss,mid,pos,val);
+		} 
+		else {
+			update(2 * si + 2,mid + 1,se,pos,val);
+		}
+		seg[si] = Math.max(seg[2 * si + 1],seg[2 * si + 2]);
+	}
+}

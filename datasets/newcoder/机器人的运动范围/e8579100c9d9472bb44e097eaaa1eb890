@@ -1,0 +1,20 @@
+class Solution {
+	int dfs(int target, int x, int y, int curX, int curY, boolean flag) {
+		int temp = 0;
+		for (int i = curX; i > 0; i /= 10) {
+			temp += (i % 10);
+		}
+		for (int j = curY; j > 0; j /= 10) {
+			temp += (j % 10);
+		}
+		if (curX < 0 || curX >= x || curY < 0 || curY >= y || temp > target || flag[curX][curY]) {
+			return 0;
+		}
+		flag[curX][curY] = true;
+		return (dfs(target,x,y,curX + 1,curY,flag) + dfs(target,x,y,curX,curY + 1,flag)) + 1;
+	}
+	int movingCount(int threshold, int rows, int cols) {
+		boolean flag = new boolean[rows][cols];
+		return dfs(threshold,rows,cols,0,0,flag);
+	}
+}

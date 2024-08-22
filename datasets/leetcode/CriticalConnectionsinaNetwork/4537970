@@ -1,0 +1,52 @@
+class Solution {
+	List<List<Integer>> criticalConnections = new ArrayList<>();
+	List<List<Integer>> graph = new ArrayList<>();
+	boolean[] visited;
+	int visitedNo = 0;
+	int[] visitedTime;
+	List<Integer> adjVertices(Integer vertex) {
+		return graph.get(vertex);
+	}
+	void buildGraph(int vertices, List<List<Integer>> edges) {
+		for (int i = 0; i < vertices; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (List<Integer> edge: edges) {	
+			graph.get(edge.get(0)).add(edge.get(1));
+			graph.get(edge.get(1)).add(edge.get(0));
+		}
+	}
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		buildGraph(n,connections);
+		this.visitedTime = new int[graph.size()];
+		this.visited = new boolean[graph.size()];
+		dfs(graph.get(0).get(0));
+		return criticalConnections;
+	}
+	void dfs(Integer src) {
+		visited[src] = true;
+		visitedTime[src] = visitedNo;
+		visitedNo++;
+		for (Integer vertex: adjVertices(src)) {	
+			if (!visited[vertex]) {
+				dfs(vertex);
+				visitedTime[vertex] = getLowestVisitedTime(vertex,src);
+				if (visitedTime[vertex] > visitedTime[src]) {
+					List<Integer> list = new ArrayList<>();
+					list.add(src);
+					list.add(vertex);
+					criticalConnections.add(list);
+				}
+			}
+		}
+	}
+	int getLowestVisitedTime(Integer vertex, Integer src) {
+		int lowestTime = visitedTime[vertex];
+		for (Integer v: adjVertices(vertex)) {	
+			if (!v.equals(src)) {
+				lowestTime = Math.min(visitedTime[v],lowestTime);
+			}
+		}
+		return lowestTime;
+	}
+}

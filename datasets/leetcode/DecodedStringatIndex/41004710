@@ -1,0 +1,52 @@
+class Solution {
+	record WordCount(String word, int count, long fullWordLength, long prevTotal) {
+	}
+	String decodeAtIndex(String s, int k) {
+		var wordCounts = parseString(s,k);
+		return findKChar(wordCounts,k);
+	}
+	String findKChar(List<WordCount> wordCounts, long k) {
+		var lastIndex = wordCounts.size() - 1;
+		var lastWordCount = wordCounts.get(lastIndex);
+		if (k == 0) {
+			var word = lastWordCount.word;
+			return String.valueOf(word.charAt(word.length() - 1));
+		} 
+		else if (k > lastWordCount.fullWordLength) {
+			return findKChar(wordCounts,k % lastWordCount.fullWordLength);
+		} 
+		else if (k <= lastWordCount.prevTotal) {
+			var wordCountsWithoutLastItem = new ArrayList<>(wordCounts);
+			wordCountsWithoutLastItem.remove(lastIndex);
+			return findKChar(wordCountsWithoutLastItem,k);
+		} 
+		else {
+			int index = (int) (k - lastWordCount.prevTotal);
+			return String.valueOf(lastWordCount.word.charAt(index));
+		}
+	}
+	boolean isLowerAlpha(char c) {
+	}
+	boolean isValidDigit(char c) {
+	}
+	List<WordCount> parseString(String s, long k) {
+		var result = new ArrayList<WordCount>();
+		int sLength = s.length();
+		int i = 0;
+		char c;
+		long total = 0;
+		var wordBuilder = new StringBuilder();
+		int count = 1;
+		while (i < sLength) {
+			c = s.charAt(i);
+			if (isLowerAlpha(c)) {
+				wordBuilder.append(c);
+				i++;
+			} 
+			else {
+				break;
+			}
+		}
+		c = s.charAt(i);
+	}
+}

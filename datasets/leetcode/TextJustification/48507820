@@ -1,0 +1,65 @@
+class Solution {
+	String composeAdjustedLine(String[] words, int l, int r, int lineWidth, int maxWidth) {
+		if (l == r) {
+			return composeDirectLine(words,l,r,lineWidth,maxWidth);
+		}
+		StringBuffer sb = new StringBuffer();
+		int spaceTotal = maxWidth - lineWidth;
+		for (int i = l, spaceFlag = 0; i <= r; i++) {
+			if (spaceFlag == 1) {
+				sb.append(" ");
+			}
+			if (spaceFlag == 1) {
+				int spaceSlots = r - i + 1;
+				int spaceExtra = (int) Math.ceil(1.0 * spaceTotal / spaceSlots);
+				for (int j = 0; j < spaceExtra; j++) {
+					sb.append(" ");
+				}
+				spaceTotal -= spaceExtra;
+			}
+			sb.append(words[i]);
+			spaceFlag = 1;
+		}
+		return sb.toString();
+	}
+	String composeDirectLine(String[] words, int l, int r, int lineWidth, int maxWidth) {
+		StringBuffer sb = new StringBuffer();
+		for (int i = l, spaceFlag = 0; i <= r; i++) {
+			if (spaceFlag == 1) {
+				sb.append(" ");
+			}
+			sb.append(words[i]);
+			spaceFlag = 1;
+		}
+		for (int i = lineWidth; i < maxWidth; i++) {
+			sb.append(" ");
+		}
+		return sb.toString();
+	}
+	List<String> fullJustify(String[] words, int maxWidth) {
+		List<String> result = new ArrayList<>();
+		int size = words.length;
+		for (int idx = 0; idx < size; ) {
+			int lineStartIdx = idx;
+			int lineWidth = 0;
+			while (idx < size) {
+				String word = words[idx];
+				int candidateWidth = lineWidth + ((lineWidth > 0) ? 1 : 0);
+				if (candidateWidth > maxWidth) {
+					String line = composeAdjustedLine(words,lineStartIdx,idx - 1,lineWidth,maxWidth);
+					result.add(line);
+					break;
+				} 
+				else {
+					lineWidth = candidateWidth;
+					idx++;
+				}
+				if (idx == size) {
+					String line = composeDirectLine(words,lineStartIdx,idx - 1,lineWidth,maxWidth);
+					result.add(line);
+				}
+			}
+		}
+		return result;
+	}
+}

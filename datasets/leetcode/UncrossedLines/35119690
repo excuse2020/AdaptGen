@@ -1,0 +1,23 @@
+class Solution {
+	int maxLines(int i, int j, int[] nums1, int[] nums2, Integer[][] cache) {
+		if (i == nums1.length || j == nums2.length) {
+			return 0;
+		}
+		if (cache[i][j] != null) {
+			return cache[i][j];
+		}
+		int cur = 0;
+		for (int k = j; k < nums2.length; k++) {
+			if (nums1[i] == nums2[k]) {
+				cur = Math.max(cur,1 + maxLines(i + 1,k + 1,nums1,nums2,cache));
+				break;
+			}
+		}
+		cur = Math.max(cur,maxLines(i + 1,j,nums1,nums2,cache));
+		cache[i][j] = cur;
+		return cur;
+	}
+	int maxUncrossedLines(int[] nums1, int[] nums2) {
+		return maxLines(0,0,nums1,nums2,new Integer[nums1.length][nums2.length]);
+	}
+}

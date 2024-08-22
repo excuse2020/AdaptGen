@@ -1,0 +1,36 @@
+class Solution {
+	String[] reorderLogFiles(String[] logs) {
+		String[] ans = new String[logs.length];
+		Map<String, List<String>> map = new TreeMap();
+		List<String> nums = new ArrayList();
+		for (String log: logs) {	
+			if (Character.isDigit(log.charAt(log.length() - 1))) {
+				nums.add(log);
+			} 
+			else {
+				String[] s = log.split(" ");
+				int j = 1;
+				String sub = "";
+				while (j < s.length) {
+					sub += " " + s[j++];
+				}
+				if (!map.containsKey(sub)) {
+					map.put(sub,new ArrayList<String>());
+				}
+				map.get(sub).add(log);
+			}
+		}
+		int last = 0;
+		for (Map.Entry<String, List<String>> entry: map.entrySet()) {	
+			List<String> tmp = entry.getValue();
+			Collections.sort(tmp);
+			for (String val: tmp) {	
+				ans[last++] = val;
+			}
+		}
+		for (String str: nums) {	
+			ans[last++] = str;
+		}
+		return ans;
+	}
+}

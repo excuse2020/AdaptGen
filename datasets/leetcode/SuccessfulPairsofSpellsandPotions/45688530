@@ -1,0 +1,33 @@
+class Solution {
+	int getIdx(int spell, int[] potions, long success) {
+		int m, l, r, n;
+		l = 0;
+		r = potions.length;
+		n = r;
+		while (l < r) {
+			m = l + (r - l) / 2;
+			if (!isValid(spell,potions[m],success)) {
+				l = m + 1;
+			} 
+			else {
+				r = m;
+			}
+		}
+		if (l - 1 >= 0 && isValid(spell,potions[l - 1],success)) {
+			return n - l;
+		}
+		return n - l;
+	}
+	boolean isValid(int spell, int potion, long success) {
+		long x = Long.valueOf(spell) * Long.valueOf(potion);
+		return x >= success;
+	}
+	int[] successfulPairs(int[] spells, int[] potions, long success) {
+		Arrays.sort(potions);
+		int[] ans = new int[spells.length];
+		for (int i = 0; i < spells.length; i++) {
+			ans[i] = getIdx(spells[i],potions,success);
+		}
+		return ans;
+	}
+}

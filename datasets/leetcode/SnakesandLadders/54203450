@@ -1,0 +1,61 @@
+class Solution {
+	int snakesAndLadders(int[][] board) {
+		int[] newBoard = new int[board.length * board.length];
+		int index = 0;
+		boolean toRight = true;
+		for (int i = board.length - 1; i >= 0; i--) {
+			if (toRight) {
+				for (int j = 0; j < board.length; j++) {
+					newBoard[index] = board[i][j];
+					System.out.println((index + 1) + " ");
+					index++;
+				}
+				toRight = false;
+			} 
+			else {
+				for (int j = board.length - 1; j >= 0; j--) {
+					newBoard[index] = board[i][j];
+					System.out.println((index + 1) + " ");
+					index++;
+				}
+				toRight = true;
+			}
+		}
+		int count = 0;
+		Queue<Integer> q = new LinkedList<>();
+		HashSet<Integer> visited = new HashSet<>();
+		visited.add(1);
+		q.add(1);
+		while (!q.isEmpty()) {
+			count++;
+			int len = q.size();
+			System.out.println("count  = " + count);
+			for (int c = 0; c < len; c++) {
+				int currIndex = q.poll();
+				System.out.println(currIndex);
+				for (int i = 1; i <= 6; i++) {
+					currIndex++;
+					if (currIndex == newBoard.length) {
+						return count;
+					}
+					System.out.println("currIndex = " + currIndex);
+					if (newBoard[currIndex - 1] != -1) {
+						System.out.println("added " + newBoard[currIndex - 1]);
+						if (newBoard[currIndex - 1] == newBoard.length) {
+							return count;
+						} 
+						else if (!visited.contains(newBoard[currIndex - 1])) {
+							q.add(newBoard[currIndex - 1]);
+							visited.add(newBoard[currIndex - 1]);
+						}
+					} 
+					else if (!visited.contains(currIndex)) {
+						q.add(currIndex);
+						visited.add(currIndex);
+					}
+				}
+			}
+		}
+		return -1;
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	int solve(char[][] matrix) {
+		if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+			return -1;
+		}
+		int rows = matrix.length;
+		int cols = matrix[0].length;
+		int maxArea = 0;
+		for (int startRow = 0; startRow < rows; startRow++) {
+			for (int startCol = 0; startCol < cols; startCol++) {
+				if (matrix[startRow][startCol] == '1') {
+					int toRightSideMin = Integer.MAX_VALUE;
+					int toDownSide = 0;
+					for (int curRow = startRow; curRow < rows; curRow++) {
+						if (matrix[curRow][startCol] == '1') {
+							toDownSide++;
+							int toRightSide = 0;
+							for (int curCol = startCol; curCol < cols; curCol++) {
+								if (matrix[curRow][curCol] == '1') {
+									toRightSide++;
+								} 
+								else {
+									break;
+								}
+							}
+							toRightSideMin = Math.min(toRightSideMin,toRightSide);
+							int side = Math.min(toRightSideMin,toDownSide);
+							maxArea = Math.max(maxArea,side * side);
+						} 
+						else if (matrix[curRow][startCol] == '0' || curRow - startRow + 1 > toRightSideMin) {
+							break;
+						}
+					}
+				}
+			}
+		}
+		return maxArea;
+	}
+}

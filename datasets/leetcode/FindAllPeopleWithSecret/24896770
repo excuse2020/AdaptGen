@@ -1,0 +1,48 @@
+class Solution {
+	void dfs(int m, Map<Integer, List<Integer>> graph, Set<Integer> set, Set<Integer> visited) {
+		Stack<Integer> s = new Stack<>();
+		s.push(m);
+		while (!s.isEmpty()) {
+			int p = s.pop();
+			visited.add(p);
+			set.add(p);
+			for (int adj: graph.get(p)) {	
+				if (!visited.contains(adj)) {
+					s.push(adj);
+				}
+			}
+		}
+	}
+	List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+		PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> {meetings[a][2] - meetings[b][2]});
+		int l = meetings.length;
+		while (l-- > 0) {
+			pq.offer(l);
+		}
+		Set<Integer> set = new HashSet<>();
+		set.add(0);
+		set.add(firstPerson);
+		while (!pq.isEmpty()) {
+			int a = pq.poll();
+			Map<Integer, List<Integer>> map = new HashMap<>();
+			map.computeIfAbsent(meetings[a][0],(k) -> {new ArrayList<>()}).add(meetings[a][1]);
+			map.computeIfAbsent(meetings[a][1],(k) -> {new ArrayList<>()}).add(meetings[a][0]);
+			while (!pq.isEmpty() && meetings[pq.peek()][2] == meetings[a][2]) {
+				a = pq.poll();
+				map.computeIfAbsent(meetings[a][0],(k) -> {new ArrayList<>()}).add(meetings[a][1]);
+				map.computeIfAbsent(meetings[a][1],(k) -> {new ArrayList<>()}).add(meetings[a][0]);
+			}
+			helper(map,set);
+		}
+		List<Integer> lst = new LinkedList<>(set);
+		return lst;
+	}
+	void helper(Map<Integer, List<Integer>> graph, Set<Integer> set) {
+		Set<Integer> visited = new HashSet<>();
+		for (Integer key: graph.keySet()) {	
+			if (!visited.contains(key) && set.contains(key)) {
+				dfs(key,graph,set,visited);
+			}
+		}
+	}
+}

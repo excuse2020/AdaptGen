@@ -1,0 +1,92 @@
+class Solution {
+	int backTracking(int pre, int bitmask, int n, String[] words, int memo, int dp, int next) {
+		if (bitmask == (1 << n) - 1) {
+			dp[pre][bitmask] = words[pre].length();
+			return dp[pre][bitmask];
+		}
+		if (dp[pre][bitmask] != Integer.MAX_VALUE) {
+			return dp[pre][bitmask];
+		}
+		int len = Integer.MAX_VALUE;
+		for (int i = 0; i < n; i++) {
+			if ((bitmask & (1 << i)) > 0) {
+				continue;
+			}
+			int returnLen = backTracking(i,bitmask | (1 << i),n,words,memo,dp,next);
+			if (bitmask != 0) {
+				returnLen += words[pre].length() - memo[pre][i];
+			}
+			if (returnLen < len) {
+				len = returnLen;
+				next[pre][bitmask] = i;
+			}
+		}
+		dp[pre][bitmask] = Math.min(dp[pre][bitmask],len);
+		return dp[pre][bitmask];
+	}
+	int countReduce(String a, String b) {
+		int len = Math.min(a.length(),b.length());
+		for (int i = len; i >= 1; i--) {
+			if (a.substring(a.length() - i,a.length()).equals(b.substring(0,i))) {
+				StringBuilder sb = new StringBuilder();
+				if (a.length() - i > 0) {
+					sb.append(a.substring(0,a.length() - i));
+				}
+				sb.append(b);
+				return i;
+			}
+		}
+		return 0;
+	}
+	String mergeString(String a, String b) {
+		int len = Math.min(a.length(),b.length());
+		for (int i = len; i >= 1; i--) {
+			if (a.substring(a.length() - i,a.length()).equals(b.substring(0,i))) {
+				StringBuilder sb = new StringBuilder();
+				if (a.length() - i > 0) {
+					sb.append(a.substring(0,a.length() - i));
+				}
+				sb.append(b);
+				return sb.toString();
+			}
+		}
+		return a + b;
+	}
+	String shortestSuperstring(String[] words) {
+		int n = words.length;
+		int memo = new int[n][n];
+		int dp = new int[n][1 << n];
+		int next = new int[n][1 << n];
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < dp[i].length; j++) {
+				dp[i][j] = Integer.MAX_VALUE;
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (i == j) {
+					memo[i][j] = 0;
+				} 
+				else {
+					memo[i][j] = countReduce(words[i],words[j]);
+				}
+			}
+		}
+		backTracking(0,0,n,words,memo,dp,next);
+		List<String> list = new ArrayList<String>();
+		int idx = 0;
+		int bitmask = 0;
+		int cnt = 0;
+		while (cnt < n) {
+			list.add(words[next[idx][bitmask]]);
+			idx = next[idx][bitmask];
+			bitmask |= (1 << idx);
+			cnt++;
+		}
+		String result = list.get(0);
+		for (int i = 1; i < list.size(); i++) {
+			result = mergeString(result,list.get(i));
+		}
+		return result;
+	}
+}

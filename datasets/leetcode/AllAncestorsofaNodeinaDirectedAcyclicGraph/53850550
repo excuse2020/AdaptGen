@@ -1,0 +1,31 @@
+class Solution {
+	List<List<Integer>> getAncestors(int n, int[][] edges) {
+		List<Integer>[] adjList = new List[n];
+		for (int[] edge: edges) {	
+			if (adjList[edge[0]] == null) {
+				adjList[edge[0]] = new ArrayList<>();
+			}
+			adjList[edge[0]].add(edge[1]);
+		}
+		List<List<Integer>> answer = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			answer.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			traverseAndAdd(i,i,adjList,answer,new boolean[n]);
+		}
+		return answer;
+	}
+	void traverseAndAdd(int i, int curr, List<Integer>[] adjList, List<List<Integer>> answer, boolean[] visited) {
+		if (adjList[curr] == null) {
+			return;
+		}
+		for (Integer next: adjList[curr]) {	
+			if (!visited[next]) {
+				answer.get(next).add(i);
+				visited[next] = true;
+				traverseAndAdd(i,next,adjList,answer,visited);
+			}
+		}
+	}
+}

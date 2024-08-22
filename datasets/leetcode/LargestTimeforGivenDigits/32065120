@@ -1,0 +1,39 @@
+class Solution {
+	String checkExistence(List<Integer> digits, int maxValue) {
+		for (int i = maxValue; i >= 0; i--) {
+			if (digits.contains(Integer.valueOf(i))) {
+				digits.remove(Integer.valueOf(i));
+				return String.valueOf(i);
+			}
+		}
+		return "";
+	}
+	String checkTimeExistence(int[] arr, int firstMaxValue) {
+		List<Integer> digits = new ArrayList<>();
+		for (int digit: arr) {	
+			digits.add(digit);
+		}
+		String time = "";
+		time += checkExistence(digits,firstMaxValue);
+		if (time.equals("2")) {
+			time += checkExistence(digits,3);
+		} 
+		else {
+			time += checkExistence(digits,9);
+		}
+		time += ":";
+		time += checkExistence(digits,5);
+		time += checkExistence(digits,9);
+		return time.length() == 5 ? time : "";
+	}
+	String largestTimeFromDigits(int[] arr) {
+		String time = checkTimeExistence(arr,2);
+		if (time == "") {
+			time = checkTimeExistence(arr,1);
+		}
+		if (time == "") {
+			time = checkTimeExistence(arr,0);
+		}
+		return time;
+	}
+}

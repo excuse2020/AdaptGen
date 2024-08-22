@@ -1,0 +1,39 @@
+class Solution {
+	int pairSum(ListNode head) {
+		ListNode slow = head;
+		ListNode fast = head;
+		ListNode prev = null;
+		while (fast != null) {
+			prev = slow;
+			slow = slow.next;
+			fast = fast.next.next;
+		}
+		ListNode rev = reverse(prev.next);
+		prev.next = null;
+		prev.next = rev;
+		fast = rev;
+		slow = head;
+		int max = 0;
+		while (fast != null) {
+			max = Math.max(max,slow.val + fast.val);
+			slow = slow.next;
+			fast = fast.next;
+		}
+		return max;
+	}
+	ListNode reverse(ListNode head) {
+		ListNode temp = head;
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode prev = null;
+		while (temp != null) {
+			ListNode t = temp.next;
+			temp.next = null;
+			temp.next = prev;
+			prev = temp;
+			temp = t;
+		}
+		return prev;
+	}
+}

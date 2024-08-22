@@ -1,0 +1,28 @@
+class Solution {
+	ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
+	void dfs(int num, ArrayList<Integer> list, boolean[] used) {
+		if (list.size() == num.length) {
+			res.add(new ArrayList<>(list));
+			return;
+		}
+		for (int i = 0; i < num.length; i++) {
+			if (used[i]) {
+				continue;
+			}
+			if (i > 0 && num[i - 1] == num[i] && !used[i - 1]) {
+				continue;
+			}
+			used[i] = true;
+			list.add(num[i]);
+			dfs(num,list,used);
+			list.remove(list.size() - 1);
+			used[i] = false;
+		}
+	}
+	ArrayList<ArrayList<Integer>> permuteUnique(int[] num) {
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		Arrays.sort(num);
+		dfs(num,list,new boolean[num.length]);
+		return res;
+	}
+}

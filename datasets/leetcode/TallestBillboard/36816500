@@ -1,0 +1,23 @@
+class Solution {
+	int offset = 5000;
+	int solve(int i, int diff, int[] rods, int dp) {
+		if (i == rods.length) {
+			return diff == 0 ? 0 : Integer.MIN_VALUE;
+		}
+		if (dp[i][diff + offset] != -1) {
+			return dp[i][diff + offset];
+		}
+		int one = solve(i + 1,diff,rods,dp);
+		int two = rods[i] + solve(i + 1,rods[i] + diff,rods,dp);
+		int three = solve(i + 1,diff - rods[i],rods,dp);
+		dp[i][diff + offset] = (int) Math.max(one,Math.max(two,three));
+		return dp[i][diff + offset];
+	}
+	int tallestBillboard(int[] rods) {
+		int dp = new int[rods.length][2 * offset + 1];
+		for (int d: dp) {	
+			Arrays.fill(d,-1);
+		}
+		return solve(0,0,rods,dp);
+	}
+}

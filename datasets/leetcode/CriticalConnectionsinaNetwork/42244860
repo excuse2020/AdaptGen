@@ -1,0 +1,41 @@
+class Solution {
+	int timer = 1;
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i <= n; i++) {
+			graph.add(new ArrayList<Integer>());
+		}
+		for (List<Integer> list: connections) {	
+			int u = list.get(0);
+			int v = list.get(1);
+			graph.get(u).add(v);
+			graph.get(v).add(u);
+		}
+		boolean visited = new boolean[n];
+		int time = new int[n];
+		int low = new int[n];
+		List<List<Integer>> bridges = new ArrayList<>();
+		dfs(0,-1,graph,visited,time,low,bridges);
+		return bridges;
+	}
+	void dfs(int node, int parent, ArrayList<ArrayList<Integer>> graph, boolean visited, int time, int low, List<List<Integer>> bridges) {
+		visited[node] = true;
+		time[node] = low[node] = timer;
+		++timer;
+		for (Integer n: graph.get(node)) {	
+			if (n == parent) {
+				continue;
+			} 
+			else if (!visited[n]) {
+				dfs(n,node,graph,visited,time,low,bridges);
+				low[node] = Math.min(low[node],low[n]);
+				if (low[n] > time[node]) {
+					bridges.add(Arrays.asList(node,n));
+				}
+			} 
+			else {
+				low[node] = Math.min(low[node],low[n]);
+			}
+		}
+	}
+}

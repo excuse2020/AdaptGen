@@ -1,0 +1,31 @@
+class Solution {
+	int log(int n) {
+		int c = 0;
+		while (n != 0) {
+			n /= 2;
+			c++;
+		}
+		return c;
+	}
+	int minOperations(int n) {
+		int dp = new int[n + 1];
+		Set<Integer> set = new HashSet<>();
+		dp[0] = 0;
+		for (int i = 0; i < 17; i++) {
+			set.add(1 << i);
+		}
+		for (int i = 1; i <= n; i++) {
+			if (set.contains(i)) {
+				dp[i] = 1;
+			} 
+			else {
+				int x = (int) Math.pow(2,log(i) - 1);
+				int y = (int) Math.pow(2,log(i));
+				int diff1 = i - x;
+				int diff2 = y - i;
+				dp[i] = Math.min(1 + dp[diff1],1 + dp[diff2]);
+			}
+		}
+		return dp[n];
+	}
+}

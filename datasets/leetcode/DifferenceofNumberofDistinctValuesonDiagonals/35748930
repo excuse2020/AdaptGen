@@ -1,0 +1,35 @@
+class Solution {
+	int[][] differenceOfDistinctValues(int[][] grid) {
+		int m = grid.length;
+		int n = grid[0].length;
+		int[][] ans = new int[m][n];
+		for (int i = 0; i < n; i++) {
+			helper(0,i,true,grid,ans);
+		}
+		for (int i = 1; i < m; i++) {
+			helper(i,0,true,grid,ans);
+		}
+		for (int i = 0; i < n; i++) {
+			helper(m - 1,i,false,grid,ans);
+		}
+		for (int i = 0; i < m - 1; i++) {
+			helper(i,n - 1,false,grid,ans);
+		}
+		return ans;
+	}
+	void helper(int row, int col, boolean add, int[][] grid, int[][] ans) {
+		Set<Integer> set = new HashSet();
+		if (add) {
+			while (row < grid.length && col < grid[0].length) {
+				ans[row][col] = set.size();
+				set.add(grid[row++][col++]);
+			}
+		} 
+		else {
+			while (row >= 0 && col >= 0) {
+				ans[row][col] = Math.abs(set.size() - ans[row][col]);
+				set.add(grid[row--][col--]);
+			}
+		}
+	}
+}

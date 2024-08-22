@@ -1,0 +1,38 @@
+class Solution {
+	Map<Integer, List<Integer>> employeeMap;
+	int[] manager, informTime;
+	int numOfMinutes = 0;
+	void backtrack(int curManager, int time) {
+		numOfMinutes = Math.max(numOfMinutes,time);
+		if (!employeeMap.containsKey(curManager)) {
+			return;
+		}
+		List<Integer> employees = employeeMap.get(curManager);
+		for (int i = 0; i < employees.size(); i++) {
+			backtrack(employees.get(i),time + informTime[curManager]);
+		}
+	}
+	Map<Integer, List<Integer>> getEmployees() {
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		List<Integer> list;
+		for (int i = 0; i < manager.length; i++) {
+			if (map.containsKey(manager[i])) {
+				list = map.get(manager[i]);
+			} 
+			else {
+				list = new ArrayList<>();
+			}
+			list.add(i);
+			map.put(manager[i],list);
+		}
+		return map;
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		this.manager = manager;
+		this.informTime = informTime;
+		employeeMap = getEmployees();
+		System.out.println(employeeMap);
+		backtrack(headID,0);
+		return numOfMinutes;
+	}
+}

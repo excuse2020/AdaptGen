@@ -1,0 +1,42 @@
+class Solution {
+	int[][] dp;
+	int binarySearch(Pair<Integer, Pair<Integer, Integer>>[] jobs, int target, int si) {
+		int left = si + 1, right = jobs.length - 1, ans = 0;
+		while (left <= right) {
+			int mid = left + (right - left) / 2;
+			if (jobs[mid].getKey() < target) {
+				left = mid + 1;
+			} 
+			else {
+				right = mid - 1;
+			}
+		}
+		return left;
+	}
+	int findLeftMostStart(Pair<Integer, Pair<Integer, Integer>>[] jobs, int i) {
+		int et = jobs[i].getValue().getKey();
+		return binarySearch(jobs,et,i);
+	}
+	int helper(Pair<Integer, Pair<Integer, Integer>>[] jobs, int i) {
+		if (i >= jobs.length || i < 0) {
+			return 0;
+		}
+		if (dp[0][i] != -1) {
+			return dp[0][i];
+		}
+		int maxP1 = helper(jobs,i + 1);
+		int si = findLeftMostStart(jobs,i);
+		int maxP2 = helper(jobs,si) + jobs[i].getValue().getValue();
+		return dp[0][i] = Math.max(maxP1,maxP2);
+	}
+	int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
+		dp = new int[2][startTime.length];
+		Arrays.fill(dp[0],-1);
+		Pair<Integer, Pair<Integer, Integer>>[] jobs = new Pair[startTime.length];
+		for (int i = 0; i < startTime.length; i++) {
+			jobs[i] = new Pair<>(startTime[i], new Pair(endTime[i], profit[i]));
+		}
+		Arrays.sort(jobs,(a, b) -> {a.getKey() - b.getKey()});
+		return helper(jobs,0);
+	}
+}

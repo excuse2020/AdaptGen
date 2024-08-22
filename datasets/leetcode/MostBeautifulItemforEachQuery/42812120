@@ -1,0 +1,19 @@
+class Solution {
+	int[] maximumBeauty(int[][] items, int[] queries) {
+		TreeMap<Integer, Integer> priceToBeauty = new TreeMap<>();
+		for (int[] item: items) {	
+			priceToBeauty.put(item[0],Math.max(priceToBeauty.getOrDefault(item[0],0),item[1]));
+		}
+		int max = 0;
+		for (Map.Entry<Integer, Integer> e: priceToBeauty.entrySet()) {	
+			max = Math.max(e.getValue(),max);
+			priceToBeauty.put(e.getKey(),max);
+		}
+		int[] ans = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			Map.Entry<Integer, Integer> e = priceToBeauty.floorEntry(queries[i]);
+			ans[i] = e == null ? 0 : e.getValue();
+		}
+		return ans;
+	}
+}

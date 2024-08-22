@@ -1,0 +1,47 @@
+class Solution {
+	void reorderList(ListNode head) {
+		if (head == null || head.next == null) {
+			return;
+		}
+		int count = 0;
+		ListNode root = head;
+		ListNode startHead = head;
+		while (root != null) {
+			root = root.next;
+			count++;
+		}
+		if (count % 2 == 0) {
+			count = count / 2;
+		} 
+		else {
+			count = count / 2 + 1;
+		}
+		root = head;
+		while (count > 1) {
+			count--;
+			root = root.next;
+		}
+		ListNode start = root.next;
+		if (start == null) {
+			return;
+		}
+		ListNode next = start.next;
+		while (next != null) {
+			start.next = next.next;
+			next.next = root.next;
+			root.next = next;
+			next = start.next;
+		}
+		ListNode reverse = root.next;
+		root.next = null;
+		ListNode reverseNext;
+		while (head != null && reverse != null) {
+			next = head.next;
+			reverseNext = reverse.next;
+			head.next = reverse;
+			reverse.next = next;
+			head = next;
+			reverse = reverseNext;
+		}
+	}
+}

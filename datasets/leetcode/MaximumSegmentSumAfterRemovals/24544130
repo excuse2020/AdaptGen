@@ -1,0 +1,39 @@
+class Solution {
+	long[] maximumSegmentSum(int[] arr, int[] queries) {
+		int n = arr.length, q = queries.length;
+		long[] ans = new long[n];
+		TreeSet<Integer> indices = new TreeSet<>();
+		indices.add(-1);
+		indices.add(n);
+		long[] pSum = new long[n];
+		for (int i = 0; i < n; i++) {
+			pSum[i] = (long) arr[i] + (i == 0 ? 0l : pSum[i - 1]);
+		}
+		TreeMap<Long, Integer> maxSum = new TreeMap<>();
+		maxSum.put(0l,1);
+		maxSum.put(pSum[n - 1],1);
+		for (int i = 0; i < q; i++) {
+			int idx = queries[i];
+			int l = indices.floor(idx) + 1, r = indices.ceiling(idx) - 1;
+			long rmSum = pSum[r] - (l == 0 ? 0l : pSum[l - 1]);
+			int freq = maxSum.get(rmSum) - 1;
+			if (freq == 0) {
+				maxSum.remove(rmSum);
+			} 
+			else {
+				maxSum.put(rmSum,freq);
+			}
+			if (l <= idx - 1) {
+				long curr = pSum[idx - 1] - (l == 0 ? 0l : pSum[l - 1]);
+				maxSum.put(curr,maxSum.getOrDefault(curr,0) + 1);
+			}
+			if (idx + 1 <= r) {
+				long curr = pSum[r] - (idx + 1 == 0 ? 0l : pSum[idx]);
+				maxSum.put(curr,maxSum.getOrDefault(curr,0) + 1);
+			}
+			indices.add(idx);
+			ans[i] = maxSum.lastKey();
+		}
+		return ans;
+	}
+}

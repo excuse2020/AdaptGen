@@ -1,0 +1,48 @@
+class Solution {
+	int endsBefore(int[] endTimes, int arrivalTime) {
+		int left = 0;
+		int right = endTimes.length - 1;
+		while (left <= right) {
+			int middle = left + (right - left) / 2;
+			if (endTimes[middle] < arrivalTime) {
+				left = middle + 1;
+			} 
+			else {
+				right = middle - 1;
+			}
+		}
+		return right;
+	}
+	int[] fullBloomFlowers(int[][] flowers, int[] persons) {
+		int[] startTimes = new int[flowers.length];
+		int[] endTimes = new int[flowers.length];
+		for (int i = 0; i < flowers.length; i++) {
+			startTimes[i] = flowers[i][0];
+			endTimes[i] = flowers[i][1];
+		}
+		Arrays.sort(startTimes);
+		Arrays.sort(endTimes);
+		int[] result = new int[persons.length];
+		for (int i = 0; i < persons.length; i++) {
+			int arrivalTime = persons[i];
+			int startsBefore = startsBeforeOrOn(startTimes,arrivalTime);
+			int endsBefore = endsBefore(endTimes,arrivalTime);
+			result[i] = startsBefore - endsBefore;
+		}
+		return result;
+	}
+	int startsBeforeOrOn(int[] startTimes, int arrivalTime) {
+		int left = 0;
+		int right = startTimes.length - 1;
+		while (left <= right) {
+			int middle = left + (right - left) / 2;
+			if (startTimes[middle] <= arrivalTime) {
+				left = middle + 1;
+			} 
+			else {
+				right = middle - 1;
+			}
+		}
+		return right;
+	}
+}

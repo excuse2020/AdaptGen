@@ -1,0 +1,52 @@
+class Solution {
+	int lowerBound(int portions, long target) {
+		int low = 0;
+		int high = portions.length - 1;
+		int ans = high + 1;
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			if (portions[mid] >= target) {
+				ans = mid;
+				high = mid - 1;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		return ans;
+	}
+	int[] successfulPairs(int[] spells, int[] portions, long success) {
+		int n = spells.length;
+		int m = portions.length;
+		Arrays.sort(portions);
+		int ans = new int[n];
+		for (int i = 0; i < n; i++) {
+			long target = (long) success / spells[i];
+			if (success % spells[i] == 0) {
+				int idx = lowerBound(portions,target);
+				ans[i] = m - idx;
+			} 
+			else {
+				int idx = upperBound(portions,target);
+				ans[i] = m - idx;
+			}
+		}
+		return ans;
+	}
+	int upperBound(int portions, long target) {
+		int low = 0;
+		int high = portions.length - 1;
+		int ans = high + 1;
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			if (portions[mid] > target) {
+				ans = mid;
+				high = mid - 1;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		return ans;
+	}
+}

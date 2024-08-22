@@ -1,0 +1,41 @@
+class Solution {
+	Map<Integer, Integer> count = new HashMap<>();
+	Map<Integer, Integer> parent = new HashMap<>();
+	int[][] s;
+	int parent(int a) {
+		if (parent.computeIfAbsent(a,(z) -> {z}) != a) {
+			parent.put(a,parent(parent.get(a)));
+		}
+		return parent.get(a);
+	}
+	int removeStones(int[][] s) {
+		this.s = s;
+		for (int[] a: s) {	
+			uf(a);
+		}
+		int resp = 0;
+		for (int a: new ArrayList<>(parent.keySet())) {	
+			if (parent(a) == a) {
+				resp++;
+			}
+		}
+		return s.length - resp;
+	}
+	void uf(int[] a) {
+		int idA = a[0];
+		int idB = (a[1] + 1) * 10000;
+		int parentA = parent(idA);
+		int parentB = parent(idB);
+		if (parentA == parentB) {
+			return;
+		}
+		if (count.getOrDefault(parentA,0) > count.getOrDefault(parentB,0)) {
+			count.put(parentA,count.getOrDefault(parentB,0) + 1);
+			parent.put(parentB,parentA);
+		} 
+		else {
+			count.put(parentB,count.getOrDefault(parentA,0) + 1);
+			parent.put(parentA,parentB);
+		}
+	}
+}

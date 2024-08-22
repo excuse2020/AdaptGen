@@ -1,0 +1,31 @@
+class Solution {
+	long mod = (long) (1e9 + 7);
+	long specPerCount(int mask, int index, int n, int prev, int arr, long dp) {
+		if (index == n) {
+			return 1;
+		}
+		if (prev != -1 && dp[mask][prev] != -1) {
+			return dp[mask][prev];
+		}
+		long sum = 0;
+		for (int i = 0; i < n; i++) {
+			if (prev == -1 || ((mask & 1 << n - i) == 0 && (arr[i] % arr[prev] == 0 || arr[prev] % arr[i] == 0))) {
+				sum = (sum % mod + specPerCount((mask | 1 << n - i),index + 1,n,i,arr,dp) % mod) % mod;
+			}
+		}
+		if (prev != -1) {
+			dp[mask][prev] = sum;
+		}
+		return sum;
+	}
+	int specialPerm(int[] nums) {
+		int n = nums.length;
+		long dp = new long[1 << 15][n + 1];
+		for (int i = 0; i < 1 << 15; i++) {
+			for (int j = 0; j <= n; j++) {
+				dp[i][j] = -1;
+			}
+		}
+		return (int) specPerCount(0,0,n,-1,nums,dp);
+	}
+}

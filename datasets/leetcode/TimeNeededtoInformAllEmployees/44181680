@@ -1,0 +1,29 @@
+class Solution {
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		Queue<Pair<Integer, Integer>> queue = new LinkedList<>();
+		HashMap<Integer, List<Integer>> managers = new HashMap<>();
+		for (int i = 0; i < manager.length; ++i) {
+			if (managers.containsKey(manager[i])) {
+				managers.get(manager[i]).add(i);
+			} 
+			else {
+				List<Integer> list = new ArrayList<>();
+				list.add(i);
+				managers.put(manager[i],list);
+			}
+		}
+		queue.add(new Pair<>(headID, informTime[headID]));
+		int time = 0;
+		while (!queue.isEmpty()) {
+			Pair<Integer, Integer> element = queue.poll();
+			time = Math.max(element.getValue(),time);
+			if (managers.containsKey(element.getKey())) {
+				List<Integer> subordinates = managers.get(element.getKey());
+				for (int subordinate: subordinates) {	
+					queue.add(new Pair<>(subordinate, element.getValue() + informTime[subordinate]));
+				}
+			}
+		}
+		return time;
+	}
+}

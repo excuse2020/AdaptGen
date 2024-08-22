@@ -1,0 +1,30 @@
+class Solution {
+	int k;
+	int help(int[][] grid, int[][] c, int row, int col, int m, int n, int[][] dp) {
+		if (row == m - 1 && col < n) {
+			return grid[row][col];
+		}
+		if (dp[row][col] != -1) {
+			return dp[row][col];
+		}
+		int x = Integer.MAX_VALUE;
+		for (int i = 0; i < n; i++) {
+			int k = grid[row][col];
+			x = Math.min(x,k + c[grid[row][col]][i]);
+		}
+		return dp[row][col] = x;
+	}
+	int minPathCost(int[][] grid, int[][] moveCost) {
+		int m = grid.length;
+		int n = grid[0].length;
+		int ans = Integer.MAX_VALUE;
+		int dp = new int[m][n];
+		for (int[] x: dp) {	
+			Arrays.fill(x,-1);
+		}
+		for (int i = 0; i < n; i++) {
+			ans = Math.min(ans,help(grid,moveCost,0,i,m,n,dp));
+		}
+		return ans;
+	}
+}

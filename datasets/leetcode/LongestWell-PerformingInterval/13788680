@@ -1,0 +1,24 @@
+class Solution {
+	int longestWPI(int[] hours) {
+		int maxGood = 0;
+		hours[0] = (hours[0] > 8) ? 1 : -1;
+		for (int i = 1; i < hours.length; i++) {
+			hours[i] = (hours[i] > 8) ? hours[i - 1] + 1 : hours[i - 1] - 1;
+		}
+		Map<Integer, Integer> prefix = new HashMap<>();
+		for (int i = 0; i < hours.length; i++) {
+			if (hours[i] > 0) {
+				maxGood = Math.max(maxGood,i + 1);
+			} 
+			else {
+				if (prefix.containsKey(hours[i] - 1)) {
+					maxGood = Math.max(maxGood,i - prefix.get(hours[i] - 1));
+				}
+				if (!prefix.containsKey(hours[i])) {
+					prefix.put(hours[i],i);
+				}
+			}
+		}
+		return maxGood;
+	}
+}

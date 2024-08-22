@@ -1,0 +1,48 @@
+class Solution {
+	HashMap<Integer, Integer>[] dp;
+	int dfsAndFindReverse(int start, int root, List<Integer>[] graph, List<Integer>[] reverseGraph) {
+		if (dp[start] != null && dp[start].containsKey(root)) {
+			return dp[start].get(root);
+		}
+		int result = 0;
+		if (graph[start] != null) {
+			for (int child: graph[start]) {	
+				if (child != root) {
+					result += dfsAndFindReverse(child,start,graph,reverseGraph);
+				}
+			}
+		}
+		if (reverseGraph[start] != null) {
+			for (int parent: reverseGraph[start]) {	
+				if (parent != root) {
+					result = result + 1;
+				}
+			}
+		}
+		if (dp[start] == null) {
+			dp[start] = new HashMap<>();
+		}
+		dp[start].put(root,result);
+		return result;
+	}
+	int[] minEdgeReversals(int n, int[][] edges) {
+		List<Integer>[] graph = new List[n];
+		List<Integer>[] reverseGraph = new List[n];
+		int[] result = new int[n];
+		dp = new HashMap[n];
+		for (int[] edge: edges) {	
+			if (graph[edge[0]] == null) {
+				graph[edge[0]] = new ArrayList<>();
+			}
+			if (reverseGraph[edge[1]] == null) {
+				reverseGraph[edge[1]] = new ArrayList<>();
+			}
+			graph[edge[0]].add(edge[1]);
+			reverseGraph[edge[1]].add(edge[0]);
+		}
+		for (int i = 0; i < n; ++i) {
+			result[i] = dfsAndFindReverse(i,-1,graph,reverseGraph);
+		}
+		return result;
+	}
+}

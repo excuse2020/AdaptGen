@@ -1,0 +1,35 @@
+class Solution {
+	void calIndegree(int[][] graph, int[] indegree) {
+		for (int i = 0; i < graph.length; i++) {
+			indegree[graph[i][0]]++;
+		}
+	}
+	int[] findOrder(int numCourses, int[][] prerequisites) {
+		int[] indegree = new int[numCourses];
+		calIndegree(prerequisites,indegree);
+		int[] res = new int[numCourses];
+		Queue<Integer> que = new LinkedList<>();
+		for (int i = 0; i < indegree.length; i++) {
+			if (indegree[i] == 0) {
+				que.add(i);
+			}
+		}
+		int idx = 0;
+		while (!que.isEmpty()) {
+			int curr = que.remove();
+			res[idx++] = curr;
+			for (int i = 0; i < prerequisites.length; i++) {
+				if (prerequisites[i][1] == curr) {
+					indegree[prerequisites[i][0]]--;
+					if (indegree[prerequisites[i][0]] == 0) {
+						que.add(prerequisites[i][0]);
+					}
+				}
+			}
+		}
+		if (idx != numCourses) {
+			return new int[0];
+		}
+		return res;
+	}
+}

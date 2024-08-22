@@ -1,0 +1,69 @@
+class Solution {
+	int ind;
+	HashMap<Integer, HashSet<Integer>> map;
+	int[] result;
+	HashSet<Integer> visited;
+	void dfs(int course) {
+		visited.add(course);
+		HashSet<Integer> neig = map.get(course);
+		for (int nextnode: neig) {	
+			if (visited.contains(nextnode)) {
+				continue;
+			} 
+			else {
+				dfs(nextnode);
+			}
+		}
+		result[ind--] = course;
+	}
+	boolean findLoop(int course) {
+		boolean flag = false;
+		visited.add(course);
+		HashSet<Integer> neig = map.get(course);
+		for (Integer nextneig: neig) {	
+			if (visited.contains(nextneig)) {
+				return true;
+			}
+			flag = findLoop(nextneig);
+			if (flag == true) {
+				return true;
+			}
+		}
+		visited.remove(course);
+		return flag;
+	}
+	int[] findOrder(int numCourses, int[][] prerequisites) {
+		if (numCourses == 1) {
+			return new int[1];
+		}
+		map = new HashMap<>();
+		result = new int[numCourses];
+		visited = new HashSet<>();
+		ind = numCourses - 1;
+		for (int i = 0; i < numCourses; i++) {
+			map.put(i,new HashSet<>());
+		}
+		for (int i = 0; i < prerequisites.length; i++) {
+			HashSet<Integer> curr = map.get(prerequisites[i][1]);
+			curr.add(prerequisites[i][0]);
+		}
+		boolean loop = false;
+		for (int i = 0; i < numCourses; i++) {
+			visited = new HashSet<>();
+			loop = findLoop(i);
+			if (loop) {
+				return new int[0];
+			}
+		}
+		visited = new HashSet<>();
+		for (int i = 0; i < numCourses; i++) {
+			if (visited.contains(i)) {
+				continue;
+			} 
+			else {
+				dfs(i);
+			}
+		}
+		return result;
+	}
+}

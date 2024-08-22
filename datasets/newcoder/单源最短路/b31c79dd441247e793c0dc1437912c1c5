@@ -1,0 +1,30 @@
+class Solution {
+	int INF = 0x3f3f3f3f;
+	int N = 510, M = 5010;
+	int n, k;
+	int[][] w = new int[N][N];
+	int findShortestPath(int _n, int _k, int[][] graph) {
+		n = _n;
+		k = _k;
+		for (int i = 1; i <= n; i++) {
+			for (int j = 1; j <= n; j++) {
+				w[i][j] = w[j][i] = i == j ? 0 : INF;
+			}
+		}
+		for (int[] t: graph) {	
+			int u = t[0], v = t[1], c = t[2];
+			w[u][v] = Math.min(w[u][v],c);
+		}
+		floyd();
+		return w[1][n] >= INF / 2 ? -1 : w[1][n];
+	}
+	void floyd() {
+		for (int p = 1; p <= n; p++) {
+			for (int i = 1; i <= n; i++) {
+				for (int j = 1; j <= n; j++) {
+					w[i][j] = Math.min(w[i][j],w[i][p] + w[p][j]);
+				}
+			}
+		}
+	}
+}

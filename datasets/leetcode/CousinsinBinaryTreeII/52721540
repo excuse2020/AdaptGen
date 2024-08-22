@@ -1,0 +1,29 @@
+class Solution {
+	void alterTree(TreeNode root, int level, Map<Integer, Integer> levelSum) {
+		int nextLevelSum = levelSum.getOrDefault(level + 1,0);
+		int nextLevelSumExcludingChildNodes = nextLevelSum - (root.left != null ? root.left.val : 0);
+		if (root.left != null) {
+			root.left.val = nextLevelSumExcludingChildNodes;
+			alterTree(root.left,level + 1,levelSum);
+		}
+		if (root.right != null) {
+			root.right.val = nextLevelSumExcludingChildNodes;
+			alterTree(root.right,level + 1,levelSum);
+		}
+	}
+	void calculateLevelSum(TreeNode root, int level, Map<Integer, Integer> levelSum) {
+		if (root == null) {
+			return;
+		}
+		levelSum.put(level,levelSum.getOrDefault(level,0) + root.val);
+		calculateLevelSum(root.left,level + 1,levelSum);
+		calculateLevelSum(root.right,level + 1,levelSum);
+	}
+	TreeNode replaceValueInTree(TreeNode root) {
+		Map<Integer, Integer> levelSum = new HashMap<>();
+		calculateLevelSum(root,0,levelSum);
+		root.val = 0;
+		alterTree(root,0,levelSum);
+		return root;
+	}
+}

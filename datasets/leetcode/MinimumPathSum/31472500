@@ -1,0 +1,32 @@
+class Solution {
+	int[][] dp = new int[202][202];
+	int sum = Integer.MAX_VALUE;
+	int minPathSum(int[][] grid) {
+		int n = grid.length, m = grid[0].length;
+		for (int i = 0; i < 202; i++) {
+			for (int j = 0; j < 202; j++) {
+				dp[i][j] = -1;
+			}
+		}
+		sum = Integer.MAX_VALUE;
+		solve(grid,n - 1,m - 1);
+		return dp[n - 1][m - 1] == -1 ? 0 : dp[n - 1][m - 1];
+	}
+	int solve(int[][] grid, int r, int c) {
+		if (r == 0 && c == 0) {
+			return dp[r][c] = grid[r][c];
+		}
+		if (dp[r][c] != -1) {
+			return dp[r][c];
+		}
+		int m = Integer.MAX_VALUE;
+		if (r - 1 >= 0) {
+			m = grid[r][c] + solve(grid,r - 1,c);
+		}
+		if (c - 1 >= 0) {
+			m = Math.min(m,grid[r][c] + solve(grid,r,c - 1));
+		}
+		dp[r][c] = m;
+		return dp[r][c];
+	}
+}

@@ -1,0 +1,44 @@
+class Solution {
+	int i = 0;
+	TreeNode Deserialize(String str) {
+		if (str.length() == 0) {
+			return null;
+		}
+		String[] values = str.split(",");
+		TreeNode root = Helper(values);
+		return root;
+	}
+	TreeNode Helper(String[] values) {
+		if (i >= values.length) {
+			return null;
+		}
+		if (values[i].equals("#")) {
+			this.i = this.i + 1;
+			return null;
+		}
+		TreeNode node = new TreeNode(Integer.valueOf(values[i]));
+		this.i = this.i + 1;
+		node.left = Helper(values);
+		node.right = Helper(values);
+		return node;
+	}
+	void InOrderTraverse(TreeNode root, StringBuilder sb) {
+		if (root == null) {
+			sb.append(",#");
+			return;
+		}
+		sb.append("," + root.val);
+		InOrderTraverse(root.left,sb);
+		InOrderTraverse(root.right,sb);
+	}
+	String Serialize(TreeNode root) {
+		if (root == null) {
+			return "";
+		}
+		StringBuilder sb = new StringBuilder();
+		sb.append(String.valueOf(root.val));
+		InOrderTraverse(root.left,sb);
+		InOrderTraverse(root.right,sb);
+		return sb.toString();
+	}
+}

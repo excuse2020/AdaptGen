@@ -1,0 +1,46 @@
+class Solution {
+	boolean check(int[] answer, int[] derived) {
+		int[] temp = new int[answer.length];
+		for (int i = 0; i < answer.length; i++) {
+			if (i == answer.length - 1) {
+				temp[i] = answer[i] ^ answer[0];
+			} 
+			else {
+				temp[i] = answer[i] ^ answer[i + 1];
+			}
+			if (temp[i] != derived[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean doesValidArrayExist(int[] derived) {
+		int n = derived.length;
+		int[] answer = new int[n];
+		answer[0] = 0;
+		for (int i = 1; i < n; i++) {
+			if (derived[i - 1] == 1) {
+				answer[i] = (answer[i - 1] == 1) ? 0 : 1;
+			} 
+			else {
+				answer[i] = answer[i - 1];
+			}
+		}
+		if (check(answer,derived)) {
+			return true;
+		}
+		answer[0] = 1;
+		for (int i = 1; i < n; i++) {
+			if (derived[i - 1] == 1) {
+				answer[i] = (answer[i - 1] == 1) ? 0 : 1;
+			} 
+			else {
+				answer[i] = answer[i - 1];
+			}
+		}
+		if (check(answer,derived)) {
+			return true;
+		}
+		return false;
+	}
+}

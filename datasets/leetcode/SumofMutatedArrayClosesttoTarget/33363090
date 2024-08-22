@@ -1,0 +1,32 @@
+class Solution {
+	int findBestValue(int[] arr, int target) {
+		int max = arr[0], sum = arr[0], n = arr.length;
+		for (int i = 1; i < n; i++) {
+			sum += arr[i];
+			max = Math.max(arr[i],max);
+		}
+		if (sum <= target) {
+			return max;
+		}
+		int left = 0, right = max;
+		while (left < right) {
+			int mid = left + (right - left) / 2;
+			sum = 0;
+			for (int num: arr) {	
+				sum += (num > mid) ? mid : num;
+			}
+			if (sum >= target) {
+				right = mid;
+			} 
+			else {
+				left = mid + 1;
+			}
+		}
+		int sum1 = 0, sum2 = 0;
+		for (int num: arr) {	
+			sum1 += (num > left) ? left : num;
+			sum2 += (num > left - 1) ? left - 1 : num;
+		}
+		return (Math.abs(sum2 - target) <= Math.abs(sum1 - target)) ? left - 1 : left;
+	}
+}

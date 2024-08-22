@@ -1,0 +1,41 @@
+class Solution {
+	int minimumTime(int n, int[][] relations, int[] time) {
+		int[] indegree = new int[n + 1];
+		var graph = new HashMap<Integer, List<Integer>>();
+		for (var currRel: relations) {	
+			int prev = currRel[0];
+			int next = currRel[1];
+			indegree[next]++;
+			graph.computeIfAbsent(prev,(v) -> {new ArrayList<Integer>()}).add(next);
+		}
+		int[] dist = new int[n + 1];
+		var queue = new LinkedList<Integer>();
+		for (int i = 1; i < n + 1; i++) {
+			if (indegree[i] == 0) {
+				queue.add(i);
+			}
+		}
+		int minTime = Integer.MIN_VALUE;
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				var currCourse = queue.poll();
+				if (graph.getOrDefault(currCourse,List.of()).isEmpty()) {
+					dist[currCourse] += time[currCourse - 1];
+					minTime = Math.max(minTime,dist[currCourse]);
+				} 
+				else {
+					for (var nextCourse: graph.getOrDefault(currCourse,List.of())) {	
+						indegree[nextCourse]--;
+						if (indegree[nextCourse] == 0) {
+							queue.add(nextCourse);
+						}
+						dist[nextCourse] = Math.max(dist[currCourse] + time[currCourse - 1],dist[nextCourse]);
+						minTime = Math.max(minTime,dist[nextCourse]);
+					}
+				}
+			}
+		}
+		return minTime;
+	}
+}

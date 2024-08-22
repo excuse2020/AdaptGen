@@ -1,0 +1,56 @@
+class Solution {
+	void dfs(TreeNode root, HashMap<TreeNode, Integer> map, List<Integer> list, int level) {
+		if (root == null) {
+			return;
+		}
+		int sum = map.containsKey(root) ? map.get(root) : 0;
+		root.val = list.get(level) - sum;
+		dfs(root.left,map,list,level + 1);
+		dfs(root.right,map,list,level + 1);
+	}
+	void getRealBrothers(TreeNode root, HashMap<TreeNode, Integer> map) {
+		if (root == null) {
+			return;
+		}
+		if (root.left != null && root.right != null) {
+			map.putIfAbsent(root.left,root.right.val);
+			map.putIfAbsent(root.right,root.left.val);
+		}
+		getRealBrothers(root.left,map);
+		getRealBrothers(root.right,map);
+	}
+	void levelsum(TreeNode root, List<Integer> list) {
+		if (root == null) {
+			return;
+		}
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(root);
+		q.add(null);
+		while (!q.isEmpty()) {
+			int sum = 0;
+			while (q.peek() != null) {
+				sum += q.peek().val;
+				if (q.peek().left != null) {
+					q.add(q.peek().left);
+				}
+				if (q.peek().right != null) {
+					q.add(q.peek().right);
+				}
+				q.poll();
+			}
+			q.poll();
+			list.add(sum);
+			if (q.size() > 0) {
+				q.add(null);
+			}
+		}
+	}
+	TreeNode replaceValueInTree(TreeNode root) {
+		List<Integer> list = new ArrayList<>();
+		HashMap<TreeNode, Integer> map = new HashMap<>();
+		levelsum(root,list);
+		getRealBrothers(root,map);
+		dfs(root,map,list,0);
+		return root;
+	}
+}

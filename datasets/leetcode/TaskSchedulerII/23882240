@@ -1,0 +1,25 @@
+class Solution {
+	long taskSchedulerII(int[] t, int space) {
+		int n = t.length;
+		Map<Long, Integer> map = new HashMap<>();
+		long[] dp = new long[t.length];
+		long cur = 0;
+		for (int i = 0; i < n; i++) {
+			long elem = t[i];
+			if (map.get(elem) == map.get(map.size() - 1)) {
+				map.put(elem,i);
+				cur++;
+				dp[i] = cur;
+			} 
+			else {
+				cur++;
+				long time = cur - dp[map.get(elem)];
+				long req = Math.max(0,space - time);
+				cur += req;
+				dp[i] = cur;
+				map.put(elem,i);
+			}
+		}
+		return dp[n - 1];
+	}
+}

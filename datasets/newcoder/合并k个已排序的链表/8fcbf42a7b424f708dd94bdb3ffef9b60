@@ -1,0 +1,45 @@
+class Solution {
+	ListNode mergeKLists(ArrayList<ListNode> lists) {
+		if (lists.isEmpty()) {
+			return null;
+		}
+		if (lists.size() == 1) {
+			return lists.get(0);
+		}
+		int size = lists.size();
+		int leftSize = size / 2;
+		int rightSize = size - leftSize;
+		ArrayList<ListNode> leftPart = new ArrayList<>();
+		ArrayList<ListNode> rightPart = new ArrayList<>();
+		for (int i = 0; i < leftSize; i++) {
+			leftPart.add(lists.get(i));
+		}
+		for (int i = leftSize; i < size; i++) {
+			rightPart.add(lists.get(i));
+		}
+		ListNode leftRes = mergeKLists(leftPart);
+		ListNode rightRes = mergeKLists(rightPart);
+		ListNode hair = new ListNode(0);
+		ListNode pointer = hair;
+		while (leftRes != null || rightRes != null) {
+			if (leftRes == null) {
+				pointer.next = rightRes;
+				return hair.next;
+			} 
+			else if (rightRes == null) {
+				pointer.next = leftRes;
+				return hair.next;
+			} 
+			else if (leftRes.val < rightRes.val) {
+				pointer.next = leftRes;
+				leftRes = leftRes.next;
+			} 
+			else {
+				pointer.next = rightRes;
+				rightRes = rightRes.next;
+			}
+			pointer = pointer.next;
+		}
+		return hair.next;
+	}
+}

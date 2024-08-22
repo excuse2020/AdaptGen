@@ -1,0 +1,33 @@
+class Solution {
+	HashSet<Integer> set;
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		set = new HashSet<>();
+		int[] n1 = new int[edges.length];
+		int[] n2 = new int[edges.length];
+		Arrays.fill(n1,-1);
+		Arrays.fill(n2,-1);
+		helper(node1,edges,n1,0);
+		set.clear();
+		helper(node2,edges,n2,0);
+		int dist = Integer.MAX_VALUE;
+		int index = -1;
+		for (int i = 0; i < n1.length; i++) {
+			if (n1[i] == -1 || n2[i] == -1) {
+				continue;
+			}
+			if (dist > Math.max(n1[i],n2[i])) {
+				dist = Math.max(n1[i],n2[i]);
+				index = i;
+			}
+		}
+		return index;
+	}
+	void helper(int node, int[] edges, int[] arr, int d) {
+		if (node == -1 || set.contains(node)) {
+			return;
+		}
+		set.add(node);
+		arr[node] = d;
+		helper(edges[node],edges,arr,d + 1);
+	}
+}

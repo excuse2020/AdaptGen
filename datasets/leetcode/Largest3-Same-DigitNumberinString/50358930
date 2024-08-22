@@ -1,0 +1,47 @@
+class Solution {
+	String largestGoodInteger(String num) {
+		List<String> list = new ArrayList<>();
+		StringBuilder sb = new StringBuilder();
+		Stack<Character> st = new Stack<>();
+		int count = 1;
+		for (char c: num.toCharArray()) {	
+			if (st.isEmpty()) {
+				st.push(c);
+				continue;
+			}
+			if (st.peek() != c) {
+				st.pop();
+				st.push(c);
+				count = 1;
+			} 
+			else {
+				st.push(c);
+				count++;
+				if (count == 3) {
+					count = 1;
+					while (sb.length() != 3) {
+						sb.append(st.pop());
+					}
+					list.add(sb.toString());
+					sb.setLength(0);
+				}
+			}
+		}
+		int max = -1;
+		for (String ele: list) {	
+			int n = Integer.parseInt(ele);
+			if (n > max) {
+				max = n;
+			}
+		}
+		if (max == -1) {
+			return "";
+		}
+		if (max == 0) {
+			return "000";
+		} 
+		else {
+			return max + "";
+		}
+	}
+}

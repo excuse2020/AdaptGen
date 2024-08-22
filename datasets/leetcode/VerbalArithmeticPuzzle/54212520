@@ -1,0 +1,64 @@
+class Solution {
+	boolean check_equation(String[] words_string_array, String result_word_string, int[] map) {
+		int words_number_sum = 0;
+		for (String word_string: words_string_array) {	
+			int current_word_number = 0;
+			for (int i = 0, N = word_string.length(); (i < N); i++) {
+				char alphabet = word_string.charAt(i);
+				current_word_number = ((current_word_number * 10) + map[((int)alphabet)]);
+			}
+			words_number_sum += current_word_number;
+		}
+		int result_word_number = 0;
+		for (int i = 0, N = result_word_string.length(); (i < N); i++) {
+			char alphabet = result_word_string.charAt(i);
+			result_word_number = ((result_word_number * 10) + map[((int)alphabet)]);
+		}
+		return (words_number_sum == result_word_number);
+	}
+	boolean depth_first_search(int current_index, int N, String unique_characters_string, String first_letter_of_all_words_string, String[] words_string_array, String result_word_string, boolean[] visited_digits_array, int[] map) {
+		if (current_index >= N) {
+			return check_equation(words_string_array,result_word_string,map);
+		}
+		for (int digit = 0; (digit <= 9); digit++) {
+			if (visited_digits_array[digit]) {
+				continue;
+			}
+			char alphabet = unique_characters_string.charAt(current_index);
+			if ((digit == 0) && (first_letter_of_all_words_string.contains((alphabet + "")))) {
+				continue;
+			}
+			map[alphabet] = digit;
+			visited_digits_array[digit] = true;
+			if (depth_first_search((current_index + 1),N,unique_characters_string,first_letter_of_all_words_string,words_string_array,result_word_string,visited_digits_array,map)) {
+				return true;
+			}
+			map[alphabet] = 0;
+			visited_digits_array[digit] = false;
+		}
+		return false;
+	}
+	boolean isSolvable(String[] words_string_array, String result_word_string) {
+		Set<Character> first_letter_of_all_words_set = new HashSet<>();
+		Set<Character> unique_characters_set = new HashSet<>();
+		for (String word_string: words_string_array) {	
+			for (int i = 0, N = word_string.length(); (i < N); i++) {
+				char alphabet = word_string.charAt(i);
+				if ((i == 0) && (N > 1)) {
+					first_letter_of_all_words_set.add(alphabet);
+				}
+				unique_characters_set.add(alphabet);
+			}
+		}
+		for (int i = 0, N = result_word_string.length(); (i < N); i++) {
+			char alphabet = result_word_string.charAt(i);
+			if ((i == 0) && (N > 1)) {
+				first_letter_of_all_words_set.add(alphabet);
+			}
+			unique_characters_set.add(alphabet);
+		}
+		String first_letter_of_all_words_string = first_letter_of_all_words_set.toString().replaceAll("[,\\\\[\\\\]\\\\s]","");
+		String unique_characters_string = unique_characters_set.toString().replaceAll("[,\\\\[\\\\]\\\\s]","");
+		return depth_first_search(0,unique_characters_string.length(),unique_characters_string,first_letter_of_all_words_string,words_string_array,result_word_string,(new boolean[10]),(new int[128]));
+	}
+}

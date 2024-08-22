@@ -1,0 +1,28 @@
+class Solution {
+	Integer[][][] dp;
+	int maximumLength(int[] nums, int k, int i, int last) {
+		if (i == nums.length) {
+			return 0;
+		}
+		if (dp[i][last + 1][k] != null) {
+			return dp[i][last + 1][k];
+		}
+		int len = 0;
+		if (last != -1 && k != 0 && nums[i] != nums[last]) {
+			len = 1 + Math.max(len,maximumLength(nums,k - 1,i + 1,i));
+		}
+		if (last != -1 && nums[i] == nums[last]) {
+			len = 1 + Math.max(len,maximumLength(nums,k,i + 1,i));
+		}
+		if (last == -1) {
+			len = 1 + Math.max(len,maximumLength(nums,k,i + 1,i));
+		}
+		len = Math.max(len,maximumLength(nums,k,i + 1,last));
+		dp[i][last + 1][k] = len;
+		return len;
+	}
+	int maximumLength(int[] nums, int k) {
+		dp = new Integer[nums.length + 1][nums.length + 2][k + 1];
+		return maximumLength(nums,k,0,-1);
+	}
+}

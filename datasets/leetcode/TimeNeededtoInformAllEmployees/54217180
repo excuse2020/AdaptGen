@@ -1,0 +1,28 @@
+class Solution {
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		List<List<Integer>> adj = new ArrayList<List<Integer>>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			if (manager[i] != -1) {
+				adj.get(manager[i]).add(i);
+			}
+		}
+		Queue<Integer> queue = new LinkedList<>();
+		queue.add(headID);
+		int[] time = new int[n];
+		time[headID] = 0;
+		while (!queue.isEmpty()) {
+			int managerHere = queue.remove();
+			int timeByManager = informTime[managerHere];
+			List<Integer> employees = adj.get(managerHere);
+			for (int employee: employees) {	
+				time[employee] = timeByManager + time[managerHere];
+				queue.add(employee);
+			}
+		}
+		Arrays.sort(time);
+		return time[n - 1];
+	}
+}

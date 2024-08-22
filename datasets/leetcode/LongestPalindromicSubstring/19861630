@@ -1,0 +1,50 @@
+class Solution {
+	String back_to_original_string(int[] radius, String modified, String original, int length) {
+		int max_radius = Integer.MIN_VALUE, max_index = 0;
+		for (int i = 0; i < length; i++) {
+			if (max_radius < radius[i]) {
+				max_radius = radius[i];
+				max_index = i;
+			}
+		}
+		max_radius /= 2;
+	}
+	String getModifiedString(String s, int N) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < N; i++) {
+			sb.append("#");
+			sb.append(s.charAt(i));
+		}
+		sb.append("#");
+		return sb.toString();
+	}
+	String longestPalindrome(String s) {
+		int N = s.length();
+		if (N == 1) {
+			return s;
+		}
+		String str = getModifiedString(s,N);
+		int len = str.length();
+		int[] radius = new int[len];
+		int prev_center = 0, right_ptr = 0;
+		for (int curr_center = 0; curr_center < len; curr_center++) {
+			int local_radius_boundary = right_ptr <= curr_center ? 0 : (right_ptr - curr_center);
+			if (curr_center <= right_ptr) {
+				int mirror = prev_center - (curr_center - prev_center);
+				if (local_radius_boundary != radius[mirror]) {
+					radius[curr_center] = Math.min(local_radius_boundary,radius[mirror]);
+					continue;
+				}
+			}
+			while (curr_center - (local_radius_boundary + 1) >= 0 && curr_center + (local_radius_boundary + 1) < len && (str.charAt(curr_center - (local_radius_boundary + 1)) == str.charAt(curr_center + (local_radius_boundary + 1)))) {
+				local_radius_boundary++;
+			}
+			radius[curr_center] = local_radius_boundary;
+			if (curr_center + local_radius_boundary > right_ptr) {
+				prev_center = curr_center;
+				right_ptr = curr_center + local_radius_boundary;
+			}
+		}
+		return back_to_original_string(radius,str,s,len);
+	}
+}

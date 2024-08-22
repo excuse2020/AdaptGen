@@ -1,0 +1,86 @@
+class Solution {
+	long maximumTotalCost(int[] nums) {
+		return solveSO(nums);
+	}
+	long solve(int index, int[] nums, int flag) {
+		if (index >= nums.length) {
+			return 0;
+		}
+		long ans = 0;
+		if (flag == 1) {
+			long include = nums[index] + solve(index + 1,nums,0);
+			long exclude = nums[index] + solve(index + 1,nums,1);
+			ans = Math.max(include,exclude);
+		} 
+		else {
+			long include = -nums[index] + solve(index + 1,nums,1);
+			long exclude = nums[index] + solve(index + 1,nums,0);
+			ans = Math.max(include,exclude);
+		}
+		return ans;
+	}
+	long solveMem(int index, int[] nums, int flag, long dp) {
+		if (index >= nums.length) {
+			return 0;
+		}
+		if (dp[index][flag] != -1) {
+			return dp[index][flag];
+		}
+		long ans = 0;
+		if (flag == 1) {
+			long include = nums[index] + solveMem(index + 1,nums,0,dp);
+			long exclude = nums[index] + solveMem(index + 1,nums,1,dp);
+			ans = Math.max(include,exclude);
+		} 
+		else {
+			long include = -nums[index] + solveMem(index + 1,nums,1,dp);
+			long exclude = nums[index] + solveMem(index + 1,nums,0,dp);
+			ans = Math.max(include,exclude);
+		}
+		return dp[index][flag] = ans;
+	}
+	long solveSO(int[] nums) {
+		int n = nums.length;
+		long curr = new long[2];
+		long next = new long[2];
+		for (int index = n - 1; index >= 0; index--) {
+			for (int flag = 0; flag <= 1; flag++) {
+				long ans = 0;
+				if (flag == 1) {
+					long include = nums[index] + next[0];
+					long exclude = nums[index] + next[1];
+					ans = Math.max(include,exclude);
+				} 
+				else {
+					long include = -nums[index] + next[1];
+					long exclude = nums[index] + next[0];
+					ans = Math.max(include,exclude);
+				}
+				curr[flag] = ans;
+			}
+			next = curr.clone();
+		}
+		return curr[1];
+	}
+	long solveTab(int[] nums) {
+		int n = nums.length;
+		long dp = new long[n + 1][2];
+		for (int index = n - 1; index >= 0; index--) {
+			for (int flag = 0; flag <= 1; flag++) {
+				long ans = 0;
+				if (flag == 1) {
+					long include = nums[index] + dp[index + 1][0];
+					long exclude = nums[index] + dp[index + 1][1];
+					ans = Math.max(include,exclude);
+				} 
+				else {
+					long include = -nums[index] + dp[index + 1][1];
+					long exclude = nums[index] + dp[index + 1][0];
+					ans = Math.max(include,exclude);
+				}
+				dp[index][flag] = ans;
+			}
+		}
+		return dp[0][1];
+	}
+}

@@ -1,0 +1,42 @@
+class Solution {
+	int numSubmatrixSumTarget(int[][] matrix, int target) {
+		int res = 0;
+		int[][] psum = new int[matrix.length][matrix[0].length];
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix[0].length; j++) {
+				psum[i][j] = matrix[i][j];
+				if (i > 0) {
+					psum[i][j] += psum[i - 1][j];
+				}
+				if (j > 0) {
+					psum[i][j] += psum[i][j - 1];
+				}
+				if (i > 0 && j > 0) {
+					psum[i][j] -= psum[i - 1][j - 1];
+				}
+			}
+		}
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix[0].length; j++) {
+				for (int r = i; r < matrix.length; r++) {
+					for (int c = j; c < matrix[0].length; c++) {
+						int current = psum[r][c];
+						if (i > 0) {
+							current -= psum[i - 1][c];
+						}
+						if (j > 0) {
+							current -= psum[r][j - 1];
+						}
+						if (i > 0 && j > 0) {
+							current += psum[i - 1][j - 1];
+						}
+						if (current == target) {
+							res++;
+						}
+					}
+				}
+			}
+		}
+		return res;
+	}
+}

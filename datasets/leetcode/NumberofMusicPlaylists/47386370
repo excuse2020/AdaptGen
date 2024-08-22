@@ -1,0 +1,28 @@
+class Solution {
+	int MOD = 1000_000_007;
+	Long[][] dp;
+	long calc(int g, int t, int n, int k) {
+		if (g == 0) {
+			return t == n ? 1 : 0;
+		}
+		if (dp[g][t] != null) {
+			return dp[g][t];
+		}
+		long res = 0;
+		if (t < n) {
+			long newSong = ((n - t) * calc(g - 1,t + 1,n,k)) % MOD;
+			res = (res + newSong) % MOD;
+		}
+		if (t > k && g - 1 >= n - t) {
+			long repeat = 0;
+			repeat = ((t - k) * calc(g - 1,t,n,k)) % MOD;
+			res = (res + repeat) % MOD;
+		}
+		dp[g][t] = res;
+		return res;
+	}
+	int numMusicPlaylists(int n, int goal, int k) {
+		dp = new Long[goal + 1][n + 1];
+		return (int) calc(goal,0,n,k);
+	}
+}

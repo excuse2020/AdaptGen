@@ -1,0 +1,33 @@
+class Solution {
+	boolean check(int m, int c1, int c2) {
+		if (c1 < 0 || c2 < 0 || c1 >= m || c2 >= m) {
+			return false;
+		}
+		if (c1 == c2) {
+			return false;
+		}
+		return true;
+	}
+	int cherryPickup(int[][] grid) {
+		return util(grid,0,0,0,grid[0].length - 1);
+	}
+	int util(int grid, int r1, int c1, int r2, int c2) {
+		if (r1 == grid.length) {
+			return 0;
+		}
+		if (!check(grid[0].length,c1,c2)) {
+			return -1;
+		}
+		int max = 0;
+		for (int i = -1; i <= 1; i++) {
+			for (int j = -1; j <= 1; j++) {
+				int curr = util(grid,r1 + 1,c1 + i,r2 + 1,c2 + j);
+				if (curr == -1) {
+					continue;
+				}
+				max = Math.max(max,curr);
+			}
+		}
+		return grid[r1][c1] + grid[r2][c2];
+	}
+}

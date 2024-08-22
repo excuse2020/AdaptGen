@@ -1,0 +1,24 @@
+class Solution {
+	int MOD = 1_000_000_007;
+	long findMaxNonAdjSum(int[] arr) {
+		long inclCurr = 0, exclCurr = 0;
+		for (int elem: arr) {	
+			long newInclCurr = exclCurr + elem;
+			exclCurr = Math.max(exclCurr,inclCurr);
+			inclCurr = newInclCurr;
+		}
+		return Math.max(inclCurr,exclCurr);
+	}
+	int maximumSumSubsequence(int[] arr, int[][] qs) {
+		long Sum = 0;
+		long maxNonAdjSum = findMaxNonAdjSum(arr);
+		for (int[] q: qs) {	
+			int index = q[0];
+			int value = q[1];
+			arr[index] = value;
+			maxNonAdjSum = findMaxNonAdjSum(arr);
+			Sum = (Sum + maxNonAdjSum) % MOD;
+		}
+		return (int) Sum;
+	}
+}

@@ -1,0 +1,37 @@
+class Solution {
+	int f(int i, int j, int n, int grid, int dp) {
+		if (j < 0 || j >= n) {
+			return (int) 1e8;
+		}
+		if (i == n - 1) {
+			return grid[i][j];
+		}
+		if (dp[i][j] != Integer.MIN_VALUE) {
+			return dp[i][j];
+		}
+		int down = grid[i][j] + f(i + 1,j,n,grid,dp);
+		int downL = grid[i][j] + f(i + 1,j - 1,n,grid,dp);
+		int downR = grid[i][j] + f(i + 1,j + 1,n,grid,dp);
+		return dp[i][j] = Math.min(down,Math.min(downL,downR));
+	}
+	int minFallingPathSum(int[][] matrix) {
+		int n = matrix.length;
+		if (n == 1) {
+			return matrix[0][0];
+		}
+		int min = (int) 1e8;
+		int m = 0;
+		int x = 0;
+		int dp = new int[n][n];
+		for (int row: dp) {	
+			Arrays.fill(row,Integer.MIN_VALUE);
+		}
+		for (int k = 0; k < n; k++) {
+			x = f(0,k,n,matrix,dp);
+			if (min > x) {
+				min = x;
+			}
+		}
+		return min;
+	}
+}

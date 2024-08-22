@@ -1,0 +1,98 @@
+class Solution {
+	int[][] adj;
+	HashMap<Integer, List<Integer>> map = new HashMap<>();
+	int max_person;
+	int[] visited;
+	void addPair(int x, int y) {
+		List<Integer> lst = map.getOrDefault(x,new ArrayList<>());
+		lst.add(y);
+		map.put(x,lst);
+	}
+	boolean checkCollisonAndAdd(int e, HashMap<Integer, Integer> mp) {
+		List<Integer> coll = map.getOrDefault(e,new ArrayList<>());
+		for (Integer i: coll) {	
+			if (mp.containsKey(i)) {
+				return false;
+			}
+		}
+		mp.put(e,1);
+		return true;
+	}
+	boolean checkValid(int[] arr) {
+		HashMap<Integer, Integer> l1 = new HashMap<>();
+		HashMap<Integer, Integer> l2 = new HashMap<>();
+		for (int i = 1; i < max_person; i++) {
+			if (arr[i] == -1) {
+				return false;
+			}
+			if (arr[i] == 0) {
+				if (!checkCollisonAndAdd(i,l1)) {
+					return false;
+				}
+			} 
+			else {
+				if (!checkCollisonAndAdd(i,l2)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	boolean crawl(int n, int[] arr) {
+		if (n >= max_person) {
+			if (checkValid(arr)) {
+				return true;
+			}
+			return false;
+		}
+		for (int i = n; i < max_person; i++) {
+			for (int v = 0; v <= 1; v++) {
+				arr[i] = v;
+				if (crawl(n + 1,arr)) {
+					return true;
+				}
+				arr[i] = -1;
+			}
+		}
+		return false;
+	}
+	boolean dfs(int n, int color, int[] colors) {
+		if (visited[n] == 1) {
+			return true;
+		}
+		visited[n] = 1;
+		colors[n] = color;
+		List<Integer> coll = map.getOrDefault(n,new ArrayList<>());
+		for (Integer i: coll) {	
+			if (colors[n] == colors[i]) {
+				return false;
+			}
+			if (!dfs(i,1 - color,colors)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		max_person = n + 1;
+		adj = new int[n + 1][n + 1];
+		for (int[] p: dislikes) {	
+			setAdjacency(p[0],p[1]);
+			addPair(p[0],p[1]);
+			addPair(p[1],p[0]);
+		}
+		int[] arr = new int[max_person];
+		Arrays.fill(arr,-1);
+		visited = new int[max_person];
+		for (int i = 1; i < max_person; i++) {
+			if (!dfs(i,0,arr)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	void setAdjacency(int x, int y) {
+		adj[x][y] = 1;
+		adj[y][x] = 1;
+	}
+}

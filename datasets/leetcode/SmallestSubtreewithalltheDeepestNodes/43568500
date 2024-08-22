@@ -1,0 +1,49 @@
+class Solution {
+	List<TreeNode> getLowestNodes(TreeNode root) {
+		List<TreeNode> levelNodes = null;
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.offer(root);
+		while (!queue.isEmpty()) {
+			int len = queue.size();
+			levelNodes = new ArrayList<>();
+			for (int i = 0; i < len; i++) {
+				TreeNode cur = queue.poll();
+				if (i == 0 || i == len - 1) {
+					levelNodes.add(cur);
+				}
+				if (cur.left != null) {
+					queue.offer(cur.left);
+				}
+				if (cur.right != null) {
+					queue.offer(cur.right);
+				}
+			}
+		}
+		return levelNodes;
+	}
+	TreeNode lca(TreeNode root, TreeNode p, TreeNode q) {
+		if (root == null) {
+			return null;
+		}
+		if (root == p || root == q) {
+			return root;
+		}
+		TreeNode left = lca(root.left,p,q);
+		TreeNode right = lca(root.right,p,q);
+		if (left != null && right != null) {
+			return root;
+		}
+		if (left == null) {
+			return right;
+		}
+		return left;
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		List<TreeNode> lowestNodes = getLowestNodes(root);
+		if (lowestNodes.size() == 1) {
+			return lowestNodes.get(0);
+		}
+		TreeNode lcaNode = lca(root,lowestNodes.get(0),lowestNodes.get(1));
+		return lcaNode;
+	}
+}

@@ -1,0 +1,40 @@
+class Solution {
+	List<String> invalidTransactions(String[] transactions) {
+		List<String> result = new ArrayList<>();
+		String[] arr_name = new String[transactions.length];
+		int[] arr_time = new int[transactions.length];
+		int[] arr_amount = new int[transactions.length];
+		String[] arr_city = new String[transactions.length];
+		for (int i = 0; i < transactions.length; i++) {
+			String[] arr_trans_split = transactions[i].split(",",4);
+			String name = arr_trans_split[0];
+			int time = Integer.parseInt(arr_trans_split[1]);
+			int amount = Integer.parseInt(arr_trans_split[2]);
+			String city = arr_trans_split[3];
+			arr_name[i] = name;
+			arr_time[i] = time;
+			arr_amount[i] = amount;
+			arr_city[i] = city;
+		}
+		for (int i = 0; i < transactions.length; i++) {
+			if (arr_amount[i] >= 1000) {
+				result.add(transactions[i]);
+			} 
+			else {
+				int i_same_name = 0;
+				for (String same_name: arr_name) {	
+					if (i_same_name != i && arr_name[i].equals(same_name)) {
+						if (arr_city[i_same_name].equals(arr_city[i]) == false) {
+							if ((arr_time[i] - arr_time[i_same_name]) / 61 == 0) {
+								result.add(transactions[i]);
+								break;
+							}
+						}
+					}
+					i_same_name++;
+				}
+			}
+		}
+		return result;
+	}
+}

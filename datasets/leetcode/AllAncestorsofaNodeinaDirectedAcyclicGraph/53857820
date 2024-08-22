@@ -1,0 +1,35 @@
+class Solution {
+	void dfs(int node, List<List<Integer>> list, List<HashSet<Integer>> ans, boolean visited) {
+		visited[node] = true;
+		for (int next: list.get(node)) {	
+			if (!visited[next]) {
+				dfs(next,list,ans,visited);
+			}
+			ans.get(node).add(next);
+			ans.get(node).addAll(ans.get(next));
+		}
+	}
+	List<List<Integer>> getAncestors(int n, int[][] edges) {
+		List<List<Integer>> list = new ArrayList<>();
+		List<HashSet<Integer>> ans = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			list.add(new ArrayList<>());
+			ans.add(new HashSet<>());
+		}
+		boolean visited = new boolean[n];
+		for (int edge: edges) {	
+			list.get(edge[1]).add(edge[0]);
+		}
+		for (int i = 0; i < n; i++) {
+			if (!visited[i]) {
+				dfs(i,list,ans,visited);
+			}
+		}
+		List<List<Integer>> final_answer = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			final_answer.add(new ArrayList<>(ans.get(i)));
+			Collections.sort(final_answer.get(i));
+		}
+		return final_answer;
+	}
+}

@@ -1,0 +1,26 @@
+class Solution {
+	int dfs(TreeNode root, int path) {
+		if (root == null) {
+			return 0;
+		}
+		if (root != null && root.left == null && root.right == null) {
+			path = path ^ (1 << root.val);
+			if ((path & (path - 1)) == 0) {
+				return 1;
+			}
+			path = path ^ (1 << root.val);
+			return 0;
+		}
+		path = path ^ (1 << root.val);
+		int l = dfs(root.left,path);
+		int r = dfs(root.right,path);
+		path = path ^ (1 << root.val);
+		return l + r;
+	}
+	int pseudoPalindromicPaths(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		return dfs(root,0);
+	}
+}

@@ -1,0 +1,30 @@
+class Solution {
+	boolean isPossible(int[] time, int totalTrips, double currTime) {
+		long trips = 0;
+		for (Integer i: time) {	
+			if (i > currTime) {
+				return false;
+			}
+			trips += (currTime / i);
+			if (trips >= totalTrips) {
+				return true;
+			}
+		}
+		return trips >= totalTrips;
+	}
+	long minimumTime(int[] time, int totalTrips) {
+		Arrays.sort(time);
+		double low = 0;
+		double high = Math.pow(10,14);
+		while (low < high) {
+			double mid = low + (high - low) / 2;
+			if (isPossible(time,totalTrips,mid)) {
+				high = mid;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		return (long) low;
+	}
+}

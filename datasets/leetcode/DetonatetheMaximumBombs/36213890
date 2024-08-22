@@ -1,0 +1,82 @@
+class Solution {
+	void buildLinks(byte[][] links, int[] linksLen, int[][] bombs, int[] bomb, int b) {
+		int x = bomb[0];
+		int y = bomb[1];
+		long radius = (long) bomb[2] * bomb[2];
+		int b1 = links.length - 1;
+		while (b1 > b) {
+			int[] bomb1 = bombs[b1];
+			long dist = distance(x,y,bomb1[0],bomb1[1]);
+			if (dist <= radius) {
+				links[b][linksLen[b]++] = (byte) b1;
+			}
+			if (dist <= (long) bomb1[2] * bomb1[2]) {
+				links[b1][linksLen[b1]++] = (byte) b;
+			}
+			b1--;
+		}
+	}
+	int countExplosions(byte[][] links, boolean[] used, int b) {
+		used[b] = true;
+		int explosions = 1;
+		int i = 0;
+		while (links[b][i] >= 0) {
+			int b1 = links[b][i];
+			if (!used[b1]) {
+				explosions += countExplosions(links,used,b1);
+			}
+			i++;
+		}
+		return explosions;
+	}
+	long distance(int x1, int y1, int x2, int y2) {
+		return (long) (x1 - x2) * (x1 - x2) + (long) (y1 - y2) * (y1 - y2);
+	}
+	int maximumDetonation(int[][] bombs) {
+		int n = bombs.length;
+		if (n <= 1) {
+			return n;
+		}
+		if (n == 2) {
+			return twoBombs(bombs);
+		}
+		byte[][] links = new byte[n][n + 1];
+		int[] linksLen = new int[n];
+		int b = 0;
+		while (b < n) {
+			buildLinks(links,linksLen,bombs,bombs[b],b);
+			b++;
+		}
+		int maxLinks = 0;
+		int i = n - 1;
+		while (i >= 0) {
+			if (linksLen[i] > maxLinks) {
+				maxLinks = linksLen[i];
+			}
+			links[i][linksLen[i]] = (byte) -1;
+			i--;
+		}
+		if (maxLinks == 0 || maxLinks == n - 1) {
+			return maxLinks + 1;
+		}
+		int maxExplosions = 0;
+		i = n - 1;
+		while (i >= 0) {
+			maxExplosions = Math.max(maxExplosions,countExplosions(links,new boolean[n],i));
+			if (maxExplosions == n) {
+				break;
+			}
+			i--;
+		}
+		return maxExplosions;
+	}
+	int twoBombs(int[][] bombs) {
+		int[] b0 = bombs[0];
+		int[] b1 = bombs[1];
+		long dist = distance(b0[0],b0[1],b1[0],b1[1]);
+		if (dist <= (long) b0[2] * b0[2] || dist <= (long) b1[2] * b1[2]) {
+			return 2;
+		}
+		return 1;
+	}
+}

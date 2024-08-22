@@ -1,0 +1,37 @@
+class Solution {
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		int[] visited = new int[numCourses];
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < numCourses; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int[] prerequisite: prerequisites) {	
+			List<Integer> adjacentNodes = graph.get(prerequisite[1]);
+			adjacentNodes.add(prerequisite[0]);
+		}
+		AtomicBoolean hasCycle = new AtomicBoolean(false);
+		for (int i = 0; i < numCourses; i++) {
+			if (visited[i] == 0) {
+				visited[i] = 1;
+				dfs(graph,visited,i,hasCycle);
+				visited[i] = 2;
+				if (hasCycle.get()) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	void dfs(List<List<Integer>> graph, int[] visited, int i, AtomicBoolean hasCycle) {
+		for (int adjacent: graph.get(i)) {	
+			if (visited[adjacent] == 0) {
+				visited[adjacent] = 1;
+				dfs(graph,visited,adjacent,hasCycle);
+			} 
+			else if (visited[adjacent] == 1) {
+				hasCycle.set(true);
+			}
+			visited[adjacent] = 2;
+		}
+	}
+}

@@ -1,0 +1,29 @@
+class Solution {
+	int numOfArrays(int n, int m, int k) {
+		int mod = 1000000007;
+		int[][] dp = new int[m + 1][k + 1];
+		int[][] pref = new int[m + 1][k + 1];
+		int[][] prvDp = new int[m + 1][k + 1];
+		int[][] prvPref = new int[m + 1][k + 1];
+		for (int j = 1; j <= m; j++) {
+			prvDp[j][1] = 1;
+			prvPref[j][1] = j;
+		}
+		for (int i = 2; i <= n; i++) {
+			for (int maxNum = 1; maxNum <= m; maxNum++) {
+				for (int cost = 1; cost <= k; cost++) {
+					dp[maxNum][cost] = (int) (((long) maxNum * prvDp[maxNum][cost]) % mod);
+					if (maxNum > 1 && cost > 1) {
+						dp[maxNum][cost] = (dp[maxNum][cost] + prvPref[maxNum - 1][cost - 1]) % mod;
+					}
+					pref[maxNum][cost] = (pref[maxNum - 1][cost] + dp[maxNum][cost]) % mod;
+				}
+			}
+			for (int j = 1; j <= m; j++) {
+				System.arraycopy(dp[j],0,prvDp[j],0,k + 1);
+				System.arraycopy(pref[j],0,prvPref[j],0,k + 1);
+			}
+		}
+		return pref[m][k];
+	}
+}

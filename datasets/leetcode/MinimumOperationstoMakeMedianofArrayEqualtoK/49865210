@@ -1,0 +1,29 @@
+class Solution {
+	long minOperationsToMakeMedianK(int[] nums, int k) {
+		PriorityQueue<Integer> less = new PriorityQueue<>(Comparator.reverseOrder());
+		PriorityQueue<Integer> greater = new PriorityQueue<>();
+		long ans = 0;
+		for (int num: nums) {	
+			if (num <= k) {
+				less.add(num);
+			} 
+			else {
+				greater.add(num);
+			}
+		}
+		while (less.size() > nums.length / 2) {
+			int num = less.poll();
+			greater.add(k);
+			ans += k - num;
+		}
+		while (greater.size() > nums.length / 2) {
+			int num = greater.poll();
+			less.add(k);
+			ans += num - k;
+		}
+		if (less.size() == greater.size() && less.peek() != greater.peek()) {
+			ans += (greater.peek() - k);
+		}
+		return ans;
+	}
+}

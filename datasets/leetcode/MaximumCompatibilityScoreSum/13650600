@@ -1,0 +1,38 @@
+class Solution {
+	int current = 0;
+	int max = 0;
+	int maxCompatibilitySum(int[][] students, int[][] mentors) {
+		int[][] scores = new int[students.length][mentors.length];
+		for (int i = 0; i < students.length; i++) {
+			for (int j = 0; j < mentors.length; j++) {
+				int matched = 0;
+				for (int k = 0; k < students[0].length; k++) {
+					if (students[i][k] == mentors[j][k]) {
+						matched++;
+					}
+				}
+				scores[i][j] = matched;
+			}
+		}
+		Deque<Integer> stacked = new LinkedList<>();
+		recur(scores,0,stacked);
+		return max;
+	}
+	void recur(int[][] scores, int line, Deque<Integer> stacked) {
+		if (line < 0 || line >= scores.length) {
+			return;
+		}
+		for (int i = 0; i < scores[line].length; i++) {
+			if (!stacked.contains(i)) {
+				current += scores[line][i];
+				stacked.add(i);
+				if (current > max) {
+					max = current;
+				}
+				recur(scores,line + 1,stacked);
+				stacked.removeLast();
+				current -= scores[line][i];
+			}
+		}
+	}
+}

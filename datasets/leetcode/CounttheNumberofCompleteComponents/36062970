@@ -1,0 +1,54 @@
+class Solution {
+	HashMap<Integer, HashSet<Integer>> buildGraph(int[][] edges) {
+		HashMap<Integer, HashSet<Integer>> graph = new HashMap<>();
+		for (int[] edge: edges) {	
+			if (!graph.containsKey(edge[0])) {
+				graph.put(edge[0],new HashSet<>());
+			}
+			graph.get(edge[0]).add(edge[1]);
+			if (!graph.containsKey(edge[1])) {
+				graph.put(edge[1],new HashSet<>());
+			}
+			graph.get(edge[1]).add(edge[0]);
+		}
+		return graph;
+	}
+	int countCompleteComponents(int n, int[][] edges) {
+		List<List<Integer>> componentGroups = new ArrayList<>();
+		int count = 0;
+		HashMap<Integer, HashSet<Integer>> graph = buildGraph(edges);
+		boolean[] visited = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			if (!visited[i]) {
+				componentGroups.add(helper(new ArrayList<Integer>(),visited,i,graph));
+			}
+		}
+		for (List<Integer> connected: componentGroups) {	
+			int currEdges = 0;
+			int size = connected.size();
+			int edjeCal = size * (size - 1);
+			for (Integer comp: connected) {	
+				if (!graph.containsKey(comp)) {
+					continue;
+				}
+				currEdges += graph.get(comp).size();
+			}
+			if (edjeCal == currEdges) {
+				count++;
+			}
+		}
+		return count;
+	}
+	List<Integer> helper(ArrayList<Integer> list, boolean[] visited, int node, HashMap<Integer, HashSet<Integer>> graph) {
+		list.add(node);
+		visited[node] = true;
+		if (graph.containsKey(node)) {
+			for (Integer adjNode: graph.get(node)) {	
+				if (!visited[adjNode]) {
+					helper(list,visited,adjNode,graph);
+				}
+			}
+		}
+		return list;
+	}
+}

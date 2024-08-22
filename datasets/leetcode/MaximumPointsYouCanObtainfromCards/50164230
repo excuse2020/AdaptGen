@@ -1,0 +1,20 @@
+class Solution {
+	int maxScore(int[] cardPoints, int k) {
+		int n = cardPoints.length;
+		int[] pfsum = new int[n];
+		int[] sfsum = new int[n];
+		pfsum[0] = cardPoints[0];
+		for (int i = 1; i < n; i++) {
+			pfsum[i] = pfsum[i - 1] + cardPoints[i];
+		}
+		sfsum[n - 1] = cardPoints[n - 1];
+		for (int i = n - 2; i >= 0; i--) {
+			sfsum[i] = sfsum[i + 1] + cardPoints[i];
+		}
+		int ans = Math.max(pfsum[k - 1],sfsum[n - k]);
+		for (int cnt = 1; cnt <= k - 1; cnt++) {
+			ans = Math.max(ans,pfsum[cnt - 1] + sfsum[n - (k - cnt)]);
+		}
+		return ans;
+	}
+}

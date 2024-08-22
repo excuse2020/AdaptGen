@@ -1,0 +1,37 @@
+class Solution {
+	int MOD = 1000000007;
+	int dp;
+	boolean visited;
+	int numberOfPaths(int[][] grid, int k) {
+		visited = new boolean[grid.length][grid[0].length];
+		dp = new int[grid.length][grid[0].length][k];
+		solve(0,0,grid,k);
+		return dp[0][0][0];
+	}
+	void solve(int i, int j, int[][] grid, int k) {
+		if (i == grid.length - 1 && j == grid[0].length - 1) {
+			dp[i][j][grid[i][j] % k] = 1;
+			return;
+		}
+		if (i >= grid.length || j >= grid[0].length || visited[i][j]) {
+			return;
+		}
+		solve(i + 1,j,grid,k);
+		solve(i,j + 1,grid,k);
+		visited[i][j] = true;
+		if (j + 1 < grid[0].length) {
+			for (int p = 0; p < k; p++) {
+				if (dp[i][j + 1][p] > 0) {
+					dp[i][j][(grid[i][j] + p) % k] = (dp[i][j][(grid[i][j] + p) % k] + dp[i][j + 1][p]) % MOD;
+				}
+			}
+		}
+		if (i + 1 < grid.length) {
+			for (int p = 0; p < k; p++) {
+				if (dp[i + 1][j][p] > 0) {
+					dp[i][j][(grid[i][j] + p) % k] = (dp[i][j][(grid[i][j] + p) % k] + dp[i + 1][j][p]) % MOD;
+				}
+			}
+		}
+	}
+}

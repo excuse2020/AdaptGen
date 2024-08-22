@@ -1,0 +1,27 @@
+class Solution {
+	String mostCommonWord(String paragraph, String[] banned) {
+		paragraph = paragraph.replaceAll("!|\\\\?|\'|,|;|\\\\."," ");
+		paragraph = paragraph.replaceAll(" {1,}"," ");
+		Set<String> bans = new HashSet<>();
+		for (var b: banned) {	
+			bans.add(b.toLowerCase());
+		}
+		String words = paragraph.split(" ");
+		Map<String, Integer> mp = new HashMap<>();
+		for (var w: words) {	
+			String t = w.toLowerCase();
+			if (!bans.contains(t)) {
+				mp.put(t,mp.getOrDefault(t,0) + 1);
+			}
+		}
+		String ans = "";
+		int cnt = 0;
+		for (var ent: mp.entrySet()) {	
+			if (cnt < ent.getValue()) {
+				ans = ent.getKey();
+				cnt = ent.getValue();
+			}
+		}
+		return ans;
+	}
+}

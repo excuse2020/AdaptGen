@@ -1,0 +1,22 @@
+class Solution {
+	long[][] dp;
+	long maximumTotalCost(int[] nums) {
+		dp = new long[nums.length + 1][2];
+		for (int i = 0; i < nums.length; i++) {
+			Arrays.fill(dp[i],Long.MIN_VALUE);
+		}
+		return solve(nums,0,0);
+	}
+	long solve(int[] nums, int index, int even) {
+		if (index >= nums.length) {
+			return 0;
+		}
+		if (dp[index][even] != Long.MIN_VALUE) {
+			return dp[index][even];
+		}
+		int val = ((even == 0) ? nums[index] : -nums[index]);
+		long incl = solve(nums,index + 1,0);
+		long excl = solve(nums,index + 1,(even + 1) % 2);
+		return dp[index][even] = Math.max(incl,excl) + val;
+	}
+}

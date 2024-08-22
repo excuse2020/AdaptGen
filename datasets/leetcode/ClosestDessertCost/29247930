@@ -1,0 +1,25 @@
+class Solution {
+	int diff;
+	int closestCost(int[] baseCosts, int[] toppingCosts, int target) {
+		diff = (int) 1e9 + 7;
+		HashSet<Integer> set = new HashSet<>();
+		int amount = 0;
+		for (int bc: baseCosts) {	
+			helper(toppingCosts,amount + bc,0,target,set);
+		}
+		if (set.contains(target - diff)) {
+			return target - diff;
+		}
+		return target + diff;
+	}
+	void helper(int[] tc, int amount, int idx, int tar, HashSet<Integer> set) {
+		if (idx >= tc.length) {
+			set.add(amount);
+			diff = Math.min(diff,Math.abs(tar - amount));
+			return;
+		}
+		helper(tc,amount,idx + 1,tar,set);
+		helper(tc,amount + tc[idx],idx + 1,tar,set);
+		helper(tc,amount + tc[idx] * 2,idx + 1,tar,set);
+	}
+}

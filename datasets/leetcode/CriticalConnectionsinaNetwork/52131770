@@ -1,0 +1,43 @@
+class Solution {
+	List<List<Integer>> res = new ArrayList<>();
+	int timer = 0;
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		List<List<Integer>> adjacency_list = new ArrayList<>();
+		boolean[] visited = new boolean[n];
+		int[] timeIn = new int[n];
+		int[] lowestTime = new int[n];
+		for (int i = 0; i < n; i++) {
+			adjacency_list.add(new ArrayList<Integer>());
+		}
+		for (List<Integer> connection: connections) {	
+			adjacency_list.get(connection.get(0)).add(connection.get(1));
+			adjacency_list.get(connection.get(1)).add(connection.get(0));
+		}
+		dfs(adjacency_list,0,-1,visited,timeIn,lowestTime);
+		return res;
+	}
+	void dfs(List<List<Integer>> adj_list, int node, int parent, boolean[] visited, int[] timeIn, int[] lowestTime) {
+		visited[node] = true;
+		timeIn[node] = timer;
+		lowestTime[node] = timer;
+		timer++;
+		for (int neighbour_node: adj_list.get(node)) {	
+			if (neighbour_node == parent) {
+				continue;
+			}
+			if (!visited[neighbour_node]) {
+				dfs(adj_list,neighbour_node,node,visited,timeIn,lowestTime);
+				lowestTime[node] = Math.min(lowestTime[node],lowestTime[neighbour_node]);
+				if (lowestTime[neighbour_node] > timeIn[node]) {
+					List<Integer> ans = new ArrayList<>();
+					ans.add(node);
+					ans.add(neighbour_node);
+					res.add(ans);
+				}
+			} 
+			else {
+				lowestTime[node] = Math.min(lowestTime[node],lowestTime[neighbour_node]);
+			}
+		}
+	}
+}

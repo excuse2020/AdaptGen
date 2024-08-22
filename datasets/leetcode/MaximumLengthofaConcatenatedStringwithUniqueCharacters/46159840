@@ -1,0 +1,29 @@
+class Solution {
+	int maxLength(List<String> arr) {
+		int n = arr.size();
+		int sum = 0;
+		return solve(arr,0,n,new HashSet<>());
+	}
+	int solve(List<String> arr, int i, int n, Set<Character> set) {
+		if (i >= n) {
+			return 0;
+		}
+		int exc = solve(arr,i + 1,n,set);
+		Set<Character> temp = new HashSet<>(set);
+		boolean flag = true;
+		int inc = -1;
+		for (int j = 0; j < arr.get(i).length(); j++) {
+			if (temp.contains(arr.get(i).charAt(j)) == false) {
+				temp.add(arr.get(i).charAt(j));
+			} 
+			else {
+				flag = false;
+				break;
+			}
+		}
+		if (flag == true) {
+			inc = arr.get(i).length() + solve(arr,i + 1,n,temp);
+		}
+		return Math.max(inc,exc);
+	}
+}

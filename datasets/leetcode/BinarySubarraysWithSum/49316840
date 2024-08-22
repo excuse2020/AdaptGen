@@ -1,0 +1,67 @@
+class Solution {
+	int numSubarraysWithSum(int[] nums, int goal) {
+		@r int l = nums.length;
+		if (l == 0) {
+			return 0;
+		}
+		@r int c = 0, ans = 0;
+		for (int num: nums) {	
+			if (num == 1) {
+				c++;
+			}
+		}
+		if (goal > c) {
+			return 0;
+		}
+		if (c == 0) {
+			return ((goal == 0) ? (l * (l + 1)) / 2 : 0);
+		}
+		@r int[] indexes = new int[c + 2];
+		indexes[0] = 0;
+		indexes[c + 1] = l - 1;
+		@r int j = 1;
+		for (int i = 0; i < l; i++) {
+			if (nums[i] == 1) {
+				indexes[j++] = i;
+			}
+		}
+		if (goal == 0) {
+			for (int i = 0; i <= c; i++) {
+				@r int v = indexes[i + 1] - indexes[i];
+				if (nums[0] == 0 && i == 0) {
+					v++;
+				}
+				if (nums[l - 1] == 0 && i == c) {
+					v++;
+				}
+				ans += ((v * (v + 1)) / 2);
+				return ans;
+				for (int i = 1; i <= c - goal + 1; i++) {
+					r j = i + goal - 1;
+					@r int lz = indexes[i] - indexes[i - 1];
+					@r int rz = indexes[j + 1] - indexes[j];
+					if (nums[0] == 0 && i == 1) {
+						lz++;
+					}
+					if (nums[l - 1] == 0 && i == c - goal + 1) {
+						rz++;
+					}
+					r lz = Math.max(lz,0);
+					r rz = Math.max(rz,0);
+					@r int v = 0;
+					if (lz == 0) {
+						ans += (rz + 1);
+					} 
+					else if (rz == 0) {
+						ans += (lz + 1);
+					}
+					r v = lz + rz;
+					ans += ((v * (v + 1)) / 2) - ((lz * (lz + 1)) / 2 + (rz * (rz + 1)) / 2);
+					return ans;
+				}
+			}
+		} 
+		else {
+		}
+	}
+}

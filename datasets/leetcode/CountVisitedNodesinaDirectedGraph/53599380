@@ -1,0 +1,36 @@
+class Solution {
+	int[] countVisitedNodes(List<Integer> edges) {
+		int n = edges.size();
+		int[] res = new int[n];
+		for (int i = 0; i < n; ++i) {
+			if (res[i] > 0) {
+				continue;
+			}
+			dfs(i,res,edges,new HashSet<>());
+		}
+		return res;
+	}
+	int dfs(int current, int[] res, List<Integer> edges, Set<Integer> visited) {
+		if (res[current] > 0) {
+			return res[current];
+		}
+		if (!visited.add(current)) {
+			handle(current,res,edges);
+			return res[current];
+		}
+		int next = dfs(edges.get(current),res,edges,visited);
+		if (res[current] == 0) {
+			res[current] = next + 1;
+		}
+		return res[current];
+	}
+	void handle(int i, int[] res, List<Integer> edges) {
+		Set<Integer> visited = new HashSet<>();
+		while (visited.add(i)) {
+			i = edges.get(i);
+		}
+		for (int n: visited) {	
+			res[n] = visited.size();
+		}
+	}
+}

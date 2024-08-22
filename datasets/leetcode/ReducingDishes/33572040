@@ -1,0 +1,29 @@
+class Solution {
+	int dp;
+	int maxSatisfaction(int[] sat) {
+		Arrays.sort(sat);
+		int n = sat.length;
+		int m = n + 1;
+		dp = new int[n + 1][m + 1];
+		for (int index = n - 1; index >= 0; index--) {
+			for (int prev = m - 1; prev >= 1; prev--) {
+				int pick = (sat[index] * prev) + dp[index + 1][prev + 1];
+				int notPick = dp[index + 1][prev];
+				dp[index][prev] = Math.max(pick,notPick);
+			}
+		}
+		return dp[0][1];
+	}
+	int solve(int index, int prev, int[] sat) {
+		if (index == sat.length) {
+			return 0;
+		}
+		if (dp[index][prev] != -1) {
+			return dp[index][prev];
+		}
+		int pick = (sat[index] * prev) + solve(index + 1,prev + 1,sat);
+		int notPick = solve(index + 1,prev,sat);
+		dp[index][prev] = Math.max(pick,notPick);
+		return dp[index][prev];
+	}
+}

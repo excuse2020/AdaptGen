@@ -1,0 +1,30 @@
+class Solution {
+	int N;
+	void createSieve(boolean[] sieve) {
+		for (int i = 2; i < N; i++) {
+			sieve[i] = true;
+		}
+		for (int i = 2; i * i <= N; i++) {
+			if (sieve[i]) {
+				for (int j = i * i; j < N; j += i) {
+					sieve[j] = false;
+				}
+			}
+		}
+	}
+	List<List<Integer>> findPrimePairs(int n) {
+		N = n + 1;
+		boolean[] sieve = new boolean[N];
+		createSieve(sieve);
+		List<List<Integer>> ans = new ArrayList<>();
+		for (int i = 2; i <= n / 2; i++) {
+			if (sieve[i] && sieve[n - i]) {
+				List<Integer> pair = new ArrayList<>();
+				pair.add(i);
+				pair.add(n - i);
+				ans.add(pair);
+			}
+		}
+		return ans;
+	}
+}

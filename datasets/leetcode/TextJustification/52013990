@@ -1,0 +1,47 @@
+class Solution {
+	void appendRow(String[] words, int maxWidth, int currChars, int wordsCount, StringBuilder row, int i, int wordsProcessed) {
+		int totalWhitespace = maxWidth - currChars;
+		if (wordsCount == 1) {
+			row.append(words[i - 1]);
+			row.append(" ".repeat(totalWhitespace));
+			return;
+		}
+		int spaceCount = wordsCount - 1;
+		int count = totalWhitespace / spaceCount;
+		String witespace = " ".repeat(count);
+		int extraWhitespaceCount = totalWhitespace % spaceCount;
+		for (int j = 0; j < spaceCount; j++) {
+			row.append(words[wordsProcessed + j]);
+			row.append(witespace);
+			if (extraWhitespaceCount > 0) {
+				row.append(" ");
+				extraWhitespaceCount--;
+			}
+		}
+		row.append(words[wordsProcessed + spaceCount]);
+	}
+	List<String> fullJustify(String[] words, int maxWidth) {
+		var res = new ArrayList<String>();
+		var row = new StringBuilder();
+		int wordsCount;
+		int currChars = 0;
+		int wordsProcessed = 0;
+		int length = words.length;
+		for (int i = 0; i < length; i++) {
+			wordsCount = i - wordsProcessed;
+			if ((currChars + words[i].length()) > maxWidth) {
+				appendRow(words,maxWidth,currChars,wordsCount,row,i,wordsProcessed);
+				res.add(row.toString());
+				row.setLength(0);
+				wordsProcessed += wordsCount;
+				currChars = 0;
+			}
+			currChars += words[i].length();
+		}
+		String lastRow = String.join(" ",Arrays.copyOfRange(words,wordsProcessed,length));
+		row.append(lastRow);
+		row.append(" ".repeat(maxWidth - lastRow.length()));
+		res.add(row.toString());
+		return res;
+	}
+}

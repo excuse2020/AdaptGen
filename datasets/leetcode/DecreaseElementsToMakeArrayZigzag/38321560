@@ -1,0 +1,43 @@
+class Solution {
+	List<Integer> getCorrectionIdx(int[] nums, boolean isEven) {
+		var corrIdx = new ArrayList<Integer>();
+		int i = isEven ? 0 : 1;
+		while (i < nums.length) {
+			int currNum = nums[i];
+			int leftNum = i > 0 ? nums[i - 1] : Integer.MIN_VALUE;
+			int rightNum = i < nums.length - 1 ? nums[i + 1] : Integer.MIN_VALUE;
+			if (currNum <= leftNum || currNum <= rightNum) {
+				corrIdx.add(i);
+			}
+			i += 2;
+		}
+		return corrIdx;
+	}
+	int getCostForCorrection(List<Integer> corrIdx, int[] nums) {
+		nums = Arrays.copyOf(nums,nums.length);
+		int totalCost = 0;
+		for (int idx: corrIdx) {	
+			int currNum = nums[idx];
+			int leftNum = idx > 0 ? nums[idx - 1] : Integer.MAX_VALUE;
+			int rightNum = idx < nums.length - 1 ? nums[idx + 1] : Integer.MAX_VALUE;
+			if (leftNum != Integer.MAX_VALUE && currNum <= leftNum) {
+				int diff = leftNum - currNum + 1;
+				nums[idx - 1] -= diff;
+				totalCost += diff;
+			}
+			if (rightNum != Integer.MAX_VALUE && currNum <= rightNum) {
+				int diff = rightNum - currNum + 1;
+				nums[idx + 1] -= diff;
+				totalCost += diff;
+			}
+		}
+		return totalCost;
+	}
+	int movesToMakeZigzag(int[] nums) {
+		var evenCorrIdx = getCorrectionIdx(nums,true);
+		var oddCorrIdx = getCorrectionIdx(nums,false);
+		var evenCorrCost = getCostForCorrection(evenCorrIdx,nums);
+		var oddCorrCost = getCostForCorrection(oddCorrIdx,nums);
+		return Math.min(evenCorrCost,oddCorrCost);
+	}
+}

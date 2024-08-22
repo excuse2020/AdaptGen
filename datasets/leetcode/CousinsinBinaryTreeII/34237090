@@ -1,0 +1,37 @@
+class Solution {
+	TreeNode replaceValueInTree(TreeNode root) {
+		Queue<TreeNode> q = new LinkedList<>();
+		HashMap<TreeNode, Integer> map = new HashMap<>();
+		HashMap<TreeNode, TreeNode> nodes = new HashMap<>();
+		q.add(root);
+		while (!q.isEmpty()) {
+			int size = q.size();
+			int total = 0;
+			for (TreeNode t: q) {	
+				total += t.val;
+			}
+			for (int i = 0; i < size; i++) {
+				TreeNode curr = q.poll();
+				if (curr != root) {
+					TreeNode parent = nodes.get(curr);
+					curr.val = total - map.get(parent);
+				}
+				int left = 0;
+				int right = 0;
+				if (curr.left != null) {
+					left = curr.left.val;
+					q.add(curr.left);
+					nodes.put(curr.left,curr);
+				}
+				if (curr.right != null) {
+					right = curr.right.val;
+					q.add(curr.right);
+					nodes.put(curr.right,curr);
+				}
+				map.put(curr,left + right);
+			}
+		}
+		root.val = 0;
+		return root;
+	}
+}

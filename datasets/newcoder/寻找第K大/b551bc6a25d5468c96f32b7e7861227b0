@@ -1,0 +1,36 @@
+class Solution {
+	int findKth(int[] a, int n, int K) {
+		int index = find_k(a,0,n - 1,K);
+		return index;
+	}
+	int find_index(int[] arr, int left, int right) {
+		int s = arr[left];
+		while (left < right) {
+			while (left < right && arr[right] <= s) {
+				right--;
+			}
+			arr[left] = arr[right];
+			while (left < right && arr[left] >= s) {
+				left++;
+			}
+			arr[right] = arr[left];
+		}
+		arr[left] = s;
+		return left;
+	}
+	int find_k(int[] arr, int left, int right, int k) {
+		if (left <= right) {
+			int index = find_index(arr,left,right);
+			if (index == k - 1) {
+				return arr[index];
+			} 
+			else if (index > k - 1) {
+				return find_k(arr,left,index - 1,k);
+			} 
+			else {
+				return find_k(arr,index + 1,right,k);
+			}
+		}
+		return -1;
+	}
+}

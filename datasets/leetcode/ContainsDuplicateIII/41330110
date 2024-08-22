@@ -1,0 +1,20 @@
+class Solution {
+	boolean containsNearbyAlmostDuplicate(int[] nums, int indexDiff, int valueDiff) {
+		NavigableSet<Integer> sortedSet = new TreeSet<>();
+		for (int i = 0; i < nums.length; i++) {
+			Integer ceilingValue = sortedSet.ceiling(nums[i]);
+			if (ceilingValue != null && ceilingValue - nums[i] <= valueDiff) {
+				return true;
+			}
+			Integer floorValue = sortedSet.floor(nums[i]);
+			if (floorValue != null && nums[i] - floorValue <= valueDiff) {
+				return true;
+			}
+			sortedSet.add(nums[i]);
+			if (i >= indexDiff) {
+				sortedSet.remove(nums[i - indexDiff]);
+			}
+		}
+		return false;
+	}
+}

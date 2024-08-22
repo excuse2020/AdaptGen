@@ -1,0 +1,30 @@
+class Solution {
+	String convert(String s, int numRows) {
+		boolean isNotFirstRecursion = numRows > 1000;
+		numRows = numRows % 1000;
+		int sLen = s.length();
+		if (sLen <= 2 || numRows == 1 || sLen <= numRows) {
+			return s;
+		}
+		String s1 = "", s2 = "";
+		int surplus = numRows * 2 - 2;
+		int next1 = 0;
+		int next2 = surplus + 1;
+		for (int i = 0; i < sLen; i++) {
+			char c = s.charAt(i);
+			if (i == next1) {
+				next1 += surplus;
+				s1 += c;
+			} 
+			else if (i == next2 && isNotFirstRecursion) {
+				next2 += surplus + 1;
+				next1 = next2 - 1;
+				s1 += c;
+			} 
+			else {
+				s2 += c;
+			}
+		}
+		return s1 + this.convert(s2,1000 + numRows - 1);
+	}
+}

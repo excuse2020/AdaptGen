@@ -1,0 +1,33 @@
+class Solution {
+	Map<Integer, List<Integer>> graph;
+	List<Boolean> hasApple;
+	int dfs(int node, int parent) {
+		int rslt = 0;
+		if (!graph.containsKey(node)) {
+			return rslt;
+		}
+		for (int child: graph.get(node)) {	
+			if (child == parent) {
+				continue;
+			}
+			rslt += dfs(child,node);
+		}
+		if (node != 0 && (hasApple.get(node) || rslt > 0)) {
+			rslt += 2;
+		}
+		return rslt;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		this.hasApple = hasApple;
+		this.graph = new HashMap<>();
+		for (int[] edge: edges) {	
+			int src = edge[0];
+			int dst = edge[1];
+			graph.putIfAbsent(src,new ArrayList<>());
+			graph.putIfAbsent(dst,new ArrayList<>());
+			graph.get(src).add(dst);
+			graph.get(dst).add(src);
+		}
+		return dfs(0,-1);
+	}
+}

@@ -1,0 +1,40 @@
+class Solution {
+	List<Integer> findSubstring(String s, String[] words) {
+		Map<String, Integer> wordCount = new HashMap<>();
+		for (String word: words) {	
+			wordCount.put(word,wordCount.getOrDefault(word,0) + 1);
+		}
+		List<Integer> result = new ArrayList<>();
+		int sLength = s.length(), wordsCount = words.length, wordLength = words[0].length();
+		if (sLength < wordsCount * wordLength) {
+			return result;
+		}
+		for (int i = 0; i < wordLength; i++) {
+			int left = i, right = i, count = 0;
+			Map<String, Integer> seen = new HashMap<>();
+			while (right + wordLength <= sLength) {
+				String word = s.substring(right,right + wordLength);
+				right += wordLength;
+				if (wordCount.containsKey(word)) {
+					seen.put(word,seen.getOrDefault(word,0) + 1);
+					count++;
+					while (seen.get(word) > wordCount.get(word)) {
+						String leftWord = s.substring(left,left + wordLength);
+						seen.put(leftWord,seen.get(leftWord) - 1);
+						left += wordLength;
+						count--;
+					}
+					if (count == wordsCount) {
+						result.add(left);
+					}
+				} 
+				else {
+					seen.clear();
+					count = 0;
+					left = right;
+				}
+			}
+		}
+		return result;
+	}
+}

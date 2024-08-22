@@ -1,0 +1,25 @@
+class Solution {
+	int longestWPI(int[] hours) {
+		Map<Integer, Integer> sumToIndex = new HashMap<>();
+		int tiringDays = 0, nonTiringDays = 0;
+		int longestInterval = 0;
+		for (int i = 0; i < hours.length; i++) {
+			if (hours[i] > 8) {
+				tiringDays++;
+			} 
+			else {
+				nonTiringDays++;
+			}
+			if (tiringDays > nonTiringDays) {
+				longestInterval = Math.max(longestInterval,i + 1);
+			}
+			int diff = (tiringDays - nonTiringDays);
+			Integer existing = sumToIndex.get(diff - 1);
+			if (existing != null) {
+				longestInterval = Math.max(longestInterval,i - existing);
+			}
+			sumToIndex.putIfAbsent(diff,i);
+		}
+		return longestInterval;
+	}
+}

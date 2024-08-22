@@ -1,0 +1,25 @@
+class Solution {
+	int max;
+	void dfs(int node, int n, List<List<Integer>> graph, int informTime, int totalTime) {
+		if (informTime[node] == 0) {
+			max = Math.max(max,totalTime);
+		}
+		for (int i = 0; i < graph.get(node).size(); i++) {
+			dfs(graph.get(node).get(i),n,graph,informTime,totalTime + informTime[node]);
+		}
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			if (manager[i] != -1) {
+				graph.get(manager[i]).add(i);
+			}
+		}
+		max = Integer.MIN_VALUE;
+		dfs(headID,n,graph,informTime,0);
+		return max;
+	}
+}

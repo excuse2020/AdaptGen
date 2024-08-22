@@ -1,0 +1,60 @@
+class Solution {
+	int helper(Map<Integer, Integer> map, int[] patience) {
+		int ans = Integer.MIN_VALUE;
+		for (int key: map.keySet()) {	
+			if (key == 0) {
+				continue;
+			}
+			int round = map.get(key) * 2;
+			int pat = patience[key];
+			int times;
+			if (round % pat == 0) {
+				times = round / pat;
+			} 
+			else {
+				times = (round / pat) + 1;
+			}
+			int pre = (round * times) - ((round - pat) * (times - 1));
+			ans = Math.max(ans,pre);
+		}
+		return ans + 1;
+	}
+	int networkBecomesIdle(int[][] edges, int[] patience) {
+		Queue<Integer> queue = new LinkedList<>();
+		HashMap<Integer, List<Integer>> pre = new HashMap<>();
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < edges.length; i++) {
+			if (pre.containsKey(edges[i][0])) {
+				pre.get(edges[i][0]).add(edges[i][1]);
+			} 
+			else {
+				pre.put(edges[i][0],new ArrayList<>());
+				pre.get(edges[i][0]).add(edges[i][1]);
+			}
+			if (pre.containsKey(edges[i][1])) {
+				pre.get(edges[i][1]).add(edges[i][0]);
+			} 
+			else {
+				pre.put(edges[i][1],new ArrayList<>());
+				pre.get(edges[i][1]).add(edges[i][0]);
+			}
+		}
+		queue.offer(0);
+		map.put(0,0);
+		boolean[] visit = new boolean[patience.length];
+		visit[0] = true;
+		while (!queue.isEmpty()) {
+			int key = queue.poll();
+			List<Integer> candidate = pre.get(key);
+			for (int i: candidate) {	
+				if (visit[i] == true) {
+					continue;
+				}
+				queue.offer(i);
+				visit[i] = true;
+				map.put(i,map.get(key) + 1);
+			}
+		}
+		return helper(map,patience);
+	}
+}

@@ -1,0 +1,17 @@
+class Solution {
+	int longestStrChain(String[] words) {
+		Arrays.sort(words,(word1, word2) -> {word1.length() - word2.length()});
+		Map<String, Integer> dp = new HashMap<>();
+		int maxChainLength = 0;
+		for (String word: words) {	
+			int numberOfPredecessors = 0;
+			for (int i = 0; i < word.length(); ++i) {
+				String predecessor = new StringBuilder(word).deleteCharAt(i).toString();
+				numberOfPredecessors = Math.max(numberOfPredecessors,dp.getOrDefault(predecessor,0) + 1);
+			}
+			dp.put(word,numberOfPredecessors);
+			maxChainLength = Math.max(maxChainLength,dp.get(word));
+		}
+		return maxChainLength;
+	}
+}

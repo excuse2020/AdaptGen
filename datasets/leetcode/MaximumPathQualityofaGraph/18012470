@@ -1,0 +1,38 @@
+class Solution {
+	int res = 0;
+	void backtrack(Map<Integer, List<int[]>> graph, int[] values, boolean[] visited, int idx, int quality, int remainTime) {
+		if (idx == 0) {
+			res = Math.max(res,quality);
+		}
+		if (!graph.containsKey(idx)) {
+			return;
+		}
+		for (int[] nei: graph.get(idx)) {	
+			int nextIdx = nei[0];
+			int nextTime = nei[1];
+			if (remainTime - nextTime < 0) {
+				continue;
+			}
+			if (visited[nextIdx]) {
+				backtrack(graph,values,visited,nextIdx,quality,remainTime - nextTime);
+			} 
+			else {
+				visited[nextIdx] = true;
+				backtrack(graph,values,visited,nextIdx,quality + values[nextIdx],remainTime - nextTime);
+				visited[nextIdx] = false;
+			}
+		}
+	}
+	int maximalPathQuality(int[] values, int[][] edges, int maxTime) {
+		int n = values.length;
+		boolean[] visited = new boolean[n];
+		visited[0] = true;
+		Map<Integer, List<int[]>> graph = new HashMap<>();
+		for (int[] edge: edges) {	
+			graph.computeIfAbsent(edge[0],(k) -> {new ArrayList<>()}).add(new int{edge[1], edge[2]});
+			graph.computeIfAbsent(edge[1],(k) -> {new ArrayList<>()}).add(new int{edge[0], edge[2]});
+		}
+		backtrack(graph,values,visited,0,values[0],maxTime);
+		return res;
+	}
+}

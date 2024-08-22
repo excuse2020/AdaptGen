@@ -1,0 +1,27 @@
+class Solution {
+	Long[][] dp;
+	int mod = (int) 1e9 + 7;
+	int countOrders(int n) {
+		dp = new Long[n + 1][n + 1];
+		return (int) (f(0,0,n) % mod);
+	}
+	long f(int pickedUp, int droppedOff, int totalOrders) {
+		if (pickedUp == totalOrders && droppedOff == totalOrders) {
+			return 1;
+		} 
+		else if (droppedOff > totalOrders || pickedUp > totalOrders) {
+			return 0;
+		} 
+		else if (dp[pickedUp][droppedOff] != null) {
+			return dp[pickedUp][droppedOff];
+		}
+		long ans = 0;
+		if (totalOrders - pickedUp > 0) {
+			ans += (totalOrders - pickedUp) * f(pickedUp + 1,droppedOff,totalOrders);
+		}
+		if (pickedUp > droppedOff) {
+			ans += (pickedUp - droppedOff) * f(pickedUp,droppedOff + 1,totalOrders);
+		}
+		return dp[pickedUp][droppedOff] = ans % mod;
+	}
+}

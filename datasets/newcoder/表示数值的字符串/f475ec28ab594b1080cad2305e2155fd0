@@ -1,0 +1,52 @@
+class Solution {
+	boolean isNumeric(String str) {
+		int size = str.length();
+		int index = 0;
+		boolean hashNum = false, hasE = false, hasSign = false, hasDot = false;
+		while (index < size && str.charAt(index) == ' ') {
+			index++;
+		}
+		while (index < size) {
+			while (index < size && str.charAt(index) >= '0' && str.charAt(index) <= '9') {
+				index++;
+				hashNum = true;
+			}
+			if (index == size) {
+				break;
+			}
+			char c = str.charAt(index);
+			if (c == 'e' || c == 'E') {
+				if (hasE || !hashNum) {
+					return false;
+				}
+				hasE = true;
+				hashNum = false;
+				hasSign = false;
+				hasDot = false;
+			} 
+			else if (c == '+' || c == '-') {
+				if (hasSign || hashNum) {
+					return false;
+				}
+				hasSign = true;
+			} 
+			else if (c == '.') {
+				if (hasDot || hasE) {
+					return false;
+				}
+				hasDot = true;
+			} 
+			else if (c == ' ') {
+				break;
+			} 
+			else {
+				return false;
+			}
+			index++;
+		}
+		while (index < size && str.charAt(index) == ' ') {
+			index++;
+		}
+		return hashNum && index == size;
+	}
+}

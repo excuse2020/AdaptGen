@@ -1,0 +1,42 @@
+class Solution {
+	boolean flipEquiv(TreeNode root1, TreeNode root2) {
+		return flipEquivImpl(root1,root2);
+	}
+	boolean flipEquivImpl(TreeNode root1, TreeNode root2) {
+		if (root1 == null && root2 == null) {
+			return true;
+		}
+		if (root1 == null || root2 == null) {
+			return false;
+		}
+		if (root1.val != root2.val) {
+			return false;
+		}
+		int vl1 = -1;
+		int vl2 = -1;
+		if (root1.left != null) {
+			vl1 = root1.left.val;
+		}
+		if (root2.left != null) {
+			vl2 = root2.left.val;
+		}
+		int vr1 = -1;
+		int vr2 = -1;
+		if (root1.right != null) {
+			vr1 = root1.right.val;
+		}
+		if (root2.right != null) {
+			vr2 = root2.right.val;
+		}
+		if (vl1 == vl2 && vr1 == vr2) {
+			return flipEquivImpl(root1.left,root2.left) && flipEquivImpl(root1.right,root2.right);
+		} 
+		else if (vl1 == vr2 && vl2 == vr1) {
+			TreeNode temp = root1.left;
+			root1.left = root1.right;
+			root1.right = temp;
+			return flipEquivImpl(root1.left,root2.left) && flipEquivImpl(root1.right,root2.right);
+		}
+		return false;
+	}
+}

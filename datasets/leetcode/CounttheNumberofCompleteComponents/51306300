@@ -1,0 +1,68 @@
+class Solution {
+	int[] parent;
+	int[] size;
+	int countCompleteComponents(int n, int[][] edges) {
+		initializeParent(n);
+		int[] inDegree = new int[n];
+		for (int[] edge: edges) {	
+			union(edge[0],edge[1]);
+			inDegree[edge[0]]++;
+			inDegree[edge[1]]++;
+		}
+		HashMap<Integer, Boolean> getUniqueGraph = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			int p = find(i);
+			if (getUniqueGraph.containsKey(p)) {
+				if (getUniqueGraph.get(p)) {
+					if (inDegree[i] != size[p] - 1) {
+						getUniqueGraph.put(p,false);
+					}
+				}
+			} 
+			else {
+				if (inDegree[i] != size[p] - 1) {
+					getUniqueGraph.put(p,false);
+				} 
+				else {
+					getUniqueGraph.put(p,true);
+				}
+			}
+		}
+		int count = 0;
+		for (Map.Entry<Integer, Boolean> grph: getUniqueGraph.entrySet()) {	
+			if (grph.getValue()) {
+				count++;
+			}
+		}
+		return count;
+	}
+	int find(int v) {
+		if (parent[v] == v) {
+			return v;
+		}
+		return find(parent[v]);
+	}
+	void initializeParent(int n) {
+		parent = new int[n];
+		size = new int[n];
+		for (int i = 0; i < n; i++) {
+			parent[i] = i;
+			size[i] = 1;
+		}
+	}
+	void union(int v1, int v2) {
+		v1 = find(v1);
+		v2 = find(v2);
+		if (v1 == v2) {
+			return;
+		}
+		if (size[v1] > size[v2]) {
+			parent[v2] = v1;
+			size[v1] += size[v2];
+		} 
+		else {
+			parent[v1] = v2;
+			size[v2] += size[v1];
+		}
+	}
+}

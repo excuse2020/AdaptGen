@@ -1,0 +1,43 @@
+class Solution {
+	ArrayList findWord(String s, String p) {
+		return solution2(s,p);
+	}
+	ArrayList solution1(String s, String p) {
+		ArrayList<Integer> list = new ArrayList<>();
+		char[] pArr = p.toCharArray();
+		Arrays.sort(pArr);
+		String pStr = String.valueOf(pArr);
+		int len = s.length();
+		int gap = pArr.length;
+		char[] subArr;
+		String subStr;
+		for (int i = 0; i + gap <= len; i++) {
+			subArr = s.substring(i,i + gap).toCharArray();
+			Arrays.sort(subArr);
+			subStr = String.valueOf(subArr);
+			if (subStr.equals(pStr)) {
+				list.add(i);
+			}
+		}
+		return list;
+	}
+	ArrayList solution2(String s, String p) {
+		ArrayList<Integer> list = new ArrayList<>();
+		int[] sCount = new int[26];
+		int[] pCount = new int[26];
+		for (char ch: p.toCharArray()) {	
+			pCount[ch - 'a']++;
+		}
+		for (int left = 0, right = 0; right < s.length(); right++) {
+			sCount[s.charAt(right) - 'a']++;
+			while (sCount[s.charAt(right) - 'a'] > pCount[s.charAt(right) - 'a']) {
+				sCount[s.charAt(left) - 'a']--;
+				left++;
+			}
+			if (right - left + 1 == p.length()) {
+				list.add(left);
+			}
+		}
+		return list;
+	}
+}

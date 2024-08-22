@@ -1,0 +1,25 @@
+class Solution {
+	int minChanges(int[] nums, int k) {
+		HashSet<Integer> allX = new HashSet<>();
+		int n = nums.length, ans = n;
+		int[] diffFr = new int[k + 1];
+		int[] maxDiffFr = new int[k + 1];
+		for (int i = 0, j = n - 1; i < j; i++, j--) {
+			int diff = Math.abs(nums[i] - nums[j]);
+			int maxDiff = Math.max(Math.max(nums[i],nums[j]),k - Math.min(nums[i],nums[j]));
+			allX.add(diff);
+			diffFr[diff]++;
+			maxDiffFr[maxDiff]++;
+		}
+		for (int i = 1; i <= k; i++) {
+			maxDiffFr[i] += maxDiffFr[i - 1];
+		}
+		for (int x: allX) {	
+			int two = x > 0 ? maxDiffFr[x - 1] : 0;
+			int one = (n / 2 - two);
+			int exact = diffFr[x];
+			ans = Math.min(ans,(two * 2) + (one - exact));
+		}
+		return ans;
+	}
+}

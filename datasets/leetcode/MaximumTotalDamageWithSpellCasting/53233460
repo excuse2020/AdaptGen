@@ -1,0 +1,28 @@
+class Solution {
+	long maximumTotalDamage(int[] power) {
+		Arrays.sort(power);
+		Map<Integer, Long> dp = new HashMap<>();
+		long maxDamage = 0;
+		TreeSet<Integer> prev = new TreeSet<>();
+		for (int p: power) {	
+			long currentMax = p;
+			if (!prev.isEmpty() && p == prev.last()) {
+				currentMax = p + dp.get(p);
+			} 
+			else {
+				for (int pre: prev) {	
+					if (pre < p - 2 && pre != 0) {
+						currentMax = Math.max(currentMax,p + dp.get(pre));
+					}
+				}
+				prev.add(p);
+				if (prev.size() > 10) {
+					prev.remove(prev.first());
+				}
+			}
+			dp.put(p,currentMax);
+			maxDamage = Math.max(maxDamage,currentMax);
+		}
+		return maxDamage;
+	}
+}

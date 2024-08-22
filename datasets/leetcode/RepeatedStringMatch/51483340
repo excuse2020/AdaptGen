@@ -1,0 +1,72 @@
+class Solution {
+	boolean isMatching(String a, String b) {
+		int arr = new int[b.length()];
+		int p = 0;
+		int suf = 1;
+		while (suf < b.length()) {
+			char cp = b.charAt(p);
+			char cs = b.charAt(suf);
+			if (cp == cs) {
+				arr[suf] = p + 1;
+				suf++;
+				p++;
+			} 
+			else {
+				if (p == 0) {
+					arr[suf] = 0;
+					suf++;
+				} 
+				else {
+					p = arr[p - 1];
+				}
+			}
+		}
+		boolean ans = false;
+		int start = 0;
+		int suff = 0;
+		while (start < a.length()) {
+			char cst = a.charAt(start);
+			char csu = b.charAt(suff);
+			if (cst == csu) {
+				suff++;
+				start++;
+				if (suff == b.length()) {
+					return true;
+				}
+			} 
+			else {
+				if (suff == 0) {
+					start++;
+				} 
+				else {
+					suff = arr[suff - 1];
+				}
+			}
+		}
+		return false;
+	}
+	int repeatedStringMatch(String a, String b) {
+		int l2 = b.length();
+		String aa = a;
+		int count = 1;
+		int l1 = aa.length();
+		while (l1 < l2) {
+			aa += a;
+			l1 += a.length();
+			count++;
+		}
+		boolean ans = isMatching(aa,b);
+		if (ans) {
+			return count;
+		} 
+		else {
+			aa += a;
+			count++;
+			ans = isMatching(aa,b);
+			if (ans) {
+				return count;
+			}
+		}
+		return -1;
+	}
+}

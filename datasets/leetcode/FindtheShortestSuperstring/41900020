@@ -1,0 +1,69 @@
+class Solution {
+	String createPath(String[] words, int start, int[][] distance, int[][] path) {
+		int c = start;
+		StringBuilder sb = new StringBuilder(words[c]);
+		int mask = (1 << start);
+		int x = path[mask][c];
+		while (x != -1) {
+			sb.append(words[x].substring(words[x].length() - distance[c][x]));
+			mask |= (1 << x);
+			c = x;
+			x = path[mask][x];
+		}
+		return sb.toString();
+	}
+	String shortestSuperstring(String[] words) {
+		int n = words.length;
+		int[][] distance = new int[n][n];
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				int min = Math.min(words[i].length(),words[j].length());
+				for (int k = min; k >= 0; k--) {
+					if (words[i].endsWith(words[j].substring(0,k))) {
+						distance[i][j] = words[j].length() - k;
+						break;
+					}
+				}
+			}
+		}
+		int dp = new int[(1 << n)][n];
+		int path = new int[(1 << n)][n];
+		String ans = "";
+		int len = Integer.MAX_VALUE;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < (1 << n); j++) {
+				Arrays.fill(dp[j],-1);
+				Arrays.fill(path[j],-1);
+			}
+			int tsp = tsp(i,0,distance,dp,path,n);
+			String str = createPath(words,i,distance,path);
+			if (str.length() < len) {
+				ans = str;
+				len = str.length();
+			}
+		}
+		return ans;
+	}
+	int tsp(int city, int mask, int[][] distance, int[][] dp, int[][] path, int n) {
+		if (mask == ((1 << n) - 1)) {
+			return 0;
+		}
+		if (dp[mask][city] != -1) {
+			return dp[mask][city];
+		}
+		int ans = Integer.MAX_VALUE;
+		int nextCity = -1;
+		for (int i = 0; i < n; i++) {
+			if ((mask & (1 << i)) == 0) {
+				int dis = distance[city][i] + tsp(i,(mask | (1 << i)),distance,dp,path,n);
+				if (dis < ans) {
+					ans = dis;
+					nextCity = i;
+				}
+			}
+		}
+		path[mask][city] = nextCity;
+		dp[mask][city] = ans;
+		return ans;
+	}
+}

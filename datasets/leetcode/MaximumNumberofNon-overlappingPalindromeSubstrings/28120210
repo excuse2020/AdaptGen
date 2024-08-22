@@ -1,0 +1,41 @@
+class Solution {
+	Integer dp;
+	Boolean dpPal;
+	int n;
+	boolean isPal(String s, int i, int j) {
+		if (i >= j) {
+			return true;
+		}
+		if (dpPal[i][j] != null) {
+			return dpPal[i][j];
+		}
+		if (s.charAt(i) == s.charAt(j)) {
+			return dpPal[i][j] = isPal(s,i + 1,j - 1);
+		} 
+		else {
+			return dpPal[i][j] = false;
+		}
+	}
+	int maxPalindromes(String s, int k) {
+		n = s.length();
+		dp = new Integer[n];
+		dpPal = new Boolean[n][n];
+		return solve(s,0,k);
+	}
+	int solve(String s, int idx, int k) {
+		if (idx >= n) {
+			return 0;
+		}
+		if (dp[idx] != null) {
+			return dp[idx];
+		}
+		int notPick = solve(s,idx + 1,k);
+		int pick = 0;
+		for (int i = idx + k - 1; i < n; i++) {
+			if (isPal(s,idx,i)) {
+				pick = Math.max(pick,1 + solve(s,i + 1,k));
+			}
+		}
+		return dp[idx] = Math.max(pick,notPick);
+	}
+}

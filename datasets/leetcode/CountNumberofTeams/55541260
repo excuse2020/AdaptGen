@@ -1,0 +1,49 @@
+class Solution {
+	int numTeams(int[] ratings) {
+		int ans = 0;
+		int n = Arrays.stream(ratings).max().getAsInt() + 1;
+		int[] leftSet = new int[4 * n];
+		int[] rightSet = new int[4 * n];
+		for (int i = 1; i < ratings.length; i++) {
+			update(0,1,0,n - 1,ratings[i],rightSet);
+		}
+		update(0,1,0,n - 1,ratings[0],leftSet);
+		for (int i = 1; i < ratings.length; i++) {
+			int left = sumRange(0,ratings[i] - 1,0,n - 1,0,leftSet);
+			int right = sumRange(ratings[i] + 1,n - 1,0,n - 1,0,rightSet);
+			ans += left * right;
+			left = sumRange(ratings[i] + 1,n - 1,0,n - 1,0,leftSet);
+			right = sumRange(0,ratings[i] - 1,0,n - 1,0,rightSet);
+			ans += left * right;
+			update(0,1,0,n - 1,ratings[i],leftSet);
+			update(0,-1,0,n - 1,ratings[i],rightSet);
+		}
+		return ans;
+	}
+	int sumRange(int left, int right, int low, int high, int ind, int[] seg) {
+		if (low >= left && high <= right) {
+			return seg[ind];
+		}
+		if (right < low || high < left) {
+			return 0;
+		}
+		int mid = low + high >> 1;
+		return sumRange(left,right,low,mid,2 * ind + 1,seg) + sumRange(left,right,mid + 1,high,2 * ind + 2,seg);
+	}
+	void update(int ind, int val, int low, int high, int node, int[] seg) {
+		if (low == high) {
+			seg[ind] += val;
+			return;
+		} 
+		else {
+			int mid = low + high >> 1;
+			if (node <= mid && node >= low) {
+				update(2 * ind + 1,val,low,mid,node,seg);
+			} 
+			else {
+				update(2 * ind + 2,val,mid + 1,high,node,seg);
+			}
+			seg[ind] = seg[2 * ind + 1] + seg[2 * ind + 2];
+		}
+	}
+}

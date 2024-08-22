@@ -1,0 +1,40 @@
+class Solution {
+	List<Integer> graph = new ArrayList<>();
+	Set<Integer> visited = new HashSet<>();
+	int[] countVisitedNodes(List<Integer> edges) {
+		graph = edges;
+		int n = edges.size();
+		int[] ret = new int[n];
+		for (int i = 0; i < n; i++) {
+			if (ret[i] == 0) {
+				dfs(ret,i);
+			}
+		}
+		return ret;
+	}
+	int cycleLength(Set<Integer> cycleVisit, int node) {
+		if (cycleVisit.contains(node)) {
+			return cycleVisit.size();
+		}
+		cycleVisit.add(node);
+		return cycleLength(cycleVisit,graph.get(node));
+	}
+	void dfs(int[] ret, int node) {
+		if (ret[node] > 0) {
+			return;
+		}
+		if (visited.contains(node)) {
+			HashSet<Integer> cycle_nodes = new HashSet<>();
+			int cycleLength = cycleLength(cycle_nodes,node);
+			for (int val: cycle_nodes) {	
+				ret[val] = cycleLength;
+			}
+			return;
+		}
+		visited.add(node);
+		dfs(ret,graph.get(node));
+		if (ret[node] == 0) {
+			ret[node] = ret[graph.get(node)] + 1;
+		}
+	}
+}

@@ -1,0 +1,22 @@
+class Solution {
+	int a(int[][] grid, int r, int c, int c1, Integer[][][] dp) {
+		if (r == grid.length) {
+			return 0;
+		}
+		if (c < 0 || c1 < 0 || c >= grid[0].length || c1 >= grid[0].length) {
+			return Integer.MIN_VALUE;
+		}
+		if (dp[r][c][c1] != null) {
+			return dp[r][c][c1];
+		}
+		int res = grid[r][c] + grid[r][c1];
+		if (c == c1) {
+			res -= grid[r][c];
+		}
+		return dp[r][c][c1] = Math.max(a(grid,r + 1,c - 1,c1 + 1,dp),Math.max(a(grid,r + 1,c - 1,c1,dp),Math.max(a(grid,r + 1,c - 1,c1 - 1,dp),Math.max(a(grid,r + 1,c,c1 + 1,dp),Math.max(a(grid,r + 1,c,c1,dp),Math.max(a(grid,r + 1,c,c1 - 1,dp),Math.max(a(grid,r + 1,c + 1,c1 + 1,dp),Math.max(a(grid,r + 1,c + 1,c1,dp),a(grid,r + 1,c + 1,c1 - 1,dp))))))))) + res;
+	}
+	int cherryPickup(int[][] grid) {
+		Integer[][][] dp = new Integer[grid.length][grid[0].length][grid[0].length];
+		return a(grid,0,0,grid[0].length - 1,dp);
+	}
+}

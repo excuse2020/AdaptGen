@@ -1,0 +1,31 @@
+class Solution {
+	int minIncrementForUnique(int[] nums) {
+		Hashtable<Integer, Integer> ht = new Hashtable<>();
+		HashSet<Integer> set = new HashSet<>();
+		for (int i = 0; i < nums.length; i++) {
+			if (!ht.containsKey(nums[i])) {
+				ht.put(nums[i],1);
+			} 
+			else {
+				ht.put(nums[i],ht.get(nums[i]) + 1);
+			}
+		}
+		int toret = 0;
+		List<Integer> list = new ArrayList<>(ht.keySet());
+		Collections.sort(list);
+		int base = Integer.MIN_VALUE;
+		for (int i = 0; i < list.size(); i++) {
+			int key = list.get(i);
+			base = Math.max(base,key);
+			if (ht.get(key) != 1) {
+				int add = ht.get(key) - 1;
+				toret += (add * (add + 1) / 2);
+			}
+			if (base != key) {
+				toret += (ht.get(key) * (base - key));
+			}
+			base += ht.get(key);
+		}
+		return toret;
+	}
+}

@@ -1,0 +1,44 @@
+class Solution {
+	int getHeight(TreeNode root) {
+		if (root == null) {
+			return 0;
+		} 
+		else {
+			return 1 + Math.max(getHeight(root.left),getHeight(root.right));
+		}
+	}
+	boolean isCompleteTree(TreeNode root) {
+		if (root.left == null && root.right == null) {
+			return true;
+		}
+		int height = getHeight(root);
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.offer(root);
+		int curHeight = 1;
+		boolean isFinished = false;
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			while (size-- > 0) {
+				TreeNode cur = queue.remove();
+				if ((cur.left == null || cur.right == null) && curHeight != height - 1) {
+					return false;
+				}
+				if (curHeight == height - 1 && cur.left == null && cur.right != null) {
+					return false;
+				}
+				if (isFinished && (cur.left != null || cur.right != null)) {
+					return false;
+				}
+				if (curHeight == height - 1 && (cur.left == null || cur.right == null)) {
+					isFinished = true;
+				}
+				if (curHeight < height - 1) {
+					queue.offer(cur.left);
+					queue.offer(cur.right);
+				}
+			}
+			curHeight++;
+		}
+		return true;
+	}
+}

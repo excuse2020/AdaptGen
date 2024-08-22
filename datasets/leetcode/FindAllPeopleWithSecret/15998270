@@ -1,0 +1,52 @@
+class Solution {
+	HashMap<Integer, TreeSet<Integer>>[] buildGraph(int n, int[][] meetings) {
+		HashMap<Integer, TreeSet<Integer>>[] graph = new HashMap[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new HashMap<Integer, TreeSet<Integer>>();
+		}
+		for (int[] meeting: meetings) {	
+			if (!graph[meeting[0]].containsKey(meeting[1])) {
+				graph[meeting[0]].put(meeting[1],new TreeSet<Integer>());
+			}
+			graph[meeting[0]].get(meeting[1]).add(meeting[2]);
+			if (!graph[meeting[1]].containsKey(meeting[0])) {
+				graph[meeting[1]].put(meeting[0],new TreeSet<Integer>());
+			}
+			graph[meeting[1]].get(meeting[0]).add(meeting[2]);
+		}
+		return graph;
+	}
+	List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+		HashMap<Integer, TreeSet<Integer>>[] graph = buildGraph(n,meetings);
+		PriorityQueue<int[]> pq = new PriorityQueue<>(new Comparator<int[]>());
+		for (int key: graph[0].keySet()) {	
+			pq.offer(new int{key, graph[0].get(key).first()});
+		}
+		graph[0].clear();
+		for (int key: graph[firstPerson].keySet()) {	
+			pq.offer(new int{key, graph[firstPerson].get(key).first()});
+		}
+		graph[firstPerson].clear();
+		Set<Integer> secrets = new HashSet<>();
+		secrets.add(0);
+		secrets.add(firstPerson);
+		while (!pq.isEmpty()) {
+			int[] a = pq.poll();
+			secrets.add(a[0]);
+			for (int key: graph[a[0]].keySet()) {	
+				for (int time: graph[a[0]].get(key)) {	
+					if (time >= a[1]) {
+						pq.offer(new int{key, time});
+						break;
+					}
+				}
+			}
+			graph[a[0]].clear();
+		}
+		List<Integer> ans = new ArrayList<>();
+		for (int num: secrets) {	
+			ans.add(num);
+		}
+		return ans;
+	}
+}

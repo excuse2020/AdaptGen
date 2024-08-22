@@ -1,0 +1,22 @@
+class Solution {
+	int maxProfit(int[] prices) {
+		int n = prices.length;
+		int[] maxGainFromLeft = new int[n];
+		int min = prices[0];
+		for (int i = 1; i < n; i++) {
+			min = Math.min(prices[i],min);
+			maxGainFromLeft[i] = Math.max(maxGainFromLeft[i - 1],prices[i] - min);
+		}
+		int[] maxGainFromRight = new int[n];
+		int max = prices[n - 1];
+		for (int i = n - 2; i >= 0; i--) {
+			max = Math.max(prices[i],max);
+			maxGainFromRight[i] = Math.max(maxGainFromRight[i + 1],max - prices[i]);
+		}
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			ans = Math.max(ans,maxGainFromLeft[i] + maxGainFromRight[i]);
+		}
+		return ans;
+	}
+}

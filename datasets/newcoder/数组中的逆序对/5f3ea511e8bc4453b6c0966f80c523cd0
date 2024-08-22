@@ -1,0 +1,45 @@
+class Solution {
+	int res = 0;
+	int InversePairs(int[] array) {
+		if (array == null || array.length < 1) {
+			return 0;
+		}
+		mergeSort(array,0,array.length - 1);
+		return res;
+	}
+	void merge(int[] arr, int left, int mid, int right) {
+		int[] tmp = new int[right - left + 1];
+		int i = left;
+		int j = mid + 1;
+		int k = 0;
+		while (i <= mid && j <= right) {
+			if (arr[i] > arr[j]) {
+				tmp[k++] = arr[j++];
+				res += (mid - i + 1);
+				res %= 1000000007;
+			} 
+			else {
+				tmp[k++] = arr[i++];
+			}
+		}
+		while (i <= mid) {
+			tmp[k++] = arr[i++];
+		}
+		while (j <= right) {
+			tmp[k++] = arr[j++];
+		}
+		k = 0;
+		i = left;
+		while (k < tmp.length) {
+			arr[i++] = tmp[k++];
+		}
+	}
+	void mergeSort(int[] arr, int left, int right) {
+		if (left < right) {
+			int mid = left + (right - left) / 2;
+			mergeSort(arr,left,mid);
+			mergeSort(arr,mid + 1,right);
+			merge(arr,left,mid,right);
+		}
+	}
+}

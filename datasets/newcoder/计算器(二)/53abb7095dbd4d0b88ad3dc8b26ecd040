@@ -1,0 +1,71 @@
+class Solution {
+	int calculate(String s) {
+		LinkedList<String> infix = new LinkedList<>();
+		String[] strs = s.split("");
+		for (String tmp: strs) {	
+			if ("+".equals(tmp) || "-".equals(tmp)) {
+				infix.add(tmp);
+			} 
+			else {
+				if (!infix.isEmpty() && !("+".equals(infix.peekLast()) || "-".equals(infix.peekLast()) || "*".equals(infix.peekLast())|| "/".equals(infix.peekLast()))) {
+					String last = infix.peekLast();
+					infix.removeLast();
+					infix.add(last + tmp);
+				} 
+				else {
+					infix.add(tmp);
+				}
+			}
+		}
+		LinkedList<String> suffix = new LinkedList<>();
+		Stack<String> stack = new Stack<>();
+		while (!infix.isEmpty()) {
+			String tmp = infix.poll();
+			if ("+".equals(tmp) || "-".equals(tmp)) {
+				if ("+".equals(tmp) || "-".equals(tmp)) {
+					while (!stack.isEmpty()) {
+						suffix.add(stack.pop());
+					}
+					stack.push(tmp);
+				} 
+				else {
+					while (!stack.isEmpty() && ("*".equals(stack.peek()) || "/".equals(stack.peek()))) {
+						suffix.add(stack.pop());
+					}
+					stack.push(tmp);
+				}
+			} 
+			else {
+				suffix.add(tmp);
+			}
+		}
+		while (!stack.isEmpty()) {
+			suffix.add(stack.pop());
+		}
+		int ans = 0;
+		while (!suffix.isEmpty()) {
+			String tmp = suffix.poll();
+			if ("+".equals(tmp) || "-".equals(tmp)) {
+				int num1 = Integer.valueOf(stack.pop());
+				int num2 = Integer.valueOf(stack.pop());
+				if ("+".equals(tmp)) {
+					ans = num2 + num1;
+				} 
+				else if ("-".equals(tmp)) {
+					ans = num2 - num1;
+				} 
+				else if ("*".equals(tmp)) {
+					ans = num2 * num1;
+				} 
+				else {
+					ans = num2 / num1;
+				}
+				stack.push(String.valueOf(ans));
+			} 
+			else {
+				stack.push(tmp);
+			}
+		}
+		return Integer.valueOf(stack.pop());
+	}
+}

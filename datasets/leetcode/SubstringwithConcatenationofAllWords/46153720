@@ -1,0 +1,29 @@
+class Solution {
+	List<Integer> findSubstring(String s, String[] words) {
+		Map<String, Integer> wordToFreq = new HashMap();
+		int wordLength = words[0].length();
+		int substringLength = words.length * wordLength;
+		List<Integer> result = new ArrayList();
+		for (String word: words) {	
+			wordToFreq.put(word,wordToFreq.getOrDefault(word,0) + 1);
+		}
+		for (int i = 0; i < s.length() - substringLength + 1; i++) {
+			int x = words.length;
+			Map<String, Integer> wordsSeen = new HashMap();
+			int j = i;
+			while (x != 0) {
+				String current = s.substring(j,j + wordLength);
+				wordsSeen.put(current,wordsSeen.getOrDefault(current,0) + 1);
+				if (!wordToFreq.containsKey(current) || wordsSeen.get(current) > wordToFreq.get(current)) {
+					break;
+				}
+				x--;
+				j = j + wordLength;
+			}
+			if (x == 0) {
+				result.add(i);
+			}
+		}
+		return result;
+	}
+}

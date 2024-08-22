@@ -1,0 +1,55 @@
+class Solution {
+	int findLatestNonConflictingIndex(int index, int[] dp, List<List<Integer>> jobs) {
+		int start = 0;
+		int end = index;
+		while (start <= end) {
+			int mid = (start + end) / 2;
+			if (jobs.get(mid).get(1) <= jobs.get(index).get(0)) {
+				if (jobs.get(mid + 1).get(1) <= jobs.get(index).get(0)) {
+					start = mid + 1;
+				} 
+				else {
+					return mid;
+				}
+			} 
+			else {
+				end = mid - 1;
+			}
+		}
+		return -1;
+	}
+	int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
+		List<List<Integer>> jobs = new ArrayList();
+		for (int i = 0; i < startTime.length; i++) {
+			List<Integer> current = new ArrayList();
+			current.add(startTime[i]);
+			current.add(endTime[i]);
+			current.add(profit[i]);
+			jobs.add(current);
+		}
+		Collections.sort(jobs,new LocalComparator());
+		int[] dp = new int[startTime.length];
+		dp[0] = jobs.get(0).get(2);
+		int addProfit = dp[0];
+		for (int i = 1; i < jobs.size(); i++) {
+			int latestNonConflictingIndex = findLatestNonConflictingIndex(i,dp,jobs);
+			if (latestNonConflictingIndex != -1 && (dp[latestNonConflictingIndex] + jobs.get(i).get(2) > dp[i - 1])) {
+				dp[i] = dp[latestNonConflictingIndex] + jobs.get(i).get(2);
+			} 
+			else {
+				dp[i] = Math.max(dp[i - 1],jobs.get(i).get(2));
+			}
+		}
+		return dp[dp.length - 1];
+	}
+	class LocalComparator {
+		int compare(List<Integer> list1, List<Integer> list2) {
+			if ((list1.get(1) - list2.get(1)) != 0) {
+				return list1.get(1) - list2.get(1);
+			} 
+			else {
+				return list1.get(0) - list2.get(0);
+			}
+		}
+	}
+}

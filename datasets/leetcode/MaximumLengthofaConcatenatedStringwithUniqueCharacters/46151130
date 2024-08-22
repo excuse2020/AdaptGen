@@ -1,0 +1,27 @@
+class Solution {
+	int maxLength(List<String> arr) {
+		return maxLengthHelper(arr,0,"");
+	}
+	int maxLengthHelper(List<String> arr, int index, String current) {
+		if (index == arr.size()) {
+			return current.length();
+		}
+		if (noDuplicates(current + arr.get(index))) {
+			int includeCurrent = maxLengthHelper(arr,index + 1,current + arr.get(index));
+			int excludeCurrent = maxLengthHelper(arr,index + 1,current);
+			return Math.max(includeCurrent,excludeCurrent);
+		} 
+		else {
+			return maxLengthHelper(arr,index + 1,current);
+		}
+	}
+	boolean noDuplicates(String str) {
+		Set<Character> charSet = new HashSet<>();
+		for (char c: str.toCharArray()) {	
+			if (!charSet.add(c)) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

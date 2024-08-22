@@ -1,0 +1,33 @@
+class Solution {
+	int cherryPickup(int[][] grid) {
+		int m = grid.length;
+		int n = grid[0].length;
+		int[][][] memo = new int[m][n][n];
+		for (int[][] subArr2: memo) {	
+			for (int[] subArr3: subArr2) {	
+				Arrays.fill(subArr3,-1);
+			}
+		}
+		return dfs(grid,0,0,n - 1,m,n,memo);
+	}
+	int dfs(int[][] grid, int row, int y, int j, int m, int n, int[][][] memo) {
+		if (row == m || y == n || j == n || y < 0 || j < 0) {
+			return 0;
+		}
+		if (memo[row][y][j] != -1) {
+			return memo[row][y][j];
+		}
+		int currentCellCherryCount = 0;
+		if (y == j) {
+			currentCellCherryCount = grid[row][y];
+		} 
+		else {
+			currentCellCherryCount = grid[row][j] + grid[row][y];
+		}
+		int maxCherryXMovesDiagLeft = Math.max(dfs(grid,row + 1,y - 1,j - 1,m,n,memo),Math.max(dfs(grid,row + 1,y - 1,j,m,n,memo),dfs(grid,row + 1,y - 1,j + 1,m,n,memo)));
+		int maxCherryXMovesDown = Math.max(dfs(grid,row + 1,y,j - 1,m,n,memo),Math.max(dfs(grid,row + 1,y,j,m,n,memo),dfs(grid,row + 1,y,j + 1,m,n,memo)));
+		int maxCherryXMovesDiagRight = Math.max(dfs(grid,row + 1,y + 1,j - 1,m,n,memo),Math.max(dfs(grid,row + 1,y + 1,j,m,n,memo),dfs(grid,row + 1,y + 1,j + 1,m,n,memo)));
+		memo[row][y][j] = currentCellCherryCount + Math.max(maxCherryXMovesDiagLeft,Math.max(maxCherryXMovesDown,maxCherryXMovesDiagRight));
+		return memo[row][y][j];
+	}
+}

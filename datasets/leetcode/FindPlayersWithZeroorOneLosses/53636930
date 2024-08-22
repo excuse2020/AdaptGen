@@ -1,0 +1,30 @@
+class Solution {
+	List<List<Integer>> findWinners(int[][] matches) {
+		List<List<Integer>> output = new ArrayList<>();
+		HashMap<Integer, Integer> dntLostMap = new HashMap<>();
+		HashMap<Integer, Integer> lostExactlyOneMap = new HashMap<>();
+		for (int i = 0; i < matches.length; i++) {
+			if (!lostExactlyOneMap.containsKey(matches[i][0])) {
+				dntLostMap.put(matches[i][0],1);
+			}
+			lostExactlyOneMap.put(matches[i][1],lostExactlyOneMap.getOrDefault(matches[i][1],0) + 1);
+		}
+		List<Integer> lostExactlyOneList = new ArrayList<>();
+		List<Integer> dntLostList = new ArrayList<>();
+		for (Map.Entry<Integer, Integer> entry: lostExactlyOneMap.entrySet()) {	
+			if (entry.getValue() == 1) {
+				lostExactlyOneList.add(entry.getKey());
+			}
+		}
+		for (Map.Entry<Integer, Integer> entry: dntLostMap.entrySet()) {	
+			if (!lostExactlyOneMap.containsKey(entry.getKey())) {
+				dntLostList.add(entry.getKey());
+			}
+		}
+		Collections.sort(dntLostList);
+		Collections.sort(lostExactlyOneList);
+		output.add(dntLostList);
+		output.add(lostExactlyOneList);
+		return output;
+	}
+}

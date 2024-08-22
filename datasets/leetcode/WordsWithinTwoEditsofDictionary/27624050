@@ -1,0 +1,42 @@
+class Solution {
+	Node root;
+	void insert(String s) {
+		Node curr = root;
+		for (char ch: s.toCharArray()) {	
+			if (curr.childs.get(ch) == null) {
+				curr.childs.put(ch,new Node());
+			}
+			curr = curr.childs.get(ch);
+		}
+	}
+	boolean search(String word, Node curr, int i, int edits) {
+		if (i == word.length()) {
+			return edits <= 2;
+		}
+		if (edits > 2) {
+			return false;
+		}
+		boolean ans = false;
+		for (Character ch: curr.childs.keySet()) {	
+			ans |= search(word,curr.childs.get(ch),i + 1,ch == word.charAt(i) ? edits : edits + 1);
+		}
+		return ans;
+	}
+	List<String> twoEditWords(String[] queries, String[] dictionary) {
+		root = new Node();
+		for (String s: dictionary) {	
+			insert(s);
+		}
+		List<String> ans = new ArrayList<>();
+		for (String s: queries) {	
+			boolean found = search(s,root,0,0);
+			if (found) {
+				ans.add(s);
+			}
+		}
+		return ans;
+	}
+	class Node {
+		HashMap<Character, Node> childs = new HashMap<>();
+	}
+}

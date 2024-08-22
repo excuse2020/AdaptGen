@@ -1,0 +1,30 @@
+class Solution {
+	long maximumSubarraySum(int[] nums, int k) {
+		int i = 0, j = 0;
+		long sum = 0, max = 0;
+		boolean vals = new boolean[100001];
+		while (j < nums.length) {
+			sum += nums[j];
+			if (vals[nums[j]] != true) {
+				vals[nums[j]] = true;
+			} 
+			else {
+				while (nums[i] != nums[j] && i < j) {
+					sum -= nums[i];
+					vals[nums[i]] = false;
+					i++;
+				}
+				sum -= nums[i];
+				i++;
+			}
+			if (j - i + 1 == k) {
+				max = Math.max(max,sum);
+				sum -= nums[i];
+				vals[nums[i]] = false;
+				i++;
+			}
+			j++;
+		}
+		return max;
+	}
+}

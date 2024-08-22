@@ -1,0 +1,55 @@
+class Solution {
+	HashMap<TreeNode, TreeNode> parents = new HashMap<>();
+	TreeNode startNode = null;
+	HashSet<TreeNode> visited = new HashSet<>();
+	int amountOfTime(TreeNode root, int start) {
+		parents.put(root,null);
+		traverse(root,parents,start);
+		int ans = 0;
+		System.out.println(startNode.val);
+		Queue<TreeNode> q = new LinkedList<>();
+		q.offer(startNode);
+		while (q.size() > 0) {
+			int siz = q.size();
+			boolean present = false;
+			for (int i = 0; i < siz; i++) {
+				TreeNode c = q.poll();
+				visited.add(c);
+				if (c.left != null && !visited.contains(c.left)) {
+					q.offer(c.left);
+					present = true;
+				}
+				if (c.right != null && !visited.contains(c.right)) {
+					q.offer(c.right);
+					present = true;
+				}
+				TreeNode par = parents.get(c);
+				if (par != null && !visited.contains(par)) {
+					q.offer(par);
+					present = true;
+				}
+			}
+			if (present) {
+				ans++;
+			}
+		}
+		return ans;
+	}
+	void traverse(TreeNode root, HashMap<TreeNode, TreeNode> parents, int start) {
+		if (root == null) {
+			return;
+		}
+		if (root.val == start) {
+			startNode = root;
+		}
+		if (root.left != null) {
+			parents.put(root.left,root);
+		}
+		if (root.right != null) {
+			parents.put(root.right,root);
+		}
+		traverse(root.left,parents,start);
+		traverse(root.right,parents,start);
+		return;
+	}
+}

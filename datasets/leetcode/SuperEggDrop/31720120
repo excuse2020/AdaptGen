@@ -1,0 +1,49 @@
+class Solution {
+	int solve(int k, int n, int[][] t) {
+		if (t[k][n] != -1) {
+			return t[k][n];
+		}
+		if (n == 0 || n == 1) {
+			return n;
+		}
+		if (k == 1) {
+			return n;
+		}
+		int min = Integer.MAX_VALUE;
+		int l = 1, h = n;
+		while (l <= h) {
+			int mid = (l + h) / 2;
+			int low, high;
+			if (t[k - 1][mid - 1] != -1) {
+				low = t[k - 1][mid - 1];
+			} 
+			else {
+				low = solve(k - 1,mid - 1,t);
+				t[k - 1][mid - 1] = low;
+			}
+			if (t[k][n - mid] != -1) {
+				high = t[k][n - mid];
+			} 
+			else {
+				high = solve(k,n - mid,t);
+				t[k][n - mid] = high;
+			}
+			int temp = 1 + Math.max(low,high);
+			min = Math.min(min,temp);
+			if (low > high) {
+				h = mid - 1;
+			} 
+			else {
+				l = mid + 1;
+			}
+		}
+		return t[k][n] = min;
+	}
+	int superEggDrop(int k, int n) {
+		int[][] t = new int[k + 1][n + 1];
+		for (int[] row: t) {	
+			Arrays.fill(row,-1);
+		}
+		return solve(k,n,t);
+	}
+}

@@ -1,0 +1,36 @@
+class Solution {
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		if (inorder.length != postorder.length || inorder.length == 0) {
+			return null;
+		}
+		if (postorder.length == 1) {
+			return new TreeNode(inorder[0]);
+		}
+		int rootVal = postorder[postorder.length - 1];
+		TreeNode node = new TreeNode(rootVal);
+		int index = 0;
+		for (int i = 0; i < inorder.length; i++) {
+			if (inorder[i] == rootVal) {
+				index = i;
+				break;
+			}
+		}
+		int[] left = new int[index];
+		int[] leftB = new int[index];
+		int[] right = new int[inorder.length - 1];
+		int[] rightB = new int[inorder.length - 1];
+		for (int i = 0; i < index; i++) {
+			left[i] = inorder[i];
+			leftB[i] = postorder[i];
+		}
+		for (int i = index + 1; i < inorder.length; i++) {
+			right[i - index - 1] = inorder[i];
+		}
+		for (int i = index; i < postorder.length - 1; i++) {
+			rightB[i - index] = postorder[i];
+		}
+		node.left = buildTree(left,leftB);
+		node.right = buildTree(right,rightB);
+		return node;
+	}
+}

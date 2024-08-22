@@ -1,0 +1,40 @@
+class Solution {
+	List<List<Integer>> getSkyline(int[][] buildings) {
+		List<List<Integer>> result = new ArrayList<>();
+		int n = buildings.length;
+		int[][] buildingPoints = new int[2 * n][2];
+		int i = 0;
+		for (int[] building: buildings) {	
+			buildingPoints[i][0] = building[0];
+			buildingPoints[i][1] = -building[2];
+			buildingPoints[i + 1][0] = building[1];
+			buildingPoints[i + 1][1] = building[2];
+			i = i + 2;
+		}
+		Arrays.sort(buildingPoints,(int[] o1, int[] o2) -> {o1[0] != o2[0] ? o1[0] - o2[0] : o1[1] - o2[1]});
+		TreeMap<Integer, Integer> tmap = new TreeMap<>();
+		tmap.put(0,1);
+		int prevMaxHeight = 0;
+		for (int j = 0; j < buildingPoints.length; j++) {
+			int currentPoint = buildingPoints[j];
+			if (currentPoint[1] < 0) {
+				tmap.put(-currentPoint[1],tmap.getOrDefault(-currentPoint[1],0) + 1);
+			} 
+			else {
+				int count = tmap.get(currentPoint[1]);
+				if (count == 1) {
+					tmap.remove(currentPoint[1]);
+				} 
+				else {
+					tmap.put(currentPoint[1],count - 1);
+				}
+			}
+			int currMaxHeight = tmap.lastKey();
+			if (currMaxHeight != prevMaxHeight) {
+				result.add(Arrays.asList(currentPoint[0],currMaxHeight));
+				prevMaxHeight = currMaxHeight;
+			}
+		}
+		return result;
+	}
+}

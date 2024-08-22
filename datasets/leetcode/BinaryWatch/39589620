@@ -1,0 +1,31 @@
+class Solution {
+	void binaryWatch(int turnedOn, int curOn, int min, int hr, List<String> result, int min_i, int hr_i, Set<String> s) {
+		if (min >= 60 || hr >= 12 || curOn > turnedOn) {
+			return;
+		}
+		if (curOn == turnedOn) {
+			String minutes = Integer.toString(min);
+			String hours = Integer.toString(hr);
+			if (minutes.length() == 1) {
+				minutes = "0" + minutes;
+			}
+			if (!s.contains(hours + ":" + minutes)) {
+				result.add(hours + ":");
+			}
+			s.add(hours + ":");
+			return;
+		}
+		for (int m = min_i; m < 6; m++) {
+			binaryWatch(turnedOn,curOn + 1,min + (int) Math.pow(2,m),hr,result,m + 1,hr_i,s);
+		}
+		for (int h = hr_i; h < 4; h++) {
+			binaryWatch(turnedOn,curOn + 1,min,hr + (int) Math.pow(2,h),result,min_i,h + 1,s);
+		}
+	}
+	List<String> readBinaryWatch(int turnedOn) {
+		List<String> result = new ArrayList<>();
+		Set<String> s = new HashSet<>();
+		binaryWatch(turnedOn,0,0,0,result,0,0,s);
+		return result;
+	}
+}

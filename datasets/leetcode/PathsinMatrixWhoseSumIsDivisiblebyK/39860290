@@ -1,0 +1,31 @@
+class Solution {
+	int MOD = 1_000_000_007;
+	int k;
+	int[][][] memo;
+	int dp(int[][] grid, int i, int j, int sum) {
+		if (i < 0 || i >= grid.length || j < 0 || j >= grid[0].length) {
+			return 0;
+		}
+		sum += grid[i][j];
+		int moddedSum = sum % k;
+		if (i == grid.length - 1 && j == grid[0].length - 1) {
+			return moddedSum == 0 ? 1 : 0;
+		}
+		if (memo[i][j][moddedSum] != -1) {
+			return memo[i][j][moddedSum];
+		}
+		int result = dp(grid,i + 1,j,moddedSum) + dp(grid,i,j + 1,moddedSum);
+		memo[i][j][moddedSum] = result % MOD;
+		return result % MOD;
+	}
+	int numberOfPaths(int[][] grid, int k) {
+		this.k = k;
+		this.memo = new int[grid.length][grid[0].length][k];
+		for (int i = 0; i < memo.length; i++) {
+			for (int j = 0; j < memo[0].length; j++) {
+				Arrays.fill(memo[i][j],-1);
+			}
+		}
+		return this.dp(grid,0,0,0);
+	}
+}

@@ -1,0 +1,33 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		int n = edges.length;
+		Map<Integer, Integer> map = dfs(edges,node1);
+		Map<Integer, Integer> map2 = dfs(edges,node2);
+		int res = Integer.MAX_VALUE;
+		int node = -1;
+		for (int i = 0; i < n; i++) {
+			if (!map.containsKey(i) || !map2.containsKey(i)) {
+				continue;
+			}
+			int min = Math.max(map.get(i),map2.get(i));
+			if (min < res) {
+				res = min;
+				node = i;
+			}
+		}
+		return node;
+	}
+	Map<Integer, Integer> dfs(int[] edges, int node1) {
+		Map<Integer, Integer> map = new HashMap();
+		int steps = 0;
+		while (node1 != -1) {
+			if (map.containsKey(node1)) {
+				break;
+			}
+			map.put(node1,steps);
+			steps++;
+			node1 = edges[node1];
+		}
+		return map;
+	}
+}

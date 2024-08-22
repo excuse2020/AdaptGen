@@ -1,0 +1,75 @@
+class Solution {
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		List<List<Integer>> list = new ArrayList<>();
+		List<Integer> sorted = traverse(root);
+		for (int q: queries) {	
+			list.add(Arrays.asList(search1(sorted,q),search2(sorted,q)));
+		}
+		return list;
+	}
+	int search1(List<Integer> sorted, int target) {
+		int l = 0, r = sorted.size() - 1;
+		while (l < r - 1) {
+			int mid = l + (r - l) / 2, midVal = sorted.get(mid);
+			if (midVal == target) {
+				return midVal;
+			} 
+			else if (midVal >= target) {
+				r = mid - 1;
+			} 
+			else {
+				l = mid;
+			}
+		}
+		if (sorted.get(r) <= target) {
+			return sorted.get(r);
+		} 
+		else if (sorted.get(l) <= target) {
+			return sorted.get(l);
+		} 
+		else {
+			return -1;
+		}
+	}
+	int search2(List<Integer> sorted, int target) {
+		int l = 0, r = sorted.size() - 1;
+		while (l < r - 1) {
+			int mid = l + (r - l) / 2, midVal = sorted.get(mid);
+			if (midVal == target) {
+				return midVal;
+			} 
+			else if (midVal <= target) {
+				l = mid + 1;
+			} 
+			else {
+				r = mid;
+			}
+		}
+		if (sorted.get(l) >= target) {
+			return sorted.get(l);
+		} 
+		else if (sorted.get(r) >= target) {
+			return sorted.get(r);
+		} 
+		else {
+			return -1;
+		}
+	}
+	List<Integer> traverse(TreeNode root) {
+		List<Integer> list = new ArrayList<>();
+		Deque<TreeNode> st = new ArrayDeque<>();
+		TreeNode cur = root;
+		while (cur != null || !st.isEmpty()) {
+			if (cur != null) {
+				st.offerFirst(cur);
+				cur = cur.left;
+			} 
+			else {
+				cur = st.pollFirst();
+				list.add(cur.val);
+				cur = cur.right;
+			}
+		}
+		return list;
+	}
+}

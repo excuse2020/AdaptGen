@@ -1,0 +1,30 @@
+class Solution {
+	int findOpt(int[] obs, int n) {
+		int[] nextLanes = new int[4];
+		for (int i = n - 1; i >= 0; i--) {
+			int[] currLanes = new int[4];
+			for (int j = 3; j >= 1; j--) {
+				if (obs[i] == j) {
+					currLanes[j] = Integer.MAX_VALUE;
+				} 
+				else if ((i < n - 1) && obs[i + 1] != j) {
+					currLanes[j] = nextLanes[j];
+				} 
+				else if (i < n - 1) {
+					int ans = Integer.MAX_VALUE;
+					for (int k = 1; k < 4; k++) {
+						if (j != k && obs[i] != k && obs[i + 1] != k) {
+							ans = Math.min(ans,nextLanes[k]);
+						}
+					}
+					currLanes[j] = ans + 1;
+				}
+			}
+			nextLanes = currLanes;
+		}
+		return nextLanes[2];
+	}
+	int minSideJumps(int[] obstacles) {
+		return findOpt(obstacles,obstacles.length);
+	}
+}

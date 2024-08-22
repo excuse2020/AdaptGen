@@ -1,0 +1,27 @@
+class Solution {
+	int indx;
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		indx = inorder.length - 1;
+		TreeNode ans = solve(inorder,postorder,0,postorder.length - 1);
+		return ans;
+	}
+	int find(int inorder, int ele, int s, int e) {
+		for (int i = s; i <= e; i++) {
+			if (inorder[i] == ele) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	TreeNode solve(int[] inorder, int[] postorder, int s, int e) {
+		if (s > e || indx < 0) {
+			return null;
+		}
+		int ele = postorder[indx--];
+		TreeNode root = new TreeNode(ele);
+		int pos = find(inorder,ele,s,e);
+		root.right = solve(inorder,postorder,pos + 1,e);
+		root.left = solve(inorder,postorder,s,pos - 1);
+		return root;
+	}
+}

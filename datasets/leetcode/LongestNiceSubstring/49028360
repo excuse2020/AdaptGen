@@ -1,0 +1,42 @@
+class Solution {
+	String longestNiceSubstring(String s) {
+		ArrayList<String> niceStrings = new ArrayList<String>();
+		for (int i = 0; i < s.length(); i++) {
+			for (int j = i + 1; j <= s.length(); j++) {
+				if (substringIsNice(s,i,j)) {
+					niceStrings.add(s.substring(i,j));
+				}
+			}
+		}
+		return niceStrings.stream().sorted(Comparator.comparingInt().reversed()).findFirst().orElse("");
+	}
+	boolean substringIsNice(String s, int start, int end) {
+		Set<Character> charSet = new HashSet<Character>();
+		Set<Character> lowerCaseSet = new HashSet<Character>();
+		Set<Character> upperCaseSet = new HashSet<Character>();
+		for (int i = start; i < end; i++) {
+			charSet.add(s.charAt(i));
+			if (Character.isLowerCase(s.charAt(i))) {
+				lowerCaseSet.add(s.charAt(i));
+			} 
+			else {
+				upperCaseSet.add(s.charAt(i));
+			}
+		}
+		Iterator<Character> iterator = lowerCaseSet.iterator();
+		while (iterator.hasNext()) {
+			char current = iterator.next();
+			if (!charSet.contains(current) || !charSet.contains((char)((int)(current) - 32))) {
+				return false;
+			}
+		}
+		Iterator<Character> iteratorI = upperCaseSet.iterator();
+		while (iteratorI.hasNext()) {
+			char current = iteratorI.next();
+			if (!charSet.contains(current) || !charSet.contains((char)((int)(current) + 32))) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

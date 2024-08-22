@@ -1,0 +1,33 @@
+class Solution {
+	RandomListNode Clone(RandomListNode pHead) {
+		if (pHead == null) {
+			return null;
+		}
+		RandomListNode root = new RandomListNode(pHead.label);
+		RandomListNode curr = root;
+		Map<RandomListNode, RandomListNode> map = new HashMap<>();
+		map.put(pHead,curr);
+		while (pHead.next != null) {
+			RandomListNode next = curr;
+			if (!map.containsKey(pHead.next)) {
+				next = new RandomListNode(pHead.next.label);
+			} 
+			else {
+				next = map.get(pHead.next);
+			}
+			curr.next = next;
+			if (!map.containsKey(pHead.random)) {
+				RandomListNode r = pHead.random == null ? null : new RandomListNode(pHead.random.label);
+				curr.random = r;
+				map.put(pHead.random,r);
+			} 
+			else {
+				curr.random = map.get(pHead.random);
+			}
+			curr = curr.next;
+			pHead = pHead.next;
+		}
+		curr.random = map.get(pHead.random);
+		return root;
+	}
+}

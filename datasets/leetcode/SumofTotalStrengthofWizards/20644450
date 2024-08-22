@@ -1,0 +1,55 @@
+class Solution {
+	int mod = (int) 1e9 + 7;
+	long[] postPostSum;
+	long[] postSum;
+	long[] prePreSum;
+	long[] preSum;
+	long getCurrentSum(int min, int start, int i, int end) {
+		long left = getLeftCount(start,i) * (end - i) % mod;
+		long right = getRightCount(i + 1,end) * (i - start) % mod;
+		return min * (left + right) % mod;
+	}
+	long getLeftCount(int start, int end) {
+		if (end == postPostSum.length - 1) {
+			return postPostSum[start + 1];
+		}
+		return (postPostSum[start + 1] - postPostSum[end + 1]) % mod;
+	}
+	long getRightCount(int start, int end) {
+		if (start == 0) {
+			return prePreSum[end - 1];
+		}
+		return (prePreSum[end - 1] - prePreSum[start - 1]) % mod;
+	}
+	void setPreAndPostSum(int n, int[] nums) {
+		preSum = new long[n];
+		prePreSum = new long[n];
+		postSum = new long[n];
+		postPostSum = new long[n];
+		for (int i = 0; i < n; i++) {
+			preSum[i] += (i == 0 ? 0 : preSum[i - 1]) + nums[i];
+			prePreSum[i] += (i == 0 ? 0 : prePreSum[i - 1]) + preSum[i];
+			int j = n - 1;
+			postSum[j] += (j == n - 1 ? 0 : postSum[j + 1]) + nums[j];
+			postPostSum[j] += (j == n - 1 ? 0 : postPostSum[j + 1]) + postSum[j];
+		}
+	}
+	int totalStrength(int[] nums) {
+		int n = nums.length;
+		long sum = 0;
+		setPreAndPostSum(n,nums);
+		int[] monotonicStack = new int[n];
+		int top = -1;
+		for (int i = 0; i <= nums.length; i++) {
+			while (top != -1 && (i == nums.length || nums[monotonicStack[top]] >= nums[i])) {
+				int middle = monotonicStack[top--];
+				int left = top == -1 ? -1 : monotonicStack[top];
+				sum += getCurrentSum(nums[middle],left,middle,i);
+			}
+			if (i < nums.length) {
+				monotonicStack[++top] = i;
+			}
+		}
+		return (int) (sum % mod);
+	}
+}

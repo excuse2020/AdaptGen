@@ -1,0 +1,73 @@
+class Solution {
+	long segT;
+	void build(int s, int e, int i, long a) {
+		if (s == e) {
+			segT[i] = a[s];
+			return;
+		}
+		int mid = s + (e - s) / 2;
+		build(s,mid,2 * i + 1,a);
+		build(mid + 1,e,2 * i + 2,a);
+		segT[i] = Math.max(segT[2 * i + 1],segT[2 * i + 2]);
+	}
+	List<Boolean> getResults(int[][] queries) {
+		List<Boolean> arr = new ArrayList<>();
+		TreeSet<Integer> set = new TreeSet<>();
+		set.add(0);
+		set.add(100000);
+		HashMap<Integer, Integer> map = new HashMap<>();
+		map.put(0,0);
+		map.put(100000,100000);
+		segT = new long[5 * (int) (1e5)];
+		for (int i: queries) {	
+			if (i[0] == 1) {
+				set.add(i[1]);
+				int prev = set.lower(i[1]);
+				int next = set.higher(i[1]);
+				map.put(next,next - i[1]);
+				map.put(i[1],i[1] - prev);
+				update(0,100000,0,i[1],map.get(i[1]));
+				update(0,100000,0,next,map.get(next));
+			} 
+			else {
+				int prev = set.lower(i[1]);
+				if (i[1] - prev >= i[2]) {
+					arr.add(true);
+					continue;
+				} 
+				else if (range(0,100000,0,0,i[1]) >= i[2]) {
+					arr.add(true);
+					continue;
+				}
+				arr.add(false);
+			}
+		}
+		return arr;
+	}
+	long range(int s, int e, int i, int qs, int qe) {
+		if (qs <= s && qe >= e) {
+			return segT[i];
+		}
+		if (qs > e || qe < s) {
+			return Long.MIN_VALUE;
+		}
+		int mid = s + (e - s) / 2;
+		long l = range(s,mid,2 * i + 1,qs,qe);
+		long r = range(mid + 1,e,2 * i + 2,qs,qe);
+		return Math.max(l,r);
+	}
+	void update(int s, int e, int i, int q, long v) {
+		if (s == e) {
+			segT[i] = v;
+			return;
+		}
+		int mid = s + (e - s) / 2;
+		if (q <= mid) {
+			update(s,mid,2 * i + 1,q,v);
+		} 
+		else {
+			update(mid + 1,e,2 * i + 2,q,v);
+		}
+		segT[i] = Math.max(segT[2 * i + 1],segT[2 * i + 2]);
+	}
+}

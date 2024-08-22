@@ -1,0 +1,21 @@
+class Solution {
+	TreeMap<Integer, Integer> map = new TreeMap<>();
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		List<List<Integer>> ans = new ArrayList<>();
+		helper(root);
+		for (int num: queries) {	
+			Integer low = map.containsKey(num) ? Integer.valueOf(num) : map.lowerKey(num);
+			Integer high = map.containsKey(num) ? Integer.valueOf(num) : map.higherKey(num);
+			ans.add(Arrays.asList(low == null ? -1 : low,high == null ? -1 : high));
+		}
+		return ans;
+	}
+	void helper(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		map.put(root.val,0);
+		helper(root.left);
+		helper(root.right);
+	}
+}

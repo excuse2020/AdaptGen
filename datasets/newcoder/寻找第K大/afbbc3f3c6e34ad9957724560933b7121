@@ -1,0 +1,51 @@
+class Solution {
+	void exch(int[] a, int temp1, int temp2) {
+		int s = a[temp1];
+		a[temp1] = a[temp2];
+		a[temp2] = s;
+	}
+	int findKth(int[] a, int n, int K) {
+		return quicksearch(a,0,n - 1,K,n);
+	}
+	int quicksearch(int[] a, int first, int last, int k, int length) {
+		int temp1 = first + 1;
+		int temp2 = last;
+		if (first >= last) {
+			if ((length - first) == k) {
+				return a[first];
+			}
+			return -1;
+		}
+		while (true) {
+			while (a[temp2] >= a[first]) {
+				temp2--;
+				if (temp2 <= first) {
+					break;
+				}
+			}
+			while (a[temp1] <= a[first]) {
+				temp1++;
+				if (temp1 >= last) {
+					break;
+				}
+			}
+			if (temp1 < temp2) {
+				exch(a,temp1,temp2);
+			} 
+			else {
+				break;
+			}
+		}
+		exch(a,temp2,first);
+		if ((length - temp2) > k) {
+			return quicksearch(a,temp2 + 1,last,k,length);
+		}
+		if ((length - temp2) == k) {
+			return a[temp2];
+		}
+		if ((length - temp2) < k) {
+			return quicksearch(a,first,temp2 - 1,k,length);
+		}
+		return -1;
+	}
+}

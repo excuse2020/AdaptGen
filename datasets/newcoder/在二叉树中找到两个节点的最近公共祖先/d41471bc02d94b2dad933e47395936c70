@@ -1,0 +1,47 @@
+class Solution {
+	boolean f1;
+	boolean f2;
+	boolean flag;
+	TreeNode result;
+	Set<TreeNode> set;
+	void find(TreeNode node, int o1, int o2, LinkedList<TreeNode> path) {
+		if (node == null) {
+			return;
+		}
+		path.push(node);
+		if (!flag) {
+			if (node.val == o1) {
+				set = new HashSet<>(path);
+				f1 = true;
+				flag = true;
+			} 
+			else if (node.val == o2) {
+				set = new HashSet<>(path);
+				f2 = true;
+				flag = true;
+			}
+		} 
+		else {
+			if (f1 && node.val == o2) {
+				f2 = true;
+			}
+			if (f2 && node.val == o1) {
+				f1 = true;
+			}
+		}
+		find(node.left,o1,o2,path);
+		find(node.right,o1,o2,path);
+		TreeNode pop = path.pop();
+		if (f1 && f2) {
+			if (set.contains(pop)) {
+				result = pop;
+				f1 = f2 = false;
+			}
+		}
+	}
+	int lowestCommonAncestor(TreeNode root, int o1, int o2) {
+		LinkedList<TreeNode> treeNodes = new LinkedList<>();
+		find(root,o1,o2,treeNodes);
+		return result.val;
+	}
+}

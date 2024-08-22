@@ -1,0 +1,31 @@
+class Solution {
+	int maximumPopulation(int[][] logs) {
+		Map<Integer, Integer> yearsMap = new HashMap<>();
+		for (int[] yr: logs) {	
+			int birth = yr[0];
+			int death = yr[1] - 1;
+			yearsMap.putIfAbsent(birth,0);
+			yearsMap.putIfAbsent(death,0);
+		}
+		for (int year: yearsMap.keySet()) {	
+			for (int[] yr: logs) {	
+				int birth = yr[0];
+				int death = yr[1] - 1;
+				if (birth <= year && year <= death) {
+					yearsMap.put(year,yearsMap.get(year) + 1);
+				}
+			}
+		}
+		int maxPopulation = 0;
+		int earliestYear = Integer.MAX_VALUE;
+		for (Map.Entry<Integer, Integer> entry: yearsMap.entrySet()) {	
+			int year = entry.getKey();
+			int population = entry.getValue();
+			if (population > maxPopulation || (population == maxPopulation && year < earliestYear)) {
+				maxPopulation = population;
+				earliestYear = year;
+			}
+		}
+		return earliestYear;
+	}
+}

@@ -1,0 +1,28 @@
+class Solution {
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		if (inorder == null || postorder == null) {
+			return null;
+		}
+		return buildTreeHelper(inorder,postorder,0,inorder.length - 1,postorder.length - 1);
+	}
+	TreeNode buildTreeHelper(int inorder, int postorder, int inStart, int inEnd, int postEnd) {
+		if (inStart > inEnd || postEnd < 0) {
+			return null;
+		}
+		int rootVal = postorder[postEnd];
+		TreeNode root = new TreeNode(rootVal);
+		int indexInorder = findIndexInInorder(inorder,postorder,rootVal,inStart,inEnd);
+		int rightSubTreeSize = inEnd - indexInorder;
+		root.left = buildTreeHelper(inorder,postorder,inStart,indexInorder - 1,postEnd - rightSubTreeSize);
+		root.right = buildTreeHelper(inorder,postorder,indexInorder + 1,inEnd,postEnd - 1);
+		return root;
+	}
+	int findIndexInInorder(int inorder, int postorder, int rootVal, int inStart, int inEnd) {
+		for (int i = inStart; i <= inEnd; i++) {
+			if (inorder[i] == rootVal) {
+				return i;
+			}
+		}
+		return -1;
+	}
+}

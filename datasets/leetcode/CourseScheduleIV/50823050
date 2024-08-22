@@ -1,0 +1,45 @@
+class Solution {
+	void addEdge(int[][] prerequisites, ArrayList<ArrayList<Integer>> adj, int[] indegree) {
+		for (int[] arr: prerequisites) {	
+			adj.get(arr[0]).add(arr[1]);
+			indegree[arr[1]]++;
+		}
+	}
+	List<Boolean> checkIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<ArrayList<Integer>>();
+		for (int i = 0; i < numCourses; i++) {
+			adj.add(new ArrayList<Integer>());
+		}
+		int[] indegree = new int[numCourses];
+		addEdge(prerequisites,adj,indegree);
+		boolean isReachable = new boolean[numCourses][numCourses];
+		Queue<Integer> q = new LinkedList<>();
+		for (int i = 0; i < indegree.length; i++) {
+			if (indegree[i] == 0) {
+				q.add(i);
+			}
+		}
+		while (!q.isEmpty()) {
+			System.out.println(q);
+			Integer node = q.poll();
+			for (Integer adjacent: adj.get(node)) {	
+				indegree[adjacent]--;
+				if (indegree[adjacent] == 0) {
+					q.add(adjacent);
+				}
+				isReachable[node][adjacent] = true;
+				for (int i = 0; i < numCourses; i++) {
+					if (isReachable[i][node]) {
+						isReachable[i][adjacent] = true;
+					}
+				}
+			}
+		}
+		boolean flag = true;
+		List<Boolean> list = new ArrayList<>();
+		for (int[] arr: queries) {	
+			list.add(isReachable[arr[0]][arr[1]]);
+		}
+		return list;
+	}
+}

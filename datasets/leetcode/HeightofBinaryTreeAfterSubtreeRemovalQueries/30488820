@@ -1,0 +1,33 @@
+class Solution {
+	HashMap<Integer, Integer> hMap = new HashMap<>();
+	HashMap<Integer, Integer> leftMap = new HashMap<>();
+	HashMap<Integer, Integer> rightMap = new HashMap<>();
+	void getHeight(TreeNode root, int max, int depth) {
+		if (root == null) {
+			return;
+		}
+		hMap.put(root.val,max);
+		getHeight(root.left,Math.max(depth + rightMap.get(root.val),max),depth + 1);
+		getHeight(root.right,Math.max(depth + leftMap.get(root.val),max),depth + 1);
+	}
+	int getTotalHeight(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		int left = getTotalHeight(root.left);
+		int right = getTotalHeight(root.right);
+		leftMap.put(root.val,left);
+		rightMap.put(root.val,right);
+		return Math.max(left,right) + 1;
+	}
+	int[] treeQueries(TreeNode root, int[] queries) {
+		getTotalHeight(root);
+		getHeight(root.left,rightMap.get(root.val),1);
+		getHeight(root.right,leftMap.get(root.val),1);
+		int[] result = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			result[i] = hMap.get(queries[i]);
+		}
+		return result;
+	}
+}

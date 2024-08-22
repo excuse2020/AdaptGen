@@ -1,0 +1,32 @@
+class Solution {
+	String smallestEquivalentString(String s1, String s2, String baseStr) {
+		Map<Character, TreeSet<Character>> groups = new HashMap<>();
+		for (int i = 0; i < s1.length(); ++i) {
+			char c1 = s1.charAt(i);
+			char c2 = s2.charAt(i);
+			if (groups.containsKey(c1) && groups.containsKey(c2)) {
+				groups.get(c1).addAll(groups.get(c2));
+				groups.get(c2).forEach((v) -> {groups.put(v,groups.get(c1))});
+			} 
+			else if (groups.containsKey(c1)) {
+				groups.get(c1).add(c2);
+				groups.put(c2,groups.get(c1));
+			} 
+			else if (groups.containsKey(c2)) {
+				groups.get(c2).add(c1);
+				groups.put(c1,groups.get(c2));
+			} 
+			else {
+				groups.computeIfAbsent(c1,(k) -> {new TreeSet<Character>()}).addAll(List.of(c1,c2));
+				groups.put(c2,groups.get(c1));
+			}
+		}
+		var sb = new StringBuilder();
+		for (int i = 0; i < baseStr.length(); ++i) {
+			char c = baseStr.charAt(i);
+			TreeSet<Character> group = groups.get(c);
+			sb.append(group != null ? group.first() : c);
+		}
+		return sb.toString();
+	}
+}

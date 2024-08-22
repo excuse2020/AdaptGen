@@ -1,0 +1,36 @@
+class Solution {
+	int integerReplacement(int n) {
+		ArrayDeque<Long> q = new ArrayDeque<>();
+		HashSet<Long> visited = new HashSet<>();
+		long steps = 0;
+		q.offer((long) n);
+		while (!q.isEmpty()) {
+			long size = q.size();
+			while (size-- > 0) {
+				long temp = q.poll();
+				if (visited.contains(temp)) {
+					continue;
+				}
+				visited.add(temp);
+				if (temp == 1) {
+					return (int) steps;
+				}
+				if (temp % 2 == 0) {
+					if (!visited.contains((long)(temp / 2))) {
+						q.offer((long) (temp / 2));
+					}
+				} 
+				else {
+					if (!visited.contains(temp + 1)) {
+						q.offer(temp + 1);
+					}
+					if (!visited.contains(temp - 1)) {
+						q.offer(temp - 1);
+					}
+				}
+			}
+			steps += 1;
+		}
+		return -1;
+	}
+}

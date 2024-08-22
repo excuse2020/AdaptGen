@@ -1,0 +1,40 @@
+class Solution {
+	int bfs(int node, int[] edges, int[] vis) {
+		Set<Integer> seen = new HashSet<>();
+		Queue<Integer> q = new LinkedList<Integer>();
+		q.add(node);
+		int maxCycle = -1;
+		int step = 0;
+		while (!q.isEmpty()) {
+			int curr = q.poll();
+			if (vis[curr] != -1) {
+				if (vis[curr] != -2 && seen.contains(curr)) {
+					maxCycle = Math.max(maxCycle,step - vis[curr]);
+				}
+			} 
+			else {
+				vis[curr] = -2;
+				if (edges[curr] != -1) {
+					vis[curr] = step;
+					q.add(edges[curr]);
+				}
+				seen.add(curr);
+			}
+			step++;
+		}
+		return maxCycle;
+	}
+	int longestCycle(int[] edges) {
+		int vis = new int[edges.length];
+		for (int i = 0; i < edges.length; i++) {
+			vis[i] = -1;
+		}
+		int mcycle = -1;
+		for (int i = 0; i < edges.length; i++) {
+			if (vis[i] == -1) {
+				mcycle = Math.max(mcycle,bfs(i,edges,vis));
+			}
+		}
+		return mcycle;
+	}
+}

@@ -1,0 +1,35 @@
+class Solution {
+	boolean canChoose(int[][] groups, int[] nums) {
+		int totalCount = 0;
+		for (int[] arr: groups) {	
+			totalCount += arr.length;
+		}
+		return checkTwoMatricestoChoose(groups,nums,0,0,totalCount);
+	}
+	boolean checkTwoMatricestoChoose(int[][] groups, int[] nums, int groupRowInd, int numsIndex, int totalCount) {
+		if (groupRowInd == groups.length) {
+			return true;
+		}
+		if (totalCount > nums.length - numsIndex) {
+			return false;
+		}
+		for (int i = numsIndex, j = 0; i < nums.length; ) {
+			if (groups[groupRowInd][j] == nums[i]) {
+				j++;
+				i++;
+			} 
+			else {
+				i = i - j + 1;
+				j = 0;
+			}
+			if (j == groups[groupRowInd].length) {
+				if (checkTwoMatricestoChoose(groups,nums,groupRowInd + 1,i,totalCount - groups[groupRowInd].length)) {
+					return true;
+				}
+				i = i - j + 1;
+				j = 0;
+			}
+		}
+		return false;
+	}
+}

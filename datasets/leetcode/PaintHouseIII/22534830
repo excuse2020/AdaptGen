@@ -1,0 +1,38 @@
+class Solution {
+	Integer[][][] dp;
+	int minCost(int[] houses, int[][] cost, int m, int n, int target) {
+		dp = new Integer[houses.length][target + 1][cost[0].length + 2];
+		int ans = minCostUtil(houses,cost,0,-1,0,target);
+		return ans == Integer.MAX_VALUE ? -1 : ans;
+	}
+	int minCostUtil(int[] houses, int[][] cost, int index, int prev, int neighbourhood, int target) {
+		if (index >= houses.length) {
+			if (neighbourhood == target) {
+				return 0;
+			}
+			return Integer.MAX_VALUE;
+		}
+		if (neighbourhood > target) {
+			return Integer.MAX_VALUE;
+		}
+		if (dp[index][neighbourhood][prev + 1] != null) {
+			return dp[index][neighbourhood][prev + 1];
+		}
+		if (houses[index] != 0) {
+			int newNeighbourhood = prev != houses[index] ? neighbourhood + 1 : neighbourhood;
+			return minCostUtil(houses,cost,index + 1,houses[index],newNeighbourhood,target);
+		}
+		int min = Integer.MAX_VALUE;
+		for (int color = 0; color < cost[index].length; color++) {
+			int newNeighbourhood = (prev != color + 1) ? neighbourhood + 1 : neighbourhood;
+			houses[index] = color + 1;
+			int curr = minCostUtil(houses,cost,index + 1,houses[index],newNeighbourhood,target);
+			houses[index] = 0;
+			if (curr == Integer.MAX_VALUE) {
+				continue;
+			}
+			min = Math.min(min,cost[index][color] + curr);
+		}
+		return dp[index][neighbourhood][prev + 1] = min;
+	}
+}

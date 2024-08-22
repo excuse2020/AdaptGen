@@ -1,0 +1,27 @@
+class Solution {
+	int mod = 1000000007;
+	int helper(int[][] grid, int k, int sum, int a, int b, int[][][] dp) {
+		if (a >= grid.length || b >= grid[0].length) {
+			return 0;
+		}
+		sum = (sum + grid[a][b]) % k;
+		if (a == grid.length - 1 && b == grid[0].length - 1 && sum == 0) {
+			return 1;
+		}
+		if (dp[a][b][sum] != -1) {
+			return dp[a][b][sum];
+		}
+		return dp[a][b][sum] = (helper(grid,k,sum,a + 1,b,dp) + helper(grid,k,sum,a,b + 1,dp)) % mod;
+	}
+	int numberOfPaths(int[][] grid, int k) {
+		int[][][] dp = new int[grid.length][grid[0].length][k];
+		for (int a = 0; a < grid.length; a++) {
+			for (int b = 0; b < grid[0].length; b++) {
+				for (int c = 0; c < k; c++) {
+					dp[a][b][c] = -1;
+				}
+			}
+		}
+		return helper(grid,k,0,0,0,dp);
+	}
+}

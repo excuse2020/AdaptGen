@@ -1,0 +1,27 @@
+class Solution {
+	int helper(int indx, int costs, int ca, int cb, int[][] dp) {
+		if (indx == costs.length) {
+			return 0;
+		}
+		if (dp[ca][cb] != -1) {
+			return dp[ca][cb];
+		}
+		int left = Integer.MAX_VALUE;
+		if (ca < costs.length / 2) {
+			left = costs[indx][0] + helper(indx + 1,costs,ca + 1,cb,dp);
+		}
+		int right = Integer.MAX_VALUE;
+		if (cb < costs.length / 2) {
+			right = costs[indx][1] + helper(indx + 1,costs,ca,cb + 1,dp);
+		}
+		return dp[ca][cb] = Math.min(left,right);
+	}
+	int twoCitySchedCost(int[][] costs) {
+		int n = costs.length;
+		int dp = new int[n][n];
+		for (int row: dp) {	
+			Arrays.fill(row,-1);
+		}
+		return helper(0,costs,0,0,dp);
+	}
+}

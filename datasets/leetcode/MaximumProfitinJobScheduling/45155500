@@ -1,0 +1,45 @@
+class Solution {
+	int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
+		int dp = new int[endTime.length][2];
+		int mat = new int[startTime.length][3];
+		for (int i = 0; i < startTime.length; i++) {
+			mat[i][0] = startTime[i];
+			mat[i][1] = endTime[i];
+			mat[i][2] = profit[i];
+		}
+		Arrays.sort(mat,Comparator.comparingDouble((o) -> {o[1]}));
+		for (int i = 0; i < mat.length; i++) {
+			int startT = mat[i][0];
+			int s = 0;
+			int e = i;
+			int mid = 0;
+			while (s < e) {
+				mid = (s + e) / 2;
+				if (mat[mid][1] <= startT) {
+					while (mid < mat.length && mat[mid][1] <= startT) {
+						mid++;
+					}
+					mid--;
+					break;
+				} 
+				else {
+					e = mid;
+				}
+			}
+			if (mat[mid][1] <= startT) {
+				dp[i][0] = dp[mid][1] + mat[i][2];
+				dp[i][1] = Math.max(dp[i][0],dp[i - 1][1]);
+			} 
+			else {
+				dp[i][0] = mat[i][2];
+				if (i > 0) {
+					dp[i][1] = Math.max(dp[i][0],dp[i - 1][1]);
+				} 
+				else {
+					dp[i][1] = dp[i][0];
+				}
+			}
+		}
+		return dp[mat.length - 1][1];
+	}
+}

@@ -1,0 +1,35 @@
+class Solution {
+	void dfs(Map<Integer, List<Integer>> map, int i, List<Integer> neigh, boolean[] visited) {
+		visited[i] = true;
+		if (!map.containsKey(i)) {
+			return;
+		}
+		for (int j = 0; j < map.get(i).size(); j++) {
+			if (!visited[map.get(i).get(j)]) {
+				neigh.add(map.get(i).get(j));
+				dfs(map,map.get(i).get(j),neigh,visited);
+			}
+		}
+	}
+	List<List<Integer>> getAncestors(int n, int[][] edges) {
+		Arrays.sort(edges,(a, b) -> {a[1] - b[1]});
+		List<List<Integer>> res = new ArrayList<>();
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int[] edge: edges) {	
+			List<Integer> neigh = new ArrayList<>();
+			if (map.containsKey(edge[1])) {
+				neigh = map.get(edge[1]);
+			}
+			neigh.add(edge[0]);
+			map.put(edge[1],neigh);
+		}
+		for (int i = 0; i < n; i++) {
+			List<Integer> neigh = new ArrayList<>();
+			boolean[] visited = new boolean[n];
+			dfs(map,i,neigh,visited);
+			Collections.sort(neigh);
+			res.add(neigh);
+		}
+		return res;
+	}
+}

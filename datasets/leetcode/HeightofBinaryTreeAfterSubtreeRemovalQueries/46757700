@@ -1,0 +1,65 @@
+class Solution {
+	Map<TreeNode, Integer> map = new HashMap();
+	int max;
+	Map<Integer, Integer> rMap = new HashMap();
+	void removeMap(TreeNode node, int cur, int maxHeightSoFar) {
+		if (node.left == null && node.right == null) {
+			rMap.put(node.val,Math.max(cur - 1,maxHeightSoFar));
+			return;
+		}
+		if (node.left == null) {
+			rMap.put(node.right.val,Math.max(cur,maxHeightSoFar));
+			removeMap(node.right,1 + cur,maxHeightSoFar);
+			return;
+		}
+		if (node.right == null) {
+			rMap.put(node.left.val,Math.max(cur,maxHeightSoFar));
+			removeMap(node.left,1 + cur,maxHeightSoFar);
+			return;
+		}
+		int hLeft = map.get(node.left);
+		int hRight = map.get(node.right);
+		if (hLeft == hRight) {
+			setAllAsMax(node.left);
+			setAllAsMax(node.right);
+			return;
+		}
+		if (hLeft > hRight) {
+			setAllAsMax(node.right);
+			maxHeightSoFar = Math.max(maxHeightSoFar,cur + hRight);
+			rMap.put(node.left.val,maxHeightSoFar);
+			removeMap(node.left,1 + cur,maxHeightSoFar);
+			return;
+		}
+		setAllAsMax(node.left);
+		maxHeightSoFar = Math.max(maxHeightSoFar,cur + hLeft);
+		rMap.put(node.right.val,maxHeightSoFar);
+		removeMap(node.right,1 + cur,maxHeightSoFar);
+	}
+	void setAllAsMax(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		rMap.put(root.val,max);
+		setAllAsMax(root.left);
+		setAllAsMax(root.right);
+	}
+	int setDepth(TreeNode node) {
+		if (node == null) {
+			return -1;
+		}
+		int ans = 1 + Math.max(setDepth(node.left),setDepth(node.right));
+		map.put(node,ans);
+		return ans;
+	}
+	int[] treeQueries(TreeNode root, int[] queries) {
+		setDepth(root);
+		max = map.get(root);
+		removeMap(root,0,0);
+		int[] ans = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			ans[i] = rMap.get(queries[i]);
+		}
+		return ans;
+	}
+}

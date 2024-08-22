@@ -1,0 +1,27 @@
+class Solution {
+	int helper(List<List<Integer>> adj, List<Boolean> hasApple, boolean[] visited, int v) {
+		int ans = 0;
+		visited[v] = true;
+		for (int i = 0; i < adj.get(v).size(); i++) {
+			if (!visited[adj.get(v).get(i)]) {
+				ans += helper(adj,hasApple,visited,adj.get(v).get(i));
+			}
+		}
+		if (hasApple.get(v) || ans != 0) {
+			ans += 2;
+		}
+		return ans;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			adj.get(edges[i][0]).add(edges[i][1]);
+			adj.get(edges[i][1]).add(edges[i][0]);
+		}
+		boolean[] visited = new boolean[n];
+		return Math.max(0,helper(adj,hasApple,visited,0) - 2);
+	}
+}

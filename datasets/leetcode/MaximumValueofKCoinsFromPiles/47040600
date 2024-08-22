@@ -1,0 +1,24 @@
+class Solution {
+	int maxValueOfCoins(List<List<Integer>> piles, int k) {
+		int[][] dp = new int[piles.size() + 1][k + 1];
+		for (int[] d: dp) {	
+			Arrays.fill(d,-1);
+		}
+		return solveMemo(piles,0,k,dp);
+	}
+	int solveMemo(List<List<Integer>> piles, int idx, int k, int[][] dp) {
+		if (idx >= piles.size() || k <= 0) {
+			return 0;
+		}
+		if (dp[idx][k] != -1) {
+			return dp[idx][k];
+		}
+		int res = solveMemo(piles,idx + 1,k,dp);
+		int count = 0;
+		for (int i = 0; i < piles.get(idx).size() && i < k; i++) {
+			count += piles.get(idx).get(i);
+			res = Math.max(res,count + solveMemo(piles,idx + 1,k - i,dp));
+		}
+		return dp[idx][k] = res;
+	}
+}

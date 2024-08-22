@@ -1,0 +1,48 @@
+class Solution {
+	int[] constructDistancedSequence(int n) {
+		int[] s = new int[2 * n - 1];
+		boolean[] used = new boolean[n + 1];
+		s[0] = n;
+		if (n > 1) {
+			s[n] = n;
+			used[n] = true;
+			put(s,used,1);
+		}
+		return s;
+	}
+	boolean put(int[] s, boolean[] used, int pos) {
+		if (pos == s.length) {
+			return true;
+		}
+		while (s[pos] != 0) {
+			if (++pos == s.length) {
+				return true;
+			}
+		}
+		for (int n = used.length - 2; n > 0; n--) {
+			if (!used[n]) {
+				used[n] = true;
+				if (n == 1) {
+					if (s[pos] == 0) {
+						s[pos] = n;
+						if (put(s,used,pos + 1)) {
+							return true;
+						}
+						s[pos] = 0;
+					}
+				} 
+				else {
+					if (s[pos] == 0 && pos + n < s.length && s[pos + n] == 0) {
+						s[pos] = s[pos + n] = n;
+						if (put(s,used,pos + 1)) {
+							return true;
+						}
+						s[pos] = s[pos + n] = 0;
+					}
+				}
+				used[n] = false;
+			}
+		}
+		return false;
+	}
+}

@@ -1,0 +1,49 @@
+class Solution {
+	int[] countServers(int n, int[][] logs, int xx, int[] queries) {
+		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {a[1] - b[1]});
+		for (int i = 0; i < logs.length; i++) {
+			pq.add(new int{logs[i][0], logs[i][1]});
+		}
+		Map<Integer, Integer> map = new HashMap<>();
+		int qn = queries.length;
+		int a = new int[qn][3];
+		for (int i = 0; i < qn; i++) {
+			a[i][0] = queries[i];
+			a[i][1] = i;
+		}
+		Arrays.sort(a,(m, nn) -> {m[0] - nn[0]});
+		LinkedList<int[]> q = new LinkedList<>();
+		int i = 0;
+		while (i < qn) {
+			while (pq.size() > 0) {
+				int x = pq.peek();
+				if (x[1] > a[i][0]) {
+					break;
+				}
+				int z = pq.poll();
+				map.put(z[0],map.getOrDefault(z[0],0) + 1);
+				q.add(z);
+			}
+			int size = a[i][0] - xx;
+			while (q.size() > 0) {
+				int x = q.get(0);
+				if (x[1] >= size) {
+					break;
+				}
+				map.put(x[0],map.get(x[0]) - 1);
+				if (map.get(x[0]) == 0) {
+					map.remove(x[0]);
+				}
+				q.remove(0);
+			}
+			a[i][2] = n - map.size();
+			i++;
+		}
+		Arrays.sort(a,(m, kk) -> {m[1] - kk[1]});
+		int res = new int[qn];
+		for (int j = 0; j < res.length; j++) {
+			res[j] = a[j][2];
+		}
+		return res;
+	}
+}

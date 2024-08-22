@@ -1,0 +1,26 @@
+class Solution {
+	int distributeCookies(int[] cookies, int k) {
+		int childs = new int[k];
+		return getMinimumUnfairness(0,cookies,childs,k);
+	}
+	int getMinimumUnfairness(int cookieNo, int[] cookies, int[] childs, int totalChilds) {
+		if (cookieNo >= cookies.length) {
+			int max = Integer.MIN_VALUE;
+			for (int child: childs) {	
+				max = Math.max(max,child);
+			}
+			return max;
+		}
+		int result = Integer.MAX_VALUE;
+		int cookie = cookies[cookieNo];
+		for (int i = 0; i < childs.length; i++) {
+			childs[i] += cookie;
+			result = Math.min(result,getMinimumUnfairness(cookieNo + 1,cookies,childs,totalChilds - 1));
+			childs[i] -= cookie;
+			if (childs[i] == 0) {
+				break;
+			}
+		}
+		return result;
+	}
+}

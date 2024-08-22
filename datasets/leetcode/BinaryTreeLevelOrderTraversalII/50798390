@@ -1,0 +1,44 @@
+class Solution {
+	List<List<Integer>> levelOrderBottom(TreeNode root) {
+		List<List<Integer>> result = new ArrayList<List<Integer>>();
+		if (root == null) {
+			return result;
+		}
+		List<Integer> li = new ArrayList<Integer>();
+		Stack<Integer> st = new Stack<Integer>();
+		Queue<TreeNode> qu = new LinkedList<TreeNode>();
+		qu.add(root);
+		qu.add(null);
+		st.push(Integer.MIN_VALUE);
+		while (!qu.isEmpty()) {
+			TreeNode ptr = qu.remove();
+			if (ptr == null) {
+				if (!qu.isEmpty()) {
+					st.push(Integer.MIN_VALUE);
+					qu.add(null);
+				}
+			} 
+			else {
+				st.push(ptr.val);
+				if (ptr.right != null) {
+					qu.add(ptr.right);
+				}
+				if (ptr.left != null) {
+					qu.add(ptr.left);
+				}
+			}
+		}
+		while (!st.isEmpty()) {
+			int value = st.pop();
+			if (value == Integer.MIN_VALUE) {
+				List<Integer> copy = new ArrayList<Integer>(li);
+				result.add(copy);
+				li.clear();
+			} 
+			else {
+				li.add(value);
+			}
+		}
+		return result;
+	}
+}

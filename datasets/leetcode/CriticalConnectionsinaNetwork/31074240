@@ -1,0 +1,45 @@
+class Solution {
+	int count = 1;
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (List<Integer> connection: connections) {	
+			int from = connection.get(0);
+			int to = connection.get(1);
+			adj.get(from).add(to);
+			adj.get(to).add(from);
+		}
+		List<List<Integer>> bridges = new ArrayList<List<Integer>>();
+		int[] time = new int[n];
+		int[] low = new int[n];
+		int[] vis = new int[n];
+		dfs(0,-1,adj,time,low,vis,bridges);
+		return bridges;
+	}
+	void dfs(int node, int parent, ArrayList<ArrayList<Integer>> adj, int[] time, int[] low, int[] vis, List<List<Integer>> bridges) {
+		vis[node] = 1;
+		time[node] = count;
+		count++;
+		low[node] = time[node];
+		for (int ele: adj.get(node)) {	
+			if (ele == parent) {
+				continue;
+			}
+			if (vis[ele] == 1) {
+				low[node] = Math.min(low[node],low[ele]);
+			} 
+			else {
+				dfs(ele,node,adj,time,low,vis,bridges);
+				low[node] = Math.min(low[node],low[ele]);
+				if (low[ele] > time[node]) {
+					ArrayList<Integer> temp = new ArrayList<>();
+					temp.add(ele);
+					temp.add(node);
+					bridges.add(temp);
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,31 @@
+class Solution {
+	int maxLevel(LinkedList<TreeNode> levelNodes, int max, int level, int bestLevel) {
+		LinkedList<TreeNode> newNodes = new LinkedList();
+		int sum = 0;
+		while (!levelNodes.isEmpty()) {
+			TreeNode node = levelNodes.pop();
+			sum += node.val;
+			if (node.left != null) {
+				newNodes.add(node.left);
+			}
+			if (node.right != null) {
+				newNodes.add(node.right);
+			}
+		}
+		if (sum > max) {
+			max = sum;
+			bestLevel = level;
+		}
+		if (!newNodes.isEmpty()) {
+			bestLevel = maxLevel(newNodes,max,level + 1,bestLevel);
+		}
+		return bestLevel;
+	}
+	int maxLevelSum(TreeNode root) {
+		LinkedList<TreeNode> levelNodes = new LinkedList();
+		if (root != null) {
+			levelNodes.add(root);
+		}
+		return maxLevel(levelNodes,Integer.MIN_VALUE,1,0);
+	}
+}

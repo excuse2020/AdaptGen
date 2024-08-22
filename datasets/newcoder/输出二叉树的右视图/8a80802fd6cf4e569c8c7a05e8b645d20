@@ -1,0 +1,56 @@
+class Solution {
+	Map<Integer, Integer> zhongxuMap = new HashMap<>();
+	int[] solve(int[] xianxu, int[] zhongxu) {
+		for (int i = 0; i < zhongxu.length; i++) {
+			zhongxuMap.put(zhongxu[i],i);
+		}
+		int m = xianxu.length - 1;
+		int n = zhongxu.length - 1;
+		TreeNode root = sortNode(xianxu,0,m,zhongxu,0,n);
+		Queue<TreeNode> q = new LinkedList<>();
+		if (root == null) {
+			return new int[0];
+		}
+		q.add(root);
+		List<Integer> list = new ArrayList<>();
+		while (!q.isEmpty()) {
+			for (int i = q.size() - 1; i >= 0; i--) {
+				TreeNode node = q.poll();
+				if (i == 0) {
+					list.add(node.val);
+				}
+				if (node.left != null) {
+					q.add(node.left);
+				}
+				if (node.right != null) {
+					q.add(node.right);
+				}
+			}
+		}
+		int[] res = new int[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			res[i] = list.get(i);
+		}
+		return res;
+	}
+	TreeNode sortNode(int[] xianxu, int xianxuLeftP, int xianxuRightP, int[] zhongxu, int zhongxuLeftP, int zhongxuRightP) {
+		if (xianxuLeftP > xianxuRightP || (zhongxuLeftP > zhongxuRightP)) {
+			return null;
+		}
+		int rootVal = xianxu[xianxuLeftP];
+		int zhongRootIndex = zhongxuMap.get(rootVal);
+		int size = zhongRootIndex - zhongxuLeftP;
+		int left_child_xianxuLeftP = xianxuLeftP + 1;
+		int left_child_xianxuRightP = xianxuLeftP + size;
+		int left_child_zhongxuLeftP = zhongxuLeftP;
+		int left_child_zhongxurightP = zhongxuLeftP + size;
+		int right_child_xianxuLeftP = xianxuLeftP + size;
+		int right_child_xianxuRightP = xianxuRightP;
+		int right_child_zhongxuLeftP = zhongxuLeftP + size;
+		int right_child_zhongxuRightP = zhongxuRightP;
+		TreeNode root = new TreeNode(rootVal);
+		root.left = sortNode(xianxu,left_child_xianxuLeftP,left_child_xianxuRightP,zhongxu,left_child_zhongxuLeftP,left_child_zhongxurightP);
+		root.right = sortNode(xianxu,right_child_xianxuLeftP,right_child_xianxuRightP,zhongxu,right_child_zhongxuLeftP,right_child_zhongxuRightP);
+		return root;
+	}
+}

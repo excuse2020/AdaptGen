@@ -1,0 +1,49 @@
+class Solution {
+	Map<Integer, Integer> map = new HashMap();
+	TreeNode build(int[] xianxu, int xstart, int xend, int[] zhongxu, int zstart, int zend) {
+		if (xstart > xend) {
+			return null;
+		}
+		int rootval = xianxu[xstart];
+		int index = map.get(rootval);
+		int length = index - zstart;
+		TreeNode root = new TreeNode(rootval);
+		root.left = build(xianxu,xstart + 1,xstart + length,zhongxu,zstart,index - 1);
+		root.right = build(xianxu,xstart + length,xend,zhongxu,index + 1,zend);
+		return root;
+	}
+	int[] dfs(TreeNode root) {
+		Map<Integer, Integer> rightValueAtDepth = new HashMap<Integer, Integer>();
+		int max_depth = -1;
+		Stack<TreeNode> stack = new Stack<TreeNode>();
+		Stack<Integer> depthStack = new Stack<Integer>();
+		stack.push(root);
+		depthStack.push(0);
+		while (!stack.isEmpty()) {
+			TreeNode node = stack.pop();
+			int depth = depthStack.pop();
+			if (node != null) {
+				max_depth = Math.max(max_depth,depth);
+				if (!rightValueAtDepth.containsKey(depth)) {
+					rightValueAtDepth.put(depth,node.val);
+				}
+				stack.push(node.left);
+				stack.push(node.right);
+				depthStack.push(depth + 1);
+				depthStack.push(depth + 1);
+			}
+		}
+		List<Integer> list = new ArrayList<Integer>();
+		for (int depth = 0; depth <= max_depth; depth++) {
+			list.add(rightValueAtDepth.get(depth));
+		}
+		return list.stream().mapToInt().toArray();
+	}
+	int[] solve(int[] xianxu, int[] zhongxu) {
+		for (int i = 0; i < zhongxu.length; i++) {
+			map.put(zhongxu[i],i);
+		}
+		TreeNode root = build(xianxu,0,xianxu.length - 1,zhongxu,0,zhongxu.length - 1);
+		return dfs(root);
+	}
+}

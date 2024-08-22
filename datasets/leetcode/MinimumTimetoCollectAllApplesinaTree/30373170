@@ -1,0 +1,25 @@
+class Solution {
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		List<List<Integer>> l = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			l.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			int u = edge[0];
+			int v = edge[1];
+			l.get(u).add(v);
+			l.get(v).add(u);
+		}
+		return minimumTime(0,l,hasApple,0);
+	}
+	int minimumTime(int index, List<List<Integer>> ll, List<Boolean> hasApple, int parent) {
+		int time = 0;
+		for (int n: ll.get(index)) {	
+			if (n == parent) {
+				continue;
+			}
+			time += minimumTime(n,ll,hasApple,index);
+		}
+		return (index != 0) && (hasApple.get(index) || (time > 0)) ? time += 2 : time;
+	}
+}

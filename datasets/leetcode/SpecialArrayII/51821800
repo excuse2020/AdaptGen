@@ -1,0 +1,46 @@
+class Solution {
+	int[] trackSpecial;
+	void buildSpecial(int[] nums, int st, int end) {
+		int len = end - st + 1;
+		if (len == 1) {
+			return;
+		}
+		int mvst = st;
+		Arrays.fill(trackSpecial,end);
+		for (int i = st + 1; i <= end; i++) {
+			if ((nums[i - 1] & 1) == (nums[i] & 1)) {
+				for (int j = mvst; j < i; j++) {
+					trackSpecial[j] = i - 1;
+				}
+				mvst = i;
+			}
+		}
+	}
+	boolean[] isArraySpecial(int[] nums, int[][] queries) {
+		int qlen = queries.length;
+		trackSpecial = new int[nums.length];
+		boolean[] ans = new boolean[qlen];
+		buildSpecial(nums,0,nums.length - 1);
+		int idx = 0;
+		for (int[] q: queries) {	
+			int beg = q[0];
+			int end = q[1];
+			if (end - beg + 1 == 1) {
+				ans[idx++] = true;
+				continue;
+			}
+			if (end - beg + 1 == 2) {
+				ans[idx++] = (nums[beg] & 1) == (nums[end] & 1) ? false : true;
+				continue;
+			}
+			int okupto = trackSpecial[beg];
+			if (okupto >= end) {
+				ans[idx++] = true;
+			} 
+			else {
+				ans[idx++] = false;
+			}
+		}
+		return ans;
+	}
+}

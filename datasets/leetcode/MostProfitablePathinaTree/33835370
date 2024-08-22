@@ -1,0 +1,55 @@
+class Solution {
+	long dfs(int src, int prnt, int level, int[] visited, List<Integer>[] g, int[] amount) {
+		long cost = 0;
+		if (visited[src] == 0) {
+			cost += amount[src];
+		} 
+		else if (visited[src] > level) {
+			cost += amount[src];
+		} 
+		else if (visited[src] == level) {
+			cost += (amount[src] / 2);
+		}
+		long current = -100_00_00_00_0;
+		for (int ngb: g[src]) {	
+			if (ngb != prnt) {
+				current = Math.max(dfs(ngb,src,level + 1,visited,g,amount),current);
+			}
+		}
+		if (current == (-100_00_00_00_0)) {
+			return cost;
+		}
+		return cost + current;
+	}
+	int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+		int n = amount.length;
+		List<Integer>[] g = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			g[i] = new ArrayList<>();
+		}
+		for (int[] edge: edges) {	
+			g[edge[0]].add(edge[1]);
+			g[edge[1]].add(edge[0]);
+		}
+		int count = 0;
+		int[] visited = new int[n];
+		moveToZero(bob,-1,1,visited,g);
+		return (int) dfs(0,-1,1,visited,g,amount);
+	}
+	boolean moveToZero(int src, int prnt, int level, int[] visited, List<Integer>[] g) {
+		if (src == 0) {
+			visited[src] = level;
+			return true;
+		}
+		visited[src] = level;
+		for (int ngb: g[src]) {	
+			if (ngb != prnt) {
+				if (moveToZero(ngb,src,level + 1,visited,g)) {
+					return true;
+				}
+			}
+		}
+		visited[src] = 0;
+		return false;
+	}
+}

@@ -1,0 +1,27 @@
+class Solution {
+	int deleteNums(int[] nums1, int[] nums2, int index1, int index2, int k) {
+		if (index1 >= nums1.length) {
+			return nums2[index2 + k - 1];
+		}
+		if (index2 >= nums2.length) {
+			return nums1[index1 + k - 1];
+		}
+		if (k == 1) {
+			return Math.min(nums1[index1],nums2[index2]);
+		}
+		int newindex1 = Math.min(index1 + k / 2,nums1.length) - 1;
+		int newindex2 = Math.min(index2 + k / 2,nums2.length) - 1;
+		if (nums1[newindex1] > nums2[newindex2]) {
+			return deleteNums(nums1,nums2,index1,newindex2 + 1,k + index2 - newindex2 - 1);
+		} 
+		else {
+			return deleteNums(nums1,nums2,newindex1 + 1,index2,k + index1 - newindex1 - 1);
+		}
+	}
+	int findMedianinTwoSortedAray(int[] arr1, int[] arr2) {
+		int len1 = arr1.length;
+		int len2 = arr2.length;
+		int sumLen = len1 + len2;
+		return deleteNums(arr1,arr2,0,0,sumLen / 2);
+	}
+}

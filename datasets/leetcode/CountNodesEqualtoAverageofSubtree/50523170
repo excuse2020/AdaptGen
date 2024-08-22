@@ -1,0 +1,36 @@
+class Solution {
+	int averageOfSubtree(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		int result = 0;
+		Deque<TreeNode> stack = new ArrayDeque<>();
+		stack.push(root);
+		while (!stack.isEmpty()) {
+			TreeNode curr = stack.pop();
+			int sum = 0, count = 0;
+			Deque<TreeNode> currStack = new ArrayDeque<>();
+			currStack.push(curr);
+			while (!currStack.isEmpty()) {
+				TreeNode top = currStack.pop();
+				count++;
+				sum += top.val;
+				if (top.right != null) {
+					currStack.push(top.right);
+				}
+				if (top.left != null) {
+					currStack.push(top.left);
+				}
+			}
+			int average = sum / count;
+			result += average == curr.val ? 1 : 0;
+			if (curr.right != null) {
+				stack.push(curr.right);
+			}
+			if (curr.left != null) {
+				stack.push(curr.left);
+			}
+		}
+		return result;
+	}
+}

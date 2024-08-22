@@ -1,0 +1,49 @@
+class Solution {
+	double getDistance(int xa, int ya, int xb, int yb) {
+		return Math.sqrt((double) Math.pow(xa - xb,2) + Math.pow(ya - yb,2));
+	}
+	int maximumDetonation(int[][] bombs) {
+		ArrayList<ArrayList<Integer>> connectedBombs = new ArrayList<>();
+		int numBombs = bombs.length;
+		for (int i = 0; i < numBombs; i++) {
+			ArrayList<Integer> nextBombs = new ArrayList<>();
+			connectedBombs.add(nextBombs);
+		}
+		for (int i = 0; i < numBombs - 1; i++) {
+			for (int j = i + 1; j < numBombs; j++) {
+				double dist = getDistance(bombs[i][0],bombs[i][1],bombs[j][0],bombs[j][1]);
+				if (dist <= bombs[i][2]) {
+					connectedBombs.get(i).add(j);
+				}
+				if (dist <= bombs[j][2]) {
+					connectedBombs.get(j).add(i);
+				}
+			}
+		}
+		int bombsDetonated = 0;
+		int[] detonated;
+		for (int i = 0; i < numBombs; i++) {
+			int tempBombsDetonated = 0;
+			detonated = new int[numBombs];
+			LinkedList<Integer> q = new LinkedList<>();
+			q.add(i);
+			while (!q.isEmpty()) {
+				int currBomb = q.poll();
+				if (detonated[currBomb] == 1) {
+					continue;
+				}
+				detonated[currBomb] = 1;
+				tempBombsDetonated++;
+				ArrayList<Integer> nextBombs = connectedBombs.get(currBomb);
+				for (Integer b: nextBombs) {	
+					q.add(b);
+				}
+			}
+			bombsDetonated = Math.max(bombsDetonated,tempBombsDetonated);
+			if (bombsDetonated == numBombs) {
+				return numBombs;
+			}
+		}
+		return bombsDetonated;
+	}
+}

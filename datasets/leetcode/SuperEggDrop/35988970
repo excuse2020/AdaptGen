@@ -1,0 +1,31 @@
+class Solution {
+	int eggHelper(int eggs, int floors, int[][] dp) {
+		if (eggs == 1 || floors <= 1) {
+			return floors;
+		}
+		int minmoves = Integer.MAX_VALUE;
+		if (dp[eggs][floors] != 0) {
+			return dp[eggs][floors];
+		}
+		int left = 1;
+		int right = floors;
+		while (left <= right) {
+			int midfloor = (left + right) / 2;
+			int belowmoves = eggHelper(eggs - 1,midfloor - 1,dp);
+			int abovemoves = eggHelper(eggs,floors - midfloor,dp);
+			int maxmoves = Math.max(belowmoves,abovemoves) + 1;
+			minmoves = Math.min(minmoves,maxmoves);
+			if (belowmoves < abovemoves) {
+				left = midfloor + 1;
+			} 
+			else {
+				right = midfloor - 1;
+			}
+		}
+		return dp[eggs][floors] = minmoves;
+	}
+	int superEggDrop(int k, int n) {
+		int[][] dp = new int[k + 1][n + 1];
+		return eggHelper(k,n,dp);
+	}
+}

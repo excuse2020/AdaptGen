@@ -1,0 +1,52 @@
+class Solution {
+	int[] d;
+	int df(List<List<Integer>> l, int i, int[] v, int B) {
+		if (i == B) {
+			d[i] = 1;
+			return 1;
+		}
+		v[i] = 1;
+		for (int j = 0; j < l.get(i).size(); j++) {
+			if (v[l.get(i).get(j)] == 0) {
+				int x = df(l,l.get(i).get(j),v,B);
+				if (x != 0) {
+					d[i] = x + 1;
+					break;
+				}
+			}
+		}
+		return d[i] == 0 ? 0 : d[i];
+	}
+	int dfs(List<List<Integer>> l, int i, int c, int[] a, int[] v) {
+		v[i] = 1;
+		int cost = a[i];
+		if (d[i] == c) {
+			cost = (a[i] / 2);
+		}
+		if (d[i] != 0 && d[i] < c) {
+			cost = 0;
+		}
+		int x = 0, g = Integer.MIN_VALUE;
+		for (int j: l.get(i)) {	
+			if (v[j] == 0) {
+				g = Math.max(g,cost + dfs(l,j,c + 1,a,v));
+			}
+		}
+		return g == Integer.MIN_VALUE ? cost : g;
+	}
+	int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+		d = new int[amount.length];
+		List<List<Integer>> l = new ArrayList<>();
+		for (int i = 0; i < amount.length; i++) {
+			l.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			l.get(edges[i][0]).add(edges[i][1]);
+			l.get(edges[i][1]).add(edges[i][0]);
+		}
+		int[] v = new int[amount.length];
+		df(l,0,v,bob);
+		Arrays.fill(v,0);
+		return dfs(l,0,1,amount,v);
+	}
+}

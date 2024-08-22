@@ -1,0 +1,45 @@
+class Solution {
+	Set<String> set = new HashSet<>();
+	void build(int l, int r, StringBuilder str) {
+		if (l == 0 && r == 0) {
+			if (!set.contains(str.toString())) {
+				if (canAdd(str.toString())) {
+					set.add(str.toString());
+				}
+			}
+			return;
+		}
+		if (l > 0) {
+			str.append("(");
+			build(l - 1,r,str);
+			str.deleteCharAt(str.length() - 1);
+		}
+		if (r > 0) {
+			str.append(")");
+			build(l,r - 1,str);
+			str.deleteCharAt(str.length() - 1);
+		}
+	}
+	boolean canAdd(String str) {
+		Stack<Character> st = new Stack<>();
+		for (int i = 0; i < str.length(); ++i) {
+			if (str.charAt(i) == '(') {
+				st.push('(');
+			} 
+			else {
+				if (!st.isEmpty()) {
+					st.pop();
+				}
+			}
+		}
+		return st.isEmpty();
+	}
+	ArrayList<String> generateParenthesis(int n) {
+		build(n,n,new StringBuilder());
+		ArrayList<String> list = new ArrayList<>();
+		for (String str: set) {	
+			list.add(str);
+		}
+		return list;
+	}
+}

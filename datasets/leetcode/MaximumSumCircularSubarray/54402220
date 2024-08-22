@@ -1,0 +1,26 @@
+class Solution {
+	int kadane(int[] nums) {
+		int maxSum = nums[0];
+		int currSum = nums[0];
+		for (int i = 1; i < nums.length; i++) {
+			currSum = Math.max(nums[i],currSum + nums[i]);
+			maxSum = Math.max(maxSum,currSum);
+		}
+		return maxSum;
+	}
+	int maxSubarraySumCircular(int[] nums) {
+		int n = nums.length;
+		int maxKadane = kadane(nums);
+		int totalSum = 0;
+		for (int i = 0; i < n; i++) {
+			totalSum += nums[i];
+			nums[i] = -nums[i];
+		}
+		int maxInvertedKadane = kadane(nums);
+		int maxCircular = totalSum + maxInvertedKadane;
+		if (maxCircular == 0) {
+			return maxKadane;
+		}
+		return Math.max(maxKadane,maxCircular);
+	}
+}

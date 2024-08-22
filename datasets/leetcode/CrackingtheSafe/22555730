@@ -1,0 +1,33 @@
+class Solution {
+	String crackSafe(int n, int k) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < n; i++) {
+			sb.append(0);
+		}
+		HashSet<String> visited = new HashSet<>();
+		visited.add(sb.toString());
+		int lim = (int) Math.pow(k,n);
+		dfs(sb,visited,lim,n,k);
+		return sb.toString();
+	}
+	boolean dfs(StringBuilder sb, HashSet<String> visited, int lim, int n, int k) {
+		if (visited.size() == lim) {
+			return true;
+		}
+		String lnm1 = sb.substring(sb.length() - (n - 1));
+		for (int i = 0; i < k; i++) {
+			String npwd = lnm1 + i;
+			if (!visited.contains(npwd)) {
+				visited.add(npwd);
+				sb.append(i);
+				boolean flag = dfs(sb,visited,lim,n,k);
+				if (flag) {
+					return true;
+				}
+				visited.remove(npwd);
+				sb.deleteCharAt(sb.length() - 1);
+			}
+		}
+		return false;
+	}
+}

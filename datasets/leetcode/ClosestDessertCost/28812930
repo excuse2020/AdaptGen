@@ -1,0 +1,37 @@
+class Solution {
+	int min = Integer.MAX_VALUE;
+	int minTarget = Integer.MAX_VALUE;
+	void GetClosestCost(int idx1, int canTake, int idx2, int costs, int count, int[] baseCosts, int[] toppingCosts, int target) {
+		if (costs >= target || idx1 >= baseCosts.length || idx2 >= toppingCosts.length) {
+			if (Math.abs(target - costs) < min) {
+				min = Math.abs(target - costs);
+				minTarget = costs;
+			} 
+			else if (Math.abs(target - costs) == min) {
+				if (costs < minTarget) {
+					minTarget = costs;
+				}
+			}
+			return;
+		}
+		if (canTake == 1 && count > 0) {
+			GetClosestCost(idx1,0,idx2,costs + baseCosts[idx1],count - 1,baseCosts,toppingCosts,target);
+		}
+		if (canTake == 1) {
+			GetClosestCost(idx1,0,idx2 + 1,costs + baseCosts[idx1],2,baseCosts,toppingCosts,target);
+		}
+		if (canTake == 1 && idx1 + 1 < baseCosts.length) {
+			GetClosestCost(idx1 + 1,1,idx2,costs,2,baseCosts,toppingCosts,target);
+		}
+		if (canTake == 0 && count > 0) {
+			GetClosestCost(idx1,0,idx2,costs + toppingCosts[idx2],count - 1,baseCosts,toppingCosts,target);
+		}
+		if (canTake == 0) {
+			GetClosestCost(idx1,0,idx2 + 1,costs,2,baseCosts,toppingCosts,target);
+		}
+	}
+	int closestCost(int[] baseCosts, int[] toppingCosts, int target) {
+		GetClosestCost(0,1,0,0,2,baseCosts,toppingCosts,target);
+		return minTarget;
+	}
+}

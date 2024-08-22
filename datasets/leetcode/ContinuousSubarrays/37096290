@@ -1,0 +1,24 @@
+class Solution {
+	long continuousSubarrays(int[] nums) {
+		long res = 0;
+		int len = nums.length;
+		TreeMap<Integer, Integer> count = new TreeMap<>();
+		int left = 0, right = 0;
+		while (right < len) {
+			int m = nums[right++];
+			count.put(m,1 + count.getOrDefault(m,0));
+			while (count.lastKey() - count.firstKey() > 2) {
+				m = nums[left++];
+				int c = count.get(m);
+				if (c == 1) {
+					count.remove(m);
+				} 
+				else {
+					count.put(m,c - 1);
+				}
+			}
+			res += right - left;
+		}
+		return res;
+	}
+}

@@ -1,0 +1,44 @@
+class Solution {
+	int timer = 0;
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(i,new ArrayList<Integer>());
+		}
+		for (int i = 0; i < connections.size(); i++) {
+			List<Integer> temp = connections.get(i);
+			graph.get(temp.get(0)).add(temp.get(1));
+			graph.get(temp.get(1)).add(temp.get(0));
+		}
+		int[] disc = new int[n];
+		int[] low = new int[n];
+		int[] parent = new int[n];
+		Arrays.fill(disc,-1);
+		Arrays.fill(low,Integer.MAX_VALUE);
+		Arrays.fill(parent,Integer.MAX_VALUE);
+		List<List<Integer>> bridges = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			if (disc[i] == -1) {
+				dfs(i,graph,disc,low,parent,bridges);
+			}
+		}
+		return bridges;
+	}
+	void dfs(int i, List<List<Integer>> graph, int[] disc, int[] low, int[] parent, List<List<Integer>> bridges) {
+		disc[i] = low[i] = timer;
+		timer++;
+		for (int nbr: graph.get(i)) {	
+			if (disc[nbr] == -1) {
+				parent[nbr] = i;
+				dfs(nbr,graph,disc,low,parent,bridges);
+				low[i] = Math.min(low[i],low[nbr]);
+				if (low[nbr] > disc[i]) {
+					bridges.add(new ArrayList<Integer>(List.of(i,nbr)));
+				}
+			} 
+			else if (parent[i] != nbr) {
+				low[i] = Math.min(low[i],disc[nbr]);
+			}
+		}
+	}
+}

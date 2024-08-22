@@ -1,0 +1,46 @@
+class Solution {
+	int gcd(int a, int b) {
+		while (b != 0) {
+			int temp = b;
+			b = a % b;
+			a = temp;
+		}
+		return a;
+	}
+	int maxPoints(int[][] points) {
+		if (points.length <= 2) {
+			return points.length;
+		}
+		int maxPoints = 0;
+		for (int i = 0; i < points.length; i++) {
+			Map<String, Integer> slopeCount = new HashMap<>();
+			int samePointCount = 0;
+			int verticalCount = 0;
+			int localMax = 0;
+			for (int j = 0; j < points.length; j++) {
+				if (i == j) {
+					continue;
+				}
+				int deltaX = points[j][0] - points[i][0];
+				int deltaY = points[j][1] - points[i][1];
+				if (deltaX == 0 && deltaY == 0) {
+					samePointCount++;
+					continue;
+				}
+				if (deltaX == 0) {
+					verticalCount++;
+					localMax = Math.max(localMax,verticalCount);
+					continue;
+				}
+				int gcd = gcd(deltaX,deltaY);
+				deltaX /= gcd;
+				deltaY /= gcd;
+				String slope = deltaX + "/";
+				slopeCount.put(slope,slopeCount.getOrDefault(slope,0) + 1);
+				localMax = Math.max(localMax,slopeCount.get(slope));
+			}
+			maxPoints = Math.max(maxPoints,localMax + samePointCount);
+		}
+		return maxPoints;
+	}
+}

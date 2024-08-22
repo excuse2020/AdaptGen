@@ -1,0 +1,31 @@
+class Solution {
+	HashMap<String, Integer> dp;
+	int dfs(String s, int index, char prev, int freq, int k) {
+		if (k < 0) {
+			return 101;
+		}
+		if (index == s.length() || k >= s.length() - index) {
+			return freq >= 100 ? 4 : freq >= 10 ? 3 : freq >= 2 ? 2 : freq;
+		}
+		String key = index + ".";
+		if (dp.containsKey(key)) {
+			return dp.get(key);
+		}
+		int res = dfs(s,index + 1,prev,freq,k - 1);
+		if (s.charAt(index) != prev) {
+			int len = freq >= 100 ? 4 : freq >= 10 ? 3 : freq >= 2 ? 2 : freq;
+			res = Math.min(res,len + dfs(s,index + 1,s.charAt(index),1,k));
+		} 
+		else {
+			res = Math.min(res,dfs(s,index + 1,prev,freq + 1,k));
+		}
+		dp.put(key,res);
+		return res;
+	}
+	int getLengthOfOptimalCompression(String s, int k) {
+		if (k >= s.length()) {
+			return 0;
+		}
+		dp = new HashMap<>();
+	}
+}

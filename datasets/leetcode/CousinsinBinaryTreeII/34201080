@@ -1,0 +1,34 @@
+class Solution {
+	TreeNode replaceValueInTree(TreeNode root) {
+		Queue<TreeNode[]> q = new ArrayDeque();
+		HashMap<TreeNode, Long> m = new HashMap<>();
+		TreeNode parent = new TreeNode(0);
+		m.put(parent,0l);
+		long sumpar = 0;
+		q.offer(new TreeNode{root, parent});
+		while (!q.isEmpty()) {
+			int size = q.size();
+			HashMap<TreeNode, Long> nm = new HashMap<>();
+			long prevsum = sumpar;
+			sumpar = 0;
+			for (int i = 0; i < size; i++) {
+				TreeNode[] par = q.poll();
+				parent = new TreeNode(par[0].val);
+				long sum = 0;
+				if (par[0].left != null) {
+					q.offer(new TreeNode{par[0].left, parent});
+					sum = par[0].left.val;
+				}
+				if (par[0].right != null) {
+					q.offer(new TreeNode{par[0].right, parent});
+					sum += par[0].right.val;
+				}
+				nm.put(parent,sum);
+				sumpar += sum;
+				par[0].val = (int) (prevsum - m.get(par[1]));
+			}
+			m = nm;
+		}
+		return root;
+	}
+}

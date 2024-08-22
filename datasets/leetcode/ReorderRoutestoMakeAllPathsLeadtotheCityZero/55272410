@@ -1,0 +1,29 @@
+class Solution {
+	void dfs(List<List<int[]>> graph, int root, int[] count, boolean visited) {
+		visited[root] = true;
+		for (var nei: graph.get(root)) {	
+			int nextNode = nei[0];
+			int dir = nei[1];
+			if (!visited[nextNode]) {
+				if (dir == 1) {
+					count[0]++;
+				}
+				dfs(graph,nextNode,count,visited);
+			}
+		}
+	}
+	int minReorder(int n, int[][] connections) {
+		List<List<int[]>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (var edge: connections) {	
+			graph.get(edge[0]).add(new int{edge[1], 1});
+			graph.get(edge[1]).add(new int{edge[0], 0});
+		}
+		int count = new int[1];
+		boolean visited = new boolean[n];
+		dfs(graph,0,count,visited);
+		return count[0];
+	}
+}

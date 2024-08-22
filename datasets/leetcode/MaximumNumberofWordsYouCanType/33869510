@@ -1,0 +1,26 @@
+class Solution {
+	int canBeTypedWords(String text, String brokenLetters) {
+		String[] words = text.split(" ");
+		int typableWordsCount = 0;
+		Set<String> untypableWords = new HashSet<>();
+		Set<Character> brokenLettersSet = brokenLetters.chars().mapToObj((c) -> {(char) c}).collect(Collectors.toSet());
+		for (String word: words) {	
+			if (!isUntypableWord(word,untypableWords,brokenLettersSet)) {
+				typableWordsCount++;
+			}
+		}
+		return typableWordsCount;
+	}
+	boolean isUntypableWord(String word, Set<String> untypableWords, Set<Character> brokenLettersSet) {
+		if (untypableWords.contains(word)) {
+			return true;
+		}
+		for (char c: word.toCharArray()) {	
+			if (brokenLettersSet.contains(c)) {
+				untypableWords.add(word);
+				return true;
+			}
+		}
+		return false;
+	}
+}

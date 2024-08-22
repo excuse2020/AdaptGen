@@ -1,0 +1,22 @@
+class Solution {
+	ArrayList<Integer> maxInWindows(int[] num, int size) {
+		ArrayList<Integer> res = new ArrayList<>();
+		if (num.length == 0 || size <= 0 || size > num.length) {
+			return res;
+		}
+		LinkedList<Integer> maxqueue = new LinkedList<Integer>();
+		for (int i = 0; i < num.length; i++) {
+			while (!maxqueue.isEmpty() && num[maxqueue.peekLast()] < num[i]) {
+				maxqueue.pollLast();
+			}
+			maxqueue.addLast(i);
+			if (maxqueue.peekFirst() == i - size) {
+				maxqueue.pollFirst();
+			}
+			if (i >= size - 1) {
+				res.add(num[maxqueue.peekFirst()]);
+			}
+		}
+		return res;
+	}
+}

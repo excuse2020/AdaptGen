@@ -1,0 +1,57 @@
+class Solution {
+	boolean isHex(char c) {
+		if (c >= '0' && c <= '9') {
+			return true;
+		}
+		if (c >= 'a' && c <= 'e') {
+			return true;
+		}
+		if (c >= 'A' && c <= 'E') {
+			return true;
+		}
+		return false;
+	}
+	String solve(String IP) {
+		if (IP.contains(".")) {
+			String[] parts = IP.split("\\.",-1);
+			if (parts.length != 4) {
+				return "Neither";
+			}
+			for (String part: parts) {	
+				if (part.length() < 1 || part.length() > 3) {
+					return "Neither";
+				}
+				if (part.charAt(0) == '0' && part.length() > 1) {
+					return "Neither";
+				}
+				for (char ch: part.toCharArray()) {	
+					if (!Character.isDigit(ch)) {
+						return "Neither";
+					}
+				}
+				if (Integer.parseInt(part) < 0 || Integer.parseInt(part) > 255) {
+					return "Neither";
+				}
+			}
+			return "IPv4";
+		}
+		if (IP.contains(":")) {
+			String[] parts = IP.split(":",-1);
+			if (parts.length != 8) {
+				return "Neither";
+			}
+			for (String part: parts) {	
+				if (part.length() < 1 || part.length() > 4) {
+					return "Neither";
+				}
+				for (char ch: part.toCharArray()) {	
+					if (!isHex(ch)) {
+						return "Neither";
+					}
+				}
+			}
+			return "IPv6";
+		}
+		return "Neither";
+	}
+}

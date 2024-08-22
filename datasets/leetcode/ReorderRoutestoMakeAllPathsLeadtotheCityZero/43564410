@@ -1,0 +1,30 @@
+class Solution {
+	int minReorder(int n, int[][] connections) {
+		LinkedList<int[]>[] graph = new LinkedList[n];
+		for (int[] con: connections) {	
+			if (graph[con[0]] == null) {
+				graph[con[0]] = new LinkedList();
+			}
+			if (graph[con[1]] == null) {
+				graph[con[1]] = new LinkedList();
+			}
+			graph[con[0]].add(new int{con[1], 1});
+			graph[con[1]].add(new int{con[0], 0});
+		}
+		Deque<Integer> q = new ArrayDeque();
+		q.offerLast(0);
+		int result = 0;
+		int[] visited = new int[n];
+		while (!q.isEmpty()) {
+			int curr = q.removeLast();
+			visited[curr] = 1;
+			for (int[] neighbour: graph[curr]) {	
+				if (visited[neighbour[0]] == 0) {
+					result += neighbour[1];
+					q.offerLast(neighbour[0]);
+				}
+			}
+		}
+		return result;
+	}
+}

@@ -1,0 +1,36 @@
+class Solution {
+	int countCharacters(String[] words, String chars) {
+		Map<Character, Integer> map = new HashMap<>();
+		int len = chars.length();
+		int res = 0;
+		for (int i = 0; i < len; i++) {
+			char c = chars.charAt(i);
+			map.put(c,map.getOrDefault(c,0) + 1);
+		}
+		for (int i = 0; i < words.length; i++) {
+			char[] ch = words[i].toCharArray();
+			len = ch.length;
+			boolean check = true;
+			Map<Character, Integer> tempMap = new HashMap<>();
+			for (int j = 0; j < len; j++) {
+				tempMap.put(ch[j],tempMap.getOrDefault(ch[j],0) + 1);
+			}
+			for (Map.Entry<Character, Integer> entry: tempMap.entrySet()) {	
+				if (map.containsKey(entry.getKey())) {
+					if (map.get(entry.getKey()) < entry.getValue()) {
+						check = false;
+						break;
+					}
+				} 
+				else {
+					check = false;
+					break;
+				}
+			}
+			if (check) {
+				res += len;
+			}
+		}
+		return res;
+	}
+}

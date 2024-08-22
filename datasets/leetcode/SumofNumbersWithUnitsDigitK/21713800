@@ -1,0 +1,35 @@
+class Solution {
+	Integer[][] mem = null;
+	int dp(ArrayList<Integer> arr, int i, int sum) {
+		if (sum == 0) {
+			return 0;
+		}
+		if (sum < 0) {
+			return 3001;
+		}
+		if (i >= arr.size()) {
+			return 3001;
+		}
+		if (mem[i][sum] != null) {
+			return mem[i][sum];
+		}
+		int ans = Math.min(1 + dp(arr,i,sum - arr.get(i)),dp(arr,i + 1,sum));
+		mem[i][sum] = ans;
+		return ans;
+	}
+	int minimumNumbers(int num, int k) {
+		ArrayList<Integer> h = new ArrayList();
+		for (int i = 0; i <= 300; i++) {
+			if (k == 0 && i == 0) {
+				continue;
+			}
+			h.add(i * 10 + k);
+		}
+		mem = new Integer[h.size() + 1][num + 1];
+		int ans = dp(h,0,num);
+		if (ans > 3000) {
+			return -1;
+		}
+		return ans;
+	}
+}

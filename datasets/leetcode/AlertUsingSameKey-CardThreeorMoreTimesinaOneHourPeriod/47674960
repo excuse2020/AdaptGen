@@ -1,0 +1,39 @@
+class Solution {
+	List<String> alertNames(String[] name, String[] time) {
+		HashMap<String, ArrayList<Integer>> map = new HashMap<>();
+		for (int i = 0; i < name.length; i++) {
+			String str = name[i];
+			String str1 = time[i].split(":");
+			ArrayList<Integer> al = map.getOrDefault(str,new ArrayList<Integer>());
+			al.add(Integer.parseInt(str1[0] + str1[1]));
+			map.put(str,al);
+		}
+		TreeMap<String, Integer> ans = new TreeMap<>();
+		for (Map.Entry<String, ArrayList<Integer>> mE: map.entrySet()) {	
+			String s = mE.getKey();
+			ArrayList<Integer> al = mE.getValue();
+			Collections.sort(al);
+			for (int i = 0; i < al.size(); i++) {
+				int c = 1, flag = 0;
+				for (int j = i + 1; j < al.size(); j++) {
+					if (Math.abs(al.get(j) - al.get(i)) <= 100) {
+						c++;
+					}
+					if (c == 3) {
+						ans.put(s,1);
+						flag = 1;
+						break;
+					}
+				}
+				if (flag == 1) {
+					break;
+				}
+			}
+		}
+		List<String> result = new ArrayList<>();
+		for (Map.Entry<String, Integer> mE: ans.entrySet()) {	
+			result.add(mE.getKey());
+		}
+		return result;
+	}
+}

@@ -1,0 +1,24 @@
+class Solution {
+	int helper(int i, int j, int[] cut) {
+		if (i > j) {
+			return 0;
+		}
+		int min = Integer.MAX_VALUE;
+		for (int k = i; k <= j; k++) {
+			int sum = cut[j + 1] - cut[i - 1] + helper(i,k - 1,cut) + helper(k + 1,j,cut);
+			min = Math.min(min,sum);
+		}
+		return min;
+	}
+	int minCost(int n, int[] cuts) {
+		Arrays.sort(cuts);
+		int[] cut = new int[cuts.length + 2];
+		cut[0] = 0;
+		int c = 0;
+		for (c = 0; c < cuts.length; c++) {
+			cut[c + 1] = cuts[c];
+		}
+		cut[c + 1] = n;
+		return helper(1,cuts.length,cut);
+	}
+}

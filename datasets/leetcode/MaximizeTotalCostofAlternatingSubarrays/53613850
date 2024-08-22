@@ -1,0 +1,19 @@
+class Solution {
+	long maximumTotalCost(int[] nums) {
+		long[] pos = new long[nums.length];
+		Arrays.fill(pos,Long.MIN_VALUE);
+		pos[nums.length - 1] = nums[nums.length - 1];
+		long[] neg = new long[nums.length];
+		Arrays.fill(neg,Long.MIN_VALUE);
+		neg[nums.length - 1] = -1 * nums[nums.length - 1];
+		for (int i = nums.length - 2; i >= 0; i--) {
+			pos[i] = Math.max(pos[i],nums[i] + pos[i + 1]);
+			long temp = nums[i] + neg[i + 1];
+			pos[i] = Math.max(pos[i],temp);
+			neg[i] = Math.max(neg[i],(-1 * nums[i]) + pos[i + 1]);
+			temp = (-1 * nums[i]) + pos[i + 1];
+			neg[i] = Math.max(neg[i],temp);
+		}
+		return pos[0];
+	}
+}

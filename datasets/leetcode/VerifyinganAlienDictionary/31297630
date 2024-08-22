@@ -1,0 +1,38 @@
+class Solution {
+	boolean isAlienSorted(String[] words, String order) {
+		Map<Character, Integer> map = new HashMap<>();
+		int index = 1;
+		int maxSize = Integer.MIN_VALUE;
+		for (char c: order.toCharArray()) {	
+			map.put(c,index);
+			index++;
+		}
+		for (String word: words) {	
+			maxSize = Math.max(maxSize,word.length());
+		}
+		for (int i = 0; i < maxSize; i++) {
+			int prev = 0;
+			int pos = 0;
+			int strictlyHigh = 0;
+			for (String word: words) {	
+				if (word.length() > i) {
+					pos = map.get(word.charAt(i));
+				} 
+				else {
+					pos = 0;
+				}
+				if (pos < prev) {
+					return false;
+				} 
+				else if (pos > prev) {
+					strictlyHigh++;
+				}
+				prev = pos;
+			}
+			if (strictlyHigh == words.length) {
+				return true;
+			}
+		}
+		return true;
+	}
+}

@@ -1,0 +1,26 @@
+class Solution {
+	int MOD = 1000000007;
+	int sumSubarrayMins(int[] arr) {
+		Stack<Integer> st = new Stack<>();
+		int n = arr.length;
+		int countArr = new int[n];
+		int sumArr = new int[n];
+		int sum = 0;
+		for (int i = 0; i < n; i++) {
+			int count = 1;
+			while (!st.isEmpty() && arr[st.peek()] > arr[i]) {
+				count += countArr[st.pop()];
+			}
+			sum = sum % MOD + (count * arr[i]) % MOD;
+			countArr[i] = count;
+			sumArr[i] = (count * arr[i]) % MOD;
+			if (!st.isEmpty()) {
+				int peakIndex = st.peek();
+				sum = sum % MOD + (sumArr[peakIndex]);
+				sumArr[i] = (sumArr[i] + sumArr[peakIndex]);
+			}
+			st.push(i);
+		}
+		return sum % MOD;
+	}
+}

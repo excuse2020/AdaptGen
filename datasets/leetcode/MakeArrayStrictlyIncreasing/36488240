@@ -1,0 +1,40 @@
+class Solution {
+	Map<Pair<Integer, Integer>, Integer> memo = new HashMap<>();
+	int dfs(int currIndex, int prevVal, int[] arr1, int[] arr2) {
+		if (currIndex == arr1.length) {
+			return 0;
+		}
+		if (memo.containsKey(new Pair<>(currIndex, prevVal))) {
+			return memo.get(new Pair<>(currIndex, prevVal));
+		}
+		int cost = 2001;
+		if (arr1[currIndex] > prevVal) {
+			cost = dfs(currIndex + 1,arr1[currIndex],arr1,arr2);
+		}
+		int smallestRepId = findSmallestReplacement(arr2,prevVal);
+		if (smallestRepId < arr2.length) {
+			cost = Math.min(cost,1 + dfs(currIndex + 1,arr2[smallestRepId],arr1,arr2));
+		}
+		memo.put(new Pair<>(currIndex, prevVal),cost);
+		return cost;
+	}
+	int findSmallestReplacement(int[] arr2, int prevVal) {
+		int left = 0;
+		int right = arr2.length;
+		while (left < right) {
+			int mid = (left + right) / 2;
+			if (arr2[mid] <= prevVal) {
+				left = mid + 1;
+			} 
+			else {
+				right = mid;
+			}
+		}
+		return left;
+	}
+	int makeArrayIncreasing(int[] arr1, int[] arr2) {
+		Arrays.sort(arr2);
+		int numSteps = dfs(0,-1,arr1,arr2);
+		return numSteps < 2001 ? numSteps : -1;
+	}
+}

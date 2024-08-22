@@ -1,0 +1,31 @@
+class Solution {
+	Integer[][][] dp;
+	int mod = 1000000007;
+	int numOfArrays(int n, int m, int k) {
+		dp = new Integer[n + 1][m + 1][101];
+		return solve(0,0,0,k,n,m);
+	}
+	int solve(int index, int maxLength, int maxValue, int k, int n, int m) {
+		if (index == n) {
+			if (maxLength == k) {
+				return 1;
+			} 
+			else {
+				return 0;
+			}
+		}
+		if (dp[index][maxValue][maxLength] != null) {
+			return dp[index][maxValue][maxLength];
+		}
+		int result = 0;
+		for (int i = 1; i <= m; i++) {
+			if (i > maxValue) {
+				result = (result + solve(index + 1,maxLength + 1,i,k,n,m)) % mod;
+			} 
+			else {
+				result = (result + solve(index + 1,maxLength,maxValue,k,n,m)) % mod;
+			}
+		}
+		return dp[index][maxValue][maxLength] = result;
+	}
+}

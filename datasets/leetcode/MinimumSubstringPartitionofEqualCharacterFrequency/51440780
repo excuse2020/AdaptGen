@@ -1,0 +1,32 @@
+class Solution {
+	boolean isValid(HashMap<Character, Integer> hm, int expectedCount) {
+		for (Map.Entry<Character, Integer> entry: hm.entrySet()) {	
+			if (entry.getValue() != expectedCount) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int minimumSubstringsInPartition(String s) {
+		int len = s.length();
+		int[] dp = new int[len];
+		Arrays.fill(dp,Integer.MAX_VALUE);
+		for (int i = 0; i < len; i++) {
+			HashMap<Character, Integer> hm = new HashMap<>();
+			for (int j = i; j >= 0; j--) {
+				char ch = s.charAt(j);
+				hm.put(ch,hm.getOrDefault(ch,0) + 1);
+				int expectedCount = hm.get(ch);
+				if (isValid(hm,expectedCount)) {
+					if (j == 0) {
+						dp[i] = 1;
+					} 
+					else {
+						dp[i] = Math.min(dp[i],dp[j - 1] + 1);
+					}
+				}
+			}
+		}
+		return dp[len - 1];
+	}
+}

@@ -1,0 +1,27 @@
+class Solution {
+	int maxSatisfaction(int[] satisfaction) {
+		int res = 0;
+		int sum = 0;
+		int min = 0;
+		int max = Integer.MIN_VALUE;
+		for (int i: satisfaction) {	
+			min = Math.min(min,i);
+			max = Math.max(max,i);
+		}
+		int[] bucket = new int[max - min + 2];
+		for (int i: satisfaction) {	
+			bucket[i - min]++;
+		}
+		for (int i = bucket.length - 1; i >= 0; i--) {
+			while (bucket[i] > 0) {
+				bucket[i]--;
+				sum += (i + min);
+				if (sum < 0) {
+					return res;
+				}
+				res += sum;
+			}
+		}
+		return res;
+	}
+}

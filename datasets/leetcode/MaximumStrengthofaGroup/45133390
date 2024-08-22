@@ -1,0 +1,38 @@
+class Solution {
+	long maxStrength(int[] nums) {
+		List<Integer> negativeNumbers = new ArrayList<>();
+		List<Integer> positiveNumbers = new ArrayList<>();
+		boolean isZeroPresent = false;
+		if (nums.length == 1) {
+			return nums[0];
+		}
+		for (int j = 0; j < nums.length; j++) {
+			if (Math.signum(nums[j]) == 1) {
+				positiveNumbers.add(nums[j]);
+			} 
+			else if (Math.signum(nums[j]) < 0) {
+				negativeNumbers.add(nums[j]);
+			} 
+			else {
+				isZeroPresent = true;
+			}
+		}
+		Collections.sort(negativeNumbers);
+		if (negativeNumbers.size() % 2 != 0) {
+			negativeNumbers.remove(negativeNumbers.size() - 1);
+		}
+		long positiveSum = 1;
+		for (int i: positiveNumbers) {	
+			positiveSum *= i;
+		}
+		long negativeSum = 1;
+		for (int i: negativeNumbers) {	
+			negativeSum *= i;
+		}
+		if (isZeroPresent && positiveNumbers.size() == 0 && (Math.signum(negativeSum) != 1 || negativeNumbers.isEmpty())) {
+			return 0;
+		}
+		long fSum = negativeSum * positiveSum;
+		return fSum < 0 ? 0 : fSum;
+	}
+}

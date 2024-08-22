@@ -1,0 +1,35 @@
+class Solution {
+	int totalFruit(int[] fruits) {
+		int maxNoOfTrees = 1;
+		int bucket1 = fruits[0];
+		int bucket2 = fruits[0];
+		Map<Integer, Integer> mapIndex = new HashMap<>();
+		int pickedFromTreesSoFar = 1;
+		mapIndex.put(bucket1,0);
+		for (int i = 1; i < fruits.length; i++) {
+			int fruitSize = fruits[i];
+			if (fruitSize == bucket1 || fruitSize == bucket2) {
+				pickedFromTreesSoFar++;
+				mapIndex.put(fruitSize,i);
+			} 
+			else if (bucket1 == bucket2) {
+				pickedFromTreesSoFar++;
+				bucket2 = fruitSize;
+				mapIndex.put(fruitSize,i);
+			} 
+			else {
+				if (bucket1 == fruits[i - 1]) {
+					pickedFromTreesSoFar = (i - mapIndex.remove(bucket2));
+					bucket2 = fruitSize;
+				} 
+				else {
+					pickedFromTreesSoFar = (i - mapIndex.remove(bucket1));
+					bucket1 = fruitSize;
+				}
+				mapIndex.put(fruitSize,i);
+			}
+			maxNoOfTrees = Math.max(maxNoOfTrees,pickedFromTreesSoFar);
+		}
+		return maxNoOfTrees;
+	}
+}

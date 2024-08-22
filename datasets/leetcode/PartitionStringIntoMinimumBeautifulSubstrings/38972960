@@ -1,0 +1,33 @@
+class Solution {
+	Set<String> st;
+	int minimumBeautifulSubstrings(String s) {
+		st = new HashSet<>();
+		st.add("1");
+		st.add("101");
+		st.add("11001");
+		st.add("1111101");
+		st.add("1001110001");
+		st.add("110000110101");
+		st.add("11110100001001");
+		int n = s.length();
+		int[] dp = new int[n];
+		Arrays.fill(dp,Integer.MAX_VALUE);
+		int ans = 100;
+		for (int i = 0; i < n; i++) {
+			for (int j = i; j >= 0; j--) {
+				String partion = s.substring(j,i + 1);
+				if ((j == 0) && (st.contains(partion))) {
+					dp[i] = 1;
+				}
+				if ((j - 1 >= 0) && (dp[j - 1] != Integer.MAX_VALUE)) {
+					dp[i] = Math.min(dp[i],dp[j - 1] + 1);
+				}
+				ans = Math.min(ans,dp[i]);
+			}
+		}
+		if (dp[n - 1] == Integer.MAX_VALUE) {
+			return -1;
+		}
+		return dp[n - 1];
+	}
+}

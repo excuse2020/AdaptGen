@@ -1,0 +1,31 @@
+class Solution {
+	long kthSmallestNum = Long.MIN_VALUE;
+	int kthSmallest(TreeNode root, int k) {
+		int i = kthSmallest(root,k,0);
+		return kthSmallestNum == Long.MIN_VALUE ? i : (int) kthSmallestNum;
+	}
+	int kthSmallest(TreeNode node, int k, int i) {
+		if (node == null) {
+			return i;
+		} 
+		else if (node.left == null && node.right == null) {
+			return ++i;
+		}
+		if (kthSmallestNum > Long.MIN_VALUE) {
+			return i;
+		}
+		int il = kthSmallest(node.left,k,i);
+		if (il == k && kthSmallestNum == Long.MIN_VALUE) {
+			kthSmallestNum = node.left.val;
+		}
+		il++;
+		if (il == k && kthSmallestNum == Long.MIN_VALUE) {
+			kthSmallestNum = node.val;
+		}
+		int ir = kthSmallest(node.right,k,il);
+		if (ir == k && kthSmallestNum == Long.MIN_VALUE) {
+			kthSmallestNum = node.right.val;
+		}
+		return ir;
+	}
+}

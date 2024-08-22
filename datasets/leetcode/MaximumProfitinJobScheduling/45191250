@@ -1,0 +1,77 @@
+class Solution {
+	int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
+		sort(startTime,endTime,profit);
+		int len = startTime.length;
+		int[] dp = new int[len + 1];
+		int idx = len - 1;
+		while (idx >= 0) {
+			int start = startTime[idx];
+			int end = endTime[idx];
+			int noSkip = profit[idx] + dp[search(startTime,end,idx + 1,len - 1)];
+			int skip = dp[search(startTime,start,idx + 1,len - 1)];
+			dp[idx] = Math.max(skip,noSkip);
+			idx--;
+		}
+		return dp[0];
+	}
+	void merge(int[] ints, int[] a, int[] b, int lo, int hi) {
+		if (lo >= hi) {
+			return;
+		}
+		int mid = (lo + hi) / 2;
+		merge(ints,a,b,lo,mid);
+		merge(ints,a,b,mid + 1,hi);
+		merge(ints,a,b,lo,mid,hi);
+	}
+	void merge(int[] ints, int[] a, int[] b, int lo, int mid, int hi) {
+		int len = hi - lo + 1;
+		int[] aStore = new int[len];
+		int[] bStore = new int[len];
+		int[] intsStore = new int[len];
+		int i = lo, j = mid + 1, aIdx = 0, bIdx = 0, intsIdx = 0;
+		while (i <= mid && j <= hi) {
+			if (ints[i] < ints[j]) {
+				intsStore[intsIdx++] = ints[i];
+				aStore[aIdx++] = a[i];
+				bStore[bIdx++] = b[i];
+				i++;
+			} 
+			else {
+				intsStore[intsIdx++] = ints[j];
+				aStore[aIdx++] = a[j];
+				bStore[bIdx++] = b[j];
+				j++;
+			}
+		}
+		while (i <= mid) {
+			intsStore[intsIdx++] = ints[i];
+			aStore[aIdx++] = a[i];
+			bStore[bIdx++] = b[i];
+			i++;
+		}
+		while (j <= hi) {
+			intsStore[intsIdx++] = ints[j];
+			aStore[aIdx++] = a[j];
+			bStore[bIdx++] = b[j];
+			j++;
+		}
+		System.arraycopy(aStore,0,a,lo,len);
+		System.arraycopy(bStore,0,b,lo,len);
+		System.arraycopy(intsStore,0,ints,lo,len);
+	}
+	int search(int[] ints, int target, int lo, int hi) {
+		while (lo <= hi) {
+			int mid = (lo + hi) / 2;
+			if (target <= ints[mid]) {
+				hi = mid - 1;
+			} 
+			else {
+				lo = mid + 1;
+			}
+		}
+		return hi + 1;
+	}
+	void sort(int[] a, int[] b, int[] c) {
+		merge(a,b,c,0,a.length - 1);
+	}
+}

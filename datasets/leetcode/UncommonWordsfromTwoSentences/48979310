@@ -1,0 +1,53 @@
+class Solution {
+	List<String> findUncommonWords(String sentence, Map<String, Integer> wordMapI, Map<String, Integer> wordMapII) {
+		List<String> words = new ArrayList<String>();
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < sentence.length(); i++) {
+			if (Character.isWhitespace(sentence.charAt(i))) {
+				words.add(sb.toString());
+				sb.setLength(0);
+			} 
+			else {
+				sb.append("" + sentence.charAt(i));
+			}
+		}
+		List<String> answer = new ArrayList<String>();
+		for (String word: words) {	
+			if (wordMapI.containsKey(word) && !wordMapII.containsKey(word)) {
+				answer.add(word);
+			} 
+			else if (wordMapII.containsKey(word) && !wordMapI.containsKey(word)) {
+				answer.add(word);
+			}
+		}
+		return answer;
+	}
+	String[] uncommonFromSentences(String s1, String s2) {
+		Map<String, Integer> wordMapI = new HashMap<>();
+		Map<String, Integer> wordMapII = new HashMap<>();
+		wordMapI = updateWordMap(s1,wordMapI);
+		wordMapII = updateWordMap(s2,wordMapII);
+		List<String> uncommon = findUncommonWords(s1 + " ",wordMapI,wordMapII);
+		return uncommon.stream().toArray();
+	}
+	Map<String, Integer> updateWordMap(String sentence, Map<String, Integer> wordMap) {
+		sentence = sentence + " ";
+		List<String> words = new ArrayList<String>();
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < sentence.length(); i++) {
+			if (Character.isWhitespace(sentence.charAt(i))) {
+				words.add(sb.toString());
+				sb.setLength(0);
+			} 
+			else {
+				sb.append("" + sentence.charAt(i));
+			}
+		}
+		Iterator<String> iterator = words.iterator();
+		while (iterator.hasNext()) {
+			String word = iterator.next();
+			wordMap.put(word,wordMap.getOrDefault(word,0) + 1);
+		}
+		return wordMap;
+	}
+}

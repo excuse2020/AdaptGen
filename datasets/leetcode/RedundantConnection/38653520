@@ -1,0 +1,29 @@
+class Solution {
+	int find(int[] parent, int node) {
+		if (parent[node] != node) {
+			parent[node] = find(parent,parent[node]);
+		}
+		return parent[node];
+	}
+	int[] findRedundantConnection(int[][] edges) {
+		int n = edges.length;
+		int parent = new int[n + 1];
+		for (int i = 1; i <= n; i++) {
+			parent[i] = i;
+		}
+		int redundant = null;
+		for (int edge: edges) {	
+			int u = edge[0];
+			int v = edge[1];
+			int parentU = find(parent,u);
+			int parentV = find(parent,v);
+			if (parentV == parentU) {
+				redundant = edge;
+			} 
+			else {
+				parent[parentU] = parentV;
+			}
+		}
+		return redundant;
+	}
+}

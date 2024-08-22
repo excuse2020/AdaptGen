@@ -1,0 +1,30 @@
+class Solution {
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		int[] indegrees = new int[numCourses];
+		List<Integer>[] nextCourses = new ArrayList[numCourses];
+		for (int i = 0; i < numCourses; ++i) {
+			nextCourses[i] = new ArrayList<>();
+		}
+		for (int[] pre: prerequisites) {	
+			indegrees[pre[0]]++;
+			nextCourses[pre[1]].add(pre[0]);
+		}
+		Deque<Integer> queue = new ArrayDeque<>();
+		for (int i = 0; i < numCourses; ++i) {
+			if (indegrees[i] == 0) {
+				queue.add(i);
+			}
+		}
+		int count = 0;
+		while (!queue.isEmpty()) {
+			int course = queue.remove();
+			count += 1;
+			for (int next: nextCourses[course]) {	
+				if (--indegrees[next] == 0) {
+					queue.add(next);
+				}
+			}
+		}
+		return count == numCourses;
+	}
+}

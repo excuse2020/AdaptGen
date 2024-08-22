@@ -1,0 +1,37 @@
+class Solution {
+	String removeKnums(String num, int k) {
+		if (k == num.length()) {
+			return "0";
+		}
+		int total = num.length() - k;
+		Deque<Character> dq = new ArrayDeque<>();
+		for (int i = 0; i < num.length(); i++) {
+			while (!dq.isEmpty() && dq.peekLast() - num.charAt(i) > 0) {
+				if (dq.size() - 1 + num.length() - i >= total) {
+					dq.removeLast();
+				} 
+				else {
+					break;
+				}
+			}
+			if (dq.size() < total) {
+				dq.addLast(num.charAt(i));
+			}
+		}
+		StringBuffer sbr = new StringBuffer();
+		boolean flag = false;
+		while (!dq.isEmpty()) {
+			if (dq.peekFirst() != '0') {
+				flag = true;
+			}
+			if (flag) {
+				sbr.append(dq.removeFirst());
+			} 
+			else {
+				dq.removeFirst();
+			}
+		}
+		String res = new String(sbr);
+		return res.equals("") ? "0" : res;
+	}
+}

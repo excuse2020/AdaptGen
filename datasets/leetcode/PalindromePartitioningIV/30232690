@@ -1,0 +1,43 @@
+class Solution {
+	Boolean[][] palindrome;
+	boolean checkPartitioning(String s) {
+		int n = s.length();
+		Boolean[][] t = new Boolean[n + 1][4];
+		palindrome = new Boolean[n + 1][n + 1];
+		return solve(s,0,n - 1,3,t);
+	}
+	boolean isPalindrome(String s, int i, int j) {
+		if (palindrome[i][j] != null) {
+			return palindrome[i][j];
+		}
+		if (i >= j) {
+			return palindrome[i][j] = true;
+		}
+		if (s.charAt(i) == s.charAt(j)) {
+			return palindrome[i][j] = isPalindrome(s,i + 1,j - 1);
+		} 
+		else {
+			return palindrome[i][j] = false;
+		}
+	}
+	boolean solve(String s, int i, int j, int l, Boolean[][] t) {
+		if (i > j) {
+			return false;
+		}
+		if (t[i][l] != null) {
+			return t[i][l];
+		}
+		if (l == 1) {
+			return isPalindrome(s,i,j);
+		}
+		boolean ans = false;
+		for (int k = i; k < j; k++) {
+			boolean temp = false;
+			if (isPalindrome(s,i,k)) {
+				temp = solve(s,k + 1,j,l - 1,t);
+			}
+			ans = ans || temp;
+		}
+		return ans;
+	}
+}

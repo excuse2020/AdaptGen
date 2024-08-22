@@ -1,0 +1,21 @@
+class Solution {
+	int get_ans(List<List<Integer>> piles, int i, int k, Integer[][] dp) {
+		if (k == 0 || i == piles.size()) {
+			return 0;
+		}
+		if (dp[i][k - 1] != null) {
+			return dp[i][k - 1];
+		}
+		List<Integer> t = piles.get(i);
+		int sum = 0, possibleCoins = Math.min(t.size(),k);
+		int maxSum = get_ans(piles,i + 1,k,dp);
+		for (int possibleCoin = 1; possibleCoin <= possibleCoins; possibleCoin++) {
+			sum += t.get(possibleCoin - 1);
+			maxSum = Math.max(maxSum,get_ans(piles,i + 1,k - possibleCoin,dp) + sum);
+		}
+		return dp[i][k - 1] = maxSum;
+	}
+	int maxValueOfCoins(List<List<Integer>> piles, int k) {
+		return get_ans(piles,0,k,new Integer[piles.size()][k]);
+	}
+}

@@ -1,0 +1,27 @@
+class Solution {
+	int[][] memo;
+	int dp(int[] prices, int day, int possess) {
+		if (memo[day][possess] != -1) {
+			return memo[day][possess];
+		}
+		if (day == 0) {
+			return possess == 0 ? 0 : -prices[0];
+		}
+		int res = 0;
+		if (possess == 0) {
+			res = Math.max(dp(prices,day - 1,0),dp(prices,day - 1,1) + prices[day]);
+		} 
+		else {
+			res = Math.max(dp(prices,day - 1,1),dp(prices,day - 1,0) - prices[day]);
+		}
+		memo[day][possess] = res;
+		return res;
+	}
+	int maxProfit(int[] prices) {
+		this.memo = new int[prices.length + 1][2];
+		for (int[] row: memo) {	
+			Arrays.fill(row,-1);
+		}
+		return dp(prices,prices.length - 1,0);
+	}
+}

@@ -1,0 +1,68 @@
+class Solution {
+	int[] amount;
+	int ans = Integer.MIN_VALUE;
+	int[] bobPath;
+	List<List<Integer>> tree;
+	boolean[] visited;
+	boolean findBob(int n, int path) {
+		if (n == 0) {
+			bobPath[n] = path;
+			return true;
+		}
+		if (visited[n]) {
+			return false;
+		}
+		visited[n] = true;
+		bobPath[n] = path;
+		boolean isValid = false;
+		for (int i: tree.get(n)) {	
+			if (findBob(i,path + 1)) {
+				isValid = true;
+				break;
+			}
+		}
+		if (isValid) {
+			return true;
+		}
+		bobPath[n] = -1;
+		return false;
+	}
+	int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+		int n = amount.length;
+		this.bobPath = new int[n];
+		this.amount = amount;
+		tree = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			tree.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			tree.get(edges[i][0]).add(edges[i][1]);
+			tree.get(edges[i][1]).add(edges[i][0]);
+		}
+		Arrays.fill(bobPath,-1);
+		visited = new boolean[n + 1];
+		findBob(bob,0);
+		visited = new boolean[n + 1];
+		solve(0,0,0);
+		return ans;
+	}
+	void solve(int n, int alicePath, int aliceAns) {
+		if (visited[n]) {
+			return;
+		}
+		if (bobPath[n] == alicePath) {
+			aliceAns += (amount[n] / 2);
+		} 
+		else if (bobPath[n] == -1 || alicePath < bobPath[n]) {
+			aliceAns += amount[n];
+		}
+		if (n != 0 && tree.get(n).size() == 1) {
+			ans = Math.max(ans,aliceAns);
+			return;
+		}
+		visited[n] = true;
+		for (int i: tree.get(n)) {	
+			solve(i,alicePath + 1,aliceAns);
+		}
+	}
+}

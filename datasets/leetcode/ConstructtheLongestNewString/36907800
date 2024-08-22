@@ -1,0 +1,26 @@
+class Solution {
+	Integer[][][][] memo;
+	int dp(int end, int x, int y, int z) {
+		if (x + y == 0) {
+			return 0;
+		}
+		if (memo[end][x][y][z] != null) {
+			return memo[end][x][y][z];
+		}
+		int len = 0;
+		if (end != 0 && x > 0) {
+			len = Math.max(len,2 + dp(0,x - 1,y,z));
+		}
+		if (end == 0 && y > 0) {
+			len = Math.max(len,2 + dp(1,x,y - 1,z));
+		}
+		if (end != 0 && z > 0) {
+			len = Math.max(len,2 + dp(2,x,y,z - 1));
+		}
+		return memo[end][x][y][z] = len;
+	}
+	int longestString(int x, int y, int z) {
+		memo = new Integer[3][x + 1][y + 1][z + 1];
+		return Math.max(Math.max(dp(0,x,y,z),dp(1,x,y,z)),dp(2,x,y,z));
+	}
+}

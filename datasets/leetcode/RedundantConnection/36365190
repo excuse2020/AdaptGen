@@ -1,0 +1,50 @@
+class Solution {
+	boolean cycle(ArrayList<ArrayList<Integer>> adj, int ind, int par, boolean[] vis, int u, int v) {
+		ArrayList<Integer> al = adj.get(ind);
+		vis[ind] = true;
+		boolean check = true;
+		for (int i = 0; i < al.size(); i++) {
+			int child = al.get(i);
+			if ((child == u && ind == v) || (child == v && ind == u)) {
+				continue;
+			}
+			if (par != child && vis[child]) {
+				check = false;
+			} 
+			else if (!vis[child]) {
+				check = check & cycle(adj,child,ind,vis,u,v);
+			}
+		}
+		return check;
+	}
+	int[] findRedundantConnection(int[][] edges) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		int n = edges.length;
+		for (int i = 0; i <= n; i++) {
+			adj.add(new ArrayList<Integer>());
+		}
+		for (int i = 0; i < n; i++) {
+			int v = edges[i][0];
+			int u = edges[i][1];
+			adj.get(u).add(v);
+			adj.get(v).add(u);
+		}
+		int[] ret = new int[2];
+		for (int i = n - 1; i >= 0; i--) {
+			boolean[] vis = new boolean[n + 1];
+			if (cycle(adj,1,-1,vis,edges[i][0],edges[i][1])) {
+				vis[0] = true;
+				boolean flag = true;
+				for (boolean b: vis) {	
+					flag = flag & b;
+				}
+				if (flag) {
+					ret[0] = edges[i][0];
+					ret[1] = edges[i][1];
+					return ret;
+				}
+			}
+		}
+		return ret;
+	}
+}

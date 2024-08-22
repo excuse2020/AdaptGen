@@ -1,0 +1,42 @@
+class Solution {
+	int[][][] dp;
+	int[] houses;
+	int minDistance(int[] h, int k) {
+		houses = h;
+		Arrays.sort(houses);
+		int n = houses.length;
+		dp = new int[n][n][k + 1];
+		for (int i = 0; i < n; ++i) {
+			for (int j = 0; j < n; ++j) {
+				Arrays.fill(dp[i][j],-1);
+			}
+		}
+		return recurse(0,n - 1,k);
+	}
+	int recurse(int left, int right, int k) {
+		if (dp[left][right][k] != -1) {
+			return dp[left][right][k];
+		}
+		if (right - left + 1 < k) {
+			return (int) (1e4 + 1);
+		}
+		if (k == 1) {
+			int mid = left + (right - left) / 2;
+			int ans = 0;
+			for (int i = left; i <= right; ++i) {
+				ans += Math.abs(houses[i] - houses[mid]);
+			}
+			dp[left][right][k] = ans;
+			return ans;
+		}
+		if (right - left + 1 == k) {
+			return 0;
+		}
+		int ans = Integer.MAX_VALUE;
+		for (int i = left; i < right; ++i) {
+			ans = Math.min(ans,recurse(left,i,1) + recurse(i + 1,right,k - 1));
+		}
+		dp[left][right][k] = ans;
+		return ans;
+	}
+}

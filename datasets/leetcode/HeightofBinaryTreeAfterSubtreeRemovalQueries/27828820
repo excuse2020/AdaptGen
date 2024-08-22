@@ -1,0 +1,50 @@
+class Solution {
+	Map<Integer, Integer> numToLevel;
+	Map<Integer, Integer> numToMaxLevel;
+	Map<Integer, Integer> removeHeight;
+	void dfsCalc(TreeNode root, int outsideMaxHeight) {
+		if (root != null) {
+			if (removeHeight.containsKey(root.val)) {
+				removeHeight.put(root.val,outsideMaxHeight);
+			}
+			int leftHeight = Math.max(getMaxHeight(root.left),numToLevel.get(root.val));
+			int rightHeight = Math.max(getMaxHeight(root.right),numToLevel.get(root.val));
+			dfsCalc(root.left,Math.max(rightHeight,outsideMaxHeight));
+			dfsCalc(root.right,Math.max(leftHeight,outsideMaxHeight));
+		}
+	}
+	int dfsMaxLevel(TreeNode root, int level) {
+		if (root == null) {
+			return level - 1;
+		} 
+		else {
+			numToLevel.put(root.val,level);
+			int maxLevel = Math.max(dfsMaxLevel(root.left,level + 1),dfsMaxLevel(root.right,level + 1));
+			numToMaxLevel.put(root.val,maxLevel);
+			return maxLevel;
+		}
+	}
+	int getMaxHeight(TreeNode root) {
+		if (root == null) {
+			return 0;
+		} 
+		else {
+			return numToMaxLevel.get(root.val);
+		}
+	}
+	int[] treeQueries(TreeNode root, int[] queries) {
+		numToMaxLevel = new HashMap<>();
+		numToLevel = new HashMap<>();
+		dfsMaxLevel(root,0);
+		removeHeight = new HashMap<>();
+		for (int n: queries) {	
+			removeHeight.put(n,-1);
+		}
+		dfsCalc(root,0);
+		int[] ret = new int[queries.length];
+		for (int i = 0; i < ret.length; i++) {
+			ret[i] = removeHeight.get(queries[i]);
+		}
+		return ret;
+	}
+}

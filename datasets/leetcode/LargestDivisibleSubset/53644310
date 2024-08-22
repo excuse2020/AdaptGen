@@ -1,0 +1,25 @@
+class Solution {
+	List<Integer>[][] dp;
+	List<Integer> helper(int[] nums, int i, int prev) {
+		if (i == nums.length) {
+			return new ArrayList<>();
+		}
+		if (dp[i][prev + 1] != null) {
+			return dp[i][prev + 1];
+		}
+		List<Integer> notTake = helper(nums,i + 1,prev);
+		List<Integer> Take = new ArrayList<>();
+		if (prev == -1 || nums[i] % nums[prev] == 0) {
+			Take.add(nums[i]);
+			Take.addAll(helper(nums,i + 1,i));
+		}
+		return dp[i][prev + 1] = (Take.size() > notTake.size()) ? Take : notTake;
+	}
+	List<Integer> largestDivisibleSubset(int[] nums) {
+		int n = nums.length;
+		Arrays.sort(nums);
+		dp = new ArrayList[n][n + 1];
+		List<Integer> ans = new ArrayList<>();
+		return helper(nums,0,-1);
+	}
+}

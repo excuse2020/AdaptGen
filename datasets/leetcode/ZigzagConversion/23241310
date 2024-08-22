@@ -1,0 +1,52 @@
+class Solution {
+	String convert(String s, int numRows) {
+		StringBuilder res = new StringBuilder();
+		HashMap<Integer, Stack<Character>> map = new HashMap<Integer, Stack<Character>>();
+		int counter = 1;
+		boolean acc = true;
+		if (numRows == 1) {
+			return s;
+		}
+		for (int i = 0; i < s.length(); i++) {
+			if (acc) {
+				if (!map.containsKey(counter)) {
+					Stack<Character> temp = new Stack<Character>();
+					map.put(counter,temp);
+				}
+				map.get(counter).push(s.charAt(i));
+				if (counter == numRows) {
+					acc = !acc;
+					counter--;
+				} 
+				else {
+					counter++;
+				}
+			} 
+			else {
+				if (map.containsKey(counter)) {
+					map.get(counter).push(s.charAt(i));
+				}
+				if (counter < 2) {
+					acc = !acc;
+					counter++;
+				} 
+				else {
+					counter--;
+				}
+			}
+		}
+		int x = 0;
+		int t = 0;
+		for (int i = 1; i <= numRows; i++) {
+			if (!map.containsKey(i)) {
+				continue;
+			}
+			while (!map.get(i).empty()) {
+				res.insert(x,map.get(i).pop());
+				t++;
+			}
+			x = t;
+		}
+		return res.toString();
+	}
+}

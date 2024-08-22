@@ -1,0 +1,21 @@
+class Solution {
+	int tallestBillboard(int[] rods) {
+		HashMap<Integer, Integer> dp = new HashMap<>();
+		dp.put(0,0);
+		for (int r: rods) {	
+			HashMap<Integer, Integer> new_dp = new HashMap<>(dp);
+			for (Map.Entry<Integer, Integer> e: dp.entrySet()) {	
+				int diff = e.getKey();
+				int taller = e.getValue();
+				int shorter = taller - diff;
+				int newTaller = new_dp.getOrDefault(diff + r,0);
+				new_dp.put(diff + r,Math.max(newTaller,taller + r));
+				int new_diff = Math.abs(shorter + r - taller);
+				int new_taller2 = Math.max(shorter + r,taller);
+				new_dp.put(new_diff,Math.max(new_taller2,new_dp.getOrDefault(new_diff,0)));
+			}
+			dp = new_dp;
+		}
+		return dp.getOrDefault(0,0);
+	}
+}

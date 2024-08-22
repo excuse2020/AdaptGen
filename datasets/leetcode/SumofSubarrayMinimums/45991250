@@ -1,0 +1,40 @@
+class Solution {
+	int sumSubarrayMins(int[] arr) {
+		int len = arr.length;
+		int[] nsl = new int[len];
+		int[] nsr = new int[len];
+		int modulo = 1000000000 + 7;
+		for (int i = 0; i < len; i++) {
+			int currIndex = i;
+			int putIndex = -1;
+			while (currIndex - 1 >= 0) {
+				if (arr[currIndex - 1] <= arr[i]) {
+					putIndex = currIndex - 1;
+					break;
+				}
+				currIndex--;
+			}
+			nsl[i] = putIndex;
+		}
+		for (int i = len - 1; i >= 0; i--) {
+			int currIndex = i;
+			int putIndex = len;
+			while (currIndex + 1 < len) {
+				if (arr[currIndex + 1] < arr[i]) {
+					putIndex = currIndex + 1;
+					break;
+				}
+				currIndex++;
+			}
+			nsr[i] = putIndex;
+		}
+		long ans = 0;
+		for (int i = 0; i < len; i++) {
+			long no_left_ele = i - nsl[i];
+			long no_right_ele = nsr[i] - i;
+			long total_subarray = ((no_left_ele % modulo) * (no_right_ele % modulo)) % modulo;
+			ans = ((ans % modulo) + (arr[i] % modulo) * (total_subarray % modulo)) % modulo;
+		}
+		return (int) ans;
+	}
+}

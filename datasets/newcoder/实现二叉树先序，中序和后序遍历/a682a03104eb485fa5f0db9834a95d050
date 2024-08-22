@@ -1,0 +1,86 @@
+class Solution {
+	int[] inOrder(TreeNode root) {
+		if (root == null) {
+			return new int[0];
+		}
+		Stack<TreeNode> stack = new Stack<>();
+		TreeNode cur = root;
+		List<Integer> list = new ArrayList<>();
+		while (!stack.isEmpty() || cur != null) {
+			if (cur != null) {
+				stack.push(cur);
+				cur = cur.left;
+			} 
+			else {
+				cur = stack.pop();
+				list.add(cur.val);
+				cur = cur.right;
+			}
+		}
+		return list2Arr(list);
+	}
+	int[] list2Arr(List<Integer> list) {
+		int[] res = new int[list.size()];
+		for (int i = 0; i < res.length; i++) {
+			res[i] = list.get(i);
+		}
+		return res;
+	}
+	int[] postOrder(TreeNode root) {
+		if (root == null) {
+			return new int[0];
+		}
+		Stack<TreeNode> stack1 = new Stack<>();
+		Stack<TreeNode> stack2 = new Stack<>();
+		TreeNode cur = root;
+		stack1.push(cur);
+		while (!stack1.isEmpty()) {
+			cur = stack1.pop();
+			stack2.push(cur);
+			if (cur.left != null) {
+				stack1.push(cur.left);
+			}
+			if (cur.right != null) {
+				stack1.push(cur.right);
+			}
+		}
+		List<Integer> list = new ArrayList<>();
+		while (!stack2.isEmpty()) {
+			list.add(stack2.pop().val);
+		}
+		return list2Arr(list);
+	}
+	int[] preOrder(TreeNode root) {
+		if (root == null) {
+			return new int[0];
+		}
+		Stack<TreeNode> stack = new Stack<>();
+		TreeNode cur = root;
+		stack.push(cur);
+		List<Integer> list = new ArrayList<>();
+		while (!stack.isEmpty()) {
+			cur = stack.pop();
+			list.add(cur.val);
+			if (cur.right != null) {
+				stack.push(cur.right);
+			}
+			if (cur.left != null) {
+				stack.push(cur.left);
+			}
+		}
+		return list2Arr(list);
+	}
+	int[][] threeOrders(TreeNode root) {
+		if (root == null) {
+			return new int[3][0];
+		}
+		int[] preArr = preOrder(root);
+		int[] inArr = inOrder(root);
+		int[] postArr = postOrder(root);
+		int[][] res = new int[3][preArr.length];
+		res[0] = preArr;
+		res[1] = inArr;
+		res[2] = postArr;
+		return res;
+	}
+}

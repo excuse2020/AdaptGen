@@ -1,0 +1,56 @@
+class Solution {
+	int findParent(int[] parents, int child) {
+		if (child == parents[child]) {
+			return child;
+		}
+		return findParent(parents,parents[child]);
+	}
+	int[] findRedundantDirectedConnection(int[][] edges) {
+		int[] degreeOfNodes = new int[edges.length + 1];
+		int nodeWithTwoDegree = -1;
+		for (int i = 0; i < edges.length; i++) {
+			degreeOfNodes[edges[i][1]]++;
+			if (degreeOfNodes[edges[i][1]] == 2) {
+				nodeWithTwoDegree = edges[i][1];
+				break;
+			}
+		}
+		int[] parents = new int[edges.length + 1];
+		for (int i = 0; i < parents.length; i++) {
+			parents[i] = i;
+		}
+		if (nodeWithTwoDegree != -1) {
+			return findRedundantWithTwoInDegree(edges,nodeWithTwoDegree,parents);
+		}
+		for (int i = 0; i < edges.length; i++) {
+			int parentOfFrom = findParent(parents,edges[i][0]);
+			int parentOfTo = findParent(parents,edges[i][1]);
+			if (parentOfFrom == parentOfTo) {
+				return edges[i];
+			}
+			parents[parentOfTo] = parentOfFrom;
+		}
+		return null;
+	}
+	int[] findRedundantWithTwoInDegree(int[][] edges, int nodeWithTwoDegree, int[] parents) {
+		int[] theTwoEdges = new int[2];
+		int index = 0;
+		for (int i = 0; i < edges.length && index < 2; i++) {
+			if (edges[i][1] == nodeWithTwoDegree) {
+				theTwoEdges[index++] = i;
+			}
+		}
+		for (int i = 0; i < edges.length; i++) {
+			if (i == theTwoEdges[1]) {
+				continue;
+			}
+			int parentOfFrom = findParent(parents,edges[i][0]);
+			int parentOfTo = findParent(parents,edges[i][1]);
+			if (parentOfFrom == parentOfTo) {
+				return edges[theTwoEdges[0]];
+			}
+			parents[parentOfTo] = parentOfFrom;
+		}
+		return edges[theTwoEdges[1]];
+	}
+}

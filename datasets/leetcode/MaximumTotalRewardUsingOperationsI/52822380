@@ -1,0 +1,36 @@
+class Solution {
+	int fun(int arr, int i, int sum, int dp) {
+		if (i == arr.length) {
+			return sum;
+		}
+		int val1 = 0, val2 = 0;
+		if (arr[i] > sum) {
+			if (dp[sum + arr[i]] != -1) {
+				val1 = dp[sum + arr[i]];
+			} 
+			else {
+				val1 = fun(arr,i + 1,sum + arr[i],dp);
+				dp[sum + arr[i]] = val1;
+			}
+		}
+		if (dp[sum] != -1) {
+			val2 = dp[sum];
+		} 
+		else {
+			val2 = fun(arr,i + 1,sum,dp);
+			dp[sum] = val2;
+		}
+		return Math.max(val1,val2);
+	}
+	int maxTotalReward(int[] rewardValues) {
+		Arrays.sort(rewardValues);
+		int sum = 0;
+		int n = rewardValues.length;
+		for (int i = 0; i < n; i++) {
+			sum += rewardValues[i];
+		}
+		int dp = new int[sum + 1];
+		Arrays.fill(dp,-1);
+		return fun(rewardValues,0,0,dp);
+	}
+}

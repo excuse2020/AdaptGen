@@ -1,0 +1,46 @@
+class Solution {
+	int cceil(double n) {
+		if (n % 2 == 0) {
+			return (int) (n / 2);
+		}
+		return (int) ((n / 2) + 1);
+	}
+	int[] deckRevealedIncreasing(int[] deck) {
+		int n = deck.length;
+		int ans = new int[n];
+		Arrays.sort(deck);
+		Queue<Integer> q = new ArrayDeque<Integer>();
+		int z = 0;
+		for (int i = 0; i < n; i += 2) {
+			ans[i] = deck[z];
+			z++;
+		}
+		for (int i = 1; i < n; i += 2) {
+			ans[i] = deck[z];
+			z++;
+		}
+		for (int i = 0; i < n; i++) {
+			q.add(ans[i]);
+		}
+		int i = 0;
+		int[] ans2 = new int[n];
+		while (!q.isEmpty() && i < n) {
+			ans2[i] = q.poll();
+			if (!q.isEmpty()) {
+				q.add(q.poll());
+			}
+			i++;
+		}
+		HashMap<Integer, Integer> h = new HashMap<Integer, Integer>();
+		for (int j = cceil(n); j < n; j++) {
+			h.put(ans2[j],deck[j]);
+		}
+		for (int j = 1; j < n; j += 2) {
+			Object temp = h.get(ans[j]);
+			if (temp != null) {
+				ans[j] = (int) temp;
+			}
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,54 @@
+class Solution {
+	int[] countVisitedNodes(List<Integer> edges) {
+		int n = edges.size();
+		boolean[] visited = new boolean[n];
+		int[] ans = new int[n];
+		for (int i = 0; i < n; i++) {
+			if (!visited[i]) {
+				find(edges,ans,visited,i);
+			}
+		}
+		return ans;
+	}
+	void distance(List<Integer> edges, Stack<Integer> stack, int[] ans) {
+		while (!stack.isEmpty()) {
+			int cur = stack.pop();
+			ans[cur] = ans[edges.get(cur)] + 1;
+		}
+	}
+	void find(List<Integer> edges, int[] ans, boolean[] visited, int start) {
+		HashSet<Integer> cycle = new HashSet<>();
+		int slow = start;
+		int fast = edges.get(edges.get(start));
+		Stack<Integer> stack = new Stack<>();
+		stack.push(slow);
+		visited[slow] = true;
+		while (slow != fast) {
+			slow = edges.get(slow);
+			fast = edges.get(edges.get(fast));
+			if (visited[slow]) {
+				distance(edges,stack,ans);
+				return;
+			}
+			stack.push(slow);
+			visited[slow] = true;
+		}
+		while (!cycle.contains(slow)) {
+			cycle.add(slow);
+			slow = edges.get(slow);
+		}
+		for (int v: cycle) {	
+			ans[v] = cycle.size();
+			visited[v] = true;
+		}
+		while (true) {
+			if (!stack.isEmpty() && cycle.contains(stack.peek())) {
+				stack.pop();
+			} 
+			else {
+				break;
+			}
+		}
+		distance(edges,stack,ans);
+	}
+}

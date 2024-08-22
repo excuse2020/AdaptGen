@@ -1,0 +1,31 @@
+class Solution {
+	double dijkstra(int n, Map<Integer, List<double[]>> adjMap, int start, int end) {
+		double[] res = new double[n];
+		Arrays.fill(res,0);
+		res[start] = 1;
+		Deque<double[]> pq = new ArrayDeque<>();
+		pq.add(new double{start, 1});
+		while (!pq.isEmpty()) {
+			double[] curr = pq.poll();
+			for (double[] next: adjMap.get((int) curr[0])) {	
+				if (curr[1] * next[1] > res[(int)next[0]]) {
+					res[(int)next[0]] = curr[1] * next[1];
+					pq.add(new double{next[0], res[(int)next[0]]});
+				}
+			}
+		}
+		return res[end];
+	}
+	double maxProbability(int n, int[][] edges, double[] succProb, int start, int end) {
+		Map<Integer, List<double[]>> adjMap = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			adjMap.put(i,new ArrayList<>());
+		}
+		int len = edges.length;
+		for (int i = 0; i < len; i++) {
+			adjMap.get(edges[i][0]).add(new double{edges[i][1], succProb[i]});
+			adjMap.get(edges[i][1]).add(new double{edges[i][0], succProb[i]});
+		}
+		return dijkstra(n,adjMap,start,end);
+	}
+}

@@ -1,0 +1,62 @@
+class Solution {
+	List<Integer> binarySearch(int[] arr, int key) {
+		int l = 0, r = arr.length - 1;
+		int ind = -1;
+		while (l <= r) {
+			int mid = (l + r) / 2;
+			if (arr[mid] == key) {
+				ind = mid;
+				break;
+			}
+			if (arr[mid] > key) {
+				r = mid - 1;
+			} 
+			else {
+				l = mid + 1;
+			}
+		}
+		List<Integer> ans = new ArrayList<>();
+		if (ind != -1) {
+			ans.add(arr[ind]);
+			ans.add(arr[ind]);
+		} 
+		else {
+			if (r >= 0) {
+				ans.add(arr[r]);
+			} 
+			else {
+				ans.add(-1);
+			}
+			if (l < arr.length) {
+				ans.add(arr[l]);
+			} 
+			else {
+				ans.add(-1);
+			}
+		}
+		return ans;
+	}
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		List<List<Integer>> ans = new ArrayList<List<Integer>>();
+		if (root == null) {
+			return ans;
+		}
+		ArrayList<Integer> nodes = new ArrayList<>();
+		inorder(root,nodes);
+		int[] arr = new int[nodes.size()];
+		for (int i = 0; i < nodes.size(); i++) {
+			arr[i] = nodes.get(i);
+		}
+		for (int i = 0; i < queries.size(); i++) {
+			ans.add(binarySearch(arr,queries.get(i)));
+		}
+		return ans;
+	}
+	void inorder(TreeNode root, ArrayList<Integer> use) {
+		if (root != null) {
+			inorder(root.left,use);
+			use.add(root.val);
+			inorder(root.right,use);
+		}
+	}
+}

@@ -1,0 +1,45 @@
+class Solution {
+	long distinctNames(String[] ideas) {
+		HashSet<String> ideaSet = new HashSet<>();
+		HashSet<Character> possibleFirstChars = new HashSet<>();
+		for (String s: ideas) {	
+			possibleFirstChars.add(s.charAt(0));
+			ideaSet.add(s);
+		}
+		HashMap<Character, HashMap<Character, Integer>> hm = new HashMap<>();
+		for (String orgString: ideas) {	
+			for (char newChar: possibleFirstChars) {	
+				char orgChar = orgString.charAt(0);
+				if (orgChar == newChar) {
+					continue;
+				}
+				String newString = newChar + orgString.substring(1,orgString.length());
+				if (ideaSet.contains(newString)) {
+					continue;
+				}
+				if (hm.containsKey(newChar)) {
+					HashMap<Character, Integer> map = hm.get(newChar);
+					map.put(orgChar,map.getOrDefault(orgChar,0) + 1);
+				} 
+				else {
+					HashMap<Character, Integer> map = new HashMap<>();
+					map.put(orgChar,1);
+					hm.put(newChar,map);
+				}
+			}
+		}
+		long total = 0;
+		for (char Pkey: hm.keySet()) {	
+			HashMap<Character, Integer> Smap = hm.get(Pkey);
+			for (char Skey: Smap.keySet()) {	
+				int cur = Smap.get(Skey);
+				if (!hm.containsKey(Skey) || !hm.get(Skey).containsKey(Pkey)) {
+					continue;
+				}
+				int curPair = hm.get(Skey).get(Pkey);
+				total += cur * curPair;
+			}
+		}
+		return total;
+	}
+}

@@ -1,0 +1,50 @@
+class Solution {
+	int find(int[] parent, int i) {
+		if (parent[i] == i) {
+			return i;
+		}
+		return parent[i] = find(parent,parent[i]);
+	}
+	String smallestStringWithSwaps(String s, List<List<Integer>> pairs) {
+		Map<Integer, PriorityQueue<Character>> charMap = new LinkedHashMap<>();
+		int[] parent = new int[s.length()];
+		int[] rank = new int[s.length()];
+		for (int i = 0; i < parent.length; i++) {
+			parent[i] = i;
+			rank[i] = 1;
+		}
+		for (List<Integer> pair: pairs) {	
+			union(pair.get(0),pair.get(1),parent,rank);
+		}
+		for (int i = 0; i < s.length(); i++) {
+			int par = find(parent,i);
+			charMap.putIfAbsent(par,new PriorityQueue<Character>());
+			PriorityQueue<Character> pq = charMap.get(par);
+			pq.add(s.charAt(i));
+			charMap.put(par,pq);
+		}
+		System.out.println(charMap);
+		StringBuilder ans = new StringBuilder();
+		for (int i = 0; i < s.length(); i++) {
+			int par = find(parent,i);
+			PriorityQueue<Character> pq = charMap.get(par);
+			if (!pq.isEmpty()) {
+				ans.append(pq.poll());
+			}
+		}
+		return ans.toString();
+	}
+	void union(int u, int v, int[] parent, int[] rank) {
+		int parSrc = find(parent,u);
+		int parDest = find(parent,v);
+		if (parSrc != parDest) {
+			if (rank[parSrc] > rank[parDest]) {
+				parent[parDest] = parSrc;
+			} 
+			else {
+				parent[parSrc] = parDest;
+				rank[parDest]++;
+			}
+		}
+	}
+}

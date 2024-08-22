@@ -1,0 +1,54 @@
+class Solution {
+	int[] leftChild, rightChild;
+	int[] memo;
+	boolean[] visited;
+	int totalNodes(int node) {
+		if (this.visited[node]) {
+			return -1;
+		}
+		if (this.memo[node] >= 0) {
+			return this.memo[node];
+		}
+		this.visited[node] = true;
+		int leftNode = leftChild[node];
+		int rightNode = rightChild[node];
+		int nodeCoverCount = 1;
+		if (leftNode != -1) {
+			int leftCoverCount = totalNodes(leftNode);
+			if (leftCoverCount == -1) {
+				return -1;
+			} 
+			else {
+				nodeCoverCount += leftCoverCount;
+			}
+		}
+		if (rightNode != -1) {
+			int rightCoverCount = totalNodes(rightNode);
+			if (rightCoverCount == -1) {
+				return -1;
+			} 
+			else {
+				nodeCoverCount += rightCoverCount;
+			}
+		}
+		visited[node] = false;
+		return this.memo[node] = nodeCoverCount;
+	}
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		this.leftChild = leftChild;
+		this.rightChild = rightChild;
+		this.memo = new int[n];
+		Arrays.fill(this.memo,-1);
+		this.visited = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			int count = totalNodes(i);
+			if (count == n) {
+				return true;
+			} 
+			else if (count == -1) {
+				return false;
+			}
+		}
+		return false;
+	}
+}

@@ -1,0 +1,61 @@
+class Solution {
+	List<List<Integer>> adj;
+	int[] dp;
+	int k;
+	int n;
+	int minNumberOfSemesters(int N, int[][] d, int K) {
+		n = N;
+		k = K;
+		dp = new int[1 << n];
+		Arrays.fill(dp,-1);
+		adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < d.length; i++) {
+			d[i][0]--;
+			d[i][1]--;
+			adj.get(d[i][0]).add(d[i][1]);
+		}
+		return solve(0);
+	}
+	int solve(int mask) {
+		if (mask == ((1 << n) - 1)) {
+			return 0;
+		}
+		if (dp[mask] != -1) {
+			return dp[mask];
+		}
+		int[] indeg = new int[n];
+		for (int i = 0; i < n; i++) {
+			if ((mask & (1 << i)) != 0) {
+				continue;
+			}
+			for (int it: adj.get(i)) {	
+				indeg[it]++;
+			}
+		}
+		int temp = 0;
+		for (int i = 0; i < n; i++) {
+			if (indeg[i] == 0 && (mask & (1 << i)) == 0) {
+				temp |= (1 << i);
+			}
+		}
+		int j = temp;
+		int cnt = Integer.bitCount(j);
+		int ans = n + 1;
+		if (cnt > k) {
+			for (; j > 0; j = (j - 1) & temp) {
+				cnt = Integer.bitCount(j);
+				if (cnt != k) {
+					continue;
+				}
+				ans = Math.min(ans,1 + solve(mask | j));
+			}
+		} 
+		else {
+			ans = Math.min(ans,1 + solve(mask | j));
+		}
+		return dp[mask] = ans;
+	}
+}

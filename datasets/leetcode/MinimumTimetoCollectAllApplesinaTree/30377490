@@ -1,0 +1,32 @@
+class Solution {
+	HashSet<Integer> visited;
+	int getMinTime(ArrayList<ArrayList<Integer>> graph, int src, List<Boolean> hasApple) {
+		int total = 0;
+		visited.add(src);
+		for (int v: graph.get(src)) {	
+			if (!visited.contains(v)) {
+				total += getMinTime(graph,v,hasApple);
+			}
+		}
+		if (src != 0 && (hasApple.get(src) || total > 0)) {
+			total += 2;
+		}
+		return total;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+		visited = new HashSet<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			graph.get(edges[i][0]).add(edges[i][1]);
+			graph.get(edges[i][1]).add(edges[i][0]);
+		}
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			ans += getMinTime(graph,0,hasApple);
+		}
+		return ans;
+	}
+}

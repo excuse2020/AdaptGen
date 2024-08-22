@@ -1,0 +1,31 @@
+class Solution {
+	int minEatingSpeed(int[] piles, int h) {
+		int maxBan = Integer.MIN_VALUE;
+		for (int n: piles) {	
+			if (n > maxBan) {
+				maxBan = n;
+			}
+		}
+		int i = 1;
+		int j = maxBan;
+		while (i <= j) {
+			int mid = i + ((j - i) / 2);
+			if (possibleToEatAll(piles,mid,h)) {
+				j = mid - 1;
+			} 
+			else {
+				i = mid + 1;
+			}
+		}
+		return i;
+	}
+	boolean possibleToEatAll(int[] piles, int eatRate, int hours) {
+		long eatHours = 0;
+		for (int n: piles) {	
+			int hour = (n / eatRate);
+			hour += (n % eatRate == 0) ? 0 : 1;
+			eatHours += hour;
+		}
+		return eatHours <= hours;
+	}
+}

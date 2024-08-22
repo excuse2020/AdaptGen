@@ -1,0 +1,53 @@
+class Solution {
+	ArrayList<Integer> maxInWindows(int[] num, int size) {
+		ArrayList<Integer> res = new ArrayList<>();
+		if (size == 0 || num == null || num.length == 0 || num.length < size) {
+			return res;
+		}
+		ArrayList<Integer> stack = new ArrayList<>();
+		if (size == 1) {
+			for (int i = 0; i < num.length; ++i) {
+				res.add(num[i]);
+			}
+			return res;
+		}
+		if (num.length == 1) {
+			res.add(num[0]);
+			return res;
+		} 
+		else if (num.length == 2) {
+			res.add(num[0] > num[1] ? num[0] : num[1]);
+			return res;
+		} 
+		else {
+			int maxx = num[0];
+			for (int i = 0; i < size; ++i) {
+				stack.add(num[i]);
+				if (num[i] > maxx) {
+					maxx = num[i];
+				}
+			}
+			res.add(maxx);
+			System.out.println(maxx);
+			for (int i = size; i < num.length; ++i) {
+				stack.add(num[i]);
+				stack.remove(0);
+				if (stack.contains(maxx)) {
+					if (num[i] > maxx) {
+						maxx = num[i];
+						res.add(num[i]);
+					} 
+					else {
+						res.add(maxx);
+					}
+					System.out.println(":" + maxx);
+				} 
+				else {
+					maxx = Math.max(stack.get(2),Math.max(stack.get(0),stack.get(1)));
+					res.add(maxx);
+				}
+			}
+		}
+		return res;
+	}
+}

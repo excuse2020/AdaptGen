@@ -1,0 +1,45 @@
+class Solution {
+	ListNode reverseBetween(ListNode head, int m, int n) {
+		ListNode preNode = null;
+		ListNode after = null;
+		ListNode newHead = head;
+		Stack<ListNode> myStack = new Stack<>();
+		int index = 1;
+		while (head != null) {
+			if (index >= m && index <= n) {
+				myStack.push(head);
+			} 
+			else {
+				if (index == m - 1) {
+					preNode = head;
+				}
+				if (index == n + 1) {
+					after = head;
+				}
+			}
+			head = head.next;
+			index++;
+		}
+		ListNode node = myStack.pop();
+		System.out.println("node is: " + (node == null ? "null" : node.val));
+		System.out.println("preNode is: " + (preNode == null ? "null" : preNode.val));
+		ListNode tempNode = null;
+		if (m == 1) {
+			newHead = node;
+		}
+		if (preNode != null) {
+			preNode.next = node;
+		}
+		while (!myStack.isEmpty()) {
+			tempNode = myStack.pop();
+			System.out.println("tempNode is: " + (tempNode == null ? "null" : tempNode.val));
+			node.next = tempNode;
+			node = node.next;
+		}
+		System.out.println("node after while is: " + (node == null ? "null" : node.val));
+		if (n < index) {
+			node.next = after;
+		}
+		return newHead;
+	}
+}

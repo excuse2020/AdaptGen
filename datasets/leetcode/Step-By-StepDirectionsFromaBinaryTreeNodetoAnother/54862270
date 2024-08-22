@@ -1,0 +1,52 @@
+class Solution {
+	int DFS(TreeNode node, int value, StringBuilder sb) {
+		if (node == null) {
+			return 0;
+		}
+		if (node.val == value) {
+			return 1;
+		}
+		int leftVal = DFS(node.left,value,sb);
+		if (leftVal == 1) {
+			sb.append("L");
+			return 1;
+		}
+		int rightVal = DFS(node.right,value,sb);
+		if (rightVal == 1) {
+			sb.append("R");
+			return 1;
+		}
+		return 0;
+	}
+	String getDirections(TreeNode root, int startValue, int destValue) {
+		TreeNode lcaRoot = getLCA(root,startValue,destValue);
+		String finalStr = "";
+		StringBuilder sb = new StringBuilder();
+		DFS(lcaRoot,startValue,sb);
+		finalStr = "U".repeat(sb.length());
+		sb = new StringBuilder();
+		DFS(lcaRoot,destValue,sb);
+		finalStr = finalStr.concat(sb.reverse().toString());
+		return finalStr;
+	}
+	TreeNode getLCA(TreeNode node, int startValue, int destValue) {
+		if (node == null) {
+			return null;
+		} 
+		else if (node.val == startValue || node.val == destValue) {
+			return node;
+		}
+		TreeNode leftN = getLCA(node.left,startValue,destValue);
+		TreeNode rightN = getLCA(node.right,startValue,destValue);
+		if (leftN != null && rightN != null) {
+			return node;
+		} 
+		else if (leftN != null && rightN == null) {
+			return leftN;
+		} 
+		else if (leftN == null && rightN != null) {
+			return rightN;
+		}
+		return null;
+	}
+}

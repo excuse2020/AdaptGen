@@ -1,0 +1,37 @@
+class Solution {
+	boolean pyramidTransition(String bottom, List<String> allowed) {
+		Map<Character, Set<String>> rootToChildren = new HashMap<>();
+		for (String all: allowed) {	
+			rootToChildren.computeIfAbsent(all.charAt(2),(k) -> {new HashSet<>()}).add(all.substring(0,2));
+		}
+		Map<String, Boolean> cache = new HashMap<>();
+		for (Character root: rootToChildren.keySet()) {	
+			if (rec(root,bottom,rootToChildren,bottom.length() - 1,0,cache)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	boolean rec(char root, String bottom, Map<Character, Set<String>> rootToChildren, int level, int idx, Map<String, Boolean> cache) {
+		String key = root + ":";
+		Boolean res = cache.get(key);
+		if (res != null) {
+			return res;
+		}
+		if (level == 0) {
+			res = bottom.charAt(idx) == root;
+		} 
+		else {
+			res = false;
+			for (String children: rootToChildren.getOrDefault(root,Collections.emptySet())) {	
+				char left = children.charAt(0), right = children.charAt(1);
+				if (rec(left,bottom,rootToChildren,level - 1,idx,cache) && rec(right,bottom,rootToChildren,level - 1,idx + 1,cache)) {
+					res = true;
+					break;
+				}
+			}
+		}
+		cache.put(key,res);
+		return res;
+	}
+}

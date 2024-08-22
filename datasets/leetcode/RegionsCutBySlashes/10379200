@@ -1,0 +1,37 @@
+class Solution {
+	int id;
+	int regionCount, n;
+	int find(int x) {
+		if (x != id[x]) {
+			id[x] = find(id[x]);
+		}
+		return id[x];
+	}
+	int getId(int r, int c, int x) {
+		return (r * n + c) * 4 + x;
+	}
+	int regionsBySlashes(String[] grid) {
+		n = grid.length;
+		id = new int[n * n];
+		for (int i = 0; i < (n * n); i++) {
+			id[i] = i;
+		}
+		regionCount = n * n;
+		int i = 0;
+		int j = 0;
+		if (i > 0) {
+			union(getId(i - 1,j,2),getId(i,j,0));
+		}
+		if (j > 0) {
+			union(getId(i,j - 1,1),getId(i,j,3));
+		}
+	}
+	void union(int x, int y) {
+		x = find(x);
+		y = find(y);
+		if (x != y) {
+			id[x] = y;
+			regionCount--;
+		}
+	}
+}

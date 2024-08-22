@@ -1,0 +1,41 @@
+class Solution {
+	int find(int node, int[] parent) {
+		while (node != parent[node]) {
+			node = parent[parent[node]];
+		}
+		return node;
+	}
+	int getCell(int x, int y, int n) {
+		return (x * n) + y;
+	}
+	int regionsBySlashes(String[] grid) {
+		int m = grid.length, n = grid[0].length();
+		int[] parent = new int[(m + 1) * (n + 1)];
+		for (int i = 0; i < parent.length; i++) {
+			parent[i] = i;
+		}
+		for (int i = 1; i < m + 1; i++) {
+			union(getCell(i - 1,0,n),getCell(i,0,n),parent);
+		}
+		for (int j = 1; j < n + 1; j++) {
+			union(getCell(m,j - 1,n),getCell(m,j,n),parent);
+		}
+		for (int i = m - 1; i >= 0; i--) {
+			union(getCell(i + 1,n,n),getCell(i,n,n),parent);
+		}
+		for (int j = n - 1; j >= 0; j--) {
+			union(getCell(0,j + 1,n),getCell(0,j,n),parent);
+		}
+		int c = 1;
+		int i = 0;
+		int j = 0;
+	}
+	boolean union(int xNode, int yNode, int[] parent) {
+		int xRoot = find(xNode,parent), yRoot = find(yNode,parent);
+		if (xRoot != yRoot) {
+			parent[yRoot] = xRoot;
+			return true;
+		}
+		return false;
+	}
+}

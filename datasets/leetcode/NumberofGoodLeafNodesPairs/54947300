@@ -1,0 +1,45 @@
+class Solution {
+	Set<TreeNode> leaves;
+	int pairs;
+	Map<TreeNode, TreeNode> parents;
+	Set<TreeNode> seen;
+	int countPairs(TreeNode root, int distance) {
+		parents = new HashMap<>();
+		leaves = new HashSet<>();
+		pairs = 0;
+		getParents(root);
+		for (TreeNode leaf: leaves) {	
+			seen = new HashSet<>();
+			dfs(leaf,0,distance);
+		}
+		return pairs / 2;
+	}
+	void dfs(TreeNode root, int curDist, int maxDist) {
+		if (curDist > maxDist || root == null || seen.contains(root)) {
+			return;
+		}
+		if (curDist != 0 && curDist <= maxDist && leaves.contains(root)) {
+			pairs++;
+		}
+		seen.add(root);
+		dfs(root.left,curDist + 1,maxDist);
+		dfs(root.right,curDist + 1,maxDist);
+		dfs(parents.get(root),curDist + 1,maxDist);
+	}
+	void getParents(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		if (root.left != null) {
+			parents.put(root.left,root);
+		}
+		if (root.right != null) {
+			parents.put(root.right,root);
+		}
+		if (root.left == null && root.right == null) {
+			leaves.add(root);
+		}
+		getParents(root.left);
+		getParents(root.right);
+	}
+}

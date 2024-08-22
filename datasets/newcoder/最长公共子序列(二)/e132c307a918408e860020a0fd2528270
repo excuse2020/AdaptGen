@@ -1,0 +1,40 @@
+class Solution {
+	String LCS(String s1, String s2) {
+		if (s1.isEmpty() || s2.isEmpty()) {
+			return "-1";
+		}
+		int[][] b = new int[s1.length() + 1][s2.length() + 1];
+		StringBuffer res = new StringBuffer();
+		for (int i = 0; i <= s1.length(); i++) {
+			b[i][0] = 0;
+		}
+		for (int j = 0; j <= s2.length(); j++) {
+			b[0][j] = 0;
+		}
+		for (int i = 1; i <= s1.length(); i++) {
+			for (int j = 1; j <= s2.length(); j++) {
+				if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
+					b[i][j] = b[i - 1][j - 1] + 1;
+				} 
+				else {
+					b[i][j] = Math.max(b[i - 1][j],b[i][j - 1]);
+				}
+			}
+		}
+		for (int i = s1.length(), j = s2.length(); b[i][j] >= 1; ) {
+			if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
+				res.append(s1.charAt(i - 1));
+				i--;
+				j--;
+			} 
+			else if (b[i - 1][j] >= b[i][j - 1]) {
+				i--;
+			} 
+			else {
+				j--;
+			}
+		}
+		res.reverse();
+		return res.toString().isEmpty() ? "-1" : res.toString();
+	}
+}

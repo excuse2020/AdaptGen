@@ -1,0 +1,86 @@
+class Solution {
+	long maxStrength(int[] originalArray) {
+		if (originalArray.length == 1) {
+			return originalArray[0];
+		} 
+		else {
+			long negMulti = 1;
+			long posMulti = 1;
+			long maxMulti = 0;
+			int positiveCount = 0;
+			int negativeCount = 0;
+			for (int element: originalArray) {	
+				if (element >= 0) {
+					positiveCount++;
+				} 
+				else {
+					negativeCount++;
+				}
+			}
+			int[] positiveArray = new int[positiveCount];
+			int[] negativeArray = new int[negativeCount];
+			int positiveIndex = 0;
+			int negativeIndex = 0;
+			for (int element: originalArray) {	
+				if (element >= 0) {
+					positiveArray[positiveIndex] = element;
+					positiveIndex++;
+				} 
+				else {
+					negativeArray[negativeIndex] = element;
+					negativeIndex++;
+				}
+			}
+			int negLen = negativeArray.length;
+			int posLen = positiveArray.length;
+			if (negLen == 1 && posLen == 1) {
+				return originalArray[0] > originalArray[1] ? originalArray[0] : originalArray[1];
+			} 
+			else {
+				if (negLen % 2 == 0) {
+					for (int i = 0; i < negLen; i++) {
+						negMulti = negMulti * negativeArray[i];
+					}
+				} 
+				else {
+					Arrays.sort(negativeArray);
+					for (int i = negLen - 2; i >= 0; i--) {
+						negMulti = negMulti * negativeArray[i];
+					}
+				}
+				Arrays.sort(positiveArray);
+				int c = 0;
+				for (int i = 0; i < posLen; i++) {
+					if (positiveArray[i] == 0) {
+						c++;
+					}
+				}
+				if (posLen == 0) {
+					posMulti = 1;
+				} 
+				else {
+					if (posLen > 0) {
+						if (positiveArray[0] == 0) {
+							if (posLen == c && negLen <= 1) {
+								posMulti = 0;
+							}
+							for (int i = c; i < posLen; i++) {
+								posMulti = posMulti * positiveArray[i];
+							}
+						} 
+						else {
+							for (int i = 0; i < posLen; i++) {
+								posMulti = posMulti * positiveArray[i];
+							}
+						}
+					} 
+					else {
+						posMulti = 0;
+					}
+				}
+				maxMulti = (long) posMulti * negMulti;
+				return maxMulti;
+			}
+		}
+	}
+}

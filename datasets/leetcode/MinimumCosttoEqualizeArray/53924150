@@ -1,0 +1,52 @@
+class Solution {
+	int minCostToEqualizeArray(int[] nums, int aa, int bb) {
+		long max = -1, mi = -1, a = aa, b = bb, n = nums.length, j = 0, mod = 1000000007;
+		for (int i: nums) {	
+			if (i > max) {
+				max = i;
+			}
+		}
+		long sum = 0;
+		for (int i: nums) {	
+			j = Math.abs(max - i);
+			sum += j;
+			mi = Math.max(mi,j);
+		}
+		if (2 * a < b) {
+			return (int) ((sum * a) % 1000000007);
+		}
+		if ((sum - mi) >= mi) {
+			if (n % 2 != 0) {
+				return (int) (Math.min((((sum / 2) * b + (sum % 2) * a)),(((sum + n) / 2 * b))) % 1000000007);
+			} 
+			else {
+				return (int) ((((sum / 2) % 1000000007 * b) % 1000000007 + ((sum % 2) * a) % 1000000007) % 1000000007);
+			}
+		}
+		long max2 = (((sum - mi) * b) % 1000000007 + (((mi + mi - sum)) * a) % 1000000007), x = 0, y = (sum - mi), z = (mi);
+		if ((n - 1) > 0) {
+			long xx = (mi + mi - sum) / (n - 1);
+			y = sum - mi + (n - 1) * xx;
+			z = mi + xx;
+			if (xx > 0 && Math.abs(y - z) < 2) {
+				max2 = Math.min(max2,(((n * xx + sum) / 2 * b)) % 1000000007 + (((n * xx + sum) % 2 * a)) % 1000000007);
+			}
+		}
+		int yy = 2;
+		while (yy > 0) {
+			yy--;
+			y += (n - 1);
+			z += 1;
+			x = (((z + y) / 2) * b);
+			if ((z + y) % 2 != 0) {
+				x += a;
+			}
+			x %= 1000000007;
+			if (y < z) {
+				break;
+			}
+			max2 = Math.min(x,max2);
+		}
+		return (int) (max2 % 1000000007);
+	}
+}

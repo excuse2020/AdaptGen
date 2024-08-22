@@ -1,0 +1,66 @@
+class Solution {
+	int len(List<Integer> A, List<Integer> B) {
+		int cnt = 1;
+		int currentIndex = A.get(0);
+		boolean findInB = true;
+		while (true) {
+			int nextIndexIndex = -1;
+			if (findInB) {
+				nextIndexIndex = upperBound(B,currentIndex);
+				if (nextIndexIndex < B.size()) {
+					cnt++;
+					currentIndex = B.get(nextIndexIndex);
+					findInB = !findInB;
+				} 
+				else {
+					break;
+				}
+			} 
+			else {
+				nextIndexIndex = upperBound(A,currentIndex);
+				if (nextIndexIndex < A.size()) {
+					cnt++;
+					currentIndex = A.get(nextIndexIndex);
+					findInB = !findInB;
+				} 
+				else {
+					break;
+				}
+			}
+		}
+		return cnt;
+	}
+	int lowerBound(List<Integer> list, int val) {
+		int low = 0;
+		int high = list.size();
+		while (low < high) {
+			int mid = (low + high) / 2;
+			if (list.get(mid) >= val) {
+				high = mid;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		return high;
+	}
+	int maximumLength(int[] nums, int k) {
+		Map<Integer, List<Integer>> modMap = new HashMap<>();
+		for (int i = 0; i < nums.length; i++) {
+			int mod = nums[i] % k;
+			modMap.computeIfAbsent(mod,(key) -> {new ArrayList<>()}).add(i);
+		}
+		int ans = modMap.values().stream().map((i) -> {i.size()}).reduce(0,);
+		List<List<Integer>> modMapValues = new ArrayList<>(modMap.values());
+		for (int i = 0; i < modMapValues.size(); i++) {
+			for (int j = i + 1; j < modMapValues.size(); j++) {
+				ans = Math.max(ans,len(modMapValues.get(i),modMapValues.get(j)));
+				ans = Math.max(ans,len(modMapValues.get(j),modMapValues.get(i)));
+			}
+		}
+		return ans;
+	}
+	int upperBound(List<Integer> list, int val) {
+		return lowerBound(list,val + 1);
+	}
+}

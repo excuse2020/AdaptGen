@@ -1,0 +1,36 @@
+class Solution {
+	int[] findOriginalArray(int[] changed) {
+		List<Integer> list = new ArrayList<>();
+		if (changed.length % 2 == 1) {
+			return new int[0];
+		}
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int p: changed) {	
+			if (!map.containsKey(p)) {
+				map.put(p,1);
+			} 
+			else {
+				map.put(p,map.get(p) + 1);
+			}
+		}
+		Arrays.sort(changed);
+		for (int p: changed) {	
+			if (map.containsKey(p) && map.get(p) > 0 && (!map.containsKey(2 * p) || map.get(2 * p) == 0)) {
+				return new int[0];
+			}
+			if (map.get(p) == 0) {
+				continue;
+			}
+			if (map.get(p) > 0 && map.get(2 * p) > 0) {
+				list.add(p);
+				map.put(p,map.get(p) - 1);
+				map.put(2 * p,map.get(2 * p) - 1);
+			}
+		}
+		int res = new int[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			res[i] = list.get(i);
+		}
+		return res;
+	}
+}

@@ -1,0 +1,33 @@
+class Solution {
+	HashMap<Pair<Integer, Integer>, Double> memo = new HashMap();
+	double dfs(int a, int b, double possiblity) {
+		if (a >= 4475 || b >= 4475) {
+			return 1.0;
+		}
+		if (a == 0 && b == 0) {
+			return possiblity / 2;
+		}
+		if (a == 0) {
+			return possiblity;
+		}
+		if (b == 0) {
+			return 0.0;
+		}
+		Pair<Integer, Integer> key = new Pair(a, b);
+		Double memoPossible = memo.get(key);
+		if (memoPossible != null) {
+			return memoPossible * possiblity;
+		}
+		double nextPossible = possiblity / 4;
+		memoPossible = 0.0;
+		memoPossible += dfs(Math.max(a - 100,0),b,nextPossible);
+		memoPossible += dfs(Math.max(a - 75,0),Math.max(b - 25,0),nextPossible);
+		memoPossible += dfs(Math.max(a - 50,0),Math.max(b - 50,0),nextPossible);
+		memoPossible += dfs(Math.max(a - 25,0),Math.max(b - 75,0),nextPossible);
+		memo.put(key,memoPossible / possiblity);
+		return memoPossible;
+	}
+	double soupServings(int n) {
+		return dfs(n,n,1);
+	}
+}

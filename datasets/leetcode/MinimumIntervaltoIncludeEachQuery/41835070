@@ -1,0 +1,25 @@
+class Solution {
+	int[] minInterval(int[][] intervals, int[] queries) {
+		int[] res = new int[queries.length];
+		Integer[] qi = new Integer[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			qi[i] = i;
+		}
+		Arrays.sort(qi,(v1, v2) -> {queries[v1] - queries[v2]});
+		PriorityQueue<int[]> pq = new PriorityQueue<>((v1, v2) -> {v1[2] - v2[2]});
+		Arrays.sort(intervals,(v1, v2) -> {v1[0] - v2[0]});
+		int intI = 0;
+		for (int i = 0; i < qi.length; i++) {
+			int q = queries[qi[i]];
+			while (intI < intervals.length && intervals[intI][0] <= q) {
+				pq.add(new int{intervals[intI][0], intervals[intI][1], intervals[intI][1] - intervals[intI][0] + 1});
+				intI++;
+			}
+			while (!pq.isEmpty() && pq.peek()[1] < q) {
+				pq.poll();
+			}
+			res[qi[i]] = pq.isEmpty() ? -1 : pq.peek()[2];
+		}
+		return res;
+	}
+}

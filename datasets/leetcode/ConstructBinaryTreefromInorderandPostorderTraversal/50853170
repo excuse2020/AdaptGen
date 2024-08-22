@@ -1,0 +1,24 @@
+class Solution {
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		TreeNode root = null;
+		if (inorder.length == 0 || postorder.length == 0) {
+			return root;
+		}
+		Map<Integer, Integer> inOrderValuesIndicesMap = new HashMap<>();
+		for (int i = 0; i < inorder.length; i++) {
+			inOrderValuesIndicesMap.put(inorder[i],i);
+		}
+		return splitTree(postorder,inOrderValuesIndicesMap,postorder.length - 1,0,inorder.length - 1);
+	}
+	TreeNode splitTree(int[] postorder, Map<Integer, Integer> inOrderValuesIndicesMap, int rootIndex, int leftExtreme, int rightExtreme) {
+		if (leftExtreme > rightExtreme || rootIndex < 0 || rootIndex >= postorder.length) {
+			return null;
+		}
+		TreeNode root = new TreeNode(postorder[rootIndex]);
+		System.out.println("root.val : " + root.val);
+		int rootIndexInInorder = inOrderValuesIndicesMap.get(root.val);
+		root.left = splitTree(postorder,inOrderValuesIndicesMap,rootIndex - (rightExtreme - rootIndexInInorder),leftExtreme,rootIndexInInorder - 1);
+		root.right = splitTree(postorder,inOrderValuesIndicesMap,rootIndex - 1,rootIndexInInorder + 1,rightExtreme);
+		return root;
+	}
+}

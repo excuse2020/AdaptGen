@@ -1,0 +1,33 @@
+class Solution {
+	Map<Integer, List<Integer>> buildMap(int n, int[][] edges) {
+		Map<Integer, List<Integer>> map = new HashMap();
+		for (int i = 0; i < n; i++) {
+			map.put(i,new ArrayList());
+		}
+		for (int[] edge: edges) {	
+			map.get(edge[0]).add(edge[1]);
+			map.get(edge[1]).add(edge[0]);
+		}
+		return map;
+	}
+	Integer dfs(int node, Map<Integer, List<Integer>> map, List<Boolean> hasApple, int prev) {
+		boolean foundApple = hasApple.get(node);
+		int count = 0;
+		for (Integer child: map.get(node)) {	
+			if (child == prev) {
+				continue;
+			}
+			Integer distance = dfs(child,map,hasApple,node);
+			if (distance != null) {
+				count += distance + 2;
+				foundApple = true;
+			}
+		}
+		return foundApple ? count : null;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		Map<Integer, List<Integer>> map = buildMap(n,edges);
+		Integer res = dfs(0,map,hasApple,-1);
+		return res != null ? res : 0;
+	}
+}

@@ -1,0 +1,93 @@
+class Solution {
+	HashMap<Integer, ArrayList<Integer>> graph;
+	int max = Integer.MIN_VALUE;
+	ArrayList<Integer> path = new ArrayList<>();
+	void DFS(int current, int[] amount, HashSet<Integer> visited, int profit) {
+		boolean leaf = true;
+		for (int nbr: graph.getOrDefault(current,new ArrayList<>())) {	
+			if (visited.contains(nbr) == true) {
+				continue;
+			}
+			leaf = false;
+			visited.add(nbr);
+			DFS(nbr,amount,visited,profit + amount[nbr]);
+		}
+		if (leaf) {
+			max = Math.max(max,profit);
+		}
+	}
+	int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+		graph = new HashMap<>();
+		for (int[] e: edges) {	
+			graph.computeIfAbsent(e[0],(x) -> {new ArrayList<>()}).add(e[1]);
+			graph.computeIfAbsent(e[1],(x) -> {new ArrayList<>()}).add(e[0]);
+		}
+		path(bob,0,new ArrayList<>(),new HashSet<>());
+		for (int i = 0; i < path.size() / 2; i++) {
+			amount[path.get(i)] = 0;
+		}
+		if (path.size() % 2 != 0) {
+			amount[path.get(path.size() / 2)] /= 2;
+		}
+		DFS(0,amount,new HashSet<>(),amount[0]);
+		return max;
+	}
+	int mostProfitablePath__(int[][] edges, int bob, int[] amount) {
+		graph = new HashMap<>();
+		for (int[] e: edges) {	
+			graph.computeIfAbsent(e[0],(x) -> {new ArrayList<>()}).add(e[1]);
+			graph.computeIfAbsent(e[1],(x) -> {new ArrayList<>()}).add(e[0]);
+		}
+		HashSet<Integer> visited = new HashSet<>();
+		solve(0,amount[0],amount,0 == bob,bob,visited);
+		return max;
+	}
+	boolean path(int current, int target, ArrayList<Integer> route, HashSet<Integer> visited) {
+		if (current == target) {
+			path = new ArrayList<>(route);
+			return true;
+		}
+		for (int nbr: graph.getOrDefault(current,new ArrayList<>())) {	
+			if (visited.contains(nbr)) {
+				continue;
+			}
+			route.add(nbr);
+			visited.add(nbr);
+			if (path(nbr,target,route,visited) == true) {
+				return true;
+			}
+			visited.remove(nbr);
+			route.remove(route.size() - 1);
+		}
+		return false;
+	}
+	void solve(int node, int curr, int[] amount, boolean bob, int bobs, HashSet<Integer> set) {
+		if (set.contains(node)) {
+			return;
+		}
+		set.add(node);
+		boolean done = true;
+		bob = (node == bobs);
+		System.out.println(node + " ");
+		for (int nbr: graph.getOrDefault(node,new ArrayList<>())) {	
+			if (set.contains(nbr) == false) {
+				done = false;
+				if (bob) {
+					if (amount[node] < 0) {
+						curr -= (amount[nbr] / 2);
+					} 
+					else {
+						curr += (amount[nbr] / 2);
+					}
+				} 
+				else {
+					curr += amount[nbr];
+				}
+				solve(nbr,curr,amount,bob,bobs,set);
+			}
+		}
+		if (done) {
+			max = Math.max(max,curr);
+		}
+	}
+}

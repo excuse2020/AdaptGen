@@ -1,0 +1,39 @@
+class Solution {
+	int m;
+	int n;
+	int[] nums;
+	int func(int index, int num, int numSelect) {
+		if (numSelect == 0) {
+			return getRowsCovered(num);
+		}
+		int max = 0;
+		for (int i = index; i < n - numSelect + 1; i++) {
+			max = Math.max(func(i + 1,num | (1 << i),numSelect - 1),max);
+		}
+		return max;
+	}
+	int getRowsCovered(int num) {
+		int cnt = 0;
+		for (int i = 0; i < nums.length; i++) {
+			if ((num & nums[i]) == nums[i]) {
+				cnt++;
+			}
+		}
+		return cnt;
+	}
+	int maximumRows(int[][] matrix, int numSelect) {
+		m = matrix.length;
+		n = matrix[0].length;
+		nums = new int[m];
+		for (int i = 0; i < m; i++) {
+			int num = 0;
+			for (int j = n - 1; j >= 0; j--) {
+				if (matrix[i][j] == 1) {
+					num = num | (1 << (n - 1));
+				}
+			}
+			nums[i] = num;
+		}
+		return func(0,0,numSelect);
+	}
+}

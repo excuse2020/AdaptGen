@@ -1,0 +1,36 @@
+class Solution {
+	int findAns(int arr, int idx, int x, int dp) {
+		if (idx == arr.length) {
+			return x;
+		}
+		if (dp[idx][x] != -1) {
+			return dp[idx][x];
+		}
+		int one = 0;
+		int two = 0;
+		if (arr[idx] > x) {
+			one = findAns(arr,idx + 1,x + arr[idx],dp);
+			two = findAns(arr,idx + 1,x,dp);
+		} 
+		else {
+			one = findAns(arr,idx + 1,x,dp);
+		}
+		return dp[idx][x] = Math.max(one,two);
+	}
+	int maxTotalReward(int[] rewardValues) {
+		int n = rewardValues.length;
+		Arrays.sort(rewardValues);
+		int dp = new int[n][4000];
+		for (int i = 0; i < n; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		findAns(rewardValues,0,0,dp);
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < 4000; j++) {
+				ans = Math.max(ans,dp[i][j]);
+			}
+		}
+		return ans;
+	}
+}

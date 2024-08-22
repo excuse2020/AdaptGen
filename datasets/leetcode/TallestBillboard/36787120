@@ -1,0 +1,21 @@
+class Solution {
+	int tallestBillboard(int[] rods) {
+		int[] dp = new int[5001], pdp = new int[5001];
+		int s = 0;
+		for (int rod: rods) {	
+			for (int d = 0; d <= s; ++d) {
+				int h = pdp[d];
+				if (d == 0 || h > 0) {
+					dp[d] = Math.max(dp[d],h);
+					dp[d + rod] = h + rod;
+					dp[Math.abs(rod - d)] = Math.max(dp[Math.abs(rod - d)],h + Math.max(0,rod - d));
+				}
+			}
+			s += rod;
+			int[] tmp = pdp;
+			pdp = dp;
+			dp = tmp;
+		}
+		return pdp[0];
+	}
+}

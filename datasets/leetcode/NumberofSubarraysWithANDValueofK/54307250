@@ -1,0 +1,69 @@
+class Solution {
+	long countSubarrays(int[] nums, int target) {
+		int one = new int[32];
+		int zer = new int[32];
+		for (int i = 0; i < 32; i++) {
+			one[i] = -1;
+			zer[i] = -1;
+		}
+		long total = 0;
+		for (int i = 0; i < nums.length; i++) {
+			int x = nums[i];
+			boolean isPossible = true;
+			int oldestOneBit = 0;
+			int closestZerBit = i;
+			for (int k = 0; k <= 31; k++) {
+				int currBit = 0;
+				if (((1 << k) & x) != 0) {
+					if (one[k] == -1) {
+						one[k] = i;
+					}
+					currBit = 1;
+				} 
+				else {
+					one[k] = -1;
+					zer[k] = i;
+				}
+				int targetBit = 0;
+				if (((1 << k) & target) != 0) {
+					targetBit = 1;
+				}
+				if (targetBit == 1 && currBit == 0) {
+					isPossible = false;
+				}
+				if (targetBit == 1) {
+					if (one[k] != -1) {
+						oldestOneBit = Math.max(oldestOneBit,one[k]);
+					} 
+					else {
+						isPossible = false;
+					}
+				}
+				if (targetBit == 0) {
+					if (zer[k] != -1) {
+						closestZerBit = Math.min(closestZerBit,zer[k]);
+					} 
+					else {
+						isPossible = false;
+					}
+				}
+			}
+			if (isPossible) {
+				System.out.println(oldestOneBit + " ");
+				if (oldestOneBit == -1) {
+					continue;
+				} 
+				else if (closestZerBit == Integer.MAX_VALUE) {
+					total += (i - oldestOneBit + 1);
+				} 
+				else if (oldestOneBit == Integer.MIN_VALUE) {
+					total += (closestZerBit + 1);
+				} 
+				else if (oldestOneBit <= closestZerBit) {
+					total += (closestZerBit - oldestOneBit + 1);
+				}
+			}
+		}
+		return total;
+	}
+}

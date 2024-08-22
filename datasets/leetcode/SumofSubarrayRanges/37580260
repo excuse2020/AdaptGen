@@ -1,0 +1,40 @@
+class Solution {
+	long subArrayRanges(int[] nums) {
+		long total = 0;
+		Stack<Integer> maxElements = new Stack<>();
+		Stack<Integer> minElements = new Stack<>();
+		maxElements.push(0);
+		minElements.push(0);
+		long prev = 0;
+		for (int i = 1; i < nums.length; i++) {
+			long cur = 0;
+			while (maxElements.size() > 0 && nums[maxElements.peek()] <= nums[i]) {
+				int index = maxElements.pop();
+				int no = 0;
+				if (maxElements.size() > 0) {
+					no = index - maxElements.peek();
+				} 
+				else {
+					no = index + 1;
+				}
+				cur += ((long) nums[i] - nums[index]) * (long) no;
+			}
+			maxElements.push(i);
+			while (minElements.size() > 0 && nums[minElements.peek()] >= nums[i]) {
+				int index = minElements.pop();
+				int no = 0;
+				if (minElements.size() > 0) {
+					no = index - minElements.peek();
+				} 
+				else {
+					no = index + 1;
+				}
+				cur += ((long) nums[index] - nums[i]) * (long) no;
+			}
+			minElements.push(i);
+			prev += cur;
+			total += prev;
+		}
+		return total;
+	}
+}

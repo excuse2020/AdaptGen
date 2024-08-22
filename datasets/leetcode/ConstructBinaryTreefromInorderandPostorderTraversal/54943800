@@ -1,0 +1,20 @@
+class Solution {
+	Map<Integer, Integer> inMap = new HashMap<>();
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		for (int i = 0; i < inorder.length; i++) {
+			inMap.put(inorder[i],i);
+		}
+		return helper(postorder,0,postorder.length - 1,0,inorder.length - 1);
+	}
+	TreeNode helper(int[] postorder, int postStart, int postEnd, int inStart, int inEnd) {
+		if (inStart > inEnd || postStart > postEnd) {
+			return null;
+		}
+		TreeNode root = new TreeNode(postorder[postEnd]);
+		int rootIndex = inMap.get(postorder[postEnd]);
+		int leftTreeSize = rootIndex - inStart;
+		root.left = helper(postorder,postStart,postStart + leftTreeSize - 1,inStart,rootIndex - 1);
+		root.right = helper(postorder,postStart + leftTreeSize,postEnd - 1,rootIndex + 1,inEnd);
+		return root;
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	List<String> invalidTransactions(String[] transactions) {
+		Transaction[] transaction = new Transaction[transactions.length];
+		for (int i = 0; i < transactions.length; i++) {
+			String[] data = transactions[i].split(",");
+			transaction[i] = new Transaction();
+			transaction[i].name = data[0];
+			transaction[i].time = Integer.parseInt(data[1]);
+			transaction[i].amount = Integer.parseInt(data[2]);
+			transaction[i].city = data[3];
+		}
+		List<String> op = new ArrayList();
+		for (int i = 0; i < transaction.length; i++) {
+			for (int j = 0; j < transaction.length; j++) {
+				if (i == j) {
+					continue;
+				}
+				if (transaction[i].name.equals(transaction[j].name) && Math.abs(transaction[i].time - transaction[j].time) <= 60 && transaction[i].city.equals(transaction[j].city) == false) {
+					op.add(transaction[i].toString());
+					break;
+				} 
+				else if (transaction[i].amount > 1000) {
+					op.add(transaction[i].toString());
+					break;
+				}
+			}
+		}
+		return op;
+	}
+	class Transaction {
+		int amount;
+		String city;
+		String name;
+		int time;
+		String toString() {
+			return name + ",";
+		}
+	}
+}

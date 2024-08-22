@@ -1,0 +1,70 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		ListNode p = reverse(head1);
+		ListNode q = reverse(head2);
+		ListNode result = new ListNode(-1);
+		ListNode x = result;
+		int flag = 0;
+		while (p != null || q != null) {
+			if (p == null) {
+				ListNode temp = null;
+				if (q.val + flag >= 10) {
+					temp = new ListNode((q.val + flag) % 10);
+					flag = 1;
+				} 
+				else {
+					temp = new ListNode(q.val + flag);
+					flag = 0;
+				}
+				x.next = temp;
+			} 
+			else if (q == null) {
+				ListNode temp = null;
+				if (p.val + flag >= 10) {
+					temp = new ListNode((p.val + flag) % 10);
+					flag = 1;
+				} 
+				else {
+					temp = new ListNode(p.val + flag);
+					flag = 0;
+				}
+				x.next = temp;
+			} 
+			else if (q != null && p != null) {
+				ListNode temp = null;
+				if (p.val + q.val >= 10) {
+					temp = new ListNode((p.val + q.val) % 10);
+					flag = 1;
+				} 
+				else {
+					temp = new ListNode(p.val + q.val);
+					flag = 0;
+				}
+				x.next = temp;
+			}
+			if (p != null) {
+				p = p.next;
+			}
+			if (q != null) {
+				q = q.next;
+			}
+			x = x.next;
+		}
+		if (flag == 1) {
+			ListNode t = new ListNode(1);
+			x.next = t;
+		}
+		return reverse(result.next);
+	}
+	ListNode reverse(ListNode head) {
+		ListNode pre = null;
+		ListNode cur = head;
+		while (cur != null) {
+			ListNode temp = cur.next;
+			cur.next = pre;
+			pre = cur;
+			cur = temp;
+		}
+		return pre;
+	}
+}

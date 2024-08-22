@@ -1,0 +1,26 @@
+class Solution {
+	int[] findOriginalArray(int[] changed) {
+		if (changed.length % 2 != 0) {
+			return new int[0];
+		}
+		Arrays.sort(changed);
+		var res = new int[changed.length / 2];
+		var resIdx = 0;
+		var dubIdx = changed.length - 1;
+		for (int i = dubIdx; i >= 0; i--) {
+			var doubled = changed[i] * 2;
+			if (doubled < changed[dubIdx]) {
+				return new int[0];
+			}
+			if (i != dubIdx && doubled == changed[dubIdx]) {
+				res[resIdx++] = changed[i];
+				changed[i] = -1;
+				dubIdx--;
+				while (dubIdx >= 0 && changed[dubIdx] == -1) {
+					dubIdx--;
+				}
+			}
+		}
+		return res.length == resIdx ? res : new int[0];
+	}
+}

@@ -1,0 +1,26 @@
+class Solution {
+	TreeNode TreeFun(int[] pre, int l1, int r1, int[] vin, int l2, int r2, Map<Integer, Integer> map) {
+		if (l1 > r1) {
+			return null;
+		}
+		TreeNode head = new TreeNode(pre[l1]);
+		if (l1 == r1) {
+			return head;
+		}
+		int find = map.get(pre[l1]);
+		head.left = TreeFun(pre,l1 + 1,find - l2 + l1,vin,l2,find - 1,map);
+		head.right = TreeFun(pre,find - l2 + l1 + 1,r1,vin,find + 1,r2,map);
+		return head;
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] vin) {
+		if (pre == null || vin == null || pre.length != vin.length) {
+			return null;
+		}
+		Map<Integer, Integer> map1 = new HashMap<>();
+		for (int i = 0; i < vin.length; i++) {
+			map1.put(vin[i],i);
+		}
+		TreeNode head = TreeFun(pre,0,pre.length - 1,vin,0,vin.length - 1,map1);
+		return head;
+	}
+}

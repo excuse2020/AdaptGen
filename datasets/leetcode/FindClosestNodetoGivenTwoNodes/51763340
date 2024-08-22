@@ -1,0 +1,65 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		int[] node = new int[edges.length];
+		Arrays.fill(node,-1);
+		Queue<Integer> nodeList = new LinkedList<>();
+		nodeList.add(node1);
+		node[node1] = 0;
+		int level = 0;
+		while (!nodeList.isEmpty()) {
+			level++;
+			int size = nodeList.size();
+			int nd = nodeList.remove();
+			for (int i = 0; i < size; i++) {
+				if (edges[nd] != -1 && node[edges[nd]] == -1) {
+					node[edges[nd]] = level;
+					nodeList.add(edges[nd]);
+				}
+			}
+		}
+		boolean[] visited = new boolean[edges.length];
+		nodeList.add(node2);
+		int ans = -1;
+		int levelOfNode1 = Integer.MAX_VALUE;
+		int levelOfNode2 = Integer.MAX_VALUE;
+		if (node[node2] >= 0) {
+			levelOfNode1 = node[node2];
+			levelOfNode2 = 0;
+			ans = node2;
+		}
+		level = 0;
+		while (!nodeList.isEmpty()) {
+			int size = nodeList.size();
+			level++;
+			for (int i = 0; i < size; i++) {
+				int nd = nodeList.remove();
+				if (edges[nd] >= 0 && node[edges[nd]] != -1) {
+					if (levelOfNode2 == node[edges[nd]] && levelOfNode1 == level) {
+						if (ans > edges[nd]) {
+							levelOfNode1 = node[edges[nd]];
+							levelOfNode2 = level;
+						}
+						ans = Math.min(ans,edges[nd]);
+					} 
+					else if (Math.max(levelOfNode2,levelOfNode1) > Math.max(level,node[edges[nd]])) {
+						levelOfNode1 = node[edges[nd]];
+						levelOfNode2 = level;
+						ans = edges[nd];
+					} 
+					else if (Math.max(levelOfNode2,levelOfNode1) == Math.max(level,node[edges[nd]])) {
+						if (levelOfNode2 + levelOfNode1 < level + node[edges[nd]]) {
+							levelOfNode1 = node[edges[nd]];
+							levelOfNode2 = level;
+							ans = edges[nd];
+						}
+					}
+				}
+				if (edges[nd] >= 0 && !visited[edges[nd]]) {
+					visited[edges[nd]] = true;
+					nodeList.add(edges[nd]);
+				}
+			}
+		}
+		return ans;
+	}
+}

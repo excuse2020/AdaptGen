@@ -1,0 +1,36 @@
+class Solution {
+	void addNode(Map<Integer, List<Integer>> map, int[] edge) {
+		if (!map.containsKey(edge[0])) {
+			map.put(edge[0],new ArrayList<>());
+		}
+		if (!map.containsKey(edge[1])) {
+			map.put(edge[1],new ArrayList<>());
+		}
+		map.get(edge[0]).add(edge[1]);
+		map.get(edge[1]).add(edge[0]);
+	}
+	int[] findRedundantConnection(int[][] edges) {
+		Map<Integer, List<Integer>> map = new LinkedHashMap<>();
+		for (int[] edge: edges) {	
+			addNode(map,edge);
+			if (!isValidTree(map,edge[0],0,new HashSet<>())) {
+				return edge;
+			}
+		}
+		return new int[0];
+	}
+	boolean isValidTree(Map<Integer, List<Integer>> map, int node, int parentNode, Set<Integer> processed) {
+		if (processed.contains(node)) {
+			return false;
+		}
+		processed.add(node);
+		for (int neighbour: map.get(node)) {	
+			if (neighbour != parentNode) {
+				if (!isValidTree(map,neighbour,node,processed)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

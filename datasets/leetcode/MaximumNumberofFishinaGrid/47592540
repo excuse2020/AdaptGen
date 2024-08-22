@@ -1,0 +1,29 @@
+class Solution {
+	int maxFishCount = 0;
+	int findMaxFish(int[][] grid) {
+		int rows = grid.length;
+		int cols = grid[0].length;
+		for (int row = 0; row < rows; row++) {
+			for (int col = 0; col < cols; col++) {
+				if (grid[row][col] != 0) {
+					maxFishCount = Math.max(maxFishCount,maxFishFrom(grid,row,col));
+				}
+			}
+		}
+		return maxFishCount;
+	}
+	int maxFishFrom(int[][] grid, int row, int col) {
+		int rows = grid.length;
+		int cols = grid[0].length;
+		if (row < 0 || col < 0 || row == rows || col == cols || grid[row][col] == 0) {
+			return 0;
+		}
+		int currFishCount = grid[row][col];
+		grid[row][col] = 0;
+		currFishCount += maxFishFrom(grid,row + 1,col);
+		currFishCount += maxFishFrom(grid,row - 1,col);
+		currFishCount += maxFishFrom(grid,row,col + 1);
+		currFishCount += maxFishFrom(grid,row,col - 1);
+		return currFishCount;
+	}
+}

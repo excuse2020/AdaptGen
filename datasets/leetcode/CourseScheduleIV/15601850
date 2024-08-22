@@ -1,0 +1,41 @@
+class Solution {
+	void bfs(int i, int numCourses, List<Integer>[] graph, int[][] isReachable) {
+		Queue<Integer> q = new LinkedList<>();
+		boolean[] visited = new boolean[numCourses];
+		q.add(i);
+		visited[i] = true;
+		while (!q.isEmpty()) {
+			int curr = q.poll();
+			for (int val: graph[curr]) {	
+				if (visited[val] == false) {
+					isReachable[i][val] = 1;
+					visited[val] = true;
+					q.offer(val);
+				}
+			}
+		}
+	}
+	List<Boolean> checkIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
+		List<Boolean> ans = new ArrayList<>();
+		int[][] isReachable = new int[numCourses][numCourses];
+		List<Integer>[] graph = new ArrayList[numCourses];
+		for (int i = 0; i < numCourses; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int[] pre: prerequisites) {	
+			graph[pre[0]].add(pre[1]);
+		}
+		for (int i = 0; i < numCourses; i++) {
+			bfs(i,numCourses,graph,isReachable);
+		}
+		for (int[] q: queries) {	
+			if (isReachable[q[0]][q[1]] == 1) {
+				ans.add(true);
+			} 
+			else {
+				ans.add(false);
+			}
+		}
+		return ans;
+	}
+}

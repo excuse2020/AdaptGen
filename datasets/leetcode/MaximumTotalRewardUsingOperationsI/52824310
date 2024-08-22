@@ -1,0 +1,41 @@
+class Solution {
+	int dp;
+	int helper(int i, int x, int nums) {
+		if (i >= nums.length) {
+			return 0;
+		}
+		if (dp[i][x] == -1) {
+			int max = 0;
+			if (x < nums[i]) {
+				max = Math.max(nums[i] + helper(i + 1,x + nums[i],nums),helper(i + 1,x,nums));
+			} 
+			else {
+				max = helper(i + 1,x,nums);
+			}
+			dp[i][x] = max;
+		}
+		return dp[i][x];
+	}
+	int maxTotalReward(int[] rewardValues) {
+		int sum = 0;
+		for (int i = 0; i < rewardValues.length; i++) {
+			sum = sum + rewardValues[i];
+		}
+		int x = (int) Math.pow(10,4) + 1;
+		if ((sum + 1) < x) {
+			x = sum + 1;
+		}
+		dp = new int[rewardValues.length][x];
+		Arrays.sort(rewardValues);
+		for (int i = 0; i < rewardValues.length; i++) {
+			for (int j = 0; j < dp[0].length; j++) {
+				dp[i][j] = -1;
+			}
+		}
+		int max = 0;
+		for (int i = 0; i < rewardValues.length; i++) {
+			max = Math.max(helper(i,0,rewardValues),max);
+		}
+		return max;
+	}
+}

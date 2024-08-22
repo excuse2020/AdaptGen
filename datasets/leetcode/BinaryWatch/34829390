@@ -1,0 +1,44 @@
+class Solution {
+	List<String> getHourList(int amount, int[] countOnes) {
+		List<String> sol = new ArrayList<String>();
+		for (int i = 0; i < 12; i++) {
+			if (countOnes[i] == amount) {
+				sol.add("" + i);
+			}
+		}
+		return sol;
+	}
+	List<String> getMinList(int amount, int[] countOnes) {
+		List<String> sol = new ArrayList<String>();
+		for (int i = 0; i <= 59; i++) {
+			if (countOnes[i] == amount) {
+				String pos = (i <= 9) ? "0" + i : "" + i;
+				sol.add(pos);
+			}
+		}
+		return sol;
+	}
+	List<String> readBinaryWatch(int turnedOn) {
+		List<String> sol = new ArrayList<String>();
+		int[] countOnes = new int[60];
+		for (int i = 0; i < 60; i++) {
+			int bit = 1;
+			while (bit <= i) {
+				if ((bit & i) != 0) {
+					countOnes[i]++;
+				}
+				bit <<= 1;
+			}
+		}
+		for (int i = 0; i <= Math.min(3,turnedOn); i++) {
+			List<String> hours = getHourList(i,countOnes);
+			List<String> mins = getMinList(turnedOn - i,countOnes);
+			for (String hour: hours) {	
+				for (String min: mins) {	
+					sol.add(hour + ":");
+				}
+			}
+		}
+		return sol;
+	}
+}

@@ -1,0 +1,33 @@
+class Solution {
+	int helper(int[] status, int[] candies, int[][] keys, int[][] containedBoxes, int box, boolean[][] memo) {
+		if (memo[box][2] || !(memo[box][0] && memo[box][1])) {
+			return 0;
+		}
+		memo[box][2] = true;
+		int count = candies[box];
+		for (int contained_box: containedBoxes[box]) {	
+			memo[contained_box][0] = true;
+			if (status[contained_box] == 1) {
+				memo[contained_box][1] = true;
+			}
+			count += helper(status,candies,keys,containedBoxes,contained_box,memo);
+		}
+		for (int key: keys[box]) {	
+			memo[key][1] = true;
+			count += helper(status,candies,keys,containedBoxes,key,memo);
+		}
+		return count;
+	}
+	int maxCandies(int[] status, int[] candies, int[][] keys, int[][] containedBoxes, int[] initialBoxes) {
+		boolean[][] memo = new boolean[status.length][3];
+		int count = 0;
+		for (int initialBox: initialBoxes) {	
+			memo[initialBox][0] = true;
+			if (status[initialBox] == 1) {
+				memo[initialBox][1] = true;
+			}
+			count += helper(status,candies,keys,containedBoxes,initialBox,memo);
+		}
+		return count;
+	}
+}

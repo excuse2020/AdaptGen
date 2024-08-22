@@ -1,0 +1,47 @@
+class Solution {
+	int minReorder(int n, int[][] connections) {
+		Map<Integer, List<Integer>> originKeyMap = new HashMap<>();
+		Map<Integer, List<Integer>> destKeyMap = new HashMap<>();
+		for (int[] connection: connections) {	
+			List<Integer> destinations = originKeyMap.getOrDefault(connection[0],new ArrayList<>());
+			destinations.add(connection[1]);
+			originKeyMap.put(connection[0],destinations);
+			List<Integer> origins = destKeyMap.getOrDefault(connection[1],new ArrayList<>());
+			origins.add(connection[0]);
+			destKeyMap.put(connection[1],origins);
+		}
+		Queue<Integer> q = new LinkedList<>();
+		Set<Integer> visited = new HashSet<>();
+		int result = 0;
+		q.add(0);
+		visited.add(0);
+		while (!q.isEmpty()) {
+			int size = q.size();
+			for (int i = 0; i < size; i++) {
+				int current = q.poll();
+				List<Integer> destinationsFromCurrent = originKeyMap.get(current);
+				if (destinationsFromCurrent != null) {
+					for (int destination: destinationsFromCurrent) {	
+						if (!visited.contains(destination)) {
+							q.add(destination);
+							visited.add(destination);
+						}
+					}
+				}
+				List<Integer> originsToCurrent = destKeyMap.get(current);
+				if (originsToCurrent != null) {
+					for (int origin: originsToCurrent) {	
+						if (visited.contains(origin)) {
+							result++;
+						} 
+						else {
+							q.add(origin);
+							visited.add(origin);
+						}
+					}
+				}
+			}
+		}
+		return result;
+	}
+}

@@ -1,0 +1,59 @@
+class Solution {
+	long minimumCost(String source, String target, char[] original, char[] changed, int[] cost) {
+		var unique = new HashSet<Character>();
+		for (var c: original) {	
+			unique.add(c);
+		}
+		for (var c: changed) {	
+			unique.add(c);
+		}
+		var n = unique.size();
+		var dist = new int[n][n];
+		for (var row: dist) {	
+			Arrays.fill(row,Integer.MAX_VALUE);
+		}
+		for (int i = 0; i < n; i++) {
+			dist[i][i] = 0;
+		}
+		var uniqueMap = new HashMap<Character, Integer>();
+		int iChar = 0;
+		for (var c: unique) {	
+			uniqueMap.put(c,iChar++);
+		}
+		for (int i = 0; i < cost.length; i++) {
+			var oIndex = uniqueMap.get(original[i]);
+			var cIndex = uniqueMap.get(changed[i]);
+			dist[oIndex][cIndex] = Math.min(dist[oIndex][cIndex],cost[i]);
+		}
+		for (int k = 0; k < n; k++) {
+			for (int i = 0; i < n; i++) {
+				for (int j = 0; j < n; j++) {
+					if (dist[i][k] != Integer.MAX_VALUE && dist[k][j] != Integer.MAX_VALUE) {
+						dist[i][j] = Math.min(dist[i][j],dist[i][k] + dist[k][j]);
+					}
+				}
+			}
+		}
+		long result = 0;
+		n = source.length();
+		var sourceChars = source.toCharArray();
+		var targetChars = target.toCharArray();
+		for (int i = 0; i < n; i++) {
+			if (sourceChars[i] != targetChars[i]) {
+				var indexOfSource = uniqueMap.get(sourceChars[i]);
+				var indexOfTarget = uniqueMap.get(targetChars[i]);
+				if (indexOfSource == null || indexOfTarget == null) {
+					return -1;
+				}
+				var changeCost = dist[indexOfSource][indexOfTarget];
+				if (changeCost != Integer.MAX_VALUE) {
+					result += changeCost;
+				} 
+				else {
+					return -1;
+				}
+			}
+		}
+		return result;
+	}
+}

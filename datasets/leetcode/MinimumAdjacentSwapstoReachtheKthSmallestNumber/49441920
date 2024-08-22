@@ -1,0 +1,51 @@
+class Solution {
+	int getMinSwaps(String num, int k) {
+		char arr = num.toCharArray();
+		while (k > 0) {
+			int i = arr.length - 2;
+			while (i >= 0 && arr[i] >= arr[i + 1]) {
+				i--;
+			}
+			if (i >= 0) {
+				int j = arr.length - 1;
+				while (j >= 0 && arr[i] >= arr[j]) {
+					j--;
+				}
+				swap(i,j,arr);
+			}
+			reverse(i + 1,arr.length - 1,arr);
+			k--;
+		}
+		int step = 0;
+		for (int i = 0; i < num.length(); i++) {
+			if (arr[i] != num.charAt(i)) {
+				int j = 0;
+				for (j = i + 1; j < num.length(); j++) {
+					if (arr[j] == num.charAt(i)) {
+						break;
+					}
+				}
+				while (j > 0 && j != i) {
+					swap(j,j - 1,arr);
+					step++;
+					j--;
+				}
+			}
+		}
+		return step;
+	}
+	void reverse(int i, int j, char[] nums) {
+		while (i <= j) {
+			swap(i,j,nums);
+			i++;
+			j--;
+		}
+	}
+	void swap(int i, int j, char[] nums) {
+		if (i != j) {
+			char temp = nums[i];
+			nums[i] = nums[j];
+			nums[j] = temp;
+		}
+	}
+}

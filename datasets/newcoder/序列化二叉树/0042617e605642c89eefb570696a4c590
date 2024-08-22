@@ -1,0 +1,63 @@
+class Solution {
+	TreeNode Deserialize(String str) {
+		if (str.length() == 0) {
+			return null;
+		}
+		String[] cs = str.split("_");
+		TreeNode temp;
+		int br = 0;
+		TreeNode proot = new TreeNode(StringToint(cs[br]));
+		Queue<TreeNode> qu = new LinkedList();
+		qu.add(proot);
+		while (br < cs.length && qu.size() != 0) {
+			temp = qu.poll();
+			br++;
+			if (br < cs.length && !cs[br].equals("#")) {
+				temp.left = new TreeNode(StringToint(cs[br]));
+				qu.add(temp.left);
+			}
+			br++;
+			if (br < cs.length && !cs[br].equals("#")) {
+				temp.right = new TreeNode(StringToint(cs[br]));
+				qu.add(temp.right);
+			}
+		}
+		return proot;
+	}
+	String Serialize(TreeNode root) {
+		if (root == null) {
+			return "";
+		}
+		Queue<TreeNode> qu = new LinkedList();
+		String s = "";
+		qu.add(root);
+		TreeNode temp = new TreeNode(root.val);
+		s = s + temp.val;
+		while (qu.size() != 0) {
+			temp = qu.poll();
+			if (temp.left != null) {
+				qu.add(temp.left);
+				s = s + '_';
+			} 
+			else {
+				s = s + '_';
+			}
+			if (temp.right != null) {
+				qu.add(temp.right);
+				s = s + '_';
+			} 
+			else {
+				s = s + '_';
+			}
+		}
+		return s;
+	}
+	int StringToint(String s) {
+		char[] cs = s.toCharArray();
+		int a = 0;
+		for (int i = 0; i < cs.length; i++) {
+			a = a * 10 + (cs[i] - '0');
+		}
+		return a;
+	}
+}

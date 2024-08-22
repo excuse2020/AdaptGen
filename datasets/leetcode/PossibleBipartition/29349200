@@ -1,0 +1,33 @@
+class Solution {
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		int[] color = new int[n + 1];
+		ArrayList<Integer>[] graph = new ArrayList[n + 1];
+		for (int i = 1; i < graph.length; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int[] d: dislikes) {	
+			graph[d[0]].add(d[1]);
+			graph[d[1]].add(d[0]);
+		}
+		for (int i = 1; i < color.length; i++) {
+			if (color[i] == 0) {
+				ArrayDeque<Integer> queue = new ArrayDeque<>();
+				queue.add(i);
+				color[i] = 1;
+				while (queue.size() != 0) {
+					int rem = queue.remove();
+					for (int neighbour: graph[rem]) {	
+						if (color[neighbour] == color[rem]) {
+							return false;
+						}
+						if (color[neighbour] == 0) {
+							queue.add(neighbour);
+							color[neighbour] = -color[rem];
+						}
+					}
+				}
+			}
+		}
+		return true;
+	}
+}

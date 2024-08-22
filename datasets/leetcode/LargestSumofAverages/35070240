@@ -1,0 +1,31 @@
+class Solution {
+	int[] sums;
+	double largestSumOfAverages(int[] nums, int k) {
+		sums = new int[nums.length + 1];
+		for (int i = 1; i < nums.length + 1; i++) {
+			sums[i] = sums[i - 1] + nums[i - 1];
+		}
+		return largestSumOfAverages(nums,k,0,nums.length,new HashMap<>());
+	}
+	double largestSumOfAverages(int[] nums, int k, int start, int end, Map<Integer, Double> mamo) {
+		if (mamo.containsKey(start * 101 + end * 101 + k)) {
+			return mamo.get(start * 101 + end * 101 + k);
+		}
+		if (k == 1) {
+			mamo.put(start * 101 + end * 101 + k,(double) (sums[end] - sums[start]) / (end - start));
+			return mamo.get(start * 101 + end * 101 + k);
+		}
+		if (k == end - start) {
+			mamo.put(start * 101 + end * 101 + k,(double) (sums[end] - sums[start]));
+			return mamo.get(start * 101 + end * 101 + k);
+		}
+		double max = 0;
+		for (int i = start + 1; k - 1 <= end - i; i++) {
+			double till = largestSumOfAverages(nums,1,start,i,mamo);
+			double after = largestSumOfAverages(nums,k - 1,i,end,mamo);
+			max = Math.max(max,till + after);
+		}
+		mamo.put(start * 101 + end * 101 + k,max);
+		return max;
+	}
+}

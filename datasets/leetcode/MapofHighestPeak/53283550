@@ -1,0 +1,43 @@
+class Solution {
+	int[][] highestPeak(int[][] isWater) {
+		Queue<int[]> q = new LinkedList<int[]>();
+		for (int i = 0; i < isWater.length; i++) {
+			for (int j = 0; j < isWater[i].length; j++) {
+				if (isWater[i][j] == 1) {
+					isWater[i][j] = 0;
+					q.offer(new int{i, j});
+				} 
+				else {
+					isWater[i][j] = -1;
+				}
+			}
+		}
+		int hight = 1;
+		while (!q.isEmpty()) {
+			int size = q.size();
+			for (int i = 1; i <= size; i++) {
+				int[] point = q.poll();
+				int x = point[0];
+				int y = point[1];
+				if (x > 0 && isWater[x - 1][y] == -1) {
+					isWater[x - 1][y] = hight;
+					q.offer(new int{x - 1, y});
+				}
+				if (x < isWater.length - 1 && isWater[x + 1][y] == -1) {
+					isWater[x + 1][y] = hight;
+					q.offer(new int{x + 1, y});
+				}
+				if (y > 0 && isWater[x][y - 1] == -1) {
+					isWater[x][y - 1] = hight;
+					q.offer(new int{x, y - 1});
+				}
+				if (y < isWater[0].length - 1 && isWater[x][y + 1] == -1) {
+					isWater[x][y + 1] = hight;
+					q.offer(new int{x, y + 1});
+				}
+			}
+			hight++;
+		}
+		return isWater;
+	}
+}

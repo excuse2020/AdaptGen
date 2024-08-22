@@ -1,0 +1,41 @@
+class Solution {
+	int gcd(int A, int B) {
+		if (B == 0) {
+			return A;
+		} 
+		else {
+			return gcd(B,A % B);
+		}
+	}
+	long helper(long num, int a, int b) {
+		long sum = 0;
+		sum += (num / (long) a);
+		sum += (num / (long) b);
+		sum -= (num / (long) lcm(a,b));
+		return sum;
+	}
+	int lcm(int a, int b) {
+		return (a * b) / gcd(a,b);
+	}
+	int nthMagicalNumber(int n, int a, int b) {
+		long start = 1l;
+		long end = Long.MAX_VALUE / 2l;
+		long ans = 0;
+		if (a < b) {
+			int temp = a;
+			a = b;
+			b = temp;
+		}
+		while (start <= end) {
+			long mid = start + (end - start) / 2;
+			if (helper(mid,a,b) >= (long) n) {
+				ans = mid;
+				end = mid - 1;
+			} 
+			else {
+				start = mid + 1;
+			}
+		}
+		return (int) (ans % 1000000007);
+	}
+}

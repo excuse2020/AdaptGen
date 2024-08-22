@@ -1,0 +1,31 @@
+class Solution {
+	int informTimeSubordinates(int managerID, int[] informTime, int[] manager, HashMap<Integer, ArrayList<Integer>> reportingStructure) {
+		int maxSubordinateTime = Integer.MIN_VALUE;
+		ArrayList<Integer> reports = reportingStructure.get(managerID);
+		for (Integer i: reports) {	
+			int subordinateTime = informTimeSubordinates(i,informTime,manager,reportingStructure);
+			if (subordinateTime > maxSubordinateTime) {
+				maxSubordinateTime = subordinateTime;
+			}
+		}
+		if (maxSubordinateTime == Integer.MIN_VALUE) {
+			return 0;
+		}
+		return maxSubordinateTime + informTime[managerID];
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		HashMap<Integer, ArrayList<Integer>> reportingStructure = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			reportingStructure.put(i,new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			int managerID = manager[i];
+			if (managerID >= 0) {
+				ArrayList<Integer> reports = reportingStructure.get(managerID);
+				reports.add(i);
+				reportingStructure.put(managerID,reports);
+			}
+		}
+		return informTimeSubordinates(headID,informTime,manager,reportingStructure);
+	}
+}

@@ -1,0 +1,27 @@
+class Solution {
+	ArrayList<Interval> merge(ArrayList<Interval> intervals) {
+		if (intervals == null || intervals.size() == 0) {
+			return new ArrayList<Interval>();
+		}
+		intervals.sort(new AA());
+		ArrayList<Interval> res = new ArrayList<>();
+		Interval interval = intervals.get(0);
+		for (int j = 1, k = 0; j < intervals.size(); j++) {
+			if (interval.end >= intervals.get(j).start) {
+				interval.end = Math.max(intervals.get(j).end,interval.end);
+			} 
+			else {
+				res.add(new Interval(interval.start, intervals.get(j - 1).end));
+				interval.start = intervals.get(j).start;
+				interval.end = intervals.get(j).end;
+			}
+		}
+		res.add(interval);
+		return res;
+	}
+	class AA {
+		int compare(Interval o1, Interval o2) {
+			return o1.start - o2.start;
+		}
+	}
+}

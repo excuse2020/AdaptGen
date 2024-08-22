@@ -1,0 +1,21 @@
+class Solution {
+	int MOD = (int) 1e9 + 7;
+	int dfs(int i, int prevIndex, int[] nums, int mask) {
+		if (i == nums.length) {
+			return 1;
+		}
+		int count = 0;
+		for (int j = 0; j < nums.length; j++) {
+			if ((mask & (1 << j)) != 0) {
+				continue;
+			}
+			if (mask == 0 || nums[prevIndex] % nums[j] == 0 || nums[j] % nums[prevIndex] == 0) {
+				count = count + dfs(i + 1,j,nums,(mask | (1 << j)));
+			}
+		}
+		return count;
+	}
+	int specialPerm(int[] nums) {
+		return dfs(0,0,nums,0);
+	}
+}

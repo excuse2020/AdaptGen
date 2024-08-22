@@ -1,0 +1,33 @@
+class Solution {
+	int[] decrypt(int[] code, int k) {
+		int[] res = new int[code.length];
+		if (k == 0) {
+			return res;
+		} 
+		else if (k > 0) {
+			int window = 0;
+			for (int i = 1; i < 1 + k; i++) {
+				window += code[i];
+			}
+			res[0] = window;
+			for (int i = 1; i < code.length; i++) {
+				window -= code[i];
+				window += code[(i + k) % code.length];
+				res[i] = window;
+			}
+		} 
+		else {
+			int window = 0;
+			for (int i = -1; i >= 0 + k; i--) {
+				window += code[(i + code.length)];
+			}
+			res[0] = window;
+			for (int i = 1; i < code.length; i++) {
+				window += code[i - 1];
+				window -= code[(((i + k) - 1) + code.length) % code.length];
+				res[i] = window;
+			}
+		}
+		return res;
+	}
+}

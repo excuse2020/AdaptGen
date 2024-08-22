@@ -1,0 +1,39 @@
+class Solution {
+	int dir = 0;
+	void dfs(int u, int[] vis, ArrayList<ArrayList<Integer>> adj, int[][] connections, ArrayList<ArrayList<Integer>> dg) {
+		vis[u] = 1;
+		for (int v: adj.get(u)) {	
+			if (vis[v] == 0) {
+				for (int ele: dg.get(u)) {	
+					if (ele == v) {
+						dir++;
+					}
+				}
+				dfs(v,vis,adj,connections,dg);
+			}
+		}
+		return;
+	}
+	int minReorder(int n, int[][] connections) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<ArrayList<Integer>>();
+		ArrayList<ArrayList<Integer>> dg = new ArrayList<ArrayList<Integer>>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<Integer>());
+			dg.add(new ArrayList<Integer>());
+		}
+		for (int i = 0; i < connections.length; i++) {
+			int u = connections[i][0];
+			int v = connections[i][1];
+			adj.get(u).add(v);
+			dg.get(u).add(v);
+			adj.get(v).add(u);
+		}
+		int[] vis = new int[n];
+		for (int i = 0; i < n; i++) {
+			if (vis[i] == 0) {
+				dfs(i,vis,adj,connections,dg);
+			}
+		}
+		return dir;
+	}
+}

@@ -1,0 +1,43 @@
+class Solution {
+	List<List<Integer>> findPrimePairs(int n) {
+		List<List<Integer>> result = new ArrayList<>();
+		Set<Integer> set = new HashSet<>();
+		sieveOfEratosthenes(set,n);
+		Set<Integer> visited = new HashSet<>();
+		for (int value: set) {	
+			if (visited.contains(value)) {
+				continue;
+			}
+			if (set.contains(n - value)) {
+				List<Integer> list = new ArrayList<>();
+				if (value < n - value) {
+					list.add(value);
+					list.add(n - value);
+				} 
+				else {
+					list.add(n - value);
+					list.add(value);
+				}
+				result.add(list);
+				visited.add(n);
+				visited.add(n - value);
+			}
+		}
+		Collections.sort(result,(a, b) -> {a.get(0) - b.get(0)});
+		return result;
+	}
+	void sieveOfEratosthenes(Set<Integer> set, int n) {
+		boolean[] table = new boolean[n + 1];
+		for (int i = 0; i < table.length; i++) {
+			table[i] = true;
+		}
+		for (int i = 2; i <= n; i++) {
+			if (table[i]) {
+				for (int j = i * 2; j <= n; j = j + i) {
+					table[j] = false;
+				}
+				set.add(i);
+			}
+		}
+	}
+}

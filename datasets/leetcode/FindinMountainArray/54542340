@@ -1,0 +1,59 @@
+class Solution {
+	int findInMountainArray(int target, MountainArray mountainArr) {
+		int l = mountainArr.length();
+		int st = 0, end = l - 1;
+		int peak = -1;
+		while (st <= end) {
+			int mid = st + (end - st) / 2;
+			if (mountainArr.get(mid) < mountainArr.get(mid + 1)) {
+				peak = mid + 1;
+				st = mid + 1;
+			} 
+			else {
+				end = mid - 1;
+			}
+		}
+		if (target == mountainArr.get(peak)) {
+			return peak;
+		}
+		int ans = leftSide(mountainArr,0,peak - 1,target);
+		if (ans != -1) {
+			return ans;
+		} 
+		else {
+			return rightSide(mountainArr,peak + 1,l - 1,target);
+		}
+	}
+	int leftSide(MountainArray mountainArr, int st, int end, int target) {
+		int l = mountainArr.length();
+		while (st <= end) {
+			int mid = st + (end - st) / 2;
+			if (mountainArr.get(mid) == target) {
+				return mid;
+			} 
+			else if (mountainArr.get(mid) < target) {
+				st = mid + 1;
+			} 
+			else {
+				end = mid - 1;
+			}
+		}
+		return -1;
+	}
+	int rightSide(MountainArray mountainArr, int st, int end, int target) {
+		int l = mountainArr.length();
+		while (st <= end) {
+			int mid = st + (end - st) / 2;
+			if (mountainArr.get(mid) == target) {
+				return mid;
+			} 
+			else if (mountainArr.get(mid) < target) {
+				end = mid - 1;
+			} 
+			else {
+				st = mid + 1;
+			}
+		}
+		return -1;
+	}
+}

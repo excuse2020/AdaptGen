@@ -1,0 +1,27 @@
+class Solution {
+	int gcd(int a, int b) {
+		if (b == 0) {
+			return a;
+		}
+		return gcd(b,a % b);
+	}
+	int subarrayGCD(int[] nums, int k) {
+		Map<Integer, Integer> map = new HashMap<>();
+		int count = 0;
+		for (int i = 0; i < nums.length; i++) {
+			map.put(nums[i],map.getOrDefault(nums[i],0) + 1);
+			Map<Integer, Integer> map2 = new HashMap<>();
+			for (Map.Entry<Integer, Integer> entry: map.entrySet()) {	
+				int key = entry.getKey();
+				int value = entry.getValue();
+				int hcf = gcd(key,nums[i]);
+				if (hcf == k) {
+					count += value;
+				}
+				map2.put(hcf,map2.getOrDefault(hcf,0) + value);
+				map = map2;
+			}
+		}
+		return count;
+	}
+}

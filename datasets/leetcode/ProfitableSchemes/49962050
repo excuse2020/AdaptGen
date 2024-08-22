@@ -1,0 +1,25 @@
+class Solution {
+	int MOD = 1_000_000_007;
+	Long[][][] dp;
+	int profitableSchemes(int n, int minProfit, int[] group, int[] profit) {
+		dp = new Long[n + 1][profit.length][101];
+		return (int) solveMemo(n,minProfit,group,profit,0,0);
+	}
+	long solveMemo(int n, int minProfit, int[] group, int[] profit, int idx, int currentProfit) {
+		if (idx >= profit.length) {
+			if (currentProfit >= minProfit) {
+				return 1;
+			}
+			return 0;
+		}
+		if (dp[n][idx][currentProfit] != null) {
+			return dp[n][idx][currentProfit];
+		}
+		long take = 0, nontake = 0;
+		if (n - group[idx] >= 0) {
+			take = solveMemo(n - group[idx],minProfit,group,profit,idx + 1,Math.min(currentProfit + profit[idx],minProfit) % MOD);
+		}
+		nontake = solveMemo(n,minProfit,group,profit,idx + 1,currentProfit);
+		return dp[n][idx][currentProfit] = (long) ((take + nontake) % MOD);
+	}
+}

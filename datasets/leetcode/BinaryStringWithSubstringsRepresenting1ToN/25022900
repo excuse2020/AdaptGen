@@ -1,0 +1,64 @@
+class Solution {
+	int KMP(String str, String patt) {
+		int[] lps = LPS(patt);
+		int i = 0;
+		int j = 0;
+		while (i < str.length()) {
+			if (j == patt.length()) {
+				return i - j;
+			} 
+			else if (str.charAt(i) == patt.charAt(j)) {
+				i++;
+				j++;
+			} 
+			else {
+				if (j == 0) {
+					i++;
+				} 
+				else {
+					j = lps[j - 1];
+				}
+			}
+		}
+		if (j == patt.length()) {
+			return i - j;
+		}
+		return -1;
+	}
+	int[] LPS(String patt) {
+		int[] lps = new int[patt.length()];
+		lps[0] = 0;
+		int i = 0;
+		int j = 1;
+		while (j < patt.length()) {
+			if (patt.charAt(i) == patt.charAt(j)) {
+				lps[j] = i + 1;
+				j++;
+				i++;
+			} 
+			else {
+				if (i == 0) {
+					j++;
+				} 
+				else {
+					i = lps[i - 1];
+				}
+			}
+		}
+		return lps;
+	}
+	boolean queryString(String s, int n) {
+		String patt = Integer.toBinaryString(n);
+		if (patt.length() > s.length()) {
+			return false;
+		}
+		for (int i = n; i >= 1; i--) {
+			patt = Integer.toBinaryString(i);
+			int idx = KMP(s,patt);
+			if (idx == -1) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

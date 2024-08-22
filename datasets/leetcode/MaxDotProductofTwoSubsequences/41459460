@@ -1,0 +1,25 @@
+class Solution {
+	int maxDotProduct(int[] nums1, int[] nums2) {
+		return maxProd(0,0,nums1,nums2,new Integer[nums1.length][nums2.length]);
+	}
+	int maxProd(int i, int j, int[] n1, int[] n2, Integer[][] cache) {
+		if (cache[i][j] != null) {
+			return cache[i][j];
+		}
+		int res = (n1[i] * n2[j]);
+		if (i + 1 < n1.length) {
+			res = Math.max(res,maxProd(i + 1,j,n1,n2,cache));
+		}
+		if (j + 1 < n2.length) {
+			res = Math.max(res,maxProd(i,j + 1,n1,n2,cache));
+		}
+		if (i + 1 < n1.length && j + 1 < n2.length) {
+			int taken = maxProd(i + 1,j + 1,n1,n2,cache);
+			res = Math.max(res,taken);
+			taken = taken == Integer.MIN_VALUE ? 0 : taken;
+			res = Math.max(res,(n1[i] * n2[j]) + taken);
+		}
+		cache[i][j] = res;
+		return res;
+	}
+}

@@ -1,0 +1,48 @@
+class Solution {
+	int length, cost1, cost2;
+	int mod = (int) 1e9 + 7;
+	long calculateCost(long maxDelta, long sumDelta) {
+		if (maxDelta * 2 <= sumDelta) {
+			return (sumDelta / 2) * cost2 + (sumDelta & 1) * cost1;
+		} 
+		else {
+			return (2 * maxDelta - sumDelta) * cost1 + (sumDelta - maxDelta) * cost2;
+		}
+	}
+	int minCostToEqualizeArray(int[] nums, int costFirst, int costSecond) {
+		if (nums.length <= 1) {
+			return 0;
+		}
+		length = nums.length;
+		cost1 = costFirst;
+		cost2 = costSecond;
+		int maximum = Arrays.stream(nums).max().getAsInt();
+		long sumDelta = 0;
+		long maxDelta = 0;
+		for (int num: nums) {	
+			long delta = maximum - num;
+			maxDelta = Math.max(maxDelta,delta);
+			sumDelta += delta;
+		}
+		if (costSecond >= costFirst * 2) {
+			return (int) (sumDelta * costFirst % mod);
+		}
+		if (nums.length == 2) {
+			return (int) (sumDelta * costFirst % mod);
+		}
+		long answer = calculateCost(maxDelta,sumDelta);
+		long maxDeltaTwice = maxDelta * 2;
+		while (maxDeltaTwice > sumDelta) {
+			maxDelta++;
+			sumDelta += length;
+			answer = Math.min(answer,calculateCost(maxDelta,sumDelta));
+			maxDeltaTwice += 2;
+		}
+		if (sumDelta % 2 == 1) {
+			maxDelta++;
+			sumDelta += length;
+			answer = Math.min(answer,calculateCost(maxDelta,sumDelta));
+		}
+		return (int) (answer % mod);
+	}
+}

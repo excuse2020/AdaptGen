@@ -1,0 +1,34 @@
+class Solution {
+	boolean canReorderDoubled(int[] arr) {
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < arr.length; i++) {
+			if (!map.containsKey(arr[i])) {
+				map.put(arr[i],0);
+			}
+			int v = map.get(arr[i]);
+			map.put(arr[i],v + 1);
+		}
+		Arrays.sort(arr);
+		for (int i = 0; i < arr.length; i++) {
+			if (map.get(arr[i]) == 0) {
+				continue;
+			}
+			int twice = 2 * arr[i];
+			if (!map.containsKey(twice)) {
+				continue;
+			}
+			if (map.get(twice) > 0) {
+				int c = map.get(arr[i]);
+				int t = map.get(twice);
+				map.put(arr[i],c - 1);
+				map.put(twice,t - 1);
+			}
+		}
+		for (Map.Entry<Integer, Integer> ent: map.entrySet()) {	
+			if (ent.getValue() > 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

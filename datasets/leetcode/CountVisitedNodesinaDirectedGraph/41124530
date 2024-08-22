@@ -1,0 +1,43 @@
+class Solution {
+	int[] countVisitedNodes(List<Integer> edges) {
+		int[] ans = new int[edges.size()];
+		List<Integer> list = new ArrayList<>();
+		boolean[] seen = new boolean[edges.size()];
+		for (int i = 0; i < edges.size(); i++) {
+			if (ans[i] == 0) {
+				markCycleAndReturn(list,i,seen,ans,edges);
+			}
+		}
+		return ans;
+	}
+	void markCycleAndReturn(List<Integer> path, int cur, boolean[] seen, int[] ans, List<Integer> edges) {
+		if (ans[cur] != 0) {
+			int length = ans[cur];
+			for (int i = 0; i < path.size(); i++) {
+				int x = path.get(i);
+				int distance = path.size() - i + length;
+				ans[x] = distance;
+			}
+			return;
+		}
+		if (seen[cur]) {
+			for (int i = path.size() - 1; i >= 0; i--) {
+				if (path.get(i) == cur) {
+					int length = path.size() - i;
+					for (int j = i; j < path.size(); j++) {
+						ans[path.get(j)] = length;
+					}
+					for (int j = 0; j < i; j++) {
+						ans[path.get(j)] = length + i - j;
+					}
+					return;
+				}
+			}
+		}
+		path.add(cur);
+		seen[cur] = true;
+		markCycleAndReturn(path,edges.get(cur),seen,ans,edges);
+		path.remove(path.size() - 1);
+		seen[cur] = false;
+	}
+}

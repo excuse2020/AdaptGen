@@ -1,0 +1,41 @@
+class Solution {
+	int amountOfTime(TreeNode root, int start) {
+		Map<Integer, List<Integer>> m = new HashMap<>();
+		buildGraph(m,root,null);
+		Queue<Integer> q = new LinkedList<>();
+		Set<Integer> visited = new HashSet<>();
+		visited.add(start);
+		q.offer(start);
+		int minutes = -1;
+		while (!q.isEmpty()) {
+			int level = q.size();
+			minutes++;
+			for (int i = 0; i < level; i++) {
+				int curNode = q.poll();
+				for (int n: m.get(curNode)) {	
+					if (visited.add(n)) {
+						q.offer(n);
+					}
+				}
+			}
+		}
+		return minutes;
+	}
+	void buildGraph(Map<Integer, List<Integer>> m, TreeNode root, TreeNode parent) {
+		if (root == null) {
+			return;
+		}
+		m.putIfAbsent(root.val,new ArrayList<>());
+		if (parent != null) {
+			m.get(root.val).add(parent.val);
+		}
+		if (root.left != null) {
+			m.get(root.val).add(root.left.val);
+		}
+		if (root.right != null) {
+			m.get(root.val).add(root.right.val);
+		}
+		buildGraph(m,root.left,root);
+		buildGraph(m,root.right,root);
+	}
+}

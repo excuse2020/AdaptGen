@@ -1,0 +1,41 @@
+class Solution {
+	int[] indegree;
+	int dfs(int src, int[][] graph, boolean[] visited, int start, int count, int prev) {
+		visited[src] = true;
+		if (count == 0) {
+			visited[src] = false;
+			if (graph[src][start] == 1) {
+				int totalcount = indegree[src] - 2 + indegree[prev] - 2 + indegree[start] - 2;
+				return totalcount;
+			}
+			return Integer.MAX_VALUE;
+		}
+		int min = Integer.MAX_VALUE;
+		for (int i = 1; i < graph[src].length; i++) {
+			if (graph[src][i] == 1 && !visited[i]) {
+				min = Math.min(min,dfs(i,graph,visited,start,count - 1,src));
+			}
+		}
+		visited[src] = false;
+		return min;
+	}
+	int minTrioDegree(int n, int[][] edges) {
+		int[][] graph = new int[n + 1][n + 1];
+		indegree = new int[n + 1];
+		for (int[] edge: edges) {	
+			int u = edge[0];
+			int v = edge[1];
+			indegree[u]++;
+			indegree[v]++;
+			graph[u][v] = 1;
+			graph[v][u] = 1;
+		}
+		int min = Integer.MAX_VALUE;
+		boolean[] visited = new boolean[n + 1];
+		for (int i = 1; i <= n; i++) {
+			int ret = dfs(i,graph,visited,i,2,-1);
+			min = Math.min(min,ret);
+		}
+		return min == Integer.MAX_VALUE ? -1 : min;
+	}
+}

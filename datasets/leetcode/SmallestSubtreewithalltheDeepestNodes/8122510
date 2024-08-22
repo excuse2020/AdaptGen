@@ -1,0 +1,49 @@
+class Solution {
+	Queue<TreeNode> deepestNodes;
+	TreeNode findLCA(TreeNode root, TreeNode a, TreeNode b) {
+		if (root == null) {
+			return null;
+		}
+		if (root == a || root == b) {
+			return root;
+		}
+		TreeNode left = findLCA(root.left,a,b);
+		TreeNode right = findLCA(root.right,a,b);
+		if (left != null && right != null) {
+			return root;
+		}
+		return left == null ? right : left;
+	}
+	int height(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		return Math.max(height(root.left),height(root.right)) + 1;
+	}
+	void storeDeepestNodes(TreeNode root, int maxDepth, int currentLevel) {
+		if (root == null) {
+			return;
+		}
+		if (root.left == null && root.right == null && currentLevel == maxDepth) {
+			deepestNodes.add(root);
+		}
+		storeDeepestNodes(root.left,maxDepth,currentLevel + 1);
+		storeDeepestNodes(root.right,maxDepth,currentLevel + 1);
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		int maxDepth = height(root);
+		deepestNodes = new LinkedList<>();
+		storeDeepestNodes(root,maxDepth,1);
+		TreeNode tempNode = deepestNodes.poll();
+		if (deepestNodes.isEmpty()) {
+			return tempNode;
+		} 
+		else {
+			while (!deepestNodes.isEmpty()) {
+				TreeNode temp2Node = deepestNodes.poll();
+				tempNode = findLCA(root,tempNode,temp2Node);
+			}
+			return tempNode;
+		}
+	}
+}

@@ -1,0 +1,18 @@
+class Solution {
+	boolean carPooling(int[][] trips, int capacity) {
+		Arrays.sort(trips,(a, b) -> {a[1] - b[1]});
+		PriorityQueue<int[]> minHeap = new PriorityQueue<>((a, b) -> {a[2] - b[2]});
+		int currPass = 0;
+		for (int[] trip: trips) {	
+			while (!minHeap.isEmpty() && minHeap.peek()[2] <= trip[1]) {
+				currPass -= minHeap.poll()[0];
+			}
+			minHeap.add(trip);
+			currPass += trip[0];
+			if (currPass > capacity) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

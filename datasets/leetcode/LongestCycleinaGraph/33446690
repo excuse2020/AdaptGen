@@ -1,0 +1,40 @@
+class Solution {
+	int[] edge;
+	int[] visited;
+	int findCycleLength(int node) {
+		if (node == -1) {
+			return -1;
+		}
+		int n = node;
+		int ans = 1;
+		while (edge[node] != n) {
+			ans++;
+			node = edge[node];
+		}
+		return ans;
+	}
+	int findCycleNode(int node) {
+		if (node == -1 || visited[node] == 2) {
+			return -1;
+		}
+		if (visited[node] == 1) {
+			return node;
+		}
+		visited[node]++;
+		int temp = findCycleNode(edge[node]);
+		visited[node]++;
+		return temp;
+	}
+	int longestCycle(int[] edges) {
+		edge = edges;
+		int ans = -1;
+		visited = new int[edges.length];
+		for (int i = 0; i < edge.length; i++) {
+			if (visited[i] == 0) {
+				int cycleNode = findCycleNode(i);
+				ans = Math.max(ans,findCycleLength(cycleNode));
+			}
+		}
+		return ans;
+	}
+}

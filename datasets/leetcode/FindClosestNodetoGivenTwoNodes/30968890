@@ -1,0 +1,46 @@
+class Solution {
+	List<List<Integer>> adj;
+	int min;
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		int n = edges.length;
+		int[] distance = new int[n];
+		int[] distance1 = new int[n];
+		Arrays.fill(distance,Integer.MAX_VALUE);
+		Arrays.fill(distance1,Integer.MAX_VALUE);
+		adj = new ArrayList<>();
+		min = Integer.MAX_VALUE;
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			if (edges[i] == -1) {
+				continue;
+			}
+			adj.get(i).add(edges[i]);
+		}
+		distance[node1] = 0;
+		dfs1(node1,distance);
+		distance1[node2] = 0;
+		dfs1(node2,distance1);
+		int index = -1;
+		for (int i = 0; i < n; i++) {
+			if (distance1[i] == Integer.MAX_VALUE || distance[i] == Integer.MAX_VALUE) {
+				continue;
+			}
+			if (min > Math.max(distance1[i],distance[i])) {
+				min = Math.max(distance1[i],distance[i]);
+				index = i;
+			}
+		}
+		return index;
+	}
+	void dfs1(int u, int[] distance) {
+		for (int v: adj.get(u)) {	
+			if (distance[v] <= 1 + distance[u]) {
+				continue;
+			}
+			distance[v] = Math.min(1 + distance[u],distance[v]);
+			dfs1(v,distance);
+		}
+	}
+}

@@ -1,0 +1,19 @@
+class Solution {
+	int[][][] dp;
+	int solve(int[][] costs, int i, int a, int b) {
+		if (i >= costs.length) {
+			return 0;
+		}
+		if (dp[i][a][b] != 0) {
+			return dp[i][a][b];
+		}
+		int costA = a > 0 ? costs[i][0] + solve(costs,i + 1,a - 1,b) : Integer.MAX_VALUE;
+		int costB = b > 0 ? costs[i][1] + solve(costs,i + 1,a,b - 1) : Integer.MAX_VALUE;
+		return dp[i][a][b] = Math.min(costA,costB);
+	}
+	int twoCitySchedCost(int[][] costs) {
+		int n = costs.length;
+		dp = new int[n + 1][(n / 2) + 1][(n / 2) + 1];
+		return solve(costs,0,n / 2,n / 2);
+	}
+}

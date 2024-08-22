@@ -1,0 +1,63 @@
+class Solution {
+	TreeNode Deserialize(String str) {
+		if (str.equals("")) {
+			return null;
+		}
+		String[] ss = str.split(",");
+		int n = ss.length;
+		TreeNode root = new TreeNode(Integer.parseInt(ss[0]));
+		Deque<TreeNode> d = new ArrayDeque<>();
+		d.addLast(root);
+		for (int i = 1; i < n - 1; i += 2) {
+			TreeNode poll = d.pollFirst();
+			String a = ss[i];
+			String b = ss[i + 1];
+			if (!a.equals("#")) {
+				poll.left = new TreeNode(Integer.parseInt(ss[i]));
+				d.addLast(poll.left);
+			}
+			if (!b.equals("#")) {
+				poll.right = new TreeNode(Integer.parseInt(ss[i + 1]));
+				d.addLast(poll.right);
+			}
+		}
+		return root;
+	}
+	String Serialize(TreeNode root) {
+		LinkedList<TreeNode> list = new LinkedList<>();
+		if (root == null) {
+			return "";
+		}
+		list.add(root);
+		int deep = deep(root);
+		int level = 1;
+		String bts = root.val + ",";
+		while (!list.isEmpty()) {
+			int curSize = list.size();
+			while (curSize > 0) {
+				TreeNode node = list.pop();
+				if (node.left != null) {
+					list.add(node.left);
+					bts = bts + node.left.val;
+				} 
+				else if (level < deep && node.left == null) {
+					bts = bts + "#,";
+				}
+				if (node.right != null) {
+					list.add(node.right);
+					bts = bts + node.right.val;
+				} 
+				else if (level < deep && node.right == null) {
+					bts = bts + "#,";
+				}
+				curSize--;
+			}
+			level++;
+		}
+		bts = bts.substring(0,bts.length() - 1);
+		return bts;
+	}
+	int deep(TreeNode node) {
+		return node == null ? 0 : Math.max(deep(node.left),deep(node.right)) + 1;
+	}
+}

@@ -1,0 +1,50 @@
+class Solution {
+	ArrayList<Integer> graph;
+	void addEdge(int a, int b) {
+		graph[a].add(b);
+		graph[b].add(a);
+	}
+	void bfs(int src, int visited) {
+		Queue<Integer> q = new LinkedList<>();
+		q.add(src);
+		visited[src] = 1;
+		while (q.size() != 0) {
+			int a = q.remove();
+			visited[a] = 1;
+			for (var x: graph[a]) {	
+				if (visited[x] != 1) {
+					visited[x] = 1;
+					q.add(x);
+				}
+			}
+		}
+	}
+	int removeStones(int[][] arr) {
+		int v = arr.length;
+		graph = new ArrayList[v];
+		for (int i = 0; i < v; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < v; i++) {
+			int x1 = arr[i][0];
+			int y1 = arr[i][1];
+			for (int j = i + 1; j < v; j++) {
+				int x2 = arr[j][0];
+				int y2 = arr[j][1];
+				if (x1 == x2 || y1 == y2) {
+					addEdge(i,j);
+				}
+			}
+		}
+		int visited = new int[v];
+		Arrays.fill(visited,-1);
+		int connected = 0;
+		for (int i = 0; i < v; i++) {
+			if (visited[i] != 1) {
+				connected++;
+				bfs(i,visited);
+			}
+		}
+		return v - connected;
+	}
+}

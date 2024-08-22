@@ -1,0 +1,60 @@
+class Solution {
+	int[][] buildMatrix(int k, int[][] rowConditions, int[][] colConditions) {
+		int[] row_sorting = t_sort(rowConditions,k);
+		int[] col_sorting = t_sort(colConditions,k);
+		if (row_sorting.length == 0 || col_sorting.length == 0) {
+			return new int[0][0];
+		}
+		int[][] value_position = new int[k + 1][2];
+		for (int i = 0; i < k; i++) {
+			value_position[row_sorting[i]][0] = i;
+			value_position[col_sorting[i]][1] = i;
+		}
+		int[][] res = new int[k][k];
+		for (int value = 1; value <= k; value++) {
+			int row = value_position[value][0];
+			int column = value_position[value][1];
+			res[row][column] = value;
+		}
+		return res;
+	}
+	boolean dfs(int source, List<Integer>[] graph, boolean[] visited, boolean[] cur_path, List<Integer> res) {
+		if (cur_path[source]) {
+			return false;
+		}
+		if (visited[source]) {
+			return true;
+		}
+		visited[source] = true;
+		cur_path[source] = true;
+		for (int connect: graph[source]) {	
+			if (!dfs(connect,graph,visited,cur_path,res)) {
+				return false;
+			}
+		}
+		cur_path[source] = false;
+		res.add(source);
+		return true;
+	}
+	int[] t_sort(int[][] edges, int k) {
+		List<Integer>[] graph = new ArrayList[k + 1];
+		for (int i = 0; i <= k; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int[] edge: edges) {	
+			graph[edge[0]].add(edge[1]);
+		}
+		boolean[] visited = new boolean[k + 1];
+		boolean[] cur_path = new boolean[k + 1];
+		List<Integer> result = new ArrayList<>();
+		for (int start = 1; start <= k; start++) {
+			if (!visited[start]) {
+				if (!dfs(start,graph,visited,cur_path,result)) {
+					return new int[0];
+				}
+			}
+		}
+		Collections.reverse(result);
+		return result.stream().mapToInt((i) -> {i}).toArray();
+	}
+}

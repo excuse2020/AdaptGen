@@ -1,0 +1,18 @@
+class Solution {
+	int maxTotalReward(int[] rewardValues) {
+		Arrays.sort(rewardValues);
+		int maxRewardSum = Arrays.stream(rewardValues).sum();
+		boolean[] dp = new boolean[maxRewardSum + 1];
+		dp[0] = true;
+		int maxCollectedReward = 0;
+		for (int reward: rewardValues) {	
+			for (int j = maxCollectedReward; j >= 0; j--) {
+				if (dp[j] && reward > j) {
+					dp[j + reward] = true;
+					maxCollectedReward = Math.max(maxCollectedReward,j + reward);
+				}
+			}
+		}
+		return maxCollectedReward;
+	}
+}

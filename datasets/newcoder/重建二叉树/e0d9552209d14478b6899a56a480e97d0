@@ -1,0 +1,27 @@
+class Solution {
+	int findIndex(int[] pre, int[] vin) {
+		for (int i = 0; i < vin.length; i++) {
+			if (pre[0] == vin[i]) {
+				return i;
+			}
+		}
+		return 0;
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] vin) {
+		if (pre.length == 0 || pre == null) {
+			return null;
+		}
+		int index = findIndex(pre,vin);
+		TreeNode root = new TreeNode(pre[0]);
+		root.left = reConstructBinaryTree(returnChild(pre,1,index + 1),returnChild(vin,0,index));
+		root.right = reConstructBinaryTree(returnChild(pre,index + 1,pre.length),returnChild(vin,index + 1,vin.length));
+		return root;
+	}
+	int[] returnChild(int[] target, int start, int end) {
+		int[] newChar = new int[end - start];
+		for (int i = start; i < end; i++) {
+			newChar[i - start] = target[i];
+		}
+		return newChar;
+	}
+}

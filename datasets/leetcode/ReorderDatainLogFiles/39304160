@@ -1,0 +1,45 @@
+class Solution {
+	String[] reorderLogFiles(String[] logs) {
+		String[] ans = new String[logs.length];
+		int ans_i = ans.length - 1;
+		TreeMap<String, ArrayList<String>> map = new TreeMap<>();
+		for (int i = 0; i < logs.length; i++) {
+			int k = logs[logs.length - 1 - i].charAt(logs[logs.length - 1 - i].length() - 1);
+			if (k - 48 <= 9) {
+				ans[ans_i--] = logs[logs.length - 1 - i];
+			} 
+			else {
+				String s = logs[logs.length - 1 - i];
+				String[] strArray = null;
+				strArray = s.split(" ");
+				String str1 = s.substring(strArray[0].length());
+				String str2 = s.substring(0,strArray[0].length());
+				ArrayList<String> l = new ArrayList();
+				if (!map.containsKey(str1)) {
+					l.add(str2);
+					map.put(str1,l);
+				} 
+				else {
+					l = map.get(str1);
+					l.add(str2);
+					map.put(str1,l);
+				}
+			}
+			int ans_j = 0;
+			for (Map.Entry<String, ArrayList<String>> entry: map.entrySet()) {	
+				if (entry.getValue().size() == 1) {
+					String input = entry.getValue().get(0) + entry.getKey();
+					ans[ans_j++] = input;
+				} 
+				else {
+					ArrayList<String> ar = entry.getValue();
+					Collections.sort(ar);
+					for (int ii = 0; ii < ar.size(); ii++) {
+						ans[ans_j++] = ar.get(ii) + entry.getKey();
+					}
+				}
+			}
+		}
+		return ans;
+	}
+}

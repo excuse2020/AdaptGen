@@ -1,0 +1,34 @@
+class Solution {
+	int findMaxCompatibility(int index, int[][] compatibility, int size, boolean[] mentorUsed) {
+		if (index == size) {
+			return 0;
+		}
+		int maxScore = 0;
+		for (int m = 0; m < size; ++m) {
+			if (!mentorUsed[m]) {
+				mentorUsed[m] = true;
+				maxScore = Math.max(maxScore,compatibility[index][m] + findMaxCompatibility(index + 1,compatibility,size,mentorUsed));
+				mentorUsed[m] = false;
+			}
+		}
+		return maxScore;
+	}
+	int maxCompatibilitySum(int[][] students, int[][] mentors) {
+		int n = students[0].length;
+		int m = students.length;
+		int[][] compatibility = new int[m][m];
+		for (int sItr = 0; sItr < m; ++sItr) {
+			for (int mItr = 0; mItr < m; ++mItr) {
+				int score = 0;
+				for (int q = 0; q < n; ++q) {
+					if (students[sItr][q] == mentors[mItr][q]) {
+						++score;
+					}
+				}
+				compatibility[sItr][mItr] = score;
+			}
+		}
+		boolean[] mentorUsed = new boolean[m];
+		return findMaxCompatibility(0,compatibility,m,mentorUsed);
+	}
+}

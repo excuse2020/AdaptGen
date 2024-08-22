@@ -1,0 +1,64 @@
+class Solution {
+	List<List<Integer>> getSkyline(int[][] buildings) {
+		List<List<Integer>> ans = new ArrayList<>();
+		PriorityQueue<int[]> pq = new PriorityQueue<>((b1, b2) -> {b1[0] == b2[0] ? b2[2] - b1[2] : b1[0] - b2[0]});
+		Arrays.sort(buildings,(b1, b2) -> {b1[0] == b2[0] ? b2[2] - b1[2] : b1[0] - b2[0]});
+		int[] curr = buildings[0];
+		ans.add(List.of(curr[0],curr[2]));
+		for (int i = 0; i < buildings.length; i++) {
+			int[] cand = buildings[i];
+			if (!pq.isEmpty()) {
+				if (pq.peek()[0] < cand[0]) {
+					cand = pq.poll();
+					i--;
+				} 
+				else if (pq.peek()[0] == cand[0] && pq.peek()[2] > cand[2]) {
+					pq.add(cand);
+					cand = pq.poll();
+				}
+			}
+			curr = updateAnsAndReturnCurr(curr,cand,ans,pq);
+		}
+		while (!pq.isEmpty()) {
+			int[] cand = pq.poll();
+			curr = updateAnsAndReturnCurr(curr,cand,ans,pq);
+		}
+		ans.add(List.of(curr[1],0));
+		return ans;
+	}
+	int[] updateAnsAndReturnCurr(int[] curr, int[] cand, List<List<Integer>> ans, PriorityQueue<int[]> pq) {
+		if (cand[1] <= curr[1] && cand[2] <= curr[2]) {
+			return curr;
+		}
+		if (curr[1] < cand[0]) {
+			ans.add(List.of(curr[1],0));
+			curr = cand;
+			ans.add(List.of(curr[0],curr[2]));
+			return curr;
+		}
+		if (cand[2] == curr[2]) {
+			curr[1] = cand[1];
+			return curr;
+		}
+		if (curr[1] == cand[0]) {
+			curr = cand;
+			ans.add(List.of(curr[0],curr[2]));
+			return curr;
+		}
+		if (cand[1] > curr[1] && cand[2] > curr[2]) {
+			curr = cand;
+			ans.add(List.of(curr[0],curr[2]));
+		} 
+		else if (cand[1] > curr[1]) {
+			cand[0] = curr[1];
+			pq.add(cand);
+		} 
+		else {
+			curr[0] = cand[1];
+			pq.add(curr);
+			curr = cand;
+			ans.add(List.of(curr[0],curr[2]));
+		}
+		return curr;
+	}
+}

@@ -1,0 +1,43 @@
+class Solution {
+	int calculateDegree(int[][] nn, int i1, int i2, int i3) {
+		return nn[0][i1] + nn[0][i2] - 6;
+	}
+	int minTrioDegree(int n, int[][] edges) {
+		int ans = -1;
+		int[][] nn = new int[n + 1][n + 1];
+		for (int[] one: edges) {	
+			nn[one[0]][one[1]]++;
+			nn[one[1]][one[0]]++;
+			nn[0][one[0]]++;
+			nn[0][one[1]]++;
+			nn[one[0]][0] = Math.max(nn[one[0]][0],one[1]);
+			nn[one[1]][0] = Math.max(nn[one[1]][0],one[0]);
+		}
+		for (int i1 = 1; i1 <= n - 2; i1++) {
+			if (nn[0][i1] < 2) {
+				continue;
+			}
+			for (int i2 = i1 + 1; i2 <= nn[i1][0]; i2++) {
+				if (nn[0][i2] < 2) {
+					continue;
+				}
+				if (nn[i1][i2] == 0) {
+					continue;
+				}
+				for (int i3 = i2 + 1; i3 <= nn[i2][0]; i3++) {
+					if (nn[i2][i3] == 0) {
+						continue;
+					}
+					if (nn[i3][i1] == 0) {
+						continue;
+					}
+					int degree = calculateDegree(nn,i1,i2,i3);
+					if (ans == -1 || ans > degree) {
+						ans = degree;
+					}
+				}
+			}
+		}
+		return ans;
+	}
+}

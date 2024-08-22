@@ -1,0 +1,29 @@
+class Solution {
+	boolean satisfies(int min, int length, int threshold) {
+		return ((double) (threshold) / length) < min;
+	}
+	int validSubarraySize(int[] nums, int threshold) {
+		Stack<Pair<Integer, Integer>> stack = new Stack<>();
+		for (int i = 0; i < nums.length; i++) {
+			int index = i;
+			while (!stack.isEmpty() && stack.peek().getValue() > nums[i]) {
+				index = stack.peek().getKey();
+				int num = stack.pop().getValue();
+				int length = i - index;
+				if (satisfies(num,length,threshold)) {
+					return length;
+				}
+			}
+			stack.push(new Pair<>(index, nums[i]));
+		}
+		while (!stack.isEmpty()) {
+			int index = stack.peek().getKey();
+			int num = stack.pop().getValue();
+			int length = nums.length - index;
+			if (satisfies(num,length,threshold)) {
+				return length;
+			}
+		}
+		return -1;
+	}
+}

@@ -1,0 +1,33 @@
+class Solution {
+	void dfs(TreeNode root, int targetSum, List<List<Integer>> path, List<Integer> p1, int sum) {
+		if (root.left == null && root.right == null) {
+			if (sum + root.val == targetSum) {
+				List<Integer> p = new ArrayList(p1);
+				p.add(root.val);
+				path.add(p);
+			}
+			return;
+		}
+		sum = sum + root.val;
+		p1.add(root.val);
+		if (root.left != null) {
+			dfs(root.left,targetSum,path,p1,sum);
+		}
+		if (root.right != null) {
+			dfs(root.right,targetSum,path,p1,sum);
+		}
+		sum = sum - root.val;
+		if (p1.size() >= 1) {
+			p1.remove(p1.size() - 1);
+		}
+	}
+	List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+		List<List<Integer>> path = new ArrayList();
+		List<Integer> p1 = new ArrayList();
+		if (root == null) {
+			return path;
+		}
+		dfs(root,targetSum,path,p1,0);
+		return path;
+	}
+}

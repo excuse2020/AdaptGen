@@ -1,0 +1,43 @@
+class Solution {
+	int maxScore = Integer.MIN_VALUE;
+	HashMap<Integer, HashMap<Integer, Integer>> mp;
+	void dfs(int start, int score, int time, int maxTime, int[] values, int[] visited) {
+		if (time > maxTime) {
+			return;
+		}
+		if (visited[start] == 0) {
+			score += values[start];
+		}
+		if (start == 0) {
+			maxScore = Math.max(maxScore,score);
+		}
+		visited[start]++;
+		HashMap<Integer, Integer> nei = mp.getOrDefault(start,new HashMap<>());
+		for (Map.Entry<Integer, Integer> entry: nei.entrySet()) {	
+			int node = entry.getKey();
+			int timeReq = entry.getValue();
+			dfs(node,score,time + timeReq,maxTime,values,visited);
+		}
+		visited[start]--;
+	}
+	int maximalPathQuality(int[] values, int[][] edges, int maxTime) {
+		mp = new HashMap<>();
+		int n = values.length;
+		for (int[] edge: edges) {	
+			int first = edge[0];
+			int second = edge[1];
+			int time = edge[2];
+			if (!mp.containsKey(first)) {
+				mp.put(first,new HashMap<>());
+			}
+			if (!mp.containsKey(second)) {
+				mp.put(second,new HashMap<>());
+			}
+			mp.get(first).put(second,time);
+			mp.get(second).put(first,time);
+		}
+		int[] visited = new int[n];
+		dfs(0,0,0,maxTime,values,visited);
+		return maxScore;
+	}
+}

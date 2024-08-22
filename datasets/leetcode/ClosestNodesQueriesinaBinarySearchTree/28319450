@@ -1,0 +1,33 @@
+class Solution {
+	TreeMap<Integer, Integer> map = new TreeMap<>();
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		List<List<Integer>> res = new ArrayList<>();
+		inOrder(root);
+		for (int num: queries) {	
+			Integer largestUnder;
+			Integer smallestOver;
+			if (map.containsKey(num)) {
+				largestUnder = Integer.valueOf(num);
+			} 
+			else {
+				largestUnder = map.lowerKey(num);
+			}
+			if (map.containsKey(num)) {
+				smallestOver = Integer.valueOf(num);
+			} 
+			else {
+				smallestOver = map.higherKey(num);
+			}
+			res.add(Arrays.asList(largestUnder == null ? -1 : largestUnder,smallestOver == null ? -1 : smallestOver));
+		}
+		return res;
+	}
+	void inOrder(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		inOrder(root.left);
+		map.put(root.val,0);
+		inOrder(root.right);
+	}
+}

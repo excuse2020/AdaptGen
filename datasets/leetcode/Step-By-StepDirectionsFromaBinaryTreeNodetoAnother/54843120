@@ -1,0 +1,43 @@
+class Solution {
+	boolean dfs(TreeNode root, int value, StringBuilder s) {
+		if (root == null) {
+			return false;
+		}
+		if (root.val == value) {
+			return true;
+		}
+		if (dfs(root.right,value,s)) {
+			s.append("R");
+			return true;
+		}
+		if (dfs(root.left,value,s)) {
+			s.append("L");
+			return true;
+		}
+		return s.length() > 0;
+	}
+	String getDirections(TreeNode root, int startValue, int destValue) {
+		StringBuilder start = new StringBuilder();
+		StringBuilder end = new StringBuilder();
+		dfs(root,startValue,start);
+		dfs(root,destValue,end);
+		int sl = start.length() - 1;
+		int el = end.length() - 1;
+		int count = 0;
+		while (sl >= 0 && el >= 0) {
+			if (start.charAt(sl) == end.charAt(el)) {
+				count++;
+				sl--;
+				el--;
+			} 
+			else {
+				break;
+			}
+		}
+		String result = "";
+		for (int i = 0; i <= sl; i++) {
+			result += "U";
+		}
+		return result + new String(end.reverse()).substring(count);
+	}
+}

@@ -1,0 +1,42 @@
+class Solution {
+	int minSideJumps(int[] obstacles) {
+		int n = obstacles.length, max = Integer.MAX_VALUE - 5;
+		int lane1 = 0, lane2 = 0, lane3 = 0;
+		int temp1, temp2, temp3;
+		if (obstacles[n - 1] == 1) {
+			lane1 = max;
+		} 
+		else if (obstacles[n - 1] == 2) {
+			lane2 = max;
+		} 
+		else if (obstacles[n - 1] == 3) {
+			lane3 = max;
+		}
+		for (int i = n - 2; i >= 0; i--) {
+			if (obstacles[i] == 1) {
+				temp1 = max;
+				temp2 = Math.min(lane3 + 1,lane2);
+				temp3 = Math.min(lane2 + 1,lane3);
+			} 
+			else if (obstacles[i] == 2) {
+				temp2 = max;
+				temp1 = Math.min(lane3 + 1,lane1);
+				temp3 = Math.min(lane1 + 1,lane3);
+			} 
+			else if (obstacles[i] == 3) {
+				temp3 = max;
+				temp1 = Math.min(lane2 + 1,lane1);
+				temp2 = Math.min(lane1 + 1,lane2);
+			} 
+			else {
+				temp1 = Math.min(Math.min(lane2 + 1,lane3 + 1),lane1);
+				temp2 = Math.min(Math.min(lane3 + 1,lane1 + 1),lane2);
+				temp3 = Math.min(Math.min(lane2 + 1,lane1 + 1),lane3);
+			}
+			lane1 = temp1;
+			lane2 = temp2;
+			lane3 = temp3;
+		}
+		return Math.min(Math.min(lane1 + 1,lane2),lane3 + 1);
+	}
+}

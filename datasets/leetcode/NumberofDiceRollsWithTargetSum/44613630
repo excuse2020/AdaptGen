@@ -1,0 +1,26 @@
+class Solution {
+	int mod = 1_000_000_007;
+	int helper(int n, int k, int target, int sum, int[][] dp) {
+		if (sum > target) {
+			return 0;
+		}
+		if (n <= 0) {
+			return sum == target ? 1 : 0;
+		}
+		if (dp[sum][n] != -1) {
+			return dp[sum][n];
+		}
+		int ways = 0;
+		for (int i = 1; i <= k; i++) {
+			ways = (ways + helper(n - 1,k,target,sum + i,dp)) % mod;
+		}
+		return dp[sum][n] = ways;
+	}
+	int numRollsToTarget(int n, int k, int target) {
+		int[][] dp = new int[target + 1][n + 1];
+		for (int[] d: dp) {	
+			Arrays.fill(d,-1);
+		}
+		return helper(n,k,target,0,dp);
+	}
+}

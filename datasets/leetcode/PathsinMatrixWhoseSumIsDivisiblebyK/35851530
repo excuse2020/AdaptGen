@@ -1,0 +1,44 @@
+class Solution {
+	int numberOfPaths(int[][] grid, int k) {
+		int m = grid.length, n = grid[0].length;
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				grid[i][j] = grid[i][j] % k;
+			}
+		}
+		HashMap<Pair<Integer, Integer>, int[]> DP = new HashMap();
+		int ans = new int[k];
+		ans[grid[m - 1][n - 1]] = 1;
+		DP.put(new Pair(m - 1, n - 1),ans);
+		for (int i = m - 1; i >= 0; i--) {
+			for (int j = n - 1; j >= 0; j--) {
+				int right;
+				int down;
+				if (j + 1 < grid[0].length) {
+					right = DP.get(new Pair(i, j + 1));
+				} 
+				else {
+					right = new int[k];
+				}
+				if (i + 1 < grid.length) {
+					down = DP.get(new Pair(i + 1, j));
+				} 
+				else {
+					down = new int[k];
+				}
+				for (int ind = 0; ind < k; ind++) {
+					down[ind] = (down[ind] + right[ind]) % 1000000007;
+				}
+				int[] Ans = new int[k];
+				for (int ind = 0; ind < k; ind++) {
+					Ans[(ind + grid[i][j]) % k] = down[ind];
+				}
+				if (i == m - 1 && j == n - 1) {
+					continue;
+				}
+				DP.put(new Pair(i, j),Ans);
+			}
+		}
+		return (int) DP.get(new Pair(0,0))[0];
+	}
+}

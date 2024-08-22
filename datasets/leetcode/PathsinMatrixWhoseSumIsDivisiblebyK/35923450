@@ -1,0 +1,27 @@
+class Solution {
+	int findPaths(int[][] grid, int i, int j, int sum, int k, int[][][] dp) {
+		if (i == grid.length - 1 && j == grid[0].length - 1) {
+			return (sum + grid[i][j]) % k == 0 ? 1 : 0;
+		}
+		if (dp[i][j][sum] != -1) {
+			return dp[i][j][sum];
+		}
+		int ways = 0;
+		if (i + 1 < grid.length) {
+			ways = (ways + findPaths(grid,i + 1,j,(sum + grid[i][j]) % k,k,dp)) % (int) (1E9 + 7);
+		}
+		if (j + 1 < grid[0].length) {
+			ways = (ways + findPaths(grid,i,j + 1,(sum + grid[i][j]) % k,k,dp)) % (int) (1E9 + 7);
+		}
+		return dp[i][j][sum] = ways;
+	}
+	int numberOfPaths(int[][] grid, int k) {
+		int[][][] dp = new int[grid.length][grid[0].length][k];
+		for (int[][] d1: dp) {	
+			for (int[] d2: d1) {	
+				Arrays.fill(d2,-1);
+			}
+		}
+		return findPaths(grid,0,0,0,k,dp);
+	}
+}

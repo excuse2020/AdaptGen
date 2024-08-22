@@ -1,0 +1,32 @@
+class Solution {
+	int leastBricks(List<List<Integer>> wall) {
+		int count = 0;
+		for (List<Integer> row: wall) {	
+			if (row.size() == 1) {
+				count++;
+			}
+		}
+		if (count == wall.size()) {
+			return wall.size();
+		}
+		long sumRow = 0;
+		int maxFreq = 1;
+		Map<Long, Integer> mapFreq = new HashMap<>();
+		for (List<Integer> row: wall) {	
+			for (int n: row) {	
+				sumRow += n;
+				Integer freq = mapFreq.get(sumRow);
+				if (freq == null) {
+					mapFreq.put(sumRow,1);
+				} 
+				else {
+					mapFreq.put(sumRow,freq + 1);
+					maxFreq = Math.max(maxFreq,freq + 1);
+				}
+			}
+			mapFreq.remove(sumRow);
+			sumRow = 0;
+		}
+		return wall.size() - maxFreq;
+	}
+}

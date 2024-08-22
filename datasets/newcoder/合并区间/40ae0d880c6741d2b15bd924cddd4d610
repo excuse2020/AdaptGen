@@ -1,0 +1,33 @@
+class MyComparator {
+	int compare(Interval o1, Interval o2) {
+		return Integer.compare(o1.end,o2.end);
+	}
+}
+class Solution {
+	ArrayList<Interval> merge(ArrayList<Interval> intervals) {
+		if (intervals.size() <= 1) {
+			return intervals;
+		}
+		Comparator cmp = new MyComparator();
+		Interval[] objs = intervals.toArray(new Interval[0]);
+		Arrays.sort(objs,cmp);
+		ArrayList<Interval> result = new ArrayList<>();
+		Interval obj = objs[objs.length - 1];
+		for (int i = objs.length - 2; i >= 0; i--) {
+			if (obj.start <= objs[i].end) {
+				if (obj.start > objs[i].start) {
+					obj.start = objs[i].start;
+				}
+			} 
+			else {
+				result.add(obj);
+				obj = objs[i];
+			}
+			if (i == 0) {
+				result.add(obj);
+			}
+		}
+		Collections.reverse(result);
+		return result;
+	}
+}

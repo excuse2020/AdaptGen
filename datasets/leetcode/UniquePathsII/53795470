@@ -1,0 +1,28 @@
+class Solution {
+	int helper(int[][] obstacleGrid, int row, int col, int[][] resultArray) {
+		if (row >= obstacleGrid.length || col >= obstacleGrid[0].length || obstacleGrid[row][col] == 1) {
+			return 0;
+		}
+		if (row == obstacleGrid.length - 1 && col == obstacleGrid[0].length - 1) {
+			return 1;
+		}
+		if (resultArray[row][col] != -1) {
+			return resultArray[row][col];
+		}
+		int rightcounts = helper(obstacleGrid,row,col + 1,resultArray);
+		int downcounts = helper(obstacleGrid,row + 1,col,resultArray);
+		resultArray[row][col] = downcounts + rightcounts;
+		return resultArray[row][col];
+	}
+	int uniquePathsWithObstacles(int[][] obstacleGrid) {
+		int outerlength = obstacleGrid.length;
+		int innerlength = obstacleGrid[0].length;
+		int[][] resultArray = new int[outerlength][innerlength];
+		for (int i = 0; i < outerlength; i++) {
+			for (int j = 0; j < innerlength; j++) {
+				resultArray[i][j] = -1;
+			}
+		}
+		return helper(obstacleGrid,0,0,resultArray);
+	}
+}

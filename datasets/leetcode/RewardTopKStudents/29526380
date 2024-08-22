@@ -1,0 +1,33 @@
+class Solution {
+	List<Integer> topStudents(String[] positive_feedback, String[] negative_feedback, String[] report, int[] student_id, int k) {
+		Set<String> pos = new HashSet();
+		Set<String> neg = new HashSet();
+		for (String c: positive_feedback) {	
+			pos.add(c);
+		}
+		for (String c: negative_feedback) {	
+			neg.add(c);
+		}
+		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {a[0] == b[0] ? a[1] - b[1] : b[0] - a[0]});
+		for (int i = 0; i < student_id.length; i++) {
+			long points = 0;
+			String[] arr = report[i].split(" ");
+			for (String c: arr) {	
+				if (pos.contains(c)) {
+					points += 3;
+				} 
+				else if (neg.contains(c)) {
+					points -= 1;
+				}
+			}
+			pq.add(new int{(int) points, student_id[i]});
+		}
+		List<Integer> ans = new ArrayList<>();
+		while (k > 0 && !pq.isEmpty()) {
+			int[] curr = pq.poll();
+			ans.add(curr[1]);
+			k--;
+		}
+		return ans;
+	}
+}

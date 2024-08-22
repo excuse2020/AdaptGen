@@ -1,0 +1,29 @@
+class Solution {
+	List<String> invalidTransactions(String[] t) {
+		int n = t.length;
+		Set<String> set = new HashSet<>();
+		Map<String, String> map = new HashMap<>();
+		Arrays.sort(t,new Comparator<String>());
+		for (int i = 0; i < n; i++) {
+			String[] t1 = t[i].split(",");
+			int time = Integer.parseInt(t1[1]);
+			int amount = Integer.parseInt(t1[2]);
+			String name = t1[0], city = t1[3];
+			if (amount > 1000) {
+				set.add(t[i]);
+			}
+			if (map.containsKey(name)) {
+				String pre = map.get(name);
+				String[] arr = pre.split(",");
+				int time1 = Integer.parseInt(arr[1]);
+				String city1 = arr[3];
+				if (!city.equals(city1) && Math.abs(time - time1) <= 60) {
+					set.add(t[i]);
+					set.add(pre);
+				}
+			}
+			map.put(name,t[i]);
+		}
+		return new ArrayList<>(set);
+	}
+}

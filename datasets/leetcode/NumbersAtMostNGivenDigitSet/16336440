@@ -1,0 +1,56 @@
+class Solution {
+	int f = 0;
+	int atMostNGivenDigitSet(String[] digits, int n) {
+		int numofdigits = 0;
+		int c = n;
+		List<Integer> numbers = new ArrayList<>();
+		while (c != 0) {
+			numofdigits++;
+			numbers.add(c % 10);
+			c = c / 10;
+		}
+		int cal = 1;
+		int len = digits.length;
+		int total = 0;
+		for (int i = 0; i < numofdigits - 1; i++) {
+			cal *= len;
+			total += cal;
+		}
+		int match = 0;
+		for (int i = numofdigits - 1; i >= 0; i--) {
+			int rem = binarysearch(digits,numbers.get(i));
+			if (f == 0) {
+				total += (rem) * cal;
+				break;
+			} 
+			else {
+				total += (rem - 1) * cal;
+				match++;
+			}
+			cal = cal / len;
+			f = 0;
+		}
+		return match == numofdigits ? total + 1 : total;
+	}
+	int binarysearch(String digits, int ele) {
+		int start = 0, end = digits.length - 1;
+		while (start < end) {
+			int mid = start + (end - start) / 2;
+			int value = Integer.parseInt(digits[mid]);
+			if (ele == value) {
+				f = 1;
+				return mid + 1;
+			} 
+			else if (ele < value) {
+				end = mid;
+			} 
+			else {
+				start = mid + 1;
+			}
+		}
+		if (Integer.parseInt(digits[start]) == ele) {
+			f = 1;
+		}
+		return Integer.parseInt(digits[start]) <= ele ? start + 1 : start;
+	}
+}

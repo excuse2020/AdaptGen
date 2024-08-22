@@ -1,0 +1,24 @@
+class Solution {
+	int MOD = 1000000007;
+	int numOfArrays(int n, int m, int k) {
+		int[][][] dp = new int[n + 1][m + 1][k + 1];
+		for (int maxVal = 1; maxVal <= m; maxVal++) {
+			dp[1][maxVal][1] = 1;
+		}
+		for (int len = 2; len <= n; len++) {
+			for (int maxVal = 1; maxVal <= m; maxVal++) {
+				for (int cost = 1; cost <= k; cost++) {
+					dp[len][maxVal][cost] = (int) (((long) maxVal * dp[len - 1][maxVal][cost]) % MOD);
+					for (int prevVal = 1; prevVal < maxVal; prevVal++) {
+						dp[len][maxVal][cost] = (dp[len][maxVal][cost] + dp[len - 1][prevVal][cost - 1]) % MOD;
+					}
+				}
+			}
+		}
+		int totalWays = 0;
+		for (int maxVal = 1; maxVal <= m; maxVal++) {
+			totalWays = (totalWays + dp[n][maxVal][k]) % MOD;
+		}
+		return totalWays;
+	}
+}

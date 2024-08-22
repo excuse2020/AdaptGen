@@ -1,0 +1,28 @@
+class Solution {
+	int helper(char[][] matrix, int[][] memo, int i, int j) {
+		if (i >= matrix.length || j >= matrix[0].length) {
+			return 0;
+		}
+		if (memo[i][j] != -1) {
+			return memo[i][j];
+		}
+		int right = helper(matrix,memo,i,j + 1);
+		int down = helper(matrix,memo,i + 1,j);
+		int diagonal = helper(matrix,memo,i + 1,j + 1);
+		memo[i][j] = 0;
+	}
+	int maximalSquare(char[][] matrix) {
+		int[][] memo = new int[matrix.length][matrix[0].length];
+		for (int[] row: memo) {	
+			Arrays.fill(row,-1);
+		}
+		helper(matrix,memo,0,0);
+		int res = 0;
+		for (int i = 0; i < memo.length; i++) {
+			for (int j = 0; j < memo[i].length; j++) {
+				res = Math.max(res,memo[i][j]);
+			}
+		}
+		return res * res;
+	}
+}

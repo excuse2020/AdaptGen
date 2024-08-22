@@ -1,0 +1,60 @@
+class Solution {
+	int BinarySearch(MountainArray a, int start, int end, int target, boolean increasing) {
+		if (increasing) {
+			int mid = 0;
+			while (start < end) {
+				mid = start + (end - start) / 2;
+				if (a.get(mid) < target) {
+					start = mid + 1;
+				} 
+				else {
+					end = mid;
+				}
+			}
+			if (a.get(start) == target) {
+				return start;
+			} 
+			else {
+				return -1;
+			}
+		}
+		int mid = 0;
+		while (start < end) {
+			mid = start + (end - start) / 2;
+			if (a.get(mid) > target) {
+				start = mid + 1;
+			} 
+			else {
+				end = mid;
+			}
+		}
+		if (a.get(start) == target) {
+			return start;
+		} 
+		else {
+			return -1;
+		}
+	}
+	int findInMountainArray(int target, MountainArray mountainArr) {
+		MountainArray a = mountainArr;
+		int start = 0, end = a.length() - 1, middle = 0;
+		while (start < end) {
+			middle = start + (end - start) / 2;
+			int t = a.get(middle);
+			int t_m1 = a.get(middle - 1);
+			int t_p1 = a.get(middle + 1);
+			if (t_m1 < t && t > t_p1) {
+				break;
+			}
+			if (t_m1 > t) {
+				end = middle;
+			}
+			if (t <= t_p1) {
+				start = middle + 1;
+			}
+		}
+		int i1 = BinarySearch(a,0,middle,target,true);
+		int i2 = BinarySearch(a,middle + 1,a.length() - 1,target,false);
+		return i1 == -1 ? i2 : i1;
+	}
+}

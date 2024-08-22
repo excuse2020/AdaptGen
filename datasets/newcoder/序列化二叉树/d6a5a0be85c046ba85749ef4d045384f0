@@ -1,0 +1,43 @@
+class Solution {
+	TreeNode Deserialize(String str) {
+		if (str == null || str.length() < 1) {
+			return null;
+		}
+		String[] parts = str.split("_");
+		Queue<TreeNode> queue = new LinkedList<>();
+		TreeNode root = new TreeNode(Integer.parseInt(parts[0]));
+		queue.offer(root);
+		for (int i = 1; i < parts.length - 1; i += 2) {
+			TreeNode cur = queue.poll();
+			int left = Integer.parseInt(parts[i]);
+			int right = Integer.parseInt(parts[i + 1]);
+			if (left != -1) {
+				cur.left = new TreeNode(left);
+				queue.offer(cur.left);
+			}
+			if (right != -1) {
+				cur.right = new TreeNode(right);
+				queue.offer(cur.right);
+			}
+		}
+		return root;
+	}
+	String Serialize(TreeNode root) {
+		if (root == null) {
+			return "";
+		}
+		Queue<TreeNode> queue = new LinkedList<>();
+		TreeNode cur = root;
+		queue.offer(cur);
+		StringBuilder sb = new StringBuilder();
+		while (!queue.isEmpty()) {
+			cur = queue.poll();
+			sb.append(cur.val + "_");
+			if (cur.val != -1) {
+				queue.offer(cur.left != null ? cur.left : new TreeNode(-1));
+				queue.offer(cur.right != null ? cur.right : new TreeNode(-1));
+			}
+		}
+		return sb.toString();
+	}
+}

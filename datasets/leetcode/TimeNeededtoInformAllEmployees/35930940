@@ -1,0 +1,25 @@
+class Solution {
+	int maxTime = 0;
+	int time = 0;
+	void dfs(ArrayList<ArrayList<Integer>> adjls, int[] informTime, int headID) {
+		maxTime = Math.max(maxTime,time);
+		for (int adjEle: adjls.get(headID)) {	
+			time += informTime[headID];
+			dfs(adjls,informTime,adjEle);
+			time -= informTime[headID];
+		}
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		ArrayList<ArrayList<Integer>> adjls = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adjls.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			if (manager[i] != -1) {
+				adjls.get(manager[i]).add(i);
+			}
+		}
+		dfs(adjls,informTime,headID);
+		return maxTime;
+	}
+}

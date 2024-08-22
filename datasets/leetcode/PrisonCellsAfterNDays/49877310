@@ -1,0 +1,42 @@
+class Solution {
+	int[] getNextDay(int[] cells) {
+		int n = cells.length;
+		int[] temp = Arrays.copyOf(cells,n);
+		for (int i = 1; i < n - 1; i++) {
+			if (cells[i - 1] == cells[i + 1]) {
+				temp[i] = 1;
+			} 
+			else {
+				temp[i] = 0;
+			}
+			temp[0] = 0;
+			temp[n - 1] = 0;
+		}
+		return temp;
+	}
+	int[] prisonAfterNDays(int[] cells, int n) {
+		Map<String, Integer> seen = new HashMap<>();
+		int cycleStart = 0, cycleEnd = 0, cycle = 0;
+		for (int day = 0; day < n; day++) {
+			int[] nextDay = getNextDay(cells);
+			String key = Arrays.toString(nextDay);
+			if (seen.containsKey(key)) {
+				cycleStart = seen.get(key);
+				cycleEnd = day;
+				cycle = cycleEnd - cycleStart;
+				break;
+			}
+			seen.put(key,day);
+			cells = nextDay;
+		}
+		if (cycle > 0) {
+			n = (n - cycleStart) % cycle + cycleStart;
+			seen.clear();
+			for (int day = cycleStart; day < n; day++) {
+				int[] nextDay = getNextDay(cells);
+				cells = nextDay;
+			}
+		}
+		return cells;
+	}
+}

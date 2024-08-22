@@ -1,0 +1,41 @@
+class Solution {
+	int findInd(ArrayList<Integer> arr, int x) {
+		int start = 0;
+		int end = arr.size() - 1;
+		int max = -1;
+		while (start <= end) {
+			int mid = (start + end) / 2;
+			if (arr.get(mid) == x) {
+				return mid;
+			} 
+			else if (arr.get(mid) > x) {
+				end = mid - 1;
+			} 
+			else {
+				max = Math.max(max,mid);
+				start = mid + 1;
+			}
+		}
+		return max;
+	}
+	int minOperations(int[] nums) {
+		Arrays.sort(nums);
+		ArrayList<Integer> arr = new ArrayList<>();
+		int l = 0;
+		while (l < nums.length) {
+			arr.add(nums[l]);
+			while (l + 1 < nums.length && nums[l] == nums[l + 1]) {
+				l++;
+			}
+			l++;
+		}
+		int maxCount = 0;
+		for (int i = 0; i < arr.size(); i++) {
+			int m = arr.get(i);
+			int r = arr.get(i) + (nums.length - 1);
+			int x = findInd(arr,r);
+			maxCount = Math.max(maxCount,(x - i) + 1);
+		}
+		return nums.length - maxCount;
+	}
+}

@@ -1,0 +1,36 @@
+class Solution {
+	int cnt = 0;
+	ArrayList<Integer> list = new ArrayList<>();
+	boolean check(TreeNode root2) {
+		if (root2 == null) {
+			return true;
+		}
+		boolean left = check(root2.left);
+		boolean right = check(root2.right);
+		if (root2.left == null && root2.right == null) {
+			if (cnt > list.size()) {
+				return false;
+			}
+			if (cnt < list.size() && root2.val != list.get(cnt)) {
+				return false;
+			}
+			cnt++;
+		}
+		return left && right;
+	}
+	boolean leafSimilar(TreeNode root1, TreeNode root2) {
+		preOrder(root1);
+		boolean res = check(root2);
+		return cnt != list.size() ? false : res;
+	}
+	void preOrder(TreeNode root1) {
+		if (root1 == null) {
+			return;
+		}
+		if (root1.left == null && root1.right == null) {
+			list.add(root1.val);
+		}
+		preOrder(root1.left);
+		preOrder(root1.right);
+	}
+}

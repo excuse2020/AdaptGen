@@ -1,0 +1,38 @@
+class Solution {
+	int brother(TreeNode root) {
+		int value = 0;
+		if (root != null) {
+			value += root.left == null ? 0 : root.left.val;
+			value += root.right == null ? 0 : root.right.val;
+		}
+		return value;
+	}
+	TreeNode replaceValueInTree(TreeNode root) {
+		Map<TreeNode, Integer> cache = new HashMap<>();
+		List<TreeNode[]> queue = new ArrayList<>();
+		queue.add(new TreeNode{root, null});
+		int total = 0;
+		while (!queue.isEmpty()) {
+			List<TreeNode[]> next = new ArrayList<>();
+			int value = 0;
+			for (TreeNode[] node: queue) {	
+				TreeNode child = node[0];
+				TreeNode parent = node[1];
+				cache.putIfAbsent(parent,brother(parent));
+				child.val = total - cache.get(parent);
+				if (child.left != null) {
+					next.add(new TreeNode{child.left, child});
+					value += child.left.val;
+				}
+				if (child.right != null) {
+					next.add(new TreeNode{child.right, child});
+					value += child.right.val;
+				}
+			}
+			cache.clear();
+			queue = next;
+			total = value;
+		}
+		return root;
+	}
+}

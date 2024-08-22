@@ -1,0 +1,42 @@
+class Solution {
+	long deleteAndEarn(int[] nums) {
+		Arrays.sort(nums);
+		int n = nums.length;
+		ArrayList<Integer> l = new ArrayList<>();
+		HashMap<Integer, Integer> hm = new HashMap<>();
+		l.add(nums[0]);
+		hm.put(nums[0],1);
+		for (int i = 1; i < n; i++) {
+			if (nums[i] != nums[i - 1]) {
+				l.add(nums[i]);
+			}
+			hm.put(nums[i],hm.getOrDefault(nums[i],0) + 1);
+		}
+		long[] dp = new long[l.size()];
+		dp[0] = (long) hm.get(nums[0]) * nums[0];
+		for (int i = 1; i < l.size(); i++) {
+			int lf = -1;
+			int r = i;
+			while (r - lf > 1) {
+				int m = (r + lf) / 2;
+				if (l.get(i) - l.get(m) > 2) {
+					lf = m;
+				} 
+				else {
+					r = m;
+				}
+			}
+			long mul = (long) l.get(i) * hm.get(l.get(i));
+			if (lf == -1) {
+				dp[i] = Math.max(dp[i - 1],mul);
+			} 
+			else {
+				dp[i] = Math.max(dp[i - 1],dp[lf] + mul);
+			}
+		}
+		return dp[l.size() - 1];
+	}
+	long maximumTotalDamage(int[] p) {
+		return deleteAndEarn(p);
+	}
+}

@@ -1,0 +1,41 @@
+class Solution {
+	boolean dfs(List<Integer>[] graph, int[] colors, int start, int color) {
+		colors[start] = color;
+		if (graph[start].size() == 0) {
+			return true;
+		}
+		for (int neighbor: graph[start]) {	
+			if (colors[neighbor] == colors[start]) {
+				return false;
+			}
+			if (colors[neighbor] == -1) {
+				if (!dfs(graph,colors,neighbor,1 - color)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		List<Integer>[] graph = new ArrayList[n];
+		for (int k = 1; k < n + 1; k++) {
+			graph[k - 1] = new ArrayList();
+		}
+		for (int[] relation: dislikes) {	
+			int u = relation[0] - 1;
+			int v = relation[1] - 1;
+			graph[u].add(v);
+			graph[v].add(u);
+		}
+		int[] colors = new int[n];
+		Arrays.fill(colors,-1);
+		for (int k = 1; k < n + 1; k++) {
+			if (colors[k - 1] == -1) {
+				if (!dfs(graph,colors,k - 1,0)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

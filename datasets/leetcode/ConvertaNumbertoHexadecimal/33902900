@@ -1,0 +1,58 @@
+class Solution {
+	String answer(int[] arr) {
+		StringBuilder sb = new StringBuilder();
+		int p1 = 0;
+		while (p1 < arr.length && arr[p1] == 0) {
+			p1++;
+		}
+		int i = p1;
+		int val = arr[i];
+		sb.append(val);
+	}
+	void fscomplement(int[] arr) {
+		for (int i = 0; i < arr.length; i++) {
+			arr[i] = 15 - arr[i];
+		}
+	}
+	void sscomplement(int[] arr) {
+		int carry = 1;
+		for (int i = arr.length - 1; i >= 0; i--) {
+			int sum = arr[i] + carry;
+			if (sum == 16) {
+				arr[i] = 0;
+				carry = 1;
+			} 
+			else {
+				arr[i] = sum;
+				carry = 0;
+			}
+		}
+	}
+	String toHex(int num) {
+		if (num == 0) {
+			return "0";
+		}
+		if (num == Integer.MIN_VALUE) {
+			return "80000000";
+		}
+		int[] arr = new int[8];
+		int i = 7;
+		boolean flag = false;
+		if (num < 0) {
+			flag = true;
+		}
+		num = Math.abs(num);
+		while (num > 0) {
+			int rem = num % 16;
+			arr[i] = rem;
+			i--;
+			num = num >> 4;
+		}
+		if (flag == true) {
+			fscomplement(arr);
+			sscomplement(arr);
+		}
+		String ans = answer(arr);
+		return ans;
+	}
+}

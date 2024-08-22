@@ -1,0 +1,52 @@
+class Solution {
+	long check(int i, int j, int[] diff) {
+		int prev = 0;
+		long ans = 0;
+		for (int k = i; k < j; k++) {
+			int l = Math.abs(diff[k]);
+			if (prev >= l) {
+				prev = l;
+				continue;
+			}
+			ans += (l - prev);
+			prev = l;
+		}
+		return ans;
+	}
+	long minimumOperations(int[] nums, int[] target) {
+		int n = nums.length;
+		int[] diff = new int[n];
+		boolean flag = false;
+		for (int i = 0; i < n; i++) {
+			int l = target[i] - nums[i];
+			if (l < 0) {
+				flag = false;
+				break;
+			} 
+			else if (l > 0) {
+				flag = true;
+				break;
+			}
+		}
+		ArrayList<Integer> idx = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			diff[i] = target[i] - nums[i];
+			if (diff[i] < 0 && flag == false) {
+				idx.add(i);
+				flag = true;
+			} 
+			else if (diff[i] > 0 && flag == true) {
+				idx.add(i);
+				flag = false;
+			}
+		}
+		idx.add(n);
+		long ans = 0;
+		for (int i = 0; i < idx.size() - 1; i++) {
+			int l = idx.get(i);
+			int r = idx.get(i + 1);
+			ans += check(l,r,diff);
+		}
+		return ans;
+	}
+}

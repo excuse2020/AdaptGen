@@ -1,0 +1,38 @@
+class Solution {
+	int dfs(int node, int[] leftChild, int[] rightChild, int[] parentCount) {
+		if (node == -1) {
+			return 0;
+		}
+		int left = dfs(leftChild[node],leftChild,rightChild,parentCount);
+		int right = dfs(rightChild[node],leftChild,rightChild,parentCount);
+		return 1 + left;
+	}
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		int[] parentCount = new int[n];
+		for (int i = 0; i < n; i++) {
+			if (leftChild[i] != -1) {
+				if (++parentCount[leftChild[i]] > 1) {
+					return false;
+				}
+			}
+			if (rightChild[i] != -1) {
+				if (++parentCount[rightChild[i]] > 1) {
+					return false;
+				}
+			}
+		}
+		int rootCount = 0;
+		for (int i = 0; i < n; i++) {
+			if (parentCount[i] == 0) {
+				rootCount++;
+				if (rootCount > 1) {
+					return false;
+				}
+				if (dfs(i,leftChild,rightChild,parentCount) != n) {
+					return false;
+				}
+			}
+		}
+		return rootCount == 1;
+	}
+}

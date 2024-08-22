@@ -1,0 +1,61 @@
+class Solution {
+	int memo;
+	int nodeVisitCount;
+	int findMinPrice(int node, int parent, int halved, ArrayList<Integer> adjacencyList, int price) {
+		int priceIfHalved = nodeVisitCount[node] * price[node] / 2;
+		int priceIfNotHalved = nodeVisitCount[node] * price[node];
+		if (memo[node][halved] != -1) {
+			return memo[node][halved];
+		}
+		for (int adjacentNode: adjacencyList[node]) {	
+			if (adjacentNode != parent) {
+				priceIfNotHalved += findMinPrice(adjacentNode,node,0,adjacencyList,price);
+			}
+		}
+		if (halved == 1) {
+			return memo[node][halved] = priceIfNotHalved;
+		}
+		for (int adjacentNode: adjacencyList[node]) {	
+			if (adjacentNode != parent) {
+				priceIfHalved += findMinPrice(adjacentNode,node,1,adjacencyList,price);
+			}
+		}
+		return memo[node][halved] = Math.min(priceIfHalved,priceIfNotHalved);
+	}
+	int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
+		ArrayList<Integer> adjacencyList = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			adjacencyList[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < edges.length; i++) {
+			adjacencyList[edges[i][0]].add(edges[i][1]);
+			adjacencyList[edges[i][1]].add(edges[i][0]);
+		}
+		nodeVisitCount = new int[n];
+		for (int i = 0; i < trips.length; i++) {
+			int start = trips[i][0];
+			int destination = trips[i][1];
+			nodeVisitCount[start]++;
+			traversePath(start,destination,adjacencyList,-1);
+		}
+		memo = new int[n][2];
+		for (int i = 0; i < n; i++) {
+			Arrays.fill(memo[i],-1);
+		}
+		return findMinPrice(0,-1,0,adjacencyList,price);
+	}
+	boolean traversePath(int source, int destination, ArrayList<Integer> adjacencyList, int parent) {
+		if (source == destination) {
+			return true;
+		}
+		for (int adjacentNode: adjacencyList[source]) {	
+			if (adjacentNode != parent) {
+				if (traversePath(adjacentNode,destination,adjacencyList,source)) {
+					nodeVisitCount[adjacentNode]++;
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+}

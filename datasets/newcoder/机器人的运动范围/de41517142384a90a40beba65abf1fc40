@@ -1,0 +1,34 @@
+class Solution {
+	void helper(int i, int j, int rows, int cols, int threshold, int[][] flag) {
+		if (i < 0 || i >= rows || j < 0 || j >= cols || threshold < indexToSum(i) + indexToSum(j) || flag[i][j] == 1) {
+			return;
+		} 
+		else {
+			flag[i][j] = 1;
+		}
+		helper(i - 1,j,rows,cols,threshold,flag);
+		helper(i + 1,j,rows,cols,threshold,flag);
+		helper(i,j - 1,rows,cols,threshold,flag);
+		helper(i,j + 1,rows,cols,threshold,flag);
+		return;
+	}
+	int indexToSum(int n) {
+		int sum = 0;
+		while (n > 0) {
+			sum += n % 10;
+			n /= 10;
+		}
+		return sum;
+	}
+	int movingCount(int threshold, int rows, int cols) {
+		int[][] flag = new int[rows][cols];
+		helper(0,0,rows,cols,threshold,flag);
+		int count = 0;
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				count += flag[i][j];
+			}
+		}
+		return count;
+	}
+}

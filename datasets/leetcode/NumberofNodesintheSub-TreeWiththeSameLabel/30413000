@@ -1,0 +1,40 @@
+class Solution {
+	int[] ans;
+	String labels;
+	List<List<Integer>> visit;
+	boolean[] visited;
+	int[] countSubTrees(int n, int[][] edges, String labels) {
+		List<List<Integer>> visit = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			visit.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			visit.get(edge[0]).add(edge[1]);
+			visit.get(edge[1]).add(edge[0]);
+		}
+		int[] ans = new int[n];
+		boolean[] visited = new boolean[n];
+		this.visit = visit;
+		this.labels = labels;
+		this.ans = ans;
+		this.visited = visited;
+		subTreeSimilarElement(0);
+		return ans;
+	}
+	Map<Character, Integer> subTreeSimilarElement(int ind) {
+		Map<Character, Integer> currMap = new HashMap<>();
+		visited[ind] = true;
+		for (int i: visit.get(ind)) {	
+			if (visited[i]) {
+				continue;
+			}
+			Map<Character, Integer> map = subTreeSimilarElement(i);
+			for (var entry: map.entrySet()) {	
+				currMap.put(entry.getKey(),currMap.getOrDefault(entry.getKey(),0) + entry.getValue());
+			}
+		}
+		currMap.put(labels.charAt(ind),currMap.getOrDefault(labels.charAt(ind),0) + 1);
+		ans[ind] = currMap.get(labels.charAt(ind));
+		return currMap;
+	}
+}

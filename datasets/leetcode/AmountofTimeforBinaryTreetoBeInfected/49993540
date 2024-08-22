@@ -1,0 +1,50 @@
+class Solution {
+	TreeNode target;
+	int amountOfTime(TreeNode root, int start) {
+		Map<TreeNode, TreeNode> parent = new HashMap<>();
+		cal(parent,root,start);
+		Queue<TreeNode> q = new LinkedList<>();
+		Map<TreeNode, Boolean> vis = new HashMap<>();
+		q.offer(target);
+		vis.put(target,true);
+		int minutes = 0;
+		while (!q.isEmpty()) {
+			minutes++;
+			int size = q.size();
+			for (int i = 0; i < size; i++) {
+				TreeNode curr = q.poll();
+				if (curr.left != null && vis.get(curr.left) == null) {
+					q.offer(curr.left);
+					vis.put(curr.left,true);
+				}
+				if (curr.right != null && vis.get(curr.right) == null) {
+					q.offer(curr.right);
+					vis.put(curr.right,true);
+				}
+				if (parent.get(curr) != null && vis.get(parent.get(curr)) == null) {
+					q.offer(parent.get(curr));
+					vis.put(parent.get(curr),true);
+				}
+			}
+		}
+		return minutes - 1;
+	}
+	void cal(Map<TreeNode, TreeNode> parent, TreeNode root, int start) {
+		Queue<TreeNode> q = new LinkedList<>();
+		q.offer(root);
+		while (!q.isEmpty()) {
+			TreeNode temp = q.poll();
+			if (temp.val == start) {
+				target = temp;
+			}
+			if (temp.left != null) {
+				q.offer(temp.left);
+				parent.put(temp.left,temp);
+			}
+			if (temp.right != null) {
+				q.offer(temp.right);
+				parent.put(temp.right,temp);
+			}
+		}
+	}
+}

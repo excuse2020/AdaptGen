@@ -1,0 +1,28 @@
+class Solution {
+	ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+	Deque<Integer> path = new LinkedList<>();
+	ArrayList<ArrayList<Integer>> combinationCount(int target, int[] nums) {
+		if (nums.length == 0) {
+			return ans;
+		}
+		Arrays.sort(nums);
+		helper(target,nums,0,0);
+		return ans;
+	}
+	void helper(int target, int[] nums, int sum, int start) {
+		if (target == sum) {
+			ans.add(new ArrayList<>(path));
+			return;
+		}
+		for (int i = start; i < nums.length; i++) {
+			if (sum + nums[i] > target) {
+				break;
+			}
+			path.addLast(nums[i]);
+			sum = sum + nums[i];
+			helper(target,nums,sum,i);
+			sum = sum - nums[i];
+			path.removeLast();
+		}
+	}
+}

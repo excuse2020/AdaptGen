@@ -1,0 +1,47 @@
+class Solution {
+	ArrayList<Integer> GetLeastNumbers_Solution(int[] input, int k) {
+		ArrayList<Integer> res = new ArrayList<>();
+		int cur_length = input.length;
+		for (int i = 0; i < k; i++) {
+			buildMaxHeap(input,cur_length);
+			int temp = input[0];
+			input[0] = input[cur_length - 1];
+			cur_length--;
+			input[cur_length] = temp;
+			res.add(temp);
+		}
+		return res;
+	}
+	void adjustDown(int[] arr, int i, int length) {
+		if (i * 2 + 1 >= length - 1) {
+			return;
+		}
+		if (arr[i] < arr[2 * i + 1]) {
+			swap(arr,i,2 * i + 1);
+		}
+		if ((2 * i + 2) < length - 1 && arr[i] < arr[2 * i + 2]) {
+			swap(arr,i,2 * i + 2);
+		}
+		adjustDown(arr,i * 2 + 1,length);
+		adjustDown(arr,i * 2 + 2,length);
+	}
+	void buildMaxHeap(int[] arr, int length) {
+		for (int i = length - 1; i > 0; i--) {
+			if (i % 2 == 0) {
+				if (arr[i] < arr[(i - 2) / 2]) {
+					swap(arr,i,(i - 2) / 2);
+					adjustDown(arr,i,length);
+				}
+			} 
+			else if (arr[i] < arr[(i - 1) / 2]) {
+				swap(arr,i,(i - 1) / 2);
+				adjustDown(arr,i,length);
+			}
+		}
+	}
+	void swap(int[] arr, int i, int j) {
+		int temp = arr[i];
+		arr[i] = arr[j];
+		arr[j] = temp;
+	}
+}

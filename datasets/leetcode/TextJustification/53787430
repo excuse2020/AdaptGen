@@ -1,0 +1,50 @@
+class Solution {
+	List<String> fullJustify(String[] words, int maxWidth) {
+		List<String> result = new ArrayList<>();
+		List<String> line = new ArrayList<>();
+		int l = 0;
+		for (String w: words) {	
+			int nextL = l + w.length();
+			if (nextL <= maxWidth) {
+				line.add(w);
+				l = nextL;
+			} 
+			else if (!line.isEmpty()) {
+				int n = line.size() - 1;
+				int space = maxWidth - l;
+				int each = n == 0 ? 0 : space / n;
+				int extra = n == 0 ? 0 : space % n;
+				StringBuilder s = new StringBuilder();
+				for (int i = 0; i < line.size(); i++) {
+					if (i > 0) {
+						for (int j = 0; j < 1 + each; j++) {
+							s.append(" ");
+						}
+					}
+					s.append(line.get(i));
+				}
+				int nn = s.length();
+				for (int i = 0; i < maxWidth - nn; i++) {
+					s.append(" ");
+				}
+				result.add(s.toString());
+				line.clear();
+				line.add(w);
+				l = w.length();
+			}
+		}
+		StringBuilder s = new StringBuilder();
+		for (int i = 0; i < line.size(); i++) {
+			if (i > 0) {
+				s.append(" ");
+			}
+			s.append(line.get(i));
+		}
+		int n = s.length();
+		for (int i = 0; i < maxWidth - n; i++) {
+			s.append(" ");
+		}
+		result.add(s.toString());
+		return result;
+	}
+}

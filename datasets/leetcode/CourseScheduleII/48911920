@@ -1,0 +1,38 @@
+class Solution {
+	int[] findOrder(int numCourses, int[][] prerequisites) {
+		HashMap<Integer, List<Integer>> dependencyMap = new HashMap<>();
+		int[] indegreeCount = new int[numCourses];
+		int[] result = new int[numCourses];
+		Queue<Integer> bfsQueue = new LinkedList<>();
+		int idx = 0;
+		for (int[] prereq: prerequisites) {	
+			int prerequisiteCourse = prereq[1];
+			int course = prereq[0];
+			indegreeCount[course]++;
+			if (!dependencyMap.containsKey(prerequisiteCourse)) {
+				dependencyMap.put(prerequisiteCourse,new ArrayList<>());
+			}
+			dependencyMap.get(prerequisiteCourse).add(course);
+		}
+		for (int i = 0; i < numCourses; i++) {
+			if (indegreeCount[i] == 0) {
+				bfsQueue.add(i);
+			}
+		}
+		while (!bfsQueue.isEmpty()) {
+			int currentCourse = bfsQueue.poll();
+			result[idx++] = currentCourse;
+			List<Integer> dependentCourses = dependencyMap.getOrDefault(currentCourse,Collections.emptyList());
+			for (int dependentCourse: dependentCourses) {	
+				indegreeCount[dependentCourse]--;
+				if (indegreeCount[dependentCourse] == 0) {
+					bfsQueue.add(dependentCourse);
+				}
+			}
+		}
+		if (idx == numCourses) {
+			return result;
+		}
+		return new int[0];
+	}
+}

@@ -1,0 +1,30 @@
+class Solution {
+	int[][] dp;
+	int gcd(int a, int b) {
+		return b == 0 ? a : gcd(b,a % b);
+	}
+	int gcdh(int i, int j, int[] nums) {
+		if (dp[i][j] > 0) {
+			return dp[i][j];
+		}
+		if (i == j) {
+			dp[i][j] = nums[i];
+		} 
+		else {
+			dp[i][j] = gcd(nums[i],gcdh(i + 1,j,nums));
+		}
+		return dp[i][j];
+	}
+	int subarrayGCD(int[] nums, int k) {
+		int res = 0;
+		dp = new int[nums.length][nums.length];
+		for (int i = 0; i < nums.length; i++) {
+			for (int j = i; j < nums.length; j++) {
+				if (gcdh(i,j,nums) == k) {
+					res++;
+				}
+			}
+		}
+		return res;
+	}
+}

@@ -1,0 +1,41 @@
+class Solution {
+	ArrayList<Integer> result = new ArrayList<>();
+	ArrayList<Integer> GetLeastNumbers_Solution(int[] input, int k) {
+		if (k == 0 || k > input.length) {
+			return result;
+		}
+		quickSearch(input,0,input.length - 1,k - 1);
+		return result;
+	}
+	int partition(int[] nums, int left, int right) {
+		int value = nums[left];
+		int index = left;
+		for (int i = left; i <= right; i++) {
+			if (nums[i] < value) {
+				index++;
+				swap(nums,i,index);
+			}
+		}
+		swap(nums,index,left);
+		return index;
+	}
+	void quickSearch(int[] nums, int left, int right, int k) {
+		int index = partition(nums,left,right);
+		if (index == k) {
+			for (int i = 0; i <= k; i++) {
+				result.add(nums[i]);
+			}
+		} 
+		else if (index > k) {
+			quickSearch(nums,left,index - 1,k);
+		} 
+		else {
+			quickSearch(nums,index + 1,right,k);
+		}
+	}
+	void swap(int[] nums, int left, int right) {
+		int temp = nums[left];
+		nums[left] = nums[right];
+		nums[right] = temp;
+	}
+}

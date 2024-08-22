@@ -1,0 +1,55 @@
+class Solution {
+	String thirtysixAdd(String A, String B) {
+		HashMap<Character, Integer> CharacterToNumber = new HashMap<>();
+		HashMap<Integer, Character> NumberToCharacter = new HashMap<>();
+		for (int i = 0; i < 10; i++) {
+			CharacterToNumber.put((char) ('0' + i),i);
+			NumberToCharacter.put(i,(char) ('0' + i));
+		}
+		for (int i = 0; i < 26; i++) {
+			CharacterToNumber.put((char) ('a' + i),i + 10);
+			NumberToCharacter.put(i + 10,(char) ('a' + i));
+		}
+		int lenA = A.length();
+		int lenB = B.length();
+		int maxLen = Math.max(lenA,lenB);
+		int pointA = lenA - 1;
+		int pointB = lenB - 1;
+		StringBuffer sb = new StringBuffer("");
+		char[] chrsA = A.toCharArray();
+		char[] chrsB = B.toCharArray();
+		int carryBit = 0;
+		while (pointA > -1 && pointB > -1) {
+			char chrA = chrsA[pointA];
+			char chrB = chrsB[pointB];
+			int chrAValue = CharacterToNumber.get(chrA);
+			int chrBValue = CharacterToNumber.get(chrB);
+			int currentValue = chrAValue + chrBValue;
+			sb.append(NumberToCharacter.get(currentValue % 36));
+			carryBit = currentValue / 36;
+			pointA--;
+			pointB--;
+		}
+		while (pointA > -1) {
+			char chrA = chrsA[pointA];
+			int chrAValue = CharacterToNumber.get(chrA);
+			int currentValue = chrAValue + carryBit;
+			sb.append(NumberToCharacter.get(currentValue % 36));
+			carryBit = currentValue / 36;
+			pointA--;
+		}
+		while (pointB > -1) {
+			char chrB = chrsB[pointB];
+			int chrBValue = CharacterToNumber.get(chrB);
+			int currentValue = chrBValue + carryBit;
+			sb.append(NumberToCharacter.get(currentValue % 36));
+			carryBit = currentValue / 36;
+			pointB--;
+		}
+		if (carryBit == 1) {
+			sb.append(1);
+		}
+		sb.reverse();
+		return new String(sb);
+	}
+}

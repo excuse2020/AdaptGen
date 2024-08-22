@@ -1,0 +1,55 @@
+class Solution {
+	int getMinNumberOfOperations(List<List<TreeNode>> nodes, int[][] allLevelOrder) {
+		int minOps = 0, level;
+		for (int i = allLevelOrder[0][0]; i <= allLevelOrder[1][0]; i++) {
+			level = allLevelOrder[0][i];
+			if (level > 0) {
+				TreeNode currentLevelNode = nodes.get(level).get(allLevelOrder[2][level]);
+				if (i < currentLevelNode.val) {
+					TreeNode iNode = nodes.get(level).get(allLevelOrder[1][i]);
+					swapNodeValues(iNode,currentLevelNode);
+					swapOrderInSameLevel(allLevelOrder,iNode.val,currentLevelNode.val);
+					minOps++;
+				}
+				allLevelOrder[2][level]++;
+			}
+		}
+		return minOps;
+	}
+	int minimumOperations(TreeNode root) {
+		if (root.left == root.right) {
+			return 0;
+		}
+		int[][] allLevelOrder = new int[3][100_001];
+		allLevelOrder[0][0] = 100_001;
+		List<List<TreeNode>> nodes = new ArrayList<>();
+		traverseTree(root,1,nodes,allLevelOrder);
+		return getMinNumberOfOperations(nodes,allLevelOrder);
+	}
+	void swapNodeValues(TreeNode lowValueNode, TreeNode highValueNode) {
+		int temp = highValueNode.val;
+		highValueNode.val = lowValueNode.val;
+		lowValueNode.val = temp;
+	}
+	void swapOrderInSameLevel(int[][] allLevelOrder, int iNode, int currentLevelNode) {
+		int temp = allLevelOrder[1][iNode];
+		allLevelOrder[1][iNode] = allLevelOrder[1][currentLevelNode];
+		allLevelOrder[1][currentLevelNode] = temp;
+	}
+	void traverseTree(TreeNode node, int level, List<List<TreeNode>> nodes, int[][] allLevelOrder) {
+		if (node == null) {
+			return;
+		}
+		if (level >= nodes.size()) {
+			nodes.add(new ArrayList<>());
+		}
+		List<TreeNode> levelNodes = nodes.get(level - 1);
+		allLevelOrder[0][node.val] = level - 1;
+		allLevelOrder[1][node.val] = levelNodes.size();
+		allLevelOrder[0][0] = Math.min(allLevelOrder[0][0],node.val);
+		allLevelOrder[1][0] = Math.max(allLevelOrder[1][0],node.val);
+		levelNodes.add(node);
+		traverseTree(node.left,level + 1,nodes,allLevelOrder);
+		traverseTree(node.right,level + 1,nodes,allLevelOrder);
+	}
+}

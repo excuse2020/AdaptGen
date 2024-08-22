@@ -1,0 +1,26 @@
+class Solution {
+	long calcRange(Deque<Integer> stack, int i, int[] nums) {
+		int index = stack.pollFirst();
+		int left = index - stack.peekFirst();
+		int right = i - index;
+		return ((left * right) * (long) nums[index]);
+	}
+	long subArrayRanges(int[] nums) {
+		Deque<Integer> minStack = new ArrayDeque<>();
+		Deque<Integer> maxStack = new ArrayDeque<>();
+		long result = 0;
+		minStack.offerFirst(-1);
+		maxStack.offerFirst(-1);
+		for (int i = 0; i <= nums.length; i++) {
+			while (minStack.peekFirst() != -1 && (i == nums.length || nums[i] < nums[minStack.peekFirst()])) {
+				result -= calcRange(minStack,i,nums);
+			}
+			minStack.offerFirst(i);
+			while (maxStack.peekFirst() != -1 && (i == nums.length || nums[i] > nums[maxStack.peekFirst()])) {
+				result += calcRange(maxStack,i,nums);
+			}
+			maxStack.offerFirst(i);
+		}
+		return result;
+	}
+}

@@ -1,0 +1,36 @@
+class Solution {
+	int[] LIS(int[] arr) {
+		int[] tails = new int[arr.length];
+		tails[0] = arr[0];
+		int end = 0;
+		int[] maxLen = new int[arr.length];
+		Arrays.fill(maxLen,1);
+		for (int i = 1; i < arr.length; i++) {
+			int left = 0;
+			int right = end + 1;
+			while (left < right) {
+				int mid = left + (right - left) / 2;
+				if (arr[i] > tails[mid]) {
+					left = mid + 1;
+				} 
+				else {
+					right = mid;
+				}
+			}
+			tails[left] = arr[i];
+			if (left == end + 1) {
+				end++;
+			}
+			if (left + 1 > maxLen[i]) {
+				maxLen[i] = left + 1;
+			}
+		}
+		int[] res = new int[end + 1];
+		for (int i = arr.length - 1, j = res.length; j > 0; i--) {
+			if (maxLen[i] == j) {
+				res[--j] = arr[i];
+			}
+		}
+		return res;
+	}
+}

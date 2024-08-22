@@ -1,0 +1,47 @@
+class Solution {
+	int n;
+	int findNextElement(List<List<Integer>> list, int startIndex, int currJobEnd) {
+		int l = startIndex + 1;
+		int r = n - 1;
+		int result = n;
+		while (l <= r) {
+			int mid = l + (r - l) / 2;
+			if (list.get(mid).get(0) >= currJobEnd) {
+				result = mid;
+				r = mid - 1;
+			} 
+			else {
+				l = mid + 1;
+			}
+		}
+		return result;
+	}
+	int findProfit(List<List<Integer>> list, int index, int[] dp) {
+		if (index == n) {
+			return 0;
+		}
+		if (dp[index] != -1) {
+			return dp[index];
+		}
+		int nextEleIndex = findNextElement(list,index,list.get(index).get(1));
+		int take = findProfit(list,nextEleIndex,dp) + list.get(index).get(2);
+		int notTake = findProfit(list,index + 1,dp);
+		return dp[index] = Integer.max(take,notTake);
+	}
+	int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
+		n = startTime.length;
+		List<List<Integer>> list = new ArrayList<>(n);
+		for (int i = 0; i < n; i++) {
+			List newList = new ArrayList<>();
+			newList.add(startTime[i]);
+			newList.add(endTime[i]);
+			newList.add(profit[i]);
+			list.add(newList);
+		}
+		Comparator<List<Integer>> comp = (a, b) -> {a.get(0) - b.get(0)};
+		Collections.sort(list,comp);
+		int[] dp = new int[n];
+		Arrays.fill(dp,-1);
+		return findProfit(list,0,dp);
+	}
+}

@@ -1,0 +1,36 @@
+class Solution {
+	int minRefuelStops(int target, int startFuel, int[][] stations) {
+		int ns = stations.length;
+		if (ns == 0) {
+			if (startFuel >= target) {
+				return 0;
+			}
+			return -1;
+		}
+		long dp = new long[ns][ns + 1];
+		long max = (long) 1e9;
+		for (long[] d: dp) {	
+			Arrays.fill(d,max);
+		}
+		dp[ns - 1][0] = target - stations[ns - 1][0];
+		dp[ns - 1][1] = (target - stations[ns - 1][0]) - stations[ns - 1][1];
+		if (dp[ns - 1][1] < 0) {
+			dp[ns - 1][1] = 0;
+		}
+		for (int i = ns - 2; i >= 0; i--) {
+			dp[i][0] = target - stations[i][0];
+			for (int j = 1; j <= ns - i; j++) {
+				dp[i][j] = Math.min(stations[i + 1][0] - stations[i][0] + dp[i + 1][j - 1],stations[i + 1][0] - stations[i][0] + dp[i + 1][j]);
+				if (dp[i][j] < 0) {
+					dp[i][j] = 0;
+				}
+			}
+		}
+		for (int i = 0; i <= ns; i++) {
+			if (dp[0][i] <= startFuel - (stations[0][0])) {
+				return i;
+			}
+		}
+		return -1;
+	}
+}

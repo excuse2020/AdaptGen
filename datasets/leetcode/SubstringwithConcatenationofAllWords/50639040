@@ -1,0 +1,40 @@
+class Solution {
+	boolean containsFullDictionary(StringBuilder currentWord, Map<String, Integer> dictionary, int simpleWordLength) {
+		int start = 0;
+		int end = simpleWordLength;
+		while (start < currentWord.length()) {
+			String word = currentWord.substring(start,end);
+			if (dictionary.containsKey(word) && dictionary.get(word) > 0) {
+				dictionary.merge(word,-1,);
+			} 
+			else {
+				return false;
+			}
+			start += simpleWordLength;
+			end += simpleWordLength;
+		}
+		return true;
+	}
+	List<Integer> findSubstring(String s, String[] words) {
+		Map<String, Integer> dictionary = new HashMap<>();
+		Arrays.stream(words).forEach((word) -> {dictionary.merge(word,1,)});
+		int simpleWordLength = words[0].length();
+		int concatenatedWordLength = simpleWordLength * words.length;
+		if (s.length() < concatenatedWordLength) {
+			return new ArrayList<>();
+		}
+		StringBuilder currentWord = new StringBuilder(s.substring(0,concatenatedWordLength));
+		List<Integer> result = new ArrayList<>();
+		for (int i = concatenatedWordLength; i < s.length(); i++) {
+			if (containsFullDictionary(currentWord,new HashMap<>(dictionary),simpleWordLength)) {
+				result.add(i - concatenatedWordLength);
+			}
+			currentWord.deleteCharAt(0);
+			currentWord.append(s.charAt(i));
+		}
+		if (containsFullDictionary(currentWord,new HashMap<>(dictionary),simpleWordLength)) {
+			result.add(s.length() - concatenatedWordLength);
+		}
+		return result;
+	}
+}

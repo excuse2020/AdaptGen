@@ -1,0 +1,44 @@
+class Solution {
+	int[] nextSmaller(int[] arr) {
+		Stack<Integer> stack = new Stack();
+		stack.push(arr.length);
+		int[] next = new int[arr.length];
+		for (int i = arr.length - 1; i >= 0; i--) {
+			while (stack.peek() != arr.length && arr[stack.peek()] > arr[i]) {
+				stack.pop();
+			}
+			next[i] = stack.peek();
+			stack.push(i);
+		}
+		return next;
+	}
+	int[] prevSmaller(int[] arr) {
+		Stack<Integer> stack = new Stack();
+		stack.push(-1);
+		int[] prev = new int[arr.length];
+		for (int i = 0; i < arr.length; i++) {
+			while (stack.peek() != -1 && arr[stack.peek()] >= arr[i]) {
+				stack.pop();
+			}
+			prev[i] = stack.peek();
+			stack.push(i);
+		}
+		return prev;
+	}
+	int sumSubarrayMins(int[] arr) {
+		int MOD = 1000000007;
+		int[] prev = prevSmaller(arr);
+		int[] next = nextSmaller(arr);
+		long ans = 0;
+		for (int i = 0; i < arr.length; i++) {
+			int left = prev[i];
+			int right = next[i];
+			left = i - left;
+			right = right - i;
+			int totalSubArrays = ((left + right) % MOD + (left * right) % MOD) % MOD;
+			ans += (long) totalSubArrays * arr[i] % MOD;
+			ans %= MOD;
+		}
+		return (int) ans;
+	}
+}

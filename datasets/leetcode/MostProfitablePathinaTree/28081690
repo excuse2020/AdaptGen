@@ -1,0 +1,76 @@
+class Solution {
+	Map<Integer, Integer> bobMap = new HashMap();
+	int mres = Integer.MIN_VALUE;
+	int step = 0;
+	boolean visited;
+	Integer aliceLeaf(Map<Integer, List<Integer>> routes, int alice, int[] amount, int astep, int res) {
+		List<Integer> ed = routes.get(alice);
+		visited[alice] = true;
+		int max = res;
+		int cmax = Integer.MIN_VALUE;
+		astep++;
+		for (Integer x: ed) {	
+			if (visited[x]) {
+				continue;
+			}
+			max = res;
+			if (bobMap.containsKey(x) && bobMap.get(x) == astep) {
+				max += amount[x] / 2;
+			} 
+			else if (bobMap.containsKey(x) && bobMap.get(x) > astep) {
+				max += amount[x];
+			} 
+			else if (bobMap.containsKey(x) && bobMap.get(x) < astep) {
+				max += 0;
+			} 
+			else {
+				max += amount[x];
+			}
+			max = aliceLeaf(routes,x,amount,astep,max);
+			cmax = Math.max(max,cmax);
+		}
+		mres = Math.max(max,mres);
+		visited[alice] = false;
+		return max;
+	}
+	Boolean bobRoot(Map<Integer, List<Integer>> routes, int bob) {
+		visited[bob] = true;
+		List<Integer> ed = routes.get(bob);
+		for (Integer x: ed) {	
+			if (visited[x]) {
+				continue;
+			}
+			bobMap.put(x,step + 1);
+			step++;
+			if (x == 0) {
+				return true;
+			}
+			boolean res = bobRoot(routes,x);
+			if (res) {
+				return true;
+			}
+			bobMap.remove(x);
+			step--;
+		}
+		return false;
+	}
+	int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+		Map<Integer, List<Integer>> routes = new HashMap();
+		visited = new boolean[amount.length];
+		for (int i = 0; i < edges.length; i++) {
+			List<Integer> l1 = routes.getOrDefault(edges[i][0],new ArrayList());
+			List<Integer> l2 = routes.getOrDefault(edges[i][1],new ArrayList());
+			l1.add(edges[i][1]);
+			l2.add(edges[i][0]);
+			routes.put(edges[i][0],l1);
+			routes.put(edges[i][1],l2);
+		}
+		bobRoot(routes,bob);
+		bobMap.put(bob,0);
+		int alice = 0;
+		int res = amount[alice];
+		visited = new boolean[amount.length];
+		aliceLeaf(routes,0,amount,0,res);
+		return mres;
+	}
+}

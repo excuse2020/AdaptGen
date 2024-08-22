@@ -1,0 +1,38 @@
+class Solution {
+	boolean findNodeRouter(TreeNode node, int value, StringBuilder str) {
+		if (node.val == value) {
+			return true;
+		}
+		if (node.left != null && findNodeRouter(node.left,value,str)) {
+			str.append("L");
+		} 
+		else if (node.right != null && findNodeRouter(node.right,value,str)) {
+			str.append("R");
+		}
+		return str.length() > 0;
+	}
+	String getDirections(TreeNode root, int startValue, int destValue) {
+		StringBuilder startStr = new StringBuilder();
+		StringBuilder destStr = new StringBuilder();
+		findNodeRouter(root,startValue,startStr);
+		findNodeRouter(root,destValue,destStr);
+		startStr.reverse();
+		destStr.reverse();
+		for (int i = 0; i < startStr.length() && i < destStr.length(); ) {
+			if (startStr.charAt(i) == destStr.charAt(i)) {
+				startStr.deleteCharAt(i);
+				destStr.deleteCharAt(i);
+			} 
+			else {
+				break;
+			}
+		}
+		int len = startStr.length();
+		String res = destStr.toString();
+		while (len > 0) {
+			res = "U" + res;
+			len--;
+		}
+		return res;
+	}
+}

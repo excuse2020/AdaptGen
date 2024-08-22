@@ -1,0 +1,77 @@
+class Solution {
+	int better(List<Integer> nums) {
+		Collections.sort(nums);
+		int happyStudents = 0;
+		int count = 0;
+		if (nums.get(0) > 0) {
+			happyStudents++;
+		}
+		int left = 0, right = 1;
+		while (right < nums.size()) {
+			count++;
+			if (!nums.get(left).equals(nums.get(right))) {
+				if (count > nums.get(left) && count < nums.get(right)) {
+					happyStudents++;
+				}
+			}
+			left++;
+			right++;
+		}
+		count++;
+		if (count > nums.get(nums.size() - 1)) {
+			happyStudents++;
+		}
+		return happyStudents;
+	}
+	int brute(List<Integer> nums) {
+		Map<Integer, Integer> countMap = new HashMap<>();
+		for (int num: nums) {	
+			countMap.put(num,countMap.getOrDefault(num,0) + 1);
+		}
+		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {a[0] - b[0]});
+		for (Map.Entry<Integer, Integer> entry: countMap.entrySet()) {	
+			int key = entry.getKey();
+			int count = entry.getValue();
+			pq.offer(new int{key, count});
+		}
+		int happyStudents = 0;
+		int count = 0;
+		if (count < pq.peek()[0]) {
+			happyStudents++;
+		}
+		while (!pq.isEmpty()) {
+			int[] curr = pq.poll();
+			count += curr[1];
+			if (pq.size() > 0 && (count > curr[0] && count < pq.peek()[0])) {
+				happyStudents++;
+			} 
+			else if (pq.size() == 0 && count > curr[0]) {
+				happyStudents++;
+			}
+		}
+		return happyStudents;
+	}
+	int countWays(List<Integer> nums) {
+		return optimal(nums);
+	}
+	int optimal(List<Integer> nums) {
+		int n = nums.size();
+		int[] freq = new int[n];
+		for (int num: nums) {	
+			freq[num]++;
+		}
+		int happyStudents = 0;
+		int count = 0;
+		if (freq[0] == 0) {
+			happyStudents++;
+		}
+		for (int i = 1; i < n; i++) {
+			count += freq[i - 1];
+			if (count == i && freq[i] == 0) {
+				happyStudents++;
+			}
+		}
+		happyStudents++;
+		return happyStudents;
+	}
+}

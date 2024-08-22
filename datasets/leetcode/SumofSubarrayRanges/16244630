@@ -1,0 +1,87 @@
+class Solution {
+	int[] findNextLargestLeftIndex(int[] nums) {
+		int[] result = new int[nums.length];
+		Stack<Integer> increasingStack = new Stack<>();
+		for (int index = 0; index < nums.length; index++) {
+			while (!increasingStack.isEmpty() && nums[increasingStack.peek()] < nums[index]) {
+				increasingStack.pop();
+			}
+			if (increasingStack.isEmpty()) {
+				result[index] = -1;
+			} 
+			else {
+				result[index] = increasingStack.peek();
+			}
+			increasingStack.push(index);
+		}
+		return result;
+	}
+	int[] findNextLargestRightIndex(int[] nums) {
+		int[] result = new int[nums.length];
+		Stack<Integer> increasingStack = new Stack<>();
+		for (int index = nums.length - 1; index >= 0; index--) {
+			while (!increasingStack.isEmpty() && nums[increasingStack.peek()] <= nums[index]) {
+				increasingStack.pop();
+			}
+			if (increasingStack.isEmpty()) {
+				result[index] = nums.length;
+			} 
+			else {
+				result[index] = increasingStack.peek();
+			}
+			increasingStack.push(index);
+		}
+		return result;
+	}
+	int[] findNextSmallestLeftIndex(int[] nums) {
+		int[] result = new int[nums.length];
+		Stack<Integer> decreasingStack = new Stack<>();
+		for (int index = 0; index < nums.length; index++) {
+			while (!decreasingStack.isEmpty() && nums[decreasingStack.peek()] > nums[index]) {
+				decreasingStack.pop();
+			}
+			if (decreasingStack.isEmpty()) {
+				result[index] = -1;
+			} 
+			else {
+				result[index] = decreasingStack.peek();
+			}
+			decreasingStack.push(index);
+		}
+		return result;
+	}
+	int[] findNextSmallestRightIndex(int[] nums) {
+		int[] result = new int[nums.length];
+		Stack<Integer> decreasingStack = new Stack<>();
+		for (int index = nums.length - 1; index >= 0; index--) {
+			while (!decreasingStack.isEmpty() && nums[decreasingStack.peek()] >= nums[index]) {
+				decreasingStack.pop();
+			}
+			if (decreasingStack.isEmpty()) {
+				result[index] = nums.length;
+			} 
+			else {
+				result[index] = decreasingStack.peek();
+			}
+			decreasingStack.push(index);
+		}
+		return result;
+	}
+	long subArrayRanges(int[] nums) {
+		long result = 0;
+		int[] nextSmallestLeft = findNextSmallestLeftIndex(nums);
+		int[] nextSmallestRight = findNextSmallestRightIndex(nums);
+		int[] nextLargestLeft = findNextLargestLeftIndex(nums);
+		int[] nextLargestRight = findNextLargestRightIndex(nums);
+		for (int index = 0; index < nums.length; index++) {
+			long minleftCount = (index - nextSmallestLeft[index]) - 1;
+			long minrightCount = (nextSmallestRight[index] - index) - 1;
+			long maxleftCount = (index - nextLargestLeft[index]) - 1;
+			long maxrightCount = (nextLargestRight[index] - index) - 1;
+			long totalMinCount = minleftCount + minrightCount;
+			long totalMaxCount = maxleftCount + maxrightCount;
+			result += (totalMaxCount - totalMinCount) * nums[index];
+		}
+		return result;
+	}
+}

@@ -1,0 +1,23 @@
+class Solution {
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		Map<Integer, Integer> map = new HashMap();
+		for (int i = 0; i < inorder.length; i++) {
+			map.put(inorder[i],i);
+		}
+		return splitTree(inorder,postorder,map,postorder.length - 1,0,inorder.length - 1);
+	}
+	TreeNode splitTree(int[] inorder, int[] postorder, Map<Integer, Integer> map, int rootIndex, int left, int right) {
+		if (rootIndex < 0 || left > right) {
+			return null;
+		}
+		TreeNode tree = new TreeNode(postorder[rootIndex]);
+		int mid = map.get(postorder[rootIndex]);
+		if (mid > left) {
+			tree.left = splitTree(inorder,postorder,map,rootIndex - right + mid - 1,left,mid - 1);
+		}
+		if (mid < right) {
+			tree.right = splitTree(inorder,postorder,map,rootIndex - 1,mid + 1,right);
+		}
+		return tree;
+	}
+}

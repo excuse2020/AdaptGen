@@ -1,0 +1,33 @@
+class Solution {
+	int[] cycleLengthQueries(int n, int[][] queries) {
+		int[] res = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			int min = Math.min(queries[i][0],queries[i][1]);
+			int max = Math.max(queries[i][0],queries[i][1]);
+			int l1 = findLevel(min);
+			int l2 = findLevel(max);
+			int edges = 0;
+			while (l1 != l2) {
+				max /= 2;
+				l2--;
+				edges++;
+			}
+			while (min != max) {
+				min /= 2;
+				max /= 2;
+				edges += 2;
+			}
+			res[i] = edges + 1;
+		}
+		return res;
+	}
+	int findLevel(int n) {
+		int level = 0;
+		int max = 1;
+		while (n >= max) {
+			max *= 2;
+			level++;
+		}
+		return level;
+	}
+}

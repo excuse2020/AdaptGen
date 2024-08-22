@@ -1,0 +1,25 @@
+class Solution {
+	int ans = Integer.MAX_VALUE;
+	int[][] dp = new int[510][510];
+	int maxSatisfaction(int[] satisfaction) {
+		ans = Integer.MAX_VALUE;
+		Arrays.sort(satisfaction);
+		for (int i = 0; i < 510; i++) {
+			Arrays.fill(dp[i],Integer.MIN_VALUE);
+		}
+		ans = solve(satisfaction,0,1);
+		return ans == Integer.MAX_VALUE ? 0 : ans;
+	}
+	int solve(int[] satisfaction, int ind, int count) {
+		if (ind == satisfaction.length) {
+			return 0;
+		}
+		if (dp[ind][count] != Integer.MIN_VALUE) {
+			return dp[ind][count];
+		}
+		int inc = 0, dis = 0;
+		inc = (satisfaction[ind] * count) + solve(satisfaction,ind + 1,count + 1);
+		dis = solve(satisfaction,ind + 1,count);
+		return dp[ind][count] = (int) Math.max(inc,dis);
+	}
+}

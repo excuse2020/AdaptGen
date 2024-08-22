@@ -1,0 +1,61 @@
+class Solution {
+	int[] arr;
+	boolean isGood;
+	int lastMax;
+	boolean canBePartitioned(int num, int mult) {
+		String sMult = String.valueOf(mult);
+		goRecursive(num,sMult,"",0,1,1,new ArrayList<>());
+		return isGood;
+	}
+	void goRecursive(int num, String sMult, String curr, int idx, int start, int size, List<Integer> list) {
+		if (isGood) {
+			return;
+		}
+		if (idx >= sMult.length()) {
+			int sum = 0;
+			int listSize = list.size();
+			list.add(Integer.parseInt(curr));
+			for (int n: list) {	
+				sum += n;
+			}
+			if (sum == num) {
+				isGood = true;
+			}
+			list.remove(listSize);
+			return;
+		}
+		if (curr.length() == size) {
+			int listSize = list.size();
+			list.add(Integer.parseInt(curr));
+			goRecursive(num,sMult,"",idx,1,size,list);
+			list.remove(listSize);
+		} 
+		else {
+			for (int i = start; i <= sMult.length(); i++) {
+				if (idx < sMult.length()) {
+					goRecursive(num,sMult,curr + sMult.charAt(idx),idx + 1,i,i,list);
+				}
+			}
+		}
+	}
+	int punishmentNumber(int n) {
+		isGood = false;
+		if (arr == null) {
+			arr = new int[1001];
+			arr[1] = 1;
+			lastMax = 1;
+			for (int i = lastMax + 1; i <= 1000; i++) {
+				int mult = i * i;
+				if (canBePartitioned(i,mult)) {
+					isGood = false;
+					arr[i] = arr[i - 1] + mult;
+					lastMax = i;
+				} 
+				else {
+					arr[i] = arr[i - 1];
+				}
+			}
+		}
+		return arr[n];
+	}
+}

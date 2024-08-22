@@ -1,0 +1,26 @@
+class Solution {
+	Map<Integer, Integer> map = new HashMap<>();
+	void map(int[] mapping, int[] nums) {
+		for (int num: nums) {	
+			int temp = 0;
+			if (num == 0) {
+				temp = mapping[0];
+				map.put(num,temp);
+			} 
+			else {
+				int i = 0;
+				int temp2 = num;
+				while (num > 0) {
+					temp += (mapping[num % 10]) * Math.pow(10,i);
+					num /= 10;
+					i++;
+				}
+				map.put(temp2,temp);
+			}
+		}
+	}
+	int[] sortJumbled(int[] mapping, int[] nums) {
+		map(mapping,nums);
+		return Arrays.stream(nums).boxed().sorted((a, b) -> {map.get(a) != map.get(b) ? map.get(a) - map.get(b) : 0}).mapToInt((n) -> {n}).toArray();
+	}
+}

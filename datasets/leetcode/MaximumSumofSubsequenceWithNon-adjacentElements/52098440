@@ -1,0 +1,29 @@
+class Solution {
+	long maxSubSeq(int[] nums) {
+		int n = nums.length;
+		if (n == 0) {
+			return 0;
+		}
+		if (n == 1) {
+			return Math.max(0,nums[0]);
+		}
+		long prev2 = Math.max(0,nums[0]);
+		long prev1 = Math.max(prev2,nums[1]);
+		for (int i = 2; i < n; i++) {
+			long curr = Math.max(prev1,prev2 + nums[i]);
+			prev2 = prev1;
+			prev1 = curr;
+		}
+		return prev1;
+	}
+	int maximumSumSubsequence(int[] nums, int[][] q) {
+		long ans = 0;
+		int MOD = 1000000007;
+		for (int i = 0; i < q.length; i++) {
+			nums[q[i][0]] = q[i][1];
+			ans += maxSubSeq(nums);
+			ans %= MOD;
+		}
+		return (int) ans;
+	}
+}

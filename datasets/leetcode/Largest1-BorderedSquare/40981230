@@ -1,0 +1,57 @@
+class Solution {
+	int largest1BorderedSquare(int[][] grid) {
+		boolean exist1s = false;
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				if (grid[i][j] == 1) {
+					exist1s = true;
+					break;
+				}
+			}
+		}
+		if (!exist1s) {
+			return 0;
+		}
+		int row = grid.length;
+		int col = grid[0].length;
+		int max = 0;
+		int[][] dp1 = new int[grid.length][grid[0].length];
+		for (int i = 0; i < row; i++) {
+			dp1[i][col - 1] = grid[i][col - 1] == 1 ? 1 : 0;
+			for (int j = col - 2; j >= 0; j--) {
+				if (grid[i][j] == 1) {
+					dp1[i][j] = dp1[i][j + 1] + 1;
+				} 
+				else {
+					dp1[i][j] = 0;
+				}
+			}
+		}
+		int[][] dp2 = new int[row][col];
+		for (int i = 0; i < col; i++) {
+			dp2[row - 1][i] = grid[row - 1][i] == 1 ? 1 : 0;
+			for (int j = row - 2; j >= 0; j--) {
+				if (grid[j][i] == 1) {
+					dp2[j][i] = dp2[j + 1][i] + 1;
+				} 
+				else {
+					dp2[j][i] = 0;
+				}
+			}
+		}
+		for (int r = 0; r < row; r++) {
+			for (int c = 0; c < col; c++) {
+				if (grid[r][c] == 1) {
+					int minLen = Math.min(dp1[r][c],dp2[r][c]);
+					for (int k = minLen; k > 0; k--) {
+						if (dp2[r][c + k - 1] >= k && dp1[r + k - 1][c] >= k) {
+							int count = k * k;
+							max = Math.max(max,count);
+						}
+					}
+				}
+			}
+		}
+		return max;
+	}
+}

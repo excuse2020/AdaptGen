@@ -1,0 +1,47 @@
+class Solution {
+	int getLongestPalindrome(String A, int n) {
+		StringBuffer S = new StringBuffer("#");
+		for (int i = 0; i < n; i++) {
+			S.append(A.charAt(i));
+			S.append("#");
+		}
+		int ans = 0;
+		int R = 0;
+		int L = 0;
+		int Mid = 0;
+		int[] Len = new int[S.length()];
+		for (int i = 0; i < S.length(); i++) {
+			if (i >= R) {
+				int len = 0;
+				while ((i - len >= 0 && i + len < S.length()) && S.charAt(i - len) == S.charAt(i + len)) {
+					len++;
+				}
+				Len[i] = len - 1;
+			} 
+			else {
+				int i_ = Mid - (i - Mid);
+				int L_ = i_ - Len[i_];
+				if (L_ > L) {
+					Len[i] = Len[i_];
+				} 
+				else if (L_ < L) {
+					Len[i] = R - i;
+				} 
+				else {
+					int len = R - i + 1;
+					while ((i - len >= 0 && i + len < S.length()) && S.charAt(i - len) == S.charAt(i + len)) {
+						len++;
+					}
+					Len[i] = len - 1;
+				}
+			}
+			if (i + Len[i] > R) {
+				Mid = i;
+				R = i + Len[i];
+				L = i - Len[i];
+			}
+			ans = Math.max(ans,Len[i] * 2 + 1);
+		}
+		return ans / 2;
+	}
+}

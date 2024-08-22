@@ -1,0 +1,66 @@
+class Solution {
+	boolean isIpV4(String ip) {
+		if (ip.indexOf('.') == -1) {
+			return false;
+		}
+		String[] parts = ip.split("\\.");
+		if (parts.length != 4) {
+			return false;
+		}
+		for (int i = 0; i < parts.length; i++) {
+			String part = parts[i];
+			if (part.length() == 0) {
+				return false;
+			}
+			if (part.length() > 3 || (part.charAt(0) == '0' && part.length() > 1)) {
+				return false;
+			}
+			int num = 0;
+			for (int j = 0; j < part.length(); j++) {
+				char ch = part.charAt(j);
+				if (ch < '0' || ch > '9') {
+					return false;
+				}
+				num = num * 10 + (int) (ch - '0');
+			}
+			if (num < 0 || num > 255) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean isIpV6(String ip) {
+		if (ip.indexOf(':') == -1) {
+			return false;
+		}
+		String[] parts = ip.split(":",-1);
+		if (parts.length != 8) {
+			return false;
+		}
+		for (int i = 0; i < parts.length; i++) {
+			String part = parts[i];
+			if (part.length() == 0 || part.length() > 4) {
+				return false;
+			}
+			for (int j = 0; j < part.length(); j++) {
+				char ch = part.charAt(j);
+				if (!((ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F'))) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	String solve(String IP) {
+		if (IP == null) {
+			return "Neither";
+		}
+		if (isIpV4(IP)) {
+			return "IPv4";
+		}
+		if (isIpV6(IP)) {
+			return "IPv6";
+		}
+		return "Neither";
+	}
+}

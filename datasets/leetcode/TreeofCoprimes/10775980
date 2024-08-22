@@ -1,0 +1,68 @@
+class Solution {
+	int[] ans;
+	int[][] dd;
+	int[] depths;
+	int[] last;
+	void fill(Map<Integer, List<Integer>> map, int i, int i0, int[] nums, int depth) {
+		ans[i] = search1(nums[i]);
+		int tmp = last[nums[i]];
+		int tmp1 = depths[nums[i]];
+		last[nums[i]] = i;
+		depths[nums[i]] = depth;
+		ArrayList<Integer> list = (ArrayList<Integer>) map.get(i);
+		for (int j: list) {	
+			if (j == i0) {
+				continue;
+			}
+			fill(map,j,i,nums,depth + 1);
+		}
+		last[nums[i]] = tmp;
+		depths[nums[i]] = tmp1;
+	}
+	int gcd(int i, int j) {
+		int d = Math.min(i,j);
+		while (d > 1 && (i % d > 0 || j % d > 0)) {
+			d--;
+		}
+		return d;
+	}
+	int[] getCoprimes(int[] nums, int[][] edges) {
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int[] edge: edges) {	
+			map.computeIfAbsent(edge[0],(s) -> {new ArrayList<>()}).add(edge[1]);
+			map.computeIfAbsent(edge[1],(s) -> {new ArrayList<>()}).add(edge[0]);
+		}
+		int maxNum;
+		maxNum = nums[0];
+		for (int i = 1; i < nums.length; i++) {
+			if (nums[i] > maxNum) {
+				maxNum = nums[i];
+			}
+		}
+		dd = new int[maxNum + 1][maxNum + 1];
+		for (int i = 1; i < dd.length; i++) {
+			for (int j = 1; j < dd[i].length; j++) {
+				dd[i][j] = gcd(i,j);
+			}
+		}
+		last = new int[maxNum + 1];
+		Arrays.fill(last,-1);
+		depths = new int[maxNum + 1];
+		Arrays.fill(depths,-1);
+		ans = new int[nums.length];
+		fill(map,0,-1,nums,0);
+		return ans;
+	}
+	int search1(int n1) {
+		int bestIndex = 0;
+		for (int n2 = 1; n2 < last.length; n2++) {
+			if (depths[n2] == -1) {
+				continue;
+			}
+			if (dd[n1][n2] == 1 && depths[n2] > depths[bestIndex]) {
+				bestIndex = n2;
+			}
+		}
+		return last[bestIndex];
+	}
+}

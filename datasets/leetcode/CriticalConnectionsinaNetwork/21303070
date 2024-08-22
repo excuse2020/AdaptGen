@@ -1,0 +1,63 @@
+class Solution {
+	int time = 0;
+	void bridgeUtil(int u, boolean visited, int disc, int low, int parent, HashMap<Integer, ArrayList<Integer>> h, List<List<Integer>> a) {
+		visited[u] = true;
+		disc[u] = low[u] = ++time;
+		Iterator<Integer> i = h.get(u).iterator();
+		while (i.hasNext()) {
+			int v = i.next();
+			if (!visited[v]) {
+				parent[v] = u;
+				bridgeUtil(v,visited,disc,low,parent,h,a);
+				low[u] = Math.min(low[u],low[v]);
+				if (low[v] > disc[u]) {
+					List<Integer> p = new ArrayList<Integer>();
+					p.add(v);
+					p.add(u);
+					a.add(p);
+				}
+			} 
+			else if (v != parent[u]) {
+				low[u] = Math.min(low[u],disc[v]);
+			}
+		}
+	}
+	List<List<Integer>> criticalConnections(int V, List<List<Integer>> connections) {
+		int n = connections.size();
+		HashMap<Integer, ArrayList<Integer>> h = new HashMap<Integer, ArrayList<Integer>>();
+		for (int i = 0; i < n; i++) {
+			int a2 = connections.get(i).get(0);
+			int b = connections.get(i).get(1);
+			if (h.containsKey(a2)) {
+				h.get(a2).add(b);
+			} 
+			else {
+				ArrayList<Integer> a1 = new ArrayList<Integer>();
+				a1.add(b);
+				h.put(a2,a1);
+			}
+			int cg = a2;
+			a2 = b;
+			b = cg;
+			if (h.containsKey(a2)) {
+				h.get(a2).add(b);
+			} 
+			else {
+				ArrayList<Integer> a1 = new ArrayList<Integer>();
+				a1.add(b);
+				h.put(a2,a1);
+			}
+		}
+		boolean visited = new boolean[V];
+		int disc = new int[V];
+		int low = new int[V];
+		int parent = new int[V];
+		List<List<Integer>> aa = new ArrayList<List<Integer>>();
+		for (int i = 0; i < V; i++) {
+			if (visited[i] == false) {
+				bridgeUtil(i,visited,disc,low,parent,h,aa);
+			}
+		}
+		return aa;
+	}
+}

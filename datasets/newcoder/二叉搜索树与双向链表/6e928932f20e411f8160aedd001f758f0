@@ -1,0 +1,36 @@
+class Solution {
+	TreeNode Convert(TreeNode pRootOfTree) {
+		Stack<TreeNode> t = new Stack<>();
+		Queue<TreeNode> q = new LinkedList<>();
+		TreeNode root = pRootOfTree;
+		TreeNode temp;
+		t.add(pRootOfTree);
+		if (pRootOfTree == null) {
+			return pRootOfTree;
+		}
+		while (!t.isEmpty()) {
+			if (pRootOfTree.left != null) {
+				temp = pRootOfTree;
+				pRootOfTree = pRootOfTree.left;
+				temp.left = null;
+				t.push(temp);
+			} 
+			else {
+				q.add(pRootOfTree);
+				if (pRootOfTree.right != null) {
+					t.push(pRootOfTree.right);
+				}
+				pRootOfTree = t.pop();
+			}
+		}
+		pRootOfTree = q.poll();
+		root = pRootOfTree;
+		while (!q.isEmpty()) {
+			temp = q.poll();
+			pRootOfTree.right = temp;
+			temp.left = pRootOfTree;
+			pRootOfTree = temp;
+		}
+		return root;
+	}
+}

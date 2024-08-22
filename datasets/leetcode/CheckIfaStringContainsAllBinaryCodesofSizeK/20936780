@@ -1,0 +1,31 @@
+class Solution {
+	boolean hasAllCodes(String s, int k) {
+		int sl = k;
+		int req_len = (int) Math.pow(2,k);
+		int need = req_len;
+		boolean arr = new boolean[req_len];
+		String tr = "";
+		while (k-- > 0) {
+			tr += "1";
+		}
+		int trim = Integer.parseInt(tr,2);
+		if (s.length() < sl) {
+			return false;
+		}
+		String cur = s.substring(0,sl);
+		int decimal = Integer.parseInt(cur,2);
+		arr[decimal] = true;
+		need--;
+		for (int i = sl; i < s.length(); i++) {
+			int digit = Character.getNumericValue(s.charAt(i));
+			decimal = ((decimal << 1) & trim) | digit;
+			if (arr[decimal] == false) {
+				arr[decimal] = true;
+				if (--need == 0) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+}

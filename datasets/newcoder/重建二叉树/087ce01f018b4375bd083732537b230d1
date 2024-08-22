@@ -1,0 +1,29 @@
+class Solution {
+	TreeNode reConstructBinaryTree(int[] pre, int[] vin) {
+		int len = pre.length;
+		if (len == 0) {
+			return null;
+		}
+		TreeNode ret = new TreeNode(pre[0]);
+		Stack<TreeNode> stack = new Stack<>();
+		TreeNode cur = ret;
+		int j = 0;
+		for (int i = 1; i < len; i++) {
+			if (cur.val != vin[j]) {
+				cur.left = new TreeNode(pre[i]);
+				stack.push(cur);
+				cur = cur.left;
+			} 
+			else {
+				j++;
+				while (!stack.isEmpty() && stack.peek().val == vin[j]) {
+					cur = stack.pop();
+					j++;
+				}
+				cur.right = new TreeNode(pre[i]);
+				cur = cur.right;
+			}
+		}
+		return ret;
+	}
+}

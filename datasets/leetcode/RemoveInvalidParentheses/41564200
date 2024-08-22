@@ -1,0 +1,48 @@
+class Solution {
+	char CLOSING;
+	char OPENING;
+	boolean isValid(String str) {
+		int balance = 0;
+		for (char ch: str.toCharArray()) {	
+			if (ch == OPENING) {
+				balance++;
+			} 
+			else if (ch == CLOSING) {
+				balance--;
+				if (balance < 0) {
+					return false;
+				}
+			}
+		}
+		return balance == 0;
+	}
+	List<String> removeInvalidParentheses(String str) {
+		List<String> result = new ArrayList<>();
+		Queue<String> queue = new LinkedList<>();
+		Set<String> visited = new HashSet<>();
+		queue.offer(str);
+		visited.add(str);
+		boolean found = false;
+		while (!queue.isEmpty()) {
+			String current = queue.poll();
+			if (isValid(current)) {
+				result.add(current);
+				found = true;
+			}
+			if (found) {
+				continue;
+			}
+			for (int i = 0; i < current.length(); i++) {
+				if (current.charAt(i) != OPENING && current.charAt(i) != CLOSING) {
+					continue;
+				}
+				String next = current.substring(0,i) + current.substring(i + 1);
+				if (!visited.contains(next)) {
+					queue.offer(next);
+					visited.add(next);
+				}
+			}
+		}
+		return result;
+	}
+}

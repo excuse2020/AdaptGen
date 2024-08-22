@@ -1,0 +1,51 @@
+class Solution {
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		boolean[] visited = new boolean[n];
+		Deque<Integer> dq = new ArrayDeque<>();
+		int[] indegree = new int[n];
+		for (int i = 0; i < n; i++) {
+			if (leftChild[i] != -1) {
+				indegree[leftChild[i]]++;
+			}
+			if (rightChild[i] != -1) {
+				indegree[rightChild[i]]++;
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			if (indegree[i] == 0) {
+				dq.addLast(i);
+			} 
+			else if (indegree[i] > 1) {
+				return false;
+			}
+		}
+		if (dq.isEmpty() || dq.size() > 1) {
+			return false;
+		}
+		while (!dq.isEmpty()) {
+			int curr = dq.pollFirst();
+			if (visited[curr]) {
+				return false;
+			}
+			visited[curr] = true;
+			if (leftChild[curr] != -1) {
+				indegree[leftChild[curr]]--;
+				if (!visited[leftChild[curr]] && indegree[leftChild[curr]] == 0) {
+					dq.addLast(leftChild[curr]);
+				}
+			}
+			if (rightChild[curr] != -1) {
+				indegree[rightChild[curr]]--;
+				if (!visited[rightChild[curr]] && indegree[rightChild[curr]] == 0) {
+					dq.addLast(rightChild[curr]);
+				}
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			if (!visited[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

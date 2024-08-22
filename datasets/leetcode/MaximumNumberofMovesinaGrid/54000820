@@ -1,0 +1,31 @@
+class Solution {
+	int fxn(int grid, int row, int col, int dp) {
+		int ans1 = 0;
+		int ans2 = 0;
+		int ans3 = 0;
+		if (dp[row][col] != 0) {
+			return dp[row][col];
+		}
+		if (isValid(grid,row - 1,col + 1) && grid[row][col] < grid[row - 1][col + 1]) {
+			ans1 = 1 + fxn(grid,row - 1,col + 1,dp);
+		}
+		if (isValid(grid,row,col + 1) && grid[row][col] < grid[row][col + 1]) {
+			ans2 = 1 + fxn(grid,row,col + 1,dp);
+		}
+		if (isValid(grid,row + 1,col + 1) && grid[row][col] < grid[row + 1][col + 1]) {
+			ans3 = 1 + fxn(grid,row + 1,col + 1,dp);
+		}
+		return dp[row][col] = Math.max(ans1,Math.max(ans2,ans3));
+	}
+	boolean isValid(int grid, int row, int col) {
+		return row >= 0 && row < grid.length && col >= 0 && col < grid[0].length;
+	}
+	int maxMoves(int[][] grid) {
+		int dp = new int[grid.length][grid[0].length];
+		int max = 0;
+		for (int i = 0; i < dp.length; i++) {
+			max = Math.max(max,fxn(grid,i,0,dp));
+		}
+		return max;
+	}
+}

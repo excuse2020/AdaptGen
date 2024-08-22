@@ -1,0 +1,32 @@
+class Solution {
+	int maxSumSubArray(int[] a, int k) {
+		int max = Integer.MIN_VALUE;
+		int prefixSum = 0;
+		TreeSet<Integer> set = new TreeSet();
+		set.add(0);
+		for (int i = 0; i < a.length; i++) {
+			prefixSum += a[i];
+			Integer target = set.ceiling(prefixSum - k);
+			if (target != null) {
+				max = Math.max(max,prefixSum - target);
+			}
+			set.add(prefixSum);
+		}
+		return max;
+	}
+	int maxSumSubmatrix(int[][] matrix, int k) {
+		int row = matrix.length;
+		int col = matrix[0].length;
+		int max = Integer.MIN_VALUE;
+		for (int i = 0; i < row; i++) {
+			int[] columnsum = new int[col];
+			for (int j = i; j < row; j++) {
+				for (int c = 0; c < col; c++) {
+					columnsum[c] += matrix[j][c];
+				}
+				max = Math.max(max,maxSumSubArray(columnsum,k));
+			}
+		}
+		return max;
+	}
+}

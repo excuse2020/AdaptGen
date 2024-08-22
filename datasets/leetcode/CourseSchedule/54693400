@@ -1,0 +1,40 @@
+class Solution {
+	boolean DFS(int st, ArrayList<ArrayList<Integer>> adj, boolean vis, boolean pathVis) {
+		vis[st] = true;
+		pathVis[st] = true;
+		for (int e: adj.get(st)) {	
+			if (!vis[e]) {
+				if (DFS(e,adj,vis,pathVis)) {
+					return true;
+				}
+			} 
+			else if (vis[e] && pathVis[e]) {
+				return true;
+			}
+		}
+		pathVis[st] = false;
+		return false;
+	}
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < numCourses; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int a: prerequisites) {	
+			adj.get(a[1]).add(a[0]);
+		}
+		return !isCyclic(numCourses,adj);
+	}
+	boolean isCyclic(int V, ArrayList<ArrayList<Integer>> adj) {
+		boolean vis = new boolean[V];
+		boolean pathVis = new boolean[V];
+		for (int i = 0; i < V; i++) {
+			if (!vis[i]) {
+				if (DFS(i,adj,vis,pathVis)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+}

@@ -1,0 +1,35 @@
+class Solution {
+	int getMin(TreeMap<Integer, Integer> tmap, int x) {
+		int sma = 0;
+		for (Integer val: tmap.keySet()) {	
+			if (val < 0) {
+				sma += tmap.get(val);
+			} 
+			else {
+				return 0;
+			}
+			if (sma >= x) {
+				return val;
+			}
+		}
+		return 0;
+	}
+	int[] getSubarrayBeauty(int[] nums, int k, int x) {
+		TreeMap<Integer, Integer> tmap = new TreeMap<>();
+		int n = nums.length;
+		int[] ans = new int[n - k + 1];
+		for (int i = 0; i < k; i++) {
+			tmap.put(nums[i],tmap.getOrDefault(nums[i],0) + 1);
+		}
+		ans[0] = getMin(tmap,x);
+		for (int i = k; i < n; i++) {
+			tmap.put(nums[i],tmap.getOrDefault(nums[i],0) + 1);
+			tmap.put(nums[i - k],tmap.getOrDefault(nums[i - k],0) - 1);
+			if (tmap.get(nums[i - k]) == 0) {
+				tmap.remove(nums[i - k]);
+			}
+			ans[i - k + 1] = getMin(tmap,x);
+		}
+		return ans;
+	}
+}

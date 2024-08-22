@@ -1,0 +1,28 @@
+class Solution {
+	int maxLen = -1;
+	int maxLength(List<String> arr) {
+		maxLength(arr,0,new HashSet<>());
+		return maxLen;
+	}
+	void maxLength(List<String> arr, int index, Set<Character> memo) {
+		if (index >= arr.size()) {
+			maxLen = Math.max(maxLen,memo.size());
+			return;
+		}
+		String curr = arr.get(index);
+		boolean isUnique = true;
+		Set<Character> tempSet = new HashSet<>();
+		for (char c: curr.toCharArray()) {	
+			if (memo.contains(c) || !tempSet.add(c)) {
+				isUnique = false;
+				break;
+			}
+		}
+		if (isUnique) {
+			memo.addAll(tempSet);
+			maxLength(arr,index + 1,memo);
+			memo.removeAll(tempSet);
+		}
+		maxLength(arr,index + 1,memo);
+	}
+}

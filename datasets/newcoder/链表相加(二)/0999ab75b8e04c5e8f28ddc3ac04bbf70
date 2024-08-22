@@ -1,0 +1,65 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		ListNode newHead = new ListNode(-1);
+		ListNode newTail = newHead;
+		ListNode pre1 = null;
+		ListNode pre2 = null;
+		ListNode cur1 = head1;
+		ListNode cur2 = head2;
+		while (cur1 != null) {
+			ListNode next1 = cur1.next;
+			cur1.next = pre1;
+			pre1 = cur1;
+			cur1 = next1;
+		}
+		while (cur2 != null) {
+			ListNode next2 = cur2.next;
+			cur2.next = pre2;
+			pre2 = cur2;
+			cur2 = next2;
+		}
+		int flag = 0;
+		while (pre1 != null && pre2 != null) {
+			int sum = pre1.val + pre2.val;
+			flag = sum / 10;
+			ListNode node = new ListNode(sum % 10);
+			newTail.next = node;
+			newTail = newTail.next;
+			pre1 = pre1.next;
+			pre2 = pre2.next;
+		}
+		if (pre1 == null && pre2 == null && flag != 0) {
+			ListNode temp = new ListNode(flag);
+			newTail.next = temp;
+		}
+		while (pre1 != null) {
+			int sum = pre1.val + flag;
+			flag = sum / 10;
+			ListNode node = new ListNode(sum % 10);
+			newTail.next = node;
+			newTail = newTail.next;
+			pre1 = pre1.next;
+		}
+		while (pre2 != null) {
+			int sum = pre2.val + flag;
+			flag = sum / 10;
+			ListNode node = new ListNode(sum % 10);
+			newTail.next = node;
+			newTail = newTail.next;
+			pre2 = pre2.next;
+		}
+		if (flag != 0) {
+			ListNode node = new ListNode(flag);
+			newTail.next = node;
+		}
+		ListNode pre3 = null;
+		ListNode cur3 = newHead.next;
+		while (cur3 != null) {
+			ListNode next3 = cur3.next;
+			cur3.next = pre3;
+			pre3 = cur3;
+			cur3 = next3;
+		}
+		return pre3;
+	}
+}

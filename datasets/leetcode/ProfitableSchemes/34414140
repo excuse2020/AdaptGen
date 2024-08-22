@@ -1,0 +1,34 @@
+class Solution {
+	int[][][] dp;
+	int modula = (int) Math.pow(10,9) + 7;
+	int helper(int i, int n, int minProfit, int[] group, int[] profit) {
+		if (i == group.length - 1) {
+			return group[i] <= n && profit[i] >= minProfit ? 1 : 0;
+		}
+		if (dp[i][n][minProfit] > -1) {
+			return dp[i][n][minProfit];
+		}
+		int count = helper(i + 1,n,minProfit,group,profit);
+		if (group[i] <= n) {
+			if (profit[i] >= minProfit) {
+				count++;
+			}
+			count += helper(i + 1,n - group[i],Math.max(0,minProfit - profit[i]),group,profit);
+		}
+		dp[i][n][minProfit] = count % modula;
+		return dp[i][n][minProfit];
+	}
+	int profitableSchemes(int n, int minProfit, int[] group, int[] profit) {
+		dp = new int[group.length][n + 1][minProfit + 1];
+		for (int[][] d1: dp) {	
+			for (int[] d2: d1) {	
+				Arrays.fill(d2,-1);
+			}
+		}
+		int count = helper(0,n,minProfit,group,profit);
+		if (minProfit == 0) {
+			count++;
+		}
+		return count;
+	}
+}

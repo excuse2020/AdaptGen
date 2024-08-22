@@ -1,0 +1,62 @@
+class Solution {
+	int solveUsingMem(int[] stoneValue, int i, int[] dp) {
+		if (i == stoneValue.length) {
+			return 0;
+		}
+		if (dp[i] != 0) {
+			return dp[i];
+		}
+		int ans = Integer.MIN_VALUE;
+		int total = 0;
+		for (int X = 1; X <= 3; X++) {
+			if (i + X - 1 >= stoneValue.length) {
+				break;
+			}
+			total += stoneValue[i + X - 1];
+			ans = Math.max(ans,total - solveUsingMem(stoneValue,i + X,dp));
+		}
+		dp[i] = ans;
+		return ans;
+	}
+	int solveUsingRec(int[] stoneValue, int i) {
+		if (i == stoneValue.length) {
+			return 0;
+		}
+		int ans = Integer.MIN_VALUE;
+		int total = 0;
+		for (int X = 1; X <= 3; X++) {
+			if (i + X - 1 >= stoneValue.length) {
+				break;
+			}
+			total += stoneValue[i + X - 1];
+			ans = Math.max(ans,total - solveUsingRec(stoneValue,i + X));
+		}
+		return ans;
+	}
+	int solveUsingTab(int[] stoneValue) {
+		int[] dp = new int[stoneValue.length + 1];
+		for (int i = stoneValue.length - 1; i >= 0; i--) {
+			int ans = Integer.MIN_VALUE;
+			int total = 0;
+			for (int X = 1; X <= 3; X++) {
+				if (i + X - 1 >= stoneValue.length) {
+					break;
+				}
+				total += stoneValue[i + X - 1];
+				ans = Math.max(ans,total - dp[i + X]);
+			}
+			dp[i] = ans;
+		}
+		return dp[0];
+	}
+	String stoneGameIII(int[] stoneValue) {
+		int ans = solveUsingTab(stoneValue);
+		if (ans == 0) {
+			return "Tie";
+		} 
+		else if (ans > 0) {
+			return "Alice";
+		}
+		return "Bob";
+	}
+}

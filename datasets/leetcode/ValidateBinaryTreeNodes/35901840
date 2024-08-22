@@ -1,0 +1,51 @@
+class Solution {
+	int findRoot(int n, int[] leftChild, int[] rightChild) {
+		boolean[] indegree = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			if (leftChild[i] != -1) {
+				indegree[leftChild[i]] = true;
+			}
+			if (rightChild[i] != -1) {
+				indegree[rightChild[i]] = true;
+			}
+		}
+		int root = -1;
+		for (int i = 0; i < n; i++) {
+			if (!indegree[i]) {
+				if (root == -1) {
+					root = i;
+				} 
+				else {
+					root = -1;
+					break;
+				}
+			}
+		}
+		return root;
+	}
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		int root = findRoot(n,leftChild,rightChild);
+		if (root == -1) {
+			return false;
+		}
+		Set<Integer> visited = new HashSet<Integer>();
+		Queue<Integer> q = new LinkedList<Integer>();
+		q.add(root);
+		while (!q.isEmpty()) {
+			Integer node = q.remove();
+			if (visited.contains(node)) {
+				return false;
+			}
+			visited.add(node);
+			int lc = leftChild[node];
+			int rc = rightChild[node];
+			if (lc != -1) {
+				q.add(lc);
+			}
+			if (rc != -1) {
+				q.add(rc);
+			}
+		}
+		return visited.size() == n;
+	}
+}

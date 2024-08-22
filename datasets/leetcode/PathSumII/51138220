@@ -1,0 +1,31 @@
+class Solution {
+	List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+		if (root == null) {
+			return new ArrayList<>();
+		}
+		return pathSumHelper(root,new ArrayList<>(),0,targetSum);
+	}
+	List<List<Integer>> pathSumHelper(TreeNode node, List<Integer> currentPath, int currentSum, int targetSum) {
+		List<List<Integer>> paths = new ArrayList<>();
+		if (node == null) {
+			return paths;
+		}
+		currentPath.add(node.val);
+		currentSum += node.val;
+		if (node.left == null && node.right == null) {
+			if (currentSum == targetSum) {
+				paths.add(new ArrayList<>(currentPath));
+			}
+		} 
+		else {
+			if (node.left != null) {
+				paths.addAll(pathSumHelper(node.left,currentPath,currentSum,targetSum));
+			}
+			if (node.right != null) {
+				paths.addAll(pathSumHelper(node.right,currentPath,currentSum,targetSum));
+			}
+		}
+		currentPath.remove(currentPath.size() - 1);
+		return paths;
+	}
+}

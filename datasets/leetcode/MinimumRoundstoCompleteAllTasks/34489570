@@ -1,0 +1,32 @@
+class Solution {
+	int dfs(int curr, int target, int dp) {
+		if (curr > target) {
+			return Integer.MAX_VALUE;
+		}
+		if (curr == target) {
+			return 0;
+		}
+		if (dp[curr] != -1) {
+			return dp[curr];
+		}
+		int ret = Math.min(dfs(curr + 2,target,dp),dfs(curr + 3,target,dp));
+		return dp[curr] = ret != Integer.MAX_VALUE ? ret + 1 : ret;
+	}
+	int minimumRounds(int[] tasks) {
+		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+		for (int t: tasks) {	
+			map.put(t,map.getOrDefault(t,0) + 1);
+		}
+		int ans = 0;
+		for (int key: map.keySet()) {	
+			int dp = new int[map.get(key)];
+			Arrays.fill(dp,-1);
+			int ret = dfs(0,map.get(key),dp);
+			if (ret == Integer.MAX_VALUE) {
+				return -1;
+			}
+			ans += ret;
+		}
+		return ans;
+	}
+}

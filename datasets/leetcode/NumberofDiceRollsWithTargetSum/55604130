@@ -1,0 +1,26 @@
+class Solution {
+	int mod = (int) Math.pow(10,9) + 7;
+	int function(int n, int k, int target, int[][] cache) {
+		if (target == 0 && n == 0) {
+			return 1;
+		}
+		if (n == 0 || target <= 0) {
+			return 0;
+		}
+		if (cache[n][target] != -1) {
+			return (int) (cache[n][target] % mod);
+		}
+		int ways = 0;
+		for (int i = 1; i <= k; i++) {
+			ways = (ways + function(n - 1,k,target - i,cache)) % mod;
+		}
+		return cache[n][target] = ways;
+	}
+	int numRollsToTarget(int n, int k, int target) {
+		int[][] cache = new int[n + 1][target + 1];
+		for (int[] c: cache) {	
+			Arrays.fill(c,-1);
+		}
+		return function(n,k,target,cache);
+	}
+}

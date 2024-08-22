@@ -1,0 +1,24 @@
+class Solution {
+	int MOD = 1_000_000_007;
+	long maxNonAdjacentSum(int[] nums) {
+		long include = 0, exclude = 0;
+		for (int num: nums) {	
+			long newInclude = exclude + num;
+			exclude = Math.max(exclude,include);
+			include = newInclude;
+		}
+		return Math.max(include,exclude);
+	}
+	int maximumSumSubsequence(int[] nums, int[][] queries) {
+		long totalSum = 0;
+		long currentSum = maxNonAdjacentSum(nums);
+		for (int[] query: queries) {	
+			int pos = query[0];
+			int val = query[1];
+			nums[pos] = val;
+			currentSum = maxNonAdjacentSum(nums);
+			totalSum = (totalSum + currentSum) % MOD;
+		}
+		return (int) totalSum;
+	}
+}

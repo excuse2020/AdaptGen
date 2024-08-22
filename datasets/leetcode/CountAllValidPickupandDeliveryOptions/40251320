@@ -1,0 +1,29 @@
+class Solution {
+	long mod = (long) 1e9 + 7;
+	int countOrders(int n) {
+		int possibleP = n;
+		int possibleD = 0;
+		long[][] dp = new long[n + 1][n + 1];
+		for (long[] level: dp) {	
+			Arrays.fill(level,-1);
+		}
+		return (int) (recursion(possibleP,possibleD,dp) % mod);
+	}
+	long recursion(int possibleP, int possibleD, long[][] dp) {
+		if (possibleP == 0 && possibleD == 0) {
+			return 1;
+		}
+		if (dp[possibleP][possibleD] != -1) {
+			return dp[possibleP][possibleD];
+		}
+		long total = 0;
+		if (possibleP != 0) {
+			total += possibleP * recursion(possibleP - 1,possibleD + 1,dp);
+		}
+		if (possibleD != 0) {
+			total += possibleD * recursion(possibleP,possibleD - 1,dp);
+		}
+		dp[possibleP][possibleD] = total % mod;
+		return total % mod;
+	}
+}

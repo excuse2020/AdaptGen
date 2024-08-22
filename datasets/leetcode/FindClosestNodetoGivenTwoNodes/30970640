@@ -1,0 +1,27 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		int[] distance1 = getDistance(edges,node1);
+		int[] distance2 = getDistance(edges,node2);
+		int ans = -1, ansMaxDist = -1;
+		for (int i = 0; i < edges.length; i++) {
+			if (distance1[i] != -1 && distance2[i] != -1) {
+				int maxDist = Math.max(distance1[i],distance2[i]);
+				if (ans == -1 || maxDist < ansMaxDist || (maxDist == ansMaxDist && ans > i)) {
+					ans = i;
+					ansMaxDist = maxDist;
+				}
+			}
+		}
+		return ans;
+	}
+	int[] getDistance(int[] edges, int node) {
+		int[] distance = new int[edges.length];
+		Arrays.fill(distance,-1);
+		int step = 0;
+		while (node != -1 && distance[node] == -1) {
+			distance[node] = step++;
+			node = edges[node];
+		}
+		return distance;
+	}
+}

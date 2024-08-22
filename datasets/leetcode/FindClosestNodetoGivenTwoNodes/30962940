@@ -1,0 +1,42 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		int n = edges.length;
+		int[] patha = new int[n];
+		int[] pathb = new int[n];
+		Arrays.fill(patha,-1);
+		Arrays.fill(pathb,-1);
+		path(patha,node1,edges);
+		path(pathb,node2,edges);
+		int ans = -1, mn = Integer.MAX_VALUE;
+		for (int i = 0; i < n; i++) {
+			int a = patha[i], b = pathb[i];
+			if (a == -1 || b == -1) {
+				continue;
+			}
+			if (mn > Math.max(a,b)) {
+				mn = Math.max(a,b);
+				ans = i;
+			}
+		}
+		return ans;
+	}
+	void path(int[] paths, int node, int[] edges) {
+		PriorityQueue<Pair<Integer, Integer>> pq;
+		pq = new PriorityQueue<>((a, b) -> {a.getKey() - b.getKey()});
+		pq.offer(new Pair(0, node));
+		paths[node] = 0;
+		while (!pq.isEmpty()) {
+			int steps = (int) pq.peek().getKey();
+			int nod = (int) pq.peek().getValue();
+			pq.remove();
+			if (edges[nod] == -1) {
+				continue;
+			}
+			int num = edges[nod];
+			if (paths[num] == -1) {
+				paths[num] = steps + 1;
+				pq.add(new Pair(steps + 1, num));
+			}
+		}
+	}
+}

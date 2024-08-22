@@ -1,0 +1,45 @@
+class Solution {
+	HashMap<String, Integer> hm;
+	int maxUncrossedLines(int[] a, int[] b) {
+		int n1 = a.length;
+		int n2 = b.length;
+		int t = new int[n1 + 1][n2 + 1];
+		for (int i = 0; i <= n1; i++) {
+			for (int j = 0; j <= n2; j++) {
+				if (i == 0 || j == 0) {
+					t[i][j] = 0;
+				}
+			}
+		}
+		for (int i = 1; i <= n1; i++) {
+			for (int j = 1; j <= n2; j++) {
+				if (a[i - 1] == b[j - 1]) {
+					t[i][j] = 1 + t[i - 1][j - 1];
+				} 
+				else {
+					t[i][j] = Math.max(t[i - 1][j],t[i][j - 1]);
+				}
+			}
+		}
+		return t[n1][n2];
+	}
+	int solve(int a, int b, int n, int m) {
+		if (n == 0 || m == 0) {
+			return 0;
+		}
+		String s = n + " ";
+		if (hm.containsKey(s)) {
+			return hm.get(s);
+		}
+		if (a[n - 1] == b[m - 1]) {
+			int x = solve(a,b,n - 1,m - 1) + 1;
+			hm.put(s,x);
+			return x;
+		} 
+		else {
+			int x = Math.max(solve(a,b,n - 1,m),solve(a,b,n,m - 1));
+			hm.put(s,x);
+			return x;
+		}
+	}
+}

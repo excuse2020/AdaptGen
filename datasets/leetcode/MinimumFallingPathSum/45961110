@@ -1,0 +1,34 @@
+class Solution {
+	int falling(int[][] arr, int row, int col, int[][] dynam, boolean[][] dynamb) {
+		if (row == arr.length) {
+			return 0;
+		}
+		if (dynamb[row][col]) {
+			return dynam[row][col];
+		}
+		int current = arr[row][col];
+		int down = falling(arr,row + 1,col,dynam,dynamb);
+		if (col > 0) {
+			down = Math.min(down,falling(arr,row + 1,col - 1,dynam,dynamb));
+		}
+		if (col < arr.length - 1) {
+			down = Math.min(down,falling(arr,row + 1,col + 1,dynam,dynamb));
+		}
+		dynamb[row][col] = true;
+		dynam[row][col] = down + current;
+		return down + current;
+	}
+	int minFallingPathSum(int[][] matrix) {
+		int l = matrix.length;
+		int sum = Integer.MAX_VALUE;
+		int[][] dynam = new int[l][l];
+		boolean[][] dynamb = new boolean[l][l];
+		for (int i = 0; i < l; i++) {
+			int t_Sum = falling(matrix,0,i,dynam,dynamb);
+			if (t_Sum < sum) {
+				sum = t_Sum;
+			}
+		}
+		return sum;
+	}
+}

@@ -1,0 +1,25 @@
+class Solution {
+	int dp(int[][] A, int i, int j, int[][] memo) {
+		if (i >= A.length) {
+			return 0;
+		}
+		if (j < 0 || j >= A[0].length) {
+			return Integer.MAX_VALUE;
+		}
+		if (memo[i][j] != 0) {
+			return memo[i][j];
+		}
+		return memo[i][j] = A[i][j] + min(dp(A,i + 1,j - 1,memo),dp(A,i + 1,j + 1,memo),dp(A,i + 1,j,memo));
+	}
+	int min(int a, int b, int c) {
+		return Math.min(Math.min(a,b),c);
+	}
+	int minFallingPathSum(int[][] A) {
+		int[][] memo = new int[A.length][A[0].length];
+		int ans = Integer.MAX_VALUE;
+		for (int j = 0; j < A[0].length; j++) {
+			ans = Math.min(ans,dp(A,0,j,memo));
+		}
+		return ans;
+	}
+}

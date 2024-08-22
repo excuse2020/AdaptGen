@@ -1,0 +1,51 @@
+class Solution {
+	List<String> fullJustify(String[] words, int maxWidth) {
+		List<String> li = new ArrayList<>();
+		String temp = "";
+		int netWordLength = 0;
+		for (int w = 0; w < words.length; w++) {
+			if ((temp == "" && words[w].length() <= maxWidth) || (temp.length() + words[w].length() <= maxWidth)) {
+				if (temp == "") {
+					temp += words[w];
+					netWordLength += words[w].length();
+				} 
+				else {
+					temp += " " + words[w];
+					netWordLength += words[w].length();
+				}
+			} 
+			else {
+				li.add(processIf(temp,maxWidth,netWordLength,true));
+				w--;
+				temp = "";
+				netWordLength = 0;
+			}
+		}
+		li.add(processIf(temp,maxWidth,netWordLength,false));
+		return li;
+	}
+	String processIf(String temp, int maxWidth, int netWordLength, boolean pFlag) {
+		if (!pFlag) {
+			return temp + " ".repeat(maxWidth - temp.length());
+		}
+		String[] sarr = temp.split(" ");
+		int divisions = sarr.length - 1;
+		if (divisions == 0) {
+			return temp + " ".repeat(maxWidth - netWordLength);
+		}
+		int possibleSpaces = maxWidth - netWordLength;
+		String res = "";
+		for (int i = 0; i < sarr.length; i++) {
+			if (i == 0) {
+				res += sarr[i];
+			} 
+			else {
+				int xx = (int) Math.ceil((double) possibleSpaces / divisions);
+				possibleSpaces = possibleSpaces - xx;
+				divisions -= 1;
+				res = res + " ".repeat(xx);
+			}
+		}
+		return res;
+	}
+}

@@ -1,0 +1,30 @@
+class Solution {
+	int countSubarrays(int[] nums, int k) {
+		HashMap<Integer, Integer> map = new HashMap<>();
+		map.put(0,1);
+		boolean self = false;
+		int count = 0;
+		int[] grt = new int[nums.length];
+		int[] small = new int[nums.length];
+		int p1 = 0;
+		int p2 = 0;
+		for (int i = 0; i < nums.length; i++) {
+			self = (self || (nums[i] == k));
+			if (nums[i] > k) {
+				p1++;
+			} 
+			else if (nums[i] < k) {
+				p2++;
+			}
+			int curr = p1 - p2;
+			if (self) {
+				count += map.getOrDefault(curr,0);
+				count += map.getOrDefault(curr - 1,0);
+			}
+			if (!self && nums[i] != k) {
+				map.put(curr,map.getOrDefault(curr,0) + 1);
+			}
+		}
+		return count;
+	}
+}

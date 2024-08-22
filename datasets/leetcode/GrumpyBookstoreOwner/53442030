@@ -1,0 +1,22 @@
+class Solution {
+	int maxSatisfied(int[] c, int[] g, int minutes) {
+		int n = c.length;
+		int totalSum = 0;
+		int grumpySum = 0;
+		for (int i = 0; i < n; i++) {
+			totalSum += c[i];
+			grumpySum += (c[i] * g[i]);
+		}
+		int windowSum = 0;
+		for (int i = 0; i < minutes; i++) {
+			windowSum += (c[i] * g[i]);
+		}
+		int maxWindowSum = windowSum;
+		for (int i = minutes; i < n; i++) {
+			windowSum += c[i] * g[i];
+			windowSum -= (c[i - minutes] * g[i - minutes]);
+			maxWindowSum = Math.max(maxWindowSum,windowSum);
+		}
+		return totalSum - grumpySum + maxWindowSum;
+	}
+}

@@ -1,0 +1,94 @@
+class Solution {
+	boolean isnum(char d) {
+		if (d - '0' <= 9 && 0 <= d - '0') {
+			return true;
+		} 
+		else {
+			return false;
+		}
+	}
+	int op(int a, int b, char c) {
+		if (c == '+') {
+			return a + b;
+		} 
+		else if (c == '-') {
+			return a - b;
+		} 
+		else {
+			return a * b;
+		}
+	}
+	int solve(String s) {
+		int res = 0;
+		Stack<Integer> s1 = new Stack<>();
+		Stack<Integer> s3 = new Stack<>();
+		Stack<Character> s2 = new Stack<>();
+		Stack<Character> s4 = new Stack<>();
+		int len = s.length();
+		int temp = 0;
+		int chen = 0;
+		for (int i = 0; i < len; i++) {
+			if (0 <= s.charAt(i) - '0' && s.charAt(i) - '0' <= 9) {
+				if (i == len - 1) {
+					s1.push(temp * 10 + s.charAt(i) - '0');
+					if (chen == 1) {
+						chen++;
+					}
+					break;
+				} 
+				else if (!isnum(s.charAt(i + 1))) {
+					s1.push(temp * 10 + s.charAt(i) - '0');
+					if (chen == 1) {
+						chen++;
+					}
+				} 
+				else if (0 <= s.charAt(i + 1) - '0' && s.charAt(i + 1) - '0' <= 9) {
+					temp = temp * 10 + s.charAt(i) - '0';
+				}
+				if (s1.size() > 1 && s2.peek() == '*' && chen == 2) {
+					int a = s1.pop();
+					int b = s1.pop();
+					s1.push(op(b,a,s2.pop()));
+					chen = 0;
+				}
+			} 
+			else {
+				if (s.charAt(i) == ')') {
+					if (s2.peek() == '(') {
+						s2.pop();
+						continue;
+					} 
+					else {
+						while (s2.peek() != '(') {
+							int a = s1.pop();
+							int b = s1.pop();
+							s1.push(op(b,a,s2.pop()));
+						}
+						if (s2.peek() == '(') {
+							s2.pop();
+						}
+						continue;
+					}
+				}
+				if (s.charAt(i) == '*' && chen == 0) {
+					chen++;
+				}
+				s2.push(s.charAt(i));
+				temp = 0;
+			}
+		}
+		while (!s1.isEmpty()) {
+			s3.push(s1.pop());
+		}
+		while (!s2.isEmpty()) {
+			s4.push(s2.pop());
+		}
+		while (!s4.isEmpty()) {
+			int a = s3.pop();
+			int b = s3.pop();
+			s3.push(op(a,b,s4.pop()));
+		}
+		res = s3.peek();
+		return res;
+	}
+}

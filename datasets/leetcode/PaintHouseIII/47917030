@@ -1,0 +1,38 @@
+class Solution {
+	int minCost(int[] houses, int[][] cost, int m, int n, int target) {
+		int[][] memo = new int[n + 1][target + 1];
+		for (int j = 1; j <= n; j++) {
+			memo[j] = new int[target + 1];
+		}
+		for (int i = 0; i < m; i++) {
+			int[][] memoNext = new int[n + 1][target + 1];
+			for (int j = 1; j <= n; j++) {
+				memoNext[j] = new int[target + 1];
+				Arrays.fill(memoNext[j],Integer.MAX_VALUE);
+			}
+			for (int j = 1; j <= n; j++) {
+				if (houses[i] != 0 && houses[i] != j) {
+					continue;
+				}
+				for (int t = 1; t <= Math.min(target,i + 1); t++) {
+					int paintCost = (houses[i] != 0 ? 0 : cost[i][j - 1]);
+					if (memo[j][t] != Integer.MAX_VALUE) {
+						memoNext[j][t] = memo[j][t] + paintCost;
+					}
+					for (int k = 1; k <= n; k++) {
+						if (k == j || memo[k][t - 1] == Integer.MAX_VALUE) {
+							continue;
+						}
+						memoNext[j][t] = Math.min(memoNext[j][t],memo[k][t - 1] + paintCost);
+					}
+				}
+			}
+			memo = memoNext;
+		}
+		int ans = Integer.MAX_VALUE;
+		for (int j = 1; j <= n; j++) {
+			ans = Math.min(ans,memo[j][target]);
+		}
+		return ans == Integer.MAX_VALUE ? -1 : ans;
+	}
+}

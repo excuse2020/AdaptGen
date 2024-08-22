@@ -1,0 +1,26 @@
+class Solution {
+	TreeNode process(int[] pre, int pL, int pR, int inL, int inR, HashMap<Integer, Integer> map) {
+		if (pL > pR || inL > inR) {
+			return null;
+		}
+		if (pL == pR || inL == inR) {
+			return new TreeNode(pre[pL]);
+		}
+		TreeNode root = new TreeNode(pre[pL]);
+		int inIndex = map.get(pre[pL]);
+		int leftTreeSize = inIndex - inL;
+		root.left = process(pre,pL + 1,pL + leftTreeSize,inL,inIndex - 1,map);
+		root.right = process(pre,pL + leftTreeSize,pR,inIndex + 1,inR,map);
+		return root;
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] in) {
+		if (pre == null || pre.length == 0 || in == null || in.length == 0) {
+			return null;
+		}
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < in.length; i++) {
+			map.put(in[i],i);
+		}
+		return process(pre,0,pre.length - 1,0,in.length - 1,map);
+	}
+}

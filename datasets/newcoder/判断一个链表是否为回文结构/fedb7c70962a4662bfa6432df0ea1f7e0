@@ -1,0 +1,43 @@
+class Solution {
+	ListNode pre;
+	boolean dfs(ListNode head) {
+		if (head == null) {
+			return true;
+		}
+		if (dfs(head.next)) {
+			boolean flag = head.val == pre.val;
+			pre = pre.next;
+			return flag;
+		}
+		return false;
+	}
+	boolean isPail(ListNode head) {
+		if (head == null) {
+			return true;
+		}
+		ListNode fast = head.next;
+		ListNode slow = head;
+		while (fast != null && fast.next != null) {
+			slow = slow.next;
+			fast = fast.next.next;
+		}
+		ListNode head1 = recur(slow,null);
+		slow.next = null;
+		while (head != null) {
+			if (head.val != head1.val) {
+				return false;
+			}
+			head = head.next;
+			head1 = head1.next;
+		}
+		return true;
+	}
+	ListNode recur(ListNode cur, ListNode pre) {
+		if (cur == null) {
+			return pre;
+		}
+		ListNode res = recur(cur.next,cur);
+		cur.next = pre;
+		return res;
+	}
+}

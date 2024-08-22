@@ -1,0 +1,24 @@
+class Solution {
+	int sumSubarrayMins(int[] arr) {
+		int mod = 1000000007;
+		int[] left = new int[arr.length];
+		int[] right = new int[arr.length];
+		Deque<Integer> stack = new ArrayDeque<>();
+		Arrays.fill(left,-1);
+		Arrays.fill(right,arr.length);
+		for (int i = 0; i < arr.length; i++) {
+			while (!stack.isEmpty() && arr[stack.peek()] >= arr[i]) {
+				right[stack.pop()] = i;
+			}
+			if (!stack.isEmpty()) {
+				left[i] = stack.peek();
+			}
+			stack.push(i);
+		}
+		long count = 0;
+		for (int i = 0; i < arr.length; i++) {
+			count = (count + (long) arr[i] * (i - left[i])) % mod;
+		}
+		return (int) count;
+	}
+}

@@ -1,0 +1,71 @@
+class Solution {
+	boolean[] ghumahua;
+	List<Integer>[] hv1;
+	List<Integer> hv2;
+	long hv3;
+	int hv5;
+	long jawab;
+	void inithv1() {
+		for (int i = 0; i < hv1.length; i++) {
+			hv1[i] = new ArrayList<>();
+		}
+	}
+	long maximumValueSum(int[] nums, int k, int[][] edges) {
+		int len = nums.length;
+		hv1 = new ArrayList[len];
+		hv2 = new ArrayList<>();
+		inithv1();
+		for (int i = 0; i < len - 1; i++) {
+			hv1[edges[i][0]].add(edges[i][1]);
+			hv1[edges[i][1]].add(edges[i][0]);
+		}
+		for (int i = 0; i < len; i++) {
+			long val = (long) nums[i] ^ k;
+			if (val > nums[i]) {
+				hv2.add(i);
+			}
+		}
+		hv5 = hv2.size();
+		if (hv5 % 2 == 0) {
+			jawab = 0;
+			for (int i = 0; i < len; i++) {
+				jawab += nums[i];
+			}
+			for (int i = 0; i < hv2.size(); i++) {
+				jawab -= nums[hv2.get(i)];
+				long add = (long) nums[hv2.get(i)] ^ k;
+				jawab += add;
+			}
+			return jawab;
+		} 
+		else {
+			jawab = 0;
+			for (int i = 0; i < len; i++) {
+				jawab += (long) nums[i];
+			}
+			hv3 = jawab;
+			for (int i = 0; i < hv2.size(); i++) {
+				jawab -= nums[hv2.get(i)];
+				long add = (long) nums[hv2.get(i)] ^ k;
+				jawab += add;
+			}
+			for (int i = 0; i < hv5; i++) {
+				long add = (long) nums[hv2.get(i)] ^ k;
+				long curr_ans = jawab - add + nums[hv2.get(i)];
+				hv3 = Math.max(hv3,curr_ans);
+			}
+			ghumahua = new boolean[len];
+			for (int i = 0; i < hv5; i++) {
+				ghumahua[hv2.get(i)] = true;
+			}
+			for (int i = 0; i < len; i++) {
+				if (!ghumahua[i]) {
+					long add = (long) nums[i] ^ k;
+					long curr_ans = jawab - nums[i] + add;
+					hv3 = Math.max(hv3,curr_ans);
+				}
+			}
+			return hv3;
+		}
+	}
+}

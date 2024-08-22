@@ -1,0 +1,36 @@
+class Solution {
+	int maxRepOpt1(String text) {
+		char[] textc = text.toCharArray();
+		int[] length = new int[textc.length];
+		HashMap<Character, Integer> countGroup = new HashMap<Character, Integer>();
+		length[0] = 1;
+		int start = 0;
+		int max = 1;
+		for (int i = 1; i < textc.length; i++) {
+			if (textc[i] == textc[start]) {
+				length[i] = length[i - 1] + 1;
+			} 
+			else {
+				countGroup.put(textc[start],countGroup.getOrDefault(textc[start],0) + 1);
+				length[i] = 1;
+				start = i;
+			}
+		}
+		countGroup.put(textc[textc.length - 1],countGroup.getOrDefault(textc[textc.length - 1],0) + 1);
+		start = 0;
+		for (int i = 0; i < textc.length; i++) {
+			start = i - length[i] + 1;
+			max = Math.max(max,length[i]);
+			if (start - 2 >= 0 && textc[i] == textc[start - 2] && countGroup.containsKey(textc[i]) && countGroup.get(textc[i]) > 2) {
+				max = Math.max(max,length[i] + length[start - 2]);
+			} 
+			else if (start - 2 >= 0 && textc[i] == textc[start - 2]) {
+				max = Math.max(max,length[i] + length[start - 2]);
+			} 
+			else if (countGroup.containsKey(textc[i]) && countGroup.get(textc[i]) >= 2) {
+				max = Math.max(max,length[i] + 1);
+			}
+		}
+		return max;
+	}
+}

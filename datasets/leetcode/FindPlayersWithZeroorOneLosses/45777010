@@ -1,0 +1,29 @@
+class Solution {
+	List<List<Integer>> findWinners(int[][] matches) {
+		HashSet<Integer> winners = new HashSet<>();
+		Map<Integer, Integer> countLosers = new HashMap<>();
+		int n = matches.length;
+		for (int i = 0; i < n; i++) {
+			winners.add(matches[i][0]);
+			countLosers.put(matches[i][1],countLosers.getOrDefault(matches[i][1],0) + 1);
+		}
+		List<List<Integer>> answer = new ArrayList<>();
+		List<Integer> notLostAny = new ArrayList<>();
+		for (Integer winner: winners) {	
+			if (!countLosers.containsKey(winner)) {
+				notLostAny.add(winner);
+			}
+		}
+		Collections.sort(notLostAny);
+		List<Integer> lostExactlyOne = new ArrayList<>();
+		for (Map.Entry<Integer, Integer> e: countLosers.entrySet()) {	
+			if (e.getValue() == 1) {
+				lostExactlyOne.add(e.getKey());
+			}
+		}
+		Collections.sort(lostExactlyOne);
+		answer.add(notLostAny);
+		answer.add(lostExactlyOne);
+		return answer;
+	}
+}

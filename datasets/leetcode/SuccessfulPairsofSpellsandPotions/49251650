@@ -1,0 +1,25 @@
+class Solution {
+	int binaryCheckForSum(int k, int[] potions, int start, int end, long success) {
+		if (start > end) {
+			return 0;
+		}
+		int mid = (start + end) / 2;
+		long mul = (long) potions[mid] * (long) k;
+		if (mul >= success) {
+			int sum = end - mid + 1;
+			return sum + binaryCheckForSum(k,potions,start,mid - 1,success);
+		} 
+		else {
+			return binaryCheckForSum(k,potions,mid + 1,end,success);
+		}
+	}
+	int[] successfulPairs(int[] spells, int[] potions, long success) {
+		Arrays.sort(potions);
+		int output = new int[spells.length];
+		for (int i = 0; i < spells.length; i++) {
+			int output1 = binaryCheckForSum(spells[i],potions,0,potions.length - 1,success);
+			output[i] = output1;
+		}
+		return output;
+	}
+}

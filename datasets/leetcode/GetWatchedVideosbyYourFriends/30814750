@@ -1,0 +1,33 @@
+class Solution {
+	List<String> watchedVideosByFriends(List<List<String>> watchedVideos, int[][] friends, int id, int l) {
+		int n = friends.length;
+		Queue<Integer> q = new LinkedList<>();
+		q.add(id);
+		HashMap<String, Integer> hm = new HashMap<>();
+		int level = 0;
+		int vis = new int[n];
+		vis[id] = 1;
+		while (!q.isEmpty()) {
+			int size = q.size();
+			for (int i = 0; i < size; i++) {
+				int node = q.poll();
+				if (level == l) {
+					for (String s: watchedVideos.get(node)) {	
+						hm.put(s,hm.getOrDefault(s,0) + 1);
+					}
+					continue;
+				}
+				for (int it: friends[node]) {	
+					if (vis[it] != 1) {
+						vis[it] = 1;
+						q.add(it);
+					}
+				}
+			}
+			level++;
+		}
+		List<String> ans = new ArrayList<>(hm.keySet());
+		Collections.sort(ans,(a, b) -> {hm.get(a) == hm.get(b) ? a.compareTo(b) : hm.get(a) - hm.get(b)});
+		return ans;
+	}
+}

@@ -1,0 +1,43 @@
+class Solution {
+	List<List<Integer>> formatAncestors(List<Integer>[] ancestors) {
+		List<List<Integer>> formatted = new ArrayList<>(ancestors.length);
+		for (List<Integer> ancestor: ancestors) {	
+			Collections.sort(ancestor);
+			formatted.add(ancestor);
+		}
+		return formatted;
+	}
+	List<List<Integer>> getAncestors(int n, int[][] edges) {
+		List<Integer>[] inbound = getInboundNodes(n,edges);
+		List<Integer>[] ancestors = new List[n];
+		for (int i = 0; i < ancestors.length; i++) {
+			if (ancestors[i] == null) {
+				ancestors[i] = getAncestors(i,ancestors,inbound);
+			}
+		}
+		return formatAncestors(ancestors);
+	}
+	List<Integer> getAncestors(int node, List<Integer>[] ancestors, List<Integer>[] inbound) {
+		if (ancestors[node] == null) {
+			Set<Integer> foundAncestors = new HashSet<>();
+			if (inbound[node] != null) {
+				for (int ancestor: inbound[node]) {	
+					foundAncestors.add(ancestor);
+					foundAncestors.addAll(getAncestors(ancestor,ancestors,inbound));
+				}
+			}
+			ancestors[node] = new ArrayList<>(foundAncestors);
+		}
+		return ancestors[node];
+	}
+	List<Integer>[] getInboundNodes(int n, int[][] edges) {
+		List<Integer>[] inbound = new List[n];
+		for (int[] edge: edges) {	
+			if (inbound[edge[1]] == null) {
+				inbound[edge[1]] = new ArrayList<>();
+			}
+			inbound[edge[1]].add(edge[0]);
+		}
+		return inbound;
+	}
+}

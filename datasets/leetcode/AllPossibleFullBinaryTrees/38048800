@@ -1,0 +1,46 @@
+class Solution {
+	List<TreeNode>[] dp;
+	List<TreeNode> allPossibleFBT(int n) {
+		if (n % 2 == 0) {
+			return new ArrayList<>();
+		}
+		dp = new ArrayList[n + 1];
+		return find(n);
+	}
+	List<TreeNode> find(int n) {
+		if (dp[n] != null) {
+			return dp[n];
+		}
+		TreeNode t = new TreeNode(0);
+		List<TreeNode> list = new ArrayList<>();
+		if (n == 1) {
+			list.add(t);
+			return dp[1] = list;
+		}
+		if (n == 3) {
+			t.left = new TreeNode(0);
+			t.right = new TreeNode(0);
+			list.add(t);
+			return dp[3] = list;
+		}
+		for (int i = 1; i <= n / 2; i = i + 2) {
+			List<TreeNode> list1 = find(i);
+			List<TreeNode> list2 = find(n - 1);
+			for (TreeNode t1: list1) {	
+				for (TreeNode t2: list2) {	
+					TreeNode root1 = new TreeNode(0);
+					root1.left = t1;
+					root1.right = t2;
+					list.add(root1);
+					if (i != n - 1) {
+						TreeNode root2 = new TreeNode(0);
+						root2.left = t2;
+						root2.right = t1;
+						list.add(root2);
+					}
+				}
+			}
+		}
+		return dp[n] = list;
+	}
+}

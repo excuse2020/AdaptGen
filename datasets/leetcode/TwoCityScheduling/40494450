@@ -1,0 +1,27 @@
+class Solution {
+	int twoCitySchedCost(int[][] costs) {
+		int n = (costs.length / 2);
+		int[][][] dp = new int[2 * n + 1][n + 1][n + 1];
+		for (int ptr = costs.length - 1; ptr >= 0; ptr--) {
+			for (int a = n; a >= 0; a--) {
+				for (int b = n; b >= 0; b--) {
+					int[] cost = costs[ptr];
+					int x = Integer.MAX_VALUE, y = Integer.MAX_VALUE;
+					if (a < n) {
+						x = dp[ptr + 1][a + 1][b] + cost[0];
+					}
+					if (b < n) {
+						y = dp[ptr + 1][a][b + 1] + cost[1];
+					}
+					if (x == Integer.MAX_VALUE && y == Integer.MAX_VALUE) {
+						dp[ptr][a][b] = 0;
+					} 
+					else {
+						dp[ptr][a][b] = Math.min(x,y);
+					}
+				}
+			}
+		}
+		return dp[0][0][0];
+	}
+}

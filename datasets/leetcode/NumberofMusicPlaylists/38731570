@@ -1,0 +1,27 @@
+class Solution {
+	long mod = (long) 1e9 + 7;
+	int numMusicPlaylists(int n, int goal, int k) {
+		long dp = new long[n + 1][goal + 1];
+		for (long r: dp) {	
+			Arrays.fill(r,-1);
+		}
+		long res = solve(n,goal,k,n,dp);
+		return (int) res;
+	}
+	long solve(int i, int goal, int k, int n, long[][] dp) {
+		if (i == 0 && goal == 0) {
+			return 1;
+		}
+		if (i == 0 || goal == 0) {
+			return 0;
+		}
+		if (dp[i][goal] != -1) {
+			return dp[i][goal];
+		}
+		long res = (solve(i - 1,goal - 1,k,n,dp) * i) % mod;
+		if (i > k) {
+			res = (res + (solve(i,goal - 1,k,n,dp) * (i - k)) % mod) % mod;
+		}
+		return dp[i][goal] = res;
+	}
+}

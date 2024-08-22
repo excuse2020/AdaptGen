@@ -1,0 +1,30 @@
+class Solution {
+	boolean isPredecessor(String word1, String word2) {
+		if (word1.length() >= word2.length() || word2.length() - word1.length() != 1) {
+			return false;
+		}
+		int i = 0, j = 0;
+		while (i < word1.length() && j < word2.length()) {
+			if (word1.charAt(i) == word2.charAt(j)) {
+				i++;
+			}
+			j++;
+		}
+		return i == word1.length();
+	}
+	int longestStrChain(String[] words) {
+		Arrays.sort(words,(s1, s2) -> {Integer.compare(s1.length(),s2.length())});
+		return longestStrChain(words,0,-1);
+	}
+	int longestStrChain(String[] words, int idx, int prev) {
+		if (idx == words.length) {
+			return 0;
+		}
+		int take = 0;
+		if (prev == -1 || isPredecessor(words[prev],words[idx])) {
+			take = 1 + longestStrChain(words,idx + 1,idx);
+		}
+		int skip = longestStrChain(words,idx + 1,prev);
+		return Math.max(take,skip);
+	}
+}

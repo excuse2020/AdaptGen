@@ -1,0 +1,40 @@
+class Solution {
+	int minimumTime(int n, int[][] relations, int[] time) {
+		ArrayList<Integer>[] adjList = new ArrayList[n];
+		int[] inDegree = new int[n];
+		for (int i = 0; i < n; i++) {
+			adjList[i] = new ArrayList<>();
+		}
+		for (int[] relation: relations) {	
+			int prevCourse = relation[0] - 1;
+			int nextCourse = relation[1] - 1;
+			adjList[prevCourse].add(nextCourse);
+			inDegree[nextCourse]++;
+		}
+		Queue<Integer> q = new LinkedList<>();
+		for (int i = 0; i < n; i++) {
+			if (inDegree[i] == 0) {
+				q.add(i);
+			}
+		}
+		int dp = new int[n];
+		for (int i = 0; i < n; i++) {
+			dp[i] = time[i];
+		}
+		while (!q.isEmpty()) {
+			int course = q.poll();
+			for (int nextCourse: adjList[course]) {	
+				inDegree[nextCourse]--;
+				dp[nextCourse] = Math.max(dp[nextCourse],dp[course] + time[nextCourse]);
+				if (inDegree[nextCourse] == 0) {
+					q.add(nextCourse);
+				}
+			}
+		}
+		int maxTime = 0;
+		for (int completionTime: dp) {	
+			maxTime = Math.max(maxTime,completionTime);
+		}
+		return maxTime;
+	}
+}

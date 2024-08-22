@@ -1,0 +1,65 @@
+class Solution {
+	int N = 1000;
+	HashSet<Integer>[] adj;
+	boolean[] isVisited;
+	ArrayList<Integer> result = new ArrayList<>();
+	ArrayList<Integer> distanceKnodes(TreeNode root, int target, int k) {
+		return solution(root,target,k);
+	}
+	void levelOrder(int target, int k) {
+		Queue<Integer> queue = new LinkedList<>();
+		isVisited[target] = true;
+		queue.offer(target);
+		int curr;
+		int size;
+		int level = 0;
+		boolean isFound = false;
+		while (!queue.isEmpty()) {
+			level++;
+			size = queue.size();
+			while (size-- > 0) {
+				curr = queue.poll();
+				for (int next: adj[curr]) {	
+					if (!isVisited[next]) {
+						isVisited[next] = true;
+						if (level == k) {
+							isFound = true;
+							result.add(next);
+						} 
+						else {
+							queue.offer(next);
+						}
+					}
+				}
+			}
+			if (isFound) {
+				break;
+			}
+		}
+	}
+	void postOrder(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		postOrder(root.left);
+		postOrder(root.right);
+		if (root.left != null) {
+			adj[root.val].add(root.left.val);
+			adj[root.left.val].add(root.val);
+		}
+		if (root.right != null) {
+			adj[root.val].add(root.right.val);
+			adj[root.right.val].add(root.val);
+		}
+	}
+	ArrayList<Integer> solution(TreeNode root, int target, int k) {
+		isVisited = new boolean[N];
+		adj = new HashSet[N];
+		for (int i = 0; i < N; i++) {
+			adj[i] = new HashSet<>();
+		}
+		postOrder(root);
+		levelOrder(target,k);
+		return result;
+	}
+}

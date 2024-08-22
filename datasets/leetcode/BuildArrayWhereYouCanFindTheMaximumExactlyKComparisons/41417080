@@ -1,0 +1,38 @@
+class Solution {
+	Integer[][][] dp;
+	int f = 1000000007;
+	int ch(int i, int n, int m, int k, int pre) {
+		if (i == n) {
+			return 1;
+		}
+		int a = 0;
+		if (dp[i][k][pre + 1] != null) {
+			return dp[i][k][pre + 1];
+		}
+		if (k == 0) {
+			for (int d = pre; d >= 1; d--) {
+				a = (a % f + ch(i + 1,n,m,k,pre) % f) % f;
+			}
+		} 
+		else {
+			if (i < (n - k)) {
+				for (int d = 1; d <= (m - k + 1); d++) {
+					a = (a % f + ch(i + 1,n,m,k - (d > pre ? 1 : 0),Math.max(pre,d)) % f) % f;
+				}
+			} 
+			else {
+				for (int d = pre + 1; d <= m; d++) {
+					a = (a % f + ch(i + 1,n,m,k - 1,d) % f) % f;
+				}
+			}
+		}
+		return dp[i][k][pre + 1] = a % f;
+	}
+	int numOfArrays(int n, int m, int k) {
+		if (k > m || k > n) {
+			return 0;
+		}
+		dp = new Integer[n + 1][k + 1][m + 2];
+		return ch(0,n,m,k,0) % f;
+	}
+}

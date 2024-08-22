@@ -1,0 +1,31 @@
+class Solution {
+	String minInteger(String s, int k) {
+		int length = s.length();
+		int[] num = new int[length];
+		int i = 0;
+		for (char ch: s.toCharArray()) {	
+			num[i++] = Integer.parseInt(String.valueOf(ch));
+		}
+		for (i = 0; i < length && k > 0; i++) {
+			int minIndex = 0, min = Integer.MAX_VALUE;
+			int limit = (k + i) > length - 1 ? length - 1 : k + i;
+			for (int j = i; j <= limit; j++) {
+				if (num[j] < min) {
+					min = num[j];
+					minIndex = j;
+				}
+			}
+			k -= (minIndex - i);
+			for (int idx = minIndex; idx > i; idx--) {
+				int temp = num[idx - 1];
+				num[idx - 1] = num[idx];
+				num[idx] = temp;
+			}
+		}
+		StringBuilder ans = new StringBuilder("");
+		for (int n: num) {	
+			ans.append(n);
+		}
+		return ans.toString();
+	}
+}

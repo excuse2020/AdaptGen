@@ -1,0 +1,35 @@
+class Solution {
+	int maxSatisfaction(int[] satisfaction) {
+		Arrays.sort(satisfaction);
+		if (satisfaction[satisfaction.length - 1] <= 0) {
+			return 0;
+		}
+		if (satisfaction[0] >= 0) {
+			int max = 0;
+			int weight = 1;
+			for (int sat: satisfaction) {	
+				max += sat * weight;
+				weight++;
+			}
+			return max;
+		}
+		int i, sum = 0;
+		for (i = satisfaction.length - 1; i >= 0; i--) {
+			sum += satisfaction[i];
+			if (sum < 0) {
+				break;
+			}
+		}
+		if (sum < 0) {
+			sum -= satisfaction[i];
+		}
+		int startIndex = i + 1;
+		int time = 1;
+		int product = 0;
+		for (int j = startIndex; j < satisfaction.length; j++) {
+			product += satisfaction[j] * time;
+			time++;
+		}
+		return product;
+	}
+}

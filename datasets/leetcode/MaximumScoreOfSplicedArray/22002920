@@ -1,0 +1,30 @@
+class Solution {
+	int maximumsSplicedArray(int[] nums1, int[] nums2) {
+		int n = nums1.length;
+		int[][] dp1 = new int[n][n];
+		dp1[0][0] = nums1[0];
+		int[][] dp2 = new int[n][n];
+		for (int i = 0; i < n; i++) {
+			dp1[i][i] = nums1[i];
+			dp2[i][i] = nums2[i];
+			for (int j = i + 1; j < n; j++) {
+				dp1[i][j] = dp1[i][j - 1] + nums1[j];
+				dp2[i][j] = dp2[i][j - 1] + nums2[j];
+			}
+		}
+		int sum1 = 0, sum2 = 0;
+		for (int i = 0; i < n; i++) {
+			sum1 += nums1[i];
+			sum2 += nums2[i];
+		}
+		int maxi = Math.max(sum1,sum2);
+		for (int i = 0; i < n; i++) {
+			for (int j = i; j < n; j++) {
+				int temp1 = sum1 - dp1[i][j] + dp2[i][j];
+				int temp2 = sum2 - dp2[i][j] + dp1[i][j];
+				maxi = Math.max(maxi,Math.max(temp1,temp2));
+			}
+		}
+		return maxi;
+	}
+}

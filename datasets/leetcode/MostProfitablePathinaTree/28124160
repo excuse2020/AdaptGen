@@ -1,0 +1,64 @@
+class Solution {
+	int findAlicePath(int start, int time, HashMap<Integer, HashSet<Integer>> tree, HashMap<Integer, Integer> bobTime, HashSet<Integer> visited, int[] amount) {
+		int sum = amount[start];
+		if (bobTime.containsKey(start)) {
+			if (bobTime.get(start) == time) {
+				sum /= 2;
+			} 
+			else if (bobTime.get(start) < time) {
+				sum = 0;
+			}
+		}
+		if (tree.get(start).size() == 1 && visited.contains(tree.get(start).iterator().next())) {
+			return sum;
+		}
+		int max = Integer.MIN_VALUE;
+		for (int adj: tree.get(start)) {	
+			if (!visited.contains(adj)) {
+				visited.add(adj);
+				max = Math.max(max,findAlicePath(adj,time + 1,tree,bobTime,visited,amount));
+			}
+		}
+		sum += max;
+		return sum;
+	}
+	int findBobPath(int start, int bob, HashMap<Integer, HashSet<Integer>> tree, HashMap<Integer, Integer> bobTime, HashSet<Integer> visited) {
+		if (start == bob) {
+			bobTime.put(start,0);
+			return 0;
+		}
+		if (tree.get(start).size() == 1 && visited.contains(tree.get(start).iterator().next())) {
+			return -1;
+		}
+		int time = -1;
+		for (int adj: tree.get(start)) {	
+			if (!visited.contains(adj)) {
+				visited.add(adj);
+				int curr = findBobPath(adj,bob,tree,bobTime,visited);
+				time = (curr > -1 ? curr + 1 : time);
+			}
+		}
+		if (time > -1) {
+			bobTime.put(start,time);
+		}
+		return time;
+	}
+	int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+		HashMap<Integer, HashSet<Integer>> tree = new HashMap<>();
+		for (int[] edge: edges) {	
+			int a = edge[0];
+			int b = edge[1];
+			tree.putIfAbsent(a,new HashSet<>());
+			tree.get(a).add(b);
+			tree.putIfAbsent(b,new HashSet<>());
+			tree.get(b).add(a);
+		}
+		HashMap<Integer, Integer> bobTime = new HashMap<>();
+		HashSet<Integer> visited = new HashSet<>();
+		visited.add(0);
+		findBobPath(0,bob,tree,bobTime,visited);
+		visited.clear();
+		visited.add(0);
+		return findAlicePath(0,0,tree,bobTime,visited,amount);
+	}
+}

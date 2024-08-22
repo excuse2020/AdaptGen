@@ -1,0 +1,32 @@
+class Solution {
+	int find(int[] piles, int i, int j, int t, int[][] dp) {
+		if (i > j) {
+			return 0;
+		}
+		int x;
+		if (dp[i][j] != 0) {
+			return dp[i][j];
+		}
+		if (t == 0) {
+			dp[i][j] = Math.max(piles[i] + find(piles,i + 1,j,1,dp),piles[j] + find(piles,i,j - 1,1,dp));
+		} 
+		else {
+			dp[i][j] = Math.min(find(piles,i + 1,j,0,dp),find(piles,i,j - 1,0,dp));
+		}
+		return dp[i][j];
+	}
+	boolean stoneGame(int[] piles) {
+		int sum = 0;
+		int dp = new int[piles.length][piles.length];
+		for (int i = 0; i < piles.length; i++) {
+			sum = sum + piles[i];
+		}
+		int x = find(piles,0,piles.length - 1,0,dp);
+		if (x > sum - x) {
+			return true;
+		} 
+		else {
+			return false;
+		}
+	}
+}

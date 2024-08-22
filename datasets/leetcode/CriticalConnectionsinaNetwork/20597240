@@ -1,0 +1,47 @@
+class Solution {
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		int vis = new int[n];
+		int tin = new int[n];
+		int low = new int[n];
+		ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int i = 0; i < connections.size(); i++) {
+			int u = connections.get(i).get(0);
+			int v = connections.get(i).get(1);
+			graph.get(u).add(v);
+			graph.get(v).add(u);
+		}
+		List<List<Integer>> result = new ArrayList<>();
+		int timer = 0;
+		for (int i = 0; i < n; i++) {
+			if (vis[i] == 0) {
+				dfs(i,-1,vis,tin,low,graph,result,timer);
+			}
+		}
+		return result;
+	}
+	void dfs(int node, int parent, int vis, int tin, int low, ArrayList<ArrayList<Integer>> adj, List<List<Integer>> ans, int timer) {
+		vis[node] = 1;
+		tin[node] = low[node] = timer++;
+		for (Integer it: adj.get(node)) {	
+			if (it == parent) {
+				continue;
+			}
+			if (vis[it] == 0) {
+				dfs(it,node,vis,tin,low,adj,ans,timer);
+				low[node] = Math.min(low[node],low[it]);
+				if (low[it] > tin[node]) {
+					ArrayList<Integer> edge = new ArrayList<>();
+					edge.add(node);
+					edge.add(it);
+					ans.add(edge);
+				}
+			} 
+			else {
+				low[node] = Math.min(low[node],tin[it]);
+			}
+		}
+	}
+}

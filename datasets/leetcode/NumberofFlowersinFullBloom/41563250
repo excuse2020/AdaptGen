@@ -1,0 +1,28 @@
+class Solution {
+	int[] fullBloomFlowers(int[][] flowers, int[] people) {
+		Integer[] pi = new Integer[people.length];
+		for (int i = 0; i < people.length; i++) {
+			pi[i] = i;
+		}
+		Arrays.sort(pi,(v1, v2) -> {people[v1] - people[v2]});
+		Arrays.sort(flowers,(v1, v2) -> {(v1[0] == v2[0]) ? v1[1] - v2[1] : v1[0] - v2[0]});
+		int open = 0;
+		int closed = 0;
+		int j = 0;
+		PriorityQueue<Integer> pq = new PriorityQueue<>();
+		int[] res = new int[people.length];
+		for (int i = 0; i < pi.length; i++) {
+			int idx = pi[i];
+			int time = people[idx];
+			while (j < flowers.length && flowers[j][0] <= time) {
+				pq.add(flowers[j][1]);
+				j++;
+			}
+			while (!pq.isEmpty() && pq.peek() < time) {
+				pq.poll();
+			}
+			res[idx] = pq.size();
+		}
+		return res;
+	}
+}

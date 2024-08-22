@@ -1,0 +1,54 @@
+class Solution {
+	int[][] divideArray(int[] nums, int k) {
+		int n = nums.length;
+		int[][] ans = new int[n / 3][3];
+		int[][] empty = new int[0][0];
+		int r = 0;
+		int c = 0;
+		int max = Integer.MIN_VALUE;
+		int min = Integer.MAX_VALUE;
+		for (int i: nums) {	
+			max = Math.max(max,i);
+			min = Math.min(min,i);
+		}
+		int[] freq = new int[max - min + 1];
+		for (int i: nums) {	
+			freq[i - min]++;
+		}
+		int i = 0;
+		while (true) {
+			if (i >= max - min + 1) {
+				break;
+			}
+			if (freq[i] == 0) {
+				i++;
+				continue;
+			}
+			if (c == 0) {
+				ans[r][c] = i + min;
+				c++;
+			} 
+			else if (c == 1) {
+				if ((i + min) - (ans[r][c - 1]) <= k) {
+					ans[r][c] = i + min;
+				} 
+				else {
+					return empty;
+				}
+				c++;
+			} 
+			else {
+				if ((i + min) - ans[r][c - 1] <= k && (i + min) - ans[r][c - 2] <= k) {
+					ans[r][c] = i + min;
+				} 
+				else {
+					return empty;
+				}
+				r++;
+				c = 0;
+			}
+			freq[i]--;
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,26 @@
+class Solution {
+	int helper(int n, int curr, int prev, Integer[][] dp) {
+		if (curr == n) {
+			return 0;
+		}
+		if (curr > n || prev > n) {
+			return (int) 1e9;
+		}
+		if (dp[prev][curr] != null) {
+			return dp[prev][curr];
+		}
+		int paste = 1 + helper(n,curr + prev,prev,dp);
+		int copy = (int) (1e9);
+		if (prev != curr) {
+			copy = 1 + helper(n,curr,curr,dp);
+		}
+		return dp[prev][curr] = Math.min(paste,copy);
+	}
+	int minSteps(int n) {
+		if (n == 1) {
+			return 0;
+		}
+		Integer[][] dp = new Integer[n + 1][n + 1];
+		return 1 + helper(n,1,1,dp);
+	}
+}

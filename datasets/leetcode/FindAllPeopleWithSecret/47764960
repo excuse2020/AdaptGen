@@ -1,0 +1,63 @@
+class Solution {
+	Set<Integer> knowsSecret = new HashSet<>();
+	void dfs(Map<Integer, Set<Integer>> meetingMap, Set<Integer> visited, Set<Integer> meetingList) {
+		for (Integer person: meetingList) {	
+			if (!visited.contains(person)) {
+				visited.add(person);
+				knowsSecret.add(person);
+				if (meetingMap.containsKey(person)) {
+					dfs(meetingMap,visited,meetingMap.get(person));
+				}
+			}
+		}
+	}
+	List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+		knowsSecret.add(0);
+		knowsSecret.add(firstPerson);
+		Map<Integer, Map<Integer, Set<Integer>>> map = new TreeMap<>();
+		for (int i = 0; i < meetings.length; i++) {
+			int time = meetings[i][2];
+			int april = meetings[i][0];
+			int lee = meetings[i][1];
+			if (map.containsKey(time)) {
+				Map<Integer, Set<Integer>> meetingMap = map.get(time);
+				if (meetingMap.containsKey(april)) {
+					Set<Integer> meetingList = meetingMap.get(april);
+					meetingList.add(lee);
+					meetingMap.put(april,meetingList);
+				} 
+				else {
+					Set<Integer> meetingList = new HashSet<>();
+					meetingList.add(lee);
+					meetingMap.put(april,meetingList);
+				}
+				if (meetingMap.containsKey(lee)) {
+					Set<Integer> meetingList = meetingMap.get(lee);
+					meetingList.add(april);
+					meetingMap.put(lee,meetingList);
+				} 
+				else {
+					Set<Integer> meetingList = new HashSet<>();
+					meetingList.add(april);
+					meetingMap.put(lee,meetingList);
+				}
+			} 
+			else {
+				Map<Integer, Set<Integer>> meetingMap = new HashMap<>();
+				meetingMap.computeIfAbsent(april,(k) -> {new HashSet<>()}).add(lee);
+				meetingMap.computeIfAbsent(lee,(k) -> {new HashSet<>()}).add(april);
+				map.put(time,meetingMap);
+			}
+		}
+		for (Map.Entry<Integer, Map<Integer, Set<Integer>>> e: map.entrySet()) {	
+			Map<Integer, Set<Integer>> meetingMap = e.getValue();
+			Set<Integer> visited = new HashSet<>();
+			for (Map.Entry<Integer, Set<Integer>> hm: meetingMap.entrySet()) {	
+				if (knowsSecret.contains(hm.getKey())) {
+					dfs(meetingMap,visited,hm.getValue());
+				}
+			}
+		}
+		return knowsSecret.stream().toList();
+	}
+}

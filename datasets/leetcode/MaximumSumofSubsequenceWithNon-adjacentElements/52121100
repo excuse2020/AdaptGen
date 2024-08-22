@@ -1,0 +1,23 @@
+class Solution {
+	int maximumSumSubsequence(int[] nums, int[][] queries) {
+		int ans = 0;
+		int len = nums.length;
+		int mod = (int) 1e9 + 7;
+		for (int[] query: queries) {	
+			nums[query[0]] = query[1];
+			if (len == 1) {
+				ans = (ans + Math.max(nums[0],0)) % mod;
+				continue;
+			}
+			int twoBack = Math.max(nums[0],0);
+			int oneBack = Math.max(twoBack,nums[1]);
+			for (int i = 2; i < len; i++) {
+				int cur = Math.max(oneBack,twoBack + Math.max(nums[i],0));
+				twoBack = oneBack;
+				oneBack = cur;
+			}
+			ans = (ans + oneBack) % mod;
+		}
+		return ans;
+	}
+}

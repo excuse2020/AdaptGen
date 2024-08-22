@@ -1,0 +1,31 @@
+class Solution {
+	int dp;
+	HashMap<Integer, ArrayList<Integer>> map = new HashMap<Integer, ArrayList<Integer>>();
+	int dfs(int prevLimit, int curr, int arr) {
+		if (curr >= arr.length) {
+			return 0;
+		}
+		if (dp[curr][prevLimit] != -1) {
+			return dp[curr][prevLimit];
+		}
+		int ans = dfs(prevLimit,curr + 1,arr);
+		int n = arr[curr];
+		for (int indx: map.getOrDefault(n,new ArrayList<Integer>())) {	
+			if (indx >= prevLimit) {
+				ans = Math.max(ans,1 + dfs(indx + 1,curr + 1,arr));
+			}
+		}
+		return dp[curr][prevLimit] = ans;
+	}
+	int maxUncrossedLines(int[] nums1, int[] nums2) {
+		dp = new int[nums1.length][nums2.length + 1];
+		for (int d: dp) {	
+			Arrays.fill(d,-1);
+		}
+		for (int i = 0; i < nums2.length; i++) {
+			int n = nums2[i];
+			map.computeIfAbsent(n,(val) -> {new ArrayList<Integer>()}).add(i);
+		}
+		return dfs(0,0,nums1);
+	}
+}

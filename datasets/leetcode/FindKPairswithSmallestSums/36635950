@@ -1,0 +1,20 @@
+class Solution {
+	List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) {
+		List<List<Integer>> res = new ArrayList<>(k);
+		int n1 = nums1.length, n2 = nums2.length;
+		PriorityQueue<int[]> queue = new PriorityQueue<>(Comparator.comparingInt((arr) -> {arr[0]}));
+		queue.offer(new int{nums1[0] + nums2[0], 0, 0});
+		int max1 = 0, index2;
+		while (k-- > 0 && !queue.isEmpty()) {
+			var currItem = queue.remove();
+			res.add(List.of(nums1[currItem[1]],nums2[currItem[2]]));
+			if ((index2 = currItem[2] + 1) < n2) {
+				queue.offer(new int{nums1[currItem[1]] + nums2[index2], currItem[1], index2});
+			}
+			if (currItem[1] == max1 && ++max1 < n1) {
+				queue.offer(new int{nums1[max1] + nums2[0], max1, 0});
+			}
+		}
+		return res;
+	}
+}

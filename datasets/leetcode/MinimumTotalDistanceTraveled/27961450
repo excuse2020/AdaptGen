@@ -1,0 +1,46 @@
+class Solution {
+	long minimumTotalDistance(List<Integer> robot, int[][] f) {
+		Arrays.sort(f,(a, b) -> {(a[1] == 0) ? 1 : (b[1] == 0) ? -1 : a[0] - b[0]});
+		int[] r = new int[robot.size()];
+		int i = 0;
+		for (int x: robot) {	
+			r[i++] = x;
+		}
+		Arrays.sort(r);
+		int[][] d = new int[f.length][2];
+		long res = 0;
+		for (i = r.length - 1; i >= 0; i--) {
+			res += pop(d,i,r,f);
+		}
+		return res;
+	}
+	long pop(int[][] d, int i, int[] r, int[][] f) {
+		long cost = Long.MAX_VALUE;
+		int j;
+		for (j = 0; j < d.length; j++) {
+			long t = Math.abs(r[i] - f[j][0]);
+			int tj = j;
+			while (tj < d.length && d[tj][1] == f[tj][1]) {
+				if (d[tj][1] == 0 || tj == d.length - 1) {
+					t = Long.MAX_VALUE;
+					break;
+				}
+				int l = d[tj][0] + d[tj][1] - 1;
+				t += Math.abs(f[tj + 1][0] - r[l]) - Math.abs(f[tj][0] - r[l]);
+				++tj;
+			}
+			if (t > cost) {
+				break;
+			}
+			cost = t;
+		}
+		d[j - 1][0] = i;
+		int tj = j - 1;
+		while (d[tj][1] == f[tj][1]) {
+			d[tj + 1][0] = d[tj][0] + d[tj][1];
+			++tj;
+		}
+		d[tj][1]++;
+		return cost;
+	}
+}

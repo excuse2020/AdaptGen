@@ -1,0 +1,31 @@
+class Solution {
+	int max = -1;
+	TreeNode u = new TreeNode(-1), v = new TreeNode(-1);
+	void dfs(TreeNode root, TreeNode p, int height, TreeNode parent) {
+		if (root == null) {
+			return;
+		}
+		p[root.val] = parent;
+		if ((root.left == null) && (root.right == null)) {
+			if (max < height) {
+				max = height;
+				u = root;
+				v = root;
+			} 
+			else if (height == max) {
+				v = root;
+			}
+		}
+		dfs(root.left,p,height + 1,root);
+		dfs(root.right,p,height + 1,root);
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		TreeNode p = new TreeNode[501];
+		dfs(root,p,0,null);
+		while (u != v) {
+			u = p[u.val];
+			v = p[v.val];
+		}
+		return u;
+	}
+}

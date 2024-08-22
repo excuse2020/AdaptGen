@@ -1,0 +1,38 @@
+class Solution {
+	ListNode deleteDuplicates(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode cur = head;
+		while (cur != null && cur.next != null) {
+			if (cur.val == cur.next.val) {
+				cur.next = cur.next.next;
+			} 
+			else {
+				cur = cur.next;
+			}
+		}
+		return head;
+	}
+	ListNode deleteDuplicates2(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		Stack<ListNode> stack = new Stack<>();
+		ListNode cur = head;
+		while (cur != null) {
+			if (stack.isEmpty() || stack.peek().val != cur.val) {
+				stack.push(cur);
+			}
+			cur = cur.next;
+		}
+		ListNode newHead = stack.pop();
+		newHead.next = null;
+		while (!stack.isEmpty()) {
+			cur = stack.pop();
+			cur.next = newHead;
+			newHead = cur;
+		}
+		return newHead;
+	}
+}

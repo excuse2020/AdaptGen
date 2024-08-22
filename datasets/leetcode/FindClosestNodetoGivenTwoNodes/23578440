@@ -1,0 +1,27 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		int[] vis = new int[edges.length];
+		Queue<int[]> queue = new LinkedList<>();
+		int result = Integer.MAX_VALUE;
+		boolean found = false;
+		queue.add(new int{node1, 1});
+		queue.add(new int{node2, 2});
+		while (!queue.isEmpty() && !found) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				int[] cur = queue.poll();
+				if (cur[0] == -1 || vis[cur[0]] == cur[1]) {
+					continue;
+				}
+				if (vis[cur[0]] != 0) {
+					found = true;
+					result = Math.min(result,cur[0]);
+					continue;
+				}
+				vis[cur[0]] = cur[1];
+				queue.add(new int{edges[cur[0]], cur[1]});
+			}
+		}
+		return found ? result : -1;
+	}
+}

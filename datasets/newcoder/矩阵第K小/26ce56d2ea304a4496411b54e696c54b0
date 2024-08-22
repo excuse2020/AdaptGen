@@ -1,0 +1,61 @@
+class Solution {
+	int KthinMatrix(ArrayList<ArrayList<Integer>> matrix, int k) {
+		int n = matrix.size();
+		int[] nums = new int[n * n];
+		int index = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				nums[index] = matrix.get(i).get(j);
+				index++;
+			}
+		}
+		for (int i = 0; i < nums.length; i++) {
+			heapInsert(nums,i);
+		}
+		int heapSize = nums.length;
+		swap(nums,0,--heapSize);
+		while (nums.length - heapSize != k) {
+			heapify(nums,0,heapSize);
+			swap(nums,0,--heapSize);
+		}
+		return nums[nums.length - k];
+	}
+	void heapInsert(int[] nums, int index) {
+		while (nums[index] < nums[(index - 1) / 2]) {
+			swap(nums,index,(index - 1) / 2);
+			index = (index - 1) / 2;
+		}
+	}
+	void heapSort(int[] nums) {
+		if (0 == nums.length || 1 == nums.length) {
+			return;
+		}
+		for (int i = 0; i < nums.length; i++) {
+			heapInsert(nums,i);
+		}
+		int heapSize = nums.length;
+		swap(nums,0,--heapSize);
+		while (heapSize > 0) {
+			heapify(nums,0,heapSize);
+			swap(nums,0,--heapSize);
+		}
+	}
+	void heapify(int[] nums, int index, int heapSize) {
+		int left = index * 2 + 1;
+		while (left < heapSize) {
+			int smallest = left + 1 < heapSize && nums[left + 1] < nums[left] ? left + 1 : left;
+			smallest = nums[smallest] < nums[index] ? smallest : index;
+			if (smallest == index) {
+				break;
+			}
+			swap(nums,smallest,index);
+			index = smallest;
+			left = index * 2 + 1;
+		}
+	}
+	void swap(int[] nums, int i, int j) {
+		int tmp = nums[i];
+		nums[i] = nums[j];
+		nums[j] = tmp;
+	}
+}

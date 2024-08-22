@@ -1,0 +1,67 @@
+class Solution {
+	boolean kmpSearch(String s, String p) {
+		char[] arr_s = s.toCharArray();
+		char[] arr_p = p.toCharArray();
+		int[] kmp = lps(arr_p);
+		int i = 0, j = 0;
+		while (i < arr_s.length && j < arr_p.length) {
+			if (arr_s[i] == arr_p[j]) {
+				i++;
+				j++;
+			} 
+			else if (j != 0) {
+				j = kmp[j - 1];
+			} 
+			else {
+				i++;
+			}
+		}
+		if (j == arr_p.length) {
+			return true;
+		} 
+		else {
+			return false;
+		}
+	}
+	int[] lps(char[] arr) {
+		int[] kmp = new int[arr.length];
+		kmp[0] = 0;
+		int len = 0, i = 1;
+		while (i < kmp.length) {
+			if (arr[len] == arr[i]) {
+				len++;
+				kmp[i] = len;
+				i++;
+			} 
+			else if (len != 0) {
+				len = kmp[len - 1];
+			} 
+			else {
+				kmp[i] = len;
+				i++;
+			}
+		}
+		return kmp;
+	}
+	int repeatedStringMatch(String A, String B) {
+		if (A == null || A.length() == 0) {
+			return -1;
+		}
+		int len = B.length();
+		StringBuilder sb = new StringBuilder(A);
+		int count = 1;
+		while (sb.length() < len) {
+			sb.append(A);
+			count++;
+		}
+		if (kmpSearch(sb.toString(),B)) {
+			return count;
+		} 
+		else if (kmpSearch(sb.append(A).toString(),B)) {
+			return count + 1;
+		} 
+		else {
+			return -1;
+		}
+	}
+}

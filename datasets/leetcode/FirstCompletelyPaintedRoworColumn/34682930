@@ -1,0 +1,41 @@
+class Solution {
+	boolean checkPaint(int[][] mat, int[] cur) {
+		boolean allPaintedRow = true, allPaintedCol = true;
+		for (int r = 0; r < mat.length; r++) {
+			if (mat[r][cur[1]] != -1) {
+				allPaintedRow = false;
+				break;
+			}
+		}
+		if (allPaintedRow) {
+			return true;
+		}
+		for (int c = 0; c < mat[0].length; c++) {
+			if (mat[cur[0]][c] != -1) {
+				allPaintedCol = false;
+				break;
+			}
+		}
+		if (allPaintedCol) {
+			return true;
+		}
+		return false;
+	}
+	int firstCompleteIndex(int[] arr, int[][] mat) {
+		Map<Integer, int[]> map = new HashMap<>();
+		for (int i = 0; i < mat.length; i++) {
+			for (int j = 0; j < mat[0].length; j++) {
+				map.put(mat[i][j],new int{i, j});
+			}
+		}
+		for (int i = 0; i < arr.length; i++) {
+			int[] cur = map.get(arr[i]);
+			map.remove(arr[i]);
+			mat[cur[0]][cur[1]] = -1;
+			if (checkPaint(mat,cur)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+}

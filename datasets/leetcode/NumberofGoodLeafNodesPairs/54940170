@@ -1,0 +1,33 @@
+class Solution {
+	int ans;
+	int dist;
+	int countPairs(TreeNode root, int distance) {
+		dist = distance;
+		ans = 0;
+		helper(root,0);
+		return ans;
+	}
+	ArrayList<Integer> helper(TreeNode root, int d) {
+		if (root == null) {
+			return new ArrayList<>();
+		}
+		ArrayList l1 = helper(root.left,d + 1);
+		ArrayList l2 = helper(root.right,d + 1);
+		for (int i = 0; i < l1.size(); i++) {
+			for (int j = 0; j < l2.size(); j++) {
+				int x = (int) l1.get(i);
+				int y = (int) l2.get(j);
+				if ((x - d) + (y - d) <= dist) {
+					ans++;
+				}
+			}
+		}
+		if (l1.size() == 0 && l2.size() == 0) {
+			l1.add(d);
+		}
+		for (int i = 0; i < l2.size(); i++) {
+			l1.add(l2.get(i));
+		}
+		return l1;
+	}
+}

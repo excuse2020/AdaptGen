@@ -1,0 +1,33 @@
+class Solution {
+	int[] diff;
+	boolean carPooling(int[][] trips, int capacity) {
+		diff = new int[10001];
+		for (int[] t: trips) {	
+			int val = t[0];
+			int i = t[1];
+			int j = t[2] - 1;
+			increment(i,j,val);
+		}
+		int[] res = result();
+		for (int i: res) {	
+			if (i > capacity) {
+				return false;
+			}
+		}
+		return true;
+	}
+	void increment(int i, int j, int val) {
+		diff[i] += val;
+		if (j + 1 < diff.length) {
+			diff[j + 1] -= val;
+		}
+	}
+	int[] result() {
+		int[] res = new int[diff.length];
+		res[0] = diff[0];
+		for (int i = 1; i < res.length; i++) {
+			res[i] = res[i - 1] + diff[i];
+		}
+		return res;
+	}
+}

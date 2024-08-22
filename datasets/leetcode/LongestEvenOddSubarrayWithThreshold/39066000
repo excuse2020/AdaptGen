@@ -1,0 +1,31 @@
+class Solution {
+	int longestAlternatingSubarray(int[] nums, int threshold) {
+		int l = 0, r = 0, n = nums.length, result = 0;
+		while (r < n) {
+			int diff = (r - l) % 2;
+			if (l == r && nums[l] % 2 == 1) {
+				l++;
+				r++;
+				continue;
+			}
+			if (nums[r] <= threshold) {
+				boolean success = diff == 0 ? nums[r] % 2 == 0 : nums[r] % 2 == 1;
+				if (success) {
+					r++;
+					continue;
+				} 
+				else {
+					result = result < (r - l) ? (r - l) : result;
+					l = r;
+					continue;
+				}
+			} 
+			else {
+				result = result < (r - l) ? (r - l) : result;
+				l = r + 1;
+			}
+			r++;
+		}
+		return result < (r - l) ? (r - l) : result;
+	}
+}

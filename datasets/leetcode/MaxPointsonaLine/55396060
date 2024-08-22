@@ -1,0 +1,28 @@
+class Solution {
+	int gcd(int a, int b) {
+		return b == 0 ? a : gcd(b,a % b);
+	}
+	int maxPoints(int[][] points) {
+		int n = points.length;
+		if (n < 3) {
+			return n;
+		}
+		int count = 2;
+		for (int i = 0; i < n && count < n - i; i++) {
+			Map<String, Integer> slopes = new HashMap<>();
+			for (int j = i + 1; j < n; j++) {
+				int dx = points[j][0] - points[i][0];
+				int dy = points[j][1] - points[i][1];
+				int div = gcd(dx,dy);
+				String key = (dx / div) + ",";
+				slopes.put(key,slopes.getOrDefault(key,1) + 1);
+			}
+			for (int x: slopes.values()) {	
+				if (x > count) {
+					count = x;
+				}
+			}
+		}
+		return count;
+	}
+}

@@ -1,0 +1,74 @@
+class Solution {
+	int numDistinct(String s, String t) {
+		return solveUsingSO(s,t);
+	}
+	int solveUsingMem(String s, String t, int i, int j, int[][] dp) {
+		if (j == t.length()) {
+			return 1;
+		}
+		if (i == s.length()) {
+			return 0;
+		}
+		if (dp[i][j] != -1) {
+			return dp[i][j];
+		}
+		int ans = 0;
+		if (s.charAt(i) == t.charAt(j)) {
+			ans += solveUsingMem(s,t,i + 1,j + 1,dp);
+		}
+		ans += solveUsingMem(s,t,i + 1,j,dp);
+		dp[i][j] = ans;
+		return ans;
+	}
+	int solveUsingRec(String s, String t, int i, int j) {
+		if (j == t.length()) {
+			return 1;
+		}
+		if (i == s.length()) {
+			return 0;
+		}
+		int ans = 0;
+		if (s.charAt(i) == t.charAt(j)) {
+			ans += solveUsingRec(s,t,i + 1,j + 1);
+		}
+		ans += solveUsingRec(s,t,i + 1,j);
+		return ans;
+	}
+	int solveUsingSO(String s, String t) {
+		int[] next = new int[t.length() + 1];
+		int[] curr = new int[t.length() + 1];
+		next[t.length()] = 1;
+		curr[t.length()] = 1;
+		for (int i = s.length() - 1; i >= 0; i--) {
+			for (int j = t.length() - 1; j >= 0; j--) {
+				int ans = 0;
+				if (s.charAt(i) == t.charAt(j)) {
+					ans += next[j + 1];
+				}
+				ans += next[j];
+				curr[j] = ans;
+			}
+			int[] temp = next;
+			next = curr;
+			curr = temp;
+		}
+		return next[0];
+	}
+	int solveUsingTab(String s, String t) {
+		int[][] dp = new int[s.length() + 1][t.length() + 1];
+		for (int i = 0; i <= s.length(); i++) {
+			dp[i][t.length()] = 1;
+		}
+		for (int i = s.length() - 1; i >= 0; i--) {
+			for (int j = t.length() - 1; j >= 0; j--) {
+				int ans = 0;
+				if (s.charAt(i) == t.charAt(j)) {
+					ans += dp[i + 1][j + 1];
+				}
+				ans += dp[i + 1][j];
+				dp[i][j] = ans;
+			}
+		}
+		return dp[0][0];
+	}
+}

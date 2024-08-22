@@ -1,0 +1,56 @@
+class Solution {
+	void calc(int[][] bits, int[] nums, int n) {
+		for (int i = 0; i < 32; i++) {
+			bits[0][i] = ((nums[0] >> i) & 1);
+		}
+		for (int i = 1; i < n; i++) {
+			for (int j = 0; j < 32; j++) {
+				bits[i][j] += ((nums[i] >> j) & 1) + bits[i - 1][j];
+			}
+		}
+	}
+	int getAND(int l, int r, int[][] bits) {
+		int and = 0;
+		if (l == 0) {
+			for (int j = 0; j < 32; j++) {
+				if (bits[r][j] == r + 1) {
+					and += (1 << j);
+				}
+			}
+		} 
+		else {
+			for (int j = 0; j < 32; j++) {
+				if (bits[r][j] - bits[l - 1][j] == r - l + 1) {
+					and += (1 << j);
+				}
+			}
+		}
+		return and;
+	}
+	int minimumDifference(int[] nums, int k) {
+		int n = nums.length;
+		int[][] bits = new int[n][32];
+		calc(bits,nums,n);
+		int ans = Integer.MAX_VALUE;
+		for (int i = 0; i < n; i++) {
+			int l = i;
+			int r = n - 1;
+			while (l <= r) {
+				int m = (l + r) >> 1;
+				if (getAND(i,m,bits) >= k) {
+					l = m + 1;
+				} 
+				else {
+					r = m - 1;
+				}
+			}
+			if (r >= i) {
+				ans = Math.min(ans,Math.abs(k - getAND(i,r,bits)));
+			}
+			if (r + 1 < n) {
+				ans = Math.min(ans,Math.abs(k - getAND(i,r + 1,bits)));
+			}
+		}
+		return ans;
+	}
+}

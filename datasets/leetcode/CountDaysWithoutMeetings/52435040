@@ -1,0 +1,31 @@
+class Solution {
+	int countDays(int days, int[][] meetings) {
+		Arrays.sort(meetings,(a, b) -> {Integer.compare(a[0],b[0])});
+		List<int[]> mergeMeeting = new ArrayList<>();
+		int[] prev = meetings[0];
+		mergeMeeting.add(prev);
+		for (int[] meeting: meetings) {	
+			if (meeting[0] <= prev[1]) {
+				prev[1] = Math.max(prev[1],meeting[1]);
+			} 
+			else {
+				prev = meeting;
+				mergeMeeting.add(prev);
+			}
+		}
+		int missingDays = 0;
+		int n = mergeMeeting.size();
+		for (int i = 0; i < n; i++) {
+			if (i == 0) {
+				missingDays += mergeMeeting.get(0)[0] - 1;
+			}
+			if (i < n - 1) {
+				missingDays += Math.max(mergeMeeting.get(i + 1)[0] - mergeMeeting.get(i)[1],0);
+			} 
+			else {
+				missingDays += Math.max(days - mergeMeeting.get(n - 1)[1],0);
+			}
+		}
+		return missingDays;
+	}
+}

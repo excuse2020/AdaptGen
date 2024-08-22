@@ -1,0 +1,33 @@
+class Solution {
+	int mod = (int) 1e9 + 7;
+	int factorial(int n) {
+		long result = 1;
+		for (int i = 2; i <= n; i++) {
+			result = (result * i) % mod;
+		}
+		return (int) result;
+	}
+	int modInverse(int x) {
+		return power(x,mod - 2);
+	}
+	int power(int x, int y) {
+		long result = 1;
+		long base = x;
+		while (y > 0) {
+			if ((y & 1) == 1) {
+				result = (result * base) % mod;
+			}
+			base = (base * base) % mod;
+			y >>= 1;
+		}
+		return (int) result;
+	}
+	int valueAfterKSeconds(int n, int k) {
+		int a = factorial(n + k - 1);
+		int b = factorial(n - 1);
+		int c = factorial(k);
+		int bInv = modInverse(b);
+		int cInv = modInverse(c);
+		return (int) (((long) a * bInv % mod) * cInv % mod);
+	}
+}

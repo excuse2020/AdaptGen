@@ -1,0 +1,29 @@
+class Solution {
+	int[][] mem = null;
+	int[] countSubTrees(int n, int[][] edges, String labels) {
+		mem = new int[n][26];
+		HashMap<Integer, HashSet<Integer>> map = new HashMap();
+		for (int[] e: edges) {	
+			map.putIfAbsent(e[0],new HashSet());
+			map.putIfAbsent(e[1],new HashSet());
+			map.get(e[0]).add(e[1]);
+			map.get(e[1]).add(e[0]);
+		}
+		dfs(map,new boolean[n],0,labels);
+		int[] ans = new int[n];
+		int i = 0;
+	}
+	int[] dfs(HashMap<Integer, HashSet<Integer>> m, boolean[] vis, int k, String labels) {
+		if (vis[k]) {
+			return new int[26];
+		}
+		vis[k] = true;
+		int[] m1 = new int[26];
+		for (int key: m.get(k)) {	
+			int[] a = dfs(m,vis,key,labels);
+			for (int i = 0; i < 26; i++) {
+				m1[i] += a[i];
+			}
+		}
+	}
+}

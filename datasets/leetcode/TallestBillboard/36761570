@@ -1,0 +1,24 @@
+class Solution {
+	int f(int idx, int diff, int rods, int memo) {
+		if (idx == rods.length) {
+			if (diff == 0) {
+				return 0;
+			}
+			return Integer.MIN_VALUE;
+		}
+		if (memo[idx][diff + 5000] != -1) {
+			return memo[idx][diff + 5000];
+		}
+		int not_take = f(idx + 1,diff,rods,memo);
+		int sp1 = rods[idx] + f(idx + 1,diff + rods[idx],rods,memo);
+		int sp2 = f(idx + 1,diff - rods[idx],rods,memo);
+		return memo[idx][diff + 5000] = Math.max(not_take,Math.max(sp1,sp2));
+	}
+	int tallestBillboard(int[] rods) {
+		int memo = new int[rods.length][10001];
+		for (int arr: memo) {	
+			Arrays.fill(arr,-1);
+		}
+		return f(0,0,rods,memo);
+	}
+}

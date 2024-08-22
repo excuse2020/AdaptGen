@@ -1,0 +1,31 @@
+class Solution {
+	int getMaximumGold(int[][] grid) {
+		int n = grid.length, m = grid[0].length;
+		int sum = 0, res = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				if (grid[i][j] != 0) {
+					sum = search(grid,i,j,n,m);
+					res = Math.max(res,sum);
+				}
+			}
+		}
+		return res;
+	}
+	int search(int[][] mat, int i, int j, int n, int m) {
+		if (i < 0 || i >= n || j < 0 || j >= m || mat[i][j] == 0) {
+			return 0;
+		}
+		int curr = mat[i][j];
+		int sum = curr, l = 0, r = 0, u = 0, d = 0, tot = 0;
+		mat[i][j] = 0;
+		l = search(mat,i,j - 1,n,m);
+		r = search(mat,i,j + 1,n,m);
+		u = search(mat,i - 1,j,n,m);
+		d = search(mat,i + 1,j,n,m);
+		tot = Math.max(u,Math.max(d,Math.max(l,r)));
+		sum += tot;
+		mat[i][j] = curr;
+		return sum;
+	}
+}

@@ -1,0 +1,50 @@
+class Solution {
+	int minSwaps(int[] nums) {
+		int len = nums.length;
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < len; i++) {
+			map.put(nums[i],i);
+		}
+		Arrays.sort(nums);
+		boolean[] visited = new boolean[len];
+		Arrays.fill(visited,false);
+		int ans = 0;
+		for (int i = 0; i < len; i++) {
+			if (visited[i] || map.get(nums[i]) == i) {
+				continue;
+			}
+			int j = i, cycle_size = 0;
+			while (!visited[j]) {
+				visited[j] = true;
+				j = map.get(nums[j]);
+				cycle_size++;
+			}
+			if (cycle_size > 0) {
+				ans += (cycle_size - 1);
+			}
+		}
+		return ans;
+	}
+	int minimumOperations(TreeNode root) {
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(root);
+		int numOfSwaps = 0;
+		while (!queue.isEmpty()) {
+			int[] arr = new int[queue.size()];
+			int size = arr.length, i = 0;
+			while (size > 0) {
+				TreeNode node = queue.remove();
+				arr[i++] = node.val;
+				if (node.left != null) {
+					queue.add(node.left);
+				}
+				if (node.right != null) {
+					queue.add(node.right);
+				}
+				size--;
+			}
+			numOfSwaps += minSwaps(arr);
+		}
+		return numOfSwaps;
+	}
+}

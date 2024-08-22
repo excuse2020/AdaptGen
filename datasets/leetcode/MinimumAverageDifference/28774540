@@ -1,0 +1,26 @@
+class Solution {
+	int minimumAverageDifference(int[] nums) {
+		int n = nums.length;
+		long prefixSum = new long[n];
+		prefixSum[0] = nums[0];
+		for (int i = 1; i < n; i++) {
+			prefixSum[i] = prefixSum[i - 1] + nums[i];
+		}
+		long totalSum = prefixSum[n - 1];
+		int minAvgDiff = Integer.MAX_VALUE;
+		int ans = -1;
+		for (int i = 0; i < n - 1; i++) {
+			long avgLeft = prefixSum[i] / (i + 1);
+			long avgRight = (totalSum - prefixSum[i]) / (n - i);
+			int minAvgDiffCurr = Math.abs((int) (avgRight - avgLeft));
+			if (minAvgDiffCurr < minAvgDiff) {
+				minAvgDiff = minAvgDiffCurr;
+				ans = i;
+			}
+		}
+		if (totalSum / n < minAvgDiff) {
+			ans = n - 1;
+		}
+		return ans;
+	}
+}

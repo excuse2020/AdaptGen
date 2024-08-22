@@ -1,0 +1,28 @@
+class Solution {
+	int minIncrementForUnique(int[] nums) {
+		Arrays.sort(nums);
+		PriorityQueue<Integer> q = new PriorityQueue<>(Collections.reverseOrder());
+		Set<Integer> set = new LinkedHashSet<>();
+		int ans = 0;
+		for (int i = 0; i < nums.length; i++) {
+			if (!set.contains(nums[i])) {
+				set.add(nums[i]);
+				q.add(nums[i]);
+			} 
+			else {
+				int max = q.peek();
+				int currentNumber = max + 1;
+				while (set.contains(currentNumber)) {
+					currentNumber++;
+				}
+				ans += currentNumber - nums[i];
+				set.add(currentNumber);
+				q.add(currentNumber);
+			}
+		}
+		if (ans == -1) {
+			return 1;
+		}
+		return ans;
+	}
+}

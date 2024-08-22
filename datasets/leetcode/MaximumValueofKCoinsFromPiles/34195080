@@ -1,0 +1,25 @@
+class Solution {
+	int find(List<List<Integer>> a, int k, int in, int dp) {
+		if (dp[in][k] != -1) {
+			return dp[in][k];
+		}
+		if (k <= 0 || in == a.size()) {
+			return 0;
+		}
+		int ans = find(a,k,in + 1,dp);
+		int s = 0;
+		for (int j = 0; j < a.get(in).size() && j < k; j++) {
+			s += a.get(in).get(j);
+			ans = Math.max(ans,find(a,k - j,in + 1,dp) + s);
+		}
+		dp[in][k] = ans;
+		return dp[in][k];
+	}
+	int maxValueOfCoins(List<List<Integer>> a, int k) {
+		int dp = new int[a.size() + 1][k + 1];
+		for (int dpp: dp) {	
+			Arrays.fill(dpp,-1);
+		}
+		return find(a,k,0,dp);
+	}
+}

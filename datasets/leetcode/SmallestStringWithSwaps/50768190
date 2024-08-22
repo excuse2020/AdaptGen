@@ -1,0 +1,68 @@
+class Solution {
+	HashMap<Integer, ArrayList<Integer>> hs;
+	void f(int idx, Character[] ch, ArrayList<ArrayList<Integer>> al, HashMap<Integer, ArrayList<Integer>> hm, int cc, String s) {
+		if (hm.containsKey(cc)) {
+			ArrayList<Integer> a = hm.get(cc);
+			a.add(idx);
+			hm.put(cc,a);
+		} 
+		else {
+			ArrayList<Integer> a = new ArrayList<>();
+			a.add(idx);
+			hm.put(cc,a);
+		}
+		if (hs.containsKey(cc)) {
+			ArrayList<Integer> hh = hs.get(cc);
+			hh.add(idx);
+			hs.put(cc,hh);
+		} 
+		else {
+			ArrayList<Integer> hh = new ArrayList<>();
+			hh.add(idx);
+			hs.put(cc,hh);
+		}
+		ch[idx] = s.charAt(idx);
+		for (int i: al.get(idx)) {	
+			if (ch[i] == null) {
+				f(i,ch,al,hm,cc,s);
+			}
+		}
+	}
+	String smallestStringWithSwaps(String s, List<List<Integer>> pairs) {
+		hs = new HashMap<>();
+		ArrayList<ArrayList<Integer>> al = new ArrayList<>();
+		for (int i = 0; i < s.length(); i++) {
+			al.add(new ArrayList<>());
+		}
+		for (List<Integer> l: pairs) {	
+			al.get(l.get(0)).add(l.get(1));
+			al.get(l.get(1)).add(l.get(0));
+		}
+		Character[] ch = new Character[s.length()];
+		Integer[] c1 = new Integer[s.length()];
+		int cc = 0;
+		HashMap<Integer, ArrayList<Integer>> hm = new HashMap<>();
+		for (int i = 0; i < s.length(); i++) {
+			if (ch[i] != null) {
+				continue;
+			}
+			f(i,ch,al,hm,cc,s);
+			ArrayList<Integer> k1 = hm.get(cc);
+			ArrayList<Integer> k2 = hs.get(cc);
+			Collections.sort(k1,(a, b) -> {s.charAt(a) - s.charAt(b)});
+			Collections.sort(k2);
+			hm.put(cc,k1);
+			hs.put(cc,k2);
+			int j = 0;
+			for (int it: k2) {	
+				ch[it] = s.charAt(k1.get(j++));
+			}
+			cc++;
+		}
+		String ans = "";
+		for (char cccc: ch) {	
+			ans += cccc;
+		}
+		return ans;
+	}
+}

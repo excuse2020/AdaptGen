@@ -1,0 +1,40 @@
+class Solution {
+	int ans;
+	boolean[] viss;
+	void dfs(int node, int[] vis, int[] edges, int[] dis, int root, int dist, boolean[] viss) {
+		if (edges[node] == -1) {
+			return;
+		}
+		if (root == -1) {
+			vis[node] = node;
+			root = node;
+		} 
+		else {
+			vis[node] = root;
+		}
+		viss[node] = true;
+		dis[node] = dist++;
+		if (viss[edges[node]] != false && vis[edges[node]] == root) {
+			ans = Math.max(ans,dist - dis[edges[node]]);
+		} 
+		else if (viss[edges[node]] != false) {
+			return;
+		} 
+		else {
+			dfs(edges[node],vis,edges,dis,root,dist,viss);
+		}
+	}
+	int longestCycle(int[] edges) {
+		ans = -1;
+		int n = edges.length;
+		int[] vis = new int[n];
+		int[] dis = new int[n];
+		viss = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			if (viss[i] != true) {
+				dfs(i,vis,edges,dis,-1,0,viss);
+			}
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,61 @@
+class Solution {
+	int operation(int a, int b, char ch) {
+		if (ch == '-') {
+			return a - b;
+		}
+		if (ch == '+') {
+			return a + b;
+		}
+		if (ch == '*') {
+			return a * b;
+		}
+		return a / b;
+	}
+	int solve(String s) {
+		Map<Character, Integer> map = new HashMap<>();
+		map.put('-',1);
+		map.put('+',1);
+		map.put('*',2);
+		map.put('/',2);
+		Deque<Character> s2 = new LinkedList<>();
+		Deque<Integer> s1 = new LinkedList<>();
+		s = "(" + s;
+		int i = 0;
+		while (i < s.length()) {
+			if (s.charAt(i) <= '9' && s.charAt(i) >= '0') {
+				int num = 0;
+				while (Character.isDigit(s.charAt(i))) {
+					num = num * 10 + s.charAt(i) - '0';
+					i++;
+				}
+				i--;
+				s1.push(num);
+			} 
+			else if (s.charAt(i) == '(') {
+				s2.push('(');
+			} 
+			else if (s.charAt(i) == '-' || s.charAt(i) == '+' || s.charAt(i) == '*' || s.charAt(i) == '/') {
+				if (!s2.isEmpty() && map.containsKey(s2.peek())) {
+					int b = s1.pop();
+					int a = s1.pop();
+					char c = s2.pop();
+					int d = operation(a,b,c);
+					s1.push(d);
+				}
+				s2.push(s.charAt(i));
+			} 
+			else {
+				while (!s2.isEmpty() && s2.peek() != '(') {
+					int b = s1.pop();
+					int a = s1.pop();
+					char c = s2.pop();
+					int d = operation(a,b,c);
+					s1.push(d);
+				}
+				s2.pop();
+			}
+			i++;
+		}
+		return s1.pop();
+	}
+}

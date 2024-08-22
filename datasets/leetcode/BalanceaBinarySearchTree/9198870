@@ -1,0 +1,82 @@
+class Solution {
+	Map<TreeNode, Integer> nodeToHeight = new HashMap<>();
+	int threshold = 1;
+	TreeNode balanceBST(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		TreeNode left = balanceBST(root.left);
+		TreeNode right = balanceBST(root.right);
+		root.left = left;
+		root.right = right;
+		int leftHeight = nodeToHeight.get(left);
+		int rightHeight = nodeToHeight.get(right);
+		int balance = rightHeight - leftHeight;
+		nodeToHeight.put(root,1 + Math.max(leftHeight,rightHeight));
+		if (Math.abs(balance) > threshold) {
+			if (balance > 0) {
+				if (getBalance(right) < 0) {
+					root.right = rotateRight(right);
+				}
+				root = rotateLeft(root);
+			} 
+			else {
+				if (getBalance(left) > 0) {
+					root.left = rotateLeft(left);
+				}
+				root = rotateRight(root);
+			}
+		}
+		if (!isBalanced(root)) {
+			return balanceBST(root);
+		}
+		return root;
+	}
+	int getBalance(TreeNode node) {
+		return nodeToHeight.get(node.right) - nodeToHeight.get(node.left);
+	}
+	boolean isBalanced(TreeNode root) {
+		if (root == null) {
+			return true;
+		}
+		boolean left = isBalanced(root.left);
+		boolean right = isBalanced(root.right);
+		return left && right;
+	}
+	TreeNode rotateLeft(TreeNode node) {
+		if (node == null || node.right == null) {
+			return node;
+		}
+		TreeNode right = node.right;
+		int height1 = nodeToHeight.get(node.left);
+		TreeNode two = right.left;
+		int height2 = nodeToHeight.get(two);
+		int height3 = nodeToHeight.get(right.right);
+		TreeNode root = right;
+		root.left = node;
+		node.right = two;
+		int newNodeHeight = 1 + Math.max(height1,height2);
+		int newRootHeight = 1 + Math.max(height3,newNodeHeight);
+		nodeToHeight.put(node,newNodeHeight);
+		nodeToHeight.put(root,newRootHeight);
+		return root;
+	}
+	TreeNode rotateRight(TreeNode node) {
+		if (node == null || node.left == null) {
+			return node;
+		}
+		TreeNode left = node.left;
+		int height1 = nodeToHeight.get(left.left);
+		TreeNode two = left.right;
+		int height2 = nodeToHeight.get(two);
+		int height3 = nodeToHeight.get(node.right);
+		TreeNode root = left;
+		root.right = node;
+		node.left = two;
+		int newNodeHeight = 1 + Math.max(height2,height3);
+		int newRootHeight = 1 + Math.max(height1,newNodeHeight);
+		nodeToHeight.put(node,newNodeHeight);
+		nodeToHeight.put(root,newRootHeight);
+		return root;
+	}
+}

@@ -1,0 +1,35 @@
+class Solution {
+	long minimumTime(int[] time, int totalTrips) {
+		long l = 0;
+		long r = time[0];
+		for (int i = 1; i < time.length; i++) {
+			if (r > time[i]) {
+				r = time[i];
+			}
+		}
+		r = r * totalTrips;
+		while (l <= r) {
+			long mid = l + ((r - l) / 2);
+			if (valid(time,totalTrips,mid)) {
+				r = mid - 1;
+			} 
+			else {
+				l = mid + 1;
+			}
+		}
+		return l;
+	}
+	boolean valid(int[] time, int totalTrips, long totalTime) {
+		int trips = 0;
+		for (int i = 0; i < time.length; i++) {
+			if (time[i] > totalTime) {
+				continue;
+			}
+			trips += (totalTime / time[i]);
+			if (trips >= totalTrips) {
+				return true;
+			}
+		}
+		return false;
+	}
+}

@@ -1,0 +1,63 @@
+class Solution {
+	ArrayList<String> ans = new ArrayList<>();
+	int left, right;
+	int n;
+	Stack<String> stack = new Stack<>();
+	void backtrace(StringBuilder sb) {
+		if (sb.length() == 2 * n) {
+			ans.add(sb.toString());
+			return;
+		}
+		if (stack.isEmpty()) {
+			if (left > 0) {
+				left--;
+				stack.push("(");
+				sb.append("(");
+				backtrace(sb);
+				sb.deleteCharAt(sb.length() - 1);
+				stack.pop();
+				left++;
+			} 
+			else {
+				return;
+			}
+		} 
+		else {
+			String top = stack.peek();
+			if (top.equals(")")) {
+				return;
+			} 
+			else {
+				if (left > 0) {
+					left--;
+					stack.push("(");
+					sb.append("(");
+					backtrace(sb);
+					sb.deleteCharAt(sb.length() - 1);
+					stack.pop();
+					left++;
+				}
+				if (right > 0) {
+					right--;
+					stack.pop();
+					sb.append(")");
+					backtrace(sb);
+					sb.deleteCharAt(sb.length() - 1);
+					stack.push("(");
+					right++;
+				}
+			}
+		}
+	}
+	ArrayList<String> generateParenthesis(int n) {
+		if (n == 0) {
+			return ans;
+		}
+		this.n = n;
+		left = n;
+		right = n;
+		StringBuilder sb = new StringBuilder();
+		backtrace(sb);
+		return ans;
+	}
+}

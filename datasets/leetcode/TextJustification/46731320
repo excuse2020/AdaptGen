@@ -1,0 +1,75 @@
+class Solution {
+	void appendSpaces(StringBuilder str, int count) {
+		while (count-- > 0) {
+			str.append(" ");
+		}
+	}
+	List<String> fullJustify(String[] words, int maxWidth) {
+		List<Integer> wordsPerLine = new ArrayList<>();
+		int remWidth = maxWidth, i = 0, wordCount = 0;
+		while (i < words.length) {
+			if (remWidth < words[i].length()) {
+				wordsPerLine.add(wordCount);
+				wordCount = 0;
+				remWidth = maxWidth;
+			} 
+			else {
+				wordCount++;
+				remWidth -= (words[i].length() + 1);
+				i++;
+			}
+		}
+		wordsPerLine.add(wordCount);
+		List<String> ans = new ArrayList<>();
+		int idx = 0;
+		for (int j = 0; j < wordsPerLine.size(); j++) {
+			int count = wordsPerLine.get(j);
+			List<String> givenWords = new ArrayList<>();
+			int charSize = 0;
+			for (i = idx; i < idx + count; i++) {
+				givenWords.add(words[i]);
+				charSize += words[i].length();
+			}
+			String line = "";
+			if (j < wordsPerLine.size() - 1) {
+				line = getLineFromWords(givenWords,maxWidth,charSize);
+			} 
+			else {
+				line = getNormalLine(givenWords,maxWidth);
+			}
+			ans.add(line);
+			idx += count;
+		}
+		return ans;
+	}
+	String getLineFromWords(List<String> words, int lineSize, int charSize) {
+		if (words.size() == 1) {
+			return getNormalLine(words,lineSize);
+		}
+		StringBuilder line = new StringBuilder();
+		int gaps = words.size() - 1;
+		int gapSpace = (lineSize - charSize) / gaps;
+		int overhead = (lineSize - charSize) % gaps;
+		for (String word: words) {	
+			line.append(word);
+			int spacesToAppend = gapSpace;
+			if (overhead > 0) {
+				spacesToAppend++;
+				overhead--;
+			}
+			appendSpaces(line,spacesToAppend);
+		}
+		if (line.length() < lineSize) {
+			appendSpaces(line,lineSize - line.length());
+		}
+		return line.toString().substring(0,lineSize);
+	}
+	String getNormalLine(List<String> words, int lineSize) {
+		StringBuilder line = new StringBuilder();
+		for (String word: words) {	
+			line.append(word).append(" ");
+		}
+		appendSpaces(line,lineSize - line.length());
+		return line.toString().substring(0,lineSize);
+	}
+}

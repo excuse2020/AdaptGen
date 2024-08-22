@@ -1,0 +1,33 @@
+class Solution {
+	List<List<Integer>> getSkyline(int[][] buildings) {
+		List<Integer> xs = new ArrayList<>();
+		for (int[] b: buildings) {	
+			xs.add(b[0]);
+			xs.add(b[1]);
+		}
+		Collections.sort(xs);
+		Arrays.sort(buildings,(a, b) -> {a[0] - b[0]});
+		PriorityQueue<int[]> heap = new PriorityQueue<>((a, b) -> {b[2] - a[2]});
+		int i = 0;
+		int prevHeight = 0;
+		List<List<Integer>> results = new ArrayList<>();
+		for (Integer x: xs) {	
+			while (i < buildings.length && buildings[i][0] <= x) {
+				heap.offer(buildings[i]);
+				i++;
+			}
+			while (!heap.isEmpty() && heap.peek()[1] <= x) {
+				heap.remove();
+			}
+			int curHeight = 0;
+			if (!heap.isEmpty()) {
+				curHeight = heap.peek()[2];
+			}
+			if (curHeight != prevHeight) {
+				results.add(List.of(x,curHeight));
+				prevHeight = curHeight;
+			}
+		}
+		return results;
+	}
+}

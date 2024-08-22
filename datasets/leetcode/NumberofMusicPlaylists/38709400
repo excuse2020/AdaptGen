@@ -1,0 +1,25 @@
+class Solution {
+	long[][] dp;
+	int mod = 1000000007;
+	long dfs(int n, int goal, int k) {
+		if (n == 0 && goal == 0) {
+			return 1;
+		}
+		if (n == 0 || goal == 0) {
+			return 0;
+		}
+		if (dp[goal][n] != -1) {
+			return dp[goal][n];
+		}
+		long repeat = dfs(n,goal - 1,k) * Math.max(n - k,0);
+		long newsong = dfs(n - 1,goal - 1,k) * n;
+		return dp[goal][n] = (int) (repeat % mod + newsong % mod) % mod;
+	}
+	int numMusicPlaylists(int n, int goal, int k) {
+		dp = new long[goal + 1][n + 1];
+		for (long[] cur: dp) {	
+			Arrays.fill(cur,-1);
+		}
+		return (int) dfs(n,goal,k);
+	}
+}

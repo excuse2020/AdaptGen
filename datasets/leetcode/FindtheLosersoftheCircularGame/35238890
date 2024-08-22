@@ -1,0 +1,28 @@
+class Solution {
+	int[] circularGameLosers(int n, int k) {
+		ArrayList<Integer> list = new ArrayList<>();
+		for (int i = 1; i < n + 1; i++) {
+			list.add(i);
+		}
+		int[] frequency = new int[list.size()];
+		int size = list.size(), index = 0;
+		frequency[0]++;
+		for (int i = 0; i < list.size(); i++) {
+			int move = (i + 1) * k;
+			move = (move + index) % list.size();
+			frequency[move]++;
+			index = list.indexOf(move + 1);
+			if (frequency[move] > 1) {
+				break;
+			}
+		}
+		list.clear();
+		for (int i = 0; i < frequency.length; i++) {
+			if (frequency[i] == 0) {
+				list.add(i + 1);
+			}
+		}
+		int[] intArray = list.stream().mapToInt().toArray();
+		return intArray;
+	}
+}

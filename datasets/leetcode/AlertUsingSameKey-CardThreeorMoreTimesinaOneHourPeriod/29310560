@@ -1,0 +1,46 @@
+class Solution {
+	List<String> alertNames(String[] keyName, String[] keyTime) {
+		Map<String, List<Integer>> map = new HashMap<>();
+		for (int index = 0; index < keyName.length; index++) {
+			List<Integer> timeList = map.getOrDefault(keyName[index],new ArrayList<>());
+			timeList.add(convertToTime(keyTime[index]));
+			map.put(keyName[index],timeList);
+		}
+		List<String> result = new ArrayList<>();
+		for (Map.Entry<String, List<Integer>> entry: map.entrySet()) {	
+			Collections.sort(entry.getValue());
+			List<Integer> times = entry.getValue();
+			for (int index = 0; index < times.size(); index++) {
+				int lowerBound = findLowerBound(times,index - 1,times.get(index));
+				if (lowerBound == -1) {
+					continue;
+				}
+				if (index - lowerBound >= 2) {
+					result.add(entry.getKey());
+					break;
+				}
+			}
+		}
+		Collections.sort(result);
+		return result;
+	}
+	int convertToTime(String time) {
+		return Integer.valueOf(time.split(":")[0]) * 60 + Integer.valueOf(time.split(":")[1]);
+	}
+	int findLowerBound(List<Integer> times, int end, int time) {
+		int left = 0;
+		int right = end;
+		int answer = -1;
+		while (left <= right) {
+			int mid = left + (right - left) / 2;
+			if (times.get(mid) >= time - 60) {
+				right = mid - 1;
+				answer = mid;
+			} 
+			else {
+				left = mid + 1;
+			}
+		}
+		return answer;
+	}
+}

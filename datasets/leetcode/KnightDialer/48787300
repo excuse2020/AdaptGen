@@ -1,0 +1,64 @@
+class Solution {
+	int mod = 1000000007;
+	long helper(boolean[][] arr, int i, int j, int n, long[][][] dp) {
+		if (n == 1) {
+			return 1;
+		}
+		if (dp[i][j][n] != -1) {
+			return dp[i][j][n];
+		}
+		long count = 0;
+		if (isValid(arr,i - 2,j - 1)) {
+			count = (count + helper(arr,i - 2,j - 1,n - 1,dp)) % mod;
+		}
+		if (isValid(arr,i - 2,j + 1)) {
+			count = (count + helper(arr,i - 2,j + 1,n - 1,dp)) % mod;
+		}
+		if (isValid(arr,i + 2,j - 1)) {
+			count = (count + helper(arr,i + 2,j - 1,n - 1,dp)) % mod;
+		}
+		if (isValid(arr,i + 2,j + 1)) {
+			count = (count + helper(arr,i + 2,j + 1,n - 1,dp)) % mod;
+		}
+		if (isValid(arr,i - 1,j - 2)) {
+			count = (count + helper(arr,i - 1,j - 2,n - 1,dp)) % mod;
+		}
+		if (isValid(arr,i + 1,j - 2)) {
+			count = (count + helper(arr,i + 1,j - 2,n - 1,dp)) % mod;
+		}
+		if (isValid(arr,i - 1,j + 2)) {
+			count = (count + helper(arr,i - 1,j + 2,n - 1,dp)) % mod;
+		}
+		if (isValid(arr,i + 1,j + 2)) {
+			count = (count + helper(arr,i + 1,j + 2,n - 1,dp)) % mod;
+		}
+		return dp[i][j][n] = count;
+	}
+	boolean isValid(boolean[][] arr, int i, int j) {
+		return i >= 0 && i < 4 && j >= 0 && j < 3 && arr[i][j];
+	}
+	int knightDialer(int n) {
+		boolean[][] arr = new boolean[4][3];
+		for (boolean[] ar: arr) {	
+			Arrays.fill(ar,true);
+		}
+		arr[3][0] = false;
+		arr[3][2] = false;
+		long[][][] dp = new long[4][3][n + 1];
+		for (long[][] ar: dp) {	
+			for (long[] a: ar) {	
+				Arrays.fill(a,-1);
+			}
+		}
+		long ans = 0;
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 3; j++) {
+				if (!arr[i][j]) {
+					continue;
+				}
+				ans = (ans + helper(arr,i,j,n,dp)) % mod;
+			}
+		}
+		return (int) ans;
+	}
+}

@@ -1,0 +1,37 @@
+class Solution {
+	int[][][][] dp;
+	int fun(int rstart, int rend, int cstart, int cend, int[] hcut, int[] vcut) {
+		if (dp[rstart][rend][cstart][cend] != -1) {
+			return dp[rstart][rend][cstart][cend];
+		}
+		if (rstart == rend && cstart == cend) {
+			return 0;
+		}
+		int ans = Integer.MAX_VALUE;
+		for (int i = rstart; i < rend; i++) {
+			int temp1 = fun(rstart,i,cstart,cend,hcut,vcut);
+			int temp2 = fun(i + 1,rend,cstart,cend,hcut,vcut);
+			ans = Math.min(ans,hcut[i] + temp1);
+		}
+		for (int i = cstart; i < cend; i++) {
+			int temp1 = fun(rstart,rend,cstart,i,hcut,vcut);
+			int temp2 = fun(rstart,rend,i + 1,cend,hcut,vcut);
+			ans = Math.min(ans,vcut[i] + temp1);
+		}
+		dp[rstart][rend][cstart][cend] = ans;
+		return ans;
+	}
+	int minimumCost(int m, int n, int[] hcut, int[] vcut) {
+		dp = new int[m][m][n][n];
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < m; j++) {
+				for (int k = 0; k < n; k++) {
+					for (int l = 0; l < n; l++) {
+						dp[i][j][k][l] = -1;
+					}
+				}
+			}
+		}
+		return fun(0,m - 1,0,n - 1,hcut,vcut);
+	}
+}

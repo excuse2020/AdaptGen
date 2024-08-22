@@ -1,0 +1,22 @@
+class Solution {
+	int peopleAwareOfSecret(int n, int delay, int forget) {
+		int MOD = 1000000007;
+		long[] onset = new long[n + 1];
+		onset[1] = 1;
+		long tellers = 0;
+		for (int d = 2; d <= n; d++) {
+			if (d - delay >= 0) {
+				tellers += onset[d - delay] % MOD;
+			}
+			if (d - forget >= 0) {
+				tellers -= onset[d - forget] % MOD;
+			}
+			onset[d] = tellers;
+		}
+		long total = 0;
+		for (int f = n; f > n - forget; f--) {
+			total += onset[f] % MOD;
+		}
+		return (int) (total % MOD);
+	}
+}

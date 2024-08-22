@@ -1,0 +1,47 @@
+class Solution {
+	int findClosest(int[] sortedNums, int target) {
+		int start = 0;
+		int end = sortedNums.length - 1;
+		while (start < end) {
+			int mid = start + (end - start) / 2;
+			if (sortedNums[mid] == target) {
+				return sortedNums[mid];
+			}
+			if (sortedNums[mid] < target) {
+				start = mid + 1;
+			} 
+			else {
+				end = mid;
+			}
+		}
+		if (start == 0) {
+			return sortedNums[start];
+		}
+		if (start == sortedNums.length) {
+			return sortedNums[start - 1];
+		}
+		if (Math.abs(sortedNums[start] - target) < Math.abs(sortedNums[start - 1] - target)) {
+			return sortedNums[start];
+		} 
+		else {
+			return sortedNums[start - 1];
+		}
+	}
+	int minAbsoluteSumDiff(int[] nums1, int[] nums2) {
+		int MOD = 1000000007;
+		int n = nums1.length;
+		int[] sortedNums = nums1.clone();
+		Arrays.sort(sortedNums);
+		long sum = 0;
+		int maxImprovement = 0;
+		for (int i = 0; i < n; i++) {
+			int diff = Math.abs(nums1[i] - nums2[i]);
+			sum += diff;
+			int closest = findClosest(sortedNums,nums2[i]);
+			int newDiff = Math.abs(closest - nums2[i]);
+			int newImprovement = diff - newDiff;
+			maxImprovement = Math.max(maxImprovement,newImprovement);
+		}
+		return (int) ((sum - maxImprovement + MOD) % MOD);
+	}
+}

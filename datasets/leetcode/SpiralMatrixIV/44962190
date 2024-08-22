@@ -1,0 +1,77 @@
+class Solution {
+	int DOWN = 2;
+	int LEFT = 3;
+	int RIGHT = 1;
+	int UP = 4;
+	ListNode buildDirectionList() {
+		ListNode right = new ListNode(RIGHT);
+		ListNode down = new ListNode(DOWN);
+		right.next = down;
+		ListNode left = new ListNode(LEFT);
+		down.next = left;
+		ListNode up = new ListNode(UP, right);
+		left.next = up;
+		return right;
+	}
+	int[][] spiralMatrix(int m, int n, ListNode head) {
+		int index = 0;
+		int[][] ans = new int[m][n];
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				ans[i][j] = -1;
+			}
+		}
+		ListNode direction = buildDirectionList();
+		int i = 0;
+		int j = 0;
+		int left = 0;
+		int top = 0;
+		int right = n - 1;
+		int bottom = m - 1;
+		while (head != null) {
+			ans[i][j] = head.val;
+			if (direction.val == RIGHT) {
+				if (j + 1 <= right) {
+					j++;
+				} 
+				else {
+					direction = direction.next;
+					i++;
+					top++;
+				}
+			} 
+			else if (direction.val == DOWN) {
+				if (i + 1 <= bottom) {
+					i++;
+				} 
+				else {
+					direction = direction.next;
+					j--;
+					right--;
+				}
+			} 
+			else if (direction.val == LEFT) {
+				if (j - 1 >= left) {
+					j--;
+				} 
+				else {
+					direction = direction.next;
+					bottom--;
+					i--;
+				}
+			} 
+			else {
+				if (i - 1 >= top) {
+					i--;
+				} 
+				else {
+					direction = direction.next;
+					j++;
+					left++;
+				}
+			}
+			head = head.next;
+		}
+		return ans;
+	}
+}

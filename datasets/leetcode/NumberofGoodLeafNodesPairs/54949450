@@ -1,0 +1,51 @@
+class Solution {
+	int countPairs(TreeNode root, int distance) {
+		HashMap<TreeNode, TreeNode> hm = new HashMap<>();
+		findPar(root,hm);
+		int ans = new int[1];
+		dfsUtil(root,ans,distance,hm);
+		return ans[0] / 2;
+	}
+	void dfs(TreeNode root, int ans, int distance, int curr, HashMap<TreeNode, TreeNode> hm, HashSet<TreeNode> hs) {
+		if (curr > distance) {
+			return;
+		}
+		if (hs.contains(root)) {
+			return;
+		}
+		hs.add(root);
+		if (root.left == null && root.right == null && curr > 0) {
+			ans[0]++;
+		}
+		if (root.left != null) {
+			dfs(root.left,ans,distance,curr + 1,hm,hs);
+		}
+		if (root.right != null) {
+			dfs(root.right,ans,distance,curr + 1,hm,hs);
+		}
+		if (hm.containsKey(root)) {
+			dfs(hm.get(root),ans,distance,curr + 1,hm,hs);
+		}
+	}
+	void dfsUtil(TreeNode root, int ans, int distance, HashMap<TreeNode, TreeNode> hm) {
+		if (root == null) {
+			return;
+		}
+		if (root.left == null && root.right == null) {
+			HashSet<TreeNode> hs = new HashSet<>();
+			dfs(root,ans,distance,0,hm,hs);
+		}
+		dfsUtil(root.left,ans,distance,hm);
+		dfsUtil(root.right,ans,distance,hm);
+	}
+	void findPar(TreeNode root, HashMap<TreeNode, TreeNode> hm) {
+		if (root.left != null) {
+			hm.put(root.left,root);
+			findPar(root.left,hm);
+		}
+		if (root.right != null) {
+			hm.put(root.right,root);
+			findPar(root.right,hm);
+		}
+	}
+}

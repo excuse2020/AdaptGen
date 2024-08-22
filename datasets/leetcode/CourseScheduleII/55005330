@@ -1,0 +1,48 @@
+class Solution {
+	boolean hasCycle;
+	void DFS(boolean[] inRecur, boolean[] visited, int i, ArrayList<ArrayList<Integer>> adj, Stack<Integer> st) {
+		visited[i] = true;
+		inRecur[i] = true;
+		for (Integer a: adj.get(i)) {	
+			if (!visited[a] && !inRecur[a]) {
+				DFS(inRecur,visited,a,adj,st);
+			} 
+			else if (inRecur[a] == true) {
+				hasCycle = true;
+				return;
+			}
+		}
+		st.push(i);
+		inRecur[i] = false;
+		return;
+	}
+	int[] findOrder(int numCourses, int[][] prerequisites) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		hasCycle = false;
+		for (int i = 0; i < numCourses; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int[] vector: prerequisites) {	
+			adj.get(vector[1]).add(vector[0]);
+		}
+		boolean[] inRecur = new boolean[numCourses];
+		Arrays.fill(inRecur,false);
+		boolean[] visited = new boolean[numCourses];
+		Arrays.fill(visited,false);
+		Stack<Integer> st = new Stack<>();
+		for (int i = 0; i < numCourses; i++) {
+			if (!visited[i]) {
+				DFS(inRecur,visited,i,adj,st);
+			}
+		}
+		if (hasCycle) {
+			return new int[0];
+		}
+		int[] arr = new int[numCourses];
+		int l = 0;
+		while (!st.isEmpty()) {
+			arr[l++] = st.pop();
+		}
+		return arr;
+	}
+}

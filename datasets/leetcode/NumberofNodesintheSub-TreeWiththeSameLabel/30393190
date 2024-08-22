@@ -1,0 +1,51 @@
+class Solution {
+	int[] countSubTrees(int n, int[][] edges, String labels) {
+		HashMap<Integer, ArrayList<Integer>> nieghbours = new HashMap();
+		for (int i = 0; i < edges.length; i++) {
+			int u = edges[i][0];
+			int v = edges[i][1];
+			if (!nieghbours.containsKey(u)) {
+				nieghbours.put(u,new ArrayList());
+			}
+			if (!nieghbours.containsKey(v)) {
+				nieghbours.put(v,new ArrayList());
+			}
+			nieghbours.get(u).add(v);
+			nieghbours.get(v).add(u);
+		}
+		HashSet<Integer> visited = new HashSet();
+		int[] ans = new int[n];
+		HashMap<Character, Integer> mapp = dfs(nieghbours,labels,visited,ans,0);
+		ans[0] = mapp.get(labels.charAt(0));
+		return ans;
+	}
+	HashMap<Character, Integer> dfs(HashMap<Integer, ArrayList<Integer>> nieghbours, String labels, HashSet<Integer> visited, int[] ans, int node) {
+		if (visited.contains(node)) {
+			return new HashMap();
+		}
+		visited.add(node);
+		char curr = labels.charAt(node);
+		HashMap<Character, Integer> mapp = new HashMap();
+		for (int nieghbour: nieghbours.get(node)) {	
+			putall(mapp,dfs(nieghbours,labels,visited,ans,nieghbour));
+		}
+		if (!mapp.containsKey(curr)) {
+			mapp.put(curr,0);
+		}
+		mapp.put(curr,mapp.get(curr) + 1);
+		ans[node] = mapp.get(curr);
+		return mapp;
+	}
+	void putall(HashMap<Character, Integer> mapp, HashMap<Character, Integer> map2) {
+		for (Map.Entry<Character, Integer> entry: map2.entrySet()) {	
+			char k = entry.getKey();
+			int v = entry.getValue();
+			if (mapp.containsKey(k)) {
+				mapp.put(k,mapp.get(k) + v);
+			} 
+			else {
+				mapp.put(k,v);
+			}
+		}
+	}
+}

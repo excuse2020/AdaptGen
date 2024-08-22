@@ -1,0 +1,64 @@
+class Solution {
+	ListNode reverseBetween(ListNode head, int m, int n) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		if ((n - m) < 1) {
+			return head;
+		}
+		ListNode tmpHead = new ListNode(0);
+		tmpHead.next = head;
+		ListNode start = head;
+		ListNode pStart = tmpHead;
+		for (int i = 1; i < m; i++) {
+			start = start.next;
+			pStart = pStart.next;
+		}
+		for (int i = 0; i < n - m; i++) {
+			ListNode next = start.next;
+			start.next = start.next.next;
+			next.next = pStart.next;
+			pStart.next = next;
+		}
+		return tmpHead.next;
+	}
+	ListNode reverseBetweenOld(ListNode head, int m, int n) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		if ((n - m) < 1) {
+			return head;
+		}
+		int i = 1;
+		ListNode tmpHead = new ListNode(0);
+		tmpHead.next = head;
+		head = tmpHead;
+		tmpHead = head.next;
+		ListNode tmpHeadPre = head;
+		while (i < m && tmpHead != null) {
+			tmpHeadPre = tmpHeadPre.next;
+			tmpHead = tmpHead.next;
+			i++;
+		}
+		ListNode fHeadPre = tmpHeadPre;
+		ListNode fTail = tmpHead;
+		ListNode pre = null;
+		while (i < n && tmpHead != null) {
+			ListNode next = tmpHead.next;
+			tmpHead.next = pre;
+			pre = tmpHead;
+			tmpHead = next;
+			i++;
+		}
+		ListNode next = null;
+		if (tmpHead != null) {
+			next = tmpHead.next;
+			tmpHead.next = pre;
+			pre = tmpHead;
+			tmpHead = next;
+		}
+		fTail.next = next;
+		fHeadPre.next = pre;
+		return head.next;
+	}
+}

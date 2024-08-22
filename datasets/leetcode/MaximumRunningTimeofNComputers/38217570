@@ -1,0 +1,23 @@
+class Solution {
+	long maxRunTime(int n, int[] batteries) {
+		Arrays.sort(batteries);
+		long sum = 0;
+		int len = batteries.length;
+		for (int i = 0; i < len - n; i++) {
+			sum += batteries[i];
+		}
+		long[] computer = new long[n];
+		for (int i = len - n, j = 0; i < len; i++) {
+			computer[j++] = batteries[i];
+		}
+		for (int i = 0; i < n - 1; i++) {
+			long dif = computer[i + 1] - computer[i];
+			if (dif * (i + 1) > sum) {
+				return computer[0] + (sum / (i + 1));
+			}
+			computer[0] += dif;
+			sum -= dif * (i + 1);
+		}
+		return computer[0] + (sum / n);
+	}
+}

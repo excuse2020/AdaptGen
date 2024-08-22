@@ -1,0 +1,29 @@
+class Solution {
+	long func(int idx, Map<Integer, Integer> freq, List<Integer> li, long[] dp) {
+		if (idx == li.size()) {
+			return 0;
+		}
+		if (dp[idx] != -1) {
+			return dp[idx];
+		}
+		int nextIdx = idx + 1;
+		while (nextIdx < li.size() && li.get(nextIdx) - li.get(idx) <= 2) {
+			nextIdx++;
+		}
+		long take = 1l * li.get(idx) + func(nextIdx,freq,li,dp);
+		long notTake = func(idx + 1,freq,li,dp);
+		return dp[idx] = Math.max(take,notTake);
+	}
+	long maximumTotalDamage(int[] power) {
+		int n = power.length;
+		Map<Integer, Integer> mp = new HashMap<>();
+		for (int pow: power) {	
+			mp.put(pow,mp.getOrDefault(pow,0) + 1);
+		}
+		List<Integer> li = new ArrayList<>(mp.keySet());
+		Collections.sort(li);
+		long[] dp = new long[n];
+		Arrays.fill(dp,-1);
+		return func(0,mp,li,dp);
+	}
+}

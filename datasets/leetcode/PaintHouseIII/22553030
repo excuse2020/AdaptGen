@@ -1,0 +1,35 @@
+class Solution {
+	Integer[][][] dp = new Integer[100][21][100];
+	int max = 10000 * 100 + 1;
+	int findCost(int[] houses, int[][] cost, int m, int n, int target, int houseNumber, int previousColor, int previousTarget) {
+		if (previousTarget > target) {
+			return Integer.MAX_VALUE / 2;
+		}
+		if (houseNumber == m) {
+			if (previousTarget == target) {
+				return 0;
+			} 
+			else {
+				return Integer.MAX_VALUE / 2;
+			}
+		}
+		if (dp[houseNumber][previousColor][previousTarget] != null) {
+			return dp[houseNumber][previousColor][previousTarget];
+		}
+		int currentCost = Integer.MAX_VALUE / 2;
+		if (houses[houseNumber] == 0) {
+			for (int color = 1; color <= n; color++) {
+				currentCost = Math.min(currentCost,cost[houseNumber][color - 1] + findCost(houses,cost,m,n,target,houseNumber + 1,color,(color == previousColor) ? previousTarget : previousTarget + 1));
+			}
+		} 
+		else {
+			currentCost = Math.min(currentCost,findCost(houses,cost,m,n,target,houseNumber + 1,houses[houseNumber],(houses[houseNumber] == previousColor) ? previousTarget : previousTarget + 1));
+		}
+		dp[houseNumber][previousColor][previousTarget] = currentCost;
+		return dp[houseNumber][previousColor][previousTarget];
+	}
+	int minCost(int[] houses, int[][] cost, int m, int n, int target) {
+		int ans = findCost(houses,cost,m,n,target,0,0,0);
+		return ans == Integer.MAX_VALUE / 2 ? -1 : ans;
+	}
+}

@@ -1,0 +1,73 @@
+class Solution {
+	ArrayList<ArrayList<TreeNode>> a;
+	int m;
+	ArrayList<TreeNode> v;
+	ArrayList<TreeNode> get(TreeNode t, TreeNode x) {
+		if (t == null) {
+			return null;
+		}
+		if (t == x) {
+			ArrayList<TreeNode> r = new ArrayList<>(m + 1);
+			r.add(t);
+			return r;
+		}
+		if (t.left == null && t.right == null) {
+			return null;
+		}
+		ArrayList<TreeNode> r = get(t.left,x);
+		if (r != null) {
+			r.add(t);
+			return r;
+		}
+		r = get(t.right,x);
+		if (r != null) {
+			r.add(t);
+			return r;
+		}
+		return null;
+	}
+	boolean match(int x) {
+		TreeNode y = a.get(0).get(x);
+		for (int i = 1, l = a.size(); i < l; i++) {
+			if (y != a.get(i).get(x)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	void search(TreeNode t, int d) {
+		if (t == null) {
+			return;
+		}
+		if (t.left == null && t.right == null) {
+			if (d > m) {
+				m = d;
+				v.clear();
+				v.add(t);
+			} 
+			else if (d == m) {
+				v.add(t);
+			}
+		}
+		search(t.left,d + 1);
+		search(t.right,d + 1);
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		m = 0;
+		v = new ArrayList<>();
+		search(root,0);
+		if (v.size() == 1) {
+			return v.get(0);
+		}
+		a = new ArrayList<>(v.size());
+		for (int i = 0, l = v.size(); i < l; i++) {
+			a.add(get(root,v.get(i)));
+		}
+		for (int i = 1, l = a.get(0).size(); i < l; i++) {
+			if (match(i)) {
+				return a.get(0).get(i);
+			}
+		}
+		return root;
+	}
+}

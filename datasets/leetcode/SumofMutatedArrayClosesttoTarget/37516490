@@ -1,0 +1,38 @@
+class Solution {
+	int findBestValue(int[] arr, int target) {
+		Arrays.sort(arr);
+		int[] pre = new int[arr.length + 1];
+		pre[0] = 0;
+		for (int i = 1; i <= arr.length; i++) {
+			pre[i] = arr[i - 1] + pre[i - 1];
+		}
+		int n = arr.length - 1;
+		if (pre[n + 1] == target) {
+			return arr[n];
+		}
+		int l = 0, r = target;
+		while (l < r) {
+			int m = (l + r) / 2;
+			int j = 0;
+			for (j = 0; j <= n; j++) {
+				if (arr[j] >= m) {
+					break;
+				}
+			}
+			int val = pre[j] + (n - j + 1) * m;
+			for (; j <= n; j++) {
+				if (arr[j] >= m + 1) {
+					break;
+				}
+			}
+			int val2 = pre[j] + (n - j + 1) * (m + 1);
+			if (Math.abs(target - val) <= Math.abs(target - val2)) {
+				r = m;
+			} 
+			else {
+				l = m + 1;
+			}
+		}
+		return l;
+	}
+}

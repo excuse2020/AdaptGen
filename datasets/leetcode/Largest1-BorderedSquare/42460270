@@ -1,0 +1,25 @@
+class Solution {
+	int largest1BorderedSquare(int[][] grid) {
+		int m = grid.length;
+		int n = grid[0].length;
+		int[][] left_to_right = new int[m + 1][n + 1];
+		int[][] top_to_bottom = new int[m + 1][n + 1];
+		int result = 0;
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				if (grid[i][j] == 1) {
+					left_to_right[i + 1][j + 1] = left_to_right[i + 1][j] + 1;
+					top_to_bottom[i + 1][j + 1] = top_to_bottom[i][j + 1] + 1;
+					int length = Math.min(left_to_right[i + 1][j + 1],top_to_bottom[i + 1][j + 1]);
+					for (; length >= 1; length--) {
+						if (left_to_right[i + 2 - length][j + 1] >= length && top_to_bottom[i + 1][j + 2 - length] >= length) {
+							result = Math.max(length,result);
+							break;
+						}
+					}
+				}
+			}
+		}
+		return result * result;
+	}
+}

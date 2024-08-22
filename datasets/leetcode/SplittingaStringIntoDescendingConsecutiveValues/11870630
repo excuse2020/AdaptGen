@@ -1,0 +1,32 @@
+class Solution {
+	ArrayList<Double> search(String s, int index, HashMap<Integer, ArrayList<Double>> memo) {
+		ArrayList<Double> res = new ArrayList<>();
+		if (index == s.length() - 1) {
+			res.add((double) Character.getNumericValue(s.charAt(index)));
+			memo.put(index,res);
+			return res;
+		}
+		if (memo.containsKey(index)) {
+			return memo.get(index);
+		}
+		for (int i = index + 1; i <= s.length(); i++) {
+			String str = s.substring(index,i);
+			Double cur = Double.parseDouble(str);
+			ArrayList<Double> temp = search(s,i,memo);
+			for (Double right: temp) {	
+				if (cur == right + 1) {
+					res.add(cur);
+				}
+			}
+			if (i == s.length()) {
+				res.add(cur);
+			}
+		}
+		memo.put(index,res);
+		return res;
+	}
+	boolean splitString(String s) {
+		ArrayList<Double> res = search(s,0,new HashMap<>());
+		return res.size() > 1;
+	}
+}

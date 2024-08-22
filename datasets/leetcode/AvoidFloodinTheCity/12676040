@@ -1,0 +1,59 @@
+class Solution {
+	int[] avoidFlood(int[] rains) {
+		int[] ans = new int[rains.length];
+		Arrays.fill(ans,1);
+		HashMap<Integer, Integer> map = new HashMap<>();
+		List<Integer> dry = new ArrayList<>();
+		for (int i = 0; i < rains.length; i++) {
+			if (rains[i] > 0) {
+				ans[i] = -1;
+				if (map.containsKey(rains[i])) {
+					int lastIndex = map.get(rains[i]);
+					if (dry.size() == 0) {
+						int arr = new int[0];
+						return arr;
+					}
+					int dryIndex = bs(dry,lastIndex,i);
+					if (dryIndex == -1) {
+						int arr = new int[0];
+						return arr;
+					}
+					ans[dryIndex] = rains[i];
+					dry.remove(new Integer(dryIndex));
+				}
+				map.put(rains[i],i);
+			} 
+			else {
+				dry.add(i);
+			}
+		}
+		return ans;
+	}
+	int bs(List<Integer> l, int t1, int t2) {
+		int index = -1;
+		int startIndex = 0, endIndex = l.size() - 1;
+		while (startIndex <= endIndex) {
+			int mid = (startIndex + endIndex) / 2;
+			if (l.get(mid) <= t1) {
+				startIndex = mid + 1;
+			} 
+			else {
+				if (l.get(mid) < t2) {
+					index = l.get(mid);
+				}
+				endIndex = mid - 1;
+			}
+		}
+		return index;
+	}
+	int ls(List<Integer> l, int t1, int t2) {
+		int index = -1;
+		for (int i = 0; i < l.size(); i++) {
+			if (l.get(i) > t1 && l.get(i) < t2) {
+				index = l.get(i);
+				break;
+			}
+		}
+		return index;
+	}
+}

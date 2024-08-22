@@ -1,0 +1,88 @@
+class Solution {
+	void adjust(long[] c, long x, long target) {
+		int i = 0;
+		while (c[50] != target) {
+			if (x == 0) {
+				System.out.println("Error");
+				break;
+			}
+			if (x % 2 != 0) {
+				c[i]++;
+				c[50]++;
+			}
+			x >>= 1;
+			i++;
+		}
+	}
+	int[] findProductsOfElements(long[][] queries) {
+		int[] response = new int[queries.length];
+		for (int i = 0; i < response.length; i++) {
+			response[i] = solve(queries[i][0],queries[i][1] + 1,queries[i][2]);
+		}
+		return response;
+	}
+	long[] getLowerCounts(long x) {
+		long[] response = new long[51];
+		long total = 0;
+		int i = 0;
+		long next = 1L;
+		while (next < x) {
+			response[i] = (x / (2 * next)) * next + Math.max((x % (2 * next)) - next,0);
+			total += response[i];
+			i++;
+			next <<= 1;
+		}
+		response[50] = total;
+		return response;
+	}
+	long getNextHigher(long from, long to, long target) {
+		if (from == to) {
+			return from;
+		}
+		long mid = from + (to + 1 - from) / 2;
+		long[] counts = getLowerCounts(mid);
+		if (counts[50] > target) {
+			return getNextHigher(from,mid - 1,target);
+		} 
+		else {
+			return getNextHigher(mid,to,target);
+		}
+	}
+	int solve(long s, long t, long mod) {
+		long n1 = s > 0 ? getNextHigher(1L,100000_00000_00000L,s) : 0L;
+		long[] c1 = s > 0 ? getLowerCounts(n1) : new long[51];
+		adjust(c1,n1,s);
+		long n2 = getNextHigher(1L,100000_00000_00000L,t);
+		long[] c2 = getLowerCounts(n2);
+		adjust(c2,n2,t);
+		for (int i = 0; i < 50; i++) {
+			c2[i] -= c1[i];
+		}
+		long[] pow = new long[50];
+		pow[0] = 1L;
+		for (int i = 1; i < 50; i++) {
+			pow[i] = pow[i - 1] << 1;
+			pow[i] %= mod;
+		}
+		long prod = 1L;
+		long next = 2L;
+		c2[50] = 0;
+		for (int i = 1; i < 50; i++) {
+			int rem = (int) ((c2[i] * (i)) % (i + 1));
+			long div = (c2[i] * i) / (i + 1);
+			prod *= pow[rem];
+			prod %= mod;
+			c2[i + 1] += div;
+			next <<= 1;
+		}
+		long base = next % mod;
+		while (c2[50] > 0) {
+			prod *= (c2[50] % 2 == 1) ? base : 1L;
+			prod %= mod;
+			base *= base;
+			base %= mod;
+			c2[50] >>= 1;
+		}
+		return (int) (prod % mod);
+	}
+}

@@ -1,0 +1,47 @@
+class Solution {
+	int maxBuilding(int n, int[][] restrictions) {
+		if (n == 0) {
+			return 0;
+		}
+		Arrays.sort(restrictions,(a, b) -> {a[0] - b[0]});
+		int size = restrictions.length + 1;
+		if (restrictions.length == 0 || restrictions[restrictions.length - 1][0] != n) {
+			size++;
+		}
+		long r = new long[size][2];
+		r[0][0] = 1;
+		r[0][1] = 0;
+		for (int i = 0; i < restrictions.length; i++) {
+			r[i + 1][0] = restrictions[i][0];
+			r[i + 1][1] = restrictions[i][1];
+		}
+		if (r.length == restrictions.length + 2) {
+			r[r.length - 1][0] = n;
+			r[r.length - 1][1] = n - 1;
+		}
+		for (int i = 1; i < r.length; i++) {
+			long[] left = r[i - 1];
+			long[] right = r[i];
+			long width = right[0] - left[0];
+			if (left[1] < right[1]) {
+				right[1] = Math.min(right[1],left[1] + width);
+			}
+		}
+		long ans = 0;
+		for (int i = r.length - 2; i >= 0; i--) {
+			long[] left = r[i];
+			long[] right = r[i + 1];
+			long width = right[0] - left[0];
+			if (left[1] > right[1]) {
+				left[1] = Math.min(left[1],right[1] + width);
+			}
+			long eq = Math.abs(right[1] - left[1]);
+			width = width - eq;
+			ans = Math.max(ans,Math.max(right[1],left[1]) + (long) Math.ceil(width / (double) 2));
+		}
+		for (long val: r) {	
+			ans = Math.max(ans,val[1]);
+		}
+		return (int) Math.min(Integer.MAX_VALUE,ans);
+	}
+}

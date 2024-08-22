@@ -1,0 +1,40 @@
+class Solution {
+	int minChanges(int[] nums, int k) {
+		Map<Integer, List<Integer>> m = new HashMap<>();
+		List<Integer> v = new ArrayList<>();
+		for (int i = 0; i < nums.length / 2; i++) {
+			int a = nums[i];
+			int b = nums[nums.length - i - 1];
+			int diff = Math.abs(a - b);
+			int x = Math.max(Math.max(a,b),Math.max(k - a,k - b));
+			m.computeIfAbsent(diff,(key) -> {new ArrayList<>()}).add(x);
+			v.add(x);
+		}
+		Collections.sort(v);
+		int ans = nums.length;
+		for (Map.Entry<Integer, List<Integer>> entry: m.entrySet()) {	
+			int diff = entry.getKey();
+			List<Integer> values = entry.getValue();
+			int temp = Collections.binarySearch(v,diff);
+			if (temp < 0) {
+				temp = -temp - 1;
+			} 
+			else {
+				while (temp > 0 && v.get(temp - 1) == diff) {
+					temp--;
+				}
+			}
+			temp = temp * 2 + (nums.length / 2 - temp);
+			for (int x: values) {	
+				if (x < diff) {
+					temp -= 2;
+				} 
+				else {
+					temp -= 1;
+				}
+			}
+			ans = Math.min(ans,temp);
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,30 @@
+class Solution {
+	int MOD = 1000000007;
+	int cal(int[][][] dp, int i, int j, int remainder, int k, int n, int m, int[][] grid) {
+		if (i == n - 1 && j == m - 1) {
+			return (remainder + grid[i][j] % k) % k == 0 ? 1 : 0;
+		}
+		if (i > n - 1 || j > m - 1) {
+			return 0;
+		}
+		if (dp[i][j][remainder] != -1) {
+			return dp[i][j][val];
+		}
+		int ans = 0;
+		remainder = (remainder + grid[i][j] % k) % k;
+		ans = (cal(dp,i + 1,j,remainder,n,m,grid) % MOD + cal(dp,i,j + 1,remainder,k,n,m,grid) % MOD) % MOD;
+		dp[i][j][remainder] = ans;
+		return ans;
+	}
+	int numberOfPaths(int[][] grid, int k) {
+		int n = grid.length;
+		int m = grid[0].length;
+		int[][][] dp = new int[n][m][k];
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				Arrays.fill(dp[i][j],-1);
+			}
+		}
+		return cal(dp,0,0,0,k,n,m,grid);
+	}
+}

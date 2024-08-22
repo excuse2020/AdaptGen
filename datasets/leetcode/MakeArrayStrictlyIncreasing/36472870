@@ -1,0 +1,57 @@
+class Solution {
+	int func(int i, int prev, int n, int m, int[] arr1, int[] arr2, Map<Integer, int[]> dp) {
+		if (i == n) {
+			return 0;
+		}
+		if (dp.containsKey(prev) && dp.get(prev)[i] != -1) {
+			return dp.get(prev)[i];
+		}
+		int replace = 999999;
+		int notReplace = 999999;
+		int ubi = upperBound(arr2,m,prev);
+		if (prev < arr1[i]) {
+			if (ubi < m) {
+				replace = Math.min(replace,1 + func(i + 1,arr2[ubi],n,m,arr1,arr2,dp));
+			}
+			notReplace = Math.min(notReplace,func(i + 1,arr1[i],n,m,arr1,arr2,dp));
+		} 
+		else {
+			if (ubi < m) {
+				replace = Math.min(replace,1 + func(i + 1,arr2[ubi],n,m,arr1,arr2,dp));
+			}
+		}
+		int minOp = Math.min(replace,notReplace);
+		if (dp.containsKey(prev)) {
+			dp.get(prev)[i] = minOp;
+		} 
+		else {
+			int[] temp = new int[n];
+			Arrays.fill(temp,-1);
+			temp[i] = minOp;
+			dp.put(prev,temp);
+		}
+		return minOp;
+	}
+	int makeArrayIncreasing(int[] arr1, int[] arr2) {
+		int n = arr1.length;
+		int m = arr2.length;
+		Arrays.sort(arr2);
+		Map<Integer, int[]> dp = new HashMap<>();
+		int ans = func(0,Integer.MIN_VALUE,n,m,arr1,arr2,dp);
+		return ans == 999999 ? -1 : ans;
+	}
+	int upperBound(int[] arr, int m, int key) {
+		int lo = 0;
+		int hi = m - 1;
+		while (lo <= hi) {
+			int mid = lo + (hi - lo) / 2;
+			if (arr[mid] <= key) {
+				lo = mid + 1;
+			} 
+			else {
+				hi = mid - 1;
+			}
+		}
+		return lo;
+	}
+}

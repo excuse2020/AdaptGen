@@ -1,0 +1,29 @@
+class Solution {
+	void helper(Set<Integer>[] graph, Set<Integer> visited, Set<Integer> resSet, int i) {
+		Set<Integer> set = graph[i];
+		for (int item: set) {	
+			if (!resSet.contains(item) && !visited.contains(item)) {
+				visited.add(item);
+				helper(graph,visited,resSet,item);
+			}
+		}
+	}
+	int reachableNodes(int n, int[][] edges, int[] restricted) {
+		Set<Integer> resSet = new HashSet<>();
+		for (int i: restricted) {	
+			resSet.add(i);
+		}
+		Set<Integer>[] graph = new HashSet[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new HashSet<>();
+		}
+		for (int[] item: edges) {	
+			graph[item[0]].add(item[1]);
+			graph[item[1]].add(item[0]);
+		}
+		Set<Integer> visited = new HashSet<>();
+		visited.add(0);
+		helper(graph,visited,resSet,0);
+		return visited.size();
+	}
+}

@@ -1,0 +1,33 @@
+class Solution {
+	int countDays(int days, int[][] meetings) {
+		meetings = merge(meetings);
+		int count = 0;
+		int day = 0;
+		for (int i = 0; i < meetings.length; ++i) {
+			int[] interval = meetings[i];
+			count += Math.max(interval[0] - day,0);
+			day = interval[1];
+		}
+		count += Math.max(days - day,0);
+		return count;
+	}
+	int[][] merge(int[][] intervals) {
+		Arrays.sort(intervals,(a, b) -> {a[0] - b[0]});
+		Stack<int[]> merged = new Stack<>();
+		merged.push(intervals[0]);
+		for (int i = 1; i < intervals.length; ++i) {
+			if (merged.peek()[1] >= intervals[i][0]) {
+				merged.peek()[1] = Math.max(intervals[i][1],merged.peek()[1]);
+			} 
+			else {
+				merged.push(intervals[i]);
+			}
+		}
+		int[][] result = new int[merged.size()][2];
+		int n = merged.size();
+		for (int i = n - 1; i >= 0; --i) {
+			result[i] = merged.pop();
+		}
+		return result;
+	}
+}

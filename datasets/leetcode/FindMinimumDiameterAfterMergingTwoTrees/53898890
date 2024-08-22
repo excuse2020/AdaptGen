@@ -1,0 +1,40 @@
+class Solution {
+	int maxNodesAmongAllPaths = 0;
+	Map<Integer, List<Integer>> buildGraph(int[][] edges) {
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		for (int edge: edges) {	
+			if (!graph.containsKey(edge[0])) {
+				graph.put(edge[0],new ArrayList<>());
+			}
+			if (!graph.containsKey(edge[1])) {
+				graph.put(edge[1],new ArrayList<>());
+			}
+			graph.get(edge[0]).add(edge[1]);
+			graph.get(edge[1]).add(edge[0]);
+		}
+		return graph;
+	}
+	int getMaxNodesInGraph(int[][] edges) {
+		maxNodesAmongAllPaths = 0;
+		getMaxNodesInPath(buildGraph(edges),0,0);
+		return maxNodesAmongAllPaths;
+	}
+	int getMaxNodesInPath(Map<Integer, List<Integer>> graph, int parent, int i) {
+		if (!graph.containsKey(i)) {
+			return 1;
+		}
+		int maxNodesInCoveredPaths = 0;
+		for (int j: graph.get(i)) {	
+			if (j != parent) {
+				int maxNodesInCurrPath = getMaxNodesInPath(graph,i,j);
+				maxNodesAmongAllPaths = Math.max(maxNodesAmongAllPaths,maxNodesInCoveredPaths + maxNodesInCurrPath);
+				maxNodesInCoveredPaths = Math.max(maxNodesInCoveredPaths,maxNodesInCurrPath);
+			}
+		}
+		return maxNodesInCoveredPaths + 1;
+	}
+	int minimumDiameterAfterMerge(int[][] edges1, int[][] edges2) {
+		int maxNodesAmongAllPaths1 = getMaxNodesInGraph(edges1), maxNodesAmongAllPaths2 = getMaxNodesInGraph(edges2);
+		return Math.max(Math.max(maxNodesAmongAllPaths1 - 1,maxNodesAmongAllPaths2 - 1),(int) (maxNodesAmongAllPaths1 / 2) + (int) (maxNodesAmongAllPaths2 / 2));
+	}
+}

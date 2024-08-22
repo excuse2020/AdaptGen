@@ -1,0 +1,46 @@
+class Solution {
+	void reverse(ListNode slow) {
+		ListNode pre = null, currentNode = slow;
+		while (currentNode != null) {
+			ListNode next = currentNode.next;
+			currentNode.next = pre;
+			pre = currentNode;
+			currentNode = next;
+		}
+	}
+	ListNode reverseBetween(ListNode head, int m, int n) {
+		if (m == n || head == null || m >= n) {
+			return head;
+		}
+		ListNode first = head, end = head;
+		ListNode preFirst = null, endAfter = null;
+		int step = n - m;
+		while (step > 0) {
+			step--;
+			end = end.next;
+			if (end == null) {
+				return head;
+			}
+		}
+		while (m - 1 > 0) {
+			m--;
+			preFirst = first;
+			first = first.next;
+			end = end.next;
+			if (end == null) {
+				return head;
+			}
+		}
+		endAfter = end.next;
+		end.next = null;
+		reverse(first);
+		if (preFirst == null) {
+			head = end;
+		} 
+		else {
+			preFirst.next = end;
+		}
+		first.next = endAfter;
+		return head;
+	}
+}

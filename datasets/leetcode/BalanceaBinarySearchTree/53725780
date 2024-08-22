@@ -1,0 +1,24 @@
+class Solution {
+	List<TreeNode> sortedTree = new ArrayList<>();
+	TreeNode balanceBST(TreeNode root) {
+		inOrder(root);
+		return createBst(0,sortedTree.size() - 1);
+	}
+	TreeNode createBst(int start, int end) {
+		if (start > end) {
+			return null;
+		}
+		int mid = start + (end - start) / 2;
+		sortedTree.get(mid).left = createBst(start,mid - 1);
+		sortedTree.get(mid).right = createBst(mid + 1,end);
+		return sortedTree.get(mid);
+	}
+	void inOrder(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		inOrder(root.left);
+		sortedTree.add(root);
+		inOrder(root.right);
+	}
+}

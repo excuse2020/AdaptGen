@@ -1,0 +1,33 @@
+class Solution {
+	int[] arr;
+	int find(int x) {
+		if (x == arr[x]) {
+			return x;
+		}
+		return arr[x] = find(arr[x]);
+	}
+	int reachableNodes(int n, int[][] edges, int[] R) {
+		arr = new int[n];
+		Set<Integer> ban = new HashSet<>();
+		for (int i = 0; i < n; ++i) {
+			arr[i] = i;
+		}
+		for (int r: R) {	
+			ban.add(r);
+		}
+		for (int[] e: edges) {	
+			if (ban.contains(e[0]) || ban.contains(e[1])) {
+				continue;
+			}
+			int a = find(e[0]), b = find(e[1]);
+			arr[a] = b;
+		}
+		int res = 0, tar = find(0);
+		for (int i = 0; i < n; ++i) {
+			if (find(i) == tar) {
+				res++;
+			}
+		}
+		return res;
+	}
+}

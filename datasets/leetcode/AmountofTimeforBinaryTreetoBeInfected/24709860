@@ -1,0 +1,29 @@
+class Solution {
+	int time = 0, startDist = 0;
+	int amountOfTime(TreeNode root, int start) {
+		helper(root,start);
+		return time;
+	}
+	int helper(TreeNode root, int start) {
+		if (root == null) {
+			return 0;
+		}
+		int left = helper(root.left,start);
+		int right = helper(root.right,start);
+		if (root.val == start) {
+			time = Math.max(time,Math.max(left,right));
+			root.val = -root.val;
+		} 
+		else if (root.left != null && root.left.val < 0) {
+			startDist++;
+			time = Math.max(time,right + startDist);
+			root.val = -root.val;
+		} 
+		else if (root.right != null && root.right.val < 0) {
+			startDist++;
+			time = Math.max(time,left + startDist);
+			root.val = -root.val;
+		}
+		return Math.max(left,right) + 1;
+	}
+}

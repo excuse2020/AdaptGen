@@ -1,0 +1,39 @@
+class Solution {
+	long minCost(int[] nums, int x) {
+		long mod = 1000000007L;
+		int len = nums.length;
+		int ind = new int[len];
+		List<PriorityQueue<Integer>> pqs = new ArrayList<>();
+		long mul = 1;
+		long min = 0;
+		for (int i = 0; i < len; i++) {
+			PriorityQueue<Integer> pq = new PriorityQueue<>();
+			pq.add(nums[i]);
+			pqs.add(pq);
+			min = min + (long) nums[i];
+			ind[i] = i;
+		}
+		for (int i = 0; i < len; i++) {
+			long nsum = 0;
+			for (int j = 0; j < len; j++) {
+				PriorityQueue<Integer> pq1 = pqs.get(j);
+				int index = ind[j];
+				index++;
+				if (index == len) {
+					index = 0;
+				}
+				ind[j] = index;
+				pq1.add(nums[index]);
+				int min2 = pq1.peek();
+				nsum = nsum + (long) min2;
+			}
+			long shiftCost = mul * x;
+			nsum += shiftCost;
+			if (nsum < min) {
+				min = nsum;
+			}
+			mul++;
+		}
+		return min;
+	}
+}

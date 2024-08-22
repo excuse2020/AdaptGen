@@ -1,0 +1,24 @@
+class Solution {
+	int numSplits(String s) {
+		int total = 0;
+		HashMap<Character, Integer> hashLeft = new HashMap<>(), hashRight = new HashMap<>();
+		for (char c: s.toCharArray()) {	
+			hashRight.put(c,hashRight.getOrDefault(c,0) + 1);
+		}
+		for (int i = 0; i < s.length(); i++) {
+			char c = s.charAt(i);
+			if (hashRight.containsKey(c)) {
+				int count = hashRight.get(c);
+				if (count - 1 == 0) {
+					hashRight.remove(c);
+				} 
+				else {
+					hashRight.put(c,--count);
+				}
+			}
+			hashLeft.put(c,hashLeft.getOrDefault(c,0) + 1);
+			total += hashLeft.size() == hashRight.size() ? 1 : 0;
+		}
+		return total;
+	}
+}

@@ -1,0 +1,28 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		Map<Integer, Integer> map1 = new HashMap<>();
+		Map<Integer, Integer> map2 = new HashMap<>();
+		int n1 = node1;
+		int c = 0;
+		while (n1 != -1 && !map1.containsKey(n1)) {
+			map1.put(n1,c++);
+			n1 = edges[n1];
+		}
+		int n2 = node2;
+		c = 0;
+		int min = Integer.MAX_VALUE;
+		int node = -1;
+		while (n2 != -1 && !map2.containsKey(n2)) {
+			map2.put(n2,c++);
+			if (map1.containsKey(n2)) {
+				int current = Math.max(map1.get(n2),map2.get(n2));
+				if (min > current || (min == current && node > n2)) {
+					min = current;
+					node = n2;
+				}
+			}
+			n2 = edges[n2];
+		}
+		return node;
+	}
+}

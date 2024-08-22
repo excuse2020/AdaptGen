@@ -1,0 +1,59 @@
+class Solution {
+	int compare(String version1, String version2) {
+		String[] strs1 = version1.split("\\.");
+		String[] strs2 = version2.split("\\.");
+		int len1 = strs1.length, len2 = strs2.length;
+		int i = 0, j = 0;
+		int res = 0;
+		while (i < len1 && j < len2) {
+			res = compareStr(strs1[i],strs2[j]);
+			if (res != 0) {
+				break;
+			}
+			i++;
+			j++;
+		}
+		while (res == 0 && i < len1) {
+			for (int a = 0; a < strs1[i].length(); a++) {
+				if (strs1[i].charAt(a) != '0') {
+					return 1;
+				}
+				i++;
+			}
+		}
+		while (res == 0 && j < len2) {
+			for (int b = 0; b < strs2[j].length(); b++) {
+				if (strs2[j].charAt(b) != '0') {
+					return -1;
+				}
+			}
+			j++;
+		}
+		return res;
+	}
+	int compareStr(String str1, String str2) {
+		int p1 = 0, p2 = 0;
+		while (p1 < str1.length() && str1.charAt(p1) == '0') {
+			p1++;
+		}
+		while (p2 < str2.length() && str2.charAt(p2) == '0') {
+			p2++;
+		}
+		int ans1 = 0, ans2 = 0;
+		while (p1 < str1.length() && p2 < str2.length()) {
+			ans1 = ans1 * 10 + (str1.charAt(p1) - '0');
+			ans2 = ans2 * 10 + (str2.charAt(p2) - '0');
+			p1++;
+			p2++;
+		}
+		while (p1 < str1.length()) {
+			ans1 = ans1 * 10 + (str1.charAt(p1) - '0');
+			p1++;
+		}
+		while (p2 < str2.length()) {
+			ans2 = ans2 * 10 + (str2.charAt(p2) - '0');
+			p2++;
+		}
+		return ans1 > ans2 ? 1 : ans1 < ans2 ? -1 : 0;
+	}
+}

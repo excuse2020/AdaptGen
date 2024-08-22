@@ -1,0 +1,18 @@
+class Solution {
+	int mod = (int) 1e9 + 7;
+	int get_ans(int n, int i, int k, int[] p, int[] g, Integer dp) {
+		if (n < 0) {
+			return 0;
+		}
+		if (i == p.length) {
+			return k > 0 ? 0 : 1;
+		}
+		if (dp[i][k][n] != null) {
+			return dp[i][k][n];
+		}
+		return dp[i][k][n] = (get_ans(n,i + 1,k,p,g,dp) + get_ans(n - g[i],i + 1,Math.max(k - p[i],0),p,g,dp)) % mod;
+	}
+	int profitableSchemes(int n, int minProfit, int[] group, int[] profit) {
+		return get_ans(n,0,minProfit,profit,group,new Integer[profit.length][minProfit + 1][n + 1]);
+	}
+}

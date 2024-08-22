@@ -1,0 +1,51 @@
+class Solution {
+	Map<Integer, List<Integer>> graph;
+	String labels;
+	int longestPath;
+	int helper(int root, int parent) {
+		char currRootLabel = labels.charAt(root);
+		List<Integer> allChildRootPaths = new ArrayList<>();
+		for (int childRoot: graph.getOrDefault(root,new ArrayList<>())) {	
+			if (childRoot == parent) {
+				continue;
+			}
+			char childRootLabel = labels.charAt(childRoot);
+			int childRootPath = helper(childRoot,root);
+			if (childRootLabel == currRootLabel) {
+				longestPath = Math.max(longestPath,childRootPath);
+				continue;
+			}
+			allChildRootPaths.add(childRootPath);
+		}
+		int maxChildPath1 = 0;
+		int maxChildPath2 = 0;
+		int size = allChildRootPaths.size();
+		if (size == 1) {
+			maxChildPath1 = allChildRootPaths.get(size - 1);
+		} 
+		else if (size > 1) {
+			Collections.sort(allChildRootPaths);
+			maxChildPath1 = allChildRootPaths.get(size - 1);
+			maxChildPath2 = allChildRootPaths.get(size - 2);
+		}
+		longestPath = Math.max(longestPath,maxChildPath1 + 1);
+		return Math.max(maxChildPath1,maxChildPath2) + 1;
+	}
+	int longestPath(int[] parent, String s) {
+		int n = parent.length;
+		labels = s;
+		longestPath = 0;
+		graph = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			int u = parent[i];
+			int v = i;
+			graph.putIfAbsent(u,new ArrayList<>());
+			graph.get(u).add(v);
+			graph.putIfAbsent(v,new ArrayList<>());
+			graph.get(v).add(u);
+		}
+		int root = 0;
+		helper(root,-1);
+		return longestPath;
+	}
+}

@@ -1,0 +1,29 @@
+class Solution {
+	void buildTree(TreeNode root, int[] nums, int left, int rootIdx, int right) {
+		if (root == null || left > rootIdx || rootIdx > right) {
+			return;
+		}
+		int leftmid = left + (rootIdx - left) / 2;
+		int rightmid = rootIdx + 1;
+		TreeNode leftSubRoot = null;
+		TreeNode rightSubRoot = null;
+		if (leftmid < rootIdx) {
+			leftSubRoot = new TreeNode(nums[leftmid]);
+		}
+		if (rightmid <= right) {
+			rightSubRoot = new TreeNode(nums[rightmid]);
+		}
+		root.left = leftSubRoot;
+		root.right = rightSubRoot;
+		buildTree(root.left,nums,left,leftmid,rootIdx - 1);
+		buildTree(root.right,nums,rootIdx + 1,rightmid,right);
+	}
+	TreeNode sortedArrayToBST(int[] nums) {
+		if (nums == null || nums.length == 0) {
+			return null;
+		}
+		TreeNode root = new TreeNode(nums[nums.length / 2]);
+		buildTree(root,nums,0,nums.length / 2,nums.length - 1);
+		return root;
+	}
+}

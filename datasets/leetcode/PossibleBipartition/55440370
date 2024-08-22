@@ -1,0 +1,36 @@
+class Solution {
+	boolean dfs(int node, int[] color, int c, ArrayList<ArrayList<Integer>> arr) {
+		color[node] = c;
+		for (Integer am: arr.get(node)) {	
+			if (color[am] == color[node]) {
+				return false;
+			}
+			if (color[am] == -1) {
+				if (!dfs(am,color,1 - color[node],arr)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		ArrayList<ArrayList<Integer>> arr = new ArrayList<>();
+		for (int i = 0; i <= n; i++) {
+			arr.add(new ArrayList<>());
+		}
+		for (int[] d: dislikes) {	
+			arr.get(d[0]).add(d[1]);
+			arr.get(d[1]).add(d[0]);
+		}
+		int[] color = new int[n + 1];
+		Arrays.fill(color,-1);
+		for (int i = 1; i <= n; i++) {
+			if (color[i] == -1) {
+				if (dfs(i,color,1,arr) == false) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

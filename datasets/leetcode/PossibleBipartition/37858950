@@ -1,0 +1,42 @@
+class Solution {
+	void getAdjacency(int[][] dislikes, List<List<Integer>> adj, int n) {
+		for (int l = 1; l <= n + 1; l++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int[] d: dislikes) {	
+			adj.get(d[0]).add(d[1]);
+			adj.get(d[1]).add(d[0]);
+		}
+	}
+	boolean isPossibleBipartition(int c, List<List<Integer>> adj, int[] color) {
+		Queue<Integer> q = new LinkedList<>();
+		q.add(c);
+		color[c] = 1;
+		while (!q.isEmpty()) {
+			int i = q.poll();
+			for (int j: adj.get(i)) {	
+				if (color[j] == 0) {
+					color[j] = color[i] * -1;
+					q.add(j);
+				} 
+				else if (color[j] == color[i]) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		int[] color = new int[n + 1];
+		List<List<Integer>> adj = new ArrayList<>(n + 1);
+		getAdjacency(dislikes,adj,n);
+		for (int c = 1; c <= n; c++) {
+			if (color[c] == 0) {
+				if (isPossibleBipartition(c,adj,color) == false) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

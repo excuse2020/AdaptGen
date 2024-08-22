@@ -1,0 +1,27 @@
+class Solution {
+	int[] findOriginalArray(int[] changed) {
+		if (changed.length % 2 != 0) {
+			return new int[0];
+		}
+		TreeMap<Integer, Integer> container = new TreeMap<>();
+		for (int num: changed) {	
+			container.put(num,container.getOrDefault(num,0) + 1);
+		}
+		int index = 0;
+		int[] ans = new int[changed.length / 2];
+		for (int key: container.keySet()) {	
+			if (container.get(key) > 0) {
+				if (container.getOrDefault((key << 1),0) >= container.get(key)) {
+					container.put((key << 1),(container.get((key << 1)) - container.get(key)));
+					for (int i = 0; i < container.get(key); i++) {
+						ans[index++] = key;
+					}
+				} 
+				else {
+					return new int[0];
+				}
+			}
+		}
+		return ans;
+	}
+}

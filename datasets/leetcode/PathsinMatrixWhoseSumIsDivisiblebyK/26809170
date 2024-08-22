@@ -1,0 +1,36 @@
+class Solution {
+	long m = (long) Math.pow(10,9) + 7;
+	Integer[][] memo;
+	long[][][] paths;
+	int numberOfPaths(int[][] grid, int k) {
+		int n = grid.length;
+		int m = grid[0].length;
+		paths = new long[n][m][k];
+		memo = new Integer[n][m];
+		recursion(grid,k,n - 1,m - 1);
+		return (int) paths[n - 1][m - 1][0];
+	}
+	void recursion(int[][] grid, int k, int i, int j) {
+		if (i == 0 && j == 0) {
+			int rem = grid[0][0] % k;
+			paths[0][0][rem]++;
+		}
+		if (j - 1 >= 0 && memo[i][j - 1] == null) {
+			recursion(grid,k,i,j - 1);
+		}
+		if (i - 1 >= 0 && memo[i - 1][j] == null) {
+			recursion(grid,k,i - 1,j);
+		}
+		for (int p = 0; p < k; p++) {
+			if (j - 1 >= 0) {
+				int sum = p + grid[i][j];
+				paths[i][j][sum % k] = (paths[i][j][sum % k] + paths[i][j - 1][p]) % m;
+			}
+			if (i - 1 >= 0) {
+				int sum = p + grid[i][j];
+				paths[i][j][sum % k] = (paths[i][j][sum % k] + paths[i - 1][j][p]) % m;
+			}
+		}
+		memo[i][j] = 1;
+	}
+}

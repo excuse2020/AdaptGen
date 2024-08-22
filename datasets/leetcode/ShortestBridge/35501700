@@ -1,0 +1,47 @@
+class Solution {
+	Set<Pair<Integer, Integer>> islandOnePerimeters;
+	Set<Pair<Integer, Integer>> islandTwoPerimeters;
+	void dfs(int[][] grid, int i, int j, int prevI, int prevJ, int islandNum) {
+		if (i < 0 || i >= grid.length || j < 0 || j >= grid[i].length || grid[i][j] == 0) {
+			if (islandNum == 1) {
+				islandOnePerimeters.add(new Pair<>(prevI, prevJ));
+			} 
+			else {
+				islandTwoPerimeters.add(new Pair<>(prevI, prevJ));
+			}
+			return;
+		}
+		grid[i][j] = 0;
+		dfs(grid,i + 1,j,i,j,islandNum);
+		dfs(grid,i - 1,j,i,j,islandNum);
+		dfs(grid,i,j + 1,i,j,islandNum);
+		dfs(grid,i,j - 1,i,j,islandNum);
+	}
+	int shortestBridge(int[][] grid) {
+		int islandNum = 1;
+		islandOnePerimeters = new HashSet<>();
+		islandTwoPerimeters = new HashSet<>();
+		for (int i = 0; i < grid.length; i++) {
+			boolean isBreakable = false;
+			for (int j = 0; j < grid[i].length; j++) {
+				if (grid[i][j] == 1) {
+					dfs(grid,i,j,i,j,islandNum++);
+					if (islandNum == 3) {
+						isBreakable = true;
+						break;
+					}
+				}
+			}
+			if (isBreakable) {
+				break;
+			}
+		}
+		int minDistance = Integer.MAX_VALUE;
+		for (Pair<Integer, Integer> xy1: islandOnePerimeters) {	
+			for (Pair<Integer, Integer> xy2: islandTwoPerimeters) {	
+				minDistance = Math.min(minDistance,Math.abs(xy2.getKey() - xy1.getKey()) + Math.abs(xy2.getValue() - xy1.getValue()));
+			}
+		}
+		return minDistance - 1;
+	}
+}

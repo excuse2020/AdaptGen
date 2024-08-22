@@ -1,0 +1,54 @@
+class Solution {
+	boolean compare(int[] a, int[] b) {
+		int firstDiff = 0;
+		for (int i = 0; i < a.length; i++) {
+			if (a[i] - b[i] == 0) {
+				continue;
+			}
+			if (firstDiff == 0) {
+				firstDiff = a[i] - b[i];
+			} 
+			else if (a[i] - b[i] != firstDiff) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int count(int index, Map<Integer, List<Integer>> graph, int[] memo, int n) {
+		if (index == n) {
+			return 0;
+		}
+		if (memo[index] != -1) {
+			return memo[index];
+		}
+		var nextList = graph.get(index);
+		memo[index] = Integer.MAX_VALUE;
+		for (Integer end: nextList) {	
+			int tmp = count(end + 1,graph,memo,n);
+			memo[index] = Math.min(memo[index],tmp + 1);
+		}
+		return memo[index];
+	}
+	Set<int[]> extract(String s) {
+		Set<int[]> res = new HashSet<>();
+		int n = s.length();
+		int[][] prefix = new int[n + 1][26];
+		int[] cur = new int[26];
+		int i = 0;
+		prefix[i] = cur.clone();
+	}
+	int minimumSubstringsInPartition(String s) {
+		Set<int[]> balances = extract(s);
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		for (int[] balance: balances) {	
+			int start = balance[0];
+			int end = balance[1];
+			var tmp = graph.getOrDefault(start,new ArrayList<>());
+			tmp.add(end);
+			graph.put(start,tmp);
+		}
+		int[] memo = new int[s.length()];
+		Arrays.fill(memo,-1);
+		return count(0,graph,memo,s.length());
+	}
+}

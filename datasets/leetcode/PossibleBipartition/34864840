@@ -1,0 +1,48 @@
+class Solution {
+	boolean findLikes(int source, Set<Integer>[] dislikeList, int[] like) {
+		Queue<Integer> q = new LinkedList<Integer>();
+		q.add(source);
+		like[source] = 1;
+		while (!q.isEmpty()) {
+			int person = q.poll();
+			for (int neighbor: dislikeList[person]) {	
+				if (like[neighbor] == -1) {
+					if (like[person] == 1) {
+						like[neighbor] = 0;
+					} 
+					else {
+						like[neighbor] = 1;
+					}
+					q.add(neighbor);
+				} 
+				else {
+					if (like[neighbor] == like[person]) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		n = n + 1;
+		Set<Integer>[] dislikeList = new HashSet[n];
+		int[] like = new int[n];
+		Arrays.fill(like,-1);
+		for (int i = 1; i < n; i++) {
+			dislikeList[i] = new HashSet<Integer>();
+		}
+		for (int[] dislike: dislikes) {	
+			dislikeList[dislike[0]].add(dislike[1]);
+			dislikeList[dislike[1]].add(dislike[0]);
+		}
+		for (int i = 1; i < n; i++) {
+			if (like[i] == -1) {
+				if (!findLikes(i,dislikeList,like)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

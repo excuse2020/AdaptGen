@@ -1,0 +1,51 @@
+class Solution {
+	int maxKDivisibleComponents(int n, int[][] edges, int[] values, int k) {
+		Map<Integer, List<Integer>> tree = new HashMap<>();
+		int[] indeg = new int[n];
+		int components = 0;
+		if (n == 1) {
+			return 1;
+		}
+		for (int[] edge: edges) {	
+			int u = edge[0], v = edge[1];
+			tree.putIfAbsent(u,new ArrayList<Integer>());
+			tree.putIfAbsent(v,new ArrayList<Integer>());
+			tree.get(u).add(v);
+			tree.get(v).add(u);
+			indeg[u]++;
+			indeg[v]++;
+		}
+		Queue<Integer> q = new LinkedList<>();
+		for (int i = 0; i < n; i++) {
+			if (indeg[i] == 1) {
+				q.add(i);
+			}
+		}
+		while (q.size() != 0) {
+			int cur = q.poll();
+			indeg[cur] = 0;
+			List<Integer> adj = tree.get(cur);
+			if (values[cur] % k == 0) {
+				components++;
+				for (int node: adj) {	
+					indeg[node]--;
+					if (indeg[node] == 1) {
+						q.add(node);
+					}
+				}
+			} 
+			else {
+				for (int node: adj) {	
+					if (indeg[node] != 0) {
+						values[node] += values[cur];
+						indeg[node]--;
+						if (indeg[node] == 1) {
+							q.add(node);
+						}
+					}
+				}
+			}
+		}
+		return components;
+	}
+}

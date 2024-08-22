@@ -1,0 +1,47 @@
+class Solution {
+	double angle;
+	List<Double> angles;
+	int ans;
+	double diff;
+	int pointsAtLocation;
+	double getAngle(List<Integer> point, List<Integer> location) {
+		double angle = Math.toDegrees(Math.atan2(point.get(0) - location.get(0),point.get(1) - location.get(1)));
+		angle += angle < 0 ? 360 : 0;
+		return angle;
+	}
+	double getDiff(int start, int end) {
+		diff = angles.get(end) - angles.get(start);
+		if (diff < 0) {
+			diff += 360.0;
+		}
+		return diff;
+	}
+	void initialize() {
+		angles = new ArrayList<>();
+		int ans = 0;
+		int pointsAtLocation = 0;
+	}
+	int visiblePoints(List<List<Integer>> points, int angle, List<Integer> location) {
+		initialize();
+		for (List<Integer> point: points) {	
+			if (point.get(0) == location.get(0) && point.get(1) == location.get(1)) {
+				pointsAtLocation++;
+			} 
+			else {
+				angles.add(getAngle(point,location));
+			}
+		}
+		Collections.sort(angles);
+		int n = angles.size();
+		for (int end = 0, start = 0; start < n; end++) {
+			if (ans == n) {
+				return ans + pointsAtLocation;
+			}
+			while (start < angles.size() && getDiff(start,end % n) > angle) {
+				start++;
+			}
+			ans = Math.max(ans,end - start + 1);
+		}
+		return ans + pointsAtLocation;
+	}
+}

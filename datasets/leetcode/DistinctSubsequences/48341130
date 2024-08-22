@@ -1,0 +1,25 @@
+class Solution {
+	int numDistinct(String s, String t) {
+		return spaceOptimization(s,t);
+	}
+	int spaceOptimization(String s1, String s2) {
+		int dp = new int[s2.length() + 1];
+		dp[0] = 1;
+		for (int i = 1; i <= s1.length(); i++) {
+			int temp = new int[dp.length];
+			temp[0] = 1;
+			for (int j = 1; j <= s2.length(); j++) {
+				int take = 0;
+				if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
+					take = dp[j - 1];
+				}
+				int ntake = dp[j];
+				temp[j] = (take + ntake) % ((int) (Math.pow(10,9) + 7));
+			}
+			for (int ii = 0; ii < dp.length; ii++) {
+				dp[ii] = temp[ii];
+			}
+		}
+		return dp[dp.length - 1];
+	}
+}

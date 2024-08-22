@@ -1,0 +1,31 @@
+class Solution {
+	int hcf(int a, int b) {
+		if (b == 0) {
+			return a;
+		}
+		return hcf(b,a % b);
+	}
+	int minOperations(int[] nums, int[] numsDivide) {
+		int min = numsDivide[0];
+		for (int i = 1; i < numsDivide.length; i++) {
+			min = hcf(min,numsDivide[i]);
+		}
+		PriorityQueue<Integer> pq = new PriorityQueue<>();
+		for (int num: nums) {	
+			pq.add(num);
+		}
+		int ans = 0;
+		int removed = -1;
+		while (pq.size() > 0 && pq.peek() < min) {
+			removed = pq.remove();
+			ans++;
+			if (min % removed == 0) {
+				return ans - 1;
+			}
+		}
+		if (pq.size() != 0 && pq.peek() == min) {
+			return ans;
+		}
+		return -1;
+	}
+}

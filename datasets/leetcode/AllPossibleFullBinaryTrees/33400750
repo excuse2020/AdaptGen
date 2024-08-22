@@ -1,0 +1,27 @@
+class Solution {
+	List<TreeNode> allPossibleFBT(int n) {
+		if (n % 2 == 0) {
+			return Collections.emptyList();
+		}
+		List<TreeNode>[] dp = new List[n + 1];
+		dp[1] = new ArrayList<>();
+		dp[1].add(new TreeNode(0));
+		for (int i = 3; i <= n; i += 2) {
+			dp[i] = new ArrayList<>();
+			for (int j = 1; j < i; j += 2) {
+				int k = i - j;
+				List<TreeNode> leftSubtrees = dp[j];
+				List<TreeNode> rightSubtrees = dp[k];
+				for (TreeNode left: leftSubtrees) {	
+					for (TreeNode right: rightSubtrees) {	
+						TreeNode root = new TreeNode(0);
+						root.left = left;
+						root.right = right;
+						dp[i].add(root);
+					}
+				}
+			}
+		}
+		return dp[n];
+	}
+}

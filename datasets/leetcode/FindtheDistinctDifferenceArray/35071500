@@ -1,0 +1,21 @@
+class Solution {
+	int[] distinctDifferenceArray(int[] nums) {
+		Set<Integer> leftDistinctCount = new HashSet<>();
+		Set<Integer> rightDistinctCount = new HashSet<>();
+		int[] leftPrefixSum = new int[nums.length];
+		int[] rightPrefixSum = new int[nums.length];
+		for (int i = 0; i < nums.length; i++) {
+			leftDistinctCount.add(nums[i]);
+			leftPrefixSum[i] = leftDistinctCount.size();
+		}
+		for (int i = nums.length - 1; i >= 0; i--) {
+			rightDistinctCount.add(nums[i]);
+			rightPrefixSum[i] = rightDistinctCount.size();
+		}
+		for (int i = 0; i < nums.length - 1; i++) {
+			rightPrefixSum[i] = leftPrefixSum[i] - rightPrefixSum[i + 1];
+		}
+		rightPrefixSum[nums.length - 1] = leftPrefixSum[nums.length - 1];
+		return rightPrefixSum;
+	}
+}

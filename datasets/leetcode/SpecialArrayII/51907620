@@ -1,0 +1,48 @@
+class Solution {
+	boolean[] isArraySpecial(int[] nums, int[][] queries) {
+		boolean[] specialLeft = new boolean[nums.length];
+		specialLeft[0] = true;
+		for (int i = 1; i < specialLeft.length; i++) {
+			if ((nums[i] & 1) != (nums[i - 1] & 1)) {
+				specialLeft[i] = specialLeft[i - 1];
+			}
+		}
+		boolean[] specialRight = new boolean[nums.length];
+		specialRight[specialRight.length - 1] = true;
+		for (int i = specialRight.length - 2; i >= 0; i--) {
+			if ((nums[i] & 1) != (nums[i + 1] & 1)) {
+				specialRight[i] = specialRight[i + 1];
+			}
+		}
+		boolean[] ans = new boolean[queries.length];
+		int i = 0;
+		for (int[] query: queries) {	
+			int start = query[0];
+			int end = query[1];
+			if (start == end) {
+				ans[i] = true;
+				i++;
+				continue;
+			}
+			if (start == 0) {
+				ans[i] = specialLeft[end];
+			} 
+			else {
+				if (specialLeft[start] || specialLeft[end]) {
+					ans[i] = (specialLeft[start] && specialLeft[end]) || (specialRight[start] && specialRight[end]);
+				} 
+				else {
+					ans[i] = true;
+					for (int j = start; j < end; j++) {
+						if ((nums[j] & 1) == (nums[j + 1] & 1)) {
+							ans[i] = false;
+							break;
+						}
+					}
+				}
+			}
+			i++;
+		}
+		return ans;
+	}
+}

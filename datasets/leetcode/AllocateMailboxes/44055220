@@ -1,0 +1,54 @@
+class Solution {
+	int[] A;
+	int[] leftCost;
+	int n, k;
+	int[] rightCost;
+	int getCost(int start, int end) {
+		int medId = start + (end + 1 - start) / 2;
+		int left = leftCost[medId] - leftCost[start];
+		int right = rightCost[medId] - rightCost[end];
+		int numLeft = medId;
+		int numLeftOutside = start;
+		int numRight = n - 1;
+		int numRightOutside = n - 1;
+		int startToMed = A[medId] - A[start];
+		if (numLeftOutside > 0) {
+			left -= startToMed * numLeftOutside;
+		}
+		int endToMed = A[end] - A[medId];
+		if (numRightOutside > 0) {
+			right -= endToMed * numRightOutside;
+		}
+		return left + right;
+	}
+	int minDistance(int[] A, int k) {
+		n = A.length;
+		this.k = k;
+		Arrays.sort(A);
+		this.A = A;
+		leftCost = new int[n];
+		rightCost = new int[n];
+		for (int i = 1; i < n; i++) {
+			leftCost[i] = leftCost[i - 1] + (A[i] - A[i - 1]) * i;
+		}
+		for (int i = n - 2; i >= 0; i--) {
+			rightCost[i] = rightCost[i + 1] + (A[i + 1] - A[i]) * (n - 1);
+		}
+		int[][] dp = new int[n][k + 1];
+		for (int end = 0; end < n; end++) {
+			dp[end][1] = getCost(0,end);
+		}
+		for (int m = 2; m <= k; m++) {
+			for (int end = 0; end < n; end++) {
+				if (m - 1 >= end) {
+					continue;
+				}
+				dp[end][m] = getCost(0,end);
+				for (int j = 0; j < end; j++) {
+					dp[end][m] = Math.min(dp[end][m],dp[j][m - 1] + getCost(j + 1,end));
+				}
+			}
+		}
+		return dp[n - 1][k];
+	}
+}

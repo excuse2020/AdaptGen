@@ -1,0 +1,33 @@
+class Solution {
+	long maximumSubarraySum(int[] nums, int k) {
+		int n = nums.length, i = 0, j = 0, m = 0;
+		long ans = 0, sum = 0;
+		int[] freq = new int[100001];
+		boolean[] duplicate = new boolean[100001];
+		while (j < n) {
+			if (freq[nums[j]] >= 1) {
+				duplicate[m] = true;
+				m++;
+			}
+			freq[nums[j]]++;
+			sum += nums[j];
+			if (j - i + 1 >= k) {
+				if (duplicate[0] == false) {
+					ans = Math.max(ans,sum);
+				}
+				if (freq[nums[i]] >= 2 && m >= 1) {
+					duplicate[m - 1] = false;
+					m--;
+				}
+				freq[nums[i]]--;
+				sum -= nums[i];
+				i++;
+				j++;
+			} 
+			else {
+				j++;
+			}
+		}
+		return ans;
+	}
+}

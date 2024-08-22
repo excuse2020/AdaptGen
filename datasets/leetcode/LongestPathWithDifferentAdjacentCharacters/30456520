@@ -1,0 +1,30 @@
+class Solution {
+	int res = 0;
+	int dfs(int cur, Map<Integer, List<Integer>> graph, String s) {
+		int one = 0;
+		int two = 0;
+		for (int next: graph.getOrDefault(cur,new ArrayList<Integer>())) {	
+			int path = dfs(next,graph,s);
+			if (s.charAt(next) != s.charAt(cur)) {
+				if (path > one) {
+					two = one;
+					one = path;
+				} 
+				else if (path > two) {
+					two = path;
+				}
+			}
+		}
+		res = Math.max(res,1 + one);
+		return 1 + one;
+	}
+	int longestPath(int[] parent, String s) {
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		for (int i = 0; i < parent.length; i++) {
+			graph.putIfAbsent(parent[i],new ArrayList<Integer>());
+			graph.get(parent[i]).add(i);
+		}
+		dfs(0,graph,s);
+		return res;
+	}
+}

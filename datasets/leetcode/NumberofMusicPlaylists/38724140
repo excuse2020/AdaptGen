@@ -1,0 +1,24 @@
+class Solution {
+	int MOD = 1_000_000_007;
+	int numMusicPlaylists(int n, int goal, int k) {
+		int storage = new int[n + 1][goal + 1];
+		for (int[] arr: storage) {	
+			Arrays.fill(arr,-1);
+		}
+		return recur(n,goal,k,storage);
+	}
+	int recur(int n, int goal, int k, int[][] storage) {
+		if (goal == 0 && n == 0) {
+			return 1;
+		}
+		if (goal == 0 || n == 0) {
+			return 0;
+		}
+		if (storage[n][goal] != -1) {
+			return storage[n][goal];
+		}
+		int diff_song = (int) ((long) recur(n - 1,goal - 1,k,storage) * n % MOD);
+		int replay_song = (int) ((long) recur(n,goal - 1,k,storage) * Math.max((n - k),0) % MOD);
+		return storage[n][goal] = ((diff_song + replay_song) % MOD);
+	}
+}

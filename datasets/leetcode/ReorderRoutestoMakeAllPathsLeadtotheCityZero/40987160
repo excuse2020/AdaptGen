@@ -1,0 +1,45 @@
+class Solution {
+	int minReorder(int n, int[][] connections) {
+		int result = 0;
+		HashMap<Integer, HashMap<Integer, Boolean>> graph = new HashMap<>();
+		for (int i = 0; i < connections.length; i++) {
+			int p1 = connections[i][0];
+			int p2 = connections[i][1];
+			if (graph.containsKey(p1)) {
+				HashMap<Integer, Boolean> temp = new HashMap<Integer, Boolean>();
+				graph.get(p1).put(p2,Boolean.TRUE);
+			} 
+			else {
+				HashMap<Integer, Boolean> temp = new HashMap<Integer, Boolean>();
+				temp.put(p2,Boolean.TRUE);
+				graph.put(p1,temp);
+			}
+			if (graph.containsKey(p2)) {
+				HashMap<Integer, Boolean> temp = new HashMap<Integer, Boolean>();
+				graph.get(p2).put(p1,Boolean.FALSE);
+			} 
+			else {
+				HashMap<Integer, Boolean> temp = new HashMap<Integer, Boolean>();
+				temp.put(p1,Boolean.FALSE);
+				graph.put(p2,temp);
+			}
+		}
+		boolean visited = new boolean[n];
+		visited[0] = true;
+		Stack<HashMap<Integer, Boolean>> stack = new Stack<>();
+		stack.push(graph.get(0));
+		while (!stack.isEmpty()) {
+			HashMap<Integer, Boolean> pop = stack.pop();
+			for (Integer current: pop.keySet()) {	
+				if (!visited[current]) {
+					if (pop.get(current)) {
+						result = result + 1;
+					}
+					visited[current] = true;
+					stack.push(graph.get(current));
+				}
+			}
+		}
+		return result;
+	}
+}

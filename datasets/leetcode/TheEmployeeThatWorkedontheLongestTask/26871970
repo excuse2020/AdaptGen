@@ -1,0 +1,25 @@
+class Solution {
+	int hardestWorker(int n, int[][] logs) {
+		int workStep = 0;
+		int llen = logs.length;
+		int result = Integer.MIN_VALUE;
+		Map<Integer, Integer> mapLoadsId = new TreeMap<>();
+		for (int i = 0; i < llen; i++) {
+			if (mapLoadsId.containsKey(logs[i][1] - workStep)) {
+				if (mapLoadsId.get(logs[i][1] - workStep) > logs[i][0]) {
+					mapLoadsId.replace(logs[i][1] - workStep,logs[i][0]);
+				}
+			} 
+			else {
+				mapLoadsId.put(logs[i][1] - workStep,logs[i][0]);
+			}
+			workStep = logs[i][1];
+		}
+		for (Integer load: mapLoadsId.keySet()) {	
+			if (load > result) {
+				result = load;
+			}
+		}
+		return mapLoadsId.get(result);
+	}
+}

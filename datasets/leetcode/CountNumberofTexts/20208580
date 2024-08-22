@@ -1,0 +1,24 @@
+class Solution {
+	Set<Character> set;
+	int countTexts(String pressedKeys) {
+		int n = pressedKeys.length();
+		int mod = 1000000007;
+		int[] dp = new int[n + 1];
+		dp[0] = 1;
+		for (int i = 1; i <= n; i++) {
+			dp[i] = dp[i - 1];
+			char c = pressedKeys.charAt(i - 1);
+			int max = set.contains(c) ? 3 : 2;
+			for (int j = 1; j <= max; j++) {
+				int pre = i - j;
+				if (pre >= 0 && pressedKeys.charAt(pre) == c) {
+					dp[i] = (dp[i] + dp[pre]) % mod;
+				} 
+				else {
+					break;
+				}
+			}
+		}
+		return dp[n];
+	}
+}

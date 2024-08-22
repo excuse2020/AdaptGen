@@ -1,0 +1,59 @@
+class Solution {
+	List<List<Integer>> buildGraph(int n, int[][] edges) {
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i <= n; ++i) {
+			adj.add(new ArrayList<>());
+		}
+		for (int[] e: edges) {	
+			int u = e[0];
+			int v = e[1];
+			adj.get(u).add(v);
+			adj.get(v).add(u);
+		}
+		return adj;
+	}
+	int secondMinimum(int n, int[][] edges, int time, int change) {
+		List<List<Integer>> adj = buildGraph(n,edges);
+		int[] dist1 = new int[n + 1];
+		int[] dist2 = new int[n + 1];
+		int[] visited = new int[n + 1];
+		Arrays.fill(dist1,Integer.MAX_VALUE);
+		Arrays.fill(dist2,Integer.MAX_VALUE);
+		dist1[0] = 0;
+		dist2[0] = 0;
+		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {a[1] - b[1]});
+		pq.add(new int{1, 0});
+		dist1[1] = 0;
+		while (!pq.isEmpty()) {
+			int[] curr = pq.poll();
+			int node = curr[0];
+			int currentTime = curr[1];
+			visited[node]++;
+			if (visited[node] == 2 && node == n && dist2[node] != Integer.MAX_VALUE) {
+				return currentTime;
+			}
+			boolean isSignalGreen = (currentTime / change) % 2 == 0;
+			if (!isSignalGreen) {
+				currentTime = time + change * (currentTime / change + 1);
+			} 
+			else {
+				currentTime += time;
+			}
+			for (int v: adj.get(node)) {	
+				if (visited[v] == 2) {
+					continue;
+				}
+				if (dist1[v] > currentTime) {
+					dist2[v] = dist1[v];
+					dist1[v] = currentTime;
+					pq.add(new int{v, dist1[v]});
+				} 
+				else if (dist2[v] > currentTime && dist1[v] != currentTime) {
+					dist2[v] = currentTime;
+					pq.add(new int{v, dist2[v]});
+				}
+			}
+		}
+		return 0;
+	}
+}

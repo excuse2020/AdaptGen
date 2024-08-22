@@ -1,0 +1,37 @@
+class Solution {
+	int[] decrypt(int[] code, int k) {
+		int sum = 0;
+		int start, end;
+		int length = code.length;
+		int[] ans = new int[length];
+		if (k > 0) {
+			for (int i = 1; i < k + 1; i++) {
+				sum += code[i];
+			}
+			start = 0;
+			end = k;
+			ans[start] = sum;
+			for (start = 1; start < length; start++) {
+				end = (end + 1) % length;
+				sum += code[end] - code[start];
+				ans[start] = sum;
+			}
+		} 
+		else if (k < 0) {
+			k = Math.abs(k);
+			for (int i = length - k; i < code.length; i++) {
+				sum += code[i];
+			}
+			start = length - 1;
+			end = length - k;
+			ans[0] = sum;
+			for (int i = 1; i < code.length; i++) {
+				start = (start + 1) % length;
+				sum += code[start] - code[end];
+				end = (end + 1) % length;
+				ans[i] = sum;
+			}
+		}
+		return ans;
+	}
+}

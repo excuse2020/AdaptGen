@@ -1,0 +1,36 @@
+class Solution {
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		List<Integer>[] preMap = new List[numCourses];
+		int[] indegree = new int[numCourses];
+		List<Integer> ans = new ArrayList<>();
+		for (int i = 0; i < prerequisites.length; i++) {
+			int course = prerequisites[i][0];
+			int pre = prerequisites[i][1];
+			if (preMap[pre] == null) {
+				preMap[pre] = new ArrayList<>();
+			}
+			preMap[pre].add(course);
+			indegree[course]++;
+		}
+		Queue<Integer> queue = new LinkedList<>();
+		for (int i = 0; i < numCourses; i++) {
+			if (indegree[i] == 0) {
+				queue.offer(i);
+			}
+		}
+		while (!queue.isEmpty()) {
+			int current = queue.poll();
+			ans.add(current);
+			if (preMap[current] != null) {
+				for (int i = 0; i < preMap[current].size(); i++) {
+					int target = preMap[current].get(i);
+					indegree[target]--;
+					if (indegree[target] == 0) {
+						queue.offer(target);
+					}
+				}
+			}
+		}
+		return ans.size() == numCourses;
+	}
+}

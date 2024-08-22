@@ -1,0 +1,31 @@
+class Solution {
+	int mod = (int) (1e9 + 7);
+	long process(int index, int restProfit, int restN, int[] group, int[] profit, long[][][] dp) {
+		if (index == group.length) {
+			return restProfit == 0 ? 1 : 0;
+		}
+		if (dp[index][restProfit][restN] != -1) {
+			return dp[index][restProfit][restN];
+		}
+		long p1 = process(index + 1,restProfit,restN,group,profit,dp);
+		long p2 = 0;
+		if (restN >= group[index]) {
+			p2 = process(index + 1,Math.max(restProfit - profit[index],0),restN - group[index],group,profit,dp);
+		}
+		long p = p1 + p2;
+		p %= mod;
+		dp[index][restProfit][restN] = p;
+		return p;
+	}
+	int profitableSchemes(int n, int minProfit, int[] group, int[] profit) {
+		long[][][] dp = new long[group.length][minProfit + 1][n + 1];
+		for (int i = 0; i < group.length; i++) {
+			for (int j = 0; j <= minProfit; j++) {
+				for (int k = 0; k <= n; k++) {
+					dp[i][j][k] = -1;
+				}
+			}
+		}
+		return (int) process(0,minProfit,n,group,profit,dp);
+	}
+}

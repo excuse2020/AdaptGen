@@ -1,0 +1,30 @@
+class Solution {
+	Map<Integer, ArrayList<Integer>> graph = new HashMap<>();
+	Set<Integer> visited = new HashSet<>();
+	int dfs(int node, int currCost, List<Boolean> hasApple) {
+		if (visited.contains(node)) {
+			return 0;
+		}
+		visited.add(node);
+		int childrenCost = 0;
+		for (int x: graph.get(node)) {	
+			childrenCost += dfs(x,2,hasApple);
+		}
+		if (childrenCost == 0 && !hasApple.get(node)) {
+			return 0;
+		}
+		return childrenCost + currCost;
+	}
+	void genrateGraph(int[][] edges) {
+		for (int[] edge: edges) {	
+			graph.putIfAbsent(edge[0],new ArrayList<>());
+			graph.putIfAbsent(edge[1],new ArrayList<>());
+			graph.get(edge[0]).add(edge[1]);
+			graph.get(edge[1]).add(edge[0]);
+		}
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		genrateGraph(edges);
+		return dfs(0,0,hasApple);
+	}
+}

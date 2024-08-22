@@ -1,0 +1,38 @@
+class Solution {
+	int dp;
+	int f(int ind, int diff, int nums, int n) {
+		if (ind == n) {
+			return 0;
+		}
+		if (dp[ind][diff + 502] != -1) {
+			return dp[ind][diff + 502];
+		}
+		int ans = 1;
+		if (diff == -502) {
+			for (int i = ind + 1; i < n; i++) {
+				int d = nums[i] - nums[ind];
+				ans = Math.max(ans,Math.max(1 + f(i,d,nums,n),f(i,diff,nums,n)));
+			}
+		} 
+		else {
+			for (int i = ind + 1; i < n; i++) {
+				int d = nums[i] - nums[ind];
+				if (diff == d) {
+					ans = Math.max(ans,1 + f(i,diff,nums,n));
+				}
+			}
+		}
+		return dp[ind][diff + 502] = ans;
+	}
+	int longestArithSeqLength(int[] nums) {
+		int n = nums.length;
+		dp = new int[n][1003];
+		for (int i = 0; i < n; i++) {
+			for (int diff = 0; diff < 1003; diff++) {
+				dp[i][diff] = -1;
+			}
+		}
+		int k = f(0,-502,nums,n);
+		return k;
+	}
+}

@@ -1,0 +1,68 @@
+class Solution {
+	int maxUncrossedLines(int[] nums1, int[] nums2) {
+		return solveTab(nums1,nums2);
+	}
+	int solve(int[] nums1, int[] nums2, int i, int j) {
+		if (i >= nums1.length) {
+			return 0;
+		}
+		if (j >= nums2.length) {
+			return 0;
+		}
+		if (i >= nums1.length && j >= nums2.length) {
+			return 0;
+		}
+		int ans = 0;
+		if (nums1[i] == nums2[j]) {
+			ans = 1 + solve(nums1,nums2,i + 1,j + 1);
+		} 
+		else {
+			int take = solve(nums1,nums2,i + 1,j);
+			int nottake = solve(nums1,nums2,i,j + 1);
+			ans = Math.max(take,nottake);
+		}
+		return ans;
+	}
+	int solveMemo(int[] nums1, int[] nums2, int i, int j, int dp) {
+		if (i >= nums1.length) {
+			return 0;
+		}
+		if (j >= nums2.length) {
+			return 0;
+		}
+		if (i >= nums1.length && j >= nums2.length) {
+			return 0;
+		}
+		if (dp[i][j] != -1) {
+			return dp[i][j];
+		}
+		int ans = 0;
+		if (nums1[i] == nums2[j]) {
+			ans = 1 + solveMemo(nums1,nums2,i + 1,j + 1,dp);
+		} 
+		else {
+			int take = solveMemo(nums1,nums2,i + 1,j,dp);
+			int nottake = solveMemo(nums1,nums2,i,j + 1,dp);
+			ans = Math.max(take,nottake);
+		}
+		return dp[i][j] = ans;
+	}
+	int solveTab(int[] nums1, int[] nums2) {
+		int dp = new int[nums1.length + 1][nums2.length + 1];
+		for (int i = nums1.length - 1; i >= 0; i--) {
+			for (int j = nums2.length - 1; j >= 0; j--) {
+				int ans = 0;
+				if (nums1[i] == nums2[j]) {
+					ans = 1 + dp[i + 1][j + 1];
+				} 
+				else {
+					int take = dp[i + 1][j];
+					int nottake = dp[i][j + 1];
+					ans = Math.max(take,nottake);
+				}
+				dp[i][j] = ans;
+			}
+		}
+		return dp[0][0];
+	}
+}

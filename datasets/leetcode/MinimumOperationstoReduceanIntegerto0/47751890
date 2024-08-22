@@ -1,0 +1,33 @@
+class Solution {
+	int fib(int n, Map<Integer, Integer> memo) {
+		if (n == 1 || n == 2 || pow2(n)) {
+			return 1;
+		}
+		if (memo.containsKey(n)) {
+			return memo.get(n);
+		}
+		int val = 1;
+		while ((int) Math.pow(2,val) <= n) {
+			val++;
+		}
+		int left = n - (int) Math.pow(2,val - 1);
+		int right = (int) Math.pow(2,val) - n;
+		int fibLeft = fib(left,memo);
+		memo.put(left,fibLeft);
+		int fibRight = fib(right,memo);
+		memo.put(right,fibRight);
+		return Math.min(fibLeft,fibRight) + 1;
+	}
+	int minOperations(int n) {
+		return fib(n,new HashMap<>());
+	}
+	boolean pow2(int n) {
+		while (n > 1) {
+			if (n % 2 != 0) {
+				return false;
+			}
+			n = n / 2;
+		}
+		return true;
+	}
+}

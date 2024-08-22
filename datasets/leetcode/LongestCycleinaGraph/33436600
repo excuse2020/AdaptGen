@@ -1,0 +1,23 @@
+class Solution {
+	int cycleLength(int[] edges, boolean[] visited, List<Integer> path, int from) {
+		if (from == -1) {
+			return -1;
+		}
+		if (visited[from]) {
+			int previous = path.indexOf(from);
+			return previous == (-1) ? -1 : path.size() - previous;
+		}
+		visited[from] = true;
+		path.add(from);
+		return cycleLength(edges,visited,path,edges[from]);
+	}
+	int longestCycle(int[] edges) {
+		boolean[] visited = new boolean[edges.length];
+		int max = -1;
+		for (int n: edges) {	
+			int cycleLength = cycleLength(edges,visited,new ArrayList<Integer>(),n);
+			max = Math.max(max,cycleLength);
+		}
+		return max;
+	}
+}

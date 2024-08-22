@@ -1,0 +1,27 @@
+class Solution {
+	Map<Integer, Integer> levelSum = new HashMap<>();
+	void getLevelSum(TreeNode root, int depth) {
+		if (root == null) {
+			return;
+		}
+		levelSum.put(depth,levelSum.getOrDefault(depth,0) + root.val);
+		getLevelSum(root.left,depth + 1);
+		getLevelSum(root.right,depth + 1);
+	}
+	TreeNode replaceValueInTree(TreeNode root) {
+		levelSum.clear();
+		getLevelSum(root,0);
+		updateCousinValue(root,0,0);
+		return root;
+	}
+	void updateCousinValue(TreeNode currNode, int sib, int depth) {
+		if (currNode == null) {
+			return;
+		}
+		currNode.val = levelSum.get(depth) - currNode.val;
+		int lv = currNode.left != null ? currNode.left.val : 0;
+		int rv = currNode.right != null ? currNode.right.val : 0;
+		updateCousinValue(currNode.left,rv,depth + 1);
+		updateCousinValue(currNode.right,lv,depth + 1);
+	}
+}

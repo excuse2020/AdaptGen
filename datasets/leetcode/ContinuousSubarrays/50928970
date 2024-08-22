@@ -1,0 +1,38 @@
+class Solution {
+	long continuousSubarrays(int[] nums) {
+		int i = 0;
+		int l = 0, h = 0;
+		long sum = 0;
+		int I = i;
+		while (i < nums.length) {
+			while (i < nums.length && Math.abs(nums[l] - nums[i]) <= 2 && Math.abs(nums[h] - nums[i]) <= 2) {
+				l = nums[i] <= nums[l] ? i : l;
+				h = nums[i] >= nums[h] ? i : h;
+				sum += (i - I) + 1;
+				i++;
+			}
+			if (i >= nums.length) {
+				break;
+			}
+			I = l;
+			if (Math.abs(nums[i] - nums[l]) > 2) {
+				if (h > l && Math.abs(nums[i] - nums[h]) > 2) {
+					I = h;
+				}
+			} 
+			else {
+				I = h;
+			}
+			I++;
+			int k = I;
+			l = I;
+			h = I;
+			while (k < i) {
+				l = nums[k] <= nums[l] ? k : l;
+				h = nums[k] >= nums[h] ? k : h;
+				k++;
+			}
+		}
+		return sum;
+	}
+}

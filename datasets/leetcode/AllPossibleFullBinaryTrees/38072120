@@ -1,0 +1,32 @@
+class Solution {
+	int MAX_N = 20;
+	List<TreeNode> allPossibleFBT(int n) {
+		List<TreeNode>[] memo = new List[MAX_N];
+		populateAllPossibleFBT(n,memo);
+		return memo[n - 1];
+	}
+	void populateAllPossibleFBT(int n, List<TreeNode>[] memo) {
+		if (memo[n - 1] != null) {
+			return;
+		}
+		if (n == 1) {
+			memo[0] = List.of(new TreeNode(0));
+			return;
+		}
+		memo[n - 1] = new ArrayList<>();
+		if (n % 2 == 0) {
+			return;
+		}
+		for (int l = 1; l < n - 1; l++) {
+			int r = n - 1;
+			populateAllPossibleFBT(l,memo);
+			populateAllPossibleFBT(r,memo);
+			for (TreeNode leftChild: memo[l - 1]) {	
+				for (TreeNode rightChild: memo[r - 1]) {	
+					TreeNode curRoot = new TreeNode(0, leftChild, rightChild);
+					memo[n - 1].add(curRoot);
+				}
+			}
+		}
+	}
+}

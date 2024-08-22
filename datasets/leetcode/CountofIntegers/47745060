@@ -1,0 +1,43 @@
+class Solution {
+	long mod = 1000000007;
+	int count(String num1, String num2, int min_sum, int max_sum) {
+		long dp = new long[25][2][200];
+		int arr1 = new int[num1.length()];
+		int arr2 = new int[num2.length()];
+		int i = 0;
+	}
+	long gValue(int num, int pos, int tight, int sum, int min, int max, long dp) {
+		if (pos == num.length) {
+			if (sum >= min && sum <= max) {
+				return 1;
+			} 
+			else {
+				return 0;
+			}
+		} 
+		else if (dp[pos][tight][sum] != -1) {
+			return dp[pos][tight][sum];
+		} 
+		else if (tight == 1) {
+			long res = 0;
+			for (int i = 0; i <= num[pos]; i++) {
+				if (i == num[pos]) {
+					res += gValue(num,pos + 1,1,sum + i,min,max,dp) % mod;
+				} 
+				else {
+					res += gValue(num,pos + 1,0,sum + i,min,max,dp) % mod;
+				}
+			}
+			dp[pos][tight][sum] = res % mod;
+			return res;
+		} 
+		else {
+			long res = 0;
+			for (int i = 0; i <= 9; i++) {
+				res += gValue(num,pos + 1,0,sum + i,min,max,dp) % mod;
+			}
+			dp[pos][tight][sum] = res % mod;
+			return res;
+		}
+	}
+}

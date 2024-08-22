@@ -1,0 +1,24 @@
+class Solution {
+	int helper(TreeNode root, int depth, int encodedSet) {
+		if (root == null) {
+			return 0;
+		}
+		encodedSet ^= 1 << root.val;
+		if (root.left == null && root.right == null) {
+			if (depth % 2 == 0) {
+				return encodedSet == 0 ? 1 : 0;
+			} 
+			else {
+				return isPowerOfTwo(encodedSet) ? 1 : 0;
+			}
+		}
+		int left = helper(root.left,depth + 1,encodedSet), right = helper(root.right,depth + 1,encodedSet);
+		return left + right;
+	}
+	boolean isPowerOfTwo(int num) {
+		return (num & (num - 1)) == 0;
+	}
+	int pseudoPalindromicPaths(TreeNode root) {
+		return helper(root,1,0);
+	}
+}

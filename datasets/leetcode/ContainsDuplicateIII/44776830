@@ -1,0 +1,23 @@
+class Solution {
+	boolean containsNearbyAlmostDuplicate(int[] nums, int indexDiff, int valueDiff) {
+		boolean ans = false;
+		TreeMap<Integer, Integer> cnt = new TreeMap<>();
+		int i, j;
+		i = 0;
+		j = 0;
+		for (i = 0; i < nums.length; i++) {
+			cnt.put(nums[i],cnt.getOrDefault(nums[i],0) + 1);
+			if (Math.abs(i - j) > indexDiff) {
+				cnt.put(nums[j],cnt.getOrDefault(nums[j],0) - 1);
+				j++;
+			}
+			Map<Integer, Integer> tmp = cnt.subMap(nums[i] - valueDiff,nums[i] + valueDiff);
+			for (Map.Entry<Integer, Integer> record: tmp.entrySet()) {	
+				if ((record.getValue() > 1 && record.getKey() == nums[i]) || (record.getValue() >= 1 && record.getKey() != nums[i])) {
+					return true;
+				}
+			}
+		}
+		return ans;
+	}
+}

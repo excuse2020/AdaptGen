@@ -1,0 +1,62 @@
+class Solution {
+	String addStrings(String num1, String num2) {
+		char[] number1 = new StringBuilder(num1).reverse().toString().toCharArray();
+		char[] number2 = new StringBuilder(num2).reverse().toString().toCharArray();
+		int minLength = Math.min(number1.length,number2.length);
+		int carrier = 0;
+		int sum;
+		StringBuilder stringBuilder = new StringBuilder();
+		for (int index = 0; index < minLength; index++) {
+			sum = Character.getNumericValue(number1[index]) + Character.getNumericValue(number2[index]);
+			carrier = sum / 10;
+			sum = sum % 10;
+			stringBuilder.append(sum);
+		}
+		if (number1.length == minLength && minLength == number2.length && carrier > 0) {
+			stringBuilder.append(carrier);
+		} 
+		else if (number1.length == minLength) {
+			for (int index = minLength; index < number2.length; index++) {
+				if (carrier > 0) {
+					sum = Character.getNumericValue(number2[index]) + carrier;
+					if (sum >= 10) {
+						stringBuilder.append(sum % 10);
+						carrier = sum / 10;
+					} 
+					else {
+						stringBuilder.append(sum);
+						carrier = 0;
+					}
+				} 
+				else {
+					stringBuilder.append(number2[index]);
+				}
+			}
+			if (carrier > 0) {
+				stringBuilder.append(carrier);
+			}
+		} 
+		else {
+			for (int index = minLength; index < number1.length; index++) {
+				if (carrier > 0) {
+					sum = Character.getNumericValue(number1[index]) + carrier;
+					if (sum >= 10) {
+						stringBuilder.append(sum % 10);
+						carrier = sum / 10;
+					} 
+					else {
+						stringBuilder.append(sum);
+						carrier = 0;
+					}
+				} 
+				else {
+					stringBuilder.append(number1[index]);
+				}
+			}
+			if (carrier > 0) {
+				stringBuilder.append(carrier);
+			}
+		}
+		return new String(stringBuilder.reverse());
+	}
+}

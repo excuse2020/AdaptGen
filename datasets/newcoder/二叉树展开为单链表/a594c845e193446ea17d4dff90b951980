@@ -1,0 +1,91 @@
+class Solution {
+	ArrayList<TreeNode> list = new ArrayList<>();
+	TreeNode rightNode;
+	TreeNode expandTree(TreeNode root) {
+		return solution4(root);
+	}
+	void postOrder(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		postOrder(root.right);
+		postOrder(root.left);
+		root.right = rightNode;
+		root.left = null;
+		rightNode = root;
+	}
+	void preOrder(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		list.add(root);
+		preOrder(root.left);
+		preOrder(root.right);
+	}
+	void rightLinkNodes() {
+		int size = list.size();
+		if (size > 0) {
+			for (int i = 1; i < size; i++) {
+				list.get(i - 1).left = null;
+				list.get(i - 1).right = list.get(i);
+			}
+			list.get(size - 1).left = null;
+			list.get(size - 1).right = null;
+		}
+	}
+	TreeNode solution1(TreeNode root) {
+		preOrder(root);
+		rightLinkNodes();
+		return root;
+	}
+	TreeNode solution2(TreeNode root) {
+		Stack<TreeNode> stack = new Stack<>();
+		if (root == null) {
+			return null;
+		}
+		stack.push(root);
+		TreeNode curr;
+		TreeNode pre = null;
+		while (!stack.isEmpty()) {
+			curr = stack.pop();
+			if (curr.right != null) {
+				stack.push(curr.right);
+			}
+			if (curr.left != null) {
+				stack.push(curr.left);
+			}
+			if (pre != null) {
+				pre.left = null;
+				pre.right = curr;
+			}
+			pre = curr;
+		}
+		pre.left = null;
+		pre.right = null;
+		return root;
+	}
+	TreeNode solution3(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		TreeNode curr = root;
+		TreeNode pre;
+		while (curr != null) {
+			if (curr.left != null) {
+				pre = curr.left;
+				while (pre.right != null) {
+					pre = pre.right;
+				}
+				pre.right = curr.right;
+				curr.right = curr.left;
+				curr.left = null;
+			}
+			curr = curr.right;
+		}
+		return root;
+	}
+	TreeNode solution4(TreeNode root) {
+		postOrder(root);
+		return root;
+	}
+}

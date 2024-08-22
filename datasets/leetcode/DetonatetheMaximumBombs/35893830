@@ -1,0 +1,39 @@
+class Solution {
+	int dfs(ArrayList<Integer>[] arr, boolean[] vis, int index, int num) {
+		vis[index] = true;
+		for (int i = 0; i < arr[index].size(); i++) {
+			int x = arr[index].get(i);
+			if (!vis[x]) {
+				num = Math.max(dfs(arr,vis,x,num + 1),num);
+			}
+		}
+		return num;
+	}
+	int maximumDetonation(int[][] bombs) {
+		ArrayList<Integer>[] arr = new ArrayList[bombs.length];
+		for (int i = 0; i < bombs.length; i++) {
+			arr[i] = new ArrayList<Integer>();
+		}
+		for (int i = 0; i < bombs.length; i++) {
+			int r1 = bombs[i][2];
+			int x1 = bombs[i][0];
+			int y1 = bombs[i][1];
+			for (int j = 0; j < bombs.length; j++) {
+				int r2 = bombs[j][2];
+				int x2 = bombs[j][0];
+				int y2 = bombs[j][1];
+				if (i != j) {
+					if (Math.pow(x1 - x2,2) + Math.pow(y1 - y2,2) <= Math.pow(r1,2)) {
+						arr[i].add(j);
+					}
+				}
+			}
+		}
+		int max = 0;
+		for (int i = 0; i < bombs.length; i++) {
+			boolean[] vis = new boolean[bombs.length];
+			max = Math.max(dfs(arr,vis,i,1),max);
+		}
+		return max;
+	}
+}

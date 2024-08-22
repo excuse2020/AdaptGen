@@ -1,0 +1,24 @@
+class Solution {
+	int maxSumAfterPartitioning(int[] arr, int k) {
+		int n = arr.length;
+		int[] dp = new int[n];
+		for (int i = 0; i < n; i++) {
+			int maxPartitionSum = Integer.MIN_VALUE;
+			int maxElement = Integer.MIN_VALUE;
+			for (int j = i; j >= (i - k + 1) && j >= 0; j--) {
+				int partitionLength = i - j + 1;
+				maxElement = Math.max(maxElement,arr[j]);
+				int currentPartitionSum = maxElement * partitionLength;
+				if (j == 0) {
+					maxPartitionSum = Math.max(maxPartitionSum,currentPartitionSum);
+				} 
+				else {
+					int previousMaxSum = dp[j - 1];
+					maxPartitionSum = Math.max(maxPartitionSum,previousMaxSum + currentPartitionSum);
+				}
+			}
+			dp[i] = maxPartitionSum;
+		}
+		return dp[n - 1];
+	}
+}

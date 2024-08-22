@@ -1,0 +1,40 @@
+class Solution {
+	int[] LIS(int[] arr) {
+		int n = arr.length;
+		int[] tails = new int[n];
+		int[] maxLen = new int[n];
+		tails[0] = arr[0];
+		maxLen[0] = 1;
+		int tailsLen = 1;
+		for (int i = 1; i < n; i++) {
+			int num = arr[i];
+			if (num > tails[tailsLen - 1]) {
+				tails[tailsLen++] = num;
+				maxLen[i] = tailsLen;
+			} 
+			else {
+				int lo = 0, hi = tailsLen - 1, firstBigIndex = 0;
+				while (lo <= hi) {
+					int mid = lo + ((hi - lo) >> 1);
+					if (tails[mid] < num) {
+						lo = mid + 1;
+					} 
+					else {
+						hi = mid - 1;
+						firstBigIndex = mid;
+					}
+				}
+				tails[firstBigIndex] = num;
+				maxLen[i] = firstBigIndex + 1;
+			}
+		}
+		int[] res = new int[tailsLen];
+		for (int i = n - 1; i >= 0; --i) {
+			if (maxLen[i] == tailsLen) {
+				res[tailsLen - 1] = arr[i];
+				--tailsLen;
+			}
+		}
+		return res;
+	}
+}

@@ -1,0 +1,34 @@
+class Solution {
+	long maximumSubarraySum(int[] a, int k) {
+		int n = a.length;
+		HashMap<Integer, Integer> hm = new HashMap<>();
+		int i = 0, j = 0;
+		long sum = 0, ans = Integer.MIN_VALUE;
+		while (j < n) {
+			if (hm.containsKey(a[j])) {
+				int getIdx = hm.get(a[j]);
+				while (i <= getIdx) {
+					sum -= a[i];
+					hm.remove(a[i]);
+					i++;
+				}
+				hm.put(a[j],j);
+			} 
+			else {
+				hm.put(a[j],j);
+			}
+			sum += a[j];
+			if (hm.size() == k) {
+				ans = Math.max(ans,sum);
+				sum -= a[i];
+				hm.remove(a[i]);
+				i++;
+			}
+			j++;
+		}
+		if (ans == Integer.MIN_VALUE) {
+			return 0;
+		}
+		return ans;
+	}
+}

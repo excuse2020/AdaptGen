@@ -1,0 +1,73 @@
+class Solution {
+	int count;
+	int[][] grid;
+	Queue<int[]> queue;
+	int threshold;
+	boolean[][] visit;
+	void dfs(int[] cell) {
+		int m = grid.length;
+		int n = grid[0].length;
+		if (cell[0] > 0 && !visit[cell[0] - 1][cell[1]]) {
+			process(new int{cell[0] - 1, cell[1], grid[cell[0] - 1][cell[1]]});
+		}
+		if (cell[0] < m - 1 && !visit[cell[0] + 1][cell[1]]) {
+			process(new int{cell[0] + 1, cell[1], grid[cell[0] + 1][cell[1]]});
+		}
+		if (cell[1] > 0 && !visit[cell[0]][cell[1] - 1]) {
+			process(new int{cell[0], cell[1] - 1, grid[cell[0]][cell[1] - 1]});
+		}
+		if (cell[1] < n - 1 && !visit[cell[0]][cell[1] + 1]) {
+			process(new int{cell[0], cell[1] + 1, grid[cell[0]][cell[1] + 1]});
+		}
+	}
+	int[] maxPoints(int[][] grid, int[] queries) {
+		this.grid = grid;
+		int m = grid.length;
+		int n = grid[0].length;
+		visit = new boolean[m][n];
+		queue = new PriorityQueue<>((c1, c2) -> {c1[2] - c2[2]});
+		List<int[]> list = new ArrayList<>();
+		threshold = 0;
+		count = 0;
+		visit[0][0] = true;
+		queue.offer(new int{0, 0, grid[0][0]});
+		while (!queue.isEmpty()) {
+			int[] cell = queue.poll();
+			if (threshold < cell[2]) {
+				list.add(new int{threshold, count});
+				threshold = cell[2];
+			}
+			count++;
+			dfs(cell);
+		}
+		list.add(new int{threshold, count});
+		for (int i = 0; i < queries.length; i++) {
+			queries[i] = search(list,queries[i]);
+		}
+		return queries;
+	}
+	void process(int[] cell) {
+		visit[cell[0]][cell[1]] = true;
+		if (cell[2] > threshold) {
+			queue.offer(cell);
+		} 
+		else {
+			count++;
+			dfs(cell);
+		}
+	}
+	int search(List<int[]> list, int query) {
+		int l = 0;
+		int r = list.size();
+		while (l < r) {
+			int m = (l + r) / 2;
+			if (list.get(m)[0] >= query) {
+				r = m;
+			} 
+			else {
+				l = m + 1;
+			}
+		}
+		return list.get(l - 1)[1];
+	}
+}

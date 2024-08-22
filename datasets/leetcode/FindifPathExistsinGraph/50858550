@@ -1,0 +1,33 @@
+class Solution {
+	boolean validPath(int n, int[][] edges, int source, int destination) {
+		List<List<Integer>> list = new ArrayList<>();
+		for (int i = 1; i <= n; i++) {
+			list.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			int v1 = edge[0];
+			int v2 = edge[1];
+			list.get(v1).add(v2);
+			list.get(v2).add(v1);
+		}
+		Queue<Integer> q = new LinkedList<>();
+		HashSet<Integer> set = new HashSet<>();
+		q.add(source);
+		while (!q.isEmpty()) {
+			int v = q.remove();
+			if (set.contains(v)) {
+				continue;
+			}
+			set.add(v);
+			if (v == destination) {
+				return true;
+			}
+			for (int nbrs: list.get(v)) {	
+				if (!set.contains(nbrs)) {
+					q.add(nbrs);
+				}
+			}
+		}
+		return false;
+	}
+}

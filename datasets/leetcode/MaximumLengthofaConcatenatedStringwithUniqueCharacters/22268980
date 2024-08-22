@@ -1,0 +1,30 @@
+class Solution {
+	int max_length = 0;
+	void dfs(Set<Character> set, int index, List<String> arr) {
+		if (index == arr.size()) {
+			return;
+		}
+		char[] arrChar = arr.get(index).toCharArray();
+		Set<Character> set_char = new HashSet<>();
+		boolean isUnique = true;
+		for (char ch: arrChar) {	
+			if (set_char.contains(ch) || set.contains(ch)) {
+				isUnique = false;
+				break;
+			}
+			set_char.add(ch);
+		}
+		dfs(set,index + 1,arr);
+		if (isUnique) {
+			max_length = Math.max(max_length,set.size() + arrChar.length);
+			set.addAll(set_char);
+			dfs(set,index + 1,arr);
+			set.removeAll(set_char);
+		}
+	}
+	int maxLength(List<String> arr) {
+		Set<Character> set = new HashSet<>();
+		dfs(set,0,arr);
+		return max_length;
+	}
+}

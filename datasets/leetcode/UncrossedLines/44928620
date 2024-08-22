@@ -1,0 +1,25 @@
+class Solution {
+	Integer[][] memo = null;
+	int dfs(int[] A, int[] B, int i, int j) {
+		int m = A.length, n = B.length;
+		if (i >= m || j >= n) {
+			return 0;
+		}
+		if (memo[i][j] != null) {
+			return memo[i][j];
+		}
+		int take = 0;
+		int skip1 = 0, skip2 = 0;
+		if (A[i] == B[j]) {
+			take = 1 + dfs(A,B,i + 1,j + 1);
+		}
+		skip1 = dfs(A,B,i + 1,j);
+		skip2 = dfs(A,B,i,j + 1);
+		return memo[i][j] = Math.max(take,Math.max(skip1,skip2));
+	}
+	int maxUncrossedLines(int[] A, int[] B) {
+		int m = A.length, n = B.length;
+		memo = new Integer[m][n];
+		return dfs(A,B,0,0);
+	}
+}

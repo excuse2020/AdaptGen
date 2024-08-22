@@ -1,0 +1,31 @@
+class Solution {
+	ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+	int n;
+	void dfs(LinkedList<Integer> path, int[] num, boolean[] used) {
+		if (path.size() == n) {
+			ans.add(new ArrayList<>(path));
+			return;
+		}
+		Set<Integer> choosed = new HashSet<>();
+		for (int i = 0; i < n; i++) {
+			if (used[i]) {
+				continue;
+			}
+			if (choosed.add(num[i])) {
+				used[i] = true;
+				path.offerLast(num[i]);
+				dfs(path,num,used);
+				path.pollLast();
+				used[i] = false;
+			}
+		}
+	}
+	ArrayList<ArrayList<Integer>> permuteUnique(int[] num) {
+		Arrays.sort(num);
+		n = num.length;
+		boolean[] used = new boolean[n];
+		LinkedList<Integer> path = new LinkedList<>();
+		dfs(path,num,used);
+		return ans;
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	int maxUncrossedLines(int[] nums1, int[] nums2) {
+		int[][] memo = new int[nums1.length][nums2.length];
+		for (int[] row: memo) {	
+			Arrays.fill(row,-1);
+		}
+		Map<Integer, Set<Integer>> edges = new HashMap<>();
+		for (int i = 0; i < nums1.length; i++) {
+			for (int j = 0; j < nums2.length; j++) {
+				if (nums1[i] == nums2[j]) {
+					edges.computeIfAbsent(nums1[i],(e) -> {new HashSet<>()}).add(j);
+				}
+			}
+		}
+		return slv(0,0,nums1,nums2,edges,memo);
+	}
+	int slv(int n1, int n2, int[] nums1, int[] nums2, Map<Integer, Set<Integer>> edges, int[][] memo) {
+		if (n1 >= nums1.length || n2 >= nums2.length) {
+			return 0;
+		}
+		if (memo[n1][n2] != -1) {
+			return memo[n1][n2];
+		}
+		int max = 0;
+		for (int j: edges.getOrDefault(nums1[n1],new HashSet<>())) {	
+			if (j >= n2) {
+				max = Math.max(max,1 + slv(n1 + 1,j + 1,nums1,nums2,edges,memo));
+			}
+		}
+		return memo[n1][n2] = Math.max(max,Math.max(slv(n1 + 1,n2 + 1,nums1,nums2,edges,memo),Math.max(slv(n1 + 1,n2,nums1,nums2,edges,memo),slv(n1,n2 + 1,nums1,nums2,edges,memo))));
+	}
+}

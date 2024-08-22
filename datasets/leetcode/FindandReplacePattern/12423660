@@ -1,0 +1,43 @@
+class Solution {
+	List<String> findAndReplacePattern(String[] words, String pattern) {
+		HashMap<Character, List<Integer>> patternMap = getCharMap(pattern);
+		List<String> result = new ArrayList();
+		for (String word: words) {	
+			if (isPatternMatch(pattern,word,patternMap)) {
+				result.add(word);
+			}
+		}
+		return result;
+	}
+	HashMap<Character, List<Integer>> getCharMap(String str) {
+		HashMap<Character, List<Integer>> charMap = new HashMap();
+		for (int i = 0; i < str.length(); i++) {
+			char c = str.charAt(i);
+			charMap.putIfAbsent(c,new ArrayList<Integer>());
+			charMap.get(c).add(i);
+		}
+		return charMap;
+	}
+	boolean isPatternMatch(String pattern, String word, HashMap<Character, List<Integer>> patternMap) {
+		int n = pattern.length();
+		if (n == 1) {
+			return true;
+		}
+		HashMap<Character, List<Integer>> wordCharMap = getCharMap(word);
+		for (int i = 0; i < n; i++) {
+			char pChar = pattern.charAt(i);
+			char wChar = word.charAt(i);
+			List<Integer> pList = patternMap.get(pChar);
+			List<Integer> wList = wordCharMap.get(wChar);
+			if (pList.size() != wList.size()) {
+				return false;
+			}
+			for (int j = 0; j < pList.size(); j++) {
+				if (pList.get(j) != wList.get(j)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

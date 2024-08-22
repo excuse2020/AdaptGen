@@ -1,0 +1,51 @@
+class Solution {
+	int findInMountainArray(int target, MountainArray arr) {
+		int peak = findPeak(arr);
+		int result = -1;
+		result = findTarget(arr,target,0,peak);
+		if (result == -1) {
+			result = findTarget(arr,target,peak,arr.length() - 1);
+		}
+		return result;
+	}
+	int findPeak(MountainArray arr) {
+		int start = 0;
+		int end = arr.length() - 1;
+		while (start < end) {
+			int mid = start + (end - start) / 2;
+			if (arr.get(mid + 1) < arr.get(mid)) {
+				end = mid;
+			} 
+			else {
+				start = mid + 1;
+			}
+		}
+		return start;
+	}
+	int findTarget(MountainArray arr, int target, int start, int end) {
+		boolean isAsc = arr.get(start) < arr.get(end);
+		while (start <= end) {
+			int mid = start + (end - start) / 2;
+			if (target == arr.get(mid)) {
+				return mid;
+			}
+			if (isAsc) {
+				if (target < arr.get(mid)) {
+					end = mid - 1;
+				} 
+				else {
+					start = mid + 1;
+				}
+			} 
+			else {
+				if (target > arr.get(mid)) {
+					end = mid - 1;
+				} 
+				else {
+					start = mid + 1;
+				}
+			}
+		}
+		return -1;
+	}
+}

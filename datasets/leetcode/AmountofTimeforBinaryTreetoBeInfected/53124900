@@ -1,0 +1,50 @@
+class Solution {
+	int amountOfTime(TreeNode n, int start) {
+		HashMap<TreeNode, TreeNode> hm = new HashMap<>();
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(n);
+		TreeNode req = null;
+		while (!q.isEmpty()) {
+			int size = q.size();
+			for (int i = 0; i < size; i++) {
+				TreeNode curr = q.remove();
+				if (curr.val == start) {
+					req = curr;
+				}
+				if (curr.left != null) {
+					hm.put(curr.left,curr);
+					q.add(curr.left);
+				}
+				if (curr.right != null) {
+					hm.put(curr.right,curr);
+					q.add(curr.right);
+				}
+			}
+		}
+		q.clear();
+		q.add(req);
+		HashSet<TreeNode> hs = new HashSet<>();
+		hs.add(req);
+		int distance = 0;
+		while (!q.isEmpty()) {
+			int size = q.size();
+			for (int i = 0; i < size; i++) {
+				TreeNode curr = q.remove();
+				if (curr.left != null && !hs.contains(curr.left)) {
+					q.add(curr.left);
+					hs.add(curr.left);
+				}
+				if (curr.right != null && !hs.contains(curr.right)) {
+					q.add(curr.right);
+					hs.add(curr.right);
+				}
+				if (hm.get(curr) != null && !hs.contains(hm.get(curr))) {
+					q.add(hm.get(curr));
+					hs.add(hm.get(curr));
+				}
+			}
+			distance++;
+		}
+		return distance - 1;
+	}
+}

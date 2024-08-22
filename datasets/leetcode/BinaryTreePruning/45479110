@@ -1,0 +1,40 @@
+class Solution {
+	boolean flag = false;
+	TreeNode cal(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		check(root.left);
+		if (!flag) {
+			root.left = null;
+		}
+		flag = false;
+		check(root.right);
+		if (!flag) {
+			root.right = null;
+		}
+		flag = false;
+		pruneTree(root.left);
+		pruneTree(root.right);
+		return root;
+	}
+	boolean check(TreeNode root) {
+		if (root != null) {
+			if (root.val == 1) {
+				flag = true;
+				return flag;
+			}
+			check(root.left);
+			check(root.right);
+		}
+		return false;
+	}
+	TreeNode pruneTree(TreeNode root) {
+		check(root);
+		if (!flag) {
+			return null;
+		}
+		flag = false;
+		return cal(root);
+	}
+}

@@ -1,0 +1,59 @@
+class Solution {
+	long absouluteDifferenceSum(int[] nums1, int[] nums2) {
+		long sum = 0;
+		for (int i = 0; i < nums1.length; i++) {
+			sum += Math.abs(nums1[i] - nums2[i]);
+		}
+		return sum;
+	}
+	int lowerBound(int[] arr, int target) {
+		int start = 0;
+		int end = arr.length - 1;
+		while (start <= end) {
+			int mid = start + (end - start) / 2;
+			if (target < arr[mid]) {
+				end = mid - 1;
+			} 
+			else if (target > arr[mid]) {
+				start = mid + 1;
+			} 
+			else {
+				return mid;
+			}
+		}
+		return end;
+	}
+	int minAbsoluteSumDiff(int[] nums1, int[] nums2) {
+		long absoluteSumDifference = absouluteDifferenceSum(nums1,nums2);
+		int[] nums1Sorted = nums1.clone();
+		Arrays.sort(nums1Sorted);
+		long maximumSave = 0;
+		for (int i = 0; i < nums2.length; i++) {
+			int absoluteDifference = Math.abs(nums1[i] - nums2[i]);
+			int lowerBound = lowerBound(nums1Sorted,nums2[i]);
+			lowerBound = lowerBound < 0 ? 0 : lowerBound;
+			int upperBound = upperBound(nums1Sorted,nums2[i]);
+			upperBound = upperBound > nums1Sorted.length - 1 ? nums1Sorted.length - 1 : upperBound;
+			int bestDiff = Math.min(Math.abs(nums1Sorted[lowerBound] - nums2[i]),Math.abs(nums1Sorted[upperBound] - nums2[i]));
+			maximumSave = Math.max(maximumSave,absoluteDifference - bestDiff);
+		}
+		return (int) ((absoluteSumDifference - maximumSave) % (long) (1e9 + 7));
+	}
+	int upperBound(int[] arr, int target) {
+		int start = 0;
+		int end = arr.length - 1;
+		while (start <= end) {
+			int mid = start + (end - start) / 2;
+			if (target < arr[mid]) {
+				end = mid - 1;
+			} 
+			else if (target > arr[mid]) {
+				start = mid + 1;
+			} 
+			else {
+				return mid;
+			}
+		}
+		return start;
+	}
+}

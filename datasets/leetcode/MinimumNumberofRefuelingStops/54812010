@@ -1,0 +1,32 @@
+class Solution {
+	int minRefuelStops(int target, int startFuel, int[][] stations) {
+		int currentFule = startFuel;
+		int stationsUsed = 0;
+		Queue<Integer> availableStations = new PriorityQueue<>((a, b) -> {b - a});
+		for (int i = 0; i < stations.length; i++) {
+			int previousStation = (i == 0 ? 0 : stations[i - 1][0]);
+			int distanceTravled = stations[i][0] - previousStation;
+			while (currentFule < distanceTravled && currentFule + previousStation < target && !availableStations.isEmpty()) {
+				currentFule += availableStations.poll();
+				stationsUsed++;
+				if (currentFule + previousStation >= target) {
+					return stationsUsed;
+				}
+			}
+			if (currentFule < distanceTravled) {
+				return -1;
+			}
+			availableStations.add(stations[i][1]);
+			currentFule -= distanceTravled;
+		}
+		int lastStationLocation = stations.length == 0 ? 0 : stations[stations.length - 1][0];
+		while (currentFule + lastStationLocation < target && !availableStations.isEmpty()) {
+			currentFule += availableStations.poll();
+			stationsUsed++;
+		}
+		if (currentFule + lastStationLocation < target) {
+			return -1;
+		}
+		return stationsUsed;
+	}
+}

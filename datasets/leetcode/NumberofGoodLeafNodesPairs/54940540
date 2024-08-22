@@ -1,0 +1,38 @@
+class Solution {
+	int countPairs(TreeNode root, int distance) {
+		int[] result = new int[1];
+		traversal(root,distance,result);
+		return result[0];
+	}
+	List<Integer> traversal(TreeNode node, int distance, int[] result) {
+		if (node == null) {
+			return new ArrayList<>();
+		}
+		if (node.left == null && node.right == null) {
+			List<Integer> leafDistances = new ArrayList<>();
+			leafDistances.add(1);
+			return leafDistances;
+		}
+		List<Integer> leftDistances = traversal(node.left,distance,result);
+		List<Integer> rightDistances = traversal(node.right,distance,result);
+		for (int ld: leftDistances) {	
+			for (int rd: rightDistances) {	
+				if (ld + rd <= distance) {
+					result[0]++;
+				}
+			}
+		}
+		List<Integer> currentDistances = new ArrayList<>();
+		for (int ld: leftDistances) {	
+			if (ld + 1 <= distance) {
+				currentDistances.add(ld + 1);
+			}
+		}
+		for (int rd: rightDistances) {	
+			if (rd + 1 <= distance) {
+				currentDistances.add(rd + 1);
+			}
+		}
+		return currentDistances;
+	}
+}

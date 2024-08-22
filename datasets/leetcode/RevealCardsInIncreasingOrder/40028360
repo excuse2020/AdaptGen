@@ -1,0 +1,42 @@
+class Solution {
+	int[] deckRevealedIncreasing(int[] deck) {
+		int n = deck.length, p = 0, rem = n;
+		int start1 = 0, start2 = 1, kata = -1;
+		Arrays.sort(deck);
+		boolean flag1 = false, flag2 = false;
+		int[] ret = new int[n];
+		for (int step = 2; p < n; step <<= 1) {
+			flag2 = (rem & 1) != 0;
+			if (flag1) {
+				for (int fill = start1; fill < n; fill += step) {
+					ret[fill] = deck[p++];
+				}
+				if (flag2) {
+					ret[kata] = deck[p++];
+				}
+			} 
+			else {
+				for (int fill = start1; fill < n; fill += step) {
+					ret[fill] = deck[p++];
+				}
+				if (flag2) {
+					if (kata != -1) {
+						ret[kata] = deck[p++];
+					}
+				}
+			}
+			if (flag2) {
+				start1 = start2 + step;
+				start2 = start1 + step;
+				kata = start1 - step;
+			} 
+			else {
+				start1 = start2;
+				start2 = start1 + step;
+			}
+			rem >>= 1;
+			flag1 = flag2;
+		}
+		return ret;
+	}
+}

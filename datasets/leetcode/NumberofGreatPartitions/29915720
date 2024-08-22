@@ -1,0 +1,31 @@
+class Solution {
+	int mod = (int) 1e9 + 7;
+	int countPar(int index, int k, int[] nums, int[][] memo) {
+		if (index == 0) {
+			return 2;
+		}
+		if (memo[index][k] != -1) {
+			return memo[index][k];
+		}
+		int pick = k > nums[index - 1] ? countPar(index - 1,k - nums[index - 1],nums,memo) : 0;
+		int notPick = countPar(index - 1,k,nums,memo);
+		return memo[index][k] = (pick + notPick) % mod;
+	}
+	int countPartitions(int[] nums, int k) {
+		long sum = 0;
+		for (int num: nums) {	
+			sum += num;
+		}
+		if (sum < 2 * k) {
+			return 0;
+		}
+		int n = nums.length;
+		int[][] memo = new int[n + 1][k + 1];
+		for (int[] row: memo) {	
+			Arrays.fill(row,-1);
+		}
+		int notGreatPartitions = countPar(n,k,nums,memo);
+		int total = (int) (Math.pow(2,n) % mod);
+		return total - notGreatPartitions + (total < notGreatPartitions ? mod : 0);
+	}
+}

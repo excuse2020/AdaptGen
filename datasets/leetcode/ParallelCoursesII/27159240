@@ -1,0 +1,73 @@
+class Solution {
+	List<Integer> copyList(List<Integer> list, int remove) {
+		List<Integer> ret = new ArrayList<>();
+		for (int i: list) {	
+			if (i == remove) {
+				continue;
+			}
+			ret.add(i);
+		}
+		return ret;
+	}
+	int minNumberOfSemesters(int n, int[][] relations, int k) {
+		int[] ind = new int[n + 1];
+		List<Integer>[] graph = new List[n + 1];
+		for (int i = 1; i <= n; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int[] edge: relations) {	
+			ind[edge[1]]++;
+			graph[edge[0]].add(edge[1]);
+		}
+		List<Integer> sources = new ArrayList<>();
+		Set<Integer> test = new TreeSet<>();
+		for (int i = 1; i <= n; i++) {
+			test.add(i);
+			if (ind[i] == 0) {
+				sources.add(i);
+			}
+		}
+		Map<String, Integer> dp = new HashMap<>();
+		int ans = rec(dp,sources,graph,ind,k,0,new ArrayList<>(),test);
+		return ans;
+	}
+	int rec(Map<String, Integer> dp, List<Integer> sources, List<Integer>[] graph, int[] ind, int k, int cur, List<Integer> newSources, Set<Integer> processed) {
+		List<Integer> newS = new ArrayList<>(sources);
+		if (newS.isEmpty() && newSources.isEmpty()) {
+			return 1;
+		} 
+		else if (newS.isEmpty()) {
+			return 1 + rec(dp,newSources,graph,ind.clone(),k,0,new ArrayList<>(),processed);
+		}
+		if (dp.containsKey(cur + "?")) {
+			return dp.get(cur + "?");
+		}
+		int ret = 0;
+		if (cur == k) {
+			cur = 0;
+			ret++;
+			newS.addAll(newSources);
+			newSources = new ArrayList<>();
+		}
+		int min = Integer.MAX_VALUE;
+		for (int s: newS) {	
+			List<Integer> sourceminueone = copyList(newS,s);
+			int[] newInd = ind.clone();
+			List<Integer> newNS = new ArrayList<>(newSources);
+			for (int v2: graph[s]) {	
+				newInd[v2]--;
+				if (newInd[v2] == 0) {
+					newNS.add(v2);
+				}
+			}
+			Set<Integer> newP = new TreeSet<>(processed);
+			newP.remove(s);
+			min = Math.min(min,rec(dp,sourceminueone,graph,newInd.clone(),k,cur + 1,newNS,newP));
+			if (min == (newP.size() + k - 1) / k) {
+				break;
+			}
+		}
+		dp.put(cur + "?",min + ret);
+		return min + ret;
+	}
+}

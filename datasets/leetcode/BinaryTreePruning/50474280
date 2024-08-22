@@ -1,0 +1,48 @@
+class Solution {
+	boolean isSubtreeAllZeros(TreeNode subTreeRoot) {
+		if (subTreeRoot == null) {
+			return true;
+		}
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(subTreeRoot);
+		while (queue.size() > 0) {
+			TreeNode temp = queue.poll();
+			if (temp.val == 1) {
+				return false;
+			}
+			if (temp.left != null) {
+				queue.add(temp.left);
+			}
+			if (temp.right != null) {
+				queue.add(temp.right);
+			}
+		}
+		return true;
+	}
+	TreeNode pruneTree(TreeNode root) {
+		pruneTreeInDFS(root);
+		if (root.left == null && root.right == null) {
+			if (root.val == 0) {
+				return null;
+			}
+		}
+		return root;
+	}
+	void pruneTreeInDFS(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		if (isSubtreeAllZeros(root.left)) {
+			root.left = null;
+		} 
+		else {
+			pruneTreeInDFS(root.left);
+		}
+		if (isSubtreeAllZeros(root.right)) {
+			root.right = null;
+		} 
+		else {
+			pruneTreeInDFS(root.right);
+		}
+	}
+}

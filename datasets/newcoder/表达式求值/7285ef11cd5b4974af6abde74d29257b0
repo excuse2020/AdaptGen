@@ -1,0 +1,95 @@
+class Solution {
+	boolean compare(char c, char d) {
+		if (c == '*' || c == '/') {
+			if (d == '+' || d == '-' || d == '(') {
+				return true;
+			} 
+			else {
+				return false;
+			}
+		}
+		if (c == '-' || c == '+') {
+			if (d == '(') {
+				return true;
+			} 
+			else {
+				return false;
+			}
+		}
+		return true;
+	}
+	int compute(int a, int b, char c) {
+		if (c == '*') {
+			return a * b;
+		}
+		if (c == '-') {
+			return b - a;
+		}
+		if (c == '+') {
+			return a + b;
+		}
+		if (c == '/') {
+			return b / a;
+		}
+		return 0;
+	}
+	int solve(String s) {
+		char[] c = s.toCharArray();
+		Stack<Integer> intS = new Stack<>();
+		Stack<Character> syS = new Stack<>();
+		int i = 0;
+		int res = 0;
+		while (i < c.length) {
+			if (c[i] == '(') {
+				syS.push(c[i]);
+			} 
+			else if (c[i] == ')') {
+				while (syS.peek() != '(') {
+					res = compute(intS.pop(),intS.pop(),syS.pop());
+					intS.push(res);
+				}
+				syS.pop();
+			} 
+			else if (Character.isDigit(c[i])) {
+				int j = i + 1;
+				String num = "" + c[i];
+				while (j < c.length && Character.isDigit(c[j])) {
+					num = num + c[j];
+					j++;
+				}
+				intS.push(strToInt(num));
+				i = j;
+				continue;
+			} 
+			else {
+				if (syS.isEmpty() || compare(c[i],syS.peek())) {
+					syS.push(c[i]);
+				} 
+				else {
+					while (!compare(c[i],syS.peek())) {
+						res = compute(intS.pop(),intS.pop(),syS.pop());
+						intS.push(res);
+						if (syS.isEmpty()) {
+							break;
+						}
+					}
+					syS.push(c[i]);
+				}
+			}
+			i++;
+		}
+		while (!syS.isEmpty()) {
+			res = compute(intS.pop(),intS.pop(),syS.pop());
+			intS.push(res);
+		}
+		return res;
+	}
+	int strToInt(String s) {
+		int len = s.length();
+		int res = 0;
+		for (int i = 0; i < len; i++) {
+			res += Integer.valueOf(s.substring(i,i + 1)) * Math.pow(10,len - 1);
+		}
+		return res;
+	}
+}

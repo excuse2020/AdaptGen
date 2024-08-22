@@ -1,0 +1,42 @@
+class Solution {
+	Map<Integer, Integer> minRounds(int n, Map<Integer, Integer> dp) {
+		if (dp.containsKey(n)) {
+			return dp;
+		}
+		if (n < 2) {
+			dp.put(n,Integer.MAX_VALUE - 2);
+			return dp;
+		} 
+		else {
+			dp = minRounds(n - 2,dp);
+			dp = minRounds(n - 3,dp);
+			dp.put(n,Math.min(dp.get(n - 2),dp.get(n - 3)) + 1);
+			return dp;
+		}
+	}
+	int minimumRounds(int[] tasks) {
+		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+		int rounds = 0;
+		for (int i = 0; i < tasks.length; i++) {
+			if (map.containsKey(tasks[i])) {
+				map.put(tasks[i],map.get(tasks[i]) + 1);
+			} 
+			else {
+				map.put(tasks[i],1);
+			}
+		}
+		Map<Integer, Integer> dp = new HashMap<Integer, Integer>();
+		dp.put(0,0);
+		for (Map.Entry<Integer, Integer> entry: map.entrySet()) {	
+			dp = minRounds(entry.getValue(),dp);
+			if (dp.get(entry.getValue()) > Integer.MAX_VALUE - 4) {
+				return -1;
+			}
+			rounds += dp.get(entry.getValue());
+		}
+		if (rounds > Integer.MAX_VALUE - 4) {
+			return -1;
+		}
+		return rounds;
+	}
+}

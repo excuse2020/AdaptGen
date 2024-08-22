@@ -1,0 +1,30 @@
+class Solution {
+	Integer[][] dp;
+	int helper(int[][] matrix, int i, int j) {
+		int n = matrix.length;
+		if (i == n - 1) {
+			return matrix[i][j];
+		}
+		if (dp[i][j] != null) {
+			return dp[i][j];
+		}
+		int a = Integer.MAX_VALUE, b = Integer.MAX_VALUE, c = Integer.MAX_VALUE;
+		if (j > 0) {
+			a = matrix[i][j] + helper(matrix,i + 1,j - 1);
+		}
+		b = matrix[i][j] + helper(matrix,i + 1,j);
+		if (j < n - 1) {
+			c = matrix[i][j] + helper(matrix,i + 1,j + 1);
+		}
+		return dp[i][j] = Math.min(a,Math.min(b,c));
+	}
+	int minFallingPathSum(int[][] matrix) {
+		int n = matrix.length;
+		dp = new Integer[n][n];
+		int minPathSum = Integer.MAX_VALUE;
+		for (int i = 0; i < n; i++) {
+			minPathSum = Math.min(minPathSum,helper(matrix,0,i));
+		}
+		return minPathSum;
+	}
+}

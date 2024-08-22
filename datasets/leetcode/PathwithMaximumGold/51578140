@@ -1,0 +1,24 @@
+class Solution {
+	int dfs(int i, int j, int[][] grid, int current) {
+		if (i < 0 || j < 0 || i >= grid.length || j >= grid[0].length || grid[i][j] <= 0) {
+			return current;
+		}
+		int newCurrent = grid[i][j] + current;
+		grid[i][j] *= -1;
+		int result = Math.max(Math.max(dfs(i + 1,j,grid,newCurrent),dfs(i - 1,j,grid,newCurrent)),Math.max(dfs(i,j + 1,grid,newCurrent),dfs(i,j - 1,grid,newCurrent)));
+		grid[i][j] *= -1;
+		return result;
+	}
+	int getMaximumGold(int[][] grid) {
+		int max = 0;
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				int tmp = dfs(i,j,grid,0);
+				if (tmp > max) {
+					max = tmp;
+				}
+			}
+		}
+		return max;
+	}
+}

@@ -1,0 +1,76 @@
+class Solution {
+	ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+		if (l1 == null && l2 == null) {
+			return null;
+		}
+		if (l1 == null) {
+			return l2;
+		}
+		if (l2 == null) {
+			return l1;
+		}
+		ListNode curr1 = l1;
+		ListNode curr2 = l2;
+		int carry = 0;
+		int size1 = getSize(l1);
+		int size2 = getSize(l2);
+		if (size1 > size2) {
+			while (curr1 != null && curr2 != null) {
+				int temp = curr1.val + curr2.val;
+				curr1.val = (temp + carry) % 10;
+				carry = (temp + carry) / 10;
+				curr1 = curr1.next;
+				curr2 = curr2.next;
+			}
+			while (curr1 != null) {
+				int temp = curr1.val;
+				curr1.val = (temp + carry) % 10;
+				carry = (temp + carry) / 10;
+				System.out.println(curr1.val);
+				curr1 = curr1.next;
+			}
+			ListNode prev = l1;
+			while (prev.next != null) {
+				prev = prev.next;
+			}
+			if (carry != 0) {
+				curr1 = new ListNode(carry);
+			}
+			prev.next = curr1;
+			return l1;
+		} 
+		else {
+			while (curr1 != null && curr2 != null) {
+				int temp = curr1.val + curr2.val;
+				curr2.val = (temp + carry) % 10;
+				carry = (temp + carry) / 10;
+				curr1 = curr1.next;
+				curr2 = curr2.next;
+			}
+			while (curr2 != null) {
+				int temp = curr2.val;
+				curr2.val = (temp + carry) % 10;
+				carry = (temp + carry) / 10;
+				curr2 = curr2.next;
+			}
+			ListNode prev = l2;
+			while (prev.next != null) {
+				prev = prev.next;
+			}
+			if (carry != 0) {
+				curr2 = new ListNode(carry);
+			}
+			prev.next = curr2;
+			return l2;
+		}
+	}
+	int getSize(ListNode head) {
+		int count = 0;
+		ListNode current = head;
+		while (current != null) {
+			count++;
+			current = current.next;
+		}
+		return count;
+	}
+}

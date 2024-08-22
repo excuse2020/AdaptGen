@@ -1,0 +1,40 @@
+class Solution {
+	List<List<String>> mostPopularCreator(String[] creators, String[] ids, int[] views) {
+		int n = ids.length;
+		HashMap<String, Long> map = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			long k = (long) views[i];
+			long z = 0;
+			map.put(creators[i],map.getOrDefault(creators[i],z) + k);
+		}
+		HashMap<String, TreeMap<Integer, TreeSet<String>>> set = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			if (!set.containsKey(creators[i])) {
+				TreeMap<Integer, TreeSet<String>> tree = new TreeMap<>();
+				TreeSet<String> str = new TreeSet<>();
+				tree.put(views[i],str);
+				set.put(creators[i],tree);
+			}
+			if (!set.get(creators[i]).containsKey(views[i])) {
+				TreeSet<String> st = new TreeSet<>();
+				set.get(creators[i]).put(views[i],st);
+			}
+			set.get(creators[i]).get(views[i]).add(ids[i]);
+		}
+		long maxViews = Long.MIN_VALUE;
+		for (long x: map.values()) {	
+			maxViews = Math.max(x,maxViews);
+		}
+		List<List<String>> list = new ArrayList<>();
+		for (String str: set.keySet()) {	
+			if (map.get(str) == maxViews) {
+				List<String> lst = new ArrayList<>();
+				lst.add(str);
+				int y = set.get(str).lastKey();
+				lst.add(set.get(str).get(y).first());
+				list.add(lst);
+			}
+		}
+		return list;
+	}
+}

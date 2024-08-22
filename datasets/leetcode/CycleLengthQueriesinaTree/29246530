@@ -1,0 +1,29 @@
+class Solution {
+	int[] anc(int num, int idx) {
+		int[] a = new int[32];
+		Arrays.fill(a,-1);
+		int j = 0;
+		while (num != 1) {
+			a[idx--] = num;
+			num /= 2;
+		}
+		return a;
+	}
+	int[] cycleLengthQueries(int n, int[][] queries) {
+		int[] ans = new int[queries.length];
+		int i = 0;
+		int[] a = new int[32], b = new int[32];
+		for (int[] query: queries) {	
+			int ha = (int) (Math.log(query[0]) / Math.log(2));
+			int hb = (int) (Math.log(query[1]) / Math.log(2));
+			a = anc(query[0],ha);
+			b = anc(query[1],hb);
+			int j = 0;
+			while (j < 32 && a[j] == b[j]) {
+				j++;
+			}
+			ans[i++] = 1 + ha - 2 * (j - 1);
+		}
+		return ans;
+	}
+}

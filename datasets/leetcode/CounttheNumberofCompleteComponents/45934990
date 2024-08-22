@@ -1,0 +1,41 @@
+class Solution {
+	List<Integer> bfs = new ArrayList<>();
+	boolean flag = true;
+	ArrayList<ArrayList<Integer>> l = new ArrayList<ArrayList<Integer>>();
+	int size = 0;
+	int countCompleteComponents(int n, int[][] e) {
+		for (int i = 0; i < n; i++) {
+			l.add(new ArrayList<Integer>());
+		}
+		for (int i = 0; i < e.length; i++) {
+			l.get(e[i][0]).add(e[i][1]);
+			l.get(e[i][1]).add(e[i][0]);
+		}
+		int vis = new int[n];
+		int count = 0;
+		for (int i = 0; i < n; i++) {
+			if (vis[i] == 0) {
+				size = l.get(i).size();
+				dfs(i,vis);
+				if (flag && size == bfs.size() - 1) {
+					count++;
+				}
+				flag = true;
+				bfs.clear();
+			}
+		}
+		return count;
+	}
+	void dfs(int node, int vis) {
+		vis[node] = 1;
+		bfs.add(node);
+		if (size != l.get(node).size()) {
+			flag = false;
+		}
+		for (int i: l.get(node)) {	
+			if (vis[i] == 0) {
+				dfs(i,vis);
+			}
+		}
+	}
+}

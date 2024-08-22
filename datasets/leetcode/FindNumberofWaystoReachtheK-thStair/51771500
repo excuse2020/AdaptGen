@@ -1,0 +1,48 @@
+class Solution {
+	BigInteger combination(int n, int k) {
+		if (k > n) {
+			return BigInteger.ZERO;
+		}
+		return factorial(n,n - k + 1).divide(factorial(k,1));
+	}
+	BigInteger factorial(int n, int k) {
+		if (n == 0) {
+			return BigInteger.ONE;
+		}
+		BigInteger result = BigInteger.ONE;
+		for (int i = k; i <= n; i++) {
+			result = result.multiply(BigInteger.valueOf(i));
+		}
+		return result;
+	}
+	int waysToReachStair(int k) {
+		if (k == 0) {
+			return 2;
+		}
+		if (k == 1) {
+			return 4;
+		}
+		int count = 1;
+		int position = 1;
+		int dig = 0;
+		int result = 0;
+		while (k >= count - position) {
+			if (k > count) {
+				count += Math.pow(2,dig);
+				dig++;
+				position++;
+				continue;
+			}
+			int diff = count - k;
+			int com = combination(position,diff).intValue();
+			if (diff == -1) {
+				break;
+			}
+			result += com;
+			count += Math.pow(2,dig);
+			dig++;
+			position++;
+		}
+		return result;
+	}
+}

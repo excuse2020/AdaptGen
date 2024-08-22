@@ -1,0 +1,41 @@
+class Solution {
+	HashMap<Integer, List<Integer>> graph;
+	int[] prerequisites;
+	int[] time;
+	int minimumTime(int n, int[][] relations, int[] t) {
+		this.time = t;
+		this.graph = new HashMap<Integer, List<Integer>>();
+		this.prerequisites = new int[n];
+		int[] indegree = new int[n];
+		for (int[] rel: relations) {	
+			var toList = this.graph.getOrDefault(rel[0] - 1,new LinkedList<Integer>());
+			toList.add(rel[1] - 1);
+			graph.put(rel[0] - 1,toList);
+			indegree[rel[1] - 1]++;
+		}
+		var queue = new LinkedList<Integer>();
+		var maxTime = 0;
+		for (int i = 0; i < n; i++) {
+			if (indegree[i] == 0) {
+				queue.add(i);
+				maxTime = Math.max(maxTime,this.time[i]);
+			}
+		}
+		while (queue.size() > 0) {
+			int size = queue.size();
+			for (int ii = 0; ii < size; ii++) {
+				var curCourse = queue.poll();
+				for (var child: graph.getOrDefault(curCourse,new LinkedList<Integer>())) {	
+					indegree[child]--;
+					this.prerequisites[child] = Math.max(this.prerequisites[child],this.time[curCourse]);
+					if (indegree[child] == 0) {
+						this.time[child] += this.prerequisites[child];
+						maxTime = Math.max(maxTime,this.time[child]);
+						queue.add(child);
+					}
+				}
+			}
+		}
+		return maxTime;
+	}
+}

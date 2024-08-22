@@ -1,0 +1,28 @@
+class Solution {
+	int findMin(int[] prices, int index, int status, int[][] dp) {
+		if (index >= prices.length) {
+			return 0;
+		}
+		if (dp[index][status] != -1) {
+			return dp[index][status];
+		}
+		int exc = 0;
+		int buy = 0;
+		int sell = 0;
+		exc = findMin(prices,index + 1,status,dp);
+		if (status > 0 && status % 2 == 0) {
+			buy = findMin(prices,index + 1,status - 1,dp) - prices[index];
+		} 
+		else if (status > 0) {
+			sell = findMin(prices,index + 1,status - 1,dp) + prices[index];
+		}
+		return dp[index][status] = Math.max(exc,Math.max(buy,sell));
+	}
+	int maxProfit(int[] prices) {
+		int[][] dp = new int[prices.length + 1][5];
+		for (int[] arr: dp) {	
+			Arrays.fill(arr,-1);
+		}
+		return findMin(prices,0,4,dp);
+	}
+}

@@ -1,0 +1,33 @@
+class Solution {
+	int maxSumAfterPartitioning(int[] arr, int k) {
+		int[] dp = new int[arr.length];
+		Arrays.fill(dp,-1);
+		for (int i = arr.length - 1; i >= 0; i--) {
+			int cur_max = -1;
+			int max = -1;
+			for (int j = i; j < arr.length && j - i + 1 <= k; j++) {
+				cur_max = Math.max(cur_max,arr[j]);
+				int max_sum = (j - i + 1) * cur_max + (j + 1 >= arr.length ? 0 : dp[j + 1]);
+				max = Math.max(max_sum,max);
+			}
+			dp[i] = max;
+		}
+		return dp[0];
+	}
+	int solve(int i, int[] arr, int k, int[] dp) {
+		if (i >= arr.length) {
+			return 0;
+		}
+		if (dp[i] != -1) {
+			return dp[i];
+		}
+		int cur_max = -1;
+		int max = -1;
+		for (int j = i; j < arr.length && j - i + 1 <= k; j++) {
+			cur_max = Math.max(cur_max,arr[j]);
+			int max_sum = (j - i + 1) * cur_max + solve(j + 1,arr,k,dp);
+			max = Math.max(max_sum,max);
+		}
+		return dp[i] = max;
+	}
+}

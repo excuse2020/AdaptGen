@@ -1,0 +1,41 @@
+class Solution {
+	List<List<Integer>> minimumAbsDifference(int[] arr) {
+		int min = Integer.MAX_VALUE;
+		int max = Integer.MIN_VALUE;
+		for (int val: arr) {	
+			min = Math.min(min,val);
+			max = Math.max(max,val);
+		}
+		int[] map = new int[max - min + 1];
+		for (int val: arr) {	
+			map[val - min]++;
+		}
+		int prevIndex = -1;
+		int minAbs = Integer.MAX_VALUE;
+		for (int i = 0; i < map.length; i++) {
+			if (map[i] != 0) {
+				if (prevIndex == -1) {
+					prevIndex = i;
+					continue;
+				}
+				minAbs = Math.min(minAbs,i - prevIndex);
+				prevIndex = i;
+			}
+		}
+		int prevElem = -1;
+		List<List<Integer>> res = new ArrayList<>();
+		for (int i = 0; i < map.length; i++) {
+			if (map[i] != 0) {
+				if (prevElem == -1) {
+					prevElem = i;
+					continue;
+				}
+				if (i - prevElem == minAbs) {
+					res.add(new ArrayList<>(Arrays.asList(prevElem + min,i + min)));
+				}
+				prevElem = i;
+			}
+		}
+		return res;
+	}
+}

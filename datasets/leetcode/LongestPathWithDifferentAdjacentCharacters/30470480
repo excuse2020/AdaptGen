@@ -1,0 +1,47 @@
+class Solution {
+	List<Integer>[] convertToTree(int[] parent, int n) {
+		List<Integer>[] tree = new List[n];
+		tree[0] = new ArrayList<>();
+		for (int i = 1; i < parent.length; i++) {
+			int p = parent[i];
+			if (tree[p] == null) {
+				tree[p] = new ArrayList<>();
+			}
+			tree[p].add(i);
+		}
+		return tree;
+	}
+	int longestPath(int[] parent, String s) {
+		List<Integer>[] tree = convertToTree(parent,s.length());
+		int[] ans = new int[1];
+		ans[0] = 1;
+		longestPath(tree,0,ans,s);
+		return ans[0];
+	}
+	int longestPath(List<Integer>[] tree, int node, int[] ans, String s) {
+		if (tree[node] == null || tree[node].isEmpty()) {
+			return 1;
+		}
+		int firstMaxSingleBranch = 0;
+		int secondMaxSingleBranch = 0;
+		for (int i: tree[node]) {	
+			int subTotal = longestPath(tree,i,ans,s);
+			if (s.charAt(node) == s.charAt(i)) {
+				continue;
+			}
+			if (subTotal > firstMaxSingleBranch) {
+				secondMaxSingleBranch = firstMaxSingleBranch;
+				firstMaxSingleBranch = subTotal;
+			} 
+			else if (subTotal > secondMaxSingleBranch) {
+				secondMaxSingleBranch = subTotal;
+			}
+		}
+		firstMaxSingleBranch += 1;
+		int total = firstMaxSingleBranch + secondMaxSingleBranch;
+		if (total > ans[0]) {
+			ans[0] = total;
+		}
+		return firstMaxSingleBranch;
+	}
+}

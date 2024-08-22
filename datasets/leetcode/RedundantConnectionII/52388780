@@ -1,0 +1,65 @@
+class Solution {
+	int[] findRedundantDirectedConnection(int[][] edges) {
+		int[] indegree = new int[1001];
+		Arrays.fill(indegree,-1);
+		int[][] graph = new int[1001][1001];
+		for (int[] edge: edges) {	
+			graph[edge[0]][edge[1]] = 1;
+			indegree[edge[1]] = Math.max(indegree[edge[1]] + 1,1);
+			indegree[edge[0]] = Math.max(indegree[edge[0]],0);
+		}
+		for (int i = edges.length - 1; i >= 0; i--) {
+			graph[edges[i][0]][edges[i][1]] = 0;
+			indegree[edges[i][1]]--;
+			if (isValidTree(graph,indegree)) {
+				return edges[i];
+			}
+			indegree[edges[i][1]]++;
+			graph[edges[i][0]][edges[i][1]] = 1;
+		}
+		return null;
+	}
+	boolean isValidTree(int[][] graph, int[] indegree) {
+		int count = 0;
+		int vertex = -1;
+		int index = 0;
+		for (int x: indegree) {	
+			if (x == 0) {
+				count++;
+				vertex = index;
+			}
+			index++;
+		}
+		if (count != 1) {
+			return false;
+		}
+		int[] visited = new int[1001];
+		boolean noCycle = validateCycle(graph,vertex,visited);
+		if (!noCycle) {
+			return false;
+		}
+		for (int i = 0; i < indegree.length; i++) {
+			if (indegree[i] >= 0 && visited[i] != 2) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean validateCycle(int[][] graph, int vertex, int[] visited) {
+		visited[vertex] = 1;
+		System.out.println("visitng " + vertex);
+		boolean ans = true;
+		for (int i = 0; i < graph.length; i++) {
+			if (i != vertex && graph[vertex][i] == 1) {
+				if (visited[i] == 1) {
+					return false;
+				} 
+				else if (visited[i] == 0) {
+					ans = ans && validateCycle(graph,i,visited);
+				}
+			}
+		}
+		visited[vertex] = 2;
+		return ans;
+	}
+}

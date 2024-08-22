@@ -1,0 +1,39 @@
+class Solution {
+	long mod = (long) 1e9 + 7;
+	void Powers(long n, ArrayList<Long> powers) {
+		long temp = n;
+		long start = 0;
+		while (temp != 0) {
+			long curr = (long) Math.pow(2,start);
+			long next = (long) Math.pow(2,start + 1);
+			if ((temp - curr) % next == 0) {
+				System.out.println(curr);
+				powers.add(curr);
+				temp = temp - curr;
+			}
+			start = start + 1;
+		}
+	}
+	int[] productQueries(int n, int[][] queries) {
+		ArrayList<Integer> answer = new ArrayList<>();
+		ArrayList<Long> powers = new ArrayList<>();
+		Powers((long) n,powers);
+		System.out.println(powers);
+		for (int[] arr: queries) {	
+			int starti = arr[0];
+			int endi = arr[1];
+			long pow = 1;
+			for (int i = starti; i <= endi; i++) {
+				pow = (pow * powers.get(i)) % mod;
+			}
+			answer.add((int) pow);
+		}
+		int[] ans = new int[answer.size()];
+		int b = 0;
+		for (int k: answer) {	
+			ans[b] = k;
+			b = b + 1;
+		}
+		return ans;
+	}
+}

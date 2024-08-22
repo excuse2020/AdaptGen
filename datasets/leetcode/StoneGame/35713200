@@ -1,0 +1,25 @@
+class Solution {
+	int Bob, Alice;
+	boolean stoneGame(int[] piles) {
+		int dp = new int[piles.length][piles.length];
+		winner(piles,0,0,piles.length - 1,dp);
+		if (dp[0][piles.length - 1] > dp[piles.length - 1][0]) {
+			return true;
+		}
+		return false;
+	}
+	int winner(int[] arr, int M, int i, int j, int dp) {
+		if (i > j) {
+			return 0;
+		}
+		if (dp[i][j] != 0) {
+			return dp[i][j];
+		}
+		if (M == 1) {
+			return dp[i][j] = Math.max(arr[i] + winner(arr,0,i + 1,j,dp),arr[j] + winner(arr,0,i,j - 1,dp));
+		} 
+		else {
+			return dp[i][j] = Math.max(winner(arr,1,i + 1,j,dp) - arr[i],winner(arr,1,i,j - 1,dp) - arr[j]);
+		}
+	}
+}

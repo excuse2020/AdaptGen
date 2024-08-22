@@ -1,0 +1,53 @@
+class Solution {
+	int[] boardmap;
+	int[] dp;
+	int snakesAndLadders(int[][] board) {
+		int n = board.length;
+		boardmap = new int[n * n + 1];
+		dp = new int[boardmap.length + 1];
+		Arrays.fill(dp,-1);
+		boolean linear = n % 2 == 0;
+		int c = n * n;
+		for (int[] b: board) {	
+			if (linear) {
+				for (int i = 0; i < b.length; i++) {
+					boardmap[c--] = b[i];
+				}
+			} 
+			else {
+				for (int i = b.length - 1; i >= 0; i--) {
+					boardmap[c--] = b[i];
+				}
+			}
+			linear = !linear;
+		}
+		PriorityQueue<Integer> queue = new PriorityQueue<>();
+		int[] reachcost = new int[boardmap.length];
+		Arrays.fill(reachcost,Integer.MAX_VALUE);
+		reachcost[1] = 0;
+		queue.offer(1);
+		while (queue.size() > 0) {
+			int p = queue.poll();
+			int curcost = reachcost[p];
+			for (int i = p + 1; i <= p + 6; i++) {
+				if (i > n * n) {
+					break;
+				}
+				int ncost = curcost + 1;
+				int target = i;
+				if (boardmap[i] != -1) {
+					target = boardmap[i];
+				}
+				if (ncost < reachcost[target]) {
+					reachcost[target] = ncost;
+					queue.add(target);
+				}
+			}
+		}
+		int ans = reachcost[n * n];
+		if (ans == Integer.MAX_VALUE) {
+			return -1;
+		}
+		return ans;
+	}
+}

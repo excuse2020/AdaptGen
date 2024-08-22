@@ -1,0 +1,21 @@
+class Solution {
+	Integer[][][] dp;
+	int f(int[] arr, int[] brr, int i, int j, boolean taken) {
+		if (i >= arr.length || j >= brr.length) {
+			return taken ? 0 : Integer.MIN_VALUE;
+		} 
+		else if (dp[i][j][taken ? 1 : 0] != null) {
+			return dp[i][j][taken ? 1 : 0];
+		}
+		int ans = Integer.MIN_VALUE;
+		int take = (arr[i] * brr[j]) + f(arr,brr,i + 1,j + 1,true);
+		int notITake = f(arr,brr,i + 1,j,taken);
+		int notJTake = f(arr,brr,i,j + 1,taken);
+		ans = Math.max(take,Math.max(notJTake,notITake));
+		return dp[i][j][taken ? 1 : 0] = ans;
+	}
+	int maxDotProduct(int[] arr, int[] brr) {
+		dp = new Integer[arr.length + 1][brr.length + 1][2];
+		return f(arr,brr,0,0,false);
+	}
+}

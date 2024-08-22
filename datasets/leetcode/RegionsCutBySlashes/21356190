@@ -1,0 +1,58 @@
+class Solution {
+	int[] rank;
+	int[] root;
+	int findset(int i) {
+		if (root[i] == i) {
+			return i;
+		}
+		return root[i] = findset(root[i]);
+	}
+	boolean isConnected(int i, int j) {
+		if (findset(i) == findset(j)) {
+			return true;
+		} 
+		else {
+			union(i,j);
+			return false;
+		}
+	}
+	int regionsBySlashes(String[] grid) {
+		int n = grid.length;
+		int dots = n + 1;
+		root = new int[dots * dots];
+		rank = new int[dots * dots];
+		int count = 0;
+		for (int i = 0; i < dots * dots; i++) {
+			root[i] = i;
+			rank[i] = 1;
+		}
+		for (int i = 0; i < dots; i++) {
+			for (int j = 0; j < dots; j++) {
+				if (i == 0 || j == 0 || i == dots - 1 || j == dots - 1) {
+					int cell = (i * dots) + j;
+					if (isConnected(0,cell)) {
+						count++;
+					}
+				}
+			}
+		}
+		int i = 0;
+		char[] ch = grid[i].toCharArray();
+		int j = 0;
+		char c = ch[j];
+	}
+	void union(int x, int y) {
+		int rootX = findset(x);
+		int rootY = findset(y);
+		if (rank[rootX] > rank[rootY]) {
+			root[rootY] = rootX;
+		} 
+		else if (rank[rootY] > rank[rootX]) {
+			root[rootX] = rootY;
+		} 
+		else {
+			root[rootY] = rootX;
+			rank[rootX] += 1;
+		}
+	}
+}

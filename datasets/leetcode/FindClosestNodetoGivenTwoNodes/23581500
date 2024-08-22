@@ -1,0 +1,28 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		Map<Integer, Integer> map1 = new HashMap<>();
+		Map<Integer, Integer> map2 = new HashMap<>();
+		dfs(edges,node1,map1,0);
+		dfs(edges,node2,map2,0);
+		int min = 1_000_000_007;
+		int result = -1;
+		for (int i = 0; i < edges.length; i++) {
+			if (map1.containsKey(i) && map2.containsKey(i)) {
+				int dist1 = map1.get(i), dist2 = map2.get(i);
+				int dist = Math.max(dist1,dist2);
+				if (dist < min) {
+					min = dist;
+					result = i;
+				}
+			}
+		}
+		return result;
+	}
+	void dfs(int[] edges, int node, Map<Integer, Integer> map, int dist) {
+		if (map.containsKey(node) || node == -1) {
+			return;
+		}
+		map.put(node,dist);
+		dfs(edges,edges[node],map,dist + 1);
+	}
+}

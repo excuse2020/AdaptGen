@@ -1,0 +1,20 @@
+class Solution {
+	int maxUncrossedLines(int[] nums1, int[] nums2) {
+		int dp = new int[nums1.length][nums2.length];
+		Arrays.stream(dp).forEach((a) -> {Arrays.fill(a,-1)});
+		int ans = solve(nums1.length - 1,nums2.length - 1,dp,nums1,nums2);
+		return ans;
+	}
+	int solve(int index1, int index2, int dp, int[] nums1, int[] nums2) {
+		if (index1 < 0 || index2 < 0) {
+			return 0;
+		}
+		if (dp[index1][index2] != -1) {
+			return dp[index1][index2];
+		}
+		if (nums1[index1] == nums2[index2]) {
+			return dp[index1][index2] = 1 + solve(index1 - 1,index2 - 1,dp,nums1,nums2);
+		}
+		return dp[index1][index2] = Math.max(solve(index1 - 1,index2,dp,nums1,nums2),solve(index1,index2 - 1,dp,nums1,nums2));
+	}
+}

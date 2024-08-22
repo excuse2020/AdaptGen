@@ -1,0 +1,30 @@
+class Solution {
+	List<Integer> arr;
+	TreeNode balanceBST(int l, int r) {
+		if (l > r) {
+			return null;
+		}
+		int m = (l + r) / 2;
+		TreeNode left = (l > m - 1) ? null : balanceBST(l,m - 1);
+		TreeNode right = (m + 1 > r) ? null : balanceBST(m + 1,r);
+		return new TreeNode(arr.get(m), left, right);
+	}
+	TreeNode balanceBST(TreeNode root) {
+		inOrder(root);
+		return balanceBST(0,arr.size() - 1);
+	}
+	void inOrder(TreeNode root) {
+		arr = new ArrayList<>();
+		Deque<TreeNode> stack = new ArrayDeque<>();
+		TreeNode node = root;
+		while (node != null || !stack.isEmpty()) {
+			while (node != null) {
+				stack.push(node);
+				node = node.left;
+			}
+			node = stack.pop();
+			arr.add(node.val);
+			node = node.right;
+		}
+	}
+}

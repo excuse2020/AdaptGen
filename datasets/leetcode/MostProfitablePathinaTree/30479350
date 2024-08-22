@@ -1,0 +1,78 @@
+class Solution {
+	List<List<Integer>> ADJENCY = new ArrayList<>();
+	int BOB;
+	boolean BOB_REACHED_GOAL = false;
+	boolean[] INDIVIDUAL_VISIT;
+	int MAX_INCOME_ALICE = Integer.MIN_VALUE;
+	int[] VISIT_BY_BOB;
+	void dfs(int source, int incomeSoFar, int person, int visitStep, int[] amount) {
+		if (person == 0) {
+			if (this.ADJENCY.get(source).size() == 1 && source != 0) {
+				this.MAX_INCOME_ALICE = Math.max(this.MAX_INCOME_ALICE,incomeSoFar);
+				return;
+			}
+		} 
+		else if (person == 1) {
+			if (source == 0) {
+				this.BOB_REACHED_GOAL = true;
+				return;
+			} 
+			else if (this.ADJENCY.get(source).size() == 1 && source != this.BOB) {
+				return;
+			}
+		}
+		if (this.INDIVIDUAL_VISIT[source]) {
+			return;
+		}
+		this.INDIVIDUAL_VISIT[source] = true;
+		for (Integer destination: this.ADJENCY.get(source)) {	
+			if (person == 1 && this.VISIT_BY_BOB[destination] == -1 && this.BOB_REACHED_GOAL == false) {
+				this.VISIT_BY_BOB[destination] = visitStep + 1;
+				dfs(destination,incomeSoFar,person,visitStep + 1,amount);
+				if (this.BOB_REACHED_GOAL == false) {
+					this.VISIT_BY_BOB[destination] = -1;
+				}
+			} 
+			else if (person == 0) {
+				int half = 0;
+				int full = 0;
+				if (this.VISIT_BY_BOB[destination] == visitStep + 1 && this.INDIVIDUAL_VISIT[destination] == false) {
+					half = amount[destination] / 2;
+					incomeSoFar += half;
+				} 
+				else if (this.VISIT_BY_BOB[destination] > visitStep + 1 || this.VISIT_BY_BOB[destination] == -1) {
+					full = amount[destination];
+					incomeSoFar += full;
+				}
+				dfs(destination,incomeSoFar,person,visitStep + 1,amount);
+				if (this.VISIT_BY_BOB[destination] == visitStep + 1) {
+					incomeSoFar -= half;
+				} 
+				else if (this.VISIT_BY_BOB[destination] > visitStep + 1 || this.VISIT_BY_BOB[destination] == -1) {
+					incomeSoFar -= full;
+				}
+			}
+		}
+		this.INDIVIDUAL_VISIT[source] = false;
+	}
+	int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+		for (int i = 0; i <= edges.length; i++) {
+			this.ADJENCY.add(new ArrayList<>());
+		}
+		this.VISIT_BY_BOB = new int[edges.length + 1];
+		Arrays.fill(this.VISIT_BY_BOB,-1);
+		this.BOB = bob;
+		this.INDIVIDUAL_VISIT = new boolean[edges.length + 1];
+		for (int[] edge: edges) {	
+			int a = edge[0];
+			int b = edge[1];
+			this.ADJENCY.get(a).add(b);
+			this.ADJENCY.get(b).add(a);
+		}
+		this.VISIT_BY_BOB[bob] = 0;
+		dfs(bob,0,1,0,amount);
+		this.INDIVIDUAL_VISIT = new boolean[edges.length + 1];
+		dfs(0,amount[0],0,0,amount);
+		return this.MAX_INCOME_ALICE;
+	}
+}

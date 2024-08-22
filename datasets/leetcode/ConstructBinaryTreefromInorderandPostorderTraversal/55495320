@@ -1,0 +1,27 @@
+class Solution {
+	int idx = 0;
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		int n = inorder.length;
+		idx = n - 1;
+		return make(inorder,postorder,0,n - 1);
+	}
+	TreeNode make(int[] inorder, int[] postorder, int start, int end) {
+		if (start > end) {
+			return null;
+		}
+		int i = start;
+		int rootVal = postorder[idx];
+		if (idx > 0) {
+			idx--;
+		}
+		for (; i <= end; i++) {
+			if (inorder[i] == rootVal) {
+				break;
+			}
+		}
+		TreeNode root = new TreeNode(rootVal);
+		root.right = make(inorder,postorder,i + 1,end);
+		root.left = make(inorder,postorder,start,i - 1);
+		return root;
+	}
+}

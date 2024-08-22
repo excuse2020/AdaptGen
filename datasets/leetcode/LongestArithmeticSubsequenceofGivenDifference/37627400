@@ -1,0 +1,54 @@
+class Solution {
+	int BS(ArrayList<Integer> arr, int target) {
+		int s = 0;
+		int e = arr.size() - 1;
+		int index = -1;
+		while (s <= e) {
+			int m = s + (e - s) / 2;
+			if (arr.get(m) > target) {
+				index = arr.get(m);
+				e = m - 1;
+			} 
+			else {
+				s = m + 1;
+			}
+		}
+		return index;
+	}
+	int helper(int[] arr, int i, HashMap<Integer, ArrayList<Integer>> map, int[] memo, int diff) {
+		if (memo[i] != 0) {
+			return memo[i];
+		}
+		int next = arr[i] + diff;
+		if (!map.containsKey(next)) {
+			memo[i] = 1;
+		} 
+		else {
+			ArrayList<Integer> next_pos = map.get(next);
+			int next_index = BS(next_pos,i);
+			if (next_index == -1) {
+				memo[i] = 1;
+			} 
+			else {
+				memo[i] = 1 + helper(arr,next_index,map,memo,diff);
+			}
+		}
+		return memo[i];
+	}
+	int longestSubsequence(int[] arr, int difference) {
+		HashMap<Integer, ArrayList<Integer>> map = new HashMap();
+		for (int i = 0; i < arr.length; i++) {
+			if (!map.containsKey(arr[i])) {
+				map.put(arr[i],new ArrayList());
+			}
+			ArrayList<Integer> temp = map.get(arr[i]);
+			temp.add(i);
+		}
+		int[] memo = new int[arr.length];
+		int max = 0;
+		for (int i = 0; i < arr.length; i++) {
+			max = Math.max(max,helper(arr,i,map,memo,difference));
+		}
+		return max;
+	}
+}

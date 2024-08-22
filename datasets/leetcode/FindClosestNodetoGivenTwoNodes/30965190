@@ -1,0 +1,22 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		HashMap<Integer, Integer> visited = new HashMap<>();
+		for (int i = node1, d = 0; i >= 0 && !visited.containsKey(i); i = edges[i]) {
+			visited.put(i,d++);
+		}
+		HashSet<Integer> visited2 = new HashSet<>();
+		int result = -1, dist = 0, min = Integer.MAX_VALUE;
+		for (int i = node2; i >= 0 && !visited2.contains(i); i = edges[i]) {
+			if (visited.containsKey(i)) {
+				int current = Math.max(dist,visited.get(i));
+				if (result == -1 || current <= min) {
+					result = current == min ? Math.min(result,i) : i;
+					min = current;
+				}
+			}
+			dist++;
+			visited2.add(i);
+		}
+		return result;
+	}
+}

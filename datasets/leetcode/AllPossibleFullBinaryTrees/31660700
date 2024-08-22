@@ -1,0 +1,22 @@
+class Solution {
+	List<TreeNode> allPossibleFBT(int N) {
+		if (N % 2 == 0) {
+			return List.of();
+		}
+		List<TreeNode>[] dp = new ArrayList[N];
+		dp[0] = new ArrayList<>(List.of(new TreeNode(0)));
+		for (int numNode = 0; numNode < N; numNode += 2) {
+			for (int leftNode = 0; leftNode < numNode; leftNode += 2) {
+				for (var left: dp[leftNode]) {	
+					for (var right: dp[numNode - 2 - leftNode]) {	
+						if (dp[numNode] == null) {
+							dp[numNode] = new ArrayList<>();
+						}
+						dp[numNode].add(new TreeNode(0, left, right));
+					}
+				}
+			}
+		}
+		return dp[N - 1];
+	}
+}

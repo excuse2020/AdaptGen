@@ -1,0 +1,35 @@
+class Solution {
+	int maxStarSum(int[] vals, int[][] edges, int k) {
+		Map<Integer, Queue<Integer>> map = new HashMap();
+		for (int[] edge: edges) {	
+			var pq1 = map.getOrDefault(edge[0],new PriorityQueue<Integer>());
+			if (vals[edge[1]] > 0) {
+				pq1.offer(vals[edge[1]]);
+			}
+			if (pq1.size() > k) {
+				pq1.poll();
+			}
+			map.put(edge[0],pq1);
+			var pq2 = map.getOrDefault(edge[1],new PriorityQueue<Integer>());
+			if (vals[edge[0]] > 0) {
+				pq2.offer(vals[edge[0]]);
+			}
+			if (pq2.size() > k) {
+				pq2.poll();
+			}
+			map.put(edge[1],pq2);
+		}
+		int max = Integer.MIN_VALUE;
+		for (int x: vals) {	
+			max = Math.max(x,max);
+		}
+		for (int center: map.keySet()) {	
+			int sum = vals[center];
+			for (int x: map.get(center)) {	
+				sum += x;
+			}
+			max = Math.max(max,sum);
+		}
+		return max;
+	}
+}

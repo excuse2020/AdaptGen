@@ -1,0 +1,65 @@
+class Solution {
+	TreeNode reConstructBinaryTree(int[] preOrder, int[] vinOrder) {
+		if (preOrder == null || vinOrder == null || preOrder.length == 0 || vinOrder.length == 0) {
+			return null;
+		}
+		if (preOrder.length == 1 && vinOrder.length == 1) {
+			TreeNode node = new TreeNode(preOrder[0]);
+			return node;
+		}
+		int rt = preOrder[0];
+		int rootIndex = 0;
+		for (int i = 0; i < vinOrder.length; i++) {
+			if (vinOrder[i] == rt) {
+				rootIndex = i;
+				break;
+			}
+		}
+		int[] leftTreePre;
+		int[] leftTreeVin;
+		int[] rightTreePre;
+		int[] rightTreeVin;
+		if (rootIndex == 0) {
+			rightTreePre = new int[vinOrder.length - 1];
+			rightTreeVin = new int[vinOrder.length - 1];
+			for (int i = 0; i < rightTreeVin.length; i++) {
+				rightTreePre[i] = preOrder[i + 1];
+				rightTreeVin[i] = vinOrder[i + 1];
+			}
+			TreeNode rightNode = reConstructBinaryTree(rightTreePre,rightTreeVin);
+			TreeNode root = new TreeNode(rt);
+			root.right = rightNode;
+			return root;
+		}
+		if (rootIndex == vinOrder.length - 1) {
+			leftTreePre = new int[vinOrder.length - 1];
+			leftTreeVin = new int[vinOrder.length - 1];
+			for (int i = 0; i < leftTreeVin.length; i++) {
+				leftTreePre[i] = preOrder[i + 1];
+				leftTreeVin[i] = vinOrder[i];
+			}
+			TreeNode liftNode = reConstructBinaryTree(leftTreePre,leftTreeVin);
+			TreeNode root = new TreeNode(rt);
+			root.left = liftNode;
+			return root;
+		}
+		leftTreePre = new int[rootIndex];
+		leftTreeVin = new int[rootIndex];
+		rightTreePre = new int[vinOrder.length - 1];
+		rightTreeVin = new int[vinOrder.length - 1];
+		for (int i = 0; i < leftTreeVin.length; i++) {
+			leftTreeVin[i] = vinOrder[i];
+			leftTreePre[i] = preOrder[i + 1];
+		}
+		for (int j = 0; j < rightTreeVin.length; j++) {
+			rightTreeVin[j] = vinOrder[rootIndex + 1 + j];
+			rightTreePre[j] = preOrder[leftTreeVin.length + 1 + j];
+		}
+		TreeNode liftNode = reConstructBinaryTree(leftTreePre,leftTreeVin);
+		TreeNode rightNode = reConstructBinaryTree(rightTreePre,rightTreeVin);
+		TreeNode root = new TreeNode(rt);
+		root.left = liftNode;
+		root.right = rightNode;
+		return root;
+	}
+}

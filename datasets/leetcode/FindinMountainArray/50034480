@@ -1,0 +1,60 @@
+class Solution {
+	int findInMountainArray(int target, MountainArray mountainArr) {
+		int start = 0;
+		int end = mountainArr.length() - 1;
+		int ans = -1;
+		int peakIndex = findPeak(mountainArr);
+		ans = searchLeft(target,mountainArr,start,peakIndex);
+		if (ans != -1) {
+			return ans;
+		}
+		return searchRight(target,mountainArr,peakIndex + 1,end);
+	}
+	int findPeak(MountainArray mountainArr) {
+		int start = 0;
+		int end = mountainArr.length() - 1;
+		while (start < end) {
+			int middle = getMiddleIndex(start,end);
+			if (mountainArr.get(middle) > mountainArr.get(middle + 1)) {
+				end = middle;
+			} 
+			else {
+				start = middle + 1;
+			}
+		}
+		return start;
+	}
+	int getMiddleIndex(int start, int end) {
+		return start + (end - start) / 2;
+	}
+	int searchLeft(int target, MountainArray mountainArr, int start, int end) {
+		while (start <= end) {
+			int middle = getMiddleIndex(start,end);
+			if (target == mountainArr.get(middle)) {
+				return middle;
+			} 
+			else if (target < mountainArr.get(middle)) {
+				end = middle - 1;
+			} 
+			else {
+				start = middle + 1;
+			}
+		}
+		return -1;
+	}
+	int searchRight(int target, MountainArray mountainArr, int start, int end) {
+		while (start <= end) {
+			int middle = getMiddleIndex(start,end);
+			if (target == mountainArr.get(middle)) {
+				return middle;
+			} 
+			else if (target < mountainArr.get(middle)) {
+				start = middle + 1;
+			} 
+			else {
+				end = middle - 1;
+			}
+		}
+		return -1;
+	}
+}

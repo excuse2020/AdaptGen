@@ -1,0 +1,36 @@
+class Solution {
+	int numRows;
+	int toothWidth;
+	String convert(String s, int numRows) {
+		this.numRows = numRows;
+		this.toothWidth = Math.max(0,numRows - 2);
+		StringBuilder result = new StringBuilder(s.length());
+		for (int n = 0; n < numRows; n++) {
+			for (int g = 0; ; g++) {
+				int charIndex = f(n,g);
+				if (charIndex >= s.length()) {
+					break;
+				}
+				result.append(s.charAt(charIndex));
+			}
+		}
+		return result.toString();
+	}
+	int f(int n, int g) {
+		if (isSpecialCase(n)) {
+			return n + g * (numRows + toothWidth);
+		}
+		if (isVerticalIntersection(g)) {
+			return n + (g / 2) * (numRows + toothWidth);
+		} 
+		else {
+			return f(n,g - 1) + 2 * (numRows - n);
+		}
+	}
+	boolean isSpecialCase(int n) {
+		return n == 0 || n == numRows - 1;
+	}
+	boolean isVerticalIntersection(int g) {
+		return g % 2 == 0;
+	}
+}

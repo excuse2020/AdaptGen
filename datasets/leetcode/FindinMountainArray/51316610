@@ -1,0 +1,62 @@
+class Solution {
+	int binarySearchInDecreasingSection(int target, MountainArray mountainArr, int low, int high) {
+		int mid;
+		while (low <= high) {
+			mid = low + (high - low) / 2;
+			int currentElement = mountainArr.get(mid);
+			if (currentElement == target) {
+				return mid;
+			} 
+			else if (currentElement > target) {
+				low = mid + 1;
+			} 
+			else {
+				high = mid - 1;
+			}
+		}
+		return -1;
+	}
+	int binarySearchInIncreasingSection(int target, MountainArray mountainArr, int low, int high) {
+		int mid;
+		while (low <= high) {
+			mid = low + (high - low) / 2;
+			int currentElement = mountainArr.get(mid);
+			if (currentElement == target) {
+				return mid;
+			} 
+			else if (currentElement < target) {
+				low = mid + 1;
+			} 
+			else {
+				high = mid - 1;
+			}
+		}
+		return -1;
+	}
+	int findInMountainArray(int target, MountainArray mountainArr) {
+		int length = mountainArr.length();
+		int peakIndex = findPeakIndex(target,mountainArr,0,length - 1);
+		int ans = binarySearchInIncreasingSection(target,mountainArr,0,peakIndex);
+		if (ans == -1) {
+			ans = binarySearchInDecreasingSection(target,mountainArr,peakIndex + 1,length - 1);
+		}
+		return ans;
+	}
+	int findPeakIndex(int target, MountainArray mountainArr, int low, int high) {
+		int mid;
+		int ans = -1;
+		while (low <= high) {
+			mid = low + (high - low) / 2;
+			int currentElement = mountainArr.get(mid);
+			int nextElement = mountainArr.get(mid + 1);
+			if (currentElement < nextElement) {
+				low = mid + 1;
+			} 
+			else {
+				ans = mid;
+				high = mid - 1;
+			}
+		}
+		return ans;
+	}
+}

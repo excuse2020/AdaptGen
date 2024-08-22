@@ -1,0 +1,40 @@
+class Solution {
+	int[] findThePrefixCommonArray(int[] A, int[] B) {
+		HashMap<Integer, Integer> hm = new HashMap<>();
+		HashMap<Integer, Integer> hm2 = new HashMap<>();
+		int[] freqA = new int[A.length + 1];
+		int[] freqB = new int[A.length + 1];
+		for (int i = 0; i < A.length; i++) {
+			hm.put(A[i],i);
+			hm2.put(B[i],i);
+		}
+		int[] ans = new int[A.length];
+		if (A[0] == B[0]) {
+			ans[0] = 1;
+		}
+		for (int i = 1; i < A.length; i++) {
+			if (A[i] == B[i]) {
+				ans[i] = ans[i - 1] + 1;
+				continue;
+			}
+			if (hm.get(B[i]) <= i && hm2.get(A[i]) <= i) {
+				ans[i] = ans[i - 1] + 2;
+			} 
+			else if (hm.get(B[i]) <= i) {
+				ans[i] = ans[i - 1] + 1;
+			} 
+			else if (hm2.get(A[i]) <= i) {
+				ans[i] = ans[i - 1] + 1;
+			} 
+			else {
+				if (i == A.length - 1) {
+					ans[i] = A.length - 1;
+				} 
+				else {
+					ans[i] = ans[i - 1];
+				}
+			}
+		}
+		return ans;
+	}
+}

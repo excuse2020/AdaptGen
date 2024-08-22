@@ -1,0 +1,30 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		int size = edges.length;
+		int[] n1 = new int[size];
+		int[] n2 = new int[size];
+		Arrays.fill(n1,-1);
+		Arrays.fill(n2,-1);
+		dfs(edges,node1,n1);
+		dfs(edges,node2,n2);
+		int res = size + 1;
+		int val = 2 * size;
+		for (int i = 0; i < size; i++) {
+			if (n1[i] != -1 && n2[i] != -1) {
+				if (val > Math.max(n1[i],n2[i])) {
+					val = Math.max(n1[i],n2[i]);
+					res = i;
+				}
+			}
+		}
+		return res == size + 1 ? -1 : res;
+	}
+	void dfs(int[] edges, int node, int[] record) {
+		int count = 0;
+		while (node != -1 && record[node] == -1) {
+			record[node] = count;
+			node = edges[node];
+			count++;
+		}
+	}
+}

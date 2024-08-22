@@ -1,0 +1,38 @@
+class Solution {
+	int MOD = 1_000_000_007;
+	LinkedHashMap<Integer, int[]> computePrefixSum(int n, int k) {
+		int[] a = new int[n];
+		Arrays.fill(a,1);
+		LinkedHashMap<Integer, int[]> ps = new LinkedHashMap<>();
+		ps.put(0,a);
+		int[] prefixSum = new int[n];
+		prefixSum[0] = 1;
+		for (int i = 1; i < n; i++) {
+			prefixSum[i] = (prefixSum[i - 1] + a[i]);
+		}
+		ps.put(1,prefixSum);
+		int ctr = 2;
+		while (ctr <= k) {
+			int[] pp = getMostRecentEntry(ps);
+			for (int i = 1; i < n; i++) {
+				pp[i] = (int) (pp[i - 1] + pp[i]) % MOD;
+			}
+			ps.put(ctr,pp);
+			ctr++;
+		}
+		return ps;
+	}
+	int[] getMostRecentEntry(LinkedHashMap<Integer, int[]> map) {
+		Map.Entry<Integer, int[]> mostRecentEntry = null;
+		for (Map.Entry<Integer, int[]> entry: map.entrySet()) {	
+			mostRecentEntry = entry;
+		}
+		return mostRecentEntry.getValue();
+	}
+	int valueAfterKSeconds(int n, int k) {
+		int ctr = 1;
+		LinkedHashMap<Integer, int[]> ps = computePrefixSum(n,k);
+		int[] aa = ps.get(k);
+		return (int) (aa[aa.length - 1]) % MOD;
+	}
+}

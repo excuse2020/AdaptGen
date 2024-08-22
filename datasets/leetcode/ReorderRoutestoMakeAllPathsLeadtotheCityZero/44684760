@@ -1,0 +1,42 @@
+class Solution {
+	int V;
+	int flips;
+	List<Integer>[] forward;
+	List<Integer>[] reverse;
+	boolean[] visited;
+	void dfs(int v) {
+		visited[v] = true;
+		List<Integer> fNeighbours = forward[v];
+		List<Integer> rNeighbours = reverse[v];
+		for (int w: fNeighbours) {	
+			if (!visited[w]) {
+				flips++;
+				dfs(w);
+			}
+		}
+		for (int w: rNeighbours) {	
+			if (!visited[w]) {
+				dfs(w);
+			}
+		}
+	}
+	int minReorder(int n, int[][] connections) {
+		V = n;
+		forward = (List<Integer>[]) new List[V];
+		reverse = (LinkedList<Integer>[]) new LinkedList[V];
+		visited = new boolean[V];
+		for (int i = 0; i < V; i++) {
+			forward[i] = new LinkedList<>();
+			reverse[i] = new LinkedList<>();
+		}
+		for (int[] connection: connections) {	
+			List<Integer> fList = forward[connection[0]];
+			List<Integer> rList = reverse[connection[1]];
+			fList.add(connection[1]);
+			rList.add(connection[0]);
+		}
+		flips = 0;
+		dfs(0);
+		return flips;
+	}
+}

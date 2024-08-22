@@ -1,0 +1,42 @@
+class Solution {
+	TreeNode lastVisited = null;
+	TreeNode Convert(TreeNode pRootOfTree) {
+		TreeNode ans = null;
+		TreeNode cur = pRootOfTree;
+		while (cur != null) {
+			if (cur.left == null) {
+				if (lastVisited == null) {
+					ans = cur;
+				}
+				visit(cur);
+				cur = cur.right;
+			} 
+			else {
+				TreeNode pred = findPredecessor(cur);
+				if (pred.right == null) {
+					pred.right = cur;
+					cur = cur.left;
+				} 
+				else {
+					visit(cur);
+					cur = cur.right;
+				}
+			}
+		}
+		return ans;
+	}
+	TreeNode findPredecessor(TreeNode cur) {
+		TreeNode n = cur.left;
+		while (n.right != null && n.right != cur) {
+			n = n.right;
+		}
+		return n;
+	}
+	void visit(TreeNode cur) {
+		if (lastVisited != null) {
+			lastVisited.right = cur;
+			cur.left = lastVisited;
+		}
+		lastVisited = cur;
+	}
+}

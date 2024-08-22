@@ -1,0 +1,31 @@
+class Solution {
+	long dividePlayers(int[] skill) {
+		long result = 0;
+		int n = skill.length;
+		int teamSkill = 0;
+		for (int i = 0; i < n; i++) {
+			teamSkill += skill[i];
+		}
+		teamSkill /= (n / 2);
+		int[] dp = new int[teamSkill + 1];
+		for (int i = 0; i < n; i++) {
+			if (skill[i] > teamSkill) {
+				return -1;
+			}
+			dp[skill[i]]++;
+		}
+		for (int i = 0; i < n; i++) {
+			if (dp[skill[i]] > 0) {
+				dp[skill[i]]--;
+				if (dp[teamSkill - skill[i]] > 0) {
+					dp[teamSkill - skill[i]]--;
+					result += (skill[i] * (teamSkill - skill[i]));
+				} 
+				else {
+					return -1;
+				}
+			}
+		}
+		return result;
+	}
+}

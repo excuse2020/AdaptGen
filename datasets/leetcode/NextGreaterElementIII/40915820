@@ -1,0 +1,46 @@
+class Solution {
+	int nextGreaterElement(int n) {
+		int len = Integer.toString(n).length();
+		int[] arr = new int[len];
+		for (int i = len - 1; i >= 0; i--, n /= 10) {
+			arr[i] = n % 10;
+		}
+		return nextPermutation(arr);
+	}
+	int nextPermutation(int[] nums) {
+		int i = nums.length - 2;
+		while (i >= 0 && nums[i] >= nums[i + 1]) {
+			i--;
+		}
+		if (i >= 0) {
+			int j = nums.length - 1;
+			while (nums[i] >= nums[j]) {
+				j--;
+			}
+			swap(nums,i,j);
+			reverse(nums,i + 1);
+			long res = 0;
+			for (int x: nums) {	
+				res = res * 10 + x;
+			}
+			if (res != (int) res) {
+				return -1;
+			}
+			return (int) res;
+		}
+		return -1;
+	}
+	void reverse(int[] nums, int start) {
+		int i = start, j = nums.length - 1;
+		while (i < j) {
+			swap(nums,i++,j--);
+		}
+	}
+	void swap(int[] nums, int i, int j) {
+		if (nums[i] != nums[j]) {
+			nums[i] ^= nums[j];
+			nums[j] ^= nums[i];
+			nums[i] ^= nums[j];
+		}
+	}
+}

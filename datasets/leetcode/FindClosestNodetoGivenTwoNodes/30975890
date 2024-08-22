@@ -1,0 +1,31 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		var distNode1 = dist(edges,node1);
+		var distNode2 = dist(edges,node2);
+		var xNode = -1;
+		for (int v = 0, minDist = Integer.MAX_VALUE; v < edges.length; ++v) {
+			if (distNode1[v] != 0 && distNode2[v] != 0) {
+				var currMaxDist = Integer.max(distNode1[v],distNode2[v]);
+				if (minDist > currMaxDist) {
+					minDist = currMaxDist;
+					xNode = v;
+				}
+			}
+		}
+		return xNode;
+	}
+	int[] dist(int[] edges, int currNode) {
+		var marked = new boolean[edges.length];
+		var dist = new int[edges.length];
+		dist[currNode] = 1;
+		while (!marked[currNode]) {
+			marked[currNode] = true;
+			var next = edges[currNode];
+			if (next != -1 && !marked[next]) {
+				dist[next] = dist[currNode] + 1;
+				currNode = next;
+			}
+		}
+		return dist;
+	}
+}

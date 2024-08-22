@@ -1,0 +1,21 @@
+class Solution {
+	int countDays(int days, int[][] meetings) {
+		PriorityQueue<int[]> priorityQueue = new PriorityQueue<>(Comparator.comparingInt((int[] e) -> {e[0]}).thenComparingInt((e) -> {e[1]}));
+		Collections.addAll(priorityQueue,meetings);
+		int start = 0;
+		int end = 0;
+		int freeDays = 0;
+		while (!priorityQueue.isEmpty()) {
+			int[] startEnd = priorityQueue.poll();
+			if (startEnd[0] >= start && startEnd[0] <= end) {
+				end = Math.max(end,startEnd[1]);
+			} 
+			else {
+				freeDays = freeDays + (startEnd[0] - end);
+				start = startEnd[0];
+				end = startEnd[1];
+			}
+		}
+		return freeDays + days - end;
+	}
+}

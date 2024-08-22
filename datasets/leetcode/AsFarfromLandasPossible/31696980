@@ -1,0 +1,46 @@
+class Solution {
+	int MAX_DISTANCE = 201;
+	int[][] buildDistances(int[][] grid) {
+		int[][] distances = new int[grid.length][grid.length];
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid.length; j++) {
+				if (grid[i][j] == 0) {
+					distances[i][j] = MAX_DISTANCE;
+				}
+			}
+		}
+		return distances;
+	}
+	int getMaxDist(int[][] distances) {
+		int maxDist = 0;
+		for (int[] line: distances) {	
+			for (int item: line) {	
+				maxDist = Math.max(maxDist,item);
+			}
+		}
+		return maxDist;
+	}
+	void markLine(int[][] distances, int[][] grid, int i, int start, int stop, int sign) {
+		for (int j = start; j != stop; j += sign) {
+			if (grid[i][j] == 0) {
+				if (j + (-sign) >= 0 && j + (-sign) < grid.length) {
+					distances[i][j] = Math.min(distances[i][j],1 + distances[i][j + -sign]);
+				}
+				if (i + (-sign) >= 0 && i + (-sign) < grid.length) {
+					distances[i][j] = Math.min(distances[i][j],1 + distances[i + -sign][j]);
+				}
+			}
+		}
+	}
+	int maxDistance(int[][] grid) {
+		int[][] distances = buildDistances(grid);
+		for (int i = 0; i < grid.length; i++) {
+			markLine(distances,grid,i,0,grid.length,1);
+		}
+		for (int i = grid.length - 1; i >= 0; i--) {
+			markLine(distances,grid,i,grid.length - 1,-1,-1);
+		}
+		int maxDist = getMaxDist(distances);
+		return maxDist == 0 || maxDist == MAX_DISTANCE ? -1 : maxDist;
+	}
+}

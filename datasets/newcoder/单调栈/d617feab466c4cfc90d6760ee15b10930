@@ -1,0 +1,31 @@
+class Solution {
+	int[][] foundMonotoneStack(int[] nums) {
+		int n = nums.length;
+		int[][] res = new int[n][2];
+		Deque<Integer> stackL = new ArrayDeque<>();
+		Deque<Integer> stackR = new ArrayDeque<>();
+		for (int i = 0; i < n; i++) {
+			while (!stackL.isEmpty() && nums[stackL.peek()] >= nums[i]) {
+				stackL.pop();
+			}
+			if (stackL.isEmpty()) {
+				res[i][0] = -1;
+			} 
+			else {
+				res[i][0] = stackL.peek();
+			}
+			stackL.push(i);
+			while (!stackR.isEmpty() && nums[stackR.peek()] >= nums[n - 1 - i]) {
+				stackR.pop();
+			}
+			if (stackR.isEmpty()) {
+				res[n - 1 - i][1] = -1;
+			} 
+			else {
+				res[n - 1 - i][1] = stackR.peek();
+			}
+			stackR.push(n - 1);
+		}
+		return res;
+	}
+}

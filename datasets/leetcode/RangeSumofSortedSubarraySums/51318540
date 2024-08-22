@@ -1,0 +1,28 @@
+class Solution {
+	int rangeSum(int[] nums, int n, int left, int right) {
+		int subArraySum = new int[n * (n + 1) / 2];
+		int prefixSum = new int[n];
+		prefixSum[0] = nums[0];
+		for (int i = 1; i < n; i++) {
+			prefixSum[i] = prefixSum[i - 1] + nums[i];
+		}
+		for (int i = 0; i < n; i++) {
+			subArraySum[i] = prefixSum[i];
+		}
+		int idx = n;
+		for (int i = 1; i < n; i++) {
+			for (int j = i; j < n; j++) {
+				subArraySum[idx] = prefixSum[j] - prefixSum[i - 1];
+				idx++;
+			}
+		}
+		Arrays.sort(subArraySum);
+		long sum = 0;
+		while (left <= right) {
+			sum = (sum + subArraySum[left - 1]);
+			sum = sum % 1000000007;
+			left++;
+		}
+		return (int) sum;
+	}
+}

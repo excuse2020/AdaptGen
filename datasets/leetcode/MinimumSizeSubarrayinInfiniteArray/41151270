@@ -1,0 +1,44 @@
+class Solution {
+	int minSizeSubarray(int[] nums, int target) {
+		long sum = 0;
+		int n = nums.length;
+		for (int i = 0; i < n; i++) {
+			sum += nums[i];
+		}
+		long totalsum = 0;
+		int c = 1;
+		while (totalsum < target) {
+			totalsum = sum * c;
+			if (totalsum < target) {
+				c++;
+			}
+		}
+		if (totalsum == target) {
+			return c * n;
+		}
+		long rem = totalsum - target;
+		int len = -1;
+		sum = 0;
+		int[] temp = new int[2 * n];
+		for (int i = 0; i < 2 * n; i++) {
+			temp[i] = nums[i % n];
+		}
+		Map<Long, Integer> hm = new HashMap<>();
+		for (int i = 0; i < 2 * n; i++) {
+			sum += temp[i];
+			if (sum == rem) {
+				len = i + 1;
+			}
+			if (hm.containsKey(sum - rem)) {
+				len = Math.max(len,i - hm.get(sum - rem));
+			}
+			if (!hm.containsKey(sum)) {
+				hm.put(sum,i);
+			}
+		}
+		if (len == -1) {
+			return -1;
+		}
+		return (c * n) - len;
+	}
+}

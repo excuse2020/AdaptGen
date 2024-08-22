@@ -1,0 +1,32 @@
+class Solution {
+	int modulo = 1000000007;
+	int countPaths(int[][] grid) {
+		int ans = 0;
+		int dp = new int[grid.length][grid[0].length];
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				ans = (ans + solve(grid,dp,i,j)) % modulo;
+			}
+		}
+		return ans;
+	}
+	int solve(int[][] grid, int[][] dp, int r, int c) {
+		if (dp[r][c] != 0) {
+			return dp[r][c];
+		}
+		dp[r][c] = 1;
+		if (r + 1 < grid.length && grid[r][c] < grid[r + 1][c]) {
+			dp[r][c] = (dp[r][c] + solve(grid,dp,r + 1,c)) % modulo;
+		}
+		if (c + 1 < grid[0].length && grid[r][c] < grid[r][c + 1]) {
+			dp[r][c] = (dp[r][c] + solve(grid,dp,r,c + 1)) % modulo;
+		}
+		if (r - 1 >= 0 && grid[r][c] < grid[r - 1][c]) {
+			dp[r][c] = (dp[r][c] + solve(grid,dp,r - 1,c)) % modulo;
+		}
+		if (c - 1 >= 0 && grid[r][c] < grid[r][c - 1]) {
+			dp[r][c] = (dp[r][c] + solve(grid,dp,r,c - 1)) % modulo;
+		}
+		return dp[r][c];
+	}
+}

@@ -1,0 +1,29 @@
+class Solution {
+	List<String> alertNames(String[] keyName, String[] keyTime) {
+		HashMap<String, List<Integer>> times = new HashMap<>();
+		List<String> alerted = new ArrayList<>();
+		for (int i = 0; i < keyName.length; i++) {
+			String name = keyName[i];
+			int time = Integer.valueOf(keyTime[i].replace(":",""));
+			if (!times.containsKey(name)) {
+				times.put(name,new ArrayList<>());
+			}
+			times.get(name).add(time);
+		}
+		for (Map.Entry<String, List<Integer>> entry: times.entrySet()) {	
+			List<Integer> subTimes = entry.getValue();
+			int size = subTimes.size();
+			subTimes.sort((a, b) -> {Integer.compare(a,b)});
+			for (int i = 0, y = 1; y < size; y++) {
+				while (subTimes.get(y) - subTimes.get(i) > 100 && i < y - 1) {
+					i++;
+				}
+				if (y - i == 2) {
+					alerted.add(entry.getKey());
+					break;
+				}
+			}
+		}
+		return alerted.stream().sorted().collect(Collectors.toList());
+	}
+}

@@ -1,0 +1,29 @@
+class Solution {
+	int longestmountain(ArrayList<Integer> nums) {
+		if (nums == null || nums.size() <= 3) {
+			return 0;
+		}
+		int len = 0;
+		int maxLen = 0;
+		int preSub = 0;
+		boolean addFlag = false;
+		boolean decFlag = false;
+		for (int i = 1; i < nums.size(); i++) {
+			int sub = nums.get(i) - nums.get(i - 1);
+			if (sub > 0 || (addFlag && preSub != 0 && sub < 0)) {
+				len = preSub <= 0 && sub > 0 ? 2 : len + 1;
+				addFlag = addFlag ? addFlag : sub > 0;
+				decFlag = decFlag ? decFlag : sub < 0;
+			} 
+			else {
+				len = 0;
+				addFlag = decFlag = false;
+			}
+			if (addFlag && decFlag) {
+				maxLen = maxLen > len ? maxLen : len;
+			}
+			preSub = sub;
+		}
+		return maxLen == 0 ? 0 : maxLen;
+	}
+}

@@ -1,0 +1,51 @@
+class Solution {
+	int BinarySearch(List<Integer> result, int target) {
+		return BinarySearchHelper(result,target,0,result.size());
+	}
+	int BinarySearchHelper(List<Integer> result, int target, int i, int j) {
+		if (i == j) {
+			return i;
+		}
+		int mid = i + (j - i) / 2;
+		if (target > result.get(mid)) {
+			return BinarySearchHelper(result,target,mid + 1,j);
+		} 
+		else {
+			return BinarySearchHelper(result,target,i,mid);
+		}
+	}
+	int LIS(int[] arr) {
+		if (arr.length == 0) {
+			return 0;
+		}
+		List<Integer> result = new ArrayList<>();
+		result.add(arr[0]);
+		for (int i = 1; i < arr.length; i++) {
+			if (arr[i] > result.get(result.size() - 1)) {
+				result.add(arr[i]);
+			} 
+			else {
+				int idx = BinarySearch(result,arr[i]);
+				result.set(idx,arr[i]);
+			}
+		}
+		return result.size();
+	}
+	int LIS_2(int[] arr) {
+		if (arr.length == 0) {
+			return 0;
+		}
+		int[] cnts = new int[arr.length];
+		Arrays.fill(cnts,1);
+		for (int i = 1; i < arr.length; i++) {
+			int localMaxCnt = 0;
+			for (int j = 0; j < i; j++) {
+				if (arr[j] < arr[i]) {
+					localMaxCnt = Math.max(localMaxCnt,cnts[j]);
+				}
+			}
+			cnts[i] = localMaxCnt + 1;
+		}
+		return Arrays.stream(cnts).max().getAsInt();
+	}
+}

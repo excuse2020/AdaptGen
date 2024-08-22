@@ -1,0 +1,21 @@
+class Solution {
+	int numSplits(String s) {
+		if (s.length() < 2) {
+			return 0;
+		}
+		Map<Character, Integer> left = new HashMap<Character, Integer>(), right = new HashMap<Character, Integer>();
+		left.put(s.charAt(0),1);
+		for (int i = 1; i < s.length(); i++) {
+			right.compute(s.charAt(i),(k, v) -> {v == null ? 1 : (v += 1)});
+		}
+		int count = left.size() == right.size() ? 1 : 0;
+		for (int i = 1; i < s.length(); i++) {
+			left.compute(s.charAt(i),(k, v) -> {v == null ? 1 : (v += 1)});
+			if (right.compute(s.charAt(i),(k, v) -> {v == null ? 1 : (v -= 1)}) == 0) {
+				right.remove(s.charAt(i));
+			}
+			count = left.size() == right.size() ? count + 1 : count;
+		}
+		return count;
+	}
+}

@@ -1,0 +1,37 @@
+class Solution {
+	int findWinningPlayer(int[] skills, int k) {
+		int n = skills.length - 1;
+		int[] countWin = new int[n + 1];
+		int ans = -1;
+		int maxSkill = Integer.MIN_VALUE;
+		Deque<Integer> deque = new LinkedList<>();
+		while (n >= 0) {
+			deque.addFirst(n);
+			if (skills[n] > maxSkill) {
+				maxSkill = skills[n];
+			}
+			n--;
+		}
+		while (true) {
+			int p1 = deque.removeFirst();
+			int p2 = deque.getFirst();
+			int win = -1;
+			if (skills[p1] > skills[p2]) {
+				int temp = deque.removeFirst();
+				deque.addFirst(p1);
+				deque.addLast(temp);
+				win = p1;
+			} 
+			else {
+				win = p2;
+				deque.addLast(p1);
+			}
+			countWin[win]++;
+			if (countWin[win] == k || skills[deque.getFirst()] == maxSkill) {
+				ans = win;
+				break;
+			}
+		}
+		return ans;
+	}
+}

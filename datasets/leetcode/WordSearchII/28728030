@@ -1,0 +1,67 @@
+class Solution {
+	boolean[][] vis;
+	boolean find(char[][] arr, String s, int index, int i, int j) {
+		if (index == s.length()) {
+			return true;
+		}
+		if (i < 0 || j < 0 || i >= arr.length || j >= arr[0].length || arr[i][j] != s.charAt(index) || vis[i][j]) {
+			return false;
+		}
+		vis[i][j] = true;
+		boolean ans = find(arr,s,index + 1,i + 1,j) || find(arr,s,index + 1,i - 1,j);
+		vis[i][j] = false;
+		return ans;
+	}
+	List<String> findWords(char[][] arr, String[] words) {
+		int r = arr.length;
+		int c = arr[0].length;
+		vis = new boolean[r][c];
+		List<String> ans = new ArrayList<>();
+		Map<String, String> inputToOpt = new HashMap<>();
+		for (String word: words) {	
+			inputToOpt.put(word,getIdealString(word,word.length()));
+		}
+		boolean wordFound;
+		for (Map.Entry<String, String> entry: inputToOpt.entrySet()) {	
+			String word = entry.getValue();
+			wordFound = false;
+			for (int i = 0; i < r; i++) {
+				for (int j = 0; j < c; j++) {
+					if (find(arr,word,0,i,j)) {
+						ans.add(entry.getKey());
+						wordFound = true;
+						break;
+					}
+				}
+				if (wordFound) {
+					break;
+				}
+			}
+		}
+		return ans;
+	}
+	String getIdealString(String s, int len) {
+		if (isSecondHalfMoreDistinct(s,len)) {
+			return rev(s,len);
+		}
+		return s;
+	}
+	boolean isSecondHalfMoreDistinct(String s, int len) {
+		boolean[] f1 = new boolean[26];
+		boolean[] f2 = new boolean[26];
+		int mid = len / 2;
+		int i = 0;
+	}
+	String rev(String s, int len) {
+		char[] ans = s.toCharArray();
+		for (int i = 0; i < len / 2; i++) {
+			swap(ans,i,len - i);
+		}
+		return new String(ans);
+	}
+	void swap(char[] arr, int i, int j) {
+		char temp = arr[i];
+		arr[i] = arr[j];
+		arr[j] = temp;
+	}
+}

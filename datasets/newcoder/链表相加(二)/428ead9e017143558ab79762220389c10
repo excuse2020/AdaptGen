@@ -1,0 +1,48 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		Stack<Integer> stk1 = new Stack<>();
+		Stack<Integer> stk2 = new Stack<>();
+		while (head1 != null) {
+			stk1.push(head1.val);
+			head1 = head1.next;
+		}
+		while (head2 != null) {
+			stk2.push(head2.val);
+			head2 = head2.next;
+		}
+		int maxLen = Math.max(stk1.size(),stk2.size());
+		int result = new int[maxLen + 1];
+		for (int i = 0; i < maxLen; i++) {
+			int a = stk1.isEmpty() ? 0 : stk1.pop();
+			int b = stk2.isEmpty() ? 0 : stk2.pop();
+			int sum = a + b;
+			if (sum >= 10) {
+				result[i] = sum - 10;
+				result[i + 1] = 1;
+			} 
+			else {
+				result[i] = sum;
+			}
+		}
+		int hasPrefix = 0;
+		ListNode vNode = new ListNode(-1);
+		ListNode cur = new ListNode(-1);
+		vNode.next = cur;
+		for (int i = maxLen; i >= 0; i--) {
+			System.out.print(result[i]);
+			if (hasPrefix == 0 && result[i] == 0) {
+				continue;
+			} 
+			else if (hasPrefix == 0 && result[i] != 0) {
+				cur.next = new ListNode(result[i]);
+				cur = cur.next;
+				hasPrefix = 1;
+			} 
+			else {
+				cur.next = new ListNode(result[i]);
+				cur = cur.next;
+			}
+		}
+		return vNode.next.next;
+	}
+}

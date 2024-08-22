@@ -1,0 +1,46 @@
+class Solution {
+	void attachTrigger(List[] triggers, int from, int to) {
+		if (triggers[from] == null) {
+			triggers[from] = new ArrayList<>();
+		}
+		triggers[from].add(to);
+	}
+	List[] getTriggers(int[][] bombs) {
+		List[] triggers = new List[bombs.length];
+		double distance;
+		for (int i = 0; i < bombs.length - 1; i++) {
+			for (int j = i + 1; j < bombs.length; j++) {
+				distance = Point2D.distance(bombs[i][0],bombs[i][1],bombs[j][0],bombs[j][1]);
+				if (distance <= bombs[i][2]) {
+					attachTrigger(triggers,i,j);
+				}
+				if (distance <= bombs[j][2]) {
+					attachTrigger(triggers,j,i);
+				}
+			}
+		}
+		return triggers;
+	}
+	int maximumDetonation(int[][] bombs) {
+		List[] triggers = getTriggers(bombs);
+		int maxChain = 1;
+		for (int i = 0; i < bombs.length; i++) {
+			maxChain = Math.max(maxChain,triggerBomb(triggers,i,new boolean[bombs.length]));
+		}
+		return maxChain;
+	}
+	int triggerBomb(List[] triggers, int bomb, boolean[] exploded) {
+		if (exploded[bomb]) {
+			return 0;
+		}
+		exploded[bomb] = true;
+		int chain = 1;
+		List<Integer> chainedBombs = triggers[bomb];
+		if (chainedBombs != null) {
+			for (int chainedBomb: chainedBombs) {	
+				chain += triggerBomb(triggers,chainedBomb,exploded);
+			}
+		}
+		return chain;
+	}
+}

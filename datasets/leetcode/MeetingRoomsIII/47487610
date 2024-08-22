@@ -1,0 +1,34 @@
+class Solution {
+	int mostBooked(int n, int[][] meetings) {
+		long[] endTimes = new long[n];
+		int[] meetingCount = new int[n];
+		Arrays.sort(meetings,(mt1, mt2) -> {Integer.compare(mt1[0],mt2[0])});
+		for (int[] meeting: meetings) {	
+			int minEndTimeIndx = 0;
+			boolean isAllocated = false;
+			for (int i = 0; i < n; i++) {
+				if (endTimes[i] < endTimes[minEndTimeIndx]) {
+					minEndTimeIndx = i;
+				}
+				if (endTimes[i] <= meeting[0]) {
+					endTimes[i] = meeting[1];
+					meetingCount[i]++;
+					isAllocated = true;
+					break;
+				}
+			}
+			if (!isAllocated) {
+				long delay = endTimes[minEndTimeIndx] - meeting[0];
+				endTimes[minEndTimeIndx] = delay + meeting[1];
+				meetingCount[minEndTimeIndx]++;
+			}
+		}
+		int maxIndx = 0;
+		for (int i = 1; i < n; i++) {
+			if (meetingCount[i] > meetingCount[maxIndx]) {
+				maxIndx = i;
+			}
+		}
+		return maxIndx;
+	}
+}

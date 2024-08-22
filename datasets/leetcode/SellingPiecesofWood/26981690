@@ -1,0 +1,31 @@
+class Solution {
+	Long[][] memo;
+	Integer[][] withoutCuts;
+	long cutToPieces(int m, int n) {
+		if (memo[m][n] != null) {
+			return memo[m][n];
+		}
+		if (m == 0 || n == 0) {
+			return memo[m][n] = 0l;
+		}
+		long max = 0;
+		if (withoutCuts[m][n] != null) {
+			max = withoutCuts[m][n];
+		}
+		for (int i = 1; i <= m / 2; i++) {
+			max = Math.max(max,cutToPieces(i,n) + cutToPieces(m - i,n));
+		}
+		for (int i = 1; i <= n / 2; i++) {
+			max = Math.max(max,cutToPieces(m,i) + cutToPieces(m,n - i));
+		}
+		return memo[m][n] = max;
+	}
+	long sellingWood(int m, int n, int[][] prices) {
+		memo = new Long[m + 1][n + 1];
+		withoutCuts = new Integer[m + 1][n + 1];
+		for (int[] price: prices) {	
+			withoutCuts[price[0]][price[1]] = price[2];
+		}
+		return cutToPieces(m,n);
+	}
+}

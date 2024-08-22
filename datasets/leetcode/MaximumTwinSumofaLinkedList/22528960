@@ -1,0 +1,30 @@
+class Solution {
+	int pairSum(ListNode head) {
+		ListNode fastRunner = head;
+		ListNode slowRunner = head;
+		while (fastRunner != null) {
+			slowRunner = slowRunner.next;
+			fastRunner = fastRunner.next.next;
+		}
+		ListNode newHead = new ListNode(-1);
+		newHead.next = slowRunner;
+		ListNode first = newHead;
+		ListNode middle = newHead.next;
+		ListNode last = newHead.next.next;
+		while (middle != null) {
+			middle.next = first;
+			first = middle;
+			middle = last;
+			if (last != null) {
+				last = last.next;
+			}
+		}
+		int ans = 0;
+		while (first.val != -1) {
+			ans = Math.max(ans,first.val + head.val);
+			first = first.next;
+			head = head.next;
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,42 @@
+class Solution {
+	int maxSatisfied(int[] customers, int[] grumpy, int minutes) {
+		int n = customers.length;
+		int totalCustomers = 0;
+		int maxGrumpySatisfied = 0;
+		int currentGrumpySatisfied = 0;
+		int start = 0, end = 0;
+		int left = 0, right = minutes - 1;
+		for (int i = 0; i <= right; i++) {
+			if (grumpy[i] == 1) {
+				currentGrumpySatisfied += customers[i];
+			}
+		}
+		if (currentGrumpySatisfied > maxGrumpySatisfied) {
+			start = left;
+			end = right;
+			maxGrumpySatisfied = currentGrumpySatisfied;
+		}
+		while (right < n - 1) {
+			if (grumpy[left] == 1) {
+				currentGrumpySatisfied -= customers[left];
+			}
+			left++;
+			right++;
+			if (grumpy[right] == 1) {
+				currentGrumpySatisfied += customers[right];
+			}
+			if (currentGrumpySatisfied > maxGrumpySatisfied) {
+				start = left;
+				end = right;
+				maxGrumpySatisfied = currentGrumpySatisfied;
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			if (grumpy[i] == 0) {
+				totalCustomers += customers[i];
+			}
+		}
+		totalCustomers += maxGrumpySatisfied;
+		return totalCustomers;
+	}
+}

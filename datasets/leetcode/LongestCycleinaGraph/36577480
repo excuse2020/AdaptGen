@@ -1,0 +1,26 @@
+class Solution {
+	int max = -1;
+	void dfs(int i, int[] edges, Map<Integer, Integer> map, boolean[] visited) {
+		if (visited[i]) {
+			return;
+		}
+		visited[i] = true;
+		int n = edges[i];
+		if (n != -1 && !visited[n]) {
+			map.put(n,map.get(i) + 1);
+			dfs(n,edges,map,visited);
+		} 
+		else if (map.containsKey(n)) {
+			max = Math.max(max,map.get(i) - map.get(n) + 1);
+		}
+	}
+	int longestCycle(int[] edges) {
+		boolean[] visited = new boolean[edges.length];
+		for (int i = 0; i < edges.length; i++) {
+			Map<Integer, Integer> map = new HashMap<>();
+			map.put(i,0);
+			dfs(i,edges,map,visited);
+		}
+		return max;
+	}
+}

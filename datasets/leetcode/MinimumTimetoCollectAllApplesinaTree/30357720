@@ -1,0 +1,35 @@
+class Solution {
+	int answer = 0;
+	boolean hasApples(List<List<Integer>> adjList, List<Boolean> hasApple, int source, int par) {
+		List<Integer> list = adjList.get(source);
+		if (list.size() == 0) {
+			return hasApple.get(source);
+		}
+		if (list.size() == 1 && list.get(0) == par) {
+			return hasApple.get(source);
+		}
+		boolean flag = false;
+		for (int i = 0; i < list.size(); ++i) {
+			if (list.get(i) == par) {
+				continue;
+			}
+			boolean edgeFlag = this.hasApples(adjList,hasApple,list.get(i),source);
+			flag |= edgeFlag;
+			answer += (edgeFlag) ? 2 : 0;
+		}
+		flag |= (hasApple.get(source));
+		return flag;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		List<List<Integer>> adjList = new ArrayList<List<Integer>>();
+		for (int i = 0; i < n; ++i) {
+			adjList.add(new ArrayList<Integer>());
+		}
+		for (int i = 0; i < edges.length; ++i) {
+			adjList.get(edges[i][0]).add(edges[i][1]);
+			adjList.get(edges[i][1]).add(edges[i][0]);
+		}
+		this.hasApples(adjList,hasApple,0,-1);
+		return this.answer;
+	}
+}

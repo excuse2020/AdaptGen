@@ -1,0 +1,32 @@
+class Solution {
+	int countCharacters(String[] words, String chars) {
+		int CHARS_LENGTH = chars.length(), goodSum = 0;
+		Hashtable<Character, Integer> maxChars = new Hashtable<>();
+		for (int i = 0; i < CHARS_LENGTH; i++) {
+			char character = chars.charAt(i);
+			Integer currVal = maxChars.putIfAbsent(character,1);
+			if (currVal != null) {
+				maxChars.put(character,currVal + 1);
+			}
+		}
+		for (String word: words) {	
+			if (word.length() > CHARS_LENGTH) {
+				continue;
+			}
+			boolean good = true;
+			Hashtable<Character, Integer> wordChars = new Hashtable<>();
+			for (int i = 0, n = word.length(); i < n && good; i++) {
+				char character = word.charAt(i);
+				Integer currVal = wordChars.putIfAbsent(character,1);
+				if (currVal != null) {
+					wordChars.put(character,currVal + 1);
+				}
+				good = maxChars.get(character) != null && wordChars.get(character) <= maxChars.get(character);
+			}
+			if (good) {
+				goodSum += word.length();
+			}
+		}
+		return goodSum;
+	}
+}

@@ -1,0 +1,51 @@
+class Solution {
+	HashMap<Integer, Integer> count;
+	HashMap<Long, Long> dp;
+	long helper(ArrayList<Integer> arr, long prev, int i) {
+		if (i == arr.size()) {
+			return 0;
+		}
+		if (!dp[i].containsKey(prev)) {
+			int curr = arr.get(i);
+			long max = -1;
+			if ((curr - prev) > 2) {
+				long g = ((long) count.get(curr) * curr);
+				if ((i + 1) < arr.size() && ((arr.get(i + 1) - curr) > 2)) {
+					max = Math.max(g + helper(arr,curr,i + 1),max);
+				} 
+				else {
+					max = Math.max(g + helper(arr,curr,i + 1),max);
+					max = Math.max(helper(arr,prev,i + 1),max);
+				}
+			} 
+			else {
+				max = Math.max(helper(arr,prev,i + 1),max);
+			}
+			dp[i].put(prev,max);
+		}
+		return dp[i].get(prev);
+	}
+	long maximumTotalDamage(int[] power) {
+		dp = new HashMap[power.length];
+		count = new HashMap<>();
+		for (int i = 0; i < power.length; i++) {
+			dp[i] = new HashMap<>();
+		}
+		Arrays.sort(power);
+		ArrayList<Integer> arr = new ArrayList<>();
+		for (int i = 0; i < power.length; i++) {
+			if (!count.containsKey(power[i])) {
+				count.put(power[i],1);
+				arr.add(power[i]);
+			} 
+			else {
+				count.put(power[i],count.get(power[i]) + 1);
+			}
+		}
+		long max = -1;
+		for (int i = 0; i < arr.size(); i++) {
+			max = Math.max(helper(arr,-4,i),max);
+		}
+		return max;
+	}
+}

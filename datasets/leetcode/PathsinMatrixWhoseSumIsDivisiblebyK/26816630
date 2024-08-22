@@ -1,0 +1,40 @@
+class Solution {
+	int numberOfPaths(int[][] grid, int k) {
+		int rows = grid.length, cols = grid[0].length, modu = 1_000_000_007;
+		int dp = new int[rows][cols][k];
+		dp[rows - 1][cols - 1][grid[rows - 1][cols - 1] % k] = 1;
+		for (int i = cols - 2; i >= 0; --i) {
+			for (int rem = 0; rem < k; ++rem) {
+				if (dp[rows - 1][i + 1][rem] > 0) {
+					int newrem = (rem + grid[rows - 1][i]) % k;
+					dp[rows - 1][i][newrem] += dp[rows - 1][i + 1][rem];
+					dp[rows - 1][i][newrem] %= modu;
+				}
+			}
+		}
+		for (int i = rows - 2; i >= 0; --i) {
+			for (int rem = 0; rem < k; ++rem) {
+				if (dp[i + 1][cols - 1][rem] > 0) {
+					int newrem = (rem + grid[i][cols - 1]) % k;
+					dp[i][cols - 1][newrem] += dp[i + 1][cols - 1][rem];
+					dp[i][cols - 1][newrem] %= modu;
+				}
+			}
+		}
+		for (int i = rows - 2; i >= 0; --i) {
+			for (int j = cols - 2; j >= 0; --j) {
+				for (int rem = 0; rem < k; ++rem) {
+					int newrem = (rem + grid[i][j]) % k;
+					if (dp[i][j + 1][rem] > 0) {
+						dp[i][j][newrem] += dp[i][j + 1][rem];
+					}
+					if (dp[i + 1][j][rem] > 0) {
+						dp[i][j][newrem] += dp[i + 1][j][rem];
+					}
+					dp[i][j][newrem] %= modu;
+				}
+			}
+		}
+		return dp[0][0][0];
+	}
+}

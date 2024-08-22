@@ -1,0 +1,24 @@
+class Solution {
+	boolean containsNearbyAlmostDuplicate(int[] nums, int indexDiff, int valueDiff) {
+		if (nums == null || nums.length == 0 || indexDiff <= 0) {
+			return false;
+		}
+		TreeSet<Long> set = new TreeSet<>();
+		int left = 0;
+		int right = 0;
+		while (right < nums.length) {
+			Long floor = set.floor((long) nums[right] + valueDiff);
+			Long ceiling = set.ceiling((long) nums[right] - valueDiff);
+			if ((floor != null && floor >= nums[right]) || (ceiling != null && ceiling <= nums[right])) {
+				return true;
+			}
+			set.add((long) nums[right]);
+			right++;
+			if (right - left > indexDiff) {
+				set.remove((long) nums[left]);
+				left++;
+			}
+		}
+		return false;
+	}
+}

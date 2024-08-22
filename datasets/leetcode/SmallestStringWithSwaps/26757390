@@ -1,0 +1,55 @@
+class Solution {
+	Map<Integer, List<Integer>> adjList;
+	Boolean vis;
+	void applyDFS(int src, char[] charArr, List<Integer> connectedIdx, List<Character> connectedChar) {
+		connectedIdx.add(src);
+		connectedChar.add(charArr[src]);
+		vis[src] = true;
+		if (!adjList.containsKey(src)) {
+			return;
+		}
+		for (Integer opts: adjList.get(src)) {	
+			if (!vis[opts]) {
+				applyDFS(opts,charArr,connectedIdx,connectedChar);
+			}
+		}
+	}
+	void generateLexMinStr(char[] charArr, List<Integer> connectedIdx, List<Character> connectedChar) {
+		Collections.sort(connectedIdx);
+		Collections.sort(connectedChar);
+		for (int i = 0; i < connectedChar.size(); i++) {
+			charArr[connectedIdx.get(i)] = connectedChar.get(i);
+		}
+	}
+	void makeGraph(List<List<Integer>> pairs) {
+		for (List<Integer> pair: pairs) {	
+			int u = pair.get(0);
+			int v = pair.get(1);
+			if (!adjList.containsKey(u)) {
+				adjList.put(u,new ArrayList<Integer>());
+			}
+			if (!adjList.containsKey(v)) {
+				adjList.put(v,new ArrayList<Integer>());
+			}
+			adjList.get(u).add(v);
+			adjList.get(v).add(u);
+		}
+	}
+	String smallestStringWithSwaps(String s, List<List<Integer>> pairs) {
+		int n = s.length();
+		adjList = new HashMap<>();
+		vis = new Boolean[n + 1];
+		Arrays.fill(vis,false);
+		char[] charArr = s.toCharArray();
+		makeGraph(pairs);
+		for (int i = 0; i < n; i++) {
+			if (!vis[i]) {
+				List<Integer> connectedIdx = new ArrayList<>();
+				List<Character> connectedChar = new ArrayList<>();
+				applyDFS(i,charArr,connectedIdx,connectedChar);
+				generateLexMinStr(charArr,connectedIdx,connectedChar);
+			}
+		}
+		return (new String(charArr));
+	}
+}

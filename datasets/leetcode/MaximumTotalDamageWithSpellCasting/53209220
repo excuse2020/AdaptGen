@@ -1,0 +1,35 @@
+class Solution {
+	Long[] cache;
+	int n;
+	long helper(int[] nums, Map<Integer, Long> freq, int index) {
+		if (index >= n) {
+			return 0;
+		}
+		if (cache[index] != null) {
+			return cache[index];
+		}
+		long notTake = helper(nums,freq,index + 1);
+		int i = index;
+		while (i < n && nums[i] <= nums[index] + 2) {
+			i++;
+		}
+		long take = helper(nums,freq,i) + nums[index] * freq.get(nums[index]);
+		cache[index] = Math.max(notTake,take);
+		return cache[index];
+	}
+	long maximumTotalDamage(int[] power) {
+		Map<Integer, Long> freq = new HashMap<>();
+		for (int num: power) {	
+			freq.put(num,freq.getOrDefault(num,0l) + 1);
+		}
+		n = freq.size();
+		int[] nums = new int[n];
+		int index = 0;
+		for (Map.Entry<Integer, Long> entry: freq.entrySet()) {	
+			nums[index++] = entry.getKey();
+		}
+		Arrays.sort(nums);
+		cache = new Long[n];
+		return helper(nums,freq,0);
+	}
+}

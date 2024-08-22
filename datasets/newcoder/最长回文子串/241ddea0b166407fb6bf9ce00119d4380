@@ -1,0 +1,37 @@
+class Solution {
+	int getLongestPalindrome(String A) {
+		int n = A.length();
+		int[] dp = new int[n];
+		Arrays.fill(dp,1);
+		int max = 1;
+		for (int i = 1; i < n; i++) {
+			if (i - dp[i - 1] >= 0 && A.charAt(i) == A.charAt(i - dp[i - 1])) {
+				dp[i] = Math.max(dp[i],dp[i - 1] + 2);
+			} 
+			else {
+				int j = i - dp[i - 1];
+				while (j < i) {
+					if (isPalindrome(A,j,i)) {
+						dp[i] = Math.max(dp[i],i - j + 1);
+						break;
+					}
+					j++;
+				}
+			}
+			max = Math.max(max,dp[i]);
+		}
+		return max;
+	}
+	boolean isPalindrome(String A, int i, int j) {
+		while (i < j) {
+			if (A.charAt(i) == A.charAt(j)) {
+				i++;
+				j--;
+			} 
+			else {
+				return false;
+			}
+		}
+		return true;
+	}
+}

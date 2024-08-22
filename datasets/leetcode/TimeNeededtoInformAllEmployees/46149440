@@ -1,0 +1,28 @@
+class Solution {
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		if (n == 0) {
+			return 0;
+		}
+		int maxTime = 0;
+		int[] totalTime = new int[n];
+		int rootTime = -1;
+		for (int i = 0; i < n; i++) {
+			totalTime[i] = -1;
+			if (manager[i] == -1) {
+				rootTime = informTime[i];
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			int currentChild = i;
+			int currentTime = 0;
+			while (manager[currentChild] != -1 && totalTime[currentChild] == -1) {
+				currentTime += informTime[currentChild];
+				currentChild = manager[currentChild];
+			}
+			currentTime += totalTime[currentChild] == -1 ? 0 : totalTime[currentChild];
+			totalTime[i] = currentTime;
+			maxTime = Math.max(maxTime,currentTime + rootTime);
+		}
+		return maxTime;
+	}
+}

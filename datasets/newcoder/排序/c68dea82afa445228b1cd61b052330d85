@@ -1,0 +1,39 @@
+class Solution {
+	int[] MySort(int[] arr) {
+		if (arr == null || arr.length < 2) {
+			return arr;
+		}
+		int[] aux = new int[arr.length];
+		for (int i = 0; i < arr.length; i++) {
+			aux[i] = arr[i];
+			swim(aux,i);
+		}
+		for (int i = 0; i < arr.length; i++) {
+			arr[i] = aux[0];
+			aux[0] = Integer.MAX_VALUE;
+			sink(aux,0);
+		}
+		return arr;
+	}
+	void exch(int[] ns, int p, int q) {
+		int temp = ns[p];
+		ns[p] = ns[q];
+		ns[q] = temp;
+	}
+	void sink(int[] aux, int i) {
+		while (i * 2 + 1 < aux.length) {
+			int mIndex = i * 2 + 1;
+			if (mIndex + 1 < aux.length && aux[mIndex + 1] < aux[mIndex]) {
+				mIndex++;
+			}
+			exch(aux,i,mIndex);
+			i = mIndex;
+		}
+	}
+	void swim(int[] aux, int i) {
+		while (i != 0 && aux[(i - 1) / 2] > aux[i]) {
+			exch(aux,(i - 1) / 2,i);
+			i = (i - 1) / 2;
+		}
+	}
+}

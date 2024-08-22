@@ -1,0 +1,25 @@
+class Solution {
+	int Mod = 1_000_000_007;
+	Long[][] memo;
+	int countOrders(int n) {
+		memo = new Long[n + 1][n + 1];
+		return (int) countOrders(n,n);
+	}
+	long countOrders(int toBePicked, int toBeDelivered) {
+		if (toBePicked == 0 && toBeDelivered == 0) {
+			return 1;
+		}
+		if (toBePicked < 0 || toBeDelivered < 0 || toBeDelivered < toBePicked) {
+			return 0;
+		}
+		if (memo[toBePicked][toBeDelivered] != null) {
+			return memo[toBePicked][toBeDelivered];
+		}
+		long ans = 0;
+		ans += toBePicked * countOrders(toBePicked - 1,toBeDelivered);
+		ans %= Mod;
+		ans += (toBeDelivered - toBePicked) * countOrders(toBePicked,toBeDelivered - 1);
+		ans %= Mod;
+		return memo[toBePicked][toBeDelivered] = ans;
+	}
+}

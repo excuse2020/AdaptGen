@@ -1,0 +1,60 @@
+class Solution {
+	TreeNode reConstructBinaryTree(int[] pre, int[] in) {
+		if (pre == null || in == null || pre.length == 0 || in.length == 0) {
+			return null;
+		}
+		TreeNode[] nodeArray = new TreeNode[pre.length];
+		int[][] idxLeftTreeIn = new int[in.length][2];
+		int[][] idxRightTreeIn = new int[in.length][2];
+		int curNodeValue0 = pre[0];
+		TreeNode curNode0 = new TreeNode(curNodeValue0);
+		nodeArray[0] = curNode0;
+		int idxRootIn0 = 0;
+		for (idxRootIn0 = 0; idxRootIn0 < in.length; ++idxRootIn0) {
+			if (in[idxRootIn0] == curNodeValue0) {
+				break;
+			}
+		}
+		idxLeftTreeIn[0][0] = 0;
+		idxLeftTreeIn[0][1] = idxRootIn0;
+		idxRightTreeIn[0][0] = idxRootIn0 + 1;
+		idxRightTreeIn[0][1] = in.length;
+		for (int idxPre = 1; idxPre < pre.length; ++idxPre) {
+			int curNodeValue = pre[idxPre];
+			TreeNode curNode = new TreeNode(curNodeValue);
+			nodeArray[idxPre] = curNode;
+			int idxRootIn = 0;
+			for (idxRootIn = 0; idxRootIn < in.length; ++idxRootIn) {
+				if (in[idxRootIn] == curNodeValue) {
+					break;
+				}
+			}
+			int idxChildTreeLeftIn = 0, idxChildTreeRightIn = 0;
+			for (int idxIn = (idxPre - 1); idxIn >= 0; --idxIn) {
+				if (idxLeftTreeIn[idxIn][0] <= idxRootIn && idxRootIn < idxLeftTreeIn[idxIn][1]) {
+					nodeArray[idxIn].left = curNode;
+					idxChildTreeLeftIn = idxLeftTreeIn[idxIn][0];
+					idxChildTreeRightIn = idxLeftTreeIn[idxIn][1];
+					break;
+				} 
+				else if (idxRightTreeIn[idxIn][0] <= idxRootIn && idxRootIn < idxRightTreeIn[idxIn][1]) {
+					nodeArray[idxIn].right = curNode;
+					idxChildTreeLeftIn = idxRightTreeIn[idxIn][0];
+					idxChildTreeRightIn = idxRightTreeIn[idxIn][1];
+					break;
+				}
+			}
+			idxLeftTreeIn[idxPre][0] = idxChildTreeLeftIn;
+			idxLeftTreeIn[idxPre][1] = idxRootIn;
+			if (idxLeftTreeIn[idxPre][0] == idxLeftTreeIn[idxPre][1]) {
+				curNode.left = null;
+			}
+			idxRightTreeIn[idxPre][0] = idxRootIn + 1;
+			idxRightTreeIn[idxPre][1] = idxChildTreeRightIn;
+			if (idxRightTreeIn[idxPre][0] == idxRightTreeIn[idxPre][1]) {
+				curNode.right = null;
+			}
+		}
+		return nodeArray[0];
+	}
+}

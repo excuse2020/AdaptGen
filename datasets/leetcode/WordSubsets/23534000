@@ -1,0 +1,56 @@
+class Solution {
+	List<String> wordSubsets(String[] words1, String[] words2) {
+		List<String> ans = new ArrayList<>();
+		int n = words2.length;
+		HashMap<Character, Integer> hm2 = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			HashMap<Character, Integer> hm = new HashMap<>();
+			for (int j = 0; j < words2[i].length(); j++) {
+				char a = words2[i].charAt(j);
+				if (hm.containsKey(a)) {
+					hm.put(a,hm.get(a) + 1);
+				} 
+				else {
+					hm.put(a,1);
+				}
+			}
+			for (Character k: hm.keySet()) {	
+				if (hm2.containsKey(k)) {
+					int max = Math.max(hm.get(k),hm2.get(k));
+					hm2.put(k,max);
+				} 
+				else {
+					hm2.put(k,hm.get(k));
+				}
+			}
+		}
+		int l = words1.length;
+		for (int i = 0; i < l; i++) {
+			HashMap<Character, Integer> hm1 = new HashMap<>();
+			for (int j = 0; j < words1[i].length(); j++) {
+				char a = words1[i].charAt(j);
+				if (hm1.containsKey(a)) {
+					hm1.put(a,hm1.get(a) + 1);
+				} 
+				else {
+					hm1.put(a,1);
+				}
+			}
+			int flag = 0;
+			for (Character k: hm2.keySet()) {	
+				if (!hm1.containsKey(k)) {
+					flag = 1;
+					break;
+				} 
+				else if (hm1.get(k) < hm2.get(k)) {
+					flag = 1;
+					break;
+				}
+			}
+			if (flag == 0) {
+				ans.add(words1[i]);
+			}
+		}
+		return ans;
+	}
+}

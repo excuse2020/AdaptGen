@@ -1,0 +1,51 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		head1 = reverList(head1);
+		head2 = reverList(head2);
+		ListNode dummy = new ListNode(-1);
+		int carryBit = 0;
+		ListNode cur = dummy;
+		while (head1 != null || head2 != null) {
+			int x;
+			if (head1 == null) {
+				x = 0;
+			} 
+			else {
+				x = head1.val;
+			}
+			int y;
+			if (head2 == null) {
+				y = 0;
+			} 
+			else {
+				y = head2.val;
+			}
+			int sum = x + y;
+			carryBit = sum / 10;
+			int digit = sum % 10;
+			ListNode digitNode = new ListNode(digit);
+			cur.next = digitNode;
+			cur = cur.next;
+			if (head1 != null) {
+				head1 = head1.next;
+			}
+			if (head2 != null) {
+				head2 = head2.next;
+			}
+		}
+		if (carryBit == 1) {
+			ListNode carryBitNode = new ListNode(1);
+			cur.next = carryBitNode;
+		}
+		return reverList(dummy.next);
+	}
+	ListNode reverList(ListNode node) {
+		if (node != null && node.next == null) {
+			return node;
+		}
+		ListNode newhead = reverList(node.next);
+		node.next.next = node;
+		node.next = null;
+		return newhead;
+	}
+}

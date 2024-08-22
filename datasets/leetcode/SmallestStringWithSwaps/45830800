@@ -1,0 +1,61 @@
+class Solution {
+	StringBuilder res = new StringBuilder();
+	void bfs(int i, String s, Map<Integer, List<Integer>> m, int vis) {
+		Queue<Integer> q = new LinkedList<>();
+		q.add(i);
+		vis[i] = 1;
+		List<Integer> in = new ArrayList<>();
+		List<Character> c = new ArrayList<>();
+		int t = 0;
+		while (!q.isEmpty()) {
+			t = q.poll();
+			in.add(t);
+			c.add(s.charAt(t));
+			if (m.containsKey(t)) {
+				for (int j: m.get(t)) {	
+					if (vis[j] == 0) {
+						vis[j] = 1;
+						q.add(j);
+					}
+				}
+			}
+		}
+		Collections.sort(in);
+		Collections.sort(c);
+		for (int j = 0; j < in.size(); j++) {
+			res.setCharAt(in.get(j),c.get(j));
+		}
+	}
+	String smallestStringWithSwaps(String s, List<List<Integer>> pairs) {
+		for (int i = 0; i < s.length(); i++) {
+			res.append(".");
+		}
+		Map<Integer, List<Integer>> m = new HashMap<>();
+		List<Integer> t = new ArrayList<>();
+		for (List<Integer> l: pairs) {	
+			if (m.containsKey(l.get(0))) {
+				t = m.get(l.get(0));
+			} 
+			else {
+				t.clear();
+			}
+			t.add(l.get(1));
+			m.put(l.get(0),new ArrayList<>(t));
+			if (m.containsKey(l.get(1))) {
+				t = m.get(l.get(1));
+			} 
+			else {
+				t.clear();
+			}
+			t.add(l.get(0));
+			m.put(l.get(1),new ArrayList<>(t));
+		}
+		int vis = new int[s.length()];
+		for (int i = 0; i < s.length(); i++) {
+			if (vis[i] == 0) {
+				bfs(i,s,m,vis);
+			}
+		}
+		return res.toString();
+	}
+}

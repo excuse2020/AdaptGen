@@ -1,0 +1,47 @@
+class Solution {
+	TreeNode replaceValueInTree(TreeNode root) {
+		Queue<TreeNode> q = new ArrayDeque<>();
+		q.offer(root);
+		ArrayList<TreeNode> p = new ArrayList<>();
+		while (q.size() > 0) {
+			int l = q.size();
+			TreeNode[] pp = new TreeNode[l];
+			for (int i = 0; i < l; i++) {
+				TreeNode x = q.poll();
+				pp[i] = x;
+				if (x.left != null) {
+					q.offer(x.left);
+				}
+				if (x.right != null) {
+					q.offer(x.right);
+				}
+			}
+			int s = 0;
+			for (int i = 0; i < pp.length; i++) {
+				if (pp[i].left != null) {
+					s += pp[i].left.val;
+				}
+				if (pp[i].right != null) {
+					s += pp[i].right.val;
+				}
+			}
+			for (int i = 0; i < pp.length; i++) {
+				int k = s;
+				if (pp[i].left != null) {
+					k -= pp[i].left.val;
+				}
+				if (pp[i].right != null) {
+					k -= pp[i].right.val;
+				}
+				if (pp[i].left != null) {
+					pp[i].left.val = k;
+				}
+				if (pp[i].right != null) {
+					pp[i].right.val = k;
+				}
+			}
+		}
+		root.val = 0;
+		return root;
+	}
+}

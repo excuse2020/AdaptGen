@@ -1,0 +1,20 @@
+class Solution {
+	int minimumDifference(int[] nums, int k) {
+		int n = nums.length;
+		List<Set<Integer>> sets = new ArrayList<>(n);
+		sets.add(Set.of(nums[0]));
+		for (int i = 1; i < n; i++) {
+			int finalI = i;
+			Set<Integer> set = sets.get(i - 1).stream().map((v) -> {v & nums[finalI]}).collect(Collectors.toSet());
+			set.add(nums[finalI]);
+			sets.add(set);
+		}
+		int min = 0x7fffffff;
+		for (Set<Integer> set: sets) {	
+			for (int i: set) {	
+				min = Math.min(min,Math.abs(k - i));
+			}
+		}
+		return min;
+	}
+}

@@ -1,0 +1,36 @@
+class Solution {
+	boolean checkForBipartrate(ArrayList<Integer>[] graph, Integer[] visited, int i, int color) {
+		if (visited[i] != null) {
+			if (visited[i] != color) {
+				return false;
+			}
+			return true;
+		}
+		visited[i] = color;
+		for (Integer v: graph[i]) {	
+			if (!checkForBipartrate(graph,visited,v,color == 0 ? 1 : 0)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		ArrayList<Integer>[] graph = new ArrayList[n + 1];
+		for (int i = 0; i < n + 1; i++) {
+			graph[i] = new ArrayList();
+		}
+		for (int[] arr: dislikes) {	
+			graph[arr[0]].add(arr[1]);
+			graph[arr[1]].add(arr[0]);
+		}
+		Integer[] visited = new Integer[n + 1];
+		for (int i = 1; i <= n; i++) {
+			if (visited[i] == null) {
+				if (!checkForBipartrate(graph,visited,i,0)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

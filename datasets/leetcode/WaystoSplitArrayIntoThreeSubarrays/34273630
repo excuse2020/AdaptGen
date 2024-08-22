@@ -1,0 +1,30 @@
+class Solution {
+	int waysToSplit(int[] nums) {
+		int total = 0, n = nums.length;
+		for (int num: nums) {	
+			total += num;
+		}
+		if (n <= 2) {
+			return 0;
+		}
+		int modulo = (int) 1e9 + 7;
+		int ways = 0;
+		int leftSum = 0, mid = nums[0], rightSum = nums[0] + nums[1];
+		int i = 0, j = 1, k = 2;
+		while (i < n) {
+			leftSum += nums[i++];
+			while (j < n && (mid < (leftSum << 1) || j == i)) {
+				mid += nums[j++];
+			}
+			if (j == n || 3 * mid > 2 * total) {
+				break;
+			}
+			while (k < n && total - rightSum >= rightSum - leftSum) {
+				rightSum += nums[k++];
+			}
+			ways += k - j;
+			ways %= modulo;
+		}
+		return ways;
+	}
+}

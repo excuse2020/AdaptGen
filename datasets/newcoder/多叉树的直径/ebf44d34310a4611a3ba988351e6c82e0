@@ -1,0 +1,30 @@
+class Solution {
+	int compute(int[][] graph, int index, boolean[] to) {
+		int max = 0;
+		to[index] = true;
+		int temp = 0;
+		for (int i = 0; i < graph.length; ++i) {
+			if (graph[index][i] != 0) {
+				if (!to[i]) {
+					to[i] = true;
+					temp = compute(graph,i,to) + graph[index][i];
+					max = max > temp ? max : temp;
+				}
+			}
+		}
+		return max;
+	}
+	int solve(int n, Interval[] Tree_edge, int[] Edge_value) {
+		int[][] graph = new int[n][n];
+		for (int i = 0; i < Tree_edge.length; ++i) {
+			graph[Tree_edge[i].start][Tree_edge[i].end] = Edge_value[i];
+			graph[Tree_edge[i].end][Tree_edge[i].start] = Edge_value[i];
+		}
+		int maxVal = 0;
+		for (int i = 0; i < n; ++i) {
+			int temp = compute(graph,i,new boolean[n]);
+			maxVal = maxVal > temp ? maxVal : temp;
+		}
+		return maxVal;
+	}
+}

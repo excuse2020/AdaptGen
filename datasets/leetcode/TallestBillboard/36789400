@@ -1,0 +1,25 @@
+class Solution {
+	int longboard(int[] rods, int idx, int diff, int[][] dp) {
+		if (dp[idx][diff + 5000] != -1) {
+			return dp[idx][diff + 5000];
+		}
+		if (idx >= rods.length) {
+			if (diff == 0) {
+				return 0;
+			}
+			return Integer.MIN_VALUE;
+		}
+		int lb = rods[idx] + longboard(rods,idx + 1,diff + rods[idx],dp);
+		int rb = rods[idx] + longboard(rods,idx + 1,diff - rods[idx],dp);
+		int no = longboard(rods,idx + 1,diff,dp);
+		return dp[idx][diff + 5000] = Math.max(lb,Math.max(rb,no));
+	}
+	int tallestBillboard(int[] rods) {
+		int[][] dp = new int[21][10001];
+		for (int[] t: dp) {	
+			Arrays.fill(t,-1);
+		}
+		int ans = longboard(rods,0,0,dp);
+		return ans / 2;
+	}
+}

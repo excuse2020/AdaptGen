@@ -1,0 +1,45 @@
+class Solution {
+	HashMap<String, Integer> memo;
+	int backtrack(int[] piles, int pointer, int chance) {
+		if (pointer >= piles.length) {
+			return 0;
+		}
+		String key = chance + "-";
+		if (memo.containsKey(key)) {
+			return memo.get(key);
+		}
+		int res = chance == 0 ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+		for (int i = 0; i < 3; i++) {
+			int calSum = 0;
+			for (int z = pointer; z <= pointer + i; z++) {
+				if (z >= piles.length) {
+					break;
+				}
+				calSum += piles[z];
+			}
+			if (chance == 0) {
+				res = Math.max(res,calSum + backtrack(piles,pointer + i,1));
+			} 
+			else {
+				res = Math.min(res,backtrack(piles,pointer + i,0));
+			}
+		}
+		memo.put(key,res);
+		return res;
+	}
+	String stoneGameIII(int[] piles) {
+		memo = new HashMap<>();
+		int totalSum = 0;
+		for (int i: piles) {	
+			totalSum += i;
+		}
+		int temp = backtrack(piles,0,0);
+		if (totalSum - temp > temp) {
+			return "Bob";
+		} 
+		else if (totalSum - temp < temp) {
+			return "Alice";
+		}
+		return "Tie";
+	}
+}

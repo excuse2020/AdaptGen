@@ -1,0 +1,31 @@
+class Solution {
+	int calculateXth(int[] countArr, int x) {
+		int ct = 0;
+		for (int i = 0; i < countArr.length && ct < x; i++) {
+			int count = countArr[i];
+			int num = i - 50;
+			if (count > 0 && num < 0) {
+				ct += count;
+			}
+			if (ct >= x) {
+				return num;
+			}
+		}
+		return 0;
+	}
+	int[] getSubarrayBeauty(int[] nums, int k, int x) {
+		int[] countArr = new int[101];
+		int[] result = new int[nums.length - k + 1];
+		for (int i = 0; i < k; i++) {
+			countArr[nums[i] + 50]++;
+		}
+		for (int start = 0, end = start + k - 1; end < nums.length; start++, end++) {
+			result[start] = calculateXth(countArr,x);
+			if (end + 1 < nums.length) {
+				countArr[nums[start] + 50]--;
+				countArr[nums[end + 1] + 50]++;
+			}
+		}
+		return result;
+	}
+}

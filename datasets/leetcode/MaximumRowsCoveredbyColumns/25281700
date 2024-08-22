@@ -1,0 +1,46 @@
+class Solution {
+	int m, n, res, arr, cols, mat;
+	void check() {
+		int count = 0, i, j;
+		boolean flag;
+		HashSet<Integer> colsSelected = new HashSet<Integer>();
+		for (int col: arr) {	
+			colsSelected.add(col);
+		}
+		for (i = 0; i < m; i++) {
+			flag = true;
+			for (j = 0; j < n; j++) {
+				if (mat[i][j] == 1 && !colsSelected.contains(j)) {
+					flag = false;
+					break;
+				}
+			}
+			if (flag) {
+				count++;
+			}
+		}
+		res = Math.max(res,count);
+	}
+	int maximumRows(int[][] mat, int cols) {
+		m = mat.length;
+		n = mat[0].length;
+		this.cols = cols;
+		arr = new int[cols];
+		this.mat = mat;
+		recurse(-1,-1);
+		return res;
+	}
+	void recurse(int i, int donetill) {
+		i++;
+		donetill++;
+		if (i == cols) {
+			check();
+		} 
+		else {
+			for (int j = donetill; j < n; j++) {
+				arr[i] = j;
+				recurse(i,j);
+			}
+		}
+	}
+}

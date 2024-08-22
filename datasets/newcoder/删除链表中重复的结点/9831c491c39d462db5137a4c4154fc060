@@ -1,0 +1,45 @@
+class Solution {
+	ListNode deleteDuplication(ListNode pHead) {
+		ListNode p1, p2, head = pHead;
+		p2 = pHead;
+		Set<Integer> we = new HashSet<>();
+		if (pHead == null) {
+			return null;
+		}
+		if (pHead.next == null) {
+			return pHead;
+		}
+		while (p2 != null) {
+			if (p2.next != null) {
+				if (p2.next.val == p2.val) {
+					we.add(p2.val);
+				}
+			}
+			p2 = p2.next;
+		}
+		p2 = null;
+		p1 = head.next;
+		if (head.next.next != null) {
+			p2 = head.next.next;
+		}
+		while (p2 != null && p1 != null) {
+			if (we.contains(p1.val)) {
+				head.next = p2;
+				p1 = p2;
+				p2 = p2.next;
+			} 
+			else {
+				head = p1;
+				p1 = p2;
+				p2 = p2.next;
+			}
+		}
+		if (we.contains(p1.val)) {
+			head.next = null;
+		}
+		if (we.contains(pHead.val)) {
+			pHead = pHead.next;
+		}
+		return pHead;
+	}
+}

@@ -1,0 +1,35 @@
+class Solution {
+	Integer memo;
+	int cherryPickup(int[][] grid) {
+		int rows = grid.length;
+		int cols = grid[0].length;
+		memo = new Integer[rows + 1][cols + 1][cols + 1];
+		return solve(grid,0,0,cols - 1);
+	}
+	int solve(int[][] grid, int i, int robot1j, int robot2j) {
+		if (robot1j < 0 || robot2j < 0 || robot1j >= grid[0].length || robot2j >= grid[0].length) {
+			return 0;
+		}
+		if (i == grid.length) {
+			return 0;
+		}
+		if (memo[i][robot1j][robot2j] != null) {
+			return memo[i][robot1j][robot2j];
+		}
+		int result = 0;
+		result += grid[i][robot1j];
+		if (robot1j != robot2j) {
+			result += grid[i][robot2j];
+		}
+		int max = 0;
+		for (int x = robot1j - 1; x <= robot1j + 1; x++) {
+			for (int y = robot2j - 1; y <= robot2j + 1; y++) {
+				if (x < y) {
+					max = Math.max(max,solve(grid,i + 1,x,y));
+				}
+			}
+		}
+		result += max;
+		return memo[i][robot1j][robot2j] = result;
+	}
+}

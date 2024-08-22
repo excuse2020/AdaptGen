@@ -1,0 +1,43 @@
+class Solution {
+	int ans = 0;
+	long mod = 1000000007;
+	int InversePairs(int[] arr) {
+		if (arr.length < 2) {
+			return 0;
+		}
+		merageSort(arr,0,arr.length - 1);
+		return ans;
+	}
+	void merageHelper(int[] arr, int l, int mid, int r) {
+		int[] temp = new int[r - l + 1];
+		int begin = 0, left = l, right = mid + 1;
+		while (left <= mid && right <= r) {
+			if (arr[left] < arr[right]) {
+				temp[begin++] = arr[left++];
+			} 
+			else {
+				temp[begin++] = arr[right++];
+				ans += mid + 1 - left;
+				ans %= mod;
+			}
+		}
+		while (left <= mid) {
+			temp[begin++] = arr[left++];
+		}
+		while (right <= r) {
+			temp[begin++] = arr[right++];
+		}
+		for (int i = l; i <= r; i++) {
+			arr[i] = temp[i - l];
+		}
+	}
+	void merageSort(int[] arr, int l, int r) {
+		int mid = l + ((r - l) >> 1);
+		if (r - l < 1) {
+			return;
+		}
+		merageSort(arr,l,mid);
+		merageSort(arr,mid + 1,r);
+		merageHelper(arr,l,mid,r);
+	}
+}

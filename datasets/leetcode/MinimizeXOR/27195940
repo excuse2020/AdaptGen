@@ -1,0 +1,26 @@
+class Solution {
+	int minimizeXor(int num1, int num2) {
+		int numBit1 = Integer.bitCount(num1), numBit2 = Integer.bitCount(num2);
+		if (numBit1 == numBit2) {
+			return num1;
+		}
+		int r = num1;
+		byte xSize = (byte) Math.max((int) (Math.log(num1) / Math.log(2)),(int) (Math.log(num2) / Math.log(2)));
+		byte i = 0;
+		while (i <= xSize && numBit1 != numBit2) {
+			int curBit = 1 << i++, bitExtant = curBit & num1;
+			boolean twoIsLarger = (numBit2 > numBit1), beZero = (bitExtant == 0);
+			if (twoIsLarger ^ beZero) {
+				continue;
+			}
+			if (beZero) {
+				r ^= curBit;
+				numBit1++;
+				continue;
+			}
+			r ^= curBit;
+			numBit1--;
+		}
+		return r;
+	}
+}

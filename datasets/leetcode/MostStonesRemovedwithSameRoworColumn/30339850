@@ -1,0 +1,35 @@
+class Solution {
+	int dfs(Map<Integer, List<int[]>> rowStones, Map<Integer, List<int[]>> colStones, int[] stone, Set<Pair<Integer, Integer>> visited) {
+		Pair<Integer, Integer> pair = new Pair<>(stone[0], stone[1]);
+		if (!visited.add(pair)) {
+			return 0;
+		}
+		if (rowStones.containsKey(stone[0])) {
+			for (int[] neighbour: rowStones.get(stone[0])) {	
+				dfs(rowStones,colStones,neighbour,visited);
+			}
+		}
+		if (colStones.containsKey(stone[1])) {
+			for (int[] neighbour: colStones.get(stone[1])) {	
+				dfs(rowStones,colStones,neighbour,visited);
+			}
+		}
+		return 1;
+	}
+	int removeStones(int[][] stones) {
+		Map<Integer, List<int[]>> rowStones = new HashMap<>();
+		Map<Integer, List<int[]>> colStones = new HashMap<>();
+		for (int[] stone: stones) {	
+			rowStones.putIfAbsent(stone[0],new ArrayList<>());
+			colStones.putIfAbsent(stone[1],new ArrayList<>());
+			rowStones.get(stone[0]).add(stone);
+			colStones.get(stone[1]).add(stone);
+		}
+		int count = 0;
+		Set<Pair<Integer, Integer>> visited = new HashSet<>();
+		for (int[] stone: stones) {	
+			count += dfs(rowStones,colStones,stone,visited);
+		}
+		return stones.length - count;
+	}
+}

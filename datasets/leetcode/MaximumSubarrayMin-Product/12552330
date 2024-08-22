@@ -1,0 +1,59 @@
+class Solution {
+	int maxSumMinProduct(int[] arr) {
+		int n = arr.length;
+		Long ans = 0L;
+		Stack<Integer> s = new Stack<>();
+		List<Integer> nslIndex = new ArrayList<>();
+		List<Integer> nsrIndex = new ArrayList<>();
+		long[] curr = new long[n + 1];
+		for (int i = 1; i <= n; i++) {
+			curr[i] = curr[i - 1] + arr[i - 1];
+		}
+		for (int i = 0; i < n; i++) {
+			if (s.isEmpty()) {
+				nslIndex.add(-1);
+			} 
+			else if (arr[s.peek()] < arr[i]) {
+				nslIndex.add(s.peek());
+			} 
+			else {
+				while (!s.isEmpty() && arr[s.peek()] >= arr[i]) {
+					s.pop();
+				}
+				if (s.isEmpty()) {
+					nslIndex.add(-1);
+				} 
+				else {
+					nslIndex.add(s.peek());
+				}
+			}
+			s.push(i);
+		}
+		s.clear();
+		for (int i = n - 1; i >= 0; i--) {
+			if (s.isEmpty()) {
+				nsrIndex.add(n);
+			} 
+			else if (arr[s.peek()] < arr[i]) {
+				nsrIndex.add(s.peek());
+			} 
+			else {
+				while (!s.isEmpty() && arr[s.peek()] >= arr[i]) {
+					s.pop();
+				}
+				if (s.isEmpty()) {
+					nsrIndex.add(n);
+				} 
+				else {
+					nsrIndex.add(s.peek());
+				}
+			}
+			s.push(i);
+		}
+		for (int i = 0; i < n; i++) {
+			long sum = curr[nsrIndex.get(i)] - curr[nslIndex.get(i) + 1];
+			ans = Math.max(ans,(long) arr[i] * sum);
+		}
+		return (int) (ans % 1000000007);
+	}
+}

@@ -1,0 +1,43 @@
+class Solution {
+	ListNode merge(ListNode left, ListNode right) {
+		ListNode dummyHead = new ListNode(-1);
+		ListNode cur = dummyHead;
+		if (left == null) {
+			return right;
+		}
+		if (right == null) {
+			return left;
+		}
+		while (left != null && right != null) {
+			if (left.val < right.val) {
+				cur.next = left;
+				left = left.next;
+			} 
+			else {
+				cur.next = right;
+				right = right.next;
+			}
+			cur = cur.next;
+		}
+		cur.next = left == null ? right : left;
+		return dummyHead.next;
+	}
+	ListNode mergeKLists(ArrayList<ListNode> lists) {
+		if (lists.size() == 0) {
+			return null;
+		}
+		if (lists.size() == 1) {
+			return lists.get(0);
+		}
+		return sortSection(lists,0,lists.size() - 1);
+	}
+	ListNode sortSection(ArrayList<ListNode> lists, int start, int end) {
+		if (start == end) {
+			return lists.get(start);
+		}
+		int mid = (end - start) / 2 + start;
+		ListNode left = sortSection(lists,start,mid);
+		ListNode right = sortSection(lists,mid + 1,end);
+		return merge(left,right);
+	}
+}

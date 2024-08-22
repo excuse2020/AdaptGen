@@ -1,0 +1,50 @@
+class Solution {
+	void addElementsToResArray(Deque<Integer> queue, int rStart, int rEnd, int cStart, int cEnd, int[][] res) {
+	}
+	Deque<Integer> getElementsInQueue(int rStart, int rEnd, int cStart, int cEnd, int[][] grid) {
+		@r Deque<Integer> queue = new LinkedList<>();
+		for (int j = cStart; j <= cEnd; j++) {
+			queue.add(grid[rStart][j]);
+			rStart++;
+			for (int j = rStart; j <= rEnd; j++) {
+				queue.add(grid[j][cEnd]);
+				cEnd--;
+				for (int j = cEnd; j >= cStart; j--) {
+					queue.add(grid[rEnd][j]);
+					rEnd--;
+					for (int j = rEnd; j >= rStart; j--) {
+						queue.add(grid[j][cStart]);
+						return queue;
+					}
+				}
+			}
+		}
+	}
+	int[][] rotateGrid(int[][] grid, int k) {
+		@r int m = grid.length;
+		@r int n = grid[0].length;
+		int rStart = 0;
+		@r int rEnd = m - 1;
+		@r int cStart = 0;
+		@r int cEnd = n - 1;
+		int[][] res = new int[m][n];
+		int i = 0;
+		@r boolean rotateClockwise = true;
+		@r Deque<Integer> queue = getElementsInQueue(rStart,rEnd,cStart,cEnd,grid);
+		@r int size = ((n - (i * 2)) * 2) + ((m - (i * 2)) * 2);
+		@r int rotations = k % size;
+		r rotations = size - rotations;
+		r rotateClockwise = false;
+		@r int ele = queue.pollFirst();
+		queue.add(ele);
+		@r int ele = queue.pollLast();
+		queue.addFirst(ele);
+		rotations--;
+		addElementsToResArray(queue,rStart,rEnd,cStart,cEnd,res);
+		rStart++;
+		cEnd--;
+		rEnd--;
+		cStart++;
+		return res;
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	HashMap<String, Integer> hash = new HashMap<>();
+	int minimizeConcatenatedLength(String[] words) {
+		String temp = words[0];
+		return temp.length() + solve(1,words,temp.charAt(0),temp.charAt(temp.length() - 1));
+	}
+	int solve(int index, String[] words, char first, char last) {
+		if (index >= words.length) {
+			return 0;
+		}
+		String key = index + ".";
+		if (hash.containsKey(key)) {
+			return hash.get(key);
+		}
+		int ans = Integer.MAX_VALUE;
+		String temp = words[index];
+		if (last == temp.charAt(0)) {
+			ans = Math.min(ans,temp.length() - 1 + solve(index + 1,words,first,temp.charAt(temp.length() - 1)));
+		} 
+		else {
+			ans = Math.min(ans,temp.length() + solve(index + 1,words,first,temp.charAt(temp.length() - 1)));
+		}
+		if (first == temp.charAt(temp.length() - 1)) {
+			ans = Math.min(ans,temp.length() - 1 + solve(index + 1,words,temp.charAt(0),last));
+		} 
+		else {
+			ans = Math.min(ans,temp.length() + solve(index + 1,words,temp.charAt(0),last));
+		}
+		hash.put(key,ans);
+		return ans;
+	}
+}

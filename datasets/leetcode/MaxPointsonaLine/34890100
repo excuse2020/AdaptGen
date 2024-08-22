@@ -1,0 +1,30 @@
+class Solution {
+	int maxPoints(int[][] points) {
+		int count = 0;
+		for (int i = 0; i < points.length - 1; i++) {
+			Map<Double, Integer> dict = new HashMap<>();
+			for (int j = i + 1; j < points.length; j++) {
+				double slope;
+				double numerator = (points[j][1] - points[i][1]);
+				double denominator = (points[j][0] - points[i][0]);
+				if (denominator == 0.0) {
+					slope = Integer.MAX_VALUE;
+				} 
+				else {
+					slope = (numerator == 0.0) ? 0.0 : numerator / denominator;
+				}
+				if (dict.containsKey(slope)) {
+					dict.put(slope,dict.get(slope) + 1);
+				} 
+				else {
+					dict.put(slope,1);
+				}
+			}
+			for (Map.Entry<Double, Integer> entry: dict.entrySet()) {	
+				int val = entry.getValue() + 1;
+				count = (count < val) ? val : count;
+			}
+		}
+		return (count < 1) ? 1 : count;
+	}
+}

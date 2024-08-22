@@ -1,0 +1,47 @@
+class Solution {
+	boolean isAllTree(TreeNode root) {
+		if (root == null) {
+			return true;
+		}
+		Queue<TreeNode> q = new LinkedList<>();
+		q.offer(root);
+		boolean flag = false;
+		while (!q.isEmpty()) {
+			int sz = q.size();
+			for (int i = 0; i < sz; i++) {
+				TreeNode node = q.poll();
+				if (node.left == null && node.right != null) {
+					return false;
+				}
+				if (flag && (node.left != null || node.right != null)) {
+					return false;
+				}
+				if (node.left == null || node.right == null) {
+					flag = true;
+				}
+				if (node.left != null) {
+					q.add(node.left);
+				}
+				if (node.right != null) {
+					q.add(node.right);
+				}
+			}
+		}
+		return true;
+	}
+	boolean isSearchTree(TreeNode root, int left, int right) {
+		if (root == null) {
+			return true;
+		}
+		if (root.val <= left || root.val >= right) {
+			return false;
+		}
+		return isSearchTree(root.left,left,root.val) && isSearchTree(root.right,root.val,right);
+	}
+	boolean[] judgeIt(TreeNode root) {
+		boolean[] res = new boolean[2];
+		res[0] = isSearchTree(root,Integer.MIN_VALUE,Integer.MAX_VALUE);
+		res[1] = isAllTree(root);
+		return res;
+	}
+}

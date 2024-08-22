@@ -1,0 +1,46 @@
+class Solution {
+	long matrixSumQueries(int n, int[][] q) {
+		HashSet<Integer> rs = new HashSet<>();
+		HashSet<Integer> cs = new HashSet<>();
+		long s = 0;
+		int nc = n, nr = n;
+		for (int i = q.length - 1; i >= 0; i--) {
+			int t = q[i][0];
+			if (t == 0) {
+				rs.add(q[i][1]);
+			} 
+			else {
+				cs.add(q[i][1]);
+			}
+			if (rs.size() == n && cs.size() == n) {
+				break;
+			}
+		}
+		for (int x = q.length - 1; x >= 0; x--) {
+			if (rs.size() > 0 || cs.size() > 0) {
+				int t = q[x][0];
+				if (t == 0) {
+					if (rs.contains(q[x][1])) {
+						s = s + q[x][2] * nc;
+						nr--;
+						rs.remove(q[x][1]);
+					} 
+					else {
+						continue;
+					}
+				} 
+				else if (t == 1) {
+					if (cs.contains(q[x][1])) {
+						s = s + q[x][2] * nr;
+						nc--;
+						cs.remove(q[x][1]);
+					}
+				}
+			} 
+			else {
+				break;
+			}
+		}
+		return s;
+	}
+}

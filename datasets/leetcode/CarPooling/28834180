@@ -1,0 +1,27 @@
+class Solution {
+	boolean carPooling(int[][] trips, int capacity) {
+		int MAX_LENGTH = 1001;
+		long[] passengersOverTime = new long[MAX_LENGTH];
+		int totalCapacity = 0, lastIndex = -1;
+		for (int[] trip: trips) {	
+			int passengers = trip[0], start = trip[1], end = trip[2];
+			if (passengers > capacity) {
+				return false;
+			}
+			passengersOverTime[start] += passengers;
+			passengersOverTime[end] -= passengers;
+			totalCapacity += passengers;
+			lastIndex = Math.max(lastIndex,end);
+		}
+		if (totalCapacity <= capacity) {
+			return true;
+		}
+		for (int i = 1; i <= lastIndex; i++) {
+			passengersOverTime[i] += passengersOverTime[i - 1];
+			if (passengersOverTime[i] > capacity) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

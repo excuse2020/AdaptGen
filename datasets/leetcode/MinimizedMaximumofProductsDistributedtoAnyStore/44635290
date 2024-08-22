@@ -1,0 +1,30 @@
+class Solution {
+	int getMaxQty(int[] quantities, int n, int low, int high) {
+		if (low + 1 == high) {
+			if (isValid(quantities,n,low)) {
+				return low;
+			} 
+			else {
+				return high;
+			}
+		}
+		int mid = (low + high) / 2;
+		if (isValid(quantities,n,mid)) {
+			return getMaxQty(quantities,n,low,mid);
+		} 
+		else {
+			return getMaxQty(quantities,n,mid,high);
+		}
+	}
+	boolean isValid(int[] quantities, int n, int k) {
+		int sum = 0;
+		for (int i = 0; i < quantities.length; i++) {
+			sum += Math.ceil((double) quantities[i] / k);
+		}
+		return sum <= n;
+	}
+	int minimizedMaximum(int n, int[] quantities) {
+		int max = Arrays.stream(quantities).max().orElse(0);
+		return getMaxQty(quantities,n,0,max);
+	}
+}

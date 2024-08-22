@@ -1,0 +1,59 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		ListNode tmp1 = head1;
+		ListNode tmp2 = head2;
+		Stack<Integer> st1 = new Stack<>();
+		Stack<Integer> st2 = new Stack<>();
+		while (tmp1 != null) {
+			st1.push(tmp1.val);
+			tmp1 = tmp1.next;
+		}
+		while (tmp2 != null) {
+			st2.push(tmp2.val);
+			tmp2 = tmp2.next;
+		}
+		int maxSize = 0;
+		if (st1.size() >= st2.size()) {
+			maxSize = st1.size();
+		} 
+		else {
+			maxSize = st2.size();
+		}
+		int p = 0;
+		int nextP = 0;
+		Stack<ListNode> stNode = new Stack<>();
+		int sum = 0;
+		for (int i = 0; i < maxSize; i++) {
+			int st1Int = 0;
+			if (!st1.isEmpty()) {
+				st1Int = st1.pop();
+			}
+			int st2Int = 0;
+			if (!st2.isEmpty()) {
+				st2Int = st2.pop();
+			}
+			sum = st1Int + st2Int;
+			if (sum >= 10) {
+				nextP = sum / 10;
+				sum = sum % 10;
+			} 
+			else {
+				nextP = 0;
+			}
+			stNode.push(new ListNode(sum));
+			p = nextP;
+		}
+		if (p > 0) {
+			stNode.push(new ListNode(p));
+		}
+		ListNode head = stNode.pop();
+		ListNode dummy = new ListNode(0);
+		dummy.next = head;
+		int len = stNode.size();
+		for (int k = 0; k < len; k++) {
+			head.next = stNode.pop();
+			head = head.next;
+		}
+		return dummy.next;
+	}
+}

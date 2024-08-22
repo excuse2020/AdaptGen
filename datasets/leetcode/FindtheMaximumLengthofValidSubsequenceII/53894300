@@ -1,0 +1,47 @@
+class Solution {
+	int maximumLength(int[] nums, int k) {
+		int len = nums.length;
+		Map<Integer, List<Integer>> modMap = new HashMap<>();
+		for (int i = 0; i < len; i++) {
+			int mod = nums[i] % k;
+			modMap.computeIfAbsent(mod,(x) -> {new ArrayList<>()}).add(i);
+		}
+		int maxLen = 0;
+		for (int rem = 0; rem < k; rem++) {
+			for (int n = 0; n < k; n++) {
+				int m = (k + rem - n) % k;
+				if (!modMap.containsKey(n) || !modMap.containsKey(m)) {
+					continue;
+				}
+				List<Integer> indices1 = modMap.get(n);
+				List<Integer> indices2 = modMap.get(m);
+				int i = 0, j = 0, currentLen = 1;
+				boolean expectFirst = true;
+				while (i < indices1.size() && j < indices2.size()) {
+					if (expectFirst) {
+						if (indices1.get(i) < indices2.get(j)) {
+							currentLen++;
+							expectFirst = false;
+							i++;
+						} 
+						else {
+							j++;
+						}
+					} 
+					else {
+						if (indices2.get(j) < indices1.get(i)) {
+							currentLen++;
+							expectFirst = true;
+							j++;
+						} 
+						else {
+							i++;
+						}
+					}
+				}
+				maxLen = Math.max(maxLen,currentLen);
+			}
+		}
+		return maxLen;
+	}
+}

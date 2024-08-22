@@ -1,0 +1,22 @@
+class Solution {
+	int depth_first_search(int string_S_index, int string_S_length, String string_S, int string_T_index, int string_T_length, String string_T, Integer[][] dp_matrix) {
+		if (string_T_index == string_T_length) {
+			return 1;
+		}
+		if (string_S_index == string_S_length) {
+			return 0;
+		}
+		if (dp_matrix[string_S_index][string_T_index] != null) {
+			return dp_matrix[string_S_index][string_T_index];
+		}
+		int pick = ((string_S.charAt(string_S_index) == string_T.charAt(string_T_index)) ? (depth_first_search((string_S_index + 1),string_S_length,string_S,(string_T_index + 1),string_T_length,string_T,dp_matrix)) : (0));
+		int not_pick = depth_first_search((string_S_index + 1),string_S_length,string_S,string_T_index,string_T_length,string_T,dp_matrix);
+		dp_matrix[string_S_index][string_T_index] = (pick + not_pick);
+		return dp_matrix[string_S_index][string_T_index];
+	}
+	int numDistinct(String string_S, String string_T) {
+		int string_S_length = string_S.length();
+		int string_T_length = string_T.length();
+		return depth_first_search(0,string_S_length,string_S,0,string_T_length,string_T,(new Integer[string_S_length][string_T_length]));
+	}
+}

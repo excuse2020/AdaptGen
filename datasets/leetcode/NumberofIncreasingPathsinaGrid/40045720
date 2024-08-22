@@ -1,0 +1,50 @@
+class Solution {
+	int mod = (int) (Math.pow(10,9) + 7);
+	int check(int i, int j, int[][] mat, int[][] dp) {
+		if (i < 0 || j < 0 || i >= mat.length || j >= mat[i].length) {
+			return 0;
+		}
+		if (dp[i][j] != -1) {
+			return dp[i][j];
+		}
+		int up = 0;
+		int down = 0;
+		int left = 0;
+		int right = 0;
+		if (i != 0) {
+			if (mat[i][j] < mat[i - 1][j]) {
+				up = check(i - 1,j,mat,dp);
+			}
+		}
+		if (i != mat.length - 1) {
+			if (mat[i][j] < mat[i + 1][j]) {
+				down = check(i + 1,j,mat,dp);
+			}
+		}
+		if (j != 0) {
+			if (mat[i][j] < mat[i][j - 1]) {
+				left = check(i,j - 1,mat,dp);
+			}
+		}
+		if (j != mat[i].length - 1) {
+			if (mat[i][j] < mat[i][j + 1]) {
+				right = check(i,j + 1,mat,dp);
+			}
+		}
+		return dp[i][j] = (up + down) % mod;
+	}
+	int countPaths(int[][] matrix) {
+		int[][] dp = new int[matrix.length][matrix[0].length];
+		for (int[] cols: dp) {	
+			Arrays.fill(cols,-1);
+		}
+		int max = 0;
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix[i].length; j++) {
+				int temp = check(i,j,matrix,dp);
+				max = (max + temp) % mod;
+			}
+		}
+		return max;
+	}
+}

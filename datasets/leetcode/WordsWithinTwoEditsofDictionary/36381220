@@ -1,0 +1,41 @@
+class Solution {
+	List<String> result = new ArrayList();
+	int calculateEditDistance(String s1, String s2) {
+		int[][] dp = new int[s1.length() + 1][s2.length() + 1];
+		for (int i = 0; i < dp.length; i++) {
+			dp[i][0] = i;
+			dp[0][i] = i;
+		}
+		for (int row = 1; row < dp.length; row++) {
+			for (int col = 1; col < dp[0].length; col++) {
+				if (s1.charAt(row - 1) == s2.charAt(col - 1)) {
+					dp[row][col] = dp[row - 1][col - 1];
+				} 
+				else {
+					dp[row][col] = 1 + Math.min(dp[row - 1][col - 1],Math.min(dp[row - 1][col],dp[row][col - 1]));
+				}
+			}
+		}
+		return dp[dp.length - 1][dp.length - 1];
+	}
+	void search(String query, String[] dictionary) {
+		for (String word: dictionary) {	
+			if (calculateEditDistance(query,word) <= 2) {
+				result.add(query);
+				break;
+			}
+		}
+	}
+	List<String> twoEditWords(String[] queries, String[] dictionary) {
+		if (queries == null) {
+			return null;
+		}
+		if (queries.length == 0) {
+			return List.of();
+		}
+		for (String query: queries) {	
+			search(query,dictionary);
+		}
+		return result;
+	}
+}

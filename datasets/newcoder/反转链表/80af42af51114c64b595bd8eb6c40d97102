@@ -1,0 +1,53 @@
+class Solution {
+	void inorder(TreeNode root, ArrayList<Integer> list) {
+		if (root != null) {
+			inorder(root.left,list);
+			list.add(root.val);
+			inorder(root.right,list);
+		}
+	}
+	boolean isCompleteTree(TreeNode root) {
+		LinkedList<TreeNode> list = new LinkedList<>();
+		list.add(root);
+		while (list.size() != 0) {
+			TreeNode treeNode = list.removeFirst();
+			if (treeNode.left != null && treeNode.right == null) {
+				while (list.size() != 0) {
+					TreeNode node = list.removeFirst();
+					if (node.left != null || node.right != null) {
+						return false;
+					}
+				}
+			} 
+			else if (treeNode.left == null && treeNode.right != null) {
+				return false;
+			}
+			if (treeNode.left != null) {
+				list.add(treeNode.left);
+			}
+			if (treeNode.right != null) {
+				list.add(treeNode.right);
+			}
+		}
+		return true;
+	}
+	boolean[] judgeIt(TreeNode root) {
+		TreeNode head = root;
+		boolean[] result = new boolean[2];
+		if (root == null) {
+			return result;
+		}
+		result[0] = true;
+		ArrayList<Integer> list = new ArrayList<>();
+		inorder(root,list);
+		for (int i = 1; i < list.size(); i++) {
+			if (list.get(i) <= list.get(i - 1)) {
+				result[0] = false;
+				break;
+			}
+		}
+		root = head;
+		result[1] = isCompleteTree(root);
+		return result;
+	}
+}

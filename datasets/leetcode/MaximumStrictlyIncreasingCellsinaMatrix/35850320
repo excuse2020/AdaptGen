@@ -1,0 +1,61 @@
+class Solution {
+	int helper(int[][] arr, int[][] v, int x, int y, int count) {
+		int val = count;
+		for (int i = 0; i < arr.length; i++) {
+			if (arr[i][y] > arr[x][y]) {
+				if (v[i][y] == 0) {
+					v[i][y] = helper(arr,v,i,y,1);
+					if (val < v[i][y] + count) {
+						val = v[i][y] + count;
+					}
+				} 
+				else if (val < count + v[i][y]) {
+					val = count + v[i][y];
+				}
+			}
+		}
+		for (int i = 0; i < arr[0].length; i++) {
+			if (arr[x][i] > arr[x][y]) {
+				if (v[x][i] == 0) {
+					v[x][i] = helper(arr,v,x,i,1);
+					if (val < v[x][i] + count) {
+						val = v[x][i] + count;
+					}
+				} 
+				else if (val < count + v[x][i]) {
+					val = count + v[x][i];
+				}
+			}
+		}
+		return val;
+	}
+	int maxIncreasingCells(int[][] mat) {
+		int ans = 1;
+		if (mat.length == 1) {
+			HashSet<Integer> s = new HashSet<Integer>();
+			for (int i = 0; i < mat[0].length; i++) {
+				s.add(mat[0][i]);
+			}
+			return s.size();
+		} 
+		else if (mat[0].length == 1) {
+			HashSet<Integer> s = new HashSet<Integer>();
+			for (int i = 0; i < mat.length; i++) {
+				s.add(mat[i][0]);
+			}
+			return s.size();
+		}
+		int v = new int[mat.length][mat[0].length];
+		for (int i = 0; i < mat.length; i++) {
+			for (int j = 0; j < mat[0].length; j++) {
+				if (v[i][j] == 0) {
+					v[i][j] = helper(mat,v,i,j,1);
+				}
+				if (v[i][j] > ans) {
+					ans = v[i][j];
+				}
+			}
+		}
+		return ans;
+	}
+}

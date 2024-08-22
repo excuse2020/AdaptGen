@@ -1,0 +1,53 @@
+class Solution {
+	boolean isSorted(char[] ch) {
+		for (int i = 1; i < ch.length; i++) {
+			if (ch[i - 1] > ch[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int makeStringSorted(String s) {
+		long ans = 0;
+		char[] ch = s.toCharArray();
+		while (!isSorted(ch)) {
+			int i = step1(ch);
+			int j = step2(ch,i);
+			swap(ch,i - 1,j);
+			reverse(ch,i);
+			ans++;
+		}
+		return (int) (ans % (Math.pow(10,9) + 7));
+	}
+	void reverse(char[] ch, int i) {
+		int j = ch.length - 1;
+		while (i < j) {
+			swap(ch,i,j);
+			i++;
+			j--;
+		}
+	}
+	int step1(char[] ch) {
+		int index = 0;
+		for (int i = 1; i < ch.length; i++) {
+			if (ch[i] < ch[i - 1]) {
+				index = i;
+			}
+		}
+		return index;
+	}
+	int step2(char[] ch, int i) {
+		int index = i;
+		for (int j = i; j < ch.length; j++) {
+			if (ch[j] < ch[i - 1]) {
+				index = j;
+			}
+		}
+		return index;
+	}
+	void swap(char[] ch, int i, int j) {
+		char c = ch[i];
+		ch[i] = ch[j];
+		ch[j] = c;
+	}
+}

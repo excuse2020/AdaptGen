@@ -1,0 +1,48 @@
+class Solution {
+	int cnt;
+	boolean hasKZero(int[] row, int k) {
+		if (k <= 0) {
+			return true;
+		}
+		for (int i = row.length - 1; i >= 0; i--) {
+			if (row[i] == 0) {
+				k--;
+				if (k == 0) {
+					return true;
+				}
+			} 
+			else {
+				break;
+			}
+		}
+		return k <= 0;
+	}
+	int minSwaps(int[][] grid) {
+		int cur = grid.length - 1;
+		cnt = 0;
+		for (int i = 0; i < grid.length; i++) {
+			boolean hasMatch = false;
+			int startIdx = grid.length - cur;
+			for (int j = startIdx; j < grid.length; j++) {
+				if (hasKZero(grid[j],cur)) {
+					hasMatch = true;
+					for (int k = j; k > startIdx; k--) {
+						swap(grid,k,k - 1);
+					}
+					break;
+				}
+			}
+			if (!hasMatch) {
+				return -1;
+			}
+			cur--;
+		}
+		return cnt;
+	}
+	void swap(int[][] grid, int a, int b) {
+		int[] tmp = grid[a];
+		grid[a] = grid[b];
+		grid[b] = tmp;
+		cnt++;
+	}
+}

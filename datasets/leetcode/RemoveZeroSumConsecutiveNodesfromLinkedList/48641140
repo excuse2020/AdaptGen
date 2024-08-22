@@ -1,0 +1,46 @@
+class Solution {
+	ListNode removeZeroSumSublists(ListNode head) {
+		Map<Integer, Integer> m = new HashMap<>();
+		int c = 0;
+		ListNode temp = head;
+		while (temp != null) {
+			c++;
+			temp = temp.next;
+		}
+		int[] a = new int[c];
+		temp = head;
+		int i = 0;
+		while (temp != null) {
+			a[i++] = temp.val;
+			temp = temp.next;
+		}
+		for (i = 0; i < c; ) {
+			int sum = a[i];
+			int j = i + 1;
+			while (j < c && sum != 0) {
+				sum += a[j++];
+			}
+			if (sum == 0) {
+				while (i < j) {
+					m.put(i++,1);
+				}
+			} 
+			else {
+				i++;
+			}
+		}
+		temp = head = null;
+		for (i = 0; i < c; i++) {
+			if (!m.containsKey(i)) {
+				if (head == null) {
+					temp = head = new ListNode(a[i]);
+				} 
+				else {
+					temp.next = new ListNode(a[i]);
+					temp = temp.next;
+				}
+			}
+		}
+		return head;
+	}
+}

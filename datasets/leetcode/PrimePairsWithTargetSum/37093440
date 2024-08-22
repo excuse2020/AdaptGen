@@ -1,0 +1,30 @@
+class Solution {
+	List<List<Integer>> findPrimePairs(int n) {
+		return sieveOfEratosthenes(n);
+	}
+	List<List<Integer>> sieveOfEratosthenes(int n) {
+		boolean prime = new boolean[n + 1];
+		prime[0] = false;
+		prime[1] = false;
+		for (int i = 2; i <= n; i++) {
+			prime[i] = true;
+		}
+		for (int p = 2; p * p <= n; p++) {
+			if (prime[p] == true) {
+				for (int i = p * p; i <= n; i += p) {
+					prime[i] = false;
+				}
+			}
+		}
+		List<List<Integer>> ans = new ArrayList<>();
+		for (int i = 2; i <= n / 2; i++) {
+			if (prime[i] && prime[n - i]) {
+				List<Integer> list = new ArrayList<>();
+				list.add(i);
+				list.add(n - i);
+				ans.add(new ArrayList<>(list));
+			}
+		}
+		return ans;
+	}
+}

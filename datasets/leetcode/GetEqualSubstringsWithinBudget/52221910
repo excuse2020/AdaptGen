@@ -1,0 +1,36 @@
+class Solution {
+	int equalSubstring(String s, String t, int maxCost) {
+		if (maxCost == 0) {
+			return getMaxIdenticalSubstringLength(s,t);
+		}
+		int start = 0;
+		int currentCost = 0;
+		int maxLength = 0;
+		for (int end = 0; end < s.length(); end++) {
+			currentCost += getCost(s.charAt(end),t.charAt(end));
+			while (currentCost > maxCost) {
+				currentCost -= Math.abs(s.charAt(start) - t.charAt(start));
+				start++;
+			}
+			maxLength = Math.max(maxLength,end - start + 1);
+		}
+		return maxLength;
+	}
+	int getCost(char charS, char charT) {
+		return Math.abs(charS - charT);
+	}
+	int getMaxIdenticalSubstringLength(String s, String t) {
+		int maxLength = 0;
+		int currentLength = 0;
+		for (int i = 0; i < s.length(); i++) {
+			if (s.charAt(i) == t.charAt(i)) {
+				currentLength++;
+				maxLength = Math.max(maxLength,currentLength);
+			} 
+			else {
+				currentLength = 0;
+			}
+		}
+		return maxLength;
+	}
+}

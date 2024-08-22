@@ -1,0 +1,21 @@
+class Solution {
+	long maximumTripletValue(int[] nums) {
+		long result = Integer.MIN_VALUE;
+		int left = 0;
+		Map<Integer, Integer> map = new HashMap<>();
+		int multiMax = 0;
+		map.put(nums.length - 1,0);
+		for (int i = nums.length - 1; i >= 0; i--) {
+			multiMax = Math.max(multiMax,nums[i]);
+			map.put(i - 1,multiMax);
+		}
+		for (int right = 0; right < nums.length; right++) {
+			if (nums[left] < nums[right]) {
+				left = right;
+			}
+			int current = nums[left] - nums[right];
+			result = Math.max(result,(long) current * map.get(right));
+		}
+		return (result > 0) ? result : 0;
+	}
+}

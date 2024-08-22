@@ -1,0 +1,25 @@
+class Solution {
+	Long dp;
+	long mod = (long) (1e9 + 7);
+	int countOrders(int n) {
+		dp = new Long[n + 1][n + 1];
+		return (int) (helper(n,n));
+	}
+	long helper(int unpicked, int undelivered) {
+		if (unpicked == 0 && undelivered == 0) {
+			return 1;
+		}
+		if (unpicked < 0 || undelivered < 0 || unpicked > undelivered) {
+			return 0;
+		}
+		if (dp[unpicked][undelivered] != null) {
+			return dp[unpicked][undelivered];
+		}
+		long ans = 0;
+		ans += unpicked * helper(unpicked - 1,undelivered);
+		ans %= mod;
+		ans += (undelivered - unpicked) * helper(unpicked,undelivered - 1);
+		ans %= mod;
+		return dp[unpicked][undelivered] = ans;
+	}
+}

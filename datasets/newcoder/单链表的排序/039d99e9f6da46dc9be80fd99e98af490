@@ -1,0 +1,51 @@
+class Solution {
+	int partition(List<ListNode> arr, int start, int end) {
+		int pivVal = arr.get(start).val;
+		int i = start, j = end;
+		while (i < j) {
+			while (i < end && arr.get(i).val <= pivVal) {
+				i++;
+			}
+			while (j > start && arr.get(j).val >= pivVal) {
+				j--;
+			}
+			if (i < j) {
+				swapNode(arr,i,j);
+			}
+		}
+		swapNode(arr,start,j);
+		return j;
+	}
+	void quickSort(List<ListNode> arr, int start, int end) {
+		if (start >= end) {
+			return;
+		}
+		int pivot = partition(arr,start,end);
+		quickSort(arr,start,pivot - 1);
+		quickSort(arr,pivot + 1,end);
+	}
+	ListNode sortInList(ListNode head) {
+		if (head == null) {
+			return null;
+		}
+		List<ListNode> arr = new ArrayList<>();
+		while (head != null) {
+			arr.add(head);
+			head = head.next;
+		}
+		quickSort(arr,0,arr.size() - 1);
+		ListNode sentinal = new ListNode(-1);
+		ListNode curLast = sentinal;
+		for (ListNode n: arr) {	
+			curLast.next = n;
+			curLast = curLast.next;
+		}
+		curLast.next = null;
+		return sentinal.next;
+	}
+	void swapNode(List<ListNode> arr, int i, int j) {
+		ListNode tmp = arr.get(i);
+		arr.set(i,arr.get(j));
+		arr.set(j,tmp);
+	}
+}

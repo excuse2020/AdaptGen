@@ -1,0 +1,20 @@
+class Solution {
+	int destroyTargets(int[] nums, int space) {
+		HashMap<Integer, PriorityQueue<Integer>> ans = new HashMap<>();
+		for (int i: nums) {	
+			int num = i % space;
+			if (!ans.containsKey(num)) {
+				ans.put(num,new PriorityQueue<>());
+			}
+			ans.get(num).add(i);
+		}
+		int max = -1, size = 0;
+		for (int i: ans.keySet()) {	
+			if (size < ans.get(i).size() || (size == ans.get(i).size() && ans.get(max).peek() > ans.get(i).peek())) {
+				size = ans.get(i).size();
+				max = i;
+			}
+		}
+		return ans.get(max).poll();
+	}
+}

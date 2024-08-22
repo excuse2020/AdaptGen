@@ -1,0 +1,26 @@
+class Solution {
+	HashMap<Integer, Integer> indexMap;
+	TreeNode BST(int[] inorder, int il, int ir, int[] postorder, int pl, int pr) {
+		if (il > ir || pl > pr) {
+			return null;
+		}
+		TreeNode node = new TreeNode(postorder[pr]);
+		int rootIndex = indexMap.get(postorder[pr]);
+		int leftSize = rootIndex - il;
+		int rightSize = ir - rootIndex;
+		node.left = BST(inorder,il,rootIndex - 1,postorder,pl,pl + leftSize - 1);
+		node.right = BST(inorder,rootIndex + 1,ir,postorder,pr - rightSize,pr - 1);
+		return node;
+	}
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		int length = inorder.length;
+		if (length == 1) {
+			return new TreeNode(inorder[0]);
+		}
+		indexMap = new HashMap<>();
+		for (int i = 0; i < length; i++) {
+			indexMap.put(inorder[i],i);
+		}
+		return BST(inorder,0,length - 1,postorder,0,length - 1);
+	}
+}

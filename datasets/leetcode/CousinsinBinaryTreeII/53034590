@@ -1,0 +1,37 @@
+class Solution {
+	void dfs(TreeNode node, HashMap<Integer, Integer> hm, int level) {
+		if (node == null) {
+			return;
+		}
+		hm.put(level,hm.getOrDefault(level,0) + node.val);
+		dfs(node.left,hm,level + 1);
+		dfs(node.right,hm,level + 1);
+	}
+	TreeNode replaceValueInTree(TreeNode root) {
+		HashMap<Integer, Integer> hm = new HashMap<Integer, Integer>();
+		dfs(root,hm,0);
+		root.val = 0;
+		updateValue(root,hm,0);
+		return root;
+	}
+	void updateValue(TreeNode node, HashMap<Integer, Integer> hm, int level) {
+		if (node == null) {
+			return;
+		}
+		int sum = 0;
+		if (node.left != null) {
+			sum = sum + node.left.val;
+		}
+		if (node.right != null) {
+			sum = sum + node.right.val;
+		}
+		if (node.left != null) {
+			node.left.val = hm.get(level + 1) - sum;
+		}
+		if (node.right != null) {
+			node.right.val = hm.get(level + 1) - sum;
+		}
+		updateValue(node.left,hm,level + 1);
+		updateValue(node.right,hm,level + 1);
+	}
+}

@@ -1,0 +1,80 @@
+class Solution {
+	void dfs(ArrayList<ArrayList<Integer>> graph, Integer[] max, int[] time, int v) {
+		ArrayList<Integer> al = graph.get(v);
+		for (int i = 0; i < al.size(); i++) {
+			int av = al.get(i);
+			if (max[av] == null) {
+				max[av] = 0;
+				dfs(graph,max,time,av);
+			}
+			max[v] = (max[v] > max[av]) ? max[v] : max[av];
+		}
+		max[v] += time[v];
+	}
+	int minimumTime(int n, int[][] relations, int[] time) {
+		ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<Integer>());
+		}
+		for (int i = 0; i < relations.length; i++) {
+			int u = relations[i][0] - 1, v = relations[i][1] - 1;
+			graph.get(u).add(v);
+		}
+		Integer[] max = new Integer[n];
+		int maxTime = 0;
+		for (int i = 0; i < n; i++) {
+			if (max[i] == null) {
+				max[i] = 0;
+				dfs(graph,max,time,i);
+			}
+			maxTime = (maxTime > max[i]) ? maxTime : max[i];
+		}
+		return maxTime;
+	}
+	int minimumTime2(int n, int[][] relations, int[] time) {
+		ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<Integer>());
+		}
+		for (int i = 0; i < relations.length; i++) {
+			int u = relations[i][0] - 1, v = relations[i][1] - 1;
+			graph.get(u).add(v);
+		}
+		Integer[] max = new Integer[n];
+		for (int i = 0; i < n; i++) {
+			if (max[i] != null) {
+				continue;
+			}
+			max[i] = 0;
+			Stack<Integer> stack = new Stack<>(), startStack = new Stack<>();
+			stack.push(i);
+			startStack.push(0);
+			while (!stack.isEmpty()) {
+				int v = stack.peek(), start = startStack.pop();
+				ArrayList<Integer> al = graph.get(v);
+				while (start < al.size()) {
+					int av = al.get(start);
+					if (max[av] == null) {
+						max[av] = 0;
+						startStack.push(start);
+						stack.push(av);
+						startStack.push(0);
+						break;
+					}
+					max[v] = (max[v] > max[av]) ? max[v] : max[av];
+					start++;
+				}
+				if (start < al.size()) {
+					continue;
+				}
+				max[v] += time[v];
+				stack.pop();
+			}
+		}
+		int maxTime = 0;
+		for (int i = 0; i < n; i++) {
+			maxTime = (maxTime > max[i]) ? maxTime : max[i];
+		}
+		return maxTime;
+	}
+}

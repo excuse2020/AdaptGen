@@ -1,0 +1,18 @@
+class Solution {
+	ArrayList<Integer> knapsack(int v, int n, ArrayList<ArrayList<Integer>> nums) {
+		ArrayList<Integer> rs = new ArrayList<Integer>();
+		int[][] dp = new int[v + 1][2];
+		int full = 0;
+		for (ArrayList<Integer> curr: nums) {	
+			for (int s = curr.get(0); s <= v; s++) {
+				dp[s][0] = Math.max(dp[s][0],dp[s - curr.get(0)][0] + curr.get(1));
+				if (s % curr.get(0) == 0 || dp[s - curr.get(0)][1] > 0) {
+					dp[s][1] = Math.max(dp[s][1],dp[s - curr.get(0)][1] + curr.get(1));
+				}
+			}
+		}
+		rs.add(dp[v][0]);
+		rs.add(dp[v][1]);
+		return rs;
+	}
+}

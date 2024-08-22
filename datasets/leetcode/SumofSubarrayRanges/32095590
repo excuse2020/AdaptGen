@@ -1,0 +1,22 @@
+class Solution {
+	long subArrayRanges(int[] nums) {
+		Stack<long[]> min = new Stack<>(), max = new Stack<>();
+		long result = 0;
+		min.add(new long{-1, Integer.MIN_VALUE, 0});
+		max.add(new long{-1, Integer.MAX_VALUE, 0});
+		for (int i = 0; i < nums.length; i++) {
+			while (min.peek()[1] >= nums[i]) {
+				min.pop();
+			}
+			long minTotal = (i - min.peek()[0]) * nums[i] + min.peek()[2];
+			min.add(new long{i, nums[i], minTotal});
+			while (max.peek()[1] <= nums[i]) {
+				max.pop();
+			}
+			long maxTotal = (i - max.peek()[0]) * nums[i] + max.peek()[2];
+			max.add(new long{i, nums[i], maxTotal});
+			result += maxTotal - minTotal;
+		}
+		return result;
+	}
+}

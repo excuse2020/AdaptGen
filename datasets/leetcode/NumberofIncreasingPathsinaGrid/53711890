@@ -1,0 +1,48 @@
+class Solution {
+	int[][] dp = new int[1002][1002];
+	int mod = 1000000007;
+	int n, m;
+	int countPaths(int[][] grid) {
+		init(grid);
+		return getCountPaths(grid);
+	}
+	int getCountPaths(int[][] grid) {
+		int countPaths = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				countPaths = (countPaths % mod + getCountPaths(grid,i,j) % mod) % mod;
+			}
+		}
+		return countPaths;
+	}
+	int getCountPaths(int[][] grid, int i, int j) {
+		int val = grid[i][j];
+		int ans = 1;
+		if (dp[i][j] != -1) {
+			return dp[i][j];
+		}
+		if (isValid(i + 1,j,val,grid)) {
+			ans = (ans % mod + getCountPaths(grid,i + 1,j) % mod) % mod;
+		}
+		if (isValid(i - 1,j,val,grid)) {
+			ans = (ans % mod + getCountPaths(grid,i - 1,j) % mod) % mod;
+		}
+		if (isValid(i,j + 1,val,grid)) {
+			ans = (ans % mod + getCountPaths(grid,i,j + 1) % mod) % mod;
+		}
+		if (isValid(i,j - 1,val,grid)) {
+			ans = (ans % mod + getCountPaths(grid,i,j - 1) % mod) % mod;
+		}
+		return dp[i][j] = ans;
+	}
+	void init(int[][] grid) {
+		n = grid.length;
+		m = grid[0].length;
+		for (int i = 0; i < 1002; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+	}
+	boolean isValid(int i, int j, int val, int[][] grid) {
+		return i >= 0 && i < n && j >= 0 && j < m && grid[i][j] > val;
+	}
+}

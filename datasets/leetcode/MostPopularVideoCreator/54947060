@@ -1,0 +1,42 @@
+class Solution {
+	List<List<String>> mostPopularCreator(String[] creators, String[] ids, int[] views) {
+		List<List<String>> listOfLists = new ArrayList<>();
+		HashMap<String, Long> platformCreator = new HashMap<>();
+		HashMap<String, Long> platformCreatorPrev = new HashMap<>();
+		HashMap<String, String> platformId = new HashMap<>();
+		for (int i = 0; i < creators.length; i++) {
+			if (platformCreator.get(creators[i]) != null) {
+				platformCreator.put(creators[i],views[i] + (platformCreator.get(creators[i])));
+				if (views[i] > platformCreatorPrev.get(creators[i])) {
+					platformCreatorPrev.put(creators[i],(long) views[i]);
+					platformId.put(creators[i],ids[i]);
+				}
+				if (views[i] == platformCreatorPrev.get(creators[i])) {
+					if (ids[i].compareTo(platformId.get(creators[i])) < 0) {
+						platformId.put(creators[i],ids[i]);
+					}
+				}
+			} 
+			else {
+				platformCreator.put(creators[i],(long) views[i]);
+				platformCreatorPrev.put(creators[i],(long) views[i]);
+				platformId.put(creators[i],ids[i]);
+			}
+		}
+		long maxValue = Integer.MIN_VALUE;
+		for (Map.Entry<String, Long> entry: platformCreator.entrySet()) {	
+			if (entry.getValue() > maxValue) {
+				maxValue = entry.getValue();
+			}
+		}
+		for (Map.Entry<String, Long> entry: platformCreator.entrySet()) {	
+			if (entry.getValue() == maxValue) {
+				List<String> result = new ArrayList<String>();
+				result.add(entry.getKey());
+				result.add(platformId.get(entry.getKey()));
+				listOfLists.add(result);
+			}
+		}
+		return listOfLists;
+	}
+}

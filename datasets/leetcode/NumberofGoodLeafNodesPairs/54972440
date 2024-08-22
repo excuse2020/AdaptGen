@@ -1,0 +1,47 @@
+class Solution {
+	int res;
+	int countPairs(TreeNode root, int distance) {
+		Map<TreeNode, TreeNode> parent = new HashMap<>();
+		getParent(root,null,parent);
+		for (Map.Entry<TreeNode, TreeNode> e: parent.entrySet()) {	
+			root = e.getKey();
+			if (root.left == null && root.right == null) {
+				Set<TreeNode> hs = new HashSet<>();
+				hs.add(root);
+				dfs(root,parent,hs,0,distance);
+			}
+		}
+		return res / 2;
+	}
+	void dfs(TreeNode root, Map<TreeNode, TreeNode> parent, Set<TreeNode> visited, int dist, int maxDist) {
+		if (root == null) {
+			return;
+		}
+		if (root.left == null && root.right == null && !visited.contains(root)) {
+			if (dist <= maxDist) {
+				res++;
+			}
+		}
+		visited.add(root);
+		TreeNode top = parent.get(root);
+		TreeNode left = root.left;
+		TreeNode right = root.right;
+		if (!visited.contains(top) && top != null) {
+			dfs(top,parent,visited,dist + 1,maxDist);
+		}
+		if (!visited.contains(left) && left != null) {
+			dfs(left,parent,visited,dist + 1,maxDist);
+		}
+		if (!visited.contains(right) && right != null) {
+			dfs(right,parent,visited,dist + 1,maxDist);
+		}
+	}
+	void getParent(TreeNode root, TreeNode parentNode, Map<TreeNode, TreeNode> parent) {
+		if (root == null) {
+			return;
+		}
+		parent.put(root,parentNode);
+		getParent(root.left,root,parent);
+		getParent(root.right,root,parent);
+	}
+}

@@ -1,0 +1,71 @@
+class Solution {
+	int minimumOperations(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		List<List<Integer>> ans = new ArrayList<>();
+		List<Integer> list = new ArrayList<>();
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(root);
+		q.add(null);
+		while (!q.isEmpty()) {
+			TreeNode curr = q.remove();
+			if (curr == null) {
+				ans.add(new ArrayList<>(list));
+				list = new ArrayList<>();
+				if (q.isEmpty()) {
+					break;
+				} 
+				else {
+					q.add(null);
+				}
+			} 
+			else {
+				list.add(curr.val);
+				if (curr.left != null) {
+					q.add(curr.left);
+				}
+				if (curr.right != null) {
+					q.add(curr.right);
+				}
+			}
+		}
+		int out = 0;
+		for (int i = 1; i < ans.size(); i++) {
+			int count = swap(ans.get(i));
+			out = out + count;
+		}
+		return out;
+	}
+	int swap(List<Integer> list) {
+		int res = 0;
+		int arr = new int[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			arr[i] = list.get(i);
+		}
+		int temp = new int[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			temp[i] = list.get(i);
+		}
+		Arrays.sort(temp);
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < list.size(); i++) {
+			map.put(list.get(i),i);
+		}
+		for (int i = 0; i < list.size(); i++) {
+			if (arr[i] != temp[i]) {
+				res++;
+				int intial = arr[i];
+				swapping(arr,i,map.get(temp[i]));
+				map.replace(intial,map.get(temp[i]));
+				map.replace(temp[i],i);
+			}
+		}
+		return res;
+	}
+	void swapping(int arr, int i, int j) {
+		int temp = arr[i];
+		arr[i] = arr[j];
+		arr[j] = temp;
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	int findMaxValueOfEquation(int[][] points, int k) {
+		int i = 0;
+		int j = 1;
+		int n = points.length;
+		Deque<Integer> dq = new ArrayDeque<Integer>();
+		int max_eqn_val = Integer.MIN_VALUE;
+		while (i < n) {
+			while (j < n) {
+				if ((points[j][0] - points[i][0]) > k) {
+					break;
+				}
+				while ((!dq.isEmpty()) && (points[dq.getLast()][0] + points[dq.getLast()][1] < points[j][0] + points[j][1])) {
+					dq.removeLast();
+				}
+				dq.addLast(j);
+				j++;
+			}
+			if (!dq.isEmpty()) {
+				max_eqn_val = Math.max(max_eqn_val,(points[dq.getFirst()][0] - points[i][0] + points[dq.getFirst()][1] + points[i][1]));
+			}
+			i++;
+			while ((!dq.isEmpty()) && (dq.getFirst() <= i)) {
+				dq.removeFirst();
+			}
+			if (i == j) {
+				j++;
+			}
+		}
+		return max_eqn_val;
+	}
+}

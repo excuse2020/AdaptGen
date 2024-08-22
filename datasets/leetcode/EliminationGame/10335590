@@ -1,0 +1,42 @@
+class Solution {
+	int lastRemaining(int n) {
+		PriorityQueue<Integer> pqMin = new PriorityQueue<>();
+		PriorityQueue<Integer> pqMax = new PriorityQueue<>();
+		for (int i = 1; i <= n; i++) {
+			pqMin.offer(i);
+		}
+		boolean left = true;
+		boolean odd = true;
+		while (!((pqMin.size() == 1 && pqMax.size() == 0) || (pqMin.size() == 0 && pqMax.size() == 1))) {
+			if (left) {
+				left = !left;
+				odd = true;
+				while (!pqMin.isEmpty()) {
+					if (odd) {
+						pqMin.poll();
+						odd = !odd;
+					} 
+					else {
+						pqMax.offer(-pqMin.poll());
+						odd = !odd;
+					}
+				}
+			} 
+			else {
+				left = !left;
+				odd = true;
+				while (!pqMax.isEmpty()) {
+					if (odd) {
+						pqMax.poll();
+						odd = !odd;
+					} 
+					else {
+						pqMin.offer(-pqMax.poll());
+						odd = !odd;
+					}
+				}
+			}
+		}
+		return pqMin.size() == 0 ? -pqMax.peek() : pqMin.peek();
+	}
+}

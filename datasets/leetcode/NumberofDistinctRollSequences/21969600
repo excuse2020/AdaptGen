@@ -1,0 +1,30 @@
+class Solution {
+	int MOD = 1_000_000_007;
+	boolean[][] cantFormPair;
+	int[][][] dp;
+	int distinctSequences(int n) {
+		this.cantFormPair = new boolean[7][7];
+		this.dp = new int[n][7][7];
+		cantFormPair[2][4] = cantFormPair[2][6] = cantFormPair[3][6] = cantFormPair[4][2] = cantFormPair[4][6] = cantFormPair[6][2] = cantFormPair[6][4] = cantFormPair[6][3] = true;
+		return solve(0,0,0,n);
+	}
+	int solve(int currentIndex, int previousElement, int cousinElement, int n) {
+		if (currentIndex == n) {
+			return 1;
+		}
+		if (dp[currentIndex][previousElement][cousinElement] != 0) {
+			return dp[currentIndex][previousElement][cousinElement];
+		}
+		long answer = 0;
+		for (int value = 1; value <= 6; ++value) {
+			if (value == previousElement) {
+				continue;
+			}
+			if (!cantFormPair[previousElement][value] && (cousinElement != value)) {
+				answer = (answer + solve(currentIndex + 1,value,previousElement,n)) % MOD;
+			}
+		}
+		dp[currentIndex][previousElement][cousinElement] = (int) answer;
+		return (int) answer;
+	}
+}

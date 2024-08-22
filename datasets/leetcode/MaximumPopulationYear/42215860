@@ -1,0 +1,39 @@
+class Solution {
+	int maximumPopulation(int[][] lg) {
+		HashMap<Integer, Integer> map = new HashMap<>();
+		int maxKey = Integer.MAX_VALUE;
+		int maxValue = Integer.MIN_VALUE;
+		for (int x = 0; x < lg.length; x++) {
+			int born = lg[x][0];
+			int died = lg[x][1] - 1;
+			if (born == died) {
+				if (map.get(born) == null) {
+					map.put(born,1);
+				} 
+				else {
+					map.put(born,map.get(born) + 1);
+				}
+			} 
+			else {
+				while (born <= died) {
+					if (map.get(born) == null) {
+						map.put(born,1);
+					} 
+					else {
+						map.put(born,map.get(born) + 1);
+					}
+					born++;
+				}
+			}
+		}
+		for (Map.Entry<Integer, Integer> entry: map.entrySet()) {	
+			int key = entry.getKey();
+			int value = entry.getValue();
+			if (value > maxValue || (value == maxValue && key < maxKey)) {
+				maxValue = value;
+				maxKey = key;
+			}
+		}
+		return maxKey;
+	}
+}

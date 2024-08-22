@@ -1,0 +1,46 @@
+class Solution {
+	int minSizeSubarray(int[] nums, int target) {
+		int sum = 0;
+		int countOfItemLessThanTarget = 0;
+		for (int v: nums) {	
+			sum += v;
+			if (v < target) {
+				countOfItemLessThanTarget++;
+			}
+			if (target == v) {
+				return 1;
+			}
+		}
+		if (countOfItemLessThanTarget <= 0) {
+			return -1;
+		}
+		if (target % sum == 0) {
+			return nums.length * (target / sum);
+		}
+		int baseLength = 0;
+		if (sum < target) {
+			int repeat = target / sum;
+			target = target - repeat * sum;
+			baseLength = repeat * nums.length;
+		}
+		int left = 0;
+		int minLength = nums.length;
+		sum = 0;
+		for (int right = 0; right < nums.length * 2; right++) {
+			sum += nums[right % nums.length];
+			if (sum > target) {
+				while (sum > target) {
+					sum -= nums[(left++) % nums.length];
+				}
+			}
+			if (sum == target) {
+				minLength = Math.min(right - left + 1,minLength);
+				sum -= nums[(left++) % nums.length];
+			}
+		}
+		if (minLength == nums.length) {
+			return -1;
+		}
+		return minLength + baseLength;
+	}
+}

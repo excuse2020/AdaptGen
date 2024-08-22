@@ -1,0 +1,58 @@
+class Solution {
+	int[] disc;
+	int[] low;
+	int[] parent;
+	int time;
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> adj) {
+		ArrayList<Integer>[] graph = new ArrayList[n];
+		for (int i = 0; i < graph.length; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < adj.size(); i++) {
+			int u = adj.get(i).get(0);
+			int v = adj.get(i).get(1);
+			graph[u].add(v);
+			graph[v].add(u);
+		}
+		disc = new int[n];
+		low = new int[n];
+		parent = new int[n];
+		time = 0;
+		parent[0] = -1;
+		disc[0] = time;
+		low[0] = time;
+		boolean visited = new boolean[n];
+		List<List<Integer>> ans = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			if (!visited[i]) {
+				dfs(graph,i,visited,ans);
+			}
+		}
+		return ans;
+	}
+	void dfs(ArrayList<Integer>[] graph, int v, boolean visited, List<List<Integer>> ans) {
+		visited[v] = true;
+		for (int nbr: graph[v]) {	
+			if (visited[nbr] && parent[v] == nbr) {
+				continue;
+			} 
+			else if (visited[nbr]) {
+				low[v] = Math.min(low[v],disc[nbr]);
+			} 
+			else {
+				time++;
+				parent[nbr] = v;
+				disc[nbr] = time;
+				low[nbr] = time;
+				dfs(graph,nbr,visited,ans);
+				low[v] = Math.min(low[v],low[nbr]);
+				if (low[nbr] > disc[v]) {
+					List<Integer> ll = new ArrayList<>();
+					ll.add(nbr);
+					ll.add(v);
+					ans.add(ll);
+				}
+			}
+		}
+	}
+}

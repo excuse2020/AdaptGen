@@ -1,0 +1,38 @@
+class Solution {
+	List<List<Integer>> ans;
+	int time = 0;
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		ans = new LinkedList();
+		int[] exploreTime = new int[n];
+		boolean[] visited = new boolean[n];
+		List<Integer>[] graph = new LinkedList[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new LinkedList();
+		}
+		for (List<Integer> edge: connections) {	
+			int a = edge.get(0);
+			int b = edge.get(1);
+			graph[a].add(b);
+			graph[b].add(a);
+		}
+		dfs(graph,0,visited,exploreTime,-1);
+		return ans;
+	}
+	void dfs(List<Integer>[] graph, int vertex, boolean[] visited, int[] exploreTime, int prev) {
+		visited[vertex] = true;
+		exploreTime[vertex] = time++;
+		int current = exploreTime[vertex];
+		for (int neighbour: graph[vertex]) {	
+			if (neighbour == prev) {
+				continue;
+			}
+			if (!visited[neighbour]) {
+				dfs(graph,neighbour,visited,exploreTime,vertex);
+			}
+			exploreTime[vertex] = Math.min(exploreTime[vertex],exploreTime[neighbour]);
+			if (current < exploreTime[neighbour]) {
+				ans.add(Arrays.asList(vertex,neighbour));
+			}
+		}
+	}
+}

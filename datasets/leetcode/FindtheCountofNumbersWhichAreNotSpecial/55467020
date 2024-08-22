@@ -1,0 +1,51 @@
+class Solution {
+	int z;
+	int bs(int x, ArrayList<Integer> arr) {
+		int s = 0;
+		int e = arr.size() - 1;
+		int ans = -1;
+		while (s <= e) {
+			int mid = (s + e) / 2;
+			if (arr.get(mid) <= x) {
+				ans = mid;
+				s = mid + 1;
+				z = arr.get(mid);
+				System.out.println(ans);
+			} 
+			else {
+				e = mid - 1;
+			}
+		}
+		return ans;
+	}
+	int nonSpecialCount(int l, int r) {
+		z = -1;
+		ArrayList<Integer> arr = sieveOfEratosthenes((int) Math.sqrt(r));
+		int x1 = bs(l,arr);
+		System.out.println(x1);
+		if (z == l) {
+			return ((r - l) + 1) - (arr.size() - x1);
+		}
+		return ((r - l) + 1) - ((arr.size() - x1) - 1);
+	}
+	ArrayList<Integer> sieveOfEratosthenes(int n) {
+		boolean prime = new boolean[n + 1];
+		ArrayList<Integer> arr = new ArrayList<>();
+		for (int i = 0; i <= n; i++) {
+			prime[i] = true;
+		}
+		for (int p = 2; p * p <= n; p++) {
+			if (prime[p] == true) {
+				for (int i = p * p; i <= n; i += p) {
+					prime[i] = false;
+				}
+			}
+		}
+		for (int i = 2; i <= n; i++) {
+			if (prime[i] == true) {
+				arr.add((int) Math.pow(i,2));
+			}
+		}
+		return arr;
+	}
+}

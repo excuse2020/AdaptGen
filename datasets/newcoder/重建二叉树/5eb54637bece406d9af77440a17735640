@@ -1,0 +1,21 @@
+class Solution {
+	TreeNode build(List<Integer> pre, List<Integer> vin) {
+		if (pre.isEmpty()) {
+			return null;
+		}
+		int rootVal = pre.get(0);
+		TreeNode root = new TreeNode(rootVal);
+		int rootIndexInVin = vin.indexOf(rootVal);
+		List<Integer> leftList = vin.subList(0,rootIndexInVin);
+		int leftCount = leftList.size();
+		root.left = build(pre.subList(1,1 + leftCount),leftList);
+		root.right = build(pre.subList(1 + leftCount,pre.size()),vin.subList(rootIndexInVin + 1,vin.size()));
+		return root;
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] vin) {
+		return build(toList(pre),toList(vin));
+	}
+	List<Integer> toList(int[] array) {
+		return Arrays.stream(array).boxed().collect(Collectors.toList());
+	}
+}

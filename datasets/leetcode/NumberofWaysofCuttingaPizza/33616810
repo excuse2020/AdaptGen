@@ -1,0 +1,39 @@
+class Solution {
+	String[] board;
+	int[][][] dp;
+	int mod = 1000000007;
+	int back(int rs, int cs, int k) {
+		if (k == 1) {
+			return 1;
+		}
+		if (dp[rs][cs][k] != -1) {
+			return dp[rs][cs][k];
+		}
+		int ans = 0;
+		for (int i = rs; i < board.length - 1; i++) {
+			if (present(rs,cs,i,board[0].length() - 1) && present(i + 1,cs,board.length - 1,board[0].length() - 1)) {
+				ans = (ans + back(i + 1,cs,k - 1)) % mod;
+			}
+		}
+		for (int i = cs; i < board[0].length() - 1; i++) {
+			if (present(rs,cs,board.length - 1,i) && present(rs,i + 1,board.length - 1,board[0].length() - 1)) {
+				ans = (ans + back(rs,i + 1,k - 1)) % mod;
+			}
+		}
+		return dp[rs][cs][k] = ans;
+	}
+	boolean present(int rs, int cs, int re, int ce) {
+		int i = rs;
+		int j = cs;
+	}
+	int ways(String[] pizza, int k) {
+		board = pizza;
+		dp = new int[pizza.length + 1][pizza[0].length() + 1][k + 1];
+		for (int[][] d: dp) {	
+			for (int[] a: d) {	
+				Arrays.fill(a,-1);
+			}
+		}
+		return back(0,0,k);
+	}
+}

@@ -1,0 +1,42 @@
+class Solution {
+	boolean isPossible(int n, List<List<Integer>> edgesList) {
+		Set<Pair<Integer, Integer>> edges = new HashSet<>();
+		int[] degree = new int[n + 1];
+		for (List<Integer> edge: edgesList) {	
+			edges.add(new Pair(edge.get(0), edge.get(1)));
+			edges.add(new Pair(edge.get(1), edge.get(0)));
+			degree[edge.get(0)]++;
+			degree[edge.get(1)]++;
+		}
+		List<Integer> oddNodes = new ArrayList<>();
+		for (int i = 1; i <= n; i++) {
+			if (degree[i] % 2 == 1) {
+				oddNodes.add(i);
+			}
+		}
+		int m = oddNodes.size();
+		if (m == 0) {
+			return true;
+		}
+		if (m == 1 || m > 4 || m == 3) {
+			return false;
+		}
+		int a = oddNodes.get(0), b = oddNodes.get(1);
+		if (m == 2) {
+			if (!edges.contains(new Pair(a,b))) {
+				return true;
+			}
+			for (int i = 1; i <= n; i++) {
+				if (!edges.contains(new Pair(a,i)) && !edges.contains(new Pair(i,b))) {
+					return true;
+				}
+			}
+			return false;
+		}
+		int c = oddNodes.get(2), d = oddNodes.get(3);
+		if ((!edges.contains(new Pair(a,b)) && !edges.contains(new Pair(c,d))) || (!edges.contains(new Pair(a,c)) && !edges.contains(new Pair(b,d)))) {
+			return true;
+		}
+		return false;
+	}
+}

@@ -1,0 +1,44 @@
+class Solution {
+	int m;
+	int mod = (int) 1e9 + 7;
+	int noOf(int n, int m, int k, int dp) {
+		if (n == 0) {
+			if (m > 0 && k == 0) {
+				return 1;
+			}
+			return 0;
+		}
+		if (dp[n][m][k] != -1) {
+			return dp[n][m][k];
+		}
+		long cnt = 0;
+		if (k != 0) {
+			for (int t = k; t < m; t++) {
+				cnt += noOf(n - 1,t,k - 1,dp);
+				cnt %= mod;
+			}
+		}
+		if (k < n) {
+			for (int t = m; t <= this.m; t++) {
+				cnt += noOf(n - 1,m,k,dp);
+				cnt %= mod;
+			}
+		}
+		return dp[n][m][k] = (int) cnt;
+	}
+	int numOfArrays(int n, int m, int k) {
+		long cnt = 0;
+		this.m = m;
+		int dp = new int[n + 1][m + 1][k + 1];
+		for (int a: dp) {	
+			for (int b: a) {	
+				Arrays.fill(b,-1);
+			}
+		}
+		for (int t = k; t <= m; t++) {
+			cnt += noOf(n - 1,t,k - 1,dp);
+			cnt %= mod;
+		}
+		return (int) cnt;
+	}
+}

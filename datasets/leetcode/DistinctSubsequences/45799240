@@ -1,0 +1,35 @@
+class Solution {
+	int mod = (int) (Math.pow(10,9) + 7);
+	int countWays(int i, int j, String s, String t, int[][] dp) {
+		if (j < 0) {
+			return 1;
+		}
+		if (i < 0) {
+			return 0;
+		}
+		if (dp[i][j] != -1) {
+			return dp[i][j];
+		}
+		if (s.charAt(i) == t.charAt(j)) {
+			dp[i][j] = (countWays(i - 1,j - 1,s,t,dp) + countWays(i - 1,j,s,t,dp)) % mod;
+		} 
+		else {
+			dp[i][j] = countWays(i - 1,j,s,t,dp);
+		}
+		return dp[i][j];
+	}
+	int numDistinct(String s, String t) {
+		int n = s.length(), m = t.length();
+		int[][] dp = new int[n + 1][m + 1];
+		int[] prev = new int[m + 1];
+		prev[0] = 1;
+		for (int i = 1; i <= n; i++) {
+			for (int j = m; j >= 1; j--) {
+				if (s.charAt(i - 1) == t.charAt(j - 1)) {
+					prev[j] = (prev[j - 1] + prev[j]) % mod;
+				}
+			}
+		}
+		return prev[m];
+	}
+}

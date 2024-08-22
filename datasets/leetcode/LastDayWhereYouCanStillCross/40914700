@@ -1,0 +1,55 @@
+class Solution {
+	boolean[] b;
+	int c;
+	int[] p;
+	int getPar(int x) {
+		if (p[x] == x) {
+			return x;
+		}
+		return p[x] = getPar(p[x]);
+	}
+	int latestDayToCross(int r, int cc, int[][] cells) {
+		c = cc;
+		boolean[] map = new boolean[r * c];
+		for (int i = cells.length - 1; i >= 0; i--) {
+			cells[i][0]--;
+			cells[i][1]--;
+		}
+		p = new int[r * c];
+		b = new boolean[r * c];
+		for (int i = 0; i < p.length; i++) {
+			p[i] = i;
+		}
+		for (int i = c * (r - 1); i < r * c; i++) {
+			b[i] = true;
+		}
+		for (int i = 0; i < map.length; i++) {
+		}
+		for (int d = cells.length - 1; d >= 0; d--) {
+			int x = cells[d][0] * c + cells[d][1];
+			map[x] = true;
+			if ((x >= c && map[x - c] && union(x,x - c)) || ((x + c) < r * c && map[x + c] && union(x,x + c))) {
+				return d;
+			}
+		}
+		return 0;
+	}
+	boolean union(int x, int y) {
+		x = getPar(x);
+		y = getPar(y);
+		if (x == y) {
+			return false;
+		}
+		boolean res;
+		if (x < y) {
+			b[x] |= b[y];
+			p[y] = x;
+			return x < c && b[x];
+		} 
+		else {
+			b[y] |= b[x];
+			p[x] = y;
+			return y < c && b[y];
+		}
+	}
+}

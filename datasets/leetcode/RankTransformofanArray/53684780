@@ -1,0 +1,36 @@
+class Solution {
+	int[] arrayRankTransform(int[] arr) {
+		PriorityQueue<Integer> que = new PriorityQueue<>();
+		Map<Integer, List<Integer>> indexLookup = new HashMap<>();
+		int[] res = new int[arr.length];
+		int i = 0;
+		for (int a: arr) {	
+			if (indexLookup.get(a) == null) {
+				List<Integer> l = new ArrayList<>();
+				l.add(i);
+				indexLookup.put(a,l);
+			} 
+			else {
+				List<Integer> l = indexLookup.get(a);
+				l.add(i);
+			}
+			i++;
+			que.add(a);
+		}
+		int rank = 1;
+		int prev = -1;
+		while (!que.isEmpty()) {
+			int val = que.poll();
+			if (prev == val) {
+				continue;
+			}
+			List<Integer> list = indexLookup.get(val);
+			for (Integer l: list) {	
+				res[l] = rank;
+			}
+			prev = val;
+			rank++;
+		}
+		return res;
+	}
+}

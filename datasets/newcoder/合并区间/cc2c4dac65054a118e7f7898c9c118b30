@@ -1,0 +1,28 @@
+class Solution {
+	Interval getnew(Interval i1, Interval i2) {
+		int start = Math.min(i1.start,i2.start);
+		int end = Math.max(i1.end,i2.end);
+		return new Interval(start, end);
+	}
+	ArrayList<Interval> merge(ArrayList<Interval> intervals) {
+		Collections.sort(intervals,new Comparator<Interval>());
+		Stack<Interval> stack = new Stack<>();
+		for (int i = 0; i < intervals.size(); i++) {
+			if (stack.isEmpty()) {
+				stack.push(intervals.get(i));
+			} 
+			else {
+				Interval t = stack.peek();
+				if (t.end >= intervals.get(i).start) {
+					stack.pop();
+					stack.push(getnew(t,intervals.get(i)));
+				} 
+				else {
+					stack.push(intervals.get(i));
+				}
+			}
+		}
+		ArrayList<Interval> res = new ArrayList<>(stack);
+		return res;
+	}
+}

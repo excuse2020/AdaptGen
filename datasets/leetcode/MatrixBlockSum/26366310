@@ -1,0 +1,26 @@
+class Solution {
+	int getSumRegion(int[][] dpBoard, int row1, int col1, int row2, int col2) {
+		return dpBoard[row2 + 1][col2 + 1] + dpBoard[row1][col1] - dpBoard[row1][col2 + 1] - dpBoard[row2 + 1][col1];
+	}
+	int[][] matrixBlockSum(int[][] board, int radius) {
+		int rows = board.length, columns = rows == 0 ? 0 : board[0].length;
+		int[][] result = new int[rows][columns];
+		int[][] dpBoard = precomputeSum(board);
+		for (int row = 0; row < rows; row++) {
+			for (int col = 0; col < columns; col++) {
+				result[row][col] = getSumRegion(dpBoard,Math.max(0,(row - radius)),Math.max(0,(col - radius)),Math.min((rows - 1),(row + radius)),Math.min((columns - 1),(col + radius)));
+			}
+		}
+		return result;
+	}
+	int[][] precomputeSum(int[][] board) {
+		int rows = board.length, columns = rows == 0 ? 0 : board[0].length;
+		int[][] dpBoard = new int[rows + 1][columns + 1];
+		for (int row = 0; row < rows; row++) {
+			for (int col = 0; col < columns; col++) {
+				dpBoard[row + 1][col + 1] = board[row][col] + dpBoard[row][col + 1] - dpBoard[row][col];
+			}
+		}
+		return dpBoard;
+	}
+}

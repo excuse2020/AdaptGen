@@ -1,0 +1,45 @@
+class Solution {
+	int find(int[] parent, int i) {
+		if (parent[i] != i) {
+			parent[i] = find(parent,parent[i]);
+		}
+		return parent[i];
+	}
+	int findCircleNum(int[][] isConnected) {
+		int n = isConnected.length;
+		int[] parent = new int[n + 1];
+		int[] size = new int[n + 1];
+		for (int i = 0; i <= n; i++) {
+			parent[i] = i;
+			size[i] = 1;
+		}
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (isConnected[i][j] == 1) {
+					int u = find(parent,i + 1);
+					int v = find(parent,j + 1);
+					if (u != v) {
+						union(parent,size,u,v);
+					}
+				}
+			}
+		}
+		int provinces = 0;
+		for (int i = 1; i <= n; i++) {
+			if (parent[i] == i) {
+				provinces++;
+			}
+		}
+		return provinces;
+	}
+	void union(int[] parent, int[] size, int u, int v) {
+		if (u < v) {
+			parent[u] = v;
+			size[v] += size[u];
+		} 
+		else {
+			parent[v] = u;
+			size[u] += size[v];
+		}
+	}
+}

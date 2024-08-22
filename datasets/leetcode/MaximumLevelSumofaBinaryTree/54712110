@@ -1,0 +1,27 @@
+class Solution {
+	int maxLevel = 1;
+	int[] sums = new int[1000];
+	void helperMethod(TreeNode root, int level) {
+		if (root == null) {
+			return;
+		}
+		sums[level] += root.val;
+		helperMethod(root.left,level + 1);
+		helperMethod(root.right,level + 1);
+		if (maxLevel < level) {
+			maxLevel = level;
+		}
+	}
+	int maxLevelSum(TreeNode root) {
+		int maxSum = Integer.MIN_VALUE;
+		int reqLevel = 0;
+		helperMethod(root,1);
+		for (int i = 1; i <= maxLevel; i++) {
+			if (maxSum < sums[i]) {
+				maxSum = sums[i];
+				reqLevel = i;
+			}
+		}
+		return reqLevel;
+	}
+}

@@ -1,0 +1,31 @@
+class Solution {
+	double solver(int a, int b, double[][] dp) {
+		if (a == 0 && b == 0) {
+			return 0.5;
+		}
+		if (a == 0 && b != 0) {
+			return 1;
+		}
+		if (a != 0 && b == 0) {
+			return 0;
+		}
+		if (dp[a][b] != -1) {
+			return dp[a][b];
+		}
+		double p1 = solver(Math.max(0,a - 100),b,dp);
+		double p2 = solver(Math.max(0,a - 75),Math.max(0,b - 25),dp);
+		double p3 = solver(Math.max(0,a - 50),Math.max(0,b - 50),dp);
+		double p4 = solver(Math.max(0,a - 25),Math.max(0,b - 75),dp);
+		return dp[a][b] = 0.25 * (p1 + p2);
+	}
+	double soupServings(int n) {
+		if (n >= 4000) {
+			return 1;
+		}
+		double[][] dp = new double[n + 1][n + 1];
+		for (double[] i: dp) {	
+			Arrays.fill(i,-1);
+		}
+		return solver(n,n,dp);
+	}
+}

@@ -1,0 +1,19 @@
+class Solution {
+	int countDays(int days, int[][] meetings) {
+		int remaining = days;
+		Arrays.sort(meetings,(a, b) -> {a[0] == b[0] ? a[1] - b[1] : a[0] - b[0]});
+		int[] first = meetings[0];
+		remaining -= (first[1] - first[0] + 1);
+		for (int i = 1; i < meetings.length; i++) {
+			int[] second = meetings[i];
+			if (second[0] <= first[1]) {
+				remaining -= Math.abs(first[1] - Math.max(first[1],second[1]));
+			} 
+			else {
+				remaining -= (second[1] - second[0] + 1);
+			}
+			first[1] = Math.max(first[1],second[1]);
+		}
+		return remaining;
+	}
+}

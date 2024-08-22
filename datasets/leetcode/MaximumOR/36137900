@@ -1,0 +1,56 @@
+class Solution {
+	int findbits(int num) {
+		int len = 0;
+		while (num != 0) {
+			num = num >> 1;
+			len++;
+		}
+		return len;
+	}
+	long maximumOr(int[] nums, int k) {
+		int n = 32;
+		int max = nums[0];
+		for (int num: nums) {	
+			max = Math.max(max,num);
+		}
+		int m = findbits(max);
+		List<Integer> list = new ArrayList();
+		long ans = 0;
+		for (int num: nums) {	
+			if (findbits(num) == m) {
+				list.add(num);
+			} 
+			else {
+				ans = ans | num;
+			}
+		}
+		long Ans = 0;
+		int count = new int[n];
+		for (int i = 0; i < list.size(); i++) {
+			int temp = list.get(i);
+			for (int j = n - 1; j >= 0; j--) {
+				count[j] += temp & 1;
+				temp = temp >> 1;
+			}
+		}
+		for (int i = 0; i < list.size(); i++) {
+			int temp = list.get(i);
+			for (int j = n - 1; j >= 0; j--) {
+				count[j] -= temp & 1;
+				temp >>= 1;
+			}
+			long ans2 = 0;
+			for (int j = 0; j < n; j++) {
+				ans2 = ans2 << 1;
+				ans2 = ans2 | (count[j] >= 1 ? 1 : 0);
+			}
+			temp = list.get(i);
+			for (int j = n - 1; j >= 0; j--) {
+				count[j] += temp & 1;
+				temp = temp >> 1;
+			}
+			Ans = Math.max(Ans,ans | ans2);
+		}
+		return Ans;
+	}
+}

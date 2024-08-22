@@ -1,0 +1,25 @@
+class Solution {
+	int helper(int i, int x, int[] arr, int[][] dp) {
+		if (i == arr.length) {
+			return 0;
+		}
+		if (dp[i][x] != -1) {
+			return dp[i][x];
+		}
+		int notTaken = helper(i + 1,x,arr,dp);
+		int taken = 0;
+		if (arr[i] > x) {
+			taken = helper(i + 1,x + arr[i],arr,dp) + arr[i];
+		}
+		return dp[i][x] = Math.max(notTaken,taken);
+	}
+	int maxTotalReward(int[] rewardValues) {
+		int n = rewardValues.length;
+		Arrays.sort(rewardValues);
+		int[][] dp = new int[n][4097];
+		for (int[] row: dp) {	
+			Arrays.fill(row,-1);
+		}
+		return helper(0,0,rewardValues,dp);
+	}
+}

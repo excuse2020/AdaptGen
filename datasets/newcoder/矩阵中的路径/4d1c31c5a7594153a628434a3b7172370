@@ -1,0 +1,35 @@
+class Solution {
+	boolean flag = false;
+	void dfs(char[][] matrix, int i, int j, String word, int idx) {
+		if (idx == word.length()) {
+			flag = true;
+			return;
+		}
+		if (i >= matrix.length || i < 0 || j >= matrix[0].length || j < 0 || matrix[i][j] != word.charAt(idx)) {
+			return;
+		}
+		char c = matrix[i][j];
+		matrix[i][j] = '0';
+		dfs(matrix,i - 1,j,word,idx + 1);
+		dfs(matrix,i + 1,j,word,idx + 1);
+		dfs(matrix,i,j - 1,word,idx + 1);
+		dfs(matrix,i,j + 1,word,idx + 1);
+		matrix[i][j] = c;
+	}
+	boolean hasPath(char[][] matrix, String word) {
+		if (matrix == null || matrix.length == 0 || word == null || word.length() == 0) {
+			return false;
+		}
+		int m = matrix.length;
+		int n = matrix[0].length;
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				dfs(matrix,i,j,word,0);
+				if (flag) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+}

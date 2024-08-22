@@ -1,0 +1,39 @@
+class Solution {
+	int getBoardValue(int[][] board, int x) {
+		int n = board.length;
+		int oldr = (x - 1) / n;
+		int row = n - 1;
+		int oldc = (x - 1) % n;
+		int col = oldr % 2 == 0 ? oldc : n - 1;
+		return board[row][col];
+	}
+	int snakesAndLadders(int[][] board) {
+		int n = board.length;
+		Queue<Integer> qu = new LinkedList<>();
+		qu.offer(1);
+		boolean[] vis = new boolean[n * n + 1];
+		for (int i = 0; !qu.isEmpty(); i++) {
+			for (int j = qu.size(); j > 0; j--) {
+				int x = qu.poll();
+				if (vis[x]) {
+					continue;
+				}
+				vis[x] = true;
+				if (x == n * n) {
+					return i;
+				}
+				for (int k = 1; k <= 6 && x + k <= n * n; k++) {
+					int y = x + k;
+					int val = getBoardValue(board,y);
+					if (val > 0) {
+						y = val;
+					}
+					if (!vis[y]) {
+						qu.offer(y);
+					}
+				}
+			}
+		}
+		return -1;
+	}
+}

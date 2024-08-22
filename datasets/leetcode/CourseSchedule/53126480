@@ -1,0 +1,50 @@
+class Solution {
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		ArrayList<Integer>[] graph = createGraph(numCourses,prerequisites);
+		int[] indegree = new int[numCourses];
+		for (int v = 0; v < numCourses; v++) {
+			for (int w: graph[v]) {	
+				indegree[w]++;
+			}
+		}
+		LinkedList<Integer> que = new LinkedList<>();
+		List<Integer> topologicalOrdering = new ArrayList<>();
+		int count = 0;
+		for (int v = 0; v < numCourses; v++) {
+			if (indegree[v] == 0) {
+				que.addLast(v);
+			}
+		}
+		while (que.size() != 0) {
+			int size = que.size();
+			while (size-- > 0) {
+				Integer rvtx = que.removeFirst();
+				topologicalOrdering.add(rvtx);
+				count++;
+				for (int nbr: graph[rvtx]) {	
+					if (--indegree[nbr] == 0) {
+						que.addLast(nbr);
+					}
+				}
+			}
+		}
+		if (count == numCourses) {
+			return true;
+		}
+		return false;
+	}
+	ArrayList<Integer>[] createGraph(int numCourses, int[][] prerequisites) {
+		ArrayList<Integer>[] graph = new ArrayList[numCourses];
+		for (int i = 0; i < numCourses; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int[] edge: prerequisites) {	
+			if (edge.length >= 2) {
+				int u = edge[0];
+				int v = edge[1];
+				graph[u].add(v);
+			}
+		}
+		return graph;
+	}
+}

@@ -1,0 +1,43 @@
+class Solution {
+	int helper(int root, int current, Map<Integer, List<Integer>> map, List<Boolean> hasApple, Set<Integer> visited) {
+		if (current != root && map.get(current).size() == 1) {
+			visited.add(current);
+			if (hasApple.get(current)) {
+				return 2;
+			}
+			return 0;
+		}
+		visited.add(current);
+		List<Integer> children = map.get(current);
+		int steps = 0;
+		boolean flag = true;
+		for (int child: children) {	
+			if (!visited.contains(child)) {
+				steps += helper(root,child,map,hasApple,visited);
+			}
+		}
+		if (current != root && hasApple.get(current) && steps == 0) {
+			return 2;
+		} 
+		else if (steps > 0 && current != root) {
+			steps = steps + 2;
+		}
+		return steps;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		if (n == 1) {
+			return 0;
+		}
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int[] edge: edges) {	
+			int from = edge[0];
+			int to = edge[1];
+			map.putIfAbsent(from,new ArrayList<>());
+			map.get(from).add(to);
+			map.putIfAbsent(to,new ArrayList<>());
+			map.get(to).add(from);
+		}
+		Set<Integer> visited = new HashSet<>();
+		return helper(0,0,map,hasApple,visited);
+	}
+}

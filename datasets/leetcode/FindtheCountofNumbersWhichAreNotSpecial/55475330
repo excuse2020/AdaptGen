@@ -1,0 +1,25 @@
+class Solution {
+	TreeMap<Integer, Integer> map = new TreeMap<>();
+	int n = 31627;
+	void isPrime(int n) {
+		boolean[] arr = new boolean[n + 1];
+		for (int i = 2; i * i <= n; i++) {
+			if (!arr[i]) {
+				for (int j = i * i; j <= n; j += i) {
+					arr[j] = true;
+				}
+			}
+		}
+		int idx = 1;
+		for (int i = 2; i <= n; i++) {
+			if (!arr[i]) {
+				map.put(i * i,idx++);
+			}
+		}
+	}
+	int nonSpecialCount(int l, int r) {
+		Map.Entry<Integer, Integer> ceil = map.ceilingEntry(l);
+		Map.Entry<Integer, Integer> floor = map.floorEntry(r);
+		return r - l + 1 - Math.max(0,(floor == null ? 0 : floor.getValue()) - (ceil == null ? 0 : ceil.getValue()) + 1);
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	ArrayList<String> ipset = new ArrayList<>();
+	ArrayList<String> res = new ArrayList<>();
+	void recall(String s, int index, int len) {
+		if (index == len && ipset.size() == 4) {
+			String ip = String.join(".",ipset);
+			res.add(ip);
+			return;
+		}
+		if (index == len || ipset.size() == 4) {
+			return;
+		}
+		int n = Math.min(index + 3,len);
+		for (int i = index; i < n; i++) {
+			String sub = s.substring(index,i + 1);
+			if (Integer.parseInt(sub) > 255 || sub.length() > 1 && sub.charAt(0) == '0') {
+				continue;
+			}
+			ipset.add(sub);
+			recall(s,i + 1,len);
+			ipset.remove(ipset.size() - 1);
+		}
+	}
+	ArrayList<String> restoreIpAddresses(String s) {
+		int len = s.length();
+		if (len < 4 || len > 12) {
+			return res;
+		}
+		recall(s,0,len);
+		return res;
+	}
+}

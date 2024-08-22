@@ -1,0 +1,28 @@
+class Solution {
+	int count = 0;
+	int countPairs(TreeNode root, int distance) {
+		xxdfs(root,distance);
+		return count;
+	}
+	int[] xxdfs(TreeNode node, int distance) {
+		int[] parArr = new int[distance + 1];
+		if (node == null) {
+			return parArr;
+		}
+		if (node.left == null && node.right == null) {
+			parArr[1] = 1;
+			return parArr;
+		}
+		int[] leftArr = xxdfs(node.left,distance);
+		int[] rightArr = xxdfs(node.right,distance);
+		for (int d1 = 1; d1 < distance; d1++) {
+			for (int d2 = 1; d1 + d2 <= distance; d2++) {
+				count += leftArr[d1] * rightArr[d2];
+			}
+		}
+		for (int i = 2; i < distance + 1; i++) {
+			parArr[i] = leftArr[i - 1] + rightArr[i - 1];
+		}
+		return parArr;
+	}
+}

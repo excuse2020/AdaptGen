@@ -1,0 +1,32 @@
+class Solution {
+	int[][] differenceOfDistinctValues(int[][] grid) {
+		int n = grid.length;
+		int m = grid[0].length;
+		Map<Integer, Set<Integer>> diagSets1 = new HashMap<>();
+		Map<Integer, Set<Integer>> diagSets2 = new HashMap<>();
+		int[][] diagUnique1 = new int[n][m];
+		int[][] diagUnique2 = new int[n][m];
+		for (int i = 1; i < n; i++) {
+			for (int j = 1; j < m; j++) {
+				int idx = i - j;
+				diagSets1.putIfAbsent(idx,new HashSet<>());
+				diagSets1.get(idx).add(grid[i - 1][j - 1]);
+				diagUnique1[i][j] = diagSets1.get(idx).size();
+			}
+		}
+		for (int i = n - 2; i >= 0; i--) {
+			for (int j = m - 2; j >= 0; j--) {
+				int idx = i - j;
+				diagSets2.putIfAbsent(idx,new HashSet<>());
+				diagSets2.get(idx).add(grid[i + 1][j + 1]);
+				diagUnique2[i][j] = diagSets2.get(idx).size();
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				grid[i][j] = Math.abs(diagUnique1[i][j] - diagUnique2[i][j]);
+			}
+		}
+		return grid;
+	}
+}

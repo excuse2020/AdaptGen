@@ -1,0 +1,47 @@
+class Solution {
+	int kmp(String S, String T) {
+		int S_len = S.length(), T_len = T.length();
+		char[] chs = S.toCharArray();
+		char[] cht = T.toCharArray();
+		int val = 0;
+		int[] F = new int[S_len];
+		int i = 1, j = 0;
+		F[0] = 0;
+		while (i < S_len) {
+			if (chs[i] == chs[j]) {
+				F[i] = j + 1;
+				i++;
+				j++;
+			} 
+			else if (j > 0) {
+				j = F[j - 1];
+			} 
+			else {
+				F[i] = 0;
+				i++;
+			}
+		}
+		i = 0;
+		j = 0;
+		while (i < T_len) {
+			if (chs[j] == cht[i]) {
+				if (j == (S_len - 1)) {
+					val++;
+					j = F[j];
+					i++;
+				} 
+				else {
+					i++;
+					j++;
+				}
+			} 
+			else if (j > 0) {
+				j = F[j - 1];
+			} 
+			else {
+				i++;
+			}
+		}
+		return val;
+	}
+}

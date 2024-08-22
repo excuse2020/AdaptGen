@@ -1,0 +1,30 @@
+class Solution {
+	int longestPath(int[] parent, String s) {
+		int[] indegree = new int[parent.length];
+		for (int i = 1; i < parent.length; i++) {
+			indegree[parent[i]]++;
+		}
+		Queue<Integer> qu = new LinkedList<>();
+		for (int i = 0; i < indegree.length; i++) {
+			if (indegree[i] == 0) {
+				qu.add(i);
+			}
+		}
+		int res = 1;
+		int path = new int[parent.length];
+		Arrays.fill(path,1);
+		while (!qu.isEmpty()) {
+			int node = qu.poll();
+			int p = parent[node];
+			if (p != -1 && --indegree[p] == 0) {
+				qu.add(p);
+			}
+			if (p == -1 || s.charAt(node) == s.charAt(p)) {
+				continue;
+			}
+			res = Math.max(res,path[p] + path[node]);
+			path[p] = Math.max(path[p],path[node] + 1);
+		}
+		return res;
+	}
+}

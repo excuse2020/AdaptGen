@@ -1,0 +1,53 @@
+class Solution {
+	List<Integer> list;
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		list = new ArrayList<>();
+		List<List<Integer>> answer = new ArrayList<>();
+		inorder(root);
+		for (int q: queries) {	
+			List<Integer> l = new ArrayList<>();
+			l.add(findSmaller(list,q));
+			l.add(findGreater(list,q));
+			answer.add(l);
+		}
+		return answer;
+	}
+	int findGreater(List<Integer> list, int val) {
+		int larger = -1;
+		int lptr = 0, rptr = list.size() - 1;
+		while (lptr <= rptr) {
+			int mid = lptr + (rptr - lptr) / 2;
+			if (list.get(mid) >= val) {
+				larger = list.get(mid);
+				rptr = mid - 1;
+			} 
+			else {
+				lptr = mid + 1;
+			}
+		}
+		return larger;
+	}
+	int findSmaller(List<Integer> list, int val) {
+		int smaller = -1;
+		int lptr = 0, rptr = list.size() - 1;
+		while (lptr <= rptr) {
+			int mid = lptr + (rptr - lptr) / 2;
+			if (list.get(mid) <= val) {
+				smaller = list.get(mid);
+				lptr = mid + 1;
+			} 
+			else {
+				rptr = mid - 1;
+			}
+		}
+		return smaller;
+	}
+	void inorder(TreeNode node) {
+		if (node == null) {
+			return;
+		}
+		inorder(node.left);
+		list.add(node.val);
+		inorder(node.right);
+	}
+}

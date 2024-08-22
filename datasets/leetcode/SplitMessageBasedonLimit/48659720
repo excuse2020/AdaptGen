@@ -1,0 +1,48 @@
+class Solution {
+	boolean isValid(int len, int limit, int num) {
+		int totsuffix = ((int) Math.log10(num) + 1) * num;
+		int curr = num;
+		for (int nd = 4; nd >= 1; nd--) {
+			int ln = (int) Math.pow(10,nd - 1);
+			if (curr >= ln) {
+				totsuffix += nd * (curr - ln + 1);
+				curr = ln - 1;
+			}
+		}
+		int nmsg = limit * num - totsuffix;
+		return nmsg >= len;
+	}
+	String[] splitMessage(String message, int limit) {
+		int n = message.length();
+		int l = 1, r = 9;
+		while (!isValid(n,limit,r)) {
+			r = r * 10 + 9;
+		}
+		l = (int) Math.pow(10,(int) Math.log10(r));
+		while (l < r) {
+			int mid = (l + r) / 2;
+			if (isValid(n,limit,mid)) {
+				r = mid;
+			} 
+			else {
+				l = mid + 1;
+			}
+		}
+		if (l > n) {
+			return new String[0];
+		}
+		String[] res = new String[l];
+		int i = 1;
+		int curr = 0;
+		int nsfx = (int) Math.log10(l) + 1;
+		while (i <= l) {
+			int totsfx = nsfx + (int) Math.log10(i);
+			int nmsg = limit - totsfx;
+			String s = message.substring(curr,Math.min(curr + nmsg,n));
+			res[i - 1] = s + "<";
+			curr += nmsg;
+			i++;
+		}
+		return res;
+	}
+}

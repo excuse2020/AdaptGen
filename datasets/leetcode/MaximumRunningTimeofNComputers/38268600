@@ -1,0 +1,36 @@
+class Solution {
+	long maxRunTime(int n, int[] batteries) {
+		Arrays.sort(batteries);
+		long s = 0;
+		for (int t: batteries) {	
+			s += t;
+		}
+		if (batteries.length == n) {
+			return batteries[0];
+		}
+		long st = batteries[0];
+		long e = s / n;
+		long res = batteries[0];
+		while (st <= e) {
+			long mid = st + (e - st) / 2;
+			if (solve(batteries,mid,n) == true) {
+				res = mid;
+				st = mid + 1;
+			} 
+			else {
+				e = mid - 1;
+			}
+		}
+		return res;
+	}
+	boolean solve(int[] b, long mid, int n) {
+		long s = 0;
+		for (int v: b) {	
+			s += Math.min(mid,v);
+		}
+		if (mid * n <= s) {
+			return true;
+		}
+		return false;
+	}
+}

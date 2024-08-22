@@ -1,0 +1,28 @@
+class Solution {
+	int fallsum(int[][] arr, int i, int j, int[][] dp) {
+		if (j >= arr[0].length || j < 0) {
+			return Integer.MAX_VALUE;
+		}
+		if (i == arr.length - 1) {
+			return arr[i][j];
+		}
+		if (dp[i][j] != 1000) {
+			return dp[i][j];
+		}
+		int left = fallsum(arr,i + 1,j - 1,dp);
+		int down = fallsum(arr,i + 1,j,dp);
+		int right = fallsum(arr,i + 1,j + 1,dp);
+		return dp[i][j] = Math.min(right,Math.min(left,down)) + arr[i][j];
+	}
+	int minFallingPathSum(int[][] matrix) {
+		int[][] dp = new int[matrix.length][matrix[0].length];
+		for (int[] a: dp) {	
+			Arrays.fill(a,1000);
+		}
+		int ans = Integer.MAX_VALUE;
+		for (int i = 0; i < matrix.length; i++) {
+			ans = Math.min(ans,fallsum(matrix,0,i,dp));
+		}
+		return ans;
+	}
+}

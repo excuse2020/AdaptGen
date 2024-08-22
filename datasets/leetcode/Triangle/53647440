@@ -1,0 +1,29 @@
+class Solution {
+	int minimumTotal(List<List<Integer>> arr) {
+		int m = arr.size();
+		int n = arr.get(m - 1).size();
+		int[][] dp = new int[m][n];
+		dp[0][0] = arr.get(0).get(0);
+		int prev_j = 1;
+		for (int i = 1; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				if (j == 0) {
+					dp[i][j] = arr.get(i).get(j) + dp[i - 1][j];
+				} 
+				else if (j == prev_j) {
+					dp[i][j] = arr.get(i).get(j) + dp[i - 1][j - 1];
+					break;
+				} 
+				else {
+					dp[i][j] = Math.min(dp[i - 1][j] + arr.get(i).get(j),dp[i - 1][j - 1] + arr.get(i).get(j));
+				}
+			}
+			prev_j++;
+		}
+		int mini = Integer.MAX_VALUE;
+		for (int j = 0; j < n; j++) {
+			mini = Math.min(mini,dp[m - 1][j]);
+		}
+		return mini;
+	}
+}

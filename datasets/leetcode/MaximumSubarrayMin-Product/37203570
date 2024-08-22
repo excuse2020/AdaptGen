@@ -1,0 +1,48 @@
+class Solution {
+	int maxSumMinProduct(int[] nums) {
+		int n = nums.length;
+		long sum = new long[n + 1];
+		long s = 0;
+		for (int i = 1; i <= nums.length; i++) {
+			sum[i] = sum[i - 1] + nums[i - 1];
+		}
+		int mod = 1000000000 + 7;
+		int[] left = new int[n];
+		int[] ryt = new int[n];
+		Stack<Integer> st = new Stack<>();
+		for (int i = 0; i < n; i++) {
+			while (!st.isEmpty() && nums[i] <= nums[st.peek()]) {
+				st.pop();
+			}
+			if (st.isEmpty()) {
+				left[i] = -1;
+			} 
+			else {
+				left[i] = st.peek();
+			}
+			st.add(i);
+		}
+		st.clear();
+		for (int i = n - 1; i >= 0; i--) {
+			while (!st.isEmpty() && nums[i] <= nums[st.peek()]) {
+				st.pop();
+			}
+			if (st.isEmpty()) {
+				ryt[i] = n;
+			} 
+			else {
+				ryt[i] = st.peek();
+			}
+			st.add(i);
+		}
+		long max = 0;
+		for (int i = 0; i < n; i++) {
+			int l = left[i];
+			int r = ryt[i];
+			long temp_s = sum[r] - sum[l + 1];
+			long pro = temp_s * nums[i];
+			max = Math.max(max,pro);
+		}
+		return (int) (max % mod);
+	}
+}

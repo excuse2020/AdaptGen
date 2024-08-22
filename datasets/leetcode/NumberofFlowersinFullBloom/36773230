@@ -1,0 +1,37 @@
+class Solution {
+	int binarySearch(int[] arr, int target) {
+		int left = 0;
+		int right = arr.length - 1;
+		while (left <= right) {
+			int mid = left + (right - left) / 2;
+			int midValue = arr[mid];
+			if (midValue > target) {
+				right = mid - 1;
+			} 
+			else {
+				left = mid + 1;
+			}
+		}
+		return left;
+	}
+	int[] fullBloomFlowers(int[][] flowers, int[] people) {
+		int flowersLength = flowers.length;
+		int[] startBlooming = new int[flowersLength];
+		int[] endBlooming = new int[flowersLength];
+		for (int index = 0; index < flowersLength; index++) {
+			startBlooming[index] = flowers[index][0];
+			endBlooming[index] = flowers[index][1] + 1;
+		}
+		Arrays.sort(startBlooming);
+		Arrays.sort(endBlooming);
+		int peopleLength = people.length;
+		int[] answer = new int[peopleLength];
+		for (int index = 0; index < peopleLength; index++) {
+			int target = people[index];
+			int flowersStartBlooming = binarySearch(startBlooming,target);
+			int flowersStopBlooming = binarySearch(endBlooming,target);
+			answer[index] = flowersStartBlooming - flowersStopBlooming;
+		}
+		return answer;
+	}
+}

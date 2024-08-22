@@ -1,0 +1,45 @@
+class Solution {
+	int[] fullBloomFlowers(int[][] flowers, int[] people) {
+		int n = flowers.length;
+		int m = people.length;
+		int[] start = new int[n];
+		int[] end = new int[n];
+		for (int i = 0; i < n; i++) {
+			start[i] = flowers[i][0];
+			end[i] = flowers[i][1];
+		}
+		int[][] ppl = new int[m][2];
+		for (int i = 0; i < m; i++) {
+			ppl[i][0] = people[i];
+			ppl[i][1] = i;
+		}
+		Arrays.sort(ppl,(a, b) -> {a[0] - b[0]});
+		Arrays.sort(start);
+		Arrays.sort(end);
+		int x = 0;
+		int y = 0;
+		int z = 0;
+		int sum = 0;
+		int[] ans = new int[m];
+		while (x != n || y != n || z != m) {
+			int s = x >= n ? Integer.MAX_VALUE : start[x];
+			int e = y >= n ? Integer.MAX_VALUE : end[y];
+			int p = z >= m ? Integer.MAX_VALUE : ppl[z][0];
+			if (x < n && start[x] <= e && start[x] <= p) {
+				sum++;
+				x++;
+			} 
+			else if (z < m && ppl[z][0] <= s && ppl[z][0] <= e) {
+				ans[ppl[z++][1]] = sum;
+				if (z == m) {
+					return ans;
+				}
+			} 
+			else if (y < n && end[y] <= s && end[y] <= p) {
+				sum--;
+				y++;
+			}
+		}
+		return ans;
+	}
+}

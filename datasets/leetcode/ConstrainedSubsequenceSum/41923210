@@ -1,0 +1,28 @@
+class Solution {
+	int constrainedSubsetSum(int[] nums, int k) {
+		Deque<Integer> dq = new ArrayDeque<>();
+		int j = 0;
+		int n = nums.length;
+		int ans = new int[n];
+		int res = Integer.MIN_VALUE;
+		res = nums[0];
+		ans[0] = nums[0];
+		dq.add(ans[0]);
+		for (int i = 1; i < n; i++) {
+			int max = Math.max(0,dq.peekFirst());
+			ans[i] = max + nums[i];
+			res = Math.max(res,ans[i]);
+			while (dq.size() > 0 && dq.peekLast() < ans[i]) {
+				dq.pollLast();
+			}
+			dq.add(ans[i]);
+			if (i >= k) {
+				if (dq.peekFirst() == ans[j]) {
+					dq.pollFirst();
+				}
+				j++;
+			}
+		}
+		return res;
+	}
+}

@@ -1,0 +1,37 @@
+class Solution {
+	int maxRem = Integer.MAX_VALUE;
+	List<String> res = new ArrayList<>();
+	char[] s;
+	HashMap<Character, Integer> v = new HashMap<>();
+	HashSet<String> vis = new HashSet<>();
+	void f(int curr, int openBr, int currp, char[] comb) {
+		int rem = curr - currp;
+		if (rem > maxRem || openBr < 0) {
+			return;
+		}
+		if (curr == s.length) {
+			if (openBr == 0) {
+				if (rem < maxRem) {
+					maxRem = rem;
+					res = new ArrayList<>();
+					vis.clear();
+				}
+				String paren = new String(comb).substring(0,currp);
+				if (!vis.contains(paren)) {
+					res.add(paren);
+					vis.add(paren);
+				}
+			}
+			return;
+		}
+		comb[currp] = s[curr];
+		f(curr + 1,openBr + v.getOrDefault(s[curr],0),currp + 1,comb);
+		if ("()".indexOf(s[curr]) < 0) {
+			return;
+		}
+		f(curr + 1,openBr,currp,comb);
+	}
+	List<String> removeInvalidParentheses(String s) {
+		this.s = s.toCharArray();
+	}
+}

@@ -1,0 +1,34 @@
+class Solution {
+	int maximumWhiteTiles(int[][] tiles, int carpetLen) {
+		int n = tiles.length;
+		Arrays.sort(tiles,Comparator.comparingInt((a) -> {a[0]}));
+		TreeMap<Integer, Integer> map = new TreeMap<>();
+		Map<Integer, Integer> idxMap = new HashMap<>();
+		long[] pre = new long[n + 1];
+		int idx = 0;
+		for (int[] tile: tiles) {	
+			map.put(tile[0],tile[1]);
+			pre[idx + 1] = (tile[1] - tile[0] + 1) + pre[idx];
+			idxMap.put(tile[0],idx++);
+		}
+		idx = 0;
+		int max = 0;
+		for (int key: map.keySet()) {	
+			int end = key + carpetLen - 1;
+			Map.Entry<Integer, Integer> entry = map.floorEntry(end);
+			int endIdx = idxMap.get(entry.getKey());
+			if (endIdx >= idx) {
+				int temp = (int) (pre[endIdx] - pre[idx]);
+				if (entry.getValue() >= end) {
+					temp += end - (entry.getKey()) + 1;
+				} 
+				else {
+					temp += (entry.getValue() - entry.getKey() + 1);
+				}
+				max = Math.max(temp,max);
+			}
+			idx++;
+		}
+		return max;
+	}
+}

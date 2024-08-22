@@ -1,0 +1,33 @@
+class Solution {
+	int[] prisonAfterNDays(int[] cells, int N) {
+		if (N == 0) {
+			return cells;
+		}
+		int T = 1;
+		ArrayList<int[]> days = new ArrayList<>();
+		days.add(cells);
+		for (int i = 1; i <= 256; i++) {
+			days.add(prisonAfterOneDay(days.get(i - 1)));
+			if (i > 1 && Arrays.equals(days.get(1),days.get(i))) {
+				T = i - 1;
+				break;
+			}
+		}
+		int actual = (N % T == 0) ? T : N % T;
+		return days.get(actual);
+	}
+	int[] prisonAfterOneDay(int[] cells) {
+		int[] res = new int[8];
+		res[0] = 0;
+		res[7] = 0;
+		for (int i = 1; i < 7; i++) {
+			if (cells[i - 1] == cells[i + 1]) {
+				res[i] = 1;
+			} 
+			else {
+				res[i] = 0;
+			}
+		}
+		return res;
+	}
+}

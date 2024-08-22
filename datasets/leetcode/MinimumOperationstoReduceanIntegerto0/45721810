@@ -1,0 +1,35 @@
+class Solution {
+	int minOperations(int n) {
+		int bitCount = 0;
+		for (int i = 0; i < 32; i++) {
+			if ((n & (1 << i)) > 0) {
+				bitCount++;
+			}
+		}
+		int m = n;
+		int stepCount = 0;
+		for (int i = 0; i < 32; i++) {
+			if ((m & (1 << i)) == 0) {
+				continue;
+			}
+			int j = i;
+			while ((m & (1 << j)) > 0) {
+				j++;
+			}
+			if (j - i > 1) {
+				m = m + (1 << i);
+				i = j - 1;
+				stepCount++;
+			} 
+			else {
+				m = m - (1 << i);
+				stepCount++;
+			}
+			if ((m & (m - 1)) == 0) {
+				stepCount++;
+				break;
+			}
+		}
+		return Math.min(stepCount,bitCount);
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	int mod = 1000000007;
+	int checkRecord(int n) {
+		int[][][] memo = new int[n + 1][2][3];
+		for (int[][] arr: memo) {	
+			for (int[] subArr: arr) {	
+				Arrays.fill(subArr,-1);
+			}
+		}
+		return solve(n,0,0,0,memo);
+	}
+	int solve(int n, int i, int ACount, int LCount, int[][][] memo) {
+		if (i == n) {
+			return 1;
+		}
+		if (memo[i][ACount][LCount] != -1) {
+			return memo[i][ACount][LCount];
+		}
+		int option2 = 0;
+		int option3 = 0;
+		int option1 = solve(n,i + 1,ACount,0,memo);
+		if (ACount < 1) {
+			option2 = solve(n,i + 1,ACount + 1,0,memo);
+		}
+		if (LCount < 2) {
+			option3 = solve(n,i + 1,ACount,LCount + 1,memo);
+		}
+		int ans = (((option1 + option2) % mod) + option3) % mod;
+		memo[i][ACount][LCount] = ans;
+		return ans;
+	}
+}

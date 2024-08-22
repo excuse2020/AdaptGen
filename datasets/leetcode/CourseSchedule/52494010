@@ -1,0 +1,36 @@
+class Solution {
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < numCourses; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int[] prereq: prerequisites) {	
+			graph.get(prereq[0]).add(prereq[1]);
+		}
+		boolean[] visited = new boolean[numCourses];
+		boolean[] isBeingVisited = new boolean[numCourses];
+		for (int i = 0; i < numCourses; i++) {
+			if (checkForCycle(graph,i,visited,isBeingVisited)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean checkForCycle(List<List<Integer>> graph, int index, boolean[] visited, boolean[] isBeingVisited) {
+		if (isBeingVisited[index]) {
+			return true;
+		}
+		if (visited[index]) {
+			return false;
+		}
+		visited[index] = true;
+		isBeingVisited[index] = true;
+		for (int adj: graph.get(index)) {	
+			if (checkForCycle(graph,adj,visited,isBeingVisited)) {
+				return true;
+			}
+		}
+		isBeingVisited[index] = false;
+		return false;
+	}
+}

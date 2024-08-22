@@ -1,0 +1,55 @@
+class Solution {
+	int[] minCostPath;
+	void calculateMinCostFromStartToEndOfSpecialRoads(int[] start, int[][] specialRoads) {
+		for (int road = 0; road < specialRoads.length; ++road) {
+			int fromX = specialRoads[road][0];
+			int fromY = specialRoads[road][1];
+			int toX = specialRoads[road][2];
+			int toY = specialRoads[road][3];
+			int specialCost = specialRoads[road][4];
+			int ordinaryCostFromStart = getOrdinaryCost(start[0],start[1],toX,toY);
+			int specialCostFromStart = getOrdinaryCost(start[0],start[1],fromX,fromY) + specialCost;
+			minCostPath[road] = Math.min(ordinaryCostFromStart,specialCostFromStart);
+		}
+	}
+	void calculateMinCostFromStartToEndOfSpecialRoadsWithGoingBetweenSpecialRoads(int[][] specialRoads) {
+		for (int firstRoad = 0; firstRoad < specialRoads.length; ++firstRoad) {
+			for (int secondRoad = 0; secondRoad < specialRoads.length; ++secondRoad) {
+				if (firstRoad == secondRoad) {
+					continue;
+				}
+				connectSpecialRoads(firstRoad,secondRoad,specialRoads);
+				connectSpecialRoads(secondRoad,firstRoad,specialRoads);
+			}
+		}
+	}
+	int calculateMinCostFromStartToTarget(int[] start, int[] target, int[][] specialRoads) {
+		int minCostFromStartToTarget = getOrdinaryCost(start[0],start[1],target[0],target[1]);
+		for (int road = 0; road < specialRoads.length; ++road) {
+			int endRoadX = specialRoads[road][2];
+			int endRoadY = specialRoads[road][3];
+			int ordinaryCostFromSpecialRoadEndToTarget = getOrdinaryCost(endRoadX,endRoadY,target[0],target[1]);
+			minCostFromStartToTarget = Math.min(minCostFromStartToTarget,minCostPath[road] + ordinaryCostFromSpecialRoadEndToTarget);
+		}
+		return minCostFromStartToTarget;
+	}
+	void connectSpecialRoads(int indexFrom, int indexTo, int[][] specialRoads) {
+		int fromX = specialRoads[indexFrom][2];
+		int fromY = specialRoads[indexFrom][3];
+		int toX = specialRoads[indexTo][0];
+		int toSecondRoadY = specialRoads[indexTo][1];
+		int specialCostSecondRoad = specialRoads[indexTo][4];
+		int ordinaryCostFromFirstToSecond = getOrdinaryCost(fromX,fromY,toX,toSecondRoadY);
+		int costFromStart = minCostPath[indexFrom] + ordinaryCostFromFirstToSecond;
+		minCostPath[indexTo] = Math.min(minCostPath[indexTo],costFromStart);
+	}
+	int getOrdinaryCost(int fromX, int fromY, int toX, int toY) {
+		return Math.abs(fromX - toX) + Math.abs(fromY - toY);
+	}
+	int minimumCost(int[] start, int[] target, int[][] specialRoads) {
+		minCostPath = new int[specialRoads.length];
+		calculateMinCostFromStartToEndOfSpecialRoads(start,specialRoads);
+		calculateMinCostFromStartToEndOfSpecialRoadsWithGoingBetweenSpecialRoads(specialRoads);
+		return calculateMinCostFromStartToTarget(start,target,specialRoads);
+	}
+}

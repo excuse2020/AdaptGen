@@ -1,0 +1,69 @@
+class Solution {
+	boolean DFSTraverse(int start, int tgt, int[] counts, List<List<Integer>> Adj, boolean vis) {
+		if (vis[start]) {
+			return false;
+		}
+		vis[start] = true;
+		if (start == tgt) {
+			counts[start]++;
+			return true;
+		}
+		boolean ans = false;
+		for (int adjacent: Adj.get(start)) {	
+			ans = ans | DFSTraverse(adjacent,tgt,counts,Adj,vis);
+		}
+		if (ans) {
+			counts[start]++;
+		}
+		return ans;
+	}
+	int DPDFS(int node, int[] DP, List<List<Integer>> Adj, boolean pathvis, int[] prices, int[] counts) {
+		if (pathvis[node]) {
+			return 0;
+		}
+		if (DP[node] != -1) {
+			return DP[node];
+		}
+		int ans1 = 0;
+		int ans2 = 0;
+		int childval = 0;
+		pathvis[node] = true;
+		for (int child1: Adj.get(node)) {	
+			if (pathvis[child1]) {
+				continue;
+			}
+			pathvis[child1] = true;
+			for (int child2: Adj.get(child1)) {	
+				int val = DPDFS(child2,DP,Adj,pathvis,prices,counts);
+				ans2 += val;
+			}
+			pathvis[child1] = false;
+			childval += counts[child1] * prices[child1];
+			ans1 += DPDFS(child1,DP,Adj,pathvis,prices,counts);
+		}
+		int Ans = Math.min(ans2 + childval,ans1 + prices[node] * counts[node]);
+		pathvis[node] = false;
+		return DP[node] = Ans;
+	}
+	int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
+		int[] counts = new int[n];
+		List<List<Integer>> Adj = new ArrayList();
+		for (int i = 0; i < n; i++) {
+			Adj.add(new ArrayList());
+		}
+		for (int edge: edges) {	
+			Adj.get(edge[0]).add(edge[1]);
+			Adj.get(edge[1]).add(edge[0]);
+		}
+		for (int trip: trips) {	
+			boolean vis = new boolean[n];
+			DFSTraverse(trip[0],trip[1],counts,Adj,vis);
+		}
+		int DP = new int[n];
+		for (int i = 0; i < DP.length; i++) {
+			DP[i] = -1;
+		}
+		boolean pathvis = new boolean[n];
+		return DPDFS(n - 1,DP,Adj,pathvis,price,counts);
+	}
+}

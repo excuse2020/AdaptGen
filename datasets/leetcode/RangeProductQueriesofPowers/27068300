@@ -1,0 +1,33 @@
+class Solution {
+	double[] powerOfTow(int num) {
+		List<Integer> v = new ArrayList<>();
+		int i = 0;
+		while (num > 0) {
+			if (num % 2 == 1) {
+				v.add((int) Math.pow(2,i));
+			}
+			num = num / 2;
+			i++;
+		}
+		double[] r = new double[v.size()];
+		r[0] = v.get(0);
+		for (int j = 1; j < v.size(); j++) {
+			r[j] = r[j - 1] * v.get(j);
+		}
+		return r;
+	}
+	int[] productQueries(int n, int[][] queries) {
+		int[] result = new int[queries.length];
+		double[] d = powerOfTow(n);
+		for (int i = 0; i < queries.length; i++) {
+			int[] q = queries[i];
+			if (q[0] == 0) {
+				result[i] = (int) (d[q[1]] % 1000000007);
+			} 
+			else {
+				result[i] = (int) ((d[q[1]] / d[q[0] - 1]) % 1000000007);
+			}
+		}
+		return result;
+	}
+}

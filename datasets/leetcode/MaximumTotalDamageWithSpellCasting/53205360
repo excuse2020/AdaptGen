@@ -1,0 +1,29 @@
+class Solution {
+	int fun(int x) {
+		return x;
+	}
+	long maximumTotalDamage(int[] power) {
+		Map<Integer, Integer> damage_freq = new HashMap<>();
+		for (int dmg: power) {	
+			int key = fun(dmg);
+			damage_freq.put(key,damage_freq.getOrDefault(key,0) + 1);
+		}
+		List<Integer> unique_damage = new ArrayList<>(damage_freq.keySet());
+		Collections.sort(unique_damage);
+		int n = unique_damage.size();
+		long[] dp = new long[n + 1];
+		for (int i = 1; i <= n; i++) {
+			long current_damage = (long) unique_damage.get(i - 1) * damage_freq.get(unique_damage.get(i - 1));
+			long take = current_damage;
+			for (int j = i - 2; j >= 0; j--) {
+				if (unique_damage.get(i - 1) - unique_damage.get(j) > 2) {
+					take += dp[j + 1];
+					break;
+				}
+			}
+			long dont_take = dp[i - 1];
+			dp[i] = Math.max(take,dont_take);
+		}
+		return dp[n];
+	}
+}

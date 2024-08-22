@@ -1,0 +1,33 @@
+class Solution {
+	int getMin(int num, List<Integer> list, int ind, int step, int dp) {
+		if (num == 0) {
+			return step;
+		}
+		if (num < 0 || ind > list.size() - 1) {
+			return Integer.MAX_VALUE;
+		}
+		if (dp[num][ind] != -1) {
+			return dp[num][ind];
+		}
+		int take = getMin(num - list.get(ind),list,ind,step + 1,dp);
+		int notTake = getMin(num,list,ind + 1,step,dp);
+		return dp[num][ind] = Math.min(take,notTake);
+	}
+	int minimumNumbers(int num, int k) {
+		List<Integer> list = new ArrayList<>();
+		if (num == 0) {
+			return 0;
+		}
+		while (k <= num) {
+			if (k != 0) {
+				list.add(k);
+			}
+			k += 10;
+		}
+		int[][] dp = new int[num + 1][list.size()];
+		for (int[] arr: dp) {	
+			Arrays.fill(arr,-1);
+		}
+		return getMin(num,list,0,0,dp) == Integer.MAX_VALUE ? -1 : getMin(num,list,0,0,dp);
+	}
+}

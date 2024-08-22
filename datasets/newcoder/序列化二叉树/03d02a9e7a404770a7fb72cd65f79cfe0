@@ -1,0 +1,34 @@
+class Solution {
+	TreeNode Deserialize(String str) {
+		if (str.length() <= 0 || str.charAt(0) == '#') {
+			return null;
+		}
+		int p = 0;
+		while (p < str.length() && str.charAt(p) != '!') {
+			p++;
+		}
+		TreeNode root = new TreeNode(Integer.parseInt(str.substring(0,p)));
+		p++;
+		int start = p;
+		int cnt = 1;
+		while (cnt > 0) {
+			p++;
+			if (str.charAt(p) == '}') {
+				cnt--;
+			}
+			if (str.charAt(p) == '{') {
+				cnt++;
+			}
+		}
+		root.left = Deserialize(str.substring(start + 1,p));
+		root.right = Deserialize(str.substring(p + 1));
+		return root;
+	}
+	String Serialize(TreeNode root) {
+		if (root == null) {
+			return "#!";
+		}
+		String res = root.val + "!";
+		return res + "{";
+	}
+}

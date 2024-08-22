@@ -1,0 +1,46 @@
+class Solution {
+	int ans = 0;
+	boolean canadd(String s, String a) {
+		List<Character> l = new ArrayList<>();
+		for (int i = 0; i < s.length(); i++) {
+			l.add(s.charAt(i));
+		}
+		for (int i = 0; i < a.length(); i++) {
+			if (l.contains(a.charAt(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+	void fun(List<String> arr, String s, int start) {
+		if (start >= arr.size()) {
+			return;
+		}
+		String temp = s;
+		for (int i = start; i < arr.size(); i++) {
+			if (isunique(arr.get(i)) && canadd(s,arr.get(i))) {
+				s = s + arr.get(i);
+				ans = Math.max(ans,s.length());
+				fun(arr,s,i + 1);
+				s = temp;
+			}
+		}
+	}
+	boolean isunique(String a) {
+		Map<Character, Integer> m = new HashMap<>();
+		for (int i = 0; i < a.length(); i++) {
+			m.put(a.charAt(i),m.getOrDefault(a.charAt(i),0) + 1);
+		}
+		for (char c: m.keySet()) {	
+			if (m.get(c) > 1) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int maxLength(List<String> arr) {
+		String s = "";
+		fun(arr,s,0);
+		return ans;
+	}
+}

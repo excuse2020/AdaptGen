@@ -1,0 +1,27 @@
+class Solution {
+	long maxPoints(int[][] points) {
+		long[] dpPrev = new long[points[0].length];
+		for (int rn = points.length - 1; rn >= 0; rn--) {
+			long[] dpNext = new long[points[0].length];
+			int[] row = points[rn];
+			long maxInRow = 0;
+			for (int cnr = 0; cnr < row.length; cnr++) {
+				maxInRow--;
+				maxInRow = Math.max(maxInRow,row[cnr] + dpPrev[cnr]);
+				dpNext[cnr] = Math.max(dpNext[cnr],maxInRow);
+			}
+			maxInRow = 0;
+			for (int cnl = row.length - 1; cnl >= 0; cnl--) {
+				maxInRow--;
+				maxInRow = Math.max(maxInRow,row[cnl] + dpPrev[cnl]);
+				dpNext[cnl] = Math.max(dpNext[cnl],maxInRow);
+			}
+			dpPrev = dpNext;
+		}
+		long result = 0;
+		for (int i = 0; i < dpPrev.length; i++) {
+			result = Math.max(result,dpPrev[i]);
+		}
+		return result;
+	}
+}

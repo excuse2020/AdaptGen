@@ -1,0 +1,44 @@
+class Solution {
+	int nodeId;
+	List<List<Integer>> buildGraph(List<List<Integer>> connections, int n) {
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (List<Integer> connection: connections) {	
+			int a = connection.get(0);
+			int b = connection.get(1);
+			graph.get(a).add(b);
+			graph.get(b).add(a);
+		}
+		return graph;
+	}
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		List<List<Integer>> graph = buildGraph(connections,n);
+		int[] nodeIds = new int[n];
+		int[] min = new int[n];
+		boolean[] visited = new boolean[n];
+		List<List<Integer>> list = new ArrayList<>();
+		dfs(graph,visited,nodeIds,min,0,-1,list);
+		return list;
+	}
+	void dfs(List<List<Integer>> graph, boolean[] visited, int[] nodeIds, int[] min, int index, int parent, List<List<Integer>> critical) {
+		visited[index] = true;
+		nodeIds[index] = min[index] = nodeId++;
+		for (Integer node: graph.get(index)) {	
+			if (node == parent) {
+				continue;
+			}
+			if (!visited[node]) {
+				dfs(graph,visited,nodeIds,min,node,index,critical);
+				min[index] = Math.min(min[index],min[node]);
+				if (nodeIds[index] < min[node]) {
+					critical.add(new ArrayList<>(Arrays.asList(node,index)));
+				}
+			} 
+			else {
+				min[index] = Math.min(min[index],nodeIds[node]);
+			}
+		}
+	}
+}

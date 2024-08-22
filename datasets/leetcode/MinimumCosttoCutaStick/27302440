@@ -1,0 +1,32 @@
+class Solution {
+	int help(int n, int[] cuts, int i, int j, int[][] dp) {
+		if (i > j) {
+			return 0;
+		}
+		int mini = Integer.MAX_VALUE;
+		if (dp[i][j] != -1) {
+			return dp[i][j];
+		}
+		for (int k = i; k <= j; k++) {
+			int cost = cuts[j + 1] - cuts[i - 1] + help(n,cuts,i,k - 1,dp) + help(n,cuts,k + 1,j,dp);
+			mini = Math.min(mini,cost);
+		}
+		return dp[i][j] = mini;
+	}
+	int minCost(int n, int[] cuts) {
+		int i = 1;
+		int j = cuts.length;
+		Arrays.sort(cuts);
+		int[] arr = new int[cuts.length + 2];
+		arr[0] = 0;
+		arr[arr.length - 1] = n;
+		for (int k = 0; k < cuts.length; k++) {
+			arr[k + 1] = cuts[k];
+		}
+		int[][] dp = new int[cuts.length + 1][cuts.length + 1];
+		for (int[] ar: dp) {	
+			Arrays.fill(ar,-1);
+		}
+		return help(n,arr,i,j,dp);
+	}
+}

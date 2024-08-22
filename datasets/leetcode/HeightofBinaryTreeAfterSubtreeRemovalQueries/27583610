@@ -1,0 +1,31 @@
+class Solution {
+	int getHeightRootedAt(TreeNode node, Map<Integer, Integer> heightsRooted) {
+		if (node == null) {
+			return -1;
+		}
+		int maxHeight = 1 + Math.max(getHeightRootedAt(node.left,heightsRooted),getHeightRootedAt(node.right,heightsRooted));
+		heightsRooted.put(node.val,maxHeight);
+		return maxHeight;
+	}
+	void getHeightsWithoutNode(TreeNode node, int height, int possibleMaxHeight, int[] heightsWithout, Map<Integer, Integer> heightsRooted) {
+		if (node == null) {
+			return;
+		}
+		int leftHeight = node.left == null ? -1 : heightsRooted.get(node.left.val);
+		int rightHeight = node.right == null ? -1 : heightsRooted.get(node.right.val);
+		getHeightsWithoutNode(node.left,height + 1,Math.max(possibleMaxHeight,rightHeight + height),heightsWithout,heightsRooted);
+		getHeightsWithoutNode(node.right,height + 1,Math.max(possibleMaxHeight,leftHeight + height),heightsWithout,heightsRooted);
+		heightsWithout[node.val] = Math.max(height - 1,possibleMaxHeight);
+	}
+	int[] treeQueries(TreeNode root, int[] queries) {
+		Map<Integer, Integer> heightsRooted = new HashMap<>();
+		getHeightRootedAt(root,heightsRooted);
+		int[] heightsWithout = new int[heightsRooted.size() + 1];
+		getHeightsWithoutNode(root,0,0,heightsWithout,heightsRooted);
+		int[] result = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			result[i] = heightsWithout[queries[i]];
+		}
+		return result;
+	}
+}

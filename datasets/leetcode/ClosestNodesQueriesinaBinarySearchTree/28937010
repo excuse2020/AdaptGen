@@ -1,0 +1,61 @@
+class Solution {
+	ArrayList<Integer> vec = new ArrayList<>();
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		inorder(root);
+		List<List<Integer>> ans = new ArrayList<>();
+		for (int i = 0; i < queries.size(); i++) {
+			int key = queries.get(i);
+			List<Integer> temp = new ArrayList<>();
+			int x1 = lowerbinarysearch(vec,key,false);
+			int x2 = upperbinarysearch(vec,key,true);
+			if (x1 >= 0 && x1 < vec.size() && vec.get(x1) <= key) {
+				temp.add(vec.get(x1));
+			} 
+			else {
+				temp.add(-1);
+			}
+			if (x2 >= 0 && x2 < vec.size() && vec.get(x2) >= key) {
+				temp.add(vec.get(x2));
+			} 
+			else {
+				temp.add(-1);
+			}
+			ans.add(temp);
+		}
+		return ans;
+	}
+	void inorder(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		inorder(root.left);
+		vec.add(root.val);
+		inorder(root.right);
+	}
+	int lowerbinarysearch(ArrayList<Integer> vec, int key, boolean flag) {
+		int s = 0, e = vec.size() - 1;
+		while (s <= e) {
+			int mid = s + (e - s) / 2;
+			if (vec.get(mid) <= key) {
+				s = mid + 1;
+			} 
+			else {
+				e = mid - 1;
+			}
+		}
+		return e;
+	}
+	int upperbinarysearch(ArrayList<Integer> vec, int key, boolean flag) {
+		int s = 0, e = vec.size() - 1;
+		while (s <= e) {
+			int mid = s + (e - s) / 2;
+			if (vec.get(mid) < key) {
+				s = mid + 1;
+			} 
+			else {
+				e = mid - 1;
+			}
+		}
+		return s;
+	}
+}

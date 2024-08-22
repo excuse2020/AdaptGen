@@ -1,0 +1,34 @@
+class Solution {
+	RandomListNode Clone(RandomListNode pHead) {
+		if (null == pHead) {
+			return null;
+		}
+		RandomListNode tmp = pHead;
+		Queue<RandomListNode> queue = new LinkedList<>();
+		HashMap<Integer, RandomListNode> hashMap = new HashMap<>();
+		while (null != tmp) {
+			RandomListNode node = new RandomListNode(tmp.label);
+			queue.add(node);
+			hashMap.put(node.label,node);
+			tmp = tmp.next;
+		}
+		RandomListNode head = queue.poll();
+		tmp = head;
+		while (!queue.isEmpty()) {
+			tmp.next = queue.poll();
+			tmp = tmp.next;
+		}
+		tmp.next = null;
+		tmp = pHead;
+		while (null != tmp) {
+			RandomListNode currentNode = hashMap.get(tmp.label);
+			RandomListNode tmpRandom = tmp.random;
+			if (null != tmpRandom) {
+				RandomListNode currentRandom = hashMap.get(tmpRandom.label);
+				currentNode.random = currentRandom;
+			}
+			tmp = tmp.next;
+		}
+		return head;
+	}
+}

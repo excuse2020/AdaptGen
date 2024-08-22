@@ -1,0 +1,27 @@
+class Solution {
+	boolean dfs(char[][] matrix, String word, int i, int j, int k) {
+		if (i < 0 || i > matrix.length - 1 || j < 0 || j > matrix[0].length - 1 || matrix[i][j] != word.charAt(k)) {
+			return false;
+		}
+		if (k == word.length() - 1 && word.charAt(k) == matrix[i][j]) {
+			return true;
+		}
+		matrix[i][j] = '\0';
+		boolean res = dfs(matrix,word,i + 1,j,k + 1) || dfs(matrix,word,i - 1,j,k + 1);
+		matrix[i][j] = word.charAt(k);
+		return res;
+	}
+	boolean hasPath(char[][] matrix, String word) {
+		if (matrix == null || matrix.length == 0 || matrix[0].length == 0 || word.length() == 0) {
+			return false;
+		}
+		for (int i = 0; i < matrix.length; ++i) {
+			for (int j = 0; j < matrix[0].length; ++j) {
+				if (dfs(matrix,word,i,j,0)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+}

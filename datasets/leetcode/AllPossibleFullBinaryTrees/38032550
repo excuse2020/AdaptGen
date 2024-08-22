@@ -1,0 +1,26 @@
+class Solution {
+	List<TreeNode> allPossibleFBT(int n) {
+		return allPossibleFBT(n,new HashMap());
+	}
+	List<TreeNode> allPossibleFBT(int n, Map<Integer, List<TreeNode>> mamo) {
+		if (mamo.containsKey(n)) {
+			return mamo.get(n);
+		}
+		List<TreeNode> all = new ArrayList<>();
+		if (n == 0) {
+			all.add(null);
+		}
+		for (int i = 0; i < n; i++) {
+			List<TreeNode> allLeft = allPossibleFBT(i,mamo), allRight = allPossibleFBT(n - (i + 1),mamo);
+			for (TreeNode left: allLeft) {	
+				for (TreeNode right: allRight) {	
+					if ((left != null && right != null) || (left == null && right == null)) {
+						all.add(new TreeNode(0, left, right));
+					}
+				}
+			}
+		}
+		mamo.put(n,all);
+		return all;
+	}
+}

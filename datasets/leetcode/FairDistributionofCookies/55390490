@@ -1,0 +1,42 @@
+class Solution {
+	int distributeCookies(int[] cookies, int k) {
+		int CARDINALITY = (int) Math.pow(2,cookies.length);
+		int[][] subsets = new int[CARDINALITY][3];
+		for (int i = 1; i < CARDINALITY; i++) {
+			int temp = i, mx = Integer.MIN_VALUE, l = 0, s = 0, j = 0;
+			while (temp != 0) {
+				if ((temp & 1) == 1) {
+					s += cookies[j];
+					mx = Math.max(mx,cookies[j]);
+					l++;
+				}
+				temp >>= 1;
+				j++;
+			}
+			subsets[i][0] = s;
+			subsets[i][1] = l;
+			subsets[i][2] = mx;
+		}
+		return this.getMinimumUnfairness(cookies,subsets,0,0,1,k,new int[CARDINALITY][k + 1]);
+	}
+	int getMinimumUnfairness(int[] cookies, int[][] subsets, int selMask, int selLen, int index, int k, int[][] dp) {
+		int ALL_SEL_MASK = (int) Math.pow(2,cookies.length) - 1;
+		int MAX_LEN = cookies.length - selLen + 1;
+		if (dp[ALL_SEL_MASK ^ selMask][k] != 0) {
+			return dp[ALL_SEL_MASK ^ selMask][k];
+		}
+		if (k == 1) {
+			return subsets[ALL_SEL_MASK ^ selMask][0];
+		}
+		if (MAX_LEN == 1) {
+			return subsets[ALL_SEL_MASK ^ selMask][2];
+		}
+		int res = Integer.MAX_VALUE;
+		for (int i = index; i < ALL_SEL_MASK + 1; i++) {
+			if ((selMask & i) == 0 && subsets[i][1] <= MAX_LEN) {
+				res = Math.min(res,Math.max(subsets[i][0],this.getMinimumUnfairness(cookies,subsets,selMask | i,selLen + subsets[i][1],index + 1,k - 1,dp)));
+			}
+		}
+		return dp[ALL_SEL_MASK ^ selMask][k] = res;
+	}
+}

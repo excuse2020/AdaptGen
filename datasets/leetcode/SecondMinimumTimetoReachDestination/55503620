@@ -1,0 +1,50 @@
+class Solution {
+	int bfs(int n, List<List<Integer>> adj, int time, int change, int tt) {
+		Queue<int[]> q = new LinkedList<>();
+		tt[1][0] = 0;
+		q.offer(new int{1, 0});
+		while (!q.isEmpty()) {
+			int element = q.poll();
+			int node = element[0];
+			int currTime = element[1];
+			if (node == n) {
+				if (tt[node][1] != Integer.MAX_VALUE) {
+					break;
+				}
+			}
+			if ((currTime / change) % 2 != 0) {
+				int waitTime = change - (currTime % change);
+				currTime += waitTime;
+			}
+			currTime = currTime + time;
+			for (int neighbour: adj.get(node)) {	
+				if (tt[neighbour][0] == Integer.MAX_VALUE) {
+					tt[neighbour][0] = currTime;
+					q.offer(new int{neighbour, currTime});
+				} 
+				else if (tt[neighbour][1] == Integer.MAX_VALUE && tt[neighbour][0] < currTime) {
+					tt[neighbour][1] = currTime;
+					q.offer(new int{neighbour, currTime});
+				}
+			}
+		}
+		return tt[n][1];
+	}
+	int secondMinimum(int n, int[][] edges, int time, int change) {
+		List<List<Integer>> adjList = new ArrayList<>();
+		for (int i = 0; i < n + 1; i++) {
+			adjList.add(new ArrayList<>());
+		}
+		for (int edge: edges) {	
+			int u = edge[0];
+			int v = edge[1];
+			adjList.get(u).add(v);
+			adjList.get(v).add(u);
+		}
+		int tt = new int[n + 1][2];
+		for (int i = 0; i < n + 1; i++) {
+			Arrays.fill(tt[i],Integer.MAX_VALUE);
+		}
+		return bfs(n,adjList,time,change,tt);
+	}
+}

@@ -1,0 +1,49 @@
+class Solution {
+	int helper(char[] s1, char[] t1, int i, int j, Integer[][] dp) {
+		if (j < 0) {
+			return 1;
+		}
+		if (i < 0) {
+			return 0;
+		}
+		if (dp[i][j] != null) {
+			return dp[i][j];
+		}
+		if (s1[i] == t1[j]) {
+			int leave = helper(s1,t1,i - 1,j,dp);
+			int take = helper(s1,t1,i - 1,j - 1,dp);
+			return dp[i][j] = leave + take;
+		} 
+		else {
+			return dp[i][j] = helper(s1,t1,i - 1,j,dp);
+		}
+	}
+	int numDistinct(String s, String t) {
+		char[] s1 = s.toCharArray();
+		char[] t1 = t.toCharArray();
+		Integer[][] dp = new Integer[s.length()][t.length()];
+		return helper(s1,t1,s1.length - 1,t1.length - 1,dp);
+	}
+}
+class olution {
+	int helper(char[] str, int index, String s, String temp) {
+		if (temp.length() == s.length()) {
+			if (temp.equals(s)) {
+				return 1;
+			} 
+			else {
+				return 0;
+			}
+		}
+		if (temp.length() > s.length() || index >= str.length) {
+			return 0;
+		}
+		int not = helper(str,index + 1,s,temp);
+		int take = helper(str,index + 1,s,temp + str[index]);
+		return not + take;
+	}
+	int numDistinct(String s, String t) {
+		char[] str = s.toCharArray();
+		return helper(str,0,t,"");
+	}
+}

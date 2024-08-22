@@ -1,0 +1,39 @@
+class Solution {
+	int minimumRounds(int[] tasks) {
+		LinkedHashMap<Integer, Integer> lhm = new LinkedHashMap<>();
+		int len = tasks.length;
+		for (int i = 0; i < len; i++) {
+			int num = tasks[i];
+			if (lhm.containsKey(num)) {
+				lhm.put(num,lhm.get(num) + 1);
+			} 
+			else {
+				lhm.put(num,1);
+			}
+		}
+		if (lhm.containsValue(1)) {
+			return -1;
+		}
+		Arrays.sort(tasks);
+		int count = 0;
+		for (int i = 0; i < len; i++) {
+			int num = tasks[i];
+			int val = lhm.get(num);
+			if (val % 3 == 0) {
+				count = count + (val / 3);
+				i = i + (((val / 3) * 3) - 1);
+			} 
+			else if (val > 3 || val == 2) {
+				val = val - 2;
+				lhm.put(num,val);
+				i = i + 1;
+				count++;
+			} 
+			else {
+				i = i + 2;
+				count++;
+			}
+		}
+		return count;
+	}
+}

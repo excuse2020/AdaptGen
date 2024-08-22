@@ -1,0 +1,68 @@
+class Solution {
+	void main(String[] args) {
+		ListNode l1 = new ListNode(-1);
+		ListNode l2 = new ListNode(5);
+		ListNode l3 = new ListNode(3);
+		ListNode l4 = new ListNode(4);
+		ListNode l5 = new ListNode(0);
+		l1.next = l2;
+		l2.next = l3;
+		l3.next = l4;
+		l4.next = l5;
+		l5.next = null;
+		ListNode head = sortList(l1);
+		while (head != null) {
+			System.out.print(head.val + " ");
+			head = head.next;
+		}
+	}
+	ListNode partion(ListNode head, ListNode end) {
+		ListNode p1 = head, p2 = head.next;
+		while (p2 != end) {
+			if (p2.val < head.val) {
+				p1 = p1.next;
+				int temp = p1.val;
+				p1.val = p2.val;
+				p2.val = temp;
+			}
+			p2 = p2.next;
+		}
+		if (p1 != head) {
+			int temp = p1.val;
+			p1.val = head.val;
+			head.val = temp;
+		}
+		return p1;
+	}
+	void quickSort(ListNode head, ListNode end) {
+		if (head != end) {
+			ListNode node = partion(head,end);
+			quickSort(head,node);
+			quickSort(node.next,end);
+		}
+	}
+	ListNode sortInList(ListNode head) {
+		quickSort(head,null);
+		return head;
+	}
+	ListNode sortList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode cur, tail = null;
+		cur = head;
+		while (cur.next != tail) {
+			while (cur.next != tail) {
+				if (cur.val > cur.next.val) {
+					int temp = cur.val;
+					cur.val = cur.next.val;
+					cur.next.val = temp;
+				}
+				cur = cur.next;
+			}
+			tail = cur;
+			cur = head;
+		}
+		return head;
+	}
+}

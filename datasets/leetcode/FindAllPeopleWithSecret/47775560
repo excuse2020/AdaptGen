@@ -1,0 +1,41 @@
+class Solution {
+	List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+		sortbyColumn(meetings);
+		int people = new int[n];
+		int i = 0;
+		ArrayList<Integer> ans = new ArrayList<>();
+		ans.add(0);
+		ans.add(firstPerson);
+		people[0] = 1;
+		people[firstPerson] = 1;
+		while (i < meetings.length) {
+			int j = i;
+			while (j + 1 < meetings.length && meetings[j + 1][2] == meetings[i][2]) {
+				j++;
+			}
+			int count = 0, prev_count = -1;
+			while (count != prev_count) {
+				prev_count = count;
+				for (int k = i; k <= j; k++) {
+					int x = meetings[k][0];
+					int y = meetings[k][1];
+					if (people[x] == 0 && people[y] == 1) {
+						people[x] = 1;
+						ans.add(x);
+						count++;
+					}
+					if (people[y] == 0 && people[x] == 1) {
+						people[y] = 1;
+						ans.add(y);
+						count++;
+					}
+				}
+			}
+			i = j + 1;
+		}
+		return ans;
+	}
+	void sortbyColumn(int arr) {
+		Arrays.sort(arr,new Comparator<int[]>());
+	}
+}

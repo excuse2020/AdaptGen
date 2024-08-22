@@ -1,0 +1,25 @@
+class Solution {
+	Map<Integer, Integer> indexMap = new HashMap<>();
+	int postIndex = 0;
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		int len = postorder.length;
+		postIndex = len - 1;
+		for (int i = 0; i < len; i++) {
+			indexMap.put(inorder[i],i);
+		}
+		return createTree(postorder,0,len - 1);
+	}
+	TreeNode createTree(int[] postorder, int start, int end) {
+		if (start > end) {
+			return null;
+		}
+		TreeNode cur = new TreeNode(postorder[postIndex--]);
+		if (start == end) {
+			return cur;
+		}
+		int index = indexMap.get(cur.val);
+		cur.right = createTree(postorder,index + 1,end);
+		cur.left = createTree(postorder,start,index - 1);
+		return cur;
+	}
+}

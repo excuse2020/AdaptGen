@@ -1,0 +1,31 @@
+class Solution {
+	int visiblePoints(List<List<Integer>> points, int angle, List<Integer> location) {
+		int x = 0, y = 1;
+		int alreadyAtLocation = 0;
+		List<Double> pointAngles = new ArrayList<>();
+		for (List<Integer> point: points) {	
+			if (point.get(x).equals(location.get(x)) && point.get(y).equals(location.get(y))) {
+				alreadyAtLocation++;
+			} 
+			else {
+				double pointAngle = Math.toDegrees(Math.atan2(point.get(y) - location.get(y),point.get(x) - location.get(x)));
+				pointAngles.add(pointAngle);
+				if (pointAngle <= 0) {
+					pointAngles.add(pointAngle + 360.0);
+				}
+			}
+		}
+		Collections.sort(pointAngles);
+		int left = 0, right = 0, maxPoints = 0;
+		while (right < pointAngles.size() && maxPoints < pointAngles.size() - left) {
+			if (pointAngles.get(right) - pointAngles.get(left) <= angle) {
+				maxPoints = Math.max(right - left + 1,maxPoints);
+				right++;
+			} 
+			else {
+				left++;
+			}
+		}
+		return maxPoints + alreadyAtLocation;
+	}
+}

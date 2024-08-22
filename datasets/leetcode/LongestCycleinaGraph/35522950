@@ -1,0 +1,47 @@
+class Solution {
+	boolean visit;
+	int dfs(int edges, int n) {
+		if (visit[n]) {
+			return 0;
+		}
+		visit[n] = true;
+		return 1 + dfs(edges,edges[n]);
+	}
+	int longestCycle(int[] edges) {
+		visit = new boolean[edges.length];
+		int indeg = new int[edges.length];
+		for (var e: edges) {	
+			if (e != -1) {
+				indeg[e]++;
+			}
+		}
+		Queue<Integer> q = new LinkedList<>();
+		for (int i = 0; i < edges.length; i++) {
+			if (indeg[i] == 0) {
+				q.add(i);
+			}
+		}
+		int topoCount = 0;
+		for (; !q.isEmpty(); ) {
+			int node = q.poll();
+			visit[node] = true;
+			++topoCount;
+			if (edges[node] != -1) {
+				indeg[edges[node]]--;
+				if (indeg[edges[node]] == 0) {
+					q.add(edges[node]);
+				}
+			}
+		}
+		if (topoCount == edges.length) {
+			return -1;
+		}
+		int max = 0;
+		for (int i = 0; i < edges.length; i++) {
+			if (!visit[i]) {
+				max = Math.max(max,dfs(edges,i));
+			}
+		}
+		return max;
+	}
+}

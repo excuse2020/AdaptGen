@@ -1,0 +1,76 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		if (head1 == null) {
+			return head2;
+		}
+		if (head2 == null) {
+			return head1;
+		}
+		ListNode new1 = reverseList(head1);
+		ListNode new2 = reverseList(head2);
+		int cnt = 0;
+		int temp = 0;
+		ListNode p1 = new1;
+		ListNode p2 = new2;
+		while (p1.next != null && p2.next != null) {
+			temp = p1.val + p2.val;
+			p1.val = p2.val = temp % 10;
+			cnt = temp / 10;
+			p1 = p1.next;
+			p2 = p2.next;
+		}
+		temp = p1.val + p2.val;
+		p1.val = p2.val = temp % 10;
+		cnt = temp / 10;
+		boolean flag = p2.next == null;
+		while (p1.next != null) {
+			if (cnt == 0) {
+				break;
+			}
+			p1 = p1.next;
+			temp = p1.val + cnt;
+			p1.val = temp % 10;
+			cnt = temp / 10;
+		}
+		while (p2.next != null) {
+			if (cnt == 0) {
+				break;
+			}
+			p2 = p2.next;
+			temp = p2.val + cnt;
+			p2.val = temp % 10;
+			cnt = temp / 10;
+		}
+		if (cnt != 0) {
+			if (flag) {
+				p1.next = new ListNode(cnt);
+				return reverseList(new1);
+			} 
+			else {
+				p2.next = new ListNode(cnt);
+				return reverseList(new2);
+			}
+		} 
+		else {
+			if (flag) {
+				return reverseList(new1);
+			}
+			return reverseList(new2);
+		}
+	}
+	ListNode reverseList(ListNode head) {
+		if (head == null) {
+			return null;
+		}
+		ListNode pre = null;
+		ListNode newHead = head;
+		ListNode next;
+		while (newHead != null) {
+			next = newHead.next;
+			newHead.next = pre;
+			pre = newHead;
+			newHead = next;
+		}
+		return pre;
+	}
+}

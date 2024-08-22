@@ -1,0 +1,36 @@
+class Solution {
+	int max = 0;
+	int dfs(ArrayList<Integer>[] childsOf, String s, int parent) {
+		int fmax = 0;
+		int smax = 0;
+		for (int child: childsOf[parent]) {	
+			int longest = dfs(childsOf,s,child);
+			if (s.charAt(parent) != s.charAt(child)) {
+				if (longest > fmax) {
+					smax = fmax;
+					fmax = longest;
+				} 
+				else if (longest > smax) {
+					smax = longest;
+				}
+			}
+		}
+		max = Math.max(max,1 + fmax);
+		return fmax + 1;
+	}
+	int longestPath(int[] parent, String s) {
+		int n = parent.length;
+		if (n == 1 || n == 0) {
+			return n;
+		}
+		ArrayList<Integer>[] children = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			children[i] = new ArrayList<>();
+		}
+		for (int i = 1; i < parent.length; i++) {
+			children[parent[i]].add(i);
+		}
+		dfs(children,s,0);
+		return max;
+	}
+}

@@ -1,0 +1,51 @@
+class Solution {
+	int minimumOperations(TreeNode root) {
+		Queue<TreeNode> q = new ArrayDeque<>();
+		q.offer(root);
+		int result = 0;
+		while (!q.isEmpty()) {
+			int len = q.size();
+			if (len == 1) {
+				TreeNode node = q.poll();
+				if (node.left != null) {
+					q.offer(node.left);
+				}
+				if (node.right != null) {
+					q.offer(node.right);
+				}
+			} 
+			else {
+				int[] dp = new int[len];
+				int[] temp = new int[len];
+				Map<Integer, Integer> map = new HashMap<>();
+				for (int i = 0; i < len; i++) {
+					TreeNode node = q.poll();
+					dp[i] = node.val;
+					temp[i] = node.val;
+					map.put(node.val,i);
+					if (node.left != null) {
+						q.offer(node.left);
+					}
+					if (node.right != null) {
+						q.offer(node.right);
+					}
+				}
+				Arrays.sort(dp);
+				for (int i = 0; i < len; i++) {
+					if (temp[i] == dp[i]) {
+						continue;
+					}
+					map.put(temp[i],map.get(dp[i]));
+					swap(temp,i,map.get(dp[i]));
+					result++;
+				}
+			}
+		}
+		return result;
+	}
+	void swap(int[] nums, int i, int j) {
+		int temp = nums[i];
+		nums[i] = nums[j];
+		nums[j] = temp;
+	}
+}

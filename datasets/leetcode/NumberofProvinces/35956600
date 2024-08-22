@@ -1,0 +1,39 @@
+class Solution {
+	void dfs(Map<Integer, List<Integer>> graph, int[] vis, int node) {
+		vis[node] = 1;
+		if (graph.get(node) == null) {
+			return;
+		}
+		for (int i = 0; i < graph.get(node).size(); i++) {
+			int neighbour = graph.get(node).get(i);
+			if (vis[neighbour] == 0) {
+				dfs(graph,vis,neighbour);
+			}
+		}
+		return;
+	}
+	int findCircleNum(int[][] isConnected) {
+		int n = isConnected.length;
+		Map<Integer, List<Integer>> graph = new HashMap();
+		int i = 0, j = 0;
+		for (i = 0; i < n; i++) {
+			for (j = 0; j < n; j++) {
+				if (isConnected[i][j] == 1 && i != j) {
+					graph.putIfAbsent(i,new ArrayList());
+					graph.putIfAbsent(j,new ArrayList());
+					graph.get(i).add(j);
+					graph.get(j).add(i);
+				}
+			}
+		}
+		int ans = 0;
+		int[] vis = new int[n];
+		for (i = 0; i < n; i++) {
+			if (vis[i] == 0) {
+				ans++;
+				dfs(graph,vis,i);
+			}
+		}
+		return ans;
+	}
+}

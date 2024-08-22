@@ -1,0 +1,40 @@
+class Solution {
+	int longestAlternatingSubarray(int[] nums, int threshold) {
+		if (nums.length == 1) {
+			if (nums[0] <= threshold) {
+				return nums[0] % 2 == 0 ? 1 : 0;
+			}
+			return 0;
+		}
+		int l = -1;
+		int r = nums.length - 1;
+		int count = 0;
+		int maxcount = 0;
+		for (int i = 0; i < nums.length - 1; i++) {
+			if (l == -1) {
+				if (nums[i] % 2 == 0 && nums[i] <= threshold) {
+					l = i;
+					count = 1;
+					if (nums[i] % 2 != nums[i + 1] % 2 && nums[i + 1] <= threshold) {
+						count++;
+					}
+				} 
+				else {
+					continue;
+				}
+			} 
+			else if (nums[i] % 2 != nums[i + 1] % 2 && nums[i] <= threshold && nums[i + 1] <= threshold) {
+				count++;
+			} 
+			else {
+				l = -1;
+				maxcount = Math.max(count,maxcount);
+				count = 0;
+			}
+		}
+		if (count == 0 && nums[nums.length - 1] % 2 == 0 && nums[nums.length - 1] <= threshold) {
+			count++;
+		}
+		return Math.max(maxcount,count);
+	}
+}

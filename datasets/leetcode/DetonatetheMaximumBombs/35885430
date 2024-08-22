@@ -1,0 +1,36 @@
+class Solution {
+	int count, real_max;
+	int[][] graph;
+	Queue<int[]> queue;
+	int[] visited;
+	void bfstravel(int[] bomas) {
+		real_max = Math.max(real_max,count);
+		for (int i = 0; i < graph.length; i++) {
+			if (visited[i] == 0 && ispossible(bomas,graph[i])) {
+				count++;
+				visited[i] = 1;
+				queue.offer(graph[i]);
+			}
+		}
+		if (!queue.isEmpty()) {
+			bfstravel(queue.poll());
+		}
+	}
+	boolean ispossible(int[] inner, int[] outer) {
+		return Math.pow(outer[0] - inner[0],2) + Math.pow(outer[1] - inner[1],2) - Math.pow(inner[2],2) <= 0;
+	}
+	int maximumDetonation(int[][] bombs) {
+		graph = bombs;
+		queue = new ArrayDeque<>();
+		visited = new int[bombs.length];
+		for (int bomb = 0; bomb < bombs.length; bomb++) {
+			visited[bomb] = 1;
+			count++;
+			bfstravel(bombs[bomb]);
+			visited[bomb] = 0;
+			count = 0;
+			Arrays.fill(visited,0);
+		}
+		return real_max;
+	}
+}

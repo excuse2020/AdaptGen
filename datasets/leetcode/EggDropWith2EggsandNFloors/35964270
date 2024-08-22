@@ -1,0 +1,23 @@
+class Solution {
+	int eggHelper(int eggs, int floors, int[][] dp) {
+		if (eggs == 1 || floors <= 1) {
+			return floors;
+		}
+		if (dp[eggs][floors] != 0) {
+			return dp[eggs][floors];
+		}
+		int minmoves = Integer.MAX_VALUE;
+		for (int i = 1; i <= floors; i++) {
+			int below = eggHelper(eggs - 1,i - 1,dp);
+			int above = eggHelper(eggs,floors - i,dp);
+			int maxmoves = Math.max(above,below) + 1;
+			minmoves = Math.min(minmoves,maxmoves);
+		}
+		return dp[eggs][floors] = minmoves;
+	}
+	int twoEggDrop(int n) {
+		int eggs = 2;
+		int[][] dp = new int[eggs + 1][n + 1];
+		return eggHelper(eggs,n,dp);
+	}
+}

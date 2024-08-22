@@ -1,0 +1,37 @@
+class Solution {
+	List<Long> getArr(long a, long b, long c) {
+		List<Long> l = new ArrayList<>(3);
+		l.add(a);
+		l.add(b);
+		l.add(c);
+		return l;
+	}
+	List<List<Long>> splitPainting(int[][] segments) {
+		List<List<Long>> r = new ArrayList<>();
+		boolean[] v = new boolean[100_001];
+		long[] x = new long[100_001];
+		int a = 0, min = 200_000, max = 0;
+		long c = 0;
+		for (int[] s: segments) {	
+			v[s[0]] = v[s[1]] = true;
+			x[s[0]] += s[2];
+			x[s[1]] -= s[2];
+			if (min > s[0]) {
+				min = s[0];
+			}
+			if (max < s[1]) {
+				max = s[1];
+			}
+		}
+		for (int b = min; b <= max; b++) {
+			if (v[b] || x[b] != 0) {
+				if (c != 0) {
+					r.add(getArr(a,b,c));
+				}
+				a = b;
+				c += x[b];
+			}
+		}
+		return r;
+	}
+}

@@ -1,0 +1,42 @@
+class Solution {
+	int[] getUsedRooms(int n, int[][] meetings) {
+		int[] usedRooms = new int[n];
+		long[] nextAvailable = new long[n];
+		Arrays.sort(meetings,Comparator.comparingInt((m) -> {m[0]}));
+		for (int[] meeting: meetings) {	
+			scheduleMeeting(meeting[0],meeting[1],usedRooms,nextAvailable);
+		}
+		return usedRooms;
+	}
+	int mostBooked(int n, int[][] meetings) {
+		if (n == 1) {
+			return 0;
+		}
+		int[] usedRooms = getUsedRooms(n,meetings);
+		int busiestRoom = 0, busiestRoomIndex = 0;
+		for (int i = 0; i < usedRooms.length; i++) {
+			if (usedRooms[i] > busiestRoom) {
+				busiestRoom = usedRooms[i];
+				busiestRoomIndex = i;
+			}
+		}
+		return busiestRoomIndex;
+	}
+	void scheduleMeeting(int start, int end, int[] usedRooms, long[] nextAvailable) {
+		long earliestAvailable = Long.MAX_VALUE;
+		int earliestAvailableIndex = -1;
+		for (int i = 0; i < nextAvailable.length; i++) {
+			if (nextAvailable[i] <= start) {
+				nextAvailable[i] = end;
+				usedRooms[i]++;
+				return;
+			} 
+			else if (nextAvailable[i] < earliestAvailable) {
+				earliestAvailable = nextAvailable[i];
+				earliestAvailableIndex = i;
+			}
+		}
+		nextAvailable[earliestAvailableIndex] += (end - start);
+		usedRooms[earliestAvailableIndex]++;
+	}
+}

@@ -1,0 +1,23 @@
+class Solution {
+	long helper(int[] power, int i) {
+		if (i >= power.length) {
+			return 0;
+		}
+		long notPick = helper(power,i + 1);
+		long pick = power[i];
+		int newI = i + 1;
+		while (newI < power.length && power[newI] == power[i]) {
+			pick += power[i];
+			newI++;
+		}
+		while (newI < power.length && power[newI] <= power[i] + 2) {
+			newI++;
+		}
+		pick += helper(power,newI);
+		return Math.max(pick,notPick);
+	}
+	long maximumTotalDamage(int[] power) {
+		Arrays.sort(power);
+		return helper(power,0);
+	}
+}

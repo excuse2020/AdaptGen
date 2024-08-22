@@ -1,0 +1,52 @@
+class Solution {
+	boolean isCompleteTree(TreeNode root) {
+		Queue<TreeNode> queue = new LinkedList<>();
+		boolean first = true;
+		TreeNode curr = root;
+		queue.add(root);
+		int i = 1;
+		boolean prevLeft, prevRight = prevLeft = false;
+		while (queue.size() > 0) {
+			int size = queue.size();
+			boolean hasLeft = false;
+			boolean hasRight = false;
+			while (size > 0) {
+				curr = queue.poll();
+				if (curr.left != null) {
+					queue.add(curr.left);
+					hasLeft = true;
+				} 
+				else {
+					hasLeft = false;
+				}
+				if (curr.right != null) {
+					queue.add(curr.right);
+					hasRight = true;
+				} 
+				else {
+					hasRight = false;
+				}
+				if (hasRight == true && hasLeft == false) {
+					return false;
+				}
+				if (first) {
+					prevLeft = hasLeft;
+					prevRight = hasRight;
+				} 
+				else {
+					if ((hasLeft == true || hasRight == true) && (prevLeft == false || prevRight == false)) {
+						return false;
+					} 
+					else {
+						prevLeft = hasLeft;
+						prevRight = hasRight;
+					}
+				}
+				size--;
+			}
+			first = false;
+			i++;
+		}
+		return true;
+	}
+}

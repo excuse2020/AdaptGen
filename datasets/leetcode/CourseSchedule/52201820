@@ -1,0 +1,68 @@
+class Solution {
+	boolean canFinish(int numCourses, int[][] pre) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		int n = pre.length;
+		for (int i = 0; i < numCourses; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			int u = pre[i][0];
+			int v = pre[i][1];
+			adj.get(u).add(v);
+		}
+		boolean[] visited = new boolean[numCourses];
+		boolean[] current = new boolean[numCourses];
+		Arrays.fill(visited,false);
+		Arrays.fill(current,false);
+		for (int i = 0; i < numCourses; i++) {
+			if (!visited[i] && detectCycle(i,adj,current,visited)) {
+				return false;
+			}
+		}
+		Stack<Integer> st = new Stack<>();
+		boolean[] vis = new boolean[numCourses];
+		Arrays.fill(vis,false);
+		for (int i = 0; i < numCourses; i++) {
+			if (!vis[i]) {
+				topoSort(st,adj,vis,i);
+			}
+		}
+		HashMap<Integer, Integer> hm = new HashMap<>();
+		int i = 0;
+		while (!st.isEmpty()) {
+			hm.put(st.pop(),i);
+			i++;
+		}
+		for (int[] arr: pre) {	
+			int u = arr[0];
+			int v = arr[1];
+			if (hm.get(u) > hm.get(v)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean detectCycle(int i, ArrayList<ArrayList<Integer>> adj, boolean[] current, boolean[] visited) {
+		visited[i] = true;
+		current[i] = true;
+		for (int neigh: adj.get(i)) {	
+			if (visited[neigh] == false && detectCycle(neigh,adj,current,visited)) {
+				return true;
+			} 
+			else if (current[neigh] == true) {
+				return true;
+			}
+		}
+		current[i] = false;
+		return false;
+	}
+	void topoSort(Stack<Integer> st, ArrayList<ArrayList<Integer>> adj, boolean[] visited, int i) {
+		visited[i] = true;
+		for (int neigh: adj.get(i)) {	
+			if (!visited[neigh]) {
+				topoSort(st,adj,visited,neigh);
+			}
+		}
+		st.push(i);
+	}
+}

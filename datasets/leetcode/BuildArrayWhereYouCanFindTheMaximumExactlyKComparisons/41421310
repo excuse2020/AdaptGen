@@ -1,0 +1,29 @@
+class Solution {
+	int mod = (int) 1e9 + 7;
+	int getNum(int idx, int max, int n, int m, int k, Integer[][][] cache) {
+		if (idx == n) {
+			return k == 0 ? 1 : 0;
+		}
+		if (k < 0) {
+			return 0;
+		}
+		if (cache[idx][max][k] != null) {
+			return cache[idx][max][k];
+		}
+		int res = 0;
+		for (int i = 1; i <= m; i++) {
+			if (max < i) {
+				res += (getNum(idx + 1,i,n,m,k - 1,cache) % mod);
+			} 
+			else {
+				res += (getNum(idx + 1,max,n,m,k,cache) % mod);
+			}
+			res %= mod;
+		}
+		cache[idx][max][k] = res;
+		return res;
+	}
+	int numOfArrays(int n, int m, int k) {
+		return getNum(0,0,n,m,k,new Integer[n][m + 1][k + 1]);
+	}
+}

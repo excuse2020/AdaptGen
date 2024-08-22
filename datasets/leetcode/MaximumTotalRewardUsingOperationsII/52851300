@@ -1,0 +1,18 @@
+class Solution {
+	int maxTotalReward(int[] rs) {
+		Arrays.sort(rs);
+		int n = rs.length;
+		BigInteger dp = BigInteger.ONE;
+		int currValue = -1;
+		for (int r: rs) {	
+			if (r == currValue) {
+				continue;
+			}
+			currValue = r;
+			BigInteger maskBitsLessThanCurr = BigInteger.ONE.shiftLeft(r).subtract(BigInteger.ONE);
+			BigInteger infoBitsLessThanCurr = dp.and(maskBitsLessThanCurr);
+			dp = dp.or(infoBitsLessThanCurr.shiftLeft(r));
+		}
+		return dp.bitLength() - 1;
+	}
+}

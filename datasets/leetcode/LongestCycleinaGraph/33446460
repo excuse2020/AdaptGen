@@ -1,0 +1,28 @@
+class Solution {
+	int longest_cycle_length = -1;
+	void dfs(int[] edges, boolean[] visited, Map<Integer, Integer> nodesDistance, int currVertex, int currLength) {
+		if (currVertex == -1) {
+			return;
+		}
+		if (visited[currVertex]) {
+			if (nodesDistance.containsKey(currVertex)) {
+				longest_cycle_length = Math.max(longest_cycle_length,currLength - nodesDistance.get(currVertex));
+			}
+			return;
+		}
+		visited[currVertex] = true;
+		nodesDistance.put(currVertex,currLength);
+		dfs(edges,visited,nodesDistance,edges[currVertex],currLength + 1);
+	}
+	int longestCycle(int[] edges) {
+		int n = edges.length;
+		boolean[] visited = new boolean[n];
+		for (int src = 0; src < n; src++) {
+			if (!visited[src]) {
+				Map<Integer, Integer> nodesDistance = new HashMap<>();
+				dfs(edges,visited,nodesDistance,src,0);
+			}
+		}
+		return longest_cycle_length;
+	}
+}

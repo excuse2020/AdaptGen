@@ -1,0 +1,27 @@
+class Solution {
+	int maxSum(int[][] grid) {
+		int r = grid.length;
+		int c = grid[0].length;
+		int[][] sumarray = new int[r][c];
+		for (int i = 0; i < r; i++) {
+			int sum = 0;
+			for (int j = 0; j < 3; j++) {
+				sum += grid[i][j];
+				sumarray[i][j] = sum;
+			}
+		}
+		for (int i = 0; i < r; i++) {
+			for (int j = 3; j < c; j++) {
+				sumarray[i][j] = sumarray[i][j - 1] - grid[i][j - 3] + grid[i][j];
+			}
+		}
+		int maxsum = -1;
+		for (int i = 0; i < r - 2; i++) {
+			for (int j = 2; j < c; j++) {
+				int hourglass = sumarray[i][j] + grid[i + 1][j - 1];
+				maxsum = Math.max(maxsum,hourglass);
+			}
+		}
+		return maxsum;
+	}
+}

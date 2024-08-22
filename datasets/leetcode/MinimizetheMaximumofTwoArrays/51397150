@@ -1,0 +1,29 @@
+class Solution {
+	long gcd(long a, long b) {
+		if (b == 0) {
+			return a;
+		}
+		return gcd(b,a % b);
+	}
+	long lcm(long d1, long d2) {
+		return (d1 * d2) / gcd(d1,d2);
+	}
+	int minimizeSet(int d1, int d2, int u1, int u2) {
+		long l = 1, h = (long) 10e10;
+		long res = h;
+		while (l <= h) {
+			long m = (l + h) / 2;
+			long a = m - m / d1;
+			long b = m - m / d2;
+			long c = m - (m / d1 + m / d2) + m / lcm((long) d1,(long) d2);
+			if (a >= u1 && b >= u2 && a + b - c >= u1 + u2) {
+				h = m - 1;
+				res = m;
+			} 
+			else {
+				l = m + 1;
+			}
+		}
+		return (int) res;
+	}
+}

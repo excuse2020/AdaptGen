@@ -1,0 +1,55 @@
+class Solution {
+	int[][] detonate(int[][] bombs) {
+		int[][] detonated = new int[bombs.length][bombs.length];
+		for (int i = 0; i < bombs.length; ++i) {
+			for (int j = 0; j < bombs.length; ++j) {
+				int c_x = bombs[i][0];
+				int c_y = bombs[i][1];
+				int c_r = bombs[i][2];
+				int n_x = bombs[j][0];
+				int n_y = bombs[j][1];
+				int n_r = bombs[j][2];
+				int diffx = Math.abs(c_x - n_x);
+				int diffy = Math.abs(c_y - n_y);
+				if ((long) c_r * c_r >= (long) diffx * diffx + (long) diffy * diffy) {
+					detonated[i][j] = 1;
+				} 
+				else {
+					detonated[i][j] = 0;
+				}
+			}
+		}
+		return detonated;
+	}
+	int dfs(int index, int[] visited, int[][] detonated) {
+		if (visited[index] == 1) {
+			return 0;
+		}
+		int[] canDetonate = detonated[index];
+		int bombs = 0;
+		visited[index] = 1;
+		for (int i = 0; i < canDetonate.length; ++i) {
+			if (i != index && canDetonate[i] == 1) {
+				if (visited[i] != 1) {
+					bombs += 1;
+					int answer = dfs(i,visited,detonated);
+					bombs += answer;
+				}
+			}
+		}
+		return bombs;
+	}
+	int maximumDetonation(int[][] bombs) {
+		int maxExplosions = 0;
+		int bombCount = 0;
+		if (bombs == null || bombs.length == 0) {
+			return 0;
+		}
+		for (int i = 0; i < bombs.length; ++i) {
+			int[] visited = new int[bombs.length];
+			bombCount = dfs(i,visited,detonate(bombs));
+			maxExplosions = Math.max(maxExplosions,bombCount);
+		}
+		return maxExplosions + 1;
+	}
+}

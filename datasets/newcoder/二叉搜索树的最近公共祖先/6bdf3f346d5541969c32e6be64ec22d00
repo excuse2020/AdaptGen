@@ -1,0 +1,47 @@
+class Solution {
+	ArrayList<Integer> findPath(TreeNode root, int target) {
+		ArrayList<Integer> path = new ArrayList<Integer>();
+		TreeNode node = root;
+		while (node.val != target) {
+			path.add(node.val);
+			if (target < node.val) {
+				node = node.left;
+			} 
+			else {
+				node = node.right;
+			}
+		}
+		path.add(node.val);
+		return path;
+	}
+	int lowestCommonAncestor(TreeNode root, int p, int q) {
+		if (root == null) {
+			return -1;
+		}
+		if ((p >= root.val && q <= root.val) || (p <= root.val && q >= root.val)) {
+			return root.val;
+		} 
+		else if (p <= root.val && q <= root.val) {
+			return lowestCommonAncestor(root.left,p,q);
+		} 
+		else {
+			return lowestCommonAncestor(root.right,p,q);
+		}
+	}
+	int lowestCommonAncestor2(TreeNode root, int p, int q) {
+		ArrayList<Integer> pPath = findPath(root,p);
+		ArrayList<Integer> qPath = findPath(root,q);
+		int res = 0;
+		for (int i = 0; i < qPath.size() && i < pPath.size(); i++) {
+			int x = qPath.get(i);
+			int y = pPath.get(i);
+			if (x == y) {
+				res = pPath.get(i);
+			} 
+			else {
+				break;
+			}
+		}
+		return res;
+	}
+}

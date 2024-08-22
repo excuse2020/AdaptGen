@@ -1,0 +1,31 @@
+class Solution {
+	int numSubmatrixSumTarget(int[][] matrix, int target) {
+		int rows = matrix.length;
+		int cols = matrix[0].length;
+		int[][] precols = new int[rows][cols];
+		precols[0] = matrix[0];
+		for (int i = 1; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				precols[i][j] = precols[i - 1][j] + matrix[i][j];
+			}
+		}
+		int ans = 0;
+		for (int i = 0; i < rows; i++) {
+			for (int k = i; k < rows; k++) {
+				int prefix = 0;
+				HashMap<Integer, Integer> hm = new HashMap();
+				hm.put(0,1);
+				for (int j = 0; j < cols; j++) {
+					int colsum = precols[k][j] - (i - 1 > -1 ? precols[i - 1][j] : 0);
+					prefix += colsum;
+					int find = prefix - target;
+					if (hm.containsKey(find)) {
+						ans += hm.get(find);
+					}
+					hm.merge(prefix,1,(v1, v2) -> {v2 = v1 + 1});
+				}
+			}
+		}
+		return ans;
+	}
+}

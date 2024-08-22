@@ -1,0 +1,36 @@
+class Solution {
+	int getLen(int a) {
+		int c = 0;
+		while (a > 0) {
+			a = a / 10;
+			c++;
+		}
+		return c;
+	}
+	long sumDigitDifferences(int[] nums) {
+		int n = getLen(nums[0]);
+		int[][] count = new int[10][n];
+		for (int i = 0; i < nums.length; i++) {
+			int k = 1;
+			for (int j = 0; j < n; j++) {
+				count[(nums[i] / k) % 10][j]++;
+				k *= 10;
+			}
+		}
+		long[] result = new long[n];
+		for (int c = 0; c < n; c++) {
+			for (int i = 0; i < 9; i++) {
+				for (int j = i + 1; j < 10; j++) {
+					if (count[i][c] != 0 && count[j][c] != 0) {
+						result[c] += Math.abs((count[i][c] * count[j][c]));
+					}
+				}
+			}
+		}
+		long res = 0;
+		for (int i = 0; i < n; i++) {
+			res += result[i];
+		}
+		return res;
+	}
+}

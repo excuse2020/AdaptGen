@@ -1,0 +1,49 @@
+class Solution {
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		boolean[] visited = new boolean[n];
+		int root = -1;
+		List<List<Integer>> graph = new ArrayList<>(n);
+		boolean[] rootCandidate = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			rootCandidate[i] = true;
+			graph.add(new LinkedList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			if (leftChild[i] != -1) {
+				rootCandidate[leftChild[i]] = false;
+				graph.get(i).add(leftChild[i]);
+			}
+			if (rightChild[i] != -1) {
+				rootCandidate[rightChild[i]] = false;
+				graph.get(i).add(rightChild[i]);
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			if (rootCandidate[i]) {
+				root = i;
+			}
+		}
+		if (root == -1) {
+			return false;
+		}
+		visited[root] = true;
+		Stack<Integer> stk = new Stack<>();
+		stk.push(root);
+		while (!stk.isEmpty()) {
+			int tp = stk.pop();
+			for (int neighbor: graph.get(tp)) {	
+				if (visited[neighbor] == true) {
+					return false;
+				}
+				visited[neighbor] = true;
+				stk.push(neighbor);
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			if (!visited[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

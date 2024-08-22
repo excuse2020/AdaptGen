@@ -1,0 +1,50 @@
+class Solution {
+	String smallestStringWithSwaps(String s, List<List<Integer>> pairs) {
+		if (pairs == null || pairs.size() == 0) {
+			return s;
+		}
+		HashMap<Integer, HashSet<Integer>> map = new HashMap();
+		for (List<Integer> pair: pairs) {	
+			map.putIfAbsent(pair.get(0),new HashSet<Integer>());
+			map.putIfAbsent(pair.get(1),new HashSet<Integer>());
+			map.get(pair.get(0)).add(pair.get(1));
+			map.get(pair.get(1)).add(pair.get(0));
+		}
+		int n = s.length();
+		char[] res = new char[n];
+		for (int i = 0; i < n; i++) {
+			res[i] = s.charAt(i);
+		}
+		boolean[] visited = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			if (!visited[i]) {
+				List<Integer> list = new ArrayList();
+				solve(map,visited,i,list);
+				if (list.size() != 0) {
+					Collections.sort(list);
+					Character[] array = new Character[list.size()];
+					for (int j = 0; j < list.size(); j++) {
+						array[j] = new Character(s.charAt(list.get(j)));
+					}
+					Arrays.sort(array);
+					int index = 0;
+					for (int l: list) {	
+						res[l] = array[index++];
+					}
+				}
+			}
+		}
+		return String.valueOf(res);
+	}
+	void solve(HashMap<Integer, HashSet<Integer>> map, boolean[] visited, int u, List<Integer> list) {
+		visited[u] = true;
+		list.add(u);
+		if (map.containsKey(u)) {
+			for (int i: map.get(u)) {	
+				if (!visited[i]) {
+					solve(map,visited,i,list);
+				}
+			}
+		}
+	}
+}

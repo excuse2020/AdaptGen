@@ -1,0 +1,51 @@
+class Solution {
+	int eatingApples(int noOfApples) {
+		int minDays = 0;
+		Queue<Integer> queue = new LinkedList<>();
+		queue.add(noOfApples);
+		Set<Integer> eatenApples = new HashSet<>();
+		eatenApples.add(noOfApples);
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			minDays += 1;
+			while (size-- > 0) {
+				int apples = queue.poll();
+				int remainingApples = apples - 1;
+				if (remainingApples == 0) {
+					return minDays;
+				}
+				if (remainingApples > 0 && !eatenApples.contains(remainingApples)) {
+					queue.add(remainingApples);
+					eatenApples.add(remainingApples);
+				}
+				if (apples % 2 == 0) {
+					remainingApples = apples - (apples / 2);
+					if (remainingApples == 0) {
+						return minDays;
+					}
+					if (remainingApples > 0 && !eatenApples.contains(remainingApples)) {
+						queue.add(remainingApples);
+						eatenApples.add(remainingApples);
+					}
+				}
+				if (apples % 3 == 0) {
+					remainingApples = apples - (2 * (apples / 3));
+					if (remainingApples == 0) {
+						return minDays;
+					}
+					if (remainingApples > 0 && !eatenApples.contains(remainingApples)) {
+						queue.add(remainingApples);
+						eatenApples.add(remainingApples);
+					}
+				}
+			}
+		}
+		return minDays;
+	}
+	int minDays(int n) {
+		if (n == 1) {
+			return 1;
+		}
+		return eatingApples(n);
+	}
+}

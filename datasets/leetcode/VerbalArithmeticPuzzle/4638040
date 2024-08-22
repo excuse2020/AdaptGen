@@ -1,0 +1,57 @@
+class Solution {
+	int getInt(String s, Map<Character, Integer> map) {
+		int sum = 0;
+		for (int i = 0; i < s.length(); i++) {
+			char c = s.charAt(i);
+			int v = map.get(c);
+			sum *= 10;
+			sum += v;
+		}
+		return sum;
+	}
+	boolean helper(String[] words, String result, Character[] chars, int i, Set<Character> firstCharsSet, boolean[] visited, Map<Character, Integer> map) {
+		if (i == chars.length) {
+			int resultSum = getInt(result,map);
+			for (int j = 0; j < words.length; j++) {
+				resultSum -= getInt(words[j],map);
+			}
+			return resultSum == 0;
+		}
+		boolean output = false;
+		for (int j = 0; j <= 9; j++) {
+			if (visited[j]) {
+				continue;
+			}
+			char c = chars[i];
+			if (j == 0 && firstCharsSet.contains(c)) {
+				continue;
+			}
+			visited[j] = true;
+			map.put(c,j);
+			output |= helper(words,result,chars,i + 1,firstCharsSet,visited,map);
+			if (output) {
+				return output;
+			}
+			visited[j] = false;
+			map.remove(c);
+		}
+		return output;
+	}
+	boolean isSolvable(String[] words, String result) {
+		Set<Character> set = new HashSet<>();
+		Set<Character> firstCharsSet = new HashSet<>();
+		for (int i = 0; i < words.length; i++) {
+			firstCharsSet.add(words[i].charAt(0));
+			for (int j = 0; j < words[i].length(); j++) {
+				set.add(words[i].charAt(j));
+			}
+		}
+		firstCharsSet.add(result.charAt(0));
+		for (int j = 0; j < result.length(); j++) {
+			set.add(result.charAt(j));
+		}
+		Map<Character, Integer> map = new HashMap<>();
+		boolean[] visited = new boolean[10];
+		return helper(words,result,set.toArray(new Character[set.size()]),0,firstCharsSet,visited,map);
+	}
+}

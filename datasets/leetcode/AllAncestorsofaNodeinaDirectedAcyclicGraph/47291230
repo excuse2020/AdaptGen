@@ -1,0 +1,44 @@
+class Solution {
+	List<List<Integer>> getAncestors(int n, int[][] edges) {
+		List<Integer>[] adjList = new ArrayList[n];
+		int[] indegree = new int[n];
+		for (int[] edge: edges) {	
+			if (adjList[edge[0]] == null) {
+				adjList[edge[0]] = new ArrayList();
+			}
+			adjList[edge[0]].add(edge[1]);
+			indegree[edge[1]]++;
+		}
+		Queue<Integer> queue = new LinkedList();
+		Map<Integer, Set<Integer>> map = new HashMap();
+		for (int i = 0; i < indegree.length; i++) {
+			if (indegree[i] == 0) {
+				queue.add(i);
+				map.put(i,new HashSet());
+			}
+		}
+		while (!queue.isEmpty()) {
+			int node = queue.remove();
+			if (adjList[node] == null) {
+				continue;
+			}
+			for (int neighbor: adjList[node]) {	
+				indegree[neighbor]--;
+				Set<Integer> set = map.getOrDefault(neighbor,new HashSet());
+				set.add(node);
+				set.addAll(map.get(node));
+				map.put(neighbor,set);
+				if (indegree[neighbor] == 0) {
+					queue.add(neighbor);
+				}
+			}
+		}
+		List<List<Integer>> ans = new ArrayList();
+		for (int i = 0; i < n; i++) {
+			List list = new ArrayList<>(map.get(i));
+			Collections.sort(list);
+			ans.add(list);
+		}
+		return ans;
+	}
+}

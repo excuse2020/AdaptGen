@@ -1,0 +1,33 @@
+class Solution {
+	Integer[] dp;
+	int deleteString(String s) {
+		int n = s.length();
+		HashSet<Character> set = new HashSet<>();
+		for (int i = 0; i < n; i++) {
+			set.add(s.charAt(i));
+		}
+		if (set.size() == 1) {
+			return s.length();
+		}
+		dp = new Integer[n];
+		return recursion(s,0,n);
+	}
+	int recursion(String s, int ptr, int len) {
+		if (ptr == len) {
+			return 0;
+		}
+		if (dp[ptr] == null) {
+			int lenStr = (len - ptr) / 2;
+			int maxval = 1;
+			for (int i = ptr; i < ptr + lenStr; i++) {
+				String first = s.substring(ptr,i + 1);
+				String last = s.substring(i + 1,2 * (i + 1) - ptr);
+				if (first.equals(last)) {
+					maxval = Math.max(maxval,recursion(s,i + 1,len) + 1);
+				}
+			}
+			dp[ptr] = maxval;
+		}
+		return dp[ptr];
+	}
+}

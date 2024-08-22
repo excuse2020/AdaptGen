@@ -1,0 +1,36 @@
+class Solution {
+	int numDupDigitsAtMostN(int n) {
+		List<Integer> list = new ArrayList<>();
+		int temp = n + 1, count = 0;
+		while (temp > 0) {
+			list.add(0,temp % 10);
+			temp = temp / 10;
+		}
+		for (int i = 0; i < list.size() - 1; ++i) {
+			count += 9 * permutation(9,i);
+		}
+		HashSet<Integer> set = new HashSet<>();
+		for (int i = 0; i < list.size(); ++i) {
+			for (int j = i == 0 ? 1 : 0; j < list.get(i); ++j) {
+				if (set.contains(j)) {
+					continue;
+				}
+				count += permutation(10 - i,list.size() - 1);
+			}
+			if (set.contains(list.get(i))) {
+				break;
+			}
+			set.add(list.get(i));
+		}
+		return n - count;
+	}
+	int permutation(int n, int r) {
+		int val = 1;
+		while (r > 0) {
+			val *= n;
+			n--;
+			r--;
+		}
+		return val;
+	}
+}

@@ -1,0 +1,28 @@
+class Solution {
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		List<List<Integer>> adjacencyL = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adjacencyL.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			int u = edge[0];
+			int v = edge[1];
+			adjacencyL.get(u).add(v);
+			adjacencyL.get(v).add(u);
+		}
+		return shortestPathLength(0,adjacencyL,hasApple,0);
+	}
+	int shortestPathLength(int idx, List<List<Integer>> adjacencyL, List<Boolean> hasApple, int parent) {
+		int pathLength = 0;
+		for (int neighbour: adjacencyL.get(idx)) {	
+			if (neighbour == parent) {
+				continue;
+			}
+			pathLength += shortestPathLength(neighbour,adjacencyL,hasApple,idx);
+		}
+		if (idx != 0 && (hasApple.get(idx) || pathLength > 0)) {
+			pathLength += 2;
+		}
+		return pathLength;
+	}
+}

@@ -1,0 +1,40 @@
+class Solution {
+	void append(ListNode listNode, ListNode appendNode) {
+		if (listNode != null) {
+			ListNode next = listNode;
+			while (next != null) {
+				if (next.next == null) {
+					next.next = appendNode;
+					break;
+				}
+				next = next.next;
+			}
+		}
+	}
+	ListNode reverseBetween(ListNode head, int m, int n) {
+		ListNode start = new ListNode(-1);
+		ListNode newHead = null;
+		ListNode end = null;
+		int i = 1;
+		while (head != null) {
+			ListNode next = head.next;
+			if (i < m) {
+				head.next = null;
+				append(start,head);
+			} 
+			else if (i >= m && i <= n) {
+				head.next = newHead;
+				newHead = head;
+			} 
+			else if (i > n) {
+				end = head;
+				break;
+			}
+			head = next;
+			i++;
+		}
+		append(start,newHead);
+		append(newHead,end);
+		return start != null ? start.next : newHead;
+	}
+}

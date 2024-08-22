@@ -1,0 +1,38 @@
+class Solution {
+	int count;
+	int countCompleteComponents(int n, int[][] edges) {
+		ArrayList<Integer> graph = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < edges.length; i++) {
+			graph[edges[i][0]].add(edges[i][1]);
+			graph[edges[i][1]].add(edges[i][0]);
+		}
+		boolean vis = new boolean[n];
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			if (!vis[i]) {
+				count = 0;
+				if (dfs(graph,vis,i)) {
+					ans++;
+				}
+			}
+		}
+		return ans;
+	}
+	boolean dfs(ArrayList<Integer> graph, boolean vis, int i) {
+		vis[i] = true;
+		count++;
+		boolean flag = true;
+		for (int j = 0; j < graph[i].size(); j++) {
+			if (!vis[graph[i].get(j)]) {
+				boolean x = dfs(graph,vis,graph[i].get(j));
+				if (!x) {
+					flag = false;
+				}
+			}
+		}
+		return (graph[i].size() == count - 1) && flag;
+	}
+}

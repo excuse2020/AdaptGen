@@ -1,0 +1,36 @@
+class Solution {
+	boolean betweenRadius(int[] a, int[] b) {
+		return Math.sqrt(Math.pow(b[0] - a[0],2) + Math.pow(b[1] - a[1],2)) <= a[2];
+	}
+	int maximumDetonation(int[][] bombs) {
+		int max = 0;
+		for (int i = 0; i < bombs.length; i++) {
+			boolean[] visited = new boolean[bombs.length];
+			visited[i] = true;
+			solve(bombs[i],bombs,visited);
+			int tmp = 0;
+			for (int j = 0; j < visited.length; j++) {
+				if (visited[j]) {
+					tmp++;
+				}
+			}
+			System.out.println(tmp);
+			max = Math.max(max,tmp);
+		}
+		return max;
+	}
+	void solve(int[] a, int[][] bombs, boolean[] visited) {
+		int n = bombs.length;
+		Queue<int[]> que = new LinkedList<>();
+		que.offer(a);
+		while (!que.isEmpty()) {
+			int[] cur = que.poll();
+			for (int i = 0; i < n; i++) {
+				if (!visited[i] && betweenRadius(cur,bombs[i])) {
+					que.offer(bombs[i]);
+					visited[i] = true;
+				}
+			}
+		}
+	}
+}

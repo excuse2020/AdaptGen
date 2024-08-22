@@ -1,0 +1,41 @@
+class Solution {
+	int ans = new int[1];
+	void make(TreeNode root, HashMap<Integer, Integer> hm, TreeNode prev) {
+		if (root == null) {
+			if (prev != null && (prev.left != null || prev.right != null)) {
+				return;
+			}
+			int oddfreq = 0;
+			for (int i: hm.keySet()) {	
+				if (hm.get(i) % 2 == 1) {
+					oddfreq++;
+				}
+			}
+			if (oddfreq <= 1) {
+				ans[0]++;
+			}
+			return;
+		}
+		if (hm.containsKey(root.val)) {
+			hm.put(root.val,hm.get(root.val) + 1);
+		} 
+		else {
+			hm.put(root.val,1);
+		}
+		prev = root;
+		make(root.left,hm,prev);
+		if (root.right != null) {
+			make(root.right,hm,prev);
+		}
+		hm.put(root.val,hm.get(root.val) - 1);
+		if (hm.get(root.val) == 0) {
+			hm.remove(root.val);
+		}
+	}
+	int pseudoPalindromicPaths(TreeNode root) {
+		HashMap<Integer, Integer> hm = new HashMap<>();
+		TreeNode prev = null;
+		make(root,hm,null);
+		return ans[0];
+	}
+}

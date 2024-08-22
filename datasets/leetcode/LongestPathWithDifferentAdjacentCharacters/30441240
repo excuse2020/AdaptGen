@@ -1,0 +1,36 @@
+class Solution {
+	int ans = 0;
+	int dfsTraversal(int currNode, int parent, Map<Integer, List<Integer>> adjacencyList, char[] sArray) {
+		if (!adjacencyList.containsKey(currNode)) {
+			return 1;
+		}
+		int firstMax = 0;
+		int secondMax = 0;
+		for (int childNode: adjacencyList.get(currNode)) {	
+			if (childNode == parent) {
+				continue;
+			}
+			int childCount = dfsTraversal(childNode,currNode,adjacencyList,sArray);
+			childCount = (sArray[currNode] != sArray[childNode]) ? childCount + 1 : 0;
+			if (childCount >= firstMax) {
+				secondMax = firstMax;
+				firstMax = childCount;
+			} 
+			else if (childCount > secondMax) {
+				secondMax = childCount;
+			}
+		}
+		ans = Math.max(ans,firstMax + secondMax);
+		return firstMax;
+	}
+	int longestPath(int[] parent, String s) {
+		Map<Integer, List<Integer>> adjacencyList = new HashMap();
+		for (int i = 1; i < parent.length; i++) {
+			adjacencyList.computeIfAbsent(i,(val) -> {new ArrayList<Integer>()}).add(parent[i]);
+			adjacencyList.computeIfAbsent(parent[i],(val) -> {new ArrayList<Integer>()}).add(i);
+		}
+		char[] sArray = s.toCharArray();
+		dfsTraversal(0,-1,adjacencyList,sArray);
+		return ans + 1;
+	}
+}

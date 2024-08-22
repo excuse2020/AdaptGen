@@ -1,0 +1,30 @@
+class Solution {
+	void addComplimentToQueue(int[] v1, int[] v2, PriorityQueue<Integer> queue) {
+		Arrays.stream(v1).forEach((n) -> {queue.add(n - 1)});
+		Arrays.stream(v2).forEach((n) -> {queue.add(6 - n)});
+	}
+	int minOperations(int[] nums1, int[] nums2) {
+		if (nums1.length > 6 * nums2.length || nums2.length > 6 * nums1.length) {
+			return -1;
+		}
+		var total1 = Arrays.stream(nums1).sum();
+		var total2 = Arrays.stream(nums2).sum();
+		if (total1 == total2) {
+			return 0;
+		}
+		var queue = new PriorityQueue<Integer>(Comparator.reverseOrder());
+		if (total1 > total2) {
+			addComplimentToQueue(nums1,nums2,queue);
+		} 
+		else {
+			addComplimentToQueue(nums2,nums1,queue);
+		}
+		var minops = 0;
+		var diff = Math.abs(total1 - total2);
+		while (!queue.isEmpty() && diff > 0) {
+			diff -= queue.poll();
+			minops++;
+		}
+		return minops;
+	}
+}

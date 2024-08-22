@@ -1,0 +1,52 @@
+class Solution {
+	int countCompleteComponents(int n, int[][] edges) {
+		int l = edges.length;
+		int[] connections = new int[n];
+		int[] parent = new int[n];
+		int[] size = new int[n];
+		for (int i = 0; i < n; i++) {
+			size[i] = 1;
+			parent[i] = i;
+		}
+		for (int i = 0; i < l; i++) {
+			int source = edges[i][0];
+			int destination = edges[i][1];
+			union(parent,size,source,destination);
+			connections[source]++;
+			connections[destination]++;
+		}
+		Set<Integer> ans = new HashSet<>();
+		for (int i = 0; i < n; i++) {
+			ans.add(findRootParent(parent[i],parent));
+		}
+		for (int i = 0; i < n; i++) {
+			int parentVertex = findRootParent(i,parent);
+			int sizeOfSet = size[parentVertex];
+			if (connections[i] != (sizeOfSet - 1)) {
+				ans.remove(parentVertex);
+			}
+		}
+		return ans.size();
+	}
+	int findRootParent(int vertex, int[] parent) {
+		if (parent[vertex] == vertex) {
+			return vertex;
+		}
+		return findRootParent(parent[vertex],parent);
+	}
+	void union(int[] parent, int[] size, int source, int destination) {
+		int vertex1 = findRootParent(source,parent);
+		int vertex2 = findRootParent(destination,parent);
+		if (vertex1 == vertex2) {
+			return;
+		}
+		if (size[vertex2] <= size[vertex1]) {
+			parent[vertex2] = vertex1;
+			size[vertex1] = size[vertex1] + size[vertex2];
+		} 
+		else {
+			parent[vertex1] = vertex2;
+			size[vertex2] = size[vertex1] + size[vertex2];
+		}
+	}
+}

@@ -1,0 +1,60 @@
+class Solution {
+	int[] parent;
+	int[] rank;
+	int find(int p) {
+		if (parent[p] != p) {
+			return parent[p] = find(parent[p]);
+		}
+		return p;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		parent = new int[n + 1];
+		rank = new int[n + 1];
+		int[] map = new int[n + 1];
+		for (int i = 0; i < parent.length; i++) {
+			parent[i] = i;
+		}
+		for (int[] dislike: dislikes) {	
+			int dis1 = dislike[0];
+			int dis2 = dislike[1];
+			if (map[dis1] == 0) {
+				map[dis1] = dis2;
+			} 
+			else {
+				map[dis1] = union(dis2,map[dis1]);
+			}
+			if (map[dis2] == 0) {
+				map[dis2] = dis1;
+			} 
+			else {
+				map[dis2] = union(dis1,map[dis2]);
+			}
+		}
+		for (int i = 1; i < n; i++) {
+			if (map[i] != 0 && find(i) == find(map[i])) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int union(int p1, int p2) {
+		int find1 = find(p1);
+		int find2 = find(p2);
+		if (find1 == find2) {
+			return find1;
+		}
+		if (rank[find1] > rank[find2]) {
+			parent[find2] = find1;
+			return find1;
+		} 
+		else if (rank[find1] < rank[find2]) {
+			parent[find1] = find2;
+			return find2;
+		} 
+		else {
+			parent[find2] = find1;
+			rank[find1]++;
+			return find1;
+		}
+	}
+}

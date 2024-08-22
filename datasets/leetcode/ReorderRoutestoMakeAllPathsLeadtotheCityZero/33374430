@@ -1,0 +1,36 @@
+class Solution {
+	int minReorder(int n, int[][] connections) {
+		HashMap<Integer, List<Integer>> map = new HashMap<>();
+		Set<String> set = new HashSet<>();
+		for (int[] nodes: connections) {	
+			if (!map.containsKey(nodes[0])) {
+				map.put(nodes[0],new ArrayList<>());
+			}
+			map.get(nodes[0]).add(nodes[1]);
+			if (!map.containsKey(nodes[1])) {
+				map.put(nodes[1],new ArrayList<>());
+			}
+			map.get(nodes[1]).add(nodes[0]);
+			set.add(nodes[0] + ",");
+		}
+		System.out.println(map);
+		Queue<Integer> q = new LinkedList<>();
+		q.add(0);
+		int count = 0;
+		boolean[] visited = new boolean[n];
+		visited[0] = true;
+		while (!q.isEmpty()) {
+			int node = q.poll();
+			for (int num: map.get(node)) {	
+				if (!visited[num]) {
+					visited[num] = true;
+					if (!set.contains(num + "," + node)) {
+						count++;
+					}
+					q.add(num);
+				}
+			}
+		}
+		return count;
+	}
+}

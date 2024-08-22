@@ -1,0 +1,66 @@
+class Solution {
+	int[] Stree;
+	void build(int[] nums, int l, int r, int idx) {
+		if (l == r) {
+			return;
+		}
+		int mid = l + (r - l) / 2;
+		build(nums,l,mid,2 * idx);
+		build(nums,mid + 1,r,2 * idx + 1);
+		Stree[idx] = peakCount(nums,l,r,mid) + Stree[2 * idx];
+	}
+	List<Integer> countOfPeaks(int[] nums, int[][] queries) {
+		int n = nums.length;
+		Stree = new int[4 * n + 1];
+		List<Integer> ans = new ArrayList<>();
+		build(nums,0,n - 1,1);
+		for (int el: Stree) {	
+			System.out.print(el + " ");
+		}
+		for (int[] query: queries) {	
+			if (query[0] == 1) {
+				int currAns = queryTree(nums,0,n - 1,query[1],query[2],1);
+				ans.add(currAns);
+			} 
+			else {
+				update(nums,query[1],query[2],0,n - 1,1);
+			}
+		}
+		return ans;
+	}
+	int peakCount(int[] nums, int l, int r, int mid) {
+		if (r - l >= 2) {
+			if ((mid - 1 >= l && nums[mid] > nums[mid - 1] && nums[mid] > nums[mid + 1]) || (mid + 2 <= r && nums[mid + 1] > nums[mid] && nums[mid + 1] > nums[mid + 2])) {
+				return 1;
+			}
+		}
+		return 0;
+	}
+	int queryTree(int[] nums, int l, int r, int s, int e, int idx) {
+		if (l == s && r == e) {
+			return Stree[idx];
+		}
+		int mid = l + (r - l) / 2;
+		if (l <= s && e <= mid) {
+			return queryTree(nums,l,mid,s,e,2 * idx);
+		}
+		if (mid + 1 <= s && e <= r) {
+			return queryTree(nums,mid + 1,r,s,e,2 * idx + 1);
+		}
+		return peakCount(nums,s,e,mid) + queryTree(nums,l,mid,s,mid,2 * idx);
+	}
+	void update(int[] nums, int i, int val, int l, int r, int idx) {
+		if (l == r) {
+			nums[l] = val;
+			return;
+		}
+		int mid = l + (r - l) / 2;
+		if (i >= l && i <= mid) {
+			update(nums,i,val,l,mid,2 * idx);
+		} 
+		else {
+			update(nums,i,val,mid + 1,r,2 * idx + 1);
+		}
+		Stree[idx] = peakCount(nums,l,r,mid) + Stree[2 * idx];
+	}
+}

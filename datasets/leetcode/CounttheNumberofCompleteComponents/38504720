@@ -1,0 +1,41 @@
+class Solution {
+	long edgeCountForDFS = 0l;
+	int nodeCountForDFS = 0;
+	void buildAdj(int n, int[][] edges, List<List<Integer>> adj) {
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int[] e: edges) {	
+			adj.get(e[0]).add(e[1]);
+			adj.get(e[1]).add(e[0]);
+		}
+	}
+	int countCompleteComponents(int n, int[][] edges) {
+		int count = 0;
+		boolean[] visited = new boolean[n];
+		List<List<Integer>> adj = new ArrayList<>();
+		buildAdj(n,edges,adj);
+		for (int i = 0; i < n; i++) {
+			if (!visited[i]) {
+				nodeCountForDFS = 0;
+				edgeCountForDFS = 0l;
+				dfs(i,adj,visited);
+				if ((nodeCountForDFS * (nodeCountForDFS - 1)) * 1l == edgeCountForDFS) {
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+	void dfs(int p, List<List<Integer>> adj, boolean[] visited) {
+		visited[p] = true;
+		nodeCountForDFS++;
+		for (int c: adj.get(p)) {	
+			edgeCountForDFS++;
+			if (!visited[c]) {
+				visited[c] = true;
+				dfs(c,adj,visited);
+			}
+		}
+	}
+}

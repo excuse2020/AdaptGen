@@ -1,0 +1,20 @@
+class Solution {
+	boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
+		TreeMap<Long, Integer> treemap = new TreeMap<>();
+		for (int i = 0; i < nums.length; i++) {
+			if (treemap.size() > k) {
+				treemap.remove((long) nums[i - k - 1]);
+			}
+			Long ceil = treemap.ceilingKey((long) nums[i]);
+			Long floor = treemap.floorKey((long) nums[i]);
+			if (ceil != null && ceil <= (long) nums[i] + t) {
+				return true;
+			}
+			if (floor != null && floor >= (long) nums[i] - t) {
+				return true;
+			}
+			treemap.put((long) nums[i],i);
+		}
+		return false;
+	}
+}

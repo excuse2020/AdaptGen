@@ -1,0 +1,33 @@
+class Solution {
+	HashMap<Character, Integer> h = new HashMap<>();
+	int thresholdHalfLen = Integer.MAX_VALUE;
+	int getHalfLen(int[] point) {
+		return Math.max(Math.abs(point[0]),Math.abs(point[1]));
+	}
+	int maxPointsInsideSquare(int[][] points, String s) {
+		for (int i = 0; i < points.length; i++) {
+			char c = s.charAt(i);
+			int b = getHalfLen(points[i]);
+			if (h.containsKey(c)) {
+				int a = h.get(c);
+				if (a <= b) {
+					thresholdHalfLen = Math.min(thresholdHalfLen,b);
+				} 
+				else {
+					thresholdHalfLen = Math.min(thresholdHalfLen,a);
+					h.put(c,b);
+				}
+			} 
+			else {
+				h.put(c,b);
+			}
+		}
+		int maxAllowedPoints = 0;
+		for (int value: h.values()) {	
+			if (value < thresholdHalfLen) {
+				maxAllowedPoints++;
+			}
+		}
+		return maxAllowedPoints;
+	}
+}

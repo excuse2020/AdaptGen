@@ -1,0 +1,49 @@
+class Solution {
+	int max_width;
+	String findLine(int i, int j, int eachWordSpace, int extraSpaceInWords, String[] words) {
+		String line = "";
+		for (int k = i; k < j; k++) {
+			line += words[k];
+			if (k == j - 1) {
+				continue;
+			}
+			for (int z = 1; z <= eachWordSpace; z++) {
+				line += " ";
+			}
+			if (extraSpaceInWords > 0) {
+				line += " ";
+				extraSpaceInWords--;
+			}
+		}
+		while (line.length() < max_width) {
+			line += " ";
+		}
+		return line;
+	}
+	List<String> fullJustify(String[] words, int maxWidth) {
+		List<String> result = new ArrayList<>();
+		max_width = maxWidth;
+		int n = words.length;
+		int i = 0;
+		while (i < n) {
+			int lettersCount = words[i].length();
+			int j = i + 1;
+			int spaceBetweenWords = 0;
+			while (j < n && (words[j].length() + 1) <= maxWidth) {
+				lettersCount += words[j].length();
+				spaceBetweenWords += 1;
+				j++;
+			}
+			int remainingSpaces = maxWidth - lettersCount;
+			int eachWordSpace = (spaceBetweenWords == 0) ? 0 : remainingSpaces / spaceBetweenWords;
+			int extraSpaceInWords = (spaceBetweenWords == 0) ? 0 : remainingSpaces % spaceBetweenWords;
+			if (j == n) {
+				eachWordSpace = 1;
+				extraSpaceInWords = 0;
+			}
+			result.add(findLine(i,j,eachWordSpace,extraSpaceInWords,words));
+			i = j;
+		}
+		return result;
+	}
+}

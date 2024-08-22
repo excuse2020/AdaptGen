@@ -1,0 +1,37 @@
+class Solution {
+	int[][] dp;
+	int m, n;
+	int max = min;
+	int min = -(int)1e7;
+	int helper(int i, int j, List<List<Integer>> g) {
+		if (i >= m || j >= n) {
+			return min;
+		}
+		if (dp[i][j] != min) {
+			return dp[i][j];
+		}
+		int v = g.get(i).get(j);
+		int ml1 = min;
+		int ml2 = min;
+		if (i != m - 1) {
+			ml1 = g.get(i + 1).get(j) - v + Math.max(0,helper(i + 1,j,g));
+		}
+		if (j != n - 1) {
+			ml2 = g.get(i).get(j + 1) - v + Math.max(0,helper(i,j + 1,g));
+		}
+		int ml = Math.max(ml1,ml2);
+		dp[i][j] = ml;
+		max = Math.max(max,dp[i][j]);
+		return dp[i][j];
+	}
+	int maxScore(List<List<Integer>> g) {
+		m = g.size();
+		n = g.get(0).size();
+		dp = new int[m][n];
+		for (int i = 0; i < m; i++) {
+			Arrays.fill(dp[i],min);
+		}
+		helper(0,0,g);
+		return max;
+	}
+}

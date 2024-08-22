@@ -1,0 +1,52 @@
+class Solution {
+	TreeNode createBinaryTree(int[][] descriptions) {
+		TreeNode rootNode;
+		Map<Integer, TreeNode> childNode = new HashMap<>();
+		Map<Integer, Integer> setA = new HashMap<>();
+		Map<Integer, Integer> setB = new HashMap<>();
+		for (int i = 0; i < descriptions.length; i++) {
+			if (descriptions[i][2] == 1) {
+				setA.put(descriptions[i][1],1);
+				setB.put(descriptions[i][0],1);
+			} 
+			else {
+				setA.put(descriptions[i][1],1);
+				setB.put(descriptions[i][0],1);
+			}
+		}
+		setB.entrySet().removeAll(setA.entrySet());
+		int root = setB.entrySet().iterator().next().getKey();
+		Map<Integer, TreeNode> map = new HashMap<>();
+		for (int i = 0; i < descriptions.length; i++) {
+			TreeNode node;
+			if (map.containsKey(descriptions[i][0])) {
+				node = map.get(descriptions[i][0]);
+			} 
+			else {
+				node = new TreeNode(descriptions[i][0]);
+			}
+			if (descriptions[i][2] == 1) {
+				if (map.containsKey(descriptions[i][1])) {
+					node.left = map.get(descriptions[i][1]);
+					map.put(descriptions[i][1],node.left);
+				} 
+				else {
+					node.left = new TreeNode(descriptions[i][1]);
+					map.put(descriptions[i][1],node.left);
+				}
+			} 
+			else {
+				if (map.containsKey(descriptions[i][1])) {
+					node.right = map.get(descriptions[i][1]);
+					map.put(descriptions[i][1],node.right);
+				} 
+				else {
+					node.right = new TreeNode(descriptions[i][1]);
+					map.put(descriptions[i][1],node.right);
+				}
+			}
+			map.put(descriptions[i][0],node);
+		}
+		return map.get(root);
+	}
+}

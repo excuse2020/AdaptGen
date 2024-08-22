@@ -1,0 +1,34 @@
+class Solution {
+	int arr;
+	Integer memo;
+	int maximumLength(int[] nums, int k) {
+		arr = nums;
+		memo = new Integer[nums.length][k + 1];
+		int ans = 0;
+		for (int i = 0; i < nums.length; i++) {
+			ans = Math.max(ans,solve(i,k));
+		}
+		return ans;
+	}
+	int solve(int i, int k) {
+		if (i >= arr.length) {
+			return 0;
+		}
+		if (k < 0) {
+			return 0;
+		}
+		if (memo[i][k] != null) {
+			return memo[i][k];
+		}
+		int ans = 0;
+		for (int x = i + 1; x < arr.length; x++) {
+			if (arr[x] == arr[i]) {
+				ans = Math.max(ans,solve(x,k));
+			} 
+			else {
+				ans = Math.max(ans,solve(x,k - 1));
+			}
+		}
+		return memo[i][k] = ans + 1;
+	}
+}

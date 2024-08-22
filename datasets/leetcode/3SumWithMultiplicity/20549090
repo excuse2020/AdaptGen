@@ -1,0 +1,51 @@
+class Solution {
+	int combinations(int num) {
+		return (int) (num / 2.0 * (num + 1));
+	}
+	int threeSumMulti(int[] arr, int target) {
+		Arrays.sort(arr);
+		int result = 0;
+		for (int i = 0; i < arr.length - 2; i++) {
+			result += twoSum(arr,i + 1,target - arr[i]);
+			result = result % ((int) Math.pow(10,9) + 7);
+		}
+		return result;
+	}
+	int twoSum(int[] arr, int start, int target) {
+		int left = start;
+		int right = arr.length - 1;
+		int result = 0;
+		while (left < right) {
+			int x = arr[left];
+			int y = arr[right];
+			if (x + y == target) {
+				if (x == y) {
+					result += combinations(right - left);
+					return result;
+				} 
+				else {
+					int countLeft = 1;
+					int countRight = 1;
+					left++;
+					while (arr[left] == arr[left - 1]) {
+						countLeft++;
+						left++;
+					}
+					right--;
+					while (arr[right] == arr[right + 1]) {
+						countRight++;
+						right--;
+					}
+					result += countLeft * countRight;
+				}
+			} 
+			else if (x + y > target) {
+				right--;
+			} 
+			else {
+				left++;
+			}
+		}
+		return result;
+	}
+}

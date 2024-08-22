@@ -1,0 +1,51 @@
+class Solution {
+	void constructTree(int rootVal, HashMap<Integer, List<int[]>> map, TreeNode root) {
+		if (!map.containsKey(rootVal)) {
+			root.left = null;
+			root.right = null;
+			return;
+		}
+		List<int[]> list = map.get(rootVal);
+		boolean isLeft = false;
+		boolean isRight = false;
+		for (int[] child: list) {	
+			TreeNode node = new TreeNode(child[0]);
+			if (child[1] == 1) {
+				root.left = node;
+				isLeft = true;
+			} 
+			else {
+				root.right = node;
+				isRight = true;
+			}
+		}
+		if (isLeft) {
+			constructTree(root.left.val,map,root.left);
+		}
+		if (isRight) {
+			constructTree(root.right.val,map,root.right);
+		}
+	}
+	TreeNode createBinaryTree(int[][] descriptions) {
+		HashMap<Integer, List<int[]>> map = new HashMap<>();
+		Set<Integer> childs = new HashSet<>();
+		Set<Integer> parents = new HashSet<>();
+		for (int[] desc: descriptions) {	
+			List<int[]> list = map.getOrDefault(desc[0],new ArrayList<>());
+			list.add(new int{desc[1], desc[2]});
+			map.put(desc[0],list);
+			childs.add(desc[1]);
+			parents.add(desc[0]);
+		}
+		int rootVal = 0;
+		for (int parent: parents) {	
+			if (!childs.contains(parent)) {
+				rootVal = parent;
+				break;
+			}
+		}
+		TreeNode root = new TreeNode(rootVal);
+		constructTree(rootVal,map,root);
+		return root;
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	int gcd(int a, int b) {
+		if (b == 0) {
+			return a;
+		}
+		return gcd(b,a % b);
+	}
+	int minOperations(int[] A) {
+		int n = A.length;
+		int num1s = 0;
+		int shortestSubArrLen = Integer.MAX_VALUE;
+		for (int i = 0; i < n; i++) {
+			if (A[i] == 1) {
+				num1s++;
+			}
+			int gcd = A[i];
+			for (int j = i + 1; j < n; j++) {
+				gcd = gcd(gcd,A[j]);
+				if (gcd == 1) {
+					shortestSubArrLen = Math.min(j - i + 1,shortestSubArrLen);
+				}
+			}
+		}
+		if (shortestSubArrLen == Integer.MAX_VALUE) {
+			return -1;
+		}
+		if (num1s > 0) {
+			return n - num1s;
+		}
+		return n - 1 + shortestSubArrLen - 1;
+	}
+}

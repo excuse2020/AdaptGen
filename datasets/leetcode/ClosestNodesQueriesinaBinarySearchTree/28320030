@@ -1,0 +1,35 @@
+class Solution {
+	TreeSet<Integer> set;
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		List<List<Integer>> ans = new ArrayList<>();
+		set = new TreeSet<>();
+		solve(root);
+		for (int val: queries) {	
+			List<Integer> list = new ArrayList<>();
+			Integer min = set.floor(val);
+			if (min == null) {
+				list.add(-1);
+			} 
+			else {
+				list.add(min);
+			}
+			Integer max = set.ceiling(val);
+			if (max == null) {
+				list.add(-1);
+			} 
+			else {
+				list.add(max);
+			}
+			ans.add(list);
+		}
+		return ans;
+	}
+	void solve(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		solve(root.left);
+		set.add(root.val);
+		solve(root.right);
+	}
+}

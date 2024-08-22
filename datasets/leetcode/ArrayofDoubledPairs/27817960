@@ -1,0 +1,35 @@
+class Solution {
+	boolean canReorderDoubled(int[] arr) {
+		HashMap<Integer, Integer> mp = new HashMap<>();
+		Arrays.sort(arr);
+		for (int i = 0; i < arr.length; i++) {
+			mp.put(arr[i],mp.getOrDefault(arr[i],0) + 1);
+		}
+		for (int i = 0; i < arr.length; i++) {
+			if (mp.containsKey(arr[i]) && mp.containsKey(2 * arr[i])) {
+				mp.put(2 * arr[i],mp.get(2 * arr[i]) - 1);
+				mp.put(arr[i],mp.get(arr[i]) - 1);
+				if (mp.get(arr[i]) == 0) {
+					mp.remove(arr[i]);
+				}
+				if (mp.get(2 * arr[i]) == 0) {
+					mp.remove(2 * arr[i]);
+				}
+			} 
+			else if (mp.containsKey(arr[i]) && mp.containsKey(2 * arr[i])) {
+				mp.put(2 * arr[i],mp.get(2 * arr[i]) - 1);
+				mp.put(arr[i],mp.get(arr[i]) - 1);
+				if (mp.containsKey(arr[i]) && mp.get(arr[i]) == 0) {
+					mp.remove(arr[i]);
+				}
+				if (mp.containsKey(2 * arr[i]) && mp.get(2 * arr[i]) == 0) {
+					mp.remove(2 * arr[i]);
+				}
+			}
+		}
+		if (mp.size() > 0) {
+			return false;
+		}
+		return true;
+	}
+}

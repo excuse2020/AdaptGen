@@ -1,0 +1,39 @@
+class Solution {
+	int[] LIS(int[] arr) {
+		int n = arr.length;
+		int[] tail = new int[n];
+		int[] dp = new int[n];
+		int len = 0;
+		for (int i = 0; i < n; i++) {
+			if (i == 0 || tail[len - 1] < arr[i]) {
+				tail[len++] = arr[i];
+				dp[i] = len;
+			} 
+			else {
+				int index = search(tail,len,arr[i]);
+				tail[index] = arr[i];
+				dp[i] = index + 1;
+			}
+		}
+		int[] res = new int[len];
+		for (int i = n - 1; i >= 0; i--) {
+			if (dp[i] == len) {
+				res[--len] = arr[i];
+			}
+		}
+		return res;
+	}
+	int search(int[] nums, int len, int k) {
+		int low = 0, high = len - 1;
+		while (low < high) {
+			int mid = (high + low) / 2;
+			if (nums[mid] >= k) {
+				high = mid;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		return low;
+	}
+}

@@ -1,0 +1,31 @@
+class Solution {
+	int constrainedSubsetSum(int[] nums, int k) {
+		int result = nums[0];
+		for (int i = 1, maxI = 0; i < nums.length; i++) {
+			if (i - maxI > k) {
+				maxI = maxInRange(nums,i - k,i - 1);
+			}
+			if (nums[i] < 0) {
+				nums[i] += Math.max(nums[maxI],0);
+			} 
+			else {
+				nums[i] += Math.max(nums[maxI],0);
+				maxI = i;
+			}
+			if (result < nums[i]) {
+				result = nums[maxI=i];
+			}
+		}
+		return result;
+	}
+	int maxInRange(int[] nums, int l, int r) {
+		l = Math.max(0,l);
+		int maxI = r--;
+		for (; l <= r; r--) {
+			if (nums[maxI] < nums[r]) {
+				maxI = r;
+			}
+		}
+		return maxI;
+	}
+}

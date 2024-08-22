@@ -1,0 +1,36 @@
+class Solution {
+	int[][] matrixRowPrefixSum(int[][] matrix) {
+		int rows = matrix.length;
+		int cols = matrix[0].length;
+		for (int row = 0; row < rows; row++) {
+			for (int col = 1; col < cols; col++) {
+				matrix[row][col] += matrix[row][col - 1];
+			}
+		}
+		return matrix;
+	}
+	int numSubMatrixRowSumTarget(int[][] matrixPrefixSum, int target) {
+		int rows = matrixPrefixSum.length;
+		int cols = matrixPrefixSum[0].length;
+		int count = 0;
+		for (int col1 = 0; col1 < cols; col1++) {
+			for (int col2 = col1; col2 < cols; col2++) {
+				int subMatrixSum = 0;
+				Map<Integer, Integer> subMatrixSumCount = new HashMap<>();
+				subMatrixSumCount.put(0,1);
+				for (int row = 0; row < rows; row++) {
+					int adjustPrefixSum = col1 == 0 ? 0 : matrixPrefixSum[row][col1 - 1];
+					subMatrixSum += matrixPrefixSum[row][col2] - adjustPrefixSum;
+					count += subMatrixSumCount.getOrDefault(subMatrixSum - target,0);
+					int matrixSumCount = subMatrixSumCount.getOrDefault(subMatrixSum,0);
+					subMatrixSumCount.put(subMatrixSum,matrixSumCount + 1);
+				}
+			}
+		}
+		return count;
+	}
+	int numSubmatrixSumTarget(int[][] matrix, int target) {
+		matrix = matrixRowPrefixSum(matrix);
+		return numSubMatrixRowSumTarget(matrix,target);
+	}
+}

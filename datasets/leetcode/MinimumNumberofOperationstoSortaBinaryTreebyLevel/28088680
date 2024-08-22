@@ -1,0 +1,49 @@
+class Solution {
+	int minSwaps(int[] nums, int n) {
+		int[] sorted = Arrays.copyOfRange(nums,0,n);
+		Arrays.sort(sorted);
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			map.put(nums[i],i);
+		}
+		int swap = 0;
+		for (int i = 0; i < n; i++) {
+			if (nums[i] != sorted[i]) {
+				swap++;
+				int origin = nums[i];
+				swap(nums,i,map.get(sorted[i]));
+				map.put(origin,map.get(sorted[i]));
+				map.put(sorted[i],i);
+			}
+		}
+		return swap;
+	}
+	int minimumOperations(TreeNode root) {
+		int result = 0;
+		List<TreeNode> current = new ArrayList<>();
+		current.add(root);
+		while (!current.isEmpty()) {
+			int size = current.size();
+			int[] row = new int[size];
+			List<TreeNode> next = new ArrayList<>();
+			for (int i = 0; i < size; i++) {
+				TreeNode node = current.get(i);
+				row[i] = node.val;
+				if (node.left != null) {
+					next.add(node.left);
+				}
+				if (node.right != null) {
+					next.add(node.right);
+				}
+			}
+			current = next;
+			result += minSwaps(row,size);
+		}
+		return result;
+	}
+	void swap(int[] nums, int i, int j) {
+		int temp = nums[i];
+		nums[i] = nums[j];
+		nums[j] = temp;
+	}
+}

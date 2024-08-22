@@ -1,0 +1,49 @@
+class Solution {
+	int countAnswer(int vertex, HashMap<Integer, ArrayList<Integer>> map, HashMap<Integer, Boolean> restrict) {
+		if (restrict.containsKey(vertex)) {
+			return 0;
+		}
+		restrict.put(vertex,true);
+		if (map.containsKey(vertex) == false) {
+			return 0;
+		}
+		ArrayList<Integer> list = map.get(vertex);
+		int count = 1;
+		for (int i = 0; i < list.size(); i++) {
+			if (restrict.containsKey(list.get(i))) {
+				continue;
+			}
+			count += countAnswer(list.get(i),map,restrict);
+		}
+		return count;
+	}
+	int reachableNodes(int n, int[][] edges, int[] restricted) {
+		HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+		for (int i = 0; i < edges.length; i++) {
+			int temp = edges[i];
+			if (map.containsKey(temp[0])) {
+				ArrayList<Integer> list = map.get(temp[0]);
+				list.add(temp[1]);
+			} 
+			else {
+				ArrayList<Integer> list = new ArrayList<>();
+				list.add(temp[1]);
+				map.put(temp[0],list);
+			}
+			if (map.containsKey(temp[1])) {
+				ArrayList<Integer> list = map.get(temp[1]);
+				list.add(temp[0]);
+			} 
+			else {
+				ArrayList<Integer> list = new ArrayList<>();
+				list.add(temp[0]);
+				map.put(temp[1],list);
+			}
+		}
+		HashMap<Integer, Boolean> restrict = new HashMap<>();
+		for (int i = 0; i < restricted.length; i++) {
+			restrict.put(restricted[i],true);
+		}
+		return countAnswer(0,map,restrict);
+	}
+}

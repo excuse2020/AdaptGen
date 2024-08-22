@@ -1,0 +1,58 @@
+class Solution {
+	List<List<Integer>> ans;
+	int n;
+	int nums;
+	void backtrack(int[] nums, int start) {
+		if (start == n) {
+			List<Integer> list = Arrays.stream(nums).boxed().collect(Collectors.toList());
+			ans.add(new LinkedList(list));
+			return;
+		}
+		for (int i = start; i < nums.length; i++) {
+			swap(nums,start,i);
+			backtrack(nums,start + 1);
+			swap(nums,i,start);
+		}
+	}
+	void backtrack(int[] nums, int start, List<Integer> list) {
+		if (list.size() == n) {
+			ans.add(new LinkedList(list));
+			return;
+		}
+		for (int i = start; i < nums.length; i++) {
+			swap(nums,start,i);
+			list.add(nums[start]);
+			backtrack(nums,start + 1,list);
+			swap(nums,i,start);
+			list.remove(list.size() - 1);
+		}
+	}
+	void backtrack(boolean[] marked, List<Integer> list) {
+		if (list.size() == n) {
+			ans.add(new LinkedList(list));
+			return;
+		}
+		for (int i = 0; i < nums.length; i++) {
+			if (marked[i]) {
+				continue;
+			}
+			list.add(nums[i]);
+			marked[i] = true;
+			backtrack(marked,list);
+			marked[i] = false;
+			list.remove(list.size() - 1);
+		}
+	}
+	List<List<Integer>> permute(int[] nums) {
+		this.nums = nums;
+		n = nums.length;
+		ans = new LinkedList();
+		backtrack(nums,0,new LinkedList());
+		return ans;
+	}
+	void swap(int[] nums, int i, int j) {
+		int temp = nums[i];
+		nums[i] = nums[j];
+		nums[j] = temp;
+	}
+}

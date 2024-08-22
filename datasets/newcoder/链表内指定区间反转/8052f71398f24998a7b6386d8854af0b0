@@ -1,0 +1,74 @@
+class Solution {
+	ListNode ReverseList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode r = head.next;
+		ListNode l = head;
+		ListNode t = r.next;
+		head.next = null;
+		while (t != null) {
+			r.next = l;
+			l = r;
+			r = t;
+			t = r.next;
+		}
+		r.next = l;
+		return r;
+	}
+	ListNode add(ListNode h1, ListNode h2, ListNode h3) {
+		if (h1 == null) {
+			h1 = h2;
+			h2 = h3;
+			h3 = null;
+		}
+		if (h1 == null) {
+			h1 = h2;
+			h2 = h3;
+			h3 = null;
+		}
+		ListNode tail = h1;
+		while (tail.next != null) {
+			tail = tail.next;
+		}
+		tail.next = h2;
+		while (tail.next != null) {
+			tail = tail.next;
+		}
+		tail.next = h3;
+		return h1;
+	}
+	ListNode reverseBetween(ListNode head, int m, int n) {
+		if (m == n) {
+			return head;
+		}
+		if (head == null) {
+			return null;
+		}
+		ListNode l = head, r, l_temp = l;
+		ListNode h1 = head, h2, h3;
+		int len = 1;
+		while (l.next != null) {
+			l = l.next;
+			len++;
+		}
+		l = head;
+		for (int i = 1; i < m; i++) {
+			l_temp = l;
+			l = l.next;
+		}
+		r = l;
+		h2 = l;
+		for (int i = 0; i < n - m; i++) {
+			r = r.next;
+		}
+		h3 = r.next;
+		r.next = null;
+		h2 = ReverseList(h2);
+		if (m == 1) {
+			return add(null,h2,h3);
+		}
+		l_temp.next = null;
+		return add(h1,h2,h3);
+	}
+}

@@ -1,0 +1,38 @@
+class Solution {
+	int bs(int low, int high, String s1, String s2) {
+		while (low <= high) {
+			int mid = (low + high) / 2;
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < mid; i++) {
+				sb.append(s1);
+			}
+			if (sb.toString().indexOf(s2) != -1) {
+				high = mid - 1;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		return low;
+	}
+	int repeatedStringMatch(String A, String B) {
+		HashMap<Character, Integer> mapA = new HashMap<>();
+		HashMap<Character, Integer> mapB = new HashMap<>();
+		for (int i = 0; i < A.length(); i++) {
+			mapA.put(A.charAt(i),mapA.getOrDefault(A.charAt(i),0) + 1);
+		}
+		for (int i = 0; i < B.length(); i++) {
+			mapB.put(B.charAt(i),mapB.getOrDefault(B.charAt(i),0) + 1);
+			if (!mapA.containsKey(B.charAt(i))) {
+				return -1;
+			}
+		}
+		int low = (int) Math.ceil(B.length() / A.length()), high = 0;
+		for (Character key: mapB.keySet()) {	
+			high = Math.max(mapB.get(key),Math.max(high,mapA.get(key)));
+		}
+		high++;
+		int res = bs(low,high,A,B);
+		return res > high ? -1 : res;
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	int mt = -1;
+	void backtrack(int[] arr, int index) {
+		for (int i = index; i < 4; i++) {
+			swap(arr,index,i);
+			int hr = 0, min = 0;
+			hr += arr[0] * 10;
+			hr += arr[1];
+			min += arr[2] * 10;
+			min += arr[3];
+			if (hr < 24 && min < 60) {
+				mt = Math.max(mt,hr * 60 + min);
+			}
+			backtrack(arr,index + 1);
+			swap(arr,index,i);
+		}
+	}
+	String largestTimeFromDigits(int[] arr) {
+		backtrack(arr,0);
+		if (mt == -1) {
+			return "";
+		}
+		String hr = String.valueOf(mt / 60);
+		if (hr.length() == 1) {
+			hr = "0" + hr;
+		}
+		String mn = String.valueOf(mt % 60);
+		if (mn.length() == 1) {
+			mn = "0" + mn;
+		}
+		String ans = hr + ":";
+		return ans;
+	}
+	void swap(int[] chars, int i, int j) {
+		int temp = chars[i];
+		chars[i] = chars[j];
+		chars[j] = temp;
+	}
+}

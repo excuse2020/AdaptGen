@@ -1,0 +1,44 @@
+class Solution {
+	boolean validateBinaryTreeNodes(int n, int[] left, int[] right) {
+		int[] map = new int[n];
+		for (int i = 0; i < n; i++) {
+			if (left[i] != -1) {
+				map[left[i]]++;
+			}
+			if (right[i] != -1) {
+				map[right[i]]++;
+			}
+		}
+		int root = -1;
+		for (int i = 0; i < n; i++) {
+			if (map[i] == 0) {
+				root = i;
+			}
+		}
+		if (root == -1) {
+			return false;
+		}
+		Queue<Integer> q = new LinkedList<>();
+		q.add(root);
+		boolean[] vis = new boolean[n];
+		while (!q.isEmpty()) {
+			int x = q.poll();
+			if (vis[x]) {
+				return false;
+			}
+			vis[x] = true;
+			if (left[x] != -1) {
+				q.add(left[x]);
+			}
+			if (right[x] != -1) {
+				q.add(right[x]);
+			}
+		}
+		for (boolean i: vis) {	
+			if (!i) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

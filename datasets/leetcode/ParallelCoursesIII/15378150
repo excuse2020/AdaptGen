@@ -1,0 +1,49 @@
+class Solution {
+	List<Integer>[] createGraph(int n, int[][] relations) {
+		List<Integer>[] graph = new List[n + 1];
+		for (int node = 1; node <= n; ++node) {
+			graph[node] = new ArrayList<>();
+		}
+		for (int[] relation: relations) {	
+			graph[relation[0]].add(relation[1]);
+		}
+		return graph;
+	}
+	int[] getIndegree(int n, int[][] relations) {
+		int[] indegree = new int[n + 1];
+		indegree[0] = -1;
+		for (int[] relation: relations) {	
+			++indegree[relation[1]];
+		}
+		return indegree;
+	}
+	int minimumTime(int n, int[][] relations, int[] time) {
+		int[] indegree = getIndegree(n,relations);
+		List<Integer>[] graph = createGraph(n,relations);
+		int[] prerequisiteTime = new int[n];
+		Queue<Integer> queue = new LinkedList<>();
+		for (int node = 1; node <= n; ++node) {
+			if (indegree[node] == 0) {
+				queue.add(node);
+				prerequisiteTime[node - 1] = time[node - 1];
+			}
+		}
+		int ans = 0;
+		int maxTotalTime = 0;
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			while (size-- > 0) {
+				int node = queue.poll();
+				maxTotalTime = Math.max(maxTotalTime,prerequisiteTime[node - 1]);
+				for (int neighbour: graph[node]) {	
+					--indegree[neighbour];
+					prerequisiteTime[neighbour - 1] = Math.max(prerequisiteTime[neighbour - 1],prerequisiteTime[node - 1] + time[neighbour - 1]);
+					if (indegree[neighbour] == 0) {
+						queue.add(neighbour);
+					}
+				}
+			}
+		}
+		return maxTotalTime;
+	}
+}

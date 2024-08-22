@@ -1,0 +1,68 @@
+class Solution {
+	List<Integer>[] adj;
+	int[] amount;
+	int[] bobTime;
+	boolean[] visited;
+	int dfsAlice(int i, int time) {
+		if (visited[i]) {
+			return -1000_000_000;
+		}
+		visited[i] = true;
+		int max = Integer.MIN_VALUE;
+		for (int neighbour: adj[i]) {	
+			int current = dfsAlice(neighbour,time + 1);
+			if (current == -1000_000_000) {
+				continue;
+			}
+			if (current > max) {
+				max = current;
+			}
+		}
+		if (max == Integer.MIN_VALUE) {
+			max = 0;
+		}
+		if (bobTime[i] == 0 || time < bobTime[i]) {
+			return amount[i] + max;
+		}
+		if (time == bobTime[i]) {
+			return amount[i] / 2 + max;
+		}
+		return max;
+	}
+	boolean dfsBob(int i, int time) {
+		if (visited[i]) {
+			return false;
+		}
+		if (i == 0) {
+			bobTime[i] = time;
+			return true;
+		}
+		visited[i] = true;
+		for (int neigbour: adj[i]) {	
+			if (dfsBob(neigbour,time + 1)) {
+				bobTime[i] = time;
+				return true;
+			}
+		}
+		return false;
+	}
+	int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+		this.amount = amount;
+		int n = edges.length + 1;
+		visited = new boolean[n];
+		adj = new List[n];
+		bobTime = new int[n];
+		for (int i = 0; i < n; i++) {
+			adj[i] = new ArrayList();
+		}
+		for (int[] e: edges) {	
+			int u = e[0];
+			int v = e[1];
+			adj[u].add(v);
+			adj[v].add(u);
+		}
+		dfsBob(bob,1);
+		visited = new boolean[n];
+		return dfsAlice(0,1);
+	}
+}

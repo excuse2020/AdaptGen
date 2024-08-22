@@ -1,0 +1,32 @@
+class Solution {
+	String[] generatePermutation(String s) {
+		ArrayList<String> res = new ArrayList();
+		res.add("");
+		StringBuilder sb = new StringBuilder(s);
+		for (int i = 1; i <= s.length(); i++) {
+			process(sb,res,i,0,new StringBuilder());
+		}
+		Collections.sort(res);
+		HashSet<String> set = new HashSet();
+		for (int i = 0; i < res.size(); i++) {
+			set.add(res.get(i));
+		}
+		String[] total = new String[set.size()];
+		int i = 0;
+		for (String str: set) {	
+			total[i++] = str;
+		}
+		return total;
+	}
+	void process(StringBuilder sb, ArrayList<String> res, int num, int cur, StringBuilder ans) {
+		if (cur == sb.length() || num == 0) {
+			StringBuilder str = new StringBuilder(ans.toString());
+			res.add(str.toString());
+			return;
+		}
+		ans.append(sb.substring(cur,cur + 1));
+		process(sb,res,num - 1,cur + 1,ans);
+		ans.deleteCharAt(ans.length() - 1);
+		process(sb,res,num,cur + 1,ans);
+	}
+}

@@ -1,0 +1,25 @@
+class Solution {
+	int[] fullBloomFlowers(int[][] flowers, int[] people) {
+		PriorityQueue<Integer> pq = new PriorityQueue<>();
+		HashMap<Integer, Integer> map = new HashMap<>();
+		int[] peoples = Arrays.copyOf(people,people.length);
+		Arrays.sort(peoples);
+		Arrays.sort(flowers,Comparator.comparingDouble((o) -> {o[0]}));
+		int j = 0;
+		for (int i: peoples) {	
+			while (j < flowers.length && i >= flowers[j][0]) {
+				pq.add(flowers[j][1]);
+				j++;
+			}
+			while (!pq.isEmpty() && pq.peek() < i) {
+				pq.poll();
+			}
+			map.put(i,pq.size());
+		}
+		for (int i = 0; i < people.length; i++) {
+			int n = map.get(people[i]);
+			people[i] = n;
+		}
+		return people;
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	Pair<TreeNode, Integer> helper(TreeNode root, int depth) {
+		if (root == null) {
+			Pair<TreeNode, Integer> out = new Pair<>();
+			out.first = null;
+			out.second = depth;
+			return out;
+		}
+		Pair<TreeNode, Integer> leftOut = helper(root.left,depth + 1);
+		Pair<TreeNode, Integer> rightOut = helper(root.right,depth + 1);
+		Pair<TreeNode, Integer> output = new Pair<>();
+		if (leftOut.second == rightOut.second) {
+			output.first = root;
+			output.second = leftOut.second;
+			return output;
+		} 
+		else if (leftOut.second < rightOut.second) {
+			output.first = rightOut.first;
+			output.second = rightOut.second;
+			return output;
+		} 
+		else {
+			output.first = leftOut.first;
+			output.second = leftOut.second;
+			return output;
+		}
+	}
+	TreeNode lcaDeepestLeaves(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		Pair<TreeNode, Integer> re = helper(root,0);
+		return re.first;
+	}
+}
+class Pair {
+	T first;
+	V second;
+}

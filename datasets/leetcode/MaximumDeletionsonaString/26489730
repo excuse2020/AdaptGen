@@ -1,0 +1,39 @@
+class Solution {
+	Integer[] dp;
+	int Do(String s, int index) {
+		if (s.isEmpty()) {
+			return 0;
+		}
+		if (dp[index] != null) {
+			return dp[index];
+		}
+		int ops = 1;
+		for (int i = 1; i <= s.length() / 2; i++) {
+			if (Do_check(s,i)) {
+				ops = Math.max(ops,1 + Do(s.substring(i),index + i));
+			}
+		}
+		dp[index] = ops;
+		return ops;
+	}
+	boolean Do_check(String s, int len) {
+		String s1 = s.substring(0,len);
+		String s2 = s.substring(len,2 * len);
+		return s1.compareTo(s2) == 0;
+	}
+	int deleteString(String s) {
+		HashMap<Character, Integer> map1 = new HashMap<>();
+		dp = new Integer[s.length()];
+		for (char ch: s.toCharArray()) {	
+			map1.put(ch,map1.getOrDefault(ch,0) + 1);
+		}
+		if (map1.size() == 1) {
+			int ans = 0;
+			for (char val: map1.keySet()) {	
+				ans = map1.get(val);
+			}
+			return ans;
+		}
+		return Do(s,0);
+	}
+}

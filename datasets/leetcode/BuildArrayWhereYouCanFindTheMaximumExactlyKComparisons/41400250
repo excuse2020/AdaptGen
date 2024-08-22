@@ -1,0 +1,35 @@
+class Solution {
+	HashMap<String, Integer> hash = new HashMap<>();
+	int mod = (int) 1e9 + 7;
+	int numOfArrays(int n, int m, int k) {
+		return solve(n,m,k,-1,n);
+	}
+	int solve(int n, int m, int k, int prev, int ori) {
+		if (k == 0 && n == 0) {
+			return 1;
+		}
+		if (n < 0) {
+			return 0;
+		}
+		String key = n + "d";
+		if (hash.containsKey(key)) {
+			return hash.get(key);
+		}
+		int take = 0;
+		for (int i = 1; i <= m; i++) {
+			if (n == ori) {
+				take = (take % mod + solve(n - 1,m,k - 1,i,ori) % mod) % mod;
+			} 
+			else {
+				if (i > prev) {
+					take = (take % mod + solve(n - 1,m,k - 1,i,ori) % mod) % mod;
+				} 
+				else {
+					take = (take % mod + solve(n - 1,m,k,prev,ori) % mod) % mod;
+				}
+			}
+		}
+		hash.put(key,take % mod);
+		return take % mod;
+	}
+}

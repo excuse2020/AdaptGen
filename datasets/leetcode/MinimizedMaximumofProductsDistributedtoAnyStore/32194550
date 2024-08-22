@@ -1,0 +1,50 @@
+class Solution {
+	boolean findAnswer(int n, int quantities, int capacity) {
+		for (int i = 0; i < quantities.length; i++) {
+			if (n == 0) {
+				return false;
+			}
+			int temp = quantities[i];
+			int tempremainder = quantities[i] % capacity;
+			int ans = quantities[i] / capacity;
+			n = n - ans;
+			if (n < 0) {
+				return false;
+			}
+			if (tempremainder != 0) {
+				n--;
+			}
+			if (n < 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int minimizedMaximum(int n, int[] quantities) {
+		int sum = 0;
+		int high = Integer.MIN_VALUE;
+		for (int i = 0; i < quantities.length; i++) {
+			sum += quantities[i];
+			if (quantities[i] > high) {
+				high = quantities[i];
+			}
+		}
+		int remainder = sum % n;
+		int low = sum / n;
+		if (remainder != 0) {
+			low++;
+		}
+		int answer = -1;
+		while (low <= high) {
+			int mid = (low + high) / 2;
+			if (findAnswer(n,quantities,mid) == true) {
+				answer = mid;
+				high = mid - 1;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		return answer;
+	}
+}

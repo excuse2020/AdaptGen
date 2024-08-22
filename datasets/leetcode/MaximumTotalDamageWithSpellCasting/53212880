@@ -1,0 +1,30 @@
+class Solution {
+	Long[] memo = null;
+	long dfs(int i, int[] A) {
+		int n = A.length;
+		if (i >= n) {
+			return 0;
+		}
+		if (memo[i] != null) {
+			return memo[i];
+		}
+		long take = 0, skip = 0;
+		int firstOcc = i, lastOcc = i;
+		while (lastOcc < n && A[lastOcc] == A[firstOcc]) {
+			lastOcc++;
+		}
+		lastOcc--;
+		skip = dfs(lastOcc + 1,A);
+		int j = lastOcc + 1;
+		while (j < n && A[j] <= A[firstOcc] + 2) {
+			j++;
+		}
+		take = (lastOcc - firstOcc + 1) * (long) A[firstOcc] + dfs(j,A);
+		return memo[i] = Math.max(take,skip);
+	}
+	long maximumTotalDamage(int[] A) {
+		Arrays.sort(A);
+		memo = new Long[A.length];
+		return dfs(0,A);
+	}
+}

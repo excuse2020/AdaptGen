@@ -1,0 +1,49 @@
+class Solution {
+	int secondMinimum(int n, int[][] edges, int time, int change) {
+		Map<Integer, Set<Integer>> graph = new HashMap<>();
+		for (int i = 1; i <= n; i++) {
+			graph.put(i,new HashSet<>());
+		}
+		for (int[] e: edges) {	
+			graph.get(e[0]).add(e[1]);
+			graph.get(e[1]).add(e[0]);
+		}
+		int[][] visited = new int[n + 1][2];
+		for (int[] v: visited) {	
+			Arrays.fill(v,Integer.MAX_VALUE);
+		}
+		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {Integer.compare(a[1],b[1])});
+		pq.offer(new int{1, 0});
+		int min = Integer.MAX_VALUE, secMin = min;
+		while (!pq.isEmpty()) {
+			int[] cur = pq.poll();
+			int curNode = cur[0], curTime = cur[1];
+			if (curNode == n) {
+				if (curTime < min) {
+					secMin = min;
+					min = curTime;
+				} 
+				else if (curTime != min && curTime < secMin) {
+					secMin = curTime;
+				}
+			}
+			if ((curTime / change) % 2 == 1) {
+				curTime += change - (curTime % change);
+			}
+			int nextTime = curTime + time;
+			for (int nxt: graph.get(curNode)) {	
+				int nxtMin = visited[nxt][0], nxtSecMin = visited[nxt][1];
+				if (nextTime < nxtMin) {
+					visited[nxt][1] = nxtMin;
+					visited[nxt][0] = nextTime;
+					pq.offer(new int{nxt, nextTime});
+				} 
+				else if (nextTime != nxtMin && nextTime < nxtSecMin) {
+					visited[nxt][1] = nextTime;
+					pq.offer(new int{nxt, nextTime});
+				}
+			}
+		}
+		return secMin;
+	}
+}

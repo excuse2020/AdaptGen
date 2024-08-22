@@ -1,0 +1,59 @@
+class Solution {
+	List<Boolean> getResults(int[][] queries) {
+		TreeSet<Integer> q1 = new TreeSet<>();
+		q1.add(0);
+		q1.add(10000000);
+		TreeMap<Integer, TreeSet<Integer>> tm = new TreeMap<>();
+		TreeSet<Integer> tmp = new TreeSet<>();
+		tmp.add(0);
+		tm.put(10000000,tmp);
+		ArrayList<Boolean> res = new ArrayList<>();
+		for (int q: queries) {	
+			if (q[0] == 1) {
+				int lower_bound = q1.floor(q[1]);
+				int upper_bound = q1.ceiling(q[1]);
+				int cur_diff = upper_bound - lower_bound;
+				TreeSet<Integer> ts = tm.get(cur_diff);
+				ts.remove(lower_bound);
+				if (ts.size() == 0) {
+					tm.remove(cur_diff);
+				} 
+				else {
+					tm.put(cur_diff,ts);
+				}
+				int l_diff = q[1] - lower_bound;
+				ts = tm.get(l_diff);
+				if (ts == null) {
+					ts = new TreeSet<>();
+				}
+				ts.add(lower_bound);
+				tm.put(l_diff,ts);
+				int u_diff = upper_bound - q[1];
+				ts = tm.get(u_diff);
+				if (ts == null) {
+					ts = new TreeSet<>();
+				}
+				ts.add(q[1]);
+				tm.put(u_diff,ts);
+				q1.add(q[1]);
+			} 
+			else {
+				int lb = tm.ceilingKey(q[2]);
+				boolean query_result = false;
+				while (lb <= tm.lastKey()) {
+					TreeSet<Integer> ts = tm.get(lb);
+					if (ts.first() + q[2] <= q[1]) {
+						query_result = true;
+						break;
+					}
+					if (lb == tm.lastKey()) {
+						break;
+					}
+					lb = tm.ceilingKey(lb + 1);
+				}
+				res.add(query_result);
+			}
+		}
+		return res;
+	}
+}

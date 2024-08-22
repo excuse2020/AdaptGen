@@ -1,0 +1,38 @@
+class Solution {
+	boolean HasSubtree(TreeNode root1, TreeNode root2) {
+		if (root1 == null || root2 == null) {
+			return false;
+		}
+		return HasSubtree(root1,root2,false);
+	}
+	boolean HasSubtree(TreeNode root1, TreeNode root2, boolean full) {
+		if (root2 == null) {
+			return true;
+		}
+		if (root1 == null) {
+			return false;
+		}
+		boolean left = false;
+		boolean right = false;
+		if (root1.val == root2.val) {
+			left = HasSubtree(root1.left,root2.left,true);
+			right = HasSubtree(root1.right,root2.right,true);
+			if (!(left && right)) {
+				left = HasSubtree(root1.left,root2,false);
+				right = HasSubtree(root1.right,root2,false);
+				return left || right;
+			} 
+			else {
+				return true;
+			}
+		} 
+		else {
+			if (full) {
+				return false;
+			}
+			left = HasSubtree(root1.left,root2,full);
+			right = HasSubtree(root1.right,root2,full);
+		}
+		return full ? left && right : left || right;
+	}
+}

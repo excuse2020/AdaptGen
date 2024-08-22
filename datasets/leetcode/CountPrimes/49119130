@@ -1,0 +1,30 @@
+class Solution {
+	int FIRST_PRIME_NUMBER = 2;
+	int NO_PRIMES_FOUND = 0;
+	int REDUCTION_FOR_NON_INCLUSIVE_RANGE = 1;
+	int countPrimes(int inputValue) {
+		return countPrimesWithSieveOfEratosthenes(inputValue);
+	}
+	int countPrimesWithSieveOfEratosthenes(int inputValue) {
+		if (inputValue < 2) {
+			return NO_PRIMES_FOUND;
+		}
+		boolean[] visited = new boolean[inputValue];
+		int maxFactor = (int) Math.sqrt(inputValue);
+		int nonPrimeNumbers = FIRST_PRIME_NUMBER - 1;
+		for (int factor = FIRST_PRIME_NUMBER; factor <= maxFactor; ++factor) {
+			if (visited[factor]) {
+				continue;
+			}
+			int currentValue = factor * factor;
+			while (currentValue < inputValue) {
+				if (!visited[currentValue]) {
+					visited[currentValue] = true;
+					++nonPrimeNumbers;
+				}
+				currentValue += factor;
+			}
+		}
+		return inputValue - nonPrimeNumbers;
+	}
+}

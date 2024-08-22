@@ -1,0 +1,24 @@
+class Solution {
+	boolean carPooling(int[][] trips, int capacity) {
+		int n = trips.length;
+		int[][] ans = new int[2 * n][2];
+		int k = 0;
+		for (int i = 0; i < n; i++) {
+			ans[k][0] = trips[i][1];
+			ans[k++][1] = trips[i][0];
+			ans[k][0] = trips[i][2];
+			ans[k++][1] = -1 * trips[i][0];
+		}
+		Arrays.sort(ans,(int[] a, int[] b) -> {(a[0] == b[0]) ? (a[1] - b[1]) : (a[0] - b[0])});
+		int sum = 0;
+		int maxCap = 0;
+		for (int i = 0; i < 2 * n; i++) {
+			sum += ans[i][1];
+			maxCap = Math.max(sum,maxCap);
+			if (maxCap > capacity) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

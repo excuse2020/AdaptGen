@@ -1,0 +1,30 @@
+class Solution {
+	List<String> subdomainVisits(String[] cpdomains) {
+		HashMap<String, Integer> table = new HashMap<String, Integer>();
+		List<String> strs = new ArrayList<String>();
+		for (String s: cpdomains) {	
+			String[] tokens = s.split(" ");
+			Integer count = Integer.parseInt(tokens[0]);
+			String[] domains = tokens[1].split("\\\\.");
+			StringBuilder sb = new StringBuilder(domains[domains.length - 1]);
+			for (int i = domains.length - 2; true; i--) {
+				String d = sb.toString();
+				if (!table.containsKey(d)) {
+					table.put(d,count);
+					strs.add(d);
+				} 
+				else {
+					table.put(d,count + table.get(d));
+				}
+				if (i < 0) {
+					break;
+				}
+				sb.insert(0,domains[i] + ".");
+			}
+		}
+		for (int i = 0; i < strs.size(); i++) {
+			strs.set(i,table.get(strs.get(i)) + " ");
+		}
+		return strs;
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	int ans = 0;
+	boolean Unique(String path) {
+		HashSet<Character> set = new HashSet<>();
+		for (char ch: path.toCharArray()) {	
+			if (set.contains(ch)) {
+				return false;
+			}
+			set.add(ch);
+		}
+		return true;
+	}
+	void dfs(List<String> arr, String path, int idx) {
+		boolean isUnique = Unique(path);
+		if (isUnique) {
+			ans = Math.max(ans,path.length());
+		}
+		if (idx == arr.size() || !isUnique) {
+			return;
+		}
+		for (int i = idx; i < arr.size(); i++) {
+			dfs(arr,path + arr.get(i),i + 1);
+		}
+	}
+	int maxLength(List<String> arr) {
+		if (arr == null || arr.size() == 0) {
+			return 0;
+		}
+		dfs(arr,"",0);
+		return ans;
+	}
+}

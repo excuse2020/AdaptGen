@@ -1,0 +1,45 @@
+class Solution {
+	int[] count(String s) {
+		int counter = new int[26];
+	}
+	List<String> wordSubsets(String[] words1, String[] words2) {
+		List<String> res = new ArrayList<>();
+		HashMap<Character, Integer> map = new HashMap<>();
+		for (String s: words2) {	
+			int counter = count(s);
+			for (int i = 0; i < 26; i++) {
+				char ans = (char) (i + 97);
+				if (counter[i] != 0) {
+					if (map.containsKey(ans)) {
+						int max = Math.max(map.get(ans),counter[i]);
+						map.put(ans,max);
+					} 
+					else {
+						map.put(ans,counter[i]);
+					}
+				}
+			}
+		}
+		for (String s: words1) {	
+			int counter = count(s);
+			boolean flag = true;
+			int c = 0;
+			for (int i = 0; i < 26; i++) {
+				char ans = (char) (i + 97);
+				if (counter[i] != 0 && map.containsKey(ans)) {
+					if (map.get(ans) <= counter[i]) {
+						c++;
+						continue;
+					} 
+					else {
+						break;
+					}
+				}
+			}
+			if (flag && c == map.size()) {
+				res.add(s);
+			}
+		}
+		return res;
+	}
+}

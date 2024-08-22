@@ -1,0 +1,44 @@
+class Solution {
+	int countPairs(TreeNode root, int distance) {
+		Map<TreeNode, List<TreeNode>> map = new HashMap<>();
+		Set<TreeNode> set = new HashSet();
+		makeGraph(root,map,null,set);
+		int count = 0;
+		for (var leaf: set) {	
+			Queue<TreeNode> que = new LinkedList<>();
+			Set<TreeNode> visited = new HashSet<>();
+			que.offer(leaf);
+			set.add(leaf);
+			for (int level = 0; level <= distance; level++) {
+				int size = que.size();
+				while (size-- > 0) {
+					TreeNode temp = que.poll();
+					if (temp != leaf && set.contains(temp)) {
+						count++;
+					}
+					for (var neighbor: map.getOrDefault(temp,new ArrayList<>())) {	
+						if (!visited.contains(neighbor)) {
+							que.offer(neighbor);
+							visited.add(neighbor);
+						}
+					}
+				}
+			}
+		}
+		return count / 2;
+	}
+	void makeGraph(TreeNode root, Map<TreeNode, List<TreeNode>> map, TreeNode parent, Set<TreeNode> set) {
+		if (root == null) {
+			return;
+		}
+		if (root.left == null && root.right == null) {
+			set.add(root);
+		}
+		if (parent != null) {
+			map.computeIfAbsent(root,(k) -> {new ArrayList<>()}).add(parent);
+			map.computeIfAbsent(parent,(k) -> {new ArrayList<>()}).add(root);
+		}
+		makeGraph(root.left,map,root,set);
+		makeGraph(root.right,map,root,set);
+	}
+}

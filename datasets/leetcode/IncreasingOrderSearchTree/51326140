@@ -1,0 +1,27 @@
+class Solution {
+	TreeNode increasingBST(TreeNode root) {
+		Stack<TreeNode> stk = new Stack();
+		traverseInorder(root,stk);
+		if (stk.size() == 0) {
+			return root;
+		}
+		TreeNode prev = stk.pop();
+		prev.left = null;
+		prev.right = null;
+		while (!stk.isEmpty()) {
+			TreeNode curr = stk.pop();
+			curr.right = prev;
+			curr.left = null;
+			prev = curr;
+		}
+		return prev;
+	}
+	void traverseInorder(TreeNode root, Stack<TreeNode> stk) {
+		if (root == null) {
+			return;
+		}
+		traverseInorder(root.left,stk);
+		stk.push(root);
+		traverseInorder(root.right,stk);
+	}
+}

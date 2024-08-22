@@ -1,0 +1,62 @@
+class Solution {
+	int[] getCoordinate(int val, int n) {
+		int[] x = new int[2];
+		x[0] = (val - 1) / n;
+		x[1] = (val - 1) % n;
+		return x;
+	}
+	void reverse(int[] row) {
+		int left = 0, right = row.length - 1;
+		while (left < right) {
+			int t = row[left];
+			row[left] = row[right];
+			row[right] = t;
+			left++;
+			right--;
+		}
+	}
+	int snakesAndLadders(int[][] board) {
+		int n = board.length;
+		int[][] revisedBoard = new int[n][n];
+		for (int i = n - 1; i >= 0; --i) {
+			int revisedRow = n - i;
+			int[] row = board[i];
+			if (revisedRow % 2 == 1) {
+				reverse(row);
+			}
+			revisedBoard[revisedRow] = row;
+		}
+		int dist = 0;
+		ArrayDeque<Integer> deque = new ArrayDeque<>();
+		deque.addLast(1);
+		HashSet<Integer> set = new HashSet<>();
+		set.add(1);
+		while (!deque.isEmpty()) {
+			int len = deque.size();
+			for (int i = 0; i < len; ++i) {
+				int val = deque.removeFirst();
+				for (int j = 1; j <= 6; ++j) {
+					if (val + j == n * n) {
+						return (dist + 1);
+					}
+					if (set.contains(val + j)) {
+						continue;
+					}
+					int[] pos = getCoordinate(val + j,n);
+					if (revisedBoard[pos[0]][pos[1]] == -1) {
+						deque.addLast(val + j);
+					} 
+					else {
+						if (revisedBoard[pos[0]][pos[1]] == n * n) {
+							return (dist + 1);
+						}
+						deque.addLast(revisedBoard[pos[0]][pos[1]]);
+					}
+					set.add(val + j);
+				}
+			}
+			dist++;
+		}
+		return -1;
+	}
+}

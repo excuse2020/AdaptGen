@@ -1,0 +1,41 @@
+class Solution {
+	long check(ArrayList<ArrayList<Integer>> adj, boolean[] vis, int src, int n) {
+		long count = 0;
+		Queue<Integer> q = new LinkedList<>();
+		q.add(src);
+		count++;
+		vis[src] = true;
+		while (!q.isEmpty()) {
+			int node = q.poll();
+			for (Integer it: adj.get(node)) {	
+				if (vis[it] == false) {
+					vis[it] = true;
+					q.add(it);
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+	long countPairs(int n, int[][] edges) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		long sum = 0;
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<Integer>());
+		}
+		boolean vis = new boolean[n];
+		for (int i = 0; i < edges.length; i++) {
+			adj.get(edges[i][0]).add(edges[i][1]);
+			adj.get(edges[i][1]).add(edges[i][0]);
+		}
+		long total = n;
+		for (int i = 0; i < n; i++) {
+			if (vis[i] == false) {
+				long count = check(adj,vis,i,n);
+				sum = sum + (count * (total - count));
+				total = total - count;
+			}
+		}
+		return sum;
+	}
+}

@@ -1,0 +1,68 @@
+class Solution {
+	Map<Integer, List<Pair<Integer, Integer>>> level_to_heights;
+	Map<Integer, Integer> levels;
+	void findLevels(TreeNode node, int level) {
+		if (node == null) {
+			return;
+		}
+		findLevels(node.left,level + 1);
+		findLevels(node.right,level + 1);
+		levels.put(node.val,level);
+	}
+	int[] treeQueries(TreeNode root, int[] queries) {
+		levels = new HashMap<>();
+		level_to_heights = new HashMap<>();
+		findLevels(root,0);
+		updateLevelsToHeight(root);
+		for (Map.Entry e: level_to_heights.entrySet()) {	
+			List<Pair<Integer, Integer>> cur = (List<Pair<Integer, Integer>>) e.getValue();
+			Collections.sort(cur,(a, b) -> {b.getValue() - a.getValue()});
+			level_to_heights.put((int) e.getKey(),cur);
+		}
+		int m = queries.length;
+		int[] ans = new int[m];
+		int i = 0;
+		for (int q: queries) {	
+			int curLevel = levels.get(q);
+			if (level_to_heights.containsKey(curLevel)) {
+				List<Pair<Integer, Integer>> inner = level_to_heights.get(curLevel);
+				if (inner.size() >= 2) {
+					Pair p = (Pair) inner.get(0);
+					if (q != (int) p.getKey()) {
+						ans[i++] = curLevel + (int) p.getValue();
+					} 
+					else {
+						Pair p1 = (Pair) inner.get(1);
+						ans[i++] = curLevel + (int) p1.getValue();
+					}
+				} 
+				else if (inner.size() == 1) {
+					ans[i++] = curLevel - 1;
+				} 
+				else {
+					ans[i++] = -1;
+				}
+			}
+		}
+		return ans;
+	}
+	int updateLevelsToHeight(TreeNode node) {
+		if (node == null) {
+			return 0;
+		}
+		int left = updateLevelsToHeight(node.left);
+		int right = updateLevelsToHeight(node.right);
+		int curLevel = levels.get(node.val);
+		if (level_to_heights.containsKey(curLevel)) {
+			List<Pair<Integer, Integer>> inner = level_to_heights.get(curLevel);
+			inner.add(new Pair(node.val, Math.max(left,right)));
+			level_to_heights.put(curLevel,inner);
+		} 
+		else {
+			List<Pair<Integer, Integer>> inner = new LinkedList<>();
+			inner.add(new Pair(node.val, Math.max(left,right)));
+			level_to_heights.put(curLevel,inner);
+		}
+		return Math.max(left,right) + 1;
+	}
+}

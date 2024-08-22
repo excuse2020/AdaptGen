@@ -1,0 +1,42 @@
+class Solution {
+	int maxScore(int[] cardPoints, int k) {
+		int arr = cardPoints;
+		int n = arr.length;
+		int leftSum = 0;
+		int rightSum = 0;
+		int leftLess = k - 1;
+		int rightLess = n - k;
+		for (int i = 0; i < k; i++) {
+			leftSum += arr[i];
+			rightSum += arr[n - i - 1];
+		}
+		int i = 0;
+		int j = n - 1;
+		int ans = 0;
+		while (k-- > 0) {
+			if (leftSum == rightSum && arr[i] != arr[j]) {
+				if (arr[i] > arr[j]) {
+					ans += arr[i];
+					rightSum -= arr[rightLess++];
+					leftSum -= arr[i++];
+				} 
+				else {
+					ans += arr[j];
+					leftSum -= arr[leftLess--];
+					rightSum -= arr[j--];
+				}
+			} 
+			else if (leftSum >= rightSum) {
+				ans += arr[i];
+				rightSum -= arr[rightLess++];
+				leftSum -= arr[i++];
+			} 
+			else {
+				ans += arr[j];
+				leftSum -= arr[leftLess--];
+				rightSum -= arr[j--];
+			}
+		}
+		return ans;
+	}
+}

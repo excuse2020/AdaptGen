@@ -1,0 +1,22 @@
+class Solution {
+	int countVowelPermutation(int length) {
+		int MODULO = 1000000007;
+		long[][] memory = new long[length + 1][5];
+		for (int index = 0; index < 5; index++) {
+			memory[1][index] = 1;
+		}
+		for (int day = 2; day <= length; day++) {
+			memory[day][0] = (memory[day - 1][1] + memory[day - 1][2]) % MODULO;
+			memory[day][1] = (memory[day - 1][0] + memory[day - 1][2]) % MODULO;
+			memory[day][2] = (memory[day - 1][1] + memory[day - 1][3]) % MODULO;
+			memory[day][3] = (memory[day - 1][2]) % MODULO;
+			memory[day][4] = (memory[day - 1][2] + memory[day - 1][3]) % MODULO;
+		}
+		long totalWays = 0;
+		for (long ways: memory[length]) {	
+			totalWays += ways;
+			totalWays %= MODULO;
+		}
+		return (int) totalWays;
+	}
+}

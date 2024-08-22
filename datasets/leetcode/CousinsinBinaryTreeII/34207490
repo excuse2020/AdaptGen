@@ -1,0 +1,35 @@
+class Solution {
+	TreeNode replaceValueInTree(TreeNode root) {
+		Map<TreeNode, Integer> map = new HashMap<>();
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(root);
+		int n = 1, sum = root.val;
+		while (!q.isEmpty()) {
+			int size = q.size(), currsum = 0;
+			while (size-- != 0) {
+				TreeNode curr = q.poll();
+				int rem = sum - curr.val;
+				if (map.containsKey(curr)) {
+					rem -= map.get(curr);
+				}
+				curr.val = rem;
+				if (curr.left != null) {
+					q.add(curr.left);
+					currsum += curr.left.val;
+					if (curr.right != null) {
+						map.put(curr.left,curr.right.val);
+					}
+				}
+				if (curr.right != null) {
+					q.add(curr.right);
+					currsum += curr.right.val;
+					if (curr.left != null) {
+						map.put(curr.right,curr.left.val);
+					}
+				}
+			}
+			sum = currsum;
+		}
+		return root;
+	}
+}

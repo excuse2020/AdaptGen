@@ -1,0 +1,27 @@
+class Solution {
+	long dfs(int[] power, int index, long[] dp) {
+		if (index >= power.length) {
+			return 0;
+		}
+		if (dp[index] != 0) {
+			return dp[index];
+		}
+		int id = index + 1;
+		long cur = power[index];
+		while (id < power.length && power[id] == power[index]) {
+			cur += power[id];
+			id++;
+		}
+		int idNext = id;
+		while (idNext < power.length && power[idNext] - power[index] <= 2) {
+			idNext++;
+		}
+		dp[index] = Math.max(cur + dfs(power,idNext,dp),dfs(power,id,dp));
+		return dp[index];
+	}
+	long maximumTotalDamage(int[] power) {
+		long[] dp = new long[power.length];
+		Arrays.sort(power);
+		return dfs(power,0,dp);
+	}
+}

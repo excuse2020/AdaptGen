@@ -1,0 +1,47 @@
+class Solution {
+	TreeNode startTreeNode = null;
+	int amountOfTime(TreeNode root, int start) {
+		int amountOfTimeNeed = -1;
+		Map<TreeNode, TreeNode> parentChild = new HashMap<>();
+		inorder(root,null,start,parentChild);
+		Set<TreeNode> set = new HashSet<>();
+		Queue<TreeNode> q = new LinkedList<>();
+		if (startTreeNode == null) {
+			return 0;
+		}
+		q.add(startTreeNode);
+		set.add(startTreeNode);
+		while (!q.isEmpty()) {
+			int n = q.size();
+			for (int i = 0; i < n; i++) {
+				TreeNode temp = q.poll();
+				if (temp != null && temp.left != null && !set.contains(temp.left)) {
+					q.add(temp.left);
+					set.add(temp.left);
+				}
+				if (temp != null && temp.right != null && !set.contains(temp.right)) {
+					q.add(temp.right);
+					set.add(temp.right);
+				}
+				TreeNode parent = parentChild.get(temp);
+				if (parent != null && !set.contains(parent)) {
+					q.add(parent);
+					set.add(parent);
+				}
+			}
+			amountOfTimeNeed++;
+		}
+		return amountOfTimeNeed;
+	}
+	void inorder(TreeNode root, TreeNode parent, int start, Map<TreeNode, TreeNode> parentChild) {
+		if (root == null) {
+			return;
+		}
+		parentChild.put(root,parent);
+		if (root.val == start) {
+			startTreeNode = root;
+		}
+		inorder(root.left,root,start,parentChild);
+		inorder(root.right,root,start,parentChild);
+	}
+}

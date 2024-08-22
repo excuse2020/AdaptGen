@@ -1,0 +1,46 @@
+class Solution {
+	int mod = 1000000007;
+	int[] nextSmaller(int[] arr) {
+		int[] nextSmaller = new int[arr.length];
+		Arrays.fill(nextSmaller,arr.length);
+		Stack<Integer> stack = new Stack<Integer>();
+		for (int i = 0; i < arr.length; i++) {
+			if (stack.isEmpty() || arr[stack.peek()] < arr[i]) {
+				stack.push(i);
+			} 
+			else {
+				while (!stack.isEmpty() && arr[stack.peek()] > arr[i]) {
+					nextSmaller[stack.pop()] = i;
+				}
+				stack.push(i);
+			}
+		}
+		return nextSmaller;
+	}
+	int[] previousSmaller(int[] arr) {
+		int[] previousSmaller = new int[arr.length];
+		Arrays.fill(previousSmaller,-1);
+		Stack<Integer> stack = new Stack<Integer>();
+		for (int i = arr.length - 1; i >= 0; i--) {
+			if (stack.isEmpty() || arr[stack.peek()] < arr[i]) {
+				stack.push(i);
+			} 
+			else {
+				while (!stack.isEmpty() && arr[stack.peek()] >= arr[i]) {
+					previousSmaller[stack.pop()] = i;
+				}
+				stack.push(i);
+			}
+		}
+		return previousSmaller;
+	}
+	int sumSubarrayMins(int[] arr) {
+		int[] previousSmaller = previousSmaller(arr);
+		int[] nextSmaller = nextSmaller(arr);
+		long ans = 0;
+		for (int i = 0; i < arr.length; i++) {
+			ans = (ans + ((long) arr[i] * (long) (i - previousSmaller[i] + 1)) % mod) % mod;
+		}
+		return (int) ans % mod;
+	}
+}

@@ -1,0 +1,28 @@
+class Solution {
+	double mod = Math.pow(10,9) + 7;
+	int numRollsToTarget(int n, int k, int target) {
+		double[][] dp = new double[n + 1][target + 1];
+		for (int i = 0; i <= n; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		return (int) (numRollsToTarget2(n,k,target,dp) % mod);
+	}
+	double numRollsToTarget2(int n, int k, int target, double[][] dp) {
+		if (n == 0 && target == 0) {
+			return 1;
+		}
+		if (n == 0 || target <= 0) {
+			return 0;
+		}
+		double w = dp[n][target];
+		if (w != -1) {
+			return w;
+		}
+		double ans = 0;
+		for (int i = 1; i <= k; i++) {
+			ans += numRollsToTarget2(n - 1,k,target - i,dp);
+		}
+		dp[n][target] = ans % mod;
+		return dp[n][target];
+	}
+}

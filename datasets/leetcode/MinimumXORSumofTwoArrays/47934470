@@ -1,0 +1,33 @@
+class Solution {
+	int len;
+	Integer[] mem = new Integer[16384];
+	int[][] xor;
+	int combination(int parentIndex, int bitMask) {
+		if (parentIndex == len) {
+			return 0;
+		}
+		Integer cache = mem[bitMask];
+		if (cache != null) {
+			return cache;
+		}
+		Integer minValue = Integer.MAX_VALUE;
+		int myMask = 1;
+		for (int num: xor[parentIndex]) {	
+			if ((bitMask & myMask) == 0) {
+				minValue = Math.min(minValue,num + combination(parentIndex + 1,myMask | bitMask));
+			}
+			myMask <<= 1;
+		}
+		return mem[bitMask] = minValue;
+	}
+	int minimumXORSum(int[] nums1, int[] nums2) {
+		len = nums1.length;
+		xor = new int[len][len];
+		for (int i = 0; i < len; i++) {
+			for (int j = 0; j < len; j++) {
+				xor[i][j] = nums1[i] ^ nums2[j];
+			}
+		}
+		return combination(0,0);
+	}
+}

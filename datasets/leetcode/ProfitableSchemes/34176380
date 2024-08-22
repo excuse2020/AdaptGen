@@ -1,0 +1,39 @@
+class Solution {
+	int mod = (int) 1e9 + 7;
+	int f(int i, int nums1, int nums2, int pro, int n, int dp, int minProfit, int pop) {
+		if (i == nums1.length) {
+			if (pro >= minProfit && n <= pop) {
+				return 1;
+			} 
+			else {
+				return 0;
+			}
+		}
+		if (n > pop) {
+			return 0;
+		}
+		int tk;
+		if (dp[i][pro][n] != -1) {
+			return dp[i][pro][n];
+		}
+		int nt = f(i + 1,nums1,nums2,pro,n,dp,minProfit,pop);
+		if (pro < minProfit) {
+			tk = f(i + 1,nums1,nums2,pro + nums2[i],n + nums1[i],dp,minProfit,pop);
+		} 
+		else {
+			tk = f(i + 1,nums1,nums2,pro,n + nums1[i],dp,minProfit,pop);
+		}
+		return dp[i][pro][n] = (nt + tk) % mod;
+	}
+	int profitableSchemes(int n, int minProfit, int[] group, int[] profit) {
+		int dp = new int[group.length][1001][101];
+		for (int i = 0; i < group.length; i++) {
+			for (int j = 0; j < 1001; j++) {
+				for (int k = 0; k < 101; k++) {
+					dp[i][j][k] = -1;
+				}
+			}
+		}
+		return f(0,group,profit,0,0,dp,minProfit,n);
+	}
+}

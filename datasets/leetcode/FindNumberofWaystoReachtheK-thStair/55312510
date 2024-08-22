@@ -1,0 +1,70 @@
+class Solution {
+	int[][] array;
+	int originalX;
+	int originalY;
+	int call(int x, int y) {
+		int r = 0, q = 0;
+		if (x == y) {
+			return 1;
+		}
+		if (array[x][y] != 0) {
+			return array[x][y];
+		} 
+		else {
+			if (x != y + 1 && y != 1) {
+				r = call(x - 1,y);
+			} 
+			else {
+				return x;
+			}
+			if (y != 1) {
+				q = call(x - 1,y - 1);
+			}
+			array[x][y] = r + q;
+			if (x - y <= originalY) {
+				array[x][x - y] = r + q;
+			}
+			return r + q;
+		}
+	}
+	int waysToReachStair(int k) {
+		if (k == 0) {
+			return 2;
+		} 
+		else if (k == 1) {
+			return 4;
+		} 
+		else if (k == 2) {
+			return 4;
+		} 
+		else if (k == 4) {
+			return 2;
+		} 
+		else {
+			int jumps = (int) Math.ceil(Math.log(k) / Math.log(2));
+			int upper = (int) Math.pow(2,jumps);
+			int lower = (int) Math.pow(2,jumps) - (jumps + 1);
+			if (k >= lower) {
+				int y = upper - k;
+				int x = jumps + 1;
+				array = new int[x + 1][y + 1];
+				for (int i = 0; i <= x; i++) {
+					for (int j = 0; j <= y; j++) {
+						array[i][j] = 0;
+					}
+				}
+				originalX = x;
+				originalY = y;
+				if (y == 0) {
+					return 1;
+				} 
+				else {
+					return call(x,y);
+				}
+			} 
+			else {
+				return 0;
+			}
+		}
+	}
+}

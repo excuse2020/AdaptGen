@@ -1,0 +1,31 @@
+class Solution {
+	long countPairs(int n, int[][] edges) {
+		int[] par = new int[n];
+		for (int i = 0; i < n; i++) {
+			par[i] = i;
+		}
+		for (int i = 0; i < edges.length; i++) {
+			int par1 = find(par,edges[i][0]);
+			int par2 = find(par,edges[i][1]);
+			par[par1] = par2;
+		}
+		int setCount = new int[n];
+		for (int i = 0; i < n; i++) {
+			int set = find(par,i);
+			setCount[set]++;
+		}
+		long sum = 0, ans = 0;
+		for (int i = 0; i < setCount.length; i++) {
+			ans += sum * (long) setCount[i];
+			sum += (long) setCount[i];
+		}
+		return ans;
+	}
+	int find(int[] par, int x) {
+		if (par[x] == x) {
+			return x;
+		}
+		par[x] = find(par,par[x]);
+		return par[x];
+	}
+}

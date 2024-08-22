@@ -1,0 +1,33 @@
+class Solution {
+	int dfs(int r, int c, int k, String[] pizza, Integer[][][] dp, int[][] preSum) {
+		if (preSum[r][c] == 0) {
+			return 0;
+		}
+		if (k == 0) {
+			return 1;
+		}
+		if (dp[r][c][k] != null) {
+			return dp[r][c][k];
+		}
+		int ans = 0;
+		int m = pizza.length, n = pizza[0].length();
+		for (int nr = r + 1; nr < m; nr++) {
+			if (preSum[r][c] - preSum[nr][c] > 0) {
+				ans = (ans + dfs(nr,c,k - 1,pizza,dp,preSum)) % 1_000_000_007;
+			}
+		}
+		for (int nc = c + 1; nc < n; nc++) {
+			if (preSum[r][c] - preSum[r][nc] > 0) {
+				ans = (ans + dfs(r,nc,k - 1,pizza,dp,preSum)) % 1_000_000_007;
+			}
+		}
+		return dp[r][c][k] = ans;
+	}
+	int ways(String[] pizza, int k) {
+		int m = pizza.length, n = pizza[0].length();
+		Integer[][][] dp = new Integer[m][n][k];
+		int[][] preSum = new int[m + 1][n + 1];
+		int r = m - 1;
+		int c = n - 1;
+	}
+}

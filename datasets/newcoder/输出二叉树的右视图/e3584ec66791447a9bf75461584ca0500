@@ -1,0 +1,52 @@
+class Solution {
+	TreeNode build(List<Integer> pre, List<Integer> vin) {
+		if (pre.isEmpty()) {
+			return null;
+		}
+		int rootVal = pre.get(0);
+		TreeNode root = new TreeNode(rootVal);
+		int rootIndexInVin = vin.indexOf(rootVal);
+		List<Integer> leftList = vin.subList(0,rootIndexInVin);
+		int leftCount = leftList.size();
+		root.left = build(pre.subList(1,1 + leftCount),leftList);
+		root.right = build(pre.subList(1 + leftCount,pre.size()),vin.subList(rootIndexInVin + 1,vin.size()));
+		return root;
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] vin) {
+		return build(toList(pre),toList(vin));
+	}
+	int[] solve(int[] xianxu, int[] zhongxu) {
+		TreeNode root = reConstructBinaryTree(xianxu,zhongxu);
+		LinkedList<TreeNode> queue = new LinkedList<>();
+		queue.offer(root);
+		int r = 1;
+		Map<Integer, Integer> map = new HashMap<>();
+		int idx = 0;
+		while (!queue.isEmpty()) {
+			TreeNode node = queue.pollFirst();
+			--r;
+			if (node.left != null) {
+				queue.offerLast(node.left);
+			}
+			if (node.right != null) {
+				queue.offerLast(node.right);
+			}
+			if (r == 0) {
+				map.put(idx++,node.val);
+				r = queue.size();
+			}
+		}
+		int count = map.size();
+		int[] ans = new int[count];
+		for (int i = 0; i < count; i++) {
+			ans[i] = map.get(i);
+		}
+		return ans;
+	}
+	List<Integer> toList(int[] array) {
+		if (array == null || array.length == 0) {
+			return Collections.emptyList();
+		}
+		return Arrays.stream(array).boxed().collect(Collectors.toList());
+	}
+}

@@ -1,0 +1,35 @@
+class Solution {
+	List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+		int m = meetings.length;
+		Map<Integer, List<List<Integer>>> graph = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			graph.put(i,new ArrayList<>());
+		}
+		for (int[] meeting: meetings) {	
+			List<List<Integer>> tempList = graph.get(meeting[0]);
+			tempList.add(Arrays.asList(meeting[1],meeting[2]));
+			graph.put(meeting[0],tempList);
+			tempList = graph.get(meeting[1]);
+			tempList.add(Arrays.asList(meeting[0],meeting[2]));
+			graph.put(meeting[1],tempList);
+		}
+		Deque<List<Integer>> q = new ArrayDeque<>();
+		q.add(Arrays.asList(0,0));
+		q.add(Arrays.asList(firstPerson,0));
+		Map<Integer, Integer> visited = new HashMap<>();
+		visited.put(0,0);
+		visited.put(firstPerson,0);
+		while (!q.isEmpty()) {
+			List<Integer> currPerson = q.removeFirst();
+			for (List<Integer> nexPerson: graph.get(currPerson.get(0))) {	
+				if (nexPerson.get(1) >= currPerson.get(1)) {
+					if (!visited.containsKey(nexPerson.get(0)) || visited.get(nexPerson.get(0)) > nexPerson.get(1)) {
+						q.add(Arrays.asList(nexPerson.get(0),nexPerson.get(1)));
+						visited.put(nexPerson.get(0),nexPerson.get(1));
+					}
+				}
+			}
+		}
+		return new ArrayList<>(visited.keySet());
+	}
+}

@@ -1,0 +1,35 @@
+class Solution {
+	Map<Double, Long> calculateSlopes(int idx, int[][] points) {
+		List<Double> list = new ArrayList<>();
+		double slope;
+		double x;
+		double y;
+		x = points[idx][0];
+		y = points[idx][1];
+		for (int i = 0; i < points.length; i++) {
+			if (i != idx) {
+				slope = -99;
+				if (x - points[i][0] != 0) {
+					slope = (y - points[i][1]) / (x - points[i][0]);
+				}
+				list.add(slope);
+			}
+		}
+		Map<Double, Long> counted = list.stream().collect(Collectors.groupingBy(Function.identity(),Collectors.counting()));
+		return counted;
+	}
+	int maxPoints(int[][] points) {
+		Map<Double, Long> counted;
+		long totalPoints = 0L;
+		for (int i = 0; i < points.length; i++) {
+			counted = calculateSlopes(i,points);
+			for (Map.Entry<Double, Long> entry: counted.entrySet()) {	
+				if (entry.getValue() > totalPoints) {
+					totalPoints = entry.getValue();
+				}
+			}
+		}
+		totalPoints++;
+		return (int) totalPoints;
+	}
+}

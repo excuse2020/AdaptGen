@@ -1,0 +1,32 @@
+class Solution {
+	int countSubarrays(int[] nums, int k) {
+		int res = 0;
+		for (int i = 0; i < nums.length; i++) {
+			if (nums[i] == k) {
+				Map<Integer, Integer> mapL = new HashMap<>();
+				int lqtK = 0;
+				for (int j = i - 1; j >= 0; j--) {
+					if (nums[j] <= k) {
+						lqtK++;
+					}
+					int size = i - j;
+					int diff = lqtK - (size - lqtK);
+					mapL.put(diff,mapL.getOrDefault(diff,0) + 1);
+				}
+				res += mapL.getOrDefault(0,0) + mapL.getOrDefault(-1,0);
+				mapL.put(0,mapL.getOrDefault(0,0) + 1);
+				lqtK = 0;
+				for (int j = i + 1; j < nums.length; j++) {
+					if (nums[j] <= k) {
+						lqtK++;
+					}
+					int size = j - i;
+					int diff = lqtK - (size - lqtK);
+					res += mapL.getOrDefault(-diff,0) + mapL.getOrDefault(-diff - 1,0);
+				}
+				return res + 1;
+			}
+		}
+		return res;
+	}
+}

@@ -1,0 +1,27 @@
+class Solution {
+	int countDays(int days, int[][] meetings) {
+		Arrays.sort(meetings,(a, b) -> {Integer.compare(a[0],b[0])});
+		int totalMeetingDays = 0;
+		int currentStart = -1;
+		int currentEnd = -1;
+		for (int[] meeting: meetings) {	
+			int start = meeting[0];
+			int end = meeting[1];
+			if (start > currentEnd) {
+				if (currentStart != -1) {
+					totalMeetingDays += currentEnd - currentStart + 1;
+				}
+				currentStart = start;
+				currentEnd = end;
+			} 
+			else {
+				currentEnd = Math.max(currentEnd,end);
+			}
+		}
+		if (currentStart != -1) {
+			totalMeetingDays += currentEnd - currentStart + 1;
+		}
+		int freeDays = days - totalMeetingDays;
+		return freeDays;
+	}
+}

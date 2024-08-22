@@ -1,0 +1,52 @@
+class Solution {
+	void Union(int arr, int X, int Z, int rank) {
+		int find_X = find(arr,X);
+		int find_Z = find(arr,Z);
+		if (find_X != find_Z) {
+			if (rank[find_X] > rank[find_Z]) {
+				arr[find_Z] = find_X;
+			} 
+			else if (rank[find_X] < rank[find_Z]) {
+				arr[find_X] = find_Z;
+			} 
+			else {
+				arr[find_X] = find_Z;
+				rank[find_Z]++;
+			}
+		}
+	}
+	int find(int arr, int X) {
+		if (arr[X] == X) {
+			return X;
+		}
+		return arr[X] = find(arr,arr[X]);
+	}
+	int removeStones(int[][] stones) {
+		int row = 0;
+		int column = 0;
+		for (int i = 0; i < stones.length; i++) {
+			row = Math.max(row,stones[i][0]);
+			column = Math.max(column,stones[i][1]);
+		}
+		int arr = new int[row + column];
+		int rank = new int[row + column];
+		for (int i = 0; i < arr.length; i++) {
+			arr[i] = i;
+		}
+		HashMap<Integer, Integer> hp = new HashMap<>();
+		for (int i = 0; i < stones.length; i++) {
+			int index_R = stones[i][0];
+			int index_C = stones[i][1] + row;
+			Union(arr,index_R,index_C,rank);
+			hp.put(index_C,0);
+			hp.put(index_R,0);
+		}
+		int cnt = 0;
+		for (Integer it: hp.keySet()) {	
+			if (find(arr,it) == it) {
+				cnt++;
+			}
+		}
+		return stones.length - cnt;
+	}
+}

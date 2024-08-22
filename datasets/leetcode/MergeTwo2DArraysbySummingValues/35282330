@@ -1,0 +1,30 @@
+class Solution {
+	int[][] mergeArrays(int[][] nums1, int[][] nums2) {
+		HashMap<Integer, Integer> hm = new HashMap<>();
+		int count = nums1.length;
+		boolean[] temp = new boolean[1001];
+		for (int i = 0; i < nums1.length; i++) {
+			hm.put(nums1[i][0],nums1[i][1]);
+			temp[nums1[i][0]] = true;
+		}
+		for (int i = 0; i < nums2.length; i++) {
+			if (hm.containsKey(nums2[i][0])) {
+				hm.replace(nums2[i][0],hm.get(nums2[i][0]) + nums2[i][1]);
+			} 
+			else {
+				hm.put(nums2[i][0],nums2[i][1]);
+				temp[nums2[i][0]] = true;
+				++count;
+			}
+		}
+		int curr_pos = 0;
+		int[][] res = new int[count][2];
+		for (int i = 0; i < 1001; i++) {
+			if (temp[i]) {
+				res[curr_pos][0] = i;
+				res[curr_pos++][1] = hm.get(i);
+			}
+		}
+		return res;
+	}
+}

@@ -1,0 +1,45 @@
+class Solution {
+	int max;
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		max = 1;
+		ArrayList<ArrayList<TreeNode>> allPathsMaxLevel = new ArrayList<>();
+		xx(allPathsMaxLevel,root,1,new ArrayList<>());
+		int st;
+		if (allPathsMaxLevel.size() == 1) {
+			return allPathsMaxLevel.get(0).get(allPathsMaxLevel.get(0).size() - 1);
+		} 
+		else if (allPathsMaxLevel.size() > 1) {
+			for (int i = 1; i < max; i++) {
+				st = allPathsMaxLevel.get(0).get(i).val;
+				for (ArrayList<TreeNode> x: allPathsMaxLevel) {	
+					if (st != x.get(i).val) {
+						return allPathsMaxLevel.get(0).get(i - 1);
+					}
+				}
+			}
+		}
+		return root;
+	}
+	void xx(ArrayList<ArrayList<TreeNode>> allPathsMaxLevel, TreeNode root, int level, ArrayList<TreeNode> currPath) {
+		if (root == null) {
+			return;
+		}
+		if (root.left == null && root.right == null) {
+			if (level == max) {
+				currPath.add(root);
+				allPathsMaxLevel.add(currPath);
+				return;
+			}
+			if (level > max) {
+				allPathsMaxLevel.clear();
+				currPath.add(root);
+				allPathsMaxLevel.add(currPath);
+				max = level;
+				return;
+			}
+		}
+		currPath.add(root);
+		xx(allPathsMaxLevel,root.left,level + 1,new ArrayList<TreeNode>(currPath));
+		xx(allPathsMaxLevel,root.right,level + 1,new ArrayList<TreeNode>(currPath));
+	}
+}

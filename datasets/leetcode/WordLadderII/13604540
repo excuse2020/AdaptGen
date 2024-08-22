@@ -1,0 +1,63 @@
+class Solution {
+	Map<String, List<String>> adjacencyList = new HashMap<>();
+	List<String> currPath = new ArrayList<>();
+	List<List<String>> shortestPath = new ArrayList<>();
+	Set<String> wordSet = new HashSet<>();
+	void backtrack(String beginWord, String endWord) {
+		if (beginWord.equals(endWord)) {
+			shortestPath.add(new ArrayList<>(currPath));
+			return;
+		} 
+		else if (!adjacencyList.containsKey(beginWord)) {
+			return;
+		}
+		for (String word: adjacencyList.get(beginWord)) {	
+			currPath.add(word);
+			backtrack(word,endWord);
+			currPath.remove(word);
+		}
+	}
+	void bfs(String beginWord) {
+		Queue<String> queue = new LinkedList<>();
+		queue.offer(beginWord);
+		wordSet.remove(beginWord);
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			Set<String> visitedSet = new HashSet<>();
+			while (size-- != 0) {
+				String currWord = queue.poll();
+				List<String> neighborsList = findNeighbors(currWord);
+				for (String word: neighborsList) {	
+					if (!adjacencyList.containsKey(currWord)) {
+						adjacencyList.put(currWord,new ArrayList<>());
+					}
+					adjacencyList.get(currWord).add(word);
+					visitedSet.add(word);
+				}
+			}
+			for (String word: visitedSet) {	
+				queue.offer(word);
+				wordSet.remove(word);
+			}
+		}
+	}
+	List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+		for (String word: wordList) {	
+			wordSet.add(word);
+		}
+		if (!wordSet.contains(endWord)) {
+			return shortestPath;
+		}
+		bfs(beginWord);
+		currPath.add(beginWord);
+		backtrack(beginWord,endWord);
+		return shortestPath;
+	}
+	List<String> findNeighbors(String currWord) {
+		List<String> neighborsList = new ArrayList<>();
+		char[] letters = currWord.toCharArray();
+		int i = 0;
+		char letter = letters[i];
+		char c;
+	}
+}

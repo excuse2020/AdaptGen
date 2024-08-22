@@ -1,0 +1,25 @@
+class Solution {
+	boolean containsNearbyAlmostDuplicate(int[] nums, int indexDiff, int valueDiff) {
+		int denominator = valueDiff + 1;
+		Map<Long, Integer> buckets = new HashMap<>();
+		for (int i = 0; i < nums.length; i++) {
+			long remappedNum = (long) nums[i] - Integer.MIN_VALUE;
+			long bucket = remappedNum / denominator;
+			if (buckets.containsKey(bucket)) {
+				return true;
+			}
+			if (buckets.containsKey(bucket - 1) && Math.abs(nums[i] - buckets.get(bucket - 1)) <= valueDiff) {
+				return true;
+			}
+			if (buckets.containsKey(bucket + 1) && Math.abs(nums[i] - buckets.get(bucket + 1)) <= valueDiff) {
+				return true;
+			}
+			buckets.put(bucket,nums[i]);
+			if (buckets.size() == indexDiff + 1) {
+				bucket = ((long) nums[i - indexDiff] - Integer.MIN_VALUE) / denominator;
+				buckets.remove(bucket);
+			}
+		}
+		return false;
+	}
+}

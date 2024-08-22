@@ -1,0 +1,43 @@
+class Solution {
+	int nextGreaterElement(int n) {
+		char[] str = (n + "").toCharArray();
+		int deflectionPoint = str.length - 1;
+		while (deflectionPoint > 0) {
+			if (str[deflectionPoint] > str[deflectionPoint - 1]) {
+				break;
+			}
+			deflectionPoint--;
+		}
+		if (deflectionPoint == 0) {
+			return -1;
+		}
+		int firstSwappingIndex = deflectionPoint - 1;
+		int secondSwappingIndex = str.length - 1;
+		while (firstSwappingIndex <= secondSwappingIndex) {
+			if (str[firstSwappingIndex] < str[secondSwappingIndex]) {
+				break;
+			}
+			secondSwappingIndex--;
+		}
+		char temp = str[firstSwappingIndex];
+		str[firstSwappingIndex] = str[secondSwappingIndex];
+		str[secondSwappingIndex] = temp;
+		reverseChar(str,deflectionPoint);
+		long result = Long.parseLong(new String(str));
+		if (result > Integer.MAX_VALUE) {
+			return -1;
+		}
+		return (int) result;
+	}
+	void reverseChar(char[] str, int i) {
+		int start = i;
+		int end = str.length - 1;
+		while (start <= end) {
+			char temp = str[start];
+			str[start] = str[end];
+			str[end] = temp;
+			start++;
+			end--;
+		}
+	}
+}

@@ -1,0 +1,22 @@
+class Solution {
+	ArrayList<Interval> merge(ArrayList<Interval> intervals) {
+		if (intervals.size() == 0) {
+			return intervals;
+		}
+		Collections.sort(intervals,new Comparator<Interval>());
+		ArrayList<Interval> res = new ArrayList<>();
+		res.add(intervals.get(0));
+		for (int i = 1; i < intervals.size(); i++) {
+			Interval interval = intervals.get(i);
+			Interval preInterval = res.get(res.size() - 1);
+			if (interval.start > preInterval.end) {
+				res.add(interval);
+			} 
+			else if (interval.start <= preInterval.end) {
+				preInterval.end = Math.max(preInterval.end,interval.end);
+				res.set(res.size() - 1,preInterval);
+			}
+		}
+		return res;
+	}
+}

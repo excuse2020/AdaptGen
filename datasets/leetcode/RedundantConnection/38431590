@@ -1,0 +1,30 @@
+class Solution {
+	boolean dfs(int a, int b, Map<Integer, List<Integer>> nei, Set<Integer> seen) {
+		if (!seen.contains(a)) {
+			seen.add(a);
+			if (a == b) {
+				return true;
+			}
+			for (int x: nei.get(a)) {	
+				if (dfs(x,b,nei,seen)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	int[] findRedundantConnection(int[][] edges) {
+		Map<Integer, List<Integer>> nei = new HashMap();
+		for (int[] edge: edges) {	
+			Set<Integer> seen = new HashSet();
+			if (nei.get(edge[0]) != null && dfs(edge[0],edge[1],nei,seen)) {
+				return edge;
+			}
+			nei.computeIfAbsent(edge[0],(k) -> {new ArrayList<>()});
+			nei.computeIfAbsent(edge[1],(k) -> {new ArrayList<>()});
+			nei.get(edge[0]).add(edge[1]);
+			nei.get(edge[1]).add(edge[0]);
+		}
+		throw new AssertionError()
+	}
+}

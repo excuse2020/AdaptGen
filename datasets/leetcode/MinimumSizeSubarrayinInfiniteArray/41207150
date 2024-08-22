@@ -1,0 +1,32 @@
+class Solution {
+	int minSizeSubarray(int[] nums, int target) {
+		int n = nums.length;
+		int sum = 0;
+		for (int e: nums) {	
+			sum += e;
+		}
+		int spans = (int) Math.ceil((double) target / (double) (sum)) + 1;
+		int totalLen = spans * n;
+		int len = Integer.MAX_VALUE;
+		sum = 0;
+		boolean flag = false;
+		int start = 0;
+		int end = 0;
+		while (end < totalLen) {
+			sum += nums[end % n];
+			while (sum > target) {
+				sum = sum - nums[start % n];
+				start++;
+			}
+			if (sum == target) {
+				flag = true;
+				len = Math.min(len,end - start + 1);
+			}
+			end++;
+		}
+		if (flag == false) {
+			return -1;
+		}
+		return len;
+	}
+}

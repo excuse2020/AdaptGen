@@ -1,0 +1,45 @@
+class Solution {
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		int[] parents = new int[n];
+		int[] indegree = new int[n];
+		Arrays.fill(parents,-1);
+		for (int i = 0; i < n; i++) {
+			if (leftChild[i] != -1 && indegree[leftChild[i]]++ > 1) {
+				return false;
+			}
+			if (rightChild[i] != -1 && indegree[rightChild[i]]++ > 1) {
+				return false;
+			}
+		}
+		int index = -1;
+		for (int i = 0; i < n; i++) {
+			if (indegree[i] == 0) {
+				index = i;
+			}
+		}
+		if (index == -1) {
+			return false;
+		}
+		int count = n - 1;
+		Queue<Integer> q = new LinkedList<>();
+		if (leftChild[index] != -1) {
+			q.offer(leftChild[index]);
+		}
+		if (rightChild[index] != -1) {
+			q.offer(rightChild[index]);
+		}
+		while (!q.isEmpty()) {
+			int node = q.poll();
+			count--;
+			int left = leftChild[node];
+			int right = rightChild[node];
+			if (left != -1) {
+				q.offer(left);
+			}
+			if (right != -1) {
+				q.offer(right);
+			}
+		}
+		return count == 0;
+	}
+}

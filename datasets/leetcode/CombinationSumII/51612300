@@ -1,0 +1,28 @@
+class Solution {
+	void backTrack(List<List<Integer>> res, List<Integer> base, int[] arr, int target, int start) {
+		int sum = 0;
+		for (int val: base) {	
+			sum += val;
+		}
+		if (sum == target) {
+			res.add(new LinkedList<Integer>(base));
+		} 
+		else if (sum > target) {
+			return;
+		}
+		for (int i = start; i < arr.length; i++) {
+			if (i > start && arr[i] == arr[i - 1]) {
+				continue;
+			}
+			base.add(arr[i]);
+			backTrack(res,base,arr,target,i + 1);
+			base.removeLast();
+		}
+	}
+	List<List<Integer>> combinationSum2(int[] candidates, int target) {
+		Arrays.sort(candidates);
+		List<List<Integer>> res = new LinkedList<>();
+		backTrack(res,new LinkedList<Integer>(),candidates,target,0);
+		return res;
+	}
+}

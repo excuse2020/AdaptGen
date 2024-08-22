@@ -1,0 +1,67 @@
+class Solution {
+	TreeNode Deserialize(String str) {
+		if (str == null) {
+			return null;
+		}
+		int n = str.length();
+		Queue<Integer> queue = new LinkedList<>();
+		Integer num = 0;
+		for (int i = 0; i < n; i++) {
+			if (str.charAt(i) == '_') {
+				queue.add(num);
+				num = 0;
+			} 
+			else if (str.charAt(i) == '#') {
+				queue.add(null);
+			} 
+			else {
+				num = num * 10 + str.charAt(i) - '0';
+			}
+		}
+		Queue<TreeNode> trees = new LinkedList<>();
+		TreeNode root = new TreeNode(queue.poll());
+		TreeNode cur = null;
+		trees.add(root);
+		while (!queue.isEmpty()) {
+			cur = trees.poll();
+			num = queue.poll();
+			if (num != null) {
+				TreeNode left = new TreeNode(num);
+				cur.left = left;
+				trees.add(left);
+			}
+			if (!queue.isEmpty()) {
+				num = queue.poll();
+				if (num != null) {
+					TreeNode right = new TreeNode(num);
+					cur.right = right;
+					trees.add(right);
+				}
+			}
+		}
+		return root;
+	}
+	String Serialize(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		Queue<TreeNode> queue = new LinkedList<>();
+		String res = "";
+		queue.add(root);
+		TreeNode cur = null;
+		String empty = "";
+		while (!queue.isEmpty()) {
+			cur = queue.poll();
+			if (cur == null) {
+				empty = empty + "#";
+			} 
+			else {
+				res = res + empty;
+				empty = "";
+				queue.add(cur.left);
+				queue.add(cur.right);
+			}
+		}
+		return res;
+	}
+}

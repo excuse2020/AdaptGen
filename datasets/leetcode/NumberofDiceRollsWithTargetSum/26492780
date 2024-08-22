@@ -1,0 +1,58 @@
+class Solution {
+	int dpRolls(int n, int k, int target) {
+		int[][] dp = new int[n + 1][target + 1];
+		for (int i = 0; i <= n; i++) {
+			dp[i][target] = 1;
+		}
+		for (int i = 0; i < target; i++) {
+			dp[0][i] = 0;
+		}
+		for (int i = 1; i < dp.length; i++) {
+			for (int sumSoFar = target; sumSoFar >= 0; sumSoFar--) {
+				int count = 0;
+				for (int j = 1; j <= k; j++) {
+					if (sumSoFar + j <= target) {
+						count = (count + dp[i - 1][sumSoFar + j]) % 1000000007;
+					}
+				}
+				dp[i][sumSoFar] = count % 1000000007;
+			}
+		}
+		return dp[n][0];
+	}
+	int memoRolls(int n, int k, int sumSoFar, int target, int[][] dp) {
+		if (sumSoFar == target) {
+			return dp[n][sumSoFar] = 1;
+		}
+		if (sumSoFar > target) {
+			return 0;
+		}
+		if (n == 0) {
+			return dp[n][sumSoFar] = 0;
+		}
+		int count = 0;
+		for (int j = 1; j <= k; j++) {
+			count += memoRolls(n - 1,k,sumSoFar + j,target,dp);
+		}
+		return dp[n][sumSoFar] = count % 1000000007;
+	}
+	int numRollsToTarget(int n, int k, int target) {
+		return dpRolls(n,k,target);
+	}
+	int recRolls(int n, int k, int sumSoFar, int target) {
+		if (target - sumSoFar == 0) {
+			return 1;
+		}
+		if (target - sumSoFar < 0) {
+			return 0;
+		}
+		if (n == 0) {
+			return 0;
+		}
+		int count = 0;
+		for (int j = 1; j <= k; j++) {
+			count += recRolls(n - 1,k,sumSoFar + j,target);
+		}
+		return count % 1000000007;
+	}
+}

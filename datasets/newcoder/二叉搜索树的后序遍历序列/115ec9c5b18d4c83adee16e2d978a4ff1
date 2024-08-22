@@ -1,0 +1,49 @@
+class Solution {
+	boolean VerifySquenceOfBST(int[] sequence) {
+		int len = sequence.length;
+		if (len == 0) {
+			return false;
+		}
+		int[] postSeq = new int[len];
+		for (int i = 0; i < len; i++) {
+			postSeq[i] = sequence[i];
+		}
+		Arrays.sort(sequence);
+		return method(postSeq,sequence);
+	}
+	int findIndex(int[] inorder, int a) {
+		for (int i = 0; i < inorder.length; i++) {
+			if (a == inorder[i]) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	boolean method(int[] post, int[] inorder) {
+		int len = post.length;
+		if (len != inorder.length) {
+			return false;
+		} 
+		else if (len == 0) {
+			return true;
+		} 
+		else if (len == 1) {
+			if (post[0] != inorder[0]) {
+				return false;
+			} 
+			else {
+				return true;
+			}
+		}
+		int root = post[len - 1];
+		int index = findIndex(inorder,root);
+		if (index == -1) {
+			return false;
+		}
+		int[] preLeftList = Arrays.copyOfRange(post,0,index);
+		int[] inorderLeftList = Arrays.copyOfRange(inorder,0,index);
+		int[] preRightList = Arrays.copyOfRange(post,index,len - 1);
+		int[] inorderRightList = Arrays.copyOfRange(inorder,index + 1,len);
+		return method(preLeftList,inorderLeftList) && method(preRightList,inorderRightList);
+	}
+}

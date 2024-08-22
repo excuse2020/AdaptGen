@@ -1,0 +1,45 @@
+class Solution {
+	void add(HashMap<Integer, Integer> freq, int key) {
+		freq.put(key,freq.getOrDefault(key,0) + 1);
+	}
+	void delete(HashMap<Integer, Integer> freq, int key) {
+		if (freq.get(key) == 1) {
+			freq.remove(key);
+		} 
+		else {
+			freq.put(key,freq.get(key) - 1);
+		}
+	}
+	int dfs(TreeNode root, HashMap<Integer, Integer> freq) {
+		if (root == null) {
+			return 0;
+		}
+		add(freq,root.val);
+		int count = 0;
+		if (isLeaf(root) && isPalindrome(freq)) {
+			count++;
+		}
+		count += dfs(root.left,freq);
+		count += dfs(root.right,freq);
+		delete(freq,root.val);
+		return count;
+	}
+	boolean isLeaf(TreeNode root) {
+		return root.left == null && root.right == null;
+	}
+	boolean isPalindrome(HashMap<Integer, Integer> freq) {
+		int oddCount = 0;
+		for (Integer key: freq.keySet()) {	
+			if (freq.get(key) % 2 == 1) {
+				oddCount++;
+			}
+			if (oddCount > 1) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int pseudoPalindromicPaths(TreeNode root) {
+		return dfs(root,new HashMap<>());
+	}
+}

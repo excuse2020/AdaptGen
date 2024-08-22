@@ -1,0 +1,44 @@
+class Solution {
+	int maxStarSum(int[] vals, int[][] edges, int k) {
+		Map<Integer, List<Integer>> adj = new HashMap<>();
+		for (int[] e: edges) {	
+			if (adj.get(e[0]) == null) {
+				adj.put(e[0],new ArrayList<>());
+			}
+			if (adj.get(e[1]) == null) {
+				adj.put(e[1],new ArrayList<>());
+			}
+			adj.get(e[1]).add(e[0]);
+			adj.get(e[0]).add(e[1]);
+		}
+		int oe = 0;
+		int maxVal = Integer.MIN_VALUE;
+		int sum = 0;
+		for (int idx = 0; idx < vals.length; idx++) {
+			List<Integer> aux = new ArrayList<>();
+			sum = vals[idx];
+			maxVal = Math.max(sum,maxVal);
+			if (adj.get(idx) == null) {
+				continue;
+			}
+			for (int ed: adj.get(idx)) {	
+				aux.add(vals[ed]);
+			}
+			int sz = aux.size();
+			Collections.sort(aux,Collections.reverseOrder());
+			if (k < sz) {
+				for (int i = 0; i < k; i++) {
+					sum += aux.get(i);
+					maxVal = Math.max(sum,maxVal);
+				}
+			} 
+			else {
+				for (int i = 0; i < sz; i++) {
+					sum += aux.get(i);
+					maxVal = Math.max(sum,maxVal);
+				}
+			}
+		}
+		return Math.max(sum,maxVal);
+	}
+}

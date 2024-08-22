@@ -1,0 +1,33 @@
+class Solution {
+	ArrayList<String> res = new ArrayList<>();
+	void dfs(int u, String str, ArrayList<String> list) {
+		if (u == str.length() && list.size() == 4) {
+			String st = "";
+			for (int i = 0; i < list.size() - 1; i++) {
+				st += list.get(i) + ".";
+			}
+			st += list.get(list.size() - 1);
+			res.add(st);
+			return;
+		}
+		if (u > str.length()) {
+			return;
+		}
+		for (int i = 1; i <= 3; i++) {
+			if (u + i <= str.length()) {
+				String s1 = str.substring(u,u + i);
+				int k = Integer.valueOf(s1);
+				if (k > 255 || (k == 0 && s1.length() > 1) || (s1.length() > 1 && s1.charAt(0) == '0')) {
+					continue;
+				}
+				list.add(s1);
+				dfs(u + i,str,list);
+				list.remove(list.size() - 1);
+			}
+		}
+	}
+	ArrayList<String> restoreIpAddresses(String s) {
+		dfs(0,s,new ArrayList<String>());
+		return res;
+	}
+}

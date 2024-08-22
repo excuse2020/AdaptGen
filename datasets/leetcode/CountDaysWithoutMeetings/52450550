@@ -1,0 +1,25 @@
+class Solution {
+	int countDays(int days, int[][] meetings) {
+		int[][] nums = merge(meetings);
+		int c = Math.abs(1 - nums[0][0]);
+		int prev = 1;
+		for (int i = 1; i < nums.length; i++) {
+			c += Math.abs(nums[i - 1][1] - nums[i][0]) - 1;
+		}
+		c += Math.abs(days - nums[nums.length - 1][1]);
+		return c;
+	}
+	int[][] merge(int[][] intervals) {
+		Arrays.sort(intervals,Comparator.comparingInt((a) -> {a[0]}));
+		List<int[]> ans = new ArrayList<>();
+		for (int[] interval: intervals) {	
+			if (ans.isEmpty() || interval[0] > ans.get(ans.size() - 1)[1]) {
+				ans.add(interval);
+			} 
+			else {
+				ans.get(ans.size() - 1)[1] = Math.max(interval[1],ans.get(ans.size() - 1)[1]);
+			}
+		}
+		return ans.toArray(new int[ans.size()]);
+	}
+}

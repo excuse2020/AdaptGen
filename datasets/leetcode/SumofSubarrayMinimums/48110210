@@ -1,0 +1,39 @@
+class Solution {
+	int sumSubarrayMins(int[] heights) {
+		int n = heights.length;
+		int subArr = 0;
+		int mod = 1000000007;
+		Stack<Integer> stack = new Stack<>();
+		int[] leftMin = new int[n];
+		int[] rightMin = new int[n];
+		for (int i = 0; i < n; i++) {
+			while (!stack.isEmpty() && heights[stack.peek()] >= heights[i]) {
+				stack.pop();
+			}
+			if (stack.isEmpty()) {
+				leftMin[i] = -1;
+			} 
+			else {
+				leftMin[i] = stack.peek();
+			}
+			stack.push(i);
+		}
+		stack.clear();
+		for (int j = n - 1; j >= 0; j--) {
+			while (!stack.isEmpty() && heights[stack.peek()] > heights[j]) {
+				stack.pop();
+			}
+			if (stack.isEmpty()) {
+				rightMin[j] = n;
+			} 
+			else {
+				rightMin[j] = stack.peek();
+			}
+			stack.push(j);
+		}
+		for (int i = 0; i < n; i++) {
+			subArr = (int) (subArr + (long) heights[i] * (i - leftMin[i]) % mod) % mod;
+		}
+		return subArr;
+	}
+}

@@ -1,0 +1,85 @@
+class Solution {
+	int maxValueOfCoins(List<List<Integer>> piles, int K) {
+		int[] prev = new int[K + 1];
+		int[] current = new int[K + 1];
+		for (int pileIndex = piles.size() - 1; pileIndex >= 0; pileIndex--) {
+			for (int k = 1; k <= K; k++) {
+				int max = prev[k];
+				List<Integer> pile = piles.get(pileIndex);
+				int currentPrefSum = 0;
+				int index = 0;
+				while (index < pile.size() && index < k) {
+					currentPrefSum += pile.get(index);
+					max = Math.max(max,currentPrefSum + prev[k - (index + 1)]);
+					index++;
+				}
+				current[k] = max;
+			}
+			int[] temp = prev;
+			prev = current;
+			current = temp;
+		}
+		return prev[K];
+	}
+	int maxValueOfCoinsDP(List<List<Integer>> piles, int K) {
+		int[][] dp = new int[piles.size() + 1][K + 1];
+		for (int pileIndex = piles.size() - 1; pileIndex >= 0; pileIndex--) {
+			for (int k = 1; k <= K; k++) {
+				int max = dp[pileIndex + 1][k];
+				List<Integer> pile = piles.get(pileIndex);
+				int currentPrefSum = 0;
+				int index = 0;
+				while (index < pile.size() && index < k) {
+					currentPrefSum += pile.get(index);
+					max = Math.max(max,currentPrefSum + dp[pileIndex + 1][k - (index + 1)]);
+					index++;
+				}
+				dp[pileIndex][k] = max;
+			}
+		}
+		return dp[0][K];
+	}
+	int maxValueOfCoinsRecWithMemo(List<List<Integer>> piles, int k) {
+		int[][] memo = new int[piles.size()][k + 1];
+		for (int[] row: memo) {	
+			Arrays.fill(row,-1);
+		}
+		return solve(piles,0,k,memo);
+	}
+	int maxValueOfCoinsRecursion(List<List<Integer>> piles, int k) {
+		return solve(piles,0,k);
+	}
+	int solve(List<List<Integer>> piles, int pileIndex, int k, int[][] memo) {
+		if (k == 0 || pileIndex == piles.size()) {
+			return 0;
+		}
+		if (memo[pileIndex][k] != -1) {
+			return memo[pileIndex][k];
+		}
+		int max = solve(piles,pileIndex + 1,k,memo);
+		List<Integer> pile = piles.get(pileIndex);
+		int currentPrefSum = 0;
+		int index = 0;
+		while (index < pile.size() && index < k) {
+			currentPrefSum += pile.get(index);
+			max = Math.max(max,currentPrefSum + solve(piles,pileIndex + 1,k - (index + 1),memo));
+			index++;
+		}
+		memo[pileIndex][k] = max;
+		return memo[pileIndex][k];
+	}
+	int solve(List<List<Integer>> piles, int pileIndex, int k) {
+		if (k == 0 || pileIndex == piles.size()) {
+			return 0;
+		}
+		int max = solve(piles,pileIndex + 1,k);
+		List<Integer> pile = piles.get(pileIndex);
+		int currentPrefSum = 0;
+		int index = 0;
+		while (index < pile.size()) {
+			currentPrefSum += pile.get(index++);
+			max = Math.max(max,currentPrefSum + solve(piles,pileIndex + 1,k - (index + 1)));
+		}
+		return max;
+	}
+}

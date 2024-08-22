@@ -1,0 +1,34 @@
+class Solution {
+	TreeNode ans;
+	int max;
+	void maxHeight(TreeNode root, int h) {
+		if (root == null) {
+			max = Math.max(max,h);
+			return;
+		}
+		maxHeight(root.left,h + 1);
+		maxHeight(root.right,h + 1);
+	}
+	boolean recur(TreeNode root, int h) {
+		if (root == null) {
+			return false;
+		} 
+		else if (h == max) {
+			ans = root;
+			return true;
+		}
+		boolean l = recur(root.left,h + 1);
+		boolean r = recur(root.right,h + 1);
+		if (l && r) {
+			ans = root;
+		}
+		return l || r;
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		max = 0;
+		maxHeight(root,0);
+		ans = null;
+		recur(root,1);
+		return ans;
+	}
+}

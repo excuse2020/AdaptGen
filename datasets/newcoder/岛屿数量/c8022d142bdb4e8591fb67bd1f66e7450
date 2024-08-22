@@ -1,0 +1,36 @@
+class Solution {
+	int count = 0;
+	void dfs(char[][] grid, boolean[][] visited, int x, int y, int x_max, int y_max) {
+		if (x < 0 || x >= x_max || y < 0 || y >= y_max) {
+			return;
+		} 
+		else if (visited[x][y]) {
+			return;
+		} 
+		else if (grid[x][y] == '0') {
+			return;
+		} 
+		else {
+			visited[x][y] = true;
+			dfs(grid,visited,x - 1,y,x_max,y_max);
+			dfs(grid,visited,x + 1,y,x_max,y_max);
+			dfs(grid,visited,x,y - 1,x_max,y_max);
+			dfs(grid,visited,x,y + 1,x_max,y_max);
+		}
+	}
+	int solve(char[][] grid) {
+		int x_max = grid.length, y_max = grid[0].length;
+		boolean[][] visited = new boolean[x_max][y_max];
+		for (int i = 0; i < x_max; i++) {
+			for (int j = 0; j < y_max; j++) {
+				if (!visited[i][j]) {
+					dfs(grid,visited,i,j,x_max,y_max);
+					if (visited[i][j]) {
+						count++;
+					}
+				}
+			}
+		}
+		return count;
+	}
+}

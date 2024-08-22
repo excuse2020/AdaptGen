@@ -1,0 +1,34 @@
+class Solution {
+	Integer[][][] memo = null;
+	int cherryPickup(int[][] A) {
+		int rows = A.length, cols = A[0].length;
+		memo = new Integer[rows][cols][cols];
+		return dfs(A,0,0,cols - 1);
+	}
+	int dfs(int[][] A, int i, int j1, int j2) {
+		int rows = A.length, cols = A[0].length;
+		if (i < 0 || i >= rows || j1 < 0 || j1 >= cols || j2 < 0 || j2 >= cols) {
+			return Integer.MIN_VALUE;
+		}
+		if (i == rows - 1) {
+			if (j1 == j2) {
+				return A[i][j1];
+			}
+			return A[i][j1] + A[i][j2];
+		}
+		if (memo[i][j1][j2] != null) {
+			return memo[i][j1][j2];
+		}
+		int res = Integer.MIN_VALUE;
+		for (int k = -1; k <= 1; ++k) {
+			for (int l = -1; l <= 1; ++l) {
+				res = Math.max(res,dfs(A,i + 1,j1 + k,j2 + l));
+			}
+		}
+		int val = A[i][j1];
+		if (j1 != j2) {
+			val += A[i][j2];
+		}
+		return memo[i][j1][j2] = res + val;
+	}
+}

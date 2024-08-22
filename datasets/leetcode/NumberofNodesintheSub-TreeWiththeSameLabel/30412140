@@ -1,0 +1,29 @@
+class Solution {
+	int[] ret;
+	int[] countSubTrees(int n, int[][] edges, String labels) {
+		this.ret = new int[n];
+		Map<Integer, Set<Integer>> tree = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			tree.put(i,new HashSet<>());
+		}
+		for (int[] edge: edges) {	
+			int u = edge[0], v = edge[1];
+			tree.get(u).add(v);
+			tree.get(v).add(u);
+		}
+		dfs(0,-1,tree,labels.toCharArray());
+		return ret;
+	}
+	int[] dfs(int u, int p, Map<Integer, Set<Integer>> tree, char[] labels) {
+		int[] currLevel = new int[26];
+		for (int v: tree.get(u)) {	
+			if (v == p) {
+				continue;
+			}
+			int[] childRes = dfs(v,u,tree,labels);
+			for (int i = 0; i < 26; i++) {
+				currLevel[i] += childRes[i];
+			}
+		}
+	}
+}

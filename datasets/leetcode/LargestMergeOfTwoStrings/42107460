@@ -1,0 +1,30 @@
+class Solution {
+	String largestMerge(String word1, String word2) {
+		String[][] dp = new String[word1.length() + 1][word2.length() + 1];
+		for (var i: dp) {	
+			Arrays.fill(i,"-1");
+		}
+		return solveMemo(word1,word2,dp);
+	}
+	String solveMemo(String word1, String word2, String[][] dp) {
+		if (word1.length() == 0 || word2.length() == 0) {
+			return word1 + word2;
+		}
+		if (!dp[word1.length()][word2.length()].equals("-1")) {
+			return dp[word1.length()][word2.length()];
+		}
+		if (word1.compareTo(word2) > 0) {
+			return dp[word1.length()][word2.length()] = word1.charAt(0) + solveRec(word1.substring(1),word2);
+		}
+		return dp[word1.length()][word2.length()] = word2.charAt(0) + solveRec(word1,word2.substring(1));
+	}
+	String solveRec(String word1, String word2) {
+		if (word1.length() == 0 || word2.length() == 0) {
+			return word1 + word2;
+		}
+		if (word1.compareTo(word2) > 0) {
+			return word1.charAt(0) + solveRec(word1.substring(1),word2);
+		}
+		return word2.charAt(0) + solveRec(word1,word2.substring(1));
+	}
+}

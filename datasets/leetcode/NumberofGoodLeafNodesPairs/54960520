@@ -1,0 +1,31 @@
+class Solution {
+	int result = 0;
+	int countPairs(TreeNode root, int distance) {
+		result = 0;
+		visitGoodPairsUtil(root,distance,new int[distance + 1]);
+		return result;
+	}
+	void visitGoodPairsUtil(TreeNode root, int distance, int[] leafsAtDist) {
+		if (root == null) {
+			return;
+		}
+		if (root.left == null && root.right == null) {
+			leafsAtDist[1] = 1;
+			return;
+		}
+		int[] rleafsAtDist = new int[distance + 1];
+		visitGoodPairsUtil(root.left,distance,leafsAtDist);
+		visitGoodPairsUtil(root.right,distance,rleafsAtDist);
+		for (int dist = 2; dist <= distance; dist++) {
+			for (int lh = 1; lh < dist; lh++) {
+				result += (leafsAtDist[lh] * rleafsAtDist[dist - lh]);
+			}
+		}
+		for (int i = 1; i <= distance; i++) {
+			leafsAtDist[i] += rleafsAtDist[i];
+		}
+		for (int i = distance; i >= 1; i--) {
+			leafsAtDist[i] = leafsAtDist[i - 1];
+		}
+	}
+}

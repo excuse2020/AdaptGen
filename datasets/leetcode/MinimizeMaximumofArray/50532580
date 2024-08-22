@@ -1,0 +1,39 @@
+class Solution {
+	boolean isPossible(int max, int[] nums) {
+		long bufferMoves = 0;
+		for (int n: nums) {	
+			if (n <= max) {
+				bufferMoves += max - n;
+			} 
+			else {
+				if (bufferMoves < n - max) {
+					return false;
+				} 
+				else {
+					bufferMoves -= n - max;
+				}
+			}
+		}
+		return true;
+	}
+	int minimizeArrayValue(int[] nums) {
+		int max = nums[0];
+		for (int num: nums) {	
+			max = Math.max(max,num);
+		}
+		int low = 0;
+		int high = max;
+		int result = 0;
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			if (isPossible(mid,nums)) {
+				result = mid;
+				high = mid - 1;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		return result;
+	}
+}

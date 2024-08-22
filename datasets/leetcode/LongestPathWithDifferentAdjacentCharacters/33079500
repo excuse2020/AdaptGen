@@ -1,0 +1,24 @@
+class Solution {
+	int max = 1;
+	void dfs(List<List<Integer>> list, String s, int i, int[] dist) {
+		dist[i] = 1;
+		for (int n: list.get(i)) {	
+			dfs(list,s,n,dist);
+			if (s.charAt(i) != s.charAt(n)) {
+				max = Math.max(max,dist[i] + dist[n]);
+				dist[i] = Math.max(dist[i],1 + dist[n]);
+			}
+		}
+	}
+	int longestPath(int[] parent, String s) {
+		List<List<Integer>> list = new ArrayList<>();
+		for (int p: parent) {	
+			list.add(new ArrayList<>());
+		}
+		for (int i = 1; i < parent.length; i++) {
+			list.get(parent[i]).add(i);
+		}
+		dfs(list,s,0,new int[parent.length]);
+		return max;
+	}
+}

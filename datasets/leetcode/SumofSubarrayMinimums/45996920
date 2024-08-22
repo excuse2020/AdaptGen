@@ -1,0 +1,43 @@
+class Solution {
+	void buildNSL(int NSL, int arr) {
+		Stack<Integer> st = new Stack<>();
+		for (int i = 0; i < arr.length; i++) {
+			while (!st.isEmpty() && arr[st.peek()] >= arr[i]) {
+				st.pop();
+			}
+			if (st.isEmpty()) {
+				NSL[i] = -1;
+			} 
+			else {
+				NSL[i] = st.peek();
+			}
+			st.push(i);
+		}
+	}
+	void buildNSR(int NSR, int arr) {
+		Stack<Integer> st = new Stack<>();
+		for (int i = arr.length - 1; i >= 0; i--) {
+			while (!st.isEmpty() && arr[st.peek()] > arr[i]) {
+				st.pop();
+			}
+			if (st.isEmpty()) {
+				NSR[i] = arr.length;
+			} 
+			else {
+				NSR[i] = st.peek();
+			}
+			st.push(i);
+		}
+	}
+	int sumSubarrayMins(int[] arr) {
+		int NSL = new int[arr.length];
+		int NSR = new int[arr.length];
+		buildNSL(NSL,arr);
+		buildNSR(NSR,arr);
+		long ans = 0;
+		for (int i = 0; i < arr.length; i++) {
+			ans = (ans + 1L * (i - NSL[i])) % 1000000007;
+		}
+		return (int) (ans % 1000000007);
+	}
+}

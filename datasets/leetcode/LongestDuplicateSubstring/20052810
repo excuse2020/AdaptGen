@@ -1,0 +1,36 @@
+class Solution {
+	int p = 37;
+	String isDuplicate(String s, int len) {
+		Set<Long> set = new HashSet<>();
+		long hash = 0l, factor = 1l;
+		for (int i = len - 1; i >= 0; i--) {
+			hash = hash + (s.charAt(i) - 96) * factor;
+			factor *= p;
+		}
+		set.add(hash);
+		for (int i = len; i < s.length(); i++) {
+			hash = (hash * p) - (factor * (s.charAt(i - len) - 96)) + (s.charAt(i) - 96);
+			if (set.contains(hash)) {
+				return s.substring(i - len + 1,i + 1);
+			}
+			set.add(hash);
+		}
+		return "";
+	}
+	String longestDupSubstring(String s) {
+		int low = 0, high = s.length(), mid;
+		String result = "", str;
+		while (low < high) {
+			mid = low + (high - low) / 2;
+			str = isDuplicate(s,mid);
+			if (str.equals("")) {
+				high = mid;
+			} 
+			else {
+				result = str;
+				low = mid + 1;
+			}
+		}
+		return result;
+	}
+}

@@ -1,0 +1,37 @@
+class Solution {
+	void getLevel(TreeNode node, HashMap<Integer, Integer> levelMap, int level) {
+		if (node == null) {
+			return;
+		}
+		getLevel(node.left,levelMap,level + 1);
+		getLevel(node.right,levelMap,level + 1);
+		levelMap.put(level,levelMap.getOrDefault(level,0) + node.val);
+	}
+	TreeNode replaceValueInTree(TreeNode root) {
+		HashMap<Integer, Integer> levelMap = new HashMap<>();
+		getLevel(root,levelMap,0);
+		TreeNode res = travese(root,null,levelMap,0);
+		res.val = 0;
+		return res;
+	}
+	TreeNode travese(TreeNode root, TreeNode parent, HashMap<Integer, Integer> levelMap, int level) {
+		if (root == null) {
+			return null;
+		}
+		TreeNode left = travese(root.left,root,levelMap,level + 1);
+		TreeNode right = travese(root.right,root,levelMap,level + 1);
+		int sum = levelMap.get(level);
+		if (parent != null) {
+			if (parent.left != null) {
+				sum -= parent.left.val;
+			}
+			if (parent.right != null) {
+				sum -= parent.right.val;
+			}
+		}
+		TreeNode aRoot = new TreeNode(sum);
+		aRoot.left = left;
+		aRoot.right = right;
+		return aRoot;
+	}
+}

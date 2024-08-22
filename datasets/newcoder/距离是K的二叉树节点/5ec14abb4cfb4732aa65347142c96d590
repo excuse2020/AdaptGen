@@ -1,0 +1,74 @@
+class Solution {
+	ArrayList<Integer> res = new ArrayList<>();
+	int target = 0;
+	ArrayList<Integer> distanceKnodes(TreeNode root, int target, int k) {
+		this.target = target;
+		TreeNode targetNode = findTarget(root);
+		HashMap<TreeNode, TreeNode> fatherNodes = getFatherNodes(root);
+		TreeNode startNode = targetNode;
+		process(startNode,k);
+		k--;
+		while (k >= 0) {
+			if (startNode == root) {
+				break;
+			}
+			if (k == 0) {
+				res.add(fatherNodes.get(startNode).val);
+				break;
+			}
+			TreeNode fatherNode = fatherNodes.get(startNode);
+			if (startNode == fatherNode.left && k - 1 >= 0) {
+				process(fatherNode.right,k - 1);
+			}
+			if (startNode == fatherNode.right && k - 1 >= 0) {
+				process(fatherNode.left,k - 1);
+			}
+			startNode = fatherNode;
+			k--;
+		}
+		return res;
+	}
+	TreeNode findTarget(TreeNode node) {
+		if (null == node) {
+			return null;
+		}
+		if (node.val == target) {
+			return node;
+		}
+		TreeNode leftNode = findTarget(node.left);
+		TreeNode rightNode = findTarget(node.right);
+		return leftNode == null ? rightNode : leftNode;
+	}
+	HashMap<TreeNode, TreeNode> getFatherNodes(TreeNode root) {
+		HashMap<TreeNode, TreeNode> fatherNodes = new HashMap<>();
+		fatherNodes.put(root,root);
+		TreeNode node = root;
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(node);
+		while (!queue.isEmpty()) {
+			node = queue.poll();
+			if (null != node.left) {
+				queue.add(node.left);
+				fatherNodes.put(node.left,node);
+			}
+			if (null != node.right) {
+				queue.add(node.right);
+				fatherNodes.put(node.right,node);
+			}
+		}
+		return fatherNodes;
+	}
+	void process(TreeNode node, int k) {
+		if (null == node) {
+			return;
+		}
+		if (k == 0) {
+			if (node.val != target) {
+				res.add(node.val);
+			}
+			return;
+		}
+		process(node.left,k - 1);
+		process(node.right,k - 1);
+	}
+}

@@ -1,0 +1,33 @@
+class Solution {
+	void initNext(int[] next, char[] s) {
+		for (int i = 1, j = 0; i < s.length; i++) {
+			while (j > 1 && s[i] != s[j]) {
+				j = next[j - 1];
+			}
+			if (s[i] == s[j]) {
+				j++;
+			}
+			next[i] = j;
+		}
+	}
+	int kmp(String S, String T) {
+		char[] s = S.toCharArray();
+		char[] t = T.toCharArray();
+		int[] next = new int[s.length];
+		int res = 0;
+		initNext(next,s);
+		for (int i = 0, j = 0; i < t.length; i++) {
+			if (j > 0 && t[i] != s[j]) {
+				j = next[j - 1];
+			}
+			if (t[i] == s[j]) {
+				j++;
+			}
+			if (j == s.length) {
+				res++;
+				j = next[j - 1];
+			}
+		}
+		return res;
+	}
+}

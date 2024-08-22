@@ -1,0 +1,64 @@
+class Solution {
+	int maxDistance(int[] position, int m) {
+		if (position.length == 2) {
+			return Math.abs(position[0] - position[1]);
+		}
+		int minPos = Integer.MAX_VALUE;
+		int maxPos = 0;
+		for (int pos: position) {	
+			if (pos < minPos) {
+				minPos = pos;
+			}
+			if (pos > maxPos) {
+				maxPos = pos;
+			}
+		}
+		if (m == 2) {
+			return maxPos - minPos;
+		}
+		if (maxPos > 800_000) {
+			Arrays.sort(position);
+		} 
+		else {
+			boolean[] used = new boolean[maxPos + 1];
+			for (int pos: position) {	
+				used[pos] = true;
+			}
+			int idx = 0;
+			for (int i = 0; i <= maxPos; i++) {
+				if (used[i]) {
+					position[idx++] = i;
+				}
+			}
+		}
+		int low = 1;
+		int high = (position[position.length - 1] - position[0]) / (m - 1);
+		while (low < high) {
+			int mid = low + (high - low + 1) / 2;
+			if (tryBalls(position,m,mid)) {
+				low = mid;
+			} 
+			else {
+				high = mid - 1;
+			}
+		}
+		return low;
+	}
+	boolean tryBalls(int[] position, int m, int dist) {
+		m--;
+		int idx = position.length - 1;
+		int nextPosition = position[idx--] - dist;
+		while (true) {
+			while (idx >= 0 && position[idx] > nextPosition) {
+				idx--;
+			}
+			if (idx < 0) {
+				return false;
+			}
+			if (--m <= 0) {
+				return true;
+			}
+			nextPosition = position[idx--] - dist;
+		}
+	}
+}

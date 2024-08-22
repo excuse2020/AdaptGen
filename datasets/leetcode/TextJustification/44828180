@@ -1,0 +1,81 @@
+class Solution {
+	List<String> fullJustify(String[] words, int maxWidth) {
+		List<String> sol = new ArrayList<>();
+		int added = 0;
+		StringBuilder sb = new StringBuilder();
+		for (int x = 0; x < words.length; x++) {
+			int len = 0;
+			int y = added;
+			while (y <= x) {
+				len += words[y].length();
+				y++;
+			}
+			len += y - added;
+			if (len <= maxWidth) {
+				sb.append(words[x]);
+			} 
+			else {
+				StringBuilder sb1 = new StringBuilder();
+				for (int b = added; b < x; b++) {
+					sb1.append(words[b]);
+					if (b != x - 1) {
+						sb1.append(" ");
+					}
+				}
+				String[] buffer = sb1.toString().trim().split("\\\\s+");
+				int currentLength = sb1.length();
+				sb1.setLength(0);
+				int gaps = buffer.length - 1;
+				int[] spacesInGap = new int[gaps];
+				int spacesAdded = 0;
+				while (currentLength + spacesAdded < maxWidth) {
+					if (gaps != 0) {
+						for (int n = 0; n < spacesInGap.length && currentLength + spacesAdded < maxWidth; n++) {
+							spacesInGap[n]++;
+							spacesAdded++;
+						}
+					} 
+					else {
+						break;
+					}
+				}
+				sb1.append(increaseSpaces(buffer,spacesInGap));
+				while (sb1.length() < maxWidth) {
+					sb1.append(" ");
+				}
+				sol.add(sb1.toString());
+				sb.setLength(0);
+				added = x;
+				x--;
+			}
+			if (x == words.length - 1) {
+				StringBuilder sb1 = new StringBuilder();
+				for (int b = added; b <= x; b++) {
+					sb1.append(words[b]);
+					if (sb1.length() < maxWidth) {
+						sb1.append(" ");
+					}
+				}
+				int currentLength = sb1.length();
+				int rem = maxWidth - currentLength;
+				for (int a = 0; a < rem; a++) {
+					sb1.append(" ");
+				}
+				sol.add(sb1.toString());
+			}
+		}
+		return sol;
+	}
+	String increaseSpaces(String[] sentence, int[] spaces) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < sentence.length; i++) {
+			sb.append(sentence[i]);
+			if (i < sentence.length - 1 && i < spaces.length) {
+				for (int j = 0; j <= spaces[i]; j++) {
+					sb.append(" ");
+				}
+			}
+		}
+		return sb.toString();
+	}
+}

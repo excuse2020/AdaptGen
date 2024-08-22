@@ -1,0 +1,30 @@
+class Solution {
+	long minimumTime(int[] time, int totalTrips) {
+		long min = Long.MAX_VALUE;
+		for (int k = 0; k < time.length; k++) {
+			min = Math.min(min,time[k]);
+		}
+		long low = 0;
+		long total = totalTrips;
+		long high = min * total;
+		long minTime = 0;
+		while (low <= high) {
+			long midTime = low + (high - low) / 2;
+			long tripsCovered = 0;
+			for (int i = 0; i < time.length; i++) {
+				tripsCovered += (midTime / time[i]);
+				if (tripsCovered >= totalTrips) {
+					break;
+				}
+			}
+			if (tripsCovered >= totalTrips) {
+				minTime = midTime;
+				high = midTime - 1;
+			} 
+			else {
+				low = midTime + 1;
+			}
+		}
+		return minTime;
+	}
+}

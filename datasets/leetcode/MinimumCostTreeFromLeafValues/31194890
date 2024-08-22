@@ -1,0 +1,40 @@
+class Solution {
+	int maxFromRange(int start, int k, int[] arr) {
+		int min = Integer.MIN_VALUE;
+		for (int i = start; i <= k; i++) {
+			if (arr[i] > min) {
+				min = arr[i];
+			}
+		}
+		return min;
+	}
+	int mctFromLeafValues(int[] arr) {
+		int[][] dp = new int[arr.length + 1][arr.length + 1];
+		for (int i = 0; i < dp.length; i++) {
+			for (int j = 0; j < dp[i].length; j++) {
+				dp[i][j] = -1;
+			}
+		}
+		return solveMinCostMem(0,arr.length - 1,arr,dp);
+	}
+	int minCost(int a, int b) {
+		if (a < b) {
+			return a;
+		}
+		return b;
+	}
+	int solveMinCostMem(int start, int end, int[] arr, int[][] dp) {
+		if (start >= end) {
+			return 0;
+		}
+		if (dp[start][end] != -1) {
+			return dp[start][end];
+		}
+		int ans = Integer.MAX_VALUE;
+		for (int k = start; k < end; k++) {
+			ans = minCost(ans,maxFromRange(start,k,arr) * maxFromRange(k + 1,end,arr) + solveMinCostMem(start,k,arr,dp) + solveMinCostMem(k + 1,end,arr,dp));
+		}
+		dp[start][end] = ans;
+		return ans;
+	}
+}

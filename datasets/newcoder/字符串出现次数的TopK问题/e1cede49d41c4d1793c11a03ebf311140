@@ -1,0 +1,24 @@
+class Solution {
+	String[][] topKstrings(String[] strings, int k) {
+		HashMap<String, Integer> sc = new HashMap<>();
+		for (String s: strings) {	
+			sc.put(s,sc.getOrDefault(s,0) + 1);
+		}
+		PriorityQueue<String> heap = new PriorityQueue<>((a, b) -> {sc.get(a).equals(sc.get(b)) ? b.compareTo(a) : sc.get(a) - sc.get(b)});
+		for (String s: sc.keySet()) {	
+			heap.offer(s);
+			if (heap.size() > k) {
+				heap.poll();
+			}
+		}
+		String[][] res = new String[k][2];
+		int j = k - 1;
+		while (!heap.isEmpty()) {
+			String tmp = heap.poll();
+			res[j][0] = tmp;
+			res[j][1] = sc.get(tmp) + "";
+			j--;
+		}
+		return res;
+	}
+}

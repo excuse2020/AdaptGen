@@ -1,0 +1,44 @@
+class Solution {
+	String child, parent;
+	TreeNode LCA(TreeNode root, int start, int end) {
+		if (root == null) {
+			return root;
+		}
+		if (root.val == start || root.val == end) {
+			return root;
+		}
+		TreeNode left = LCA(root.left,start,end);
+		TreeNode right = LCA(root.right,start,end);
+		if (left != null && right != null) {
+			return root;
+		}
+		return left == null ? right : left;
+	}
+	boolean findDir(TreeNode root, int value, StringBuilder sb) {
+		if (root == null) {
+			return false;
+		}
+		if (root.val == value) {
+			return true;
+		}
+		if (findDir(root.left,value,sb)) {
+			sb.append("L");
+		} 
+		else if (findDir(root.right,value,sb)) {
+			sb.append("R");
+		}
+		return sb.length() > 0;
+	}
+	String getDirections(TreeNode root, int start, int end) {
+		TreeNode lca = LCA(root,start,end);
+		StringBuilder sbL = new StringBuilder();
+		StringBuilder sbR = new StringBuilder();
+		findDir(lca,start,sbL);
+		findDir(lca,end,sbR);
+		StringBuilder child = new StringBuilder();
+		for (int i = 0; i < sbL.length(); i++) {
+			child.append("U");
+		}
+		return child.toString() + sbR.reverse().toString();
+	}
+}

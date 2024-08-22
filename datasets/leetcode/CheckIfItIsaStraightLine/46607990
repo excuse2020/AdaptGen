@@ -1,0 +1,52 @@
+class Solution {
+	boolean checkStraightLine(int[][] coordinates) {
+		return smarter(coordinates);
+	}
+	boolean nasty(int[][] coordinates) {
+		Arrays.sort(coordinates,(a1, a2) -> {a1[0] - a2[0]});
+		int prevX = coordinates[0][0];
+		int prevY = coordinates[0][1];
+		int x = coordinates[1][0];
+		int y = coordinates[1][1];
+		int prevSlope = Integer.MIN_VALUE;
+		if (x != prevX) {
+			prevSlope = ((y - prevY) / (x - prevX));
+		}
+		prevX = x;
+		prevY = y;
+		for (int i = 2; i < coordinates.length; i++) {
+			x = coordinates[i][0];
+			y = coordinates[i][1];
+			if (x == prevX && prevSlope != Integer.MIN_VALUE) {
+				return false;
+			} 
+			else if (x == prevX) {
+				continue;
+			}
+			int slope = ((y - prevY) / (x - prevX));
+			if (slope != prevSlope) {
+				return false;
+			}
+			prevSlope = slope;
+			prevX = x;
+			prevY = y;
+		}
+		return true;
+	}
+	boolean smarter(int[][] coordinates) {
+		int X = coordinates[0][0];
+		int Y = coordinates[0][1];
+		int x = coordinates[1][0];
+		int y = coordinates[1][1];
+		int delX = (x - X);
+		int delY = (y - Y);
+		for (int[] coordinate: coordinates) {	
+			x = coordinate[0];
+			y = coordinate[1];
+			if (delX * (y - Y) != delY * (x - X)) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

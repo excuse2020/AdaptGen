@@ -1,0 +1,30 @@
+class Solution {
+	List<Integer[]> moves = List.of(new Integer{-1, 1},new Integer{0, 1},new Integer{1, 1});
+	boolean isValid(int i, int j, int[][] grid) {
+		return i >= 0 && i < grid.length && j >= 0 && j < grid[0].length;
+	}
+	int maxMoves(int[][] grid) {
+		int max = 0;
+		int[][] memo = new int[grid.length][grid[0].length];
+		for (int[] row: memo) {	
+			Arrays.fill(row,-1);
+		}
+		for (int i = 0; i < grid.length; i++) {
+			max = Math.max(max,slv(i,0,grid,memo));
+		}
+		return max;
+	}
+	int slv(int i, int j, int[][] grid, int[][] memo) {
+		int max = 0;
+		if (memo[i][j] != -1) {
+			return memo[i][j];
+		}
+		for (Integer[] move: moves) {	
+			int x = i + move[0], y = j + move[1];
+			if (isValid(x,y,grid) && grid[x][y] > grid[i][j]) {
+				max = Math.max(max,1 + slv(x,y,grid,memo));
+			}
+		}
+		return memo[i][j] = max;
+	}
+}

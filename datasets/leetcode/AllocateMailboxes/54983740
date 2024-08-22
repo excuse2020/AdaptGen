@@ -1,0 +1,53 @@
+class Solution {
+	int[] houses;
+	int[][][] memo;
+	int n;
+	int minDistance(int[] houses, int k) {
+		Arrays.sort(houses);
+		n = houses.length;
+		memo = new int[n][n][k + 1];
+		for (int[][] memo2d: memo) {	
+			for (int[] memo1d: memo2d) {	
+				Arrays.fill(memo1d,-1);
+			}
+		}
+		this.houses = houses;
+		return rec(0,n - 1,k);
+	}
+	int placeMailBox(int i, int j) {
+		if (i == j) {
+			return 0;
+		}
+		int mid = i + (j - i) / 2;
+		int median = -1;
+		int ans = 0;
+		if ((j - i + 1) % 2 != 0) {
+			median = houses[mid];
+		} 
+		else {
+			median = (houses[mid] + houses[mid + 1]) / 2;
+		}
+		for (int k = i; k <= j; k++) {
+			ans += Math.abs(median - houses[k]);
+		}
+		return ans;
+	}
+	int rec(int left, int right, int k) {
+		if (left == n) {
+			return n + 1;
+		}
+		if (memo[left][right][k] != -1) {
+			return memo[left][right][k];
+		}
+		if (k == 1) {
+			memo[left][right][k] = placeMailBox(left,right);
+			return memo[left][right][k];
+		}
+		int ans = Integer.MAX_VALUE;
+		for (int i = left; i <= right; i++) {
+			ans = Math.min(ans,placeMailBox(left,i) + rec(i + 1,right,k - 1));
+		}
+		memo[left][right][k] = ans;
+		return memo[left][right][k];
+	}
+}

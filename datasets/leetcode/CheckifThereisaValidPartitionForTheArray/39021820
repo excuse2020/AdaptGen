@@ -1,0 +1,26 @@
+class Solution {
+	Boolean[] dp;
+	boolean isValid(int[] nums, int index) {
+		if (index >= nums.length) {
+			return true;
+		}
+		if (dp[index] != null) {
+			return dp[index];
+		}
+		boolean f1 = false, f2 = false, f3 = false;
+		if (index < nums.length - 1 && nums[index] == nums[index + 1]) {
+			f1 = isValid(nums,index + 2);
+		}
+		if (index < nums.length - 2 && nums[index] == nums[index + 1] && nums[index + 1] == nums[index + 2]) {
+			f2 = isValid(nums,index + 3);
+		}
+		if (index < nums.length - 2 && nums[index + 1] - nums[index] == 1 && nums[index + 2] - nums[index + 1] == 1) {
+			f3 = isValid(nums,index + 3);
+		}
+		return dp[index] = f1 || f2;
+	}
+	boolean validPartition(int[] nums) {
+		dp = new Boolean[nums.length];
+		return isValid(nums,0);
+	}
+}

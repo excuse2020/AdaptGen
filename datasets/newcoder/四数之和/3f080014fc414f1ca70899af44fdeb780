@@ -1,0 +1,65 @@
+class Solution {
+	ArrayList<ArrayList<Integer>> fournumber(ArrayList<Integer> nums, int target) {
+		nums.sort(new ComparaInteger());
+		HashMap<Integer, Integer> eachNumberOccurrences = new HashMap<>();
+		ArrayList<Integer> TwoSum = new ArrayList<>();
+		HashMap<Integer, HashSet<ArrayList<Integer>>> twoSumGroups = new HashMap<>();
+		for (int i = 0; i < nums.size() - 1; i++) {
+			int occurrences = eachNumberOccurrences.getOrDefault(nums.get(i),0);
+			occurrences++;
+			eachNumberOccurrences.put(nums.get(i),occurrences);
+			for (int j = i + 1; j < nums.size(); j++) {
+				TwoSum.add(nums.get(i) + nums.get(j));
+				HashSet<ArrayList<Integer>> newSet = new HashSet<>();
+				HashSet<ArrayList<Integer>> previousSet = twoSumGroups.getOrDefault(nums.get(i) + nums.get(j),newSet);
+				ArrayList<Integer> currentArr = new ArrayList<>();
+				currentArr.add(nums.get(i));
+				currentArr.add(nums.get(j));
+				previousSet.add(currentArr);
+				twoSumGroups.put(nums.get(i) + nums.get(j),previousSet);
+			}
+		}
+		int occurrences = eachNumberOccurrences.getOrDefault(nums.get(nums.size() - 1),0);
+		occurrences++;
+		eachNumberOccurrences.put(nums.get(nums.size() - 1),occurrences);
+		HashSet<ArrayList<Integer>> ans = new HashSet<>();
+		HashMap<Integer, Integer> twoSumOccurrences = new HashMap<>();
+		for (int i = 0; i < TwoSum.size(); i++) {
+			occurrences = twoSumOccurrences.getOrDefault(target - TwoSum.get(i),-1);
+			if (occurrences != -1) {
+				HashSet<ArrayList<Integer>> groups1 = twoSumGroups.get(TwoSum.get(i));
+				HashSet<ArrayList<Integer>> groups2 = twoSumGroups.get(target - TwoSum.get(i));
+				for (ArrayList<Integer> tmpArr1: groups1) {	
+					for (ArrayList<Integer> tmpArr2: groups2) {	
+						ArrayList<Integer> copyArr = new ArrayList<>(tmpArr1);
+						copyArr.addAll(tmpArr2);
+						if (isValid(copyArr,eachNumberOccurrences)) {
+							copyArr.sort(new ComparaInteger());
+							ans.add(copyArr);
+						}
+					}
+				}
+			}
+			twoSumOccurrences.put(TwoSum.get(i),1);
+		}
+		ArrayList<ArrayList<Integer>> res = new ArrayList(ans);
+		return res;
+	}
+	boolean isValid(ArrayList<Integer> nums, HashMap<Integer, Integer> eachNumberOccurrences) {
+		HashMap<Integer, Integer> copyHash = new HashMap<>(eachNumberOccurrences);
+		for (int num: nums) {	
+			int acc = copyHash.get(num);
+			acc--;
+			if (acc < 0) {
+				return false;
+			}
+			copyHash.put(num,acc);
+		}
+		return true;
+	}
+	class ComparaInteger {
+		int compare(Integer num1, Integer num2) {
+			return num1 - num2;
+		}
+	}
+}

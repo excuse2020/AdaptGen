@@ -1,0 +1,37 @@
+class Solution {
+	TreeNode bstToGst(TreeNode root) {
+		List<Integer> s1 = new ArrayList<>();
+		preorder1(s1,root);
+		Collections.sort(s1);
+		preorder2(s1,root);
+		return root;
+	}
+	void preorder1(List<Integer> s1, TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		s1.add(root.val);
+		preorder1(s1,root.left);
+		preorder1(s1,root.right);
+	}
+	void preorder2(List<Integer> s1, TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		int elm = root.val;
+		int ss = 0;
+		for (int e = s1.size() - 1; e >= 0; e--) {
+			if (s1.get(e) == elm) {
+				ss = e;
+				break;
+			}
+		}
+		int res = 0;
+		for (int y = ss; y < s1.size(); y++) {
+			res += s1.get(y);
+		}
+		root.val = res;
+		preorder2(s1,root.left);
+		preorder2(s1,root.right);
+	}
+}

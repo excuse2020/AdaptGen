@@ -1,0 +1,38 @@
+class Solution {
+	ListNode mergeTwo(ListNode node1, ListNode node2) {
+		if (node1 == null || node2 == null) {
+			return node1 == null ? node2 : node1;
+		}
+		ListNode head = new ListNode(0);
+		ListNode tmp = head, tmp1 = node1, tmp2 = node2;
+		while (tmp1 != null && tmp2 != null) {
+			if (tmp1.val <= tmp2.val) {
+				tmp.next = tmp1;
+				tmp1 = tmp1.next;
+			} 
+			else {
+				tmp.next = tmp2;
+				tmp2 = tmp2.next;
+			}
+			tmp = tmp.next;
+		}
+		tmp.next = tmp1 == null ? tmp2 : tmp1;
+		return head.next;
+	}
+	ListNode sortInList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode slow = head;
+		ListNode fast = head.next;
+		while (fast != null && fast.next != null) {
+			slow = slow.next;
+			fast = fast.next.next;
+		}
+		ListNode newList = slow.next;
+		slow.next = null;
+		ListNode left = sortInList(head);
+		ListNode right = sortInList(newList);
+		return mergeTwo(left,right);
+	}
+}

@@ -1,0 +1,20 @@
+class Solution {
+	long maximumSubarraySum(int[] nums, int k) {
+		long res = 0L, sum = 0L;
+		int n = nums.length;
+		int[] lastIndex = new int[100_001];
+		Arrays.fill(lastIndex,-1);
+		for (int start = 0, end = 0; end < n; end++) {
+			while (lastIndex[nums[end]] != -1 || end - start + 1 > k) {
+				sum -= nums[start];
+				lastIndex[nums[start++]] = -1;
+			}
+			sum += nums[end];
+			if (end - start + 1 == k) {
+				res = Math.max(res,sum);
+			}
+			lastIndex[nums[end]] = end;
+		}
+		return res;
+	}
+}

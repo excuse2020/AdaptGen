@@ -1,0 +1,31 @@
+class Solution {
+	int MOD = (int) (1e9 + 7);
+	Integer dp;
+	int n, m, k;
+	int getWays(int idx, int cost, int max) {
+		if (idx >= n) {
+			return cost == k ? 1 : 0;
+		}
+		if (cost > k) {
+			return 0;
+		}
+		if (dp[idx][cost][max + 1] != null) {
+			return dp[idx][cost][max + 1];
+		}
+		int ways = 0;
+		for (int i = 1; i <= m; i++) {
+			int newCost = i > max ? cost + 1 : cost;
+			int newMax = i > max ? i : max;
+			ways += getWays(idx + 1,newCost,newMax);
+			ways %= MOD;
+		}
+		return dp[idx][cost][max + 1] = ways;
+	}
+	int numOfArrays(int n, int m, int k) {
+		this.n = n;
+		this.m = m;
+		this.k = k;
+		dp = new Integer[n + 1][k + 1][m + 2];
+		return getWays(0,0,-1);
+	}
+}

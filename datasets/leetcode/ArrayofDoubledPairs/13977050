@@ -1,0 +1,25 @@
+class Solution {
+	boolean canReorderDoubled(int[] arr) {
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int num: arr) {	
+			if (!map.containsKey(num)) {
+				map.put(num,0);
+			}
+			map.put(num,map.get(num) + 1);
+		}
+		List<Integer> list = new ArrayList<>(map.keySet());
+		Collections.sort(list,(a, b) -> {Integer.compare(Math.abs(a),Math.abs(b))});
+		for (int num: list) {	
+			int count = map.get(num);
+			if (count == 0) {
+				continue;
+			}
+			int pairCount = map.getOrDefault(2 * num,0);
+			if (count > pairCount) {
+				return false;
+			}
+			map.put(2 * num,pairCount - count);
+		}
+		return true;
+	}
+}

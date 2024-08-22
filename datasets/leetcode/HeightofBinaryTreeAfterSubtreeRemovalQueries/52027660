@@ -1,0 +1,38 @@
+class Solution {
+	Map<Integer, Integer> leftHeights;
+	Map<Integer, Integer> rightHeights;
+	Map<Integer, Integer> subtreeRemovedHeight;
+	int getHeights(TreeNode root, int height) {
+		if (root == null) {
+			return height - 1;
+		}
+		int leftHeight = getHeights(root.left,height + 1);
+		leftHeights.put(root.val,leftHeight);
+		int rightHeight = getHeights(root.right,height + 1);
+		rightHeights.put(root.val,rightHeight);
+		return Math.max(leftHeight,rightHeight);
+	}
+	void removeSubtreesAtRoot(TreeNode root, int height) {
+		if (root == null) {
+			return;
+		}
+		subtreeRemovedHeight.put(root.val,height);
+		removeSubtreesAtRoot(root.left,Math.max(height,rightHeights.get(root.val)));
+		removeSubtreesAtRoot(root.right,Math.max(height,leftHeights.get(root.val)));
+	}
+	int[] treeQueries(TreeNode root, int[] queries) {
+		if (root == null || queries == null || queries.length < 1) {
+			return new int[0];
+		}
+		leftHeights = new HashMap<>();
+		rightHeights = new HashMap<>();
+		subtreeRemovedHeight = new HashMap<>();
+		getHeights(root,0);
+		removeSubtreesAtRoot(root,0);
+		int[] result = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			result[i] = subtreeRemovedHeight.get(queries[i]);
+		}
+		return result;
+	}
+}

@@ -1,0 +1,35 @@
+class Solution {
+	int maxStarSum(int[] vals, int[][] edges, int k) {
+		List<List<Integer>> adj = new ArrayList<>();
+		int n = vals.length;
+		int max = Integer.MIN_VALUE;
+		for (int i = 0; i < n; i++) {
+			List<Integer> l = new ArrayList<>();
+			adj.add(l);
+		}
+		for (int x: edges) {	
+			adj.get(x[0]).add(x[1]);
+			adj.get(x[1]).add(x[0]);
+		}
+		int j = 0;
+		for (List<Integer> l: adj) {	
+			PriorityQueue<Integer> p = new PriorityQueue<>(Collections.reverseOrder());
+			for (int i: l) {	
+				p.add(vals[i]);
+			}
+			int x = k;
+			int sum = vals[j++];
+			max = Math.max(sum,max);
+			while (!p.isEmpty() && x-- > 0) {
+				if (sum + p.peek() > sum) {
+					sum += p.poll();
+				} 
+				else {
+					break;
+				}
+			}
+			max = Math.max(max,sum);
+		}
+		return max;
+	}
+}

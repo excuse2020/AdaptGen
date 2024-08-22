@@ -1,0 +1,38 @@
+class Solution {
+	boolean isPossible(int[] target) {
+		int sum = 0;
+		PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> {b - a});
+		for (int val: target) {	
+			sum += val;
+			pq.offer(val);
+		}
+		while (!pq.isEmpty()) {
+			if (pq.peek() == 1) {
+				return true;
+			}
+			if (sum > pq.size()) {
+				if (pq.size() == 1) {
+					return false;
+				}
+				int diff = sum - pq.peek();
+				int val = pq.peek() / diff;
+				if (val - 1 > 0) {
+					diff = diff * (val - 1);
+				}
+				sum -= pq.peek();
+				int newvalue = pq.remove() - diff;
+				if (newvalue < 1) {
+					return false;
+				} 
+				else {
+					pq.offer(newvalue);
+					sum += newvalue;
+				}
+			} 
+			else {
+				return false;
+			}
+		}
+		return true;
+	}
+}

@@ -1,0 +1,27 @@
+class Solution {
+	int cherryPickup(int[][] g) {
+		int n = g.length, m = g[0].length;
+		int base = new int[n][m][m];
+		int c = 0;
+		base[0][0][m - 1] = g[0][0] + g[0][m - 1];
+		for (int i = 1; i < n; i++) {
+			for (int l = 0; l <= i; l++) {
+				for (int r = m - 1; r > l && r > m - i; r--) {
+					base[i][l][r] = base[i - 1][l][r];
+					for (int j = Math.max(l - 1,0); j <= l + 1 && j < m; j++) {
+						for (int k = Math.max(r - 1,0); k <= r + 1 && k < m; k++) {
+							if (j < k) {
+								base[i][l][r] = Math.max(base[i][l][r],base[i - 1][j][k]);
+							}
+						}
+					}
+					base[i][l][r] += g[i][l] + g[i][r];
+					if (i == n - 1) {
+						c = Math.max(c,base[i][l][r]);
+					}
+				}
+			}
+		}
+		return c;
+	}
+}

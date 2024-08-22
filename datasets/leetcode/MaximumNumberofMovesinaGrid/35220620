@@ -1,0 +1,31 @@
+class Solution {
+	int dfs(int[][] grid, Map<Integer, Integer> map, int x, int y, int prev) {
+		int m = grid.length;
+		int n = grid[0].length;
+		if (x < 0 || x >= m || y < 0 || y >= n || grid[x][y] <= prev) {
+			return -1;
+		}
+		int pos = x * n + y;
+		if (map.containsKey(pos)) {
+			return map.get(pos);
+		}
+		int curr = grid[x][y];
+		int a = dfs(grid,map,x - 1,y + 1,curr);
+		int b = dfs(grid,map,x,y + 1,curr);
+		int c = dfs(grid,map,x + 1,y + 1,curr);
+		int value = Math.max(a,Math.max(b,c)) + 1;
+		map.put(pos,value);
+		return value;
+	}
+	int maxMoves(int[][] grid) {
+		int m = grid.length;
+		int n = grid[0].length;
+		int res = 0;
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < m; i++) {
+			int move = dfs(grid,map,i,0,0);
+			res = Math.max(res,move);
+		}
+		return res;
+	}
+}

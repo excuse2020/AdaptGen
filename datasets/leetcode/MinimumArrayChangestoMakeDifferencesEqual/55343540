@@ -1,0 +1,37 @@
+class Solution {
+	int minChanges(int[] nums, int k) {
+		HashMap<Integer, Integer> freq = new HashMap<>();
+		int n = nums.length;
+		int[] max = new int[n / 2];
+		for (int i = 0; i < n / 2; i++) {
+			int diff = (int) Math.abs(nums[i] - nums[n - i - 1]);
+			int high = (int) Math.max(nums[i],nums[n - i - 1]);
+			int low = (int) Math.min(nums[i],nums[n - i - 1]);
+			int a = high;
+			int b = k - low;
+			int maximum = (int) Math.max(a,b);
+			max[i] = maximum;
+			freq.put(diff,freq.getOrDefault(diff,0) + 1);
+		}
+		Arrays.sort(max);
+		int answer = Integer.MAX_VALUE;
+		for (int i: freq.keySet()) {	
+			int low = 0;
+			int high = (n / 2) - 1;
+			int ans = n / 2 - 1;
+			while (low <= high) {
+				int mid = (low + high) / 2;
+				if (max[mid] >= i) {
+					ans = mid;
+					high = mid - 1;
+				} 
+				else {
+					low = mid + 1;
+				}
+			}
+			int count = ans * 2 + (nums.length / 2 - ans) - freq.get(i);
+			answer = (int) Math.min(answer,count);
+		}
+		return answer;
+	}
+}

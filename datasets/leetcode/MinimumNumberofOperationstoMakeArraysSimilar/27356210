@@ -1,0 +1,61 @@
+class Solution {
+	long makeSimilar(int[] nums, int[] t) {
+		reconstruct(nums);
+		reconstruct(t);
+		for (int i = 0; i != nums.length; i++) {
+			t[i] -= nums[i];
+		}
+		Arrays.sort(t);
+		int l = 0;
+		while (t[l] < 0) {
+			l++;
+		}
+		if (l-- == 0) {
+			return 0;
+		}
+		int r = l;
+		while (t[r] <= 0) {
+			r++;
+		}
+		long ans = 0;
+		while (l != -1) {
+			if (-t[l] == t[r]) {
+				ans += t[r];
+				l--;
+				r++;
+			} 
+			else if (-t[l] < t[r]) {
+				ans -= t[l];
+				t[r] += t[l];
+				l--;
+			} 
+			else {
+				ans += t[r];
+				t[l] += t[r];
+				r++;
+			}
+		}
+		return ans >> 1;
+	}
+	void reconstruct(int[] arr) {
+		int l = 0, r = arr.length - 1;
+		while (l < r) {
+			if ((arr[l] & 1) == 1) {
+				l++;
+			} 
+			else if ((arr[r] & 1) == 0) {
+				r--;
+			} 
+			else {
+				int x = arr[l];
+				arr[l++] = arr[r];
+				arr[r--] = x;
+			}
+		}
+		if (l != arr.length && (arr[l] & 1) == 1) {
+			l++;
+		}
+		Arrays.sort(arr,0,l);
+		Arrays.sort(arr,l,arr.length);
+	}
+}

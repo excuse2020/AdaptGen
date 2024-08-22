@@ -1,0 +1,25 @@
+class Solution {
+	Map<Integer, List<Integer>> COPRIME = new HashMap<>();
+	int countBeautifulPairs(int[] nums) {
+		int n = nums.length;
+		int[][] ends = new int[n][10];
+		for (int i = n - 1; i > 0; i--) {
+			if (i != n - 1) {
+				System.arraycopy(ends[i + 1],0,ends[i],0,10);
+			}
+			int d = nums[i] % 10;
+			ends[i][d]++;
+		}
+		int sum = 0;
+		for (int i = 0; i < n - 1; i++) {
+			int num = nums[i];
+			while (num >= 10) {
+				num /= 10;
+			}
+			for (int d: COPRIME.get(num)) {	
+				sum += ends[i + 1][d];
+			}
+		}
+		return sum;
+	}
+}

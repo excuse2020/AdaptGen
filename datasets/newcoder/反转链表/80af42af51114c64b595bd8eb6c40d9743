@@ -1,0 +1,28 @@
+class Solution {
+	ArrayList<ArrayList<Integer>> resultList;
+	void dfs(int[] num, ArrayList<Integer> list, int sum, int index) {
+		if (list.size() >= 3 && sum != 0) {
+			return;
+		}
+		if (index <= num.length && sum == 0 && !resultList.contains(list) && list.size() == 3) {
+			resultList.add(new ArrayList<>(list));
+			return;
+		}
+		for (int i = index; i < num.length; i++) {
+			sum -= num[i];
+			list.add(num[i]);
+			dfs(num,list,sum,i + 1);
+			sum += num[i];
+			list.remove(list.size() - 1);
+		}
+	}
+	ArrayList<ArrayList<Integer>> threeSum(int[] num) {
+		resultList = new ArrayList<>();
+		if (num.length == 0) {
+			return resultList;
+		}
+		Arrays.sort(num);
+		dfs(num,new ArrayList<>(),0,0);
+		return resultList;
+	}
+}

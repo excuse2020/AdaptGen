@@ -1,0 +1,44 @@
+class Solution {
+	int[] findOriginalArray(int[] changed) {
+		int n = changed.length;
+		if (n % 2 == 1) {
+			return new int[0];
+		}
+		int ret = new int[n / 2];
+		int idx = 0;
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int x: changed) {	
+			map.put(x,map.getOrDefault(x,0) + 1);
+		}
+		Arrays.sort(changed);
+		for (int i = n - 1; i >= 0; --i) {
+			int x = changed[i];
+			if (x == 0 && map.containsKey(0)) {
+				int freq = map.get(0);
+				if (freq > 2) {
+					ret[idx++] = 0;
+					map.put(0,freq - 2);
+				} 
+				else if (freq == 2) {
+					ret[idx++] = 0;
+					map.remove(0);
+				}
+			} 
+			else if (x % 2 == 0 && map.containsKey(x / 2) && map.containsKey(x)) {
+				ret[idx++] = x / 2;
+				map.put(x,map.get(x) - 1);
+				map.put(x / 2,map.get(x / 2) - 1);
+				if (map.get(x) == 0) {
+					map.remove(x);
+				}
+				if (map.get(x / 2) == 0) {
+					map.remove(x / 2);
+				}
+			}
+			if (map.isEmpty() || idx == n / 2) {
+				break;
+			}
+		}
+		return idx == n / 2 ? ret : new int[0];
+	}
+}

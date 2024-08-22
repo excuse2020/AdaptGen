@@ -1,0 +1,47 @@
+class Solution {
+	List<Integer> dfs(int r, int c, int[][] land) {
+		if (r == land.length || c == land[0].length || land[r][c] == 0) {
+			return null;
+		}
+		land[r][c] = 0;
+		List<Integer> down = dfs(r + 1,c,land);
+		List<Integer> right = dfs(r,c + 1,land);
+		if (down == null && right == null) {
+			return Arrays.asList(r,c);
+		}
+		if (down != null) {
+			return down;
+		}
+		if (right != null) {
+			return right;
+		}
+		return null;
+	}
+	int[][] findFarmland(int[][] land) {
+		List<List<Integer>> resL = new ArrayList<>();
+		for (int r = 0; r < land.length; r++) {
+			for (int c = 0; c < land[r].length; c++) {
+				if (land[r][c] == 1) {
+					if (r + 1 == land.length && c + 1 == land[r].length) {
+						resL.add(Arrays.asList(r,c,r,c));
+						land[r][c] = 0;
+					} 
+					else {
+						List<Integer> otherPoint = dfs(r,c,land);
+						resL.add(Arrays.asList(r,c,otherPoint.get(0),otherPoint.get(1)));
+					}
+				}
+			}
+		}
+		int[][] res = new int[resL.size()][4];
+		int i = 0;
+		for (List<Integer> next: resL) {	
+			res[i][0] = next.get(0);
+			res[i][1] = next.get(1);
+			res[i][2] = next.get(2);
+			res[i][3] = next.get(3);
+			i++;
+		}
+		return res;
+	}
+}

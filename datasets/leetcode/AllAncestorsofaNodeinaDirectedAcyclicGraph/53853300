@@ -1,0 +1,58 @@
+class Solution {
+	List<List<Integer>> getAncestors(int n, int[][] edges) {
+		int[] inCount = new int[n];
+		ArrayList<Integer>[] outList = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			outList[i] = new ArrayList();
+		}
+		for (int[] edge: edges) {	
+			outList[edge[0]].add(edge[1]);
+			inCount[edge[1]]++;
+		}
+		int arrSize = (n + 63) / 64;
+		long[][] ancestors = new long[n][arrSize];
+		int[] que = new int[n];
+		int queIn = 0;
+		int queOut = 0;
+		for (int i = 0; i < n; i++) {
+			if (inCount[i] == 0) {
+				que[queIn++] = i;
+			}
+		}
+		while (queOut < queIn) {
+			int node = que[queOut++];
+			int bitIdx = node / 64;
+			long bitMask = 1L << (node & 63);
+			long[] nodeAncestors = ancestors[node];
+			for (int toNode: outList[node]) {	
+				long[] toAncestors = ancestors[toNode];
+				for (int j = 0; j < arrSize; j++) {
+					toAncestors[j] |= nodeAncestors[j];
+				}
+				toAncestors[bitIdx] |= bitMask;
+				if (--inCount[toNode] == 0) {
+					que[queIn++] = toNode;
+				}
+			}
+		}
+		List<List<Integer>> result = new ArrayList();
+		for (int node = 0; node < n; node++) {
+			List<Integer> list = outList[node];
+			list.clear();
+			long[] nodeAncestors = ancestors[node];
+			for (int i = 0; i < arrSize; i++) {
+				long mask = nodeAncestors[i];
+				int ancNode = i * 64;
+				while (mask != 0) {
+					if ((mask & 1) != 0) {
+						list.add(ancNode);
+					}
+					mask >>>= 1;
+					ancNode++;
+				}
+			}
+			result.add(list);
+		}
+		return result;
+	}
+}

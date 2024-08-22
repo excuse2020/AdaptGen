@@ -1,0 +1,38 @@
+class Solution {
+	boolean solve(int x, boolean[] visited, int[] left, int[] right) {
+		if (x == -1) {
+			return true;
+		}
+		if (visited[x]) {
+			return false;
+		}
+		visited[x] = true;
+		return solve(left[x],visited,left,right) && solve(right[x],visited,left,right);
+	}
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		int[] parentCount = new int[n];
+		boolean visited = new boolean[n];
+		int zp = 0;
+		for (int i = 0; i < n; i++) {
+			if (leftChild[i] > -1) {
+				parentCount[leftChild[i]]++;
+			}
+			if (rightChild[i] > -1) {
+				parentCount[rightChild[i]]++;
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			if (parentCount[i] == 0) {
+				boolean b = solve(i,visited,leftChild,rightChild);
+				int c = 0;
+				for (boolean bool: visited) {	
+					if (bool) {
+						c++;
+					}
+				}
+				return c == n && b;
+			}
+		}
+		return false;
+	}
+}

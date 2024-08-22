@@ -1,0 +1,39 @@
+class Solution {
+	int minimumTime(int n, int[][] relations, int[] time) {
+		int[] indegree = new int[n];
+		for (int[] i: relations) {	
+			indegree[i[1] - 1]++;
+		}
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int[] i: relations) {	
+			adj.get(i[0] - 1).add(i[1] - 1);
+		}
+		Queue<Integer> q = new LinkedList<>();
+		int[] dp = new int[n];
+		for (int i = 0; i < n; i++) {
+			if (indegree[i] == 0) {
+				q.add(i);
+			}
+			dp[i] = time[i];
+		}
+		while (!q.isEmpty()) {
+			int size = q.size();
+			int currmaxtime = 0;
+			for (int i = 0; i < size; i++) {
+				int num = q.remove();
+				for (int k: adj.get(num)) {	
+					dp[k] = Math.max(dp[k],dp[num] + time[k]);
+					indegree[k]--;
+					if (indegree[k] == 0) {
+						q.add(k);
+					}
+				}
+			}
+		}
+		Arrays.sort(dp);
+		return dp[n - 1];
+	}
+}

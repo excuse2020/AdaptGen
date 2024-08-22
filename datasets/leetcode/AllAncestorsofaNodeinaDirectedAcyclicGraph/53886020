@@ -1,0 +1,32 @@
+class Solution {
+	void dfs(int start, int current, List<List<Integer>> graph, List<List<Integer>> ancestors, boolean[] visited) {
+		for (int neighbor: graph.get(current)) {	
+			if (!visited[neighbor]) {
+				ancestors.get(neighbor).add(start);
+				visited[neighbor] = true;
+				dfs(start,neighbor,graph,ancestors,visited);
+			}
+		}
+	}
+	List<List<Integer>> getAncestors(int n, int[][] edges) {
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			graph.get(edge[0]).add(edge[1]);
+		}
+		List<List<Integer>> ancestors = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			ancestors.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			boolean[] visited = new boolean[n];
+			dfs(i,i,graph,ancestors,visited);
+		}
+		for (List<Integer> list: ancestors) {	
+			Collections.sort(list);
+		}
+		return ancestors;
+	}
+}

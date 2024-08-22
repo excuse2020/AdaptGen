@@ -1,0 +1,35 @@
+class Solution {
+	boolean check(int max, int[] nums, int opCount) {
+		for (int i = 0; i < nums.length; i++) {
+			if (nums[i] > max) {
+				if (opCount == 0) {
+					return false;
+				}
+				int operRed = (nums[i] % max == 0 ? (nums[i] / max) - 1 : nums[i] / max);
+				if (operRed > opCount) {
+					return false;
+				}
+				opCount -= operRed;
+			}
+		}
+		return true;
+	}
+	int minimumSize(int[] nums, int maxOperations) {
+		int left = 1;
+		int max = -1;
+		for (int i = 0; i < nums.length; i++) {
+			max = Math.max(max,nums[i]);
+		}
+		int right = max;
+		while (left < right) {
+			int mid = (left + right) / 2;
+			if (!check(mid,nums,maxOperations)) {
+				left = mid + 1;
+			} 
+			else {
+				right = mid;
+			}
+		}
+		return left;
+	}
+}

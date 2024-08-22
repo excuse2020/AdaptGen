@@ -1,0 +1,39 @@
+class Solution {
+	int minReorder(int n, int[][] connections) {
+		int[] distToZero = new int[n];
+		List<List<Integer>> adjList = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adjList.add(new ArrayList<>());
+		}
+		for (int[] e: connections) {	
+			adjList.get(e[0]).add(e[1]);
+			adjList.get(e[1]).add(e[0]);
+		}
+		Queue<Integer> queue = new ArrayDeque<>();
+		queue.offer(0);
+		boolean[] visited = new boolean[n];
+		visited[0] = true;
+		int dist = 0;
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				int curr = queue.poll();
+				distToZero[curr] = dist;
+				for (int nei: adjList.get(curr)) {	
+					if (!visited[nei]) {
+						queue.offer(nei);
+						visited[nei] = true;
+					}
+				}
+			}
+			dist++;
+		}
+		int ans = 0;
+		for (int[] e: connections) {	
+			if (distToZero[e[0]] < distToZero[e[1]]) {
+				ans++;
+			}
+		}
+		return ans;
+	}
+}

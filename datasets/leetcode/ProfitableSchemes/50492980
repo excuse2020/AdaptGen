@@ -1,0 +1,23 @@
+class Solution {
+	int mod = (int) (1e9 + 7);
+	int f(int[] profit, int[] group, int n, int minProfit, int i, int profitCollected, int totalPeople, Integer[][][] dp) {
+		if (i == profit.length && profitCollected >= minProfit && totalPeople <= n) {
+			return 1;
+		}
+		if (i == profit.length || totalPeople > n) {
+			return 0;
+		}
+		if (profitCollected > 100) {
+			profitCollected = 100;
+		}
+		if (dp[i][totalPeople][profitCollected] != null) {
+			return dp[i][totalPeople][profitCollected];
+		}
+		int take = f(profit,group,n,minProfit,i + 1,(profitCollected + profit[i]) % mod,(totalPeople + group[i]) % mod,dp);
+		int notTake = dp[i][totalPeople][profitCollected] = +f(profit,group,n,minProfit,i + 1,profitCollected,totalPeople,dp);
+		return dp[i][totalPeople][profitCollected] = (take + notTake) % mod;
+	}
+	int profitableSchemes(int n, int minProfit, int[] group, int[] profit) {
+		return f(profit,group,n,minProfit,0,0,0,new Integer[group.length + 1][n + 1][101]);
+	}
+}

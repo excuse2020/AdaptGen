@@ -1,0 +1,30 @@
+class Solution {
+	long far = 0;
+	List<List<int[]>> graph;
+	long max = 0;
+	void dfs(long cur, long pre, long dist) {
+		if (dist > max) {
+			max = dist;
+			far = cur;
+		}
+		for (int[] child: graph.get((int) cur)) {	
+			if (child[0] != (int) pre) {
+				dfs(child[0],cur,dist + child[1]);
+			}
+		}
+	}
+	int solve(int n, Interval[] Tree_edge, int[] Edge_value) {
+		graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int i = 0; i < Tree_edge.length; i++) {
+			graph.get(Tree_edge[i].start).add(new int{Tree_edge[i].end, Edge_value[i]});
+			graph.get(Tree_edge[i].end).add(new int{Tree_edge[i].start, Edge_value[i]});
+		}
+		dfs(0,-1,0);
+		max = 0;
+		dfs(far,-1,0);
+		return (int) max;
+	}
+}

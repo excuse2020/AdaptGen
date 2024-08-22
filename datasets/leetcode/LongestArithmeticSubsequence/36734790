@@ -1,0 +1,32 @@
+class Solution {
+	Integer[][] dp;
+	int longestArithSeqLength(int[] nums) {
+		dp = new Integer[nums.length][1001];
+		int n = nums.length;
+		if (n < 3) {
+			return n;
+		}
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = i + 1; j < n; j++) {
+				ans = Math.max(ans,2 + solve(nums,i,nums[j] - nums[i] + 500,n));
+			}
+		}
+		return ans;
+	}
+	int solve(int[] nums, int index, int diff, int n) {
+		if (index < 0) {
+			return 0;
+		}
+		if (dp[index][diff] != null) {
+			return dp[index][diff];
+		}
+		int currAns = 0;
+		for (int j = index - 1; j >= 0; j--) {
+			if (nums[index] - nums[j] + 500 == diff) {
+				currAns = Math.max(currAns,1 + solve(nums,j,diff,n));
+			}
+		}
+		return dp[index][diff] = currAns;
+	}
+}

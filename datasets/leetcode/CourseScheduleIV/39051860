@@ -1,0 +1,30 @@
+class Solution {
+	List<Boolean> checkIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
+		ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < numCourses; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int i = 0; i < prerequisites.length; i++) {
+			graph.get(prerequisites[i][0]).add(prerequisites[i][1]);
+		}
+		List<Boolean> answer = new ArrayList<>();
+		for (int i = 0; i < queries.length; i++) {
+			boolean visited = new boolean[numCourses];
+			Boolean ans = dfs(queries[i][0],queries[i][1],graph,visited);
+			answer.add(ans);
+		}
+		return answer;
+	}
+	boolean dfs(int src, int dest, ArrayList<ArrayList<Integer>> graph, boolean visited) {
+		visited[src] = true;
+		if (src == dest) {
+			return true;
+		}
+		for (int v: graph.get(src)) {	
+			if (visited[v] == false && dfs(v,dest,graph,visited)) {
+				return true;
+			}
+		}
+		return false;
+	}
+}

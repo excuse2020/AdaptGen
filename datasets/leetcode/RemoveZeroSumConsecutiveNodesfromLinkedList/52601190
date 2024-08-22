@@ -1,0 +1,38 @@
+class Solution {
+	ListNode removeZeroSumSublists(ListNode head) {
+		Stack<Integer> sumStack = new Stack<>();
+		Stack<ListNode> nodes = new Stack<>();
+		HashSet<Integer> sumSet = new HashSet<>();
+		ListNode curr = head;
+		int sum = 0;
+		while (curr != null) {
+			sum += curr.val;
+			if (sum == 0) {
+				ListNode temp = curr;
+				curr = curr.next;
+				temp.next = null;
+				head = curr;
+				sumStack = new Stack<>();
+				nodes = new Stack<>();
+				sumSet = new HashSet<>();
+			} 
+			else {
+				if (sumSet.contains(sum)) {
+					while (sumStack.peek() != sum) {
+						sumSet.remove(sumStack.pop());
+						nodes.pop();
+					}
+					nodes.peek().next = curr.next;
+					curr = curr.next;
+				} 
+				else {
+					sumStack.push(sum);
+					nodes.push(curr);
+					sumSet.add(sum);
+					curr = curr.next;
+				}
+			}
+		}
+		return head;
+	}
+}

@@ -1,0 +1,36 @@
+class Solution {
+	List<TreeNode> allPossibleFBT(int n) {
+		Object[] mem = new Object[n + 1];
+		List<TreeNode> list = new ArrayList<>();
+		list.add(new TreeNode(0));
+		mem[1] = list;
+		return solve(n,mem);
+	}
+	List<TreeNode> solve(int n, Object[] mem) {
+		if (n <= 0) {
+			return new ArrayList<>();
+		}
+		if (mem[n] != null) {
+			return (List<TreeNode>) mem[n];
+		}
+		List<TreeNode> tmp = new ArrayList<>();
+		int capacity = n - 1;
+		for (int i = 0; i < n; i++) {
+			List<TreeNode> right = solve(n - (i + 1),mem);
+			List<TreeNode> left = solve(i,mem);
+			int total = n - (i + 1) + i;
+			if ((total == capacity && capacity % 2 == 0 && !right.isEmpty() && !left.isEmpty())) {
+				for (int j = 0; j < right.size(); j++) {
+					for (int k = 0; k < left.size(); k++) {
+						TreeNode root = new TreeNode(0);
+						root.right = right.get(j);
+						root.left = left.get(k);
+						tmp.add(root);
+					}
+				}
+			}
+		}
+		mem[n] = tmp;
+		return tmp;
+	}
+}

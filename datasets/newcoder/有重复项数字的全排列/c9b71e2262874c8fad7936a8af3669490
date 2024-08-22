@@ -1,0 +1,29 @@
+class Solution {
+	ArrayList<ArrayList<Integer>> permuteUnique(int[] num) {
+		Arrays.sort(num);
+		ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
+		boolean[] arr = new boolean[num.length];
+		ArrayList<Integer> tmp = new ArrayList<Integer>();
+		recursion(ret,num,tmp,arr);
+		return ret;
+	}
+	void recursion(ArrayList<ArrayList<Integer>> ret, int[] num, ArrayList<Integer> tmp, boolean[] arr) {
+		if (num.length == tmp.size()) {
+			ret.add(new ArrayList<Integer>(tmp));
+			return;
+		}
+		for (int i = 0; i < num.length; i++) {
+			if (arr[i]) {
+				continue;
+			}
+			if (i > 0 && num[i] == num[i - 1] && !arr[i - 1]) {
+				continue;
+			}
+			arr[i] = true;
+			tmp.add(num[i]);
+			recursion(ret,num,tmp,arr);
+			arr[i] = false;
+			tmp.remove(tmp.size() - 1);
+		}
+	}
+}

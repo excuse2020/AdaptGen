@@ -1,0 +1,68 @@
+class Solution {
+	void fillLsm(int[] lsm, int[] arr, int n) {
+		Stack<Integer> stack = new Stack<>();
+		for (int i = 0; i < n; i++) {
+			if (stack.isEmpty()) {
+				lsm[i] = -1;
+			} 
+			else {
+				while (!stack.isEmpty() && arr[stack.peek()] > arr[i]) {
+					stack.pop();
+				}
+				lsm[i] = stack.isEmpty() ? -1 : stack.peek();
+			}
+			stack.push(i);
+		}
+	}
+	void fillRsm(int[] rsm, int[] arr, int n) {
+		Stack<Integer> stack = new Stack<>();
+		for (int i = n - 1; i >= 0; i--) {
+			if (stack.isEmpty()) {
+				rsm[i] = n;
+			} 
+			else {
+				while (!stack.isEmpty() && arr[stack.peek()] >= arr[i]) {
+					stack.pop();
+				}
+				rsm[i] = stack.isEmpty() ? n : stack.peek();
+			}
+			stack.push(i);
+		}
+	}
+	int sumSubarrayMins(int[] arr) {
+		return withMonotonicStack(arr);
+	}
+	int withBruteForce(int[] arr) {
+		int n = arr.length;
+		int minSum = 0;
+		int mod = (int) 1e9 + 7;
+		int i = 0;
+		while (i < n) {
+			int j = i;
+			int min = Integer.MAX_VALUE;
+			while (j < n) {
+				min = Math.min(min,arr[j]);
+				minSum = (minSum + min) % mod;
+				j++;
+			}
+			i++;
+		}
+		return minSum;
+	}
+	int withMonotonicStack(int[] arr) {
+		int n = arr.length;
+		int MOD = (int) 1e9 + 7;
+		int[] lsm = new int[n];
+		int[] rsm = new int[n];
+		fillLsm(lsm,arr,n);
+		fillRsm(rsm,arr,n);
+		long sum = 0;
+		for (int i = 0; i < n; i++) {
+			long noOfLeftSubArr = i - lsm[i];
+			long noOfRightSubArr = rsm[i] - i;
+			long tempSum = noOfLeftSubArr * noOfRightSubArr;
+			sum = (sum + tempSum) % MOD;
+		}
+		return (int) sum;
+	}
+}

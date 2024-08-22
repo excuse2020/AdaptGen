@@ -1,0 +1,24 @@
+class Solution {
+	int f(int i, int[] rods, int a, int[][] dp) {
+		if (i < 0) {
+			if (a == 0) {
+				return a;
+			}
+			return -(int)10e9;
+		}
+		if (dp[i][a + 5000] != -1) {
+			return dp[i][a + 5000];
+		}
+		int x = f(i - 1,rods,a,dp);
+		int y = rods[i] + f(i - 1,rods,a + rods[i],dp);
+		int z = f(i - 1,rods,a - rods[i],dp);
+		return dp[i][a + 5000] = Math.max(x,Math.max(y,z));
+	}
+	int tallestBillboard(int[] rods) {
+		int dp = new int[rods.length][10004];
+		for (int i = 0; i < rods.length; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		return f(rods.length - 1,rods,0,dp);
+	}
+}

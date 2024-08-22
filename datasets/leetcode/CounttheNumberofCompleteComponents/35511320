@@ -1,0 +1,59 @@
+class Solution {
+	int countCompleteComponents(int n, int[][] edges) {
+		int[] parent = new int[n];
+		int[] rank = new int[n];
+		int[] size = new int[n];
+		for (int i = 0; i < n; i++) {
+			parent[i] = i;
+			rank[i] = 1;
+			size[i] = 1;
+		}
+		int res = 0;
+		for (int[] e: edges) {	
+			union(parent,rank,size,find(parent,e[0]),find(parent,e[1]));
+		}
+		for (int i = 0; i < n; i++) {
+			if (parent[i] == i) {
+				int num = noOfEdge(parent,i,edges);
+				if (num == size[i] * (size[i] - 1) / 2) {
+					res++;
+				}
+			}
+		}
+		return res;
+	}
+	int find(int[] parent, int x) {
+		if (parent[x] == x) {
+			return x;
+		}
+		parent[x] = find(parent,parent[x]);
+		return parent[x];
+	}
+	int noOfEdge(int[] parent, int root, int[][] edges) {
+		int sum = 0;
+		for (int[] e: edges) {	
+			int p1 = parent[e[0]];
+			int p2 = parent[e[1]];
+			if (p1 == p2 && p2 == root) {
+				sum++;
+			}
+		}
+		return sum;
+	}
+	void union(int[] parent, int[] rank, int[] size, int x, int y) {
+		if (x == y) {
+			return;
+		}
+		if (rank[x] <= rank[y]) {
+			parent[x] = y;
+			if (rank[x] == rank[y]) {
+				rank[y]++;
+			}
+			size[y] += size[x];
+		} 
+		else {
+			parent[y] = x;
+			size[x] += size[y];
+		}
+	}
+}

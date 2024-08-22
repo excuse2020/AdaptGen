@@ -1,0 +1,68 @@
+class Solution {
+	int convert(int[] x) {
+		int n = x.length;
+		int ans = 0;
+		int j = 0;
+		for (int i = n - 1; i >= 0; i--) {
+			if (x[i] == 1) {
+				ans += 1 << j;
+			}
+			j++;
+		}
+		return ans;
+	}
+	List<Integer> goodSubsetofBinaryMatrix(int[][] grid) {
+		int n = grid.length;
+		int m = grid[0].length;
+		for (int i = 0; i < n; i++) {
+			boolean found = true;
+			for (int j = 0; j < m; j++) {
+				if (grid[i][j] == 1) {
+					found = false;
+				}
+			}
+			if (found) {
+				return Arrays.asList(i);
+			}
+		}
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			int[] x = grid[i];
+			int num = convert(x);
+			System.out.println(num);
+			int ans = neg(x,map,new int[m]);
+			if (ans != -1) {
+				return Arrays.asList(ans,i);
+			}
+			map.put(num,i);
+			System.out.println();
+		}
+		return new ArrayList<>();
+	}
+	int neg(int[] x, HashMap<Integer, Integer> map, int[] num) {
+		int n = x.length;
+		return solve(x,0,map,num);
+	}
+	int solve(int[] x, int i, HashMap<Integer, Integer> map, int[] num) {
+		int n = x.length;
+		if (i == n) {
+			int y = convert(num);
+			System.out.println(Arrays.toString(num) + " ");
+			if (map.containsKey(y)) {
+				return map.get(y);
+			}
+			return -1;
+		}
+		int ans = -1;
+		if (x[i] == 0) {
+			num[i] = 1;
+			ans = solve(x,i + 1,map,num);
+			num[i] = 0;
+		}
+		if (ans != -1) {
+			return ans;
+		}
+		ans = solve(x,i + 1,map,num);
+		return ans;
+	}
+}

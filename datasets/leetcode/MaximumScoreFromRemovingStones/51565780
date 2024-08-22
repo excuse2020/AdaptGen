@@ -1,0 +1,35 @@
+class Solution {
+	int maximumScore(int a, int b, int c) {
+		PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+		PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+		int ans = 0;
+		minHeap.add(a);
+		minHeap.add(b);
+		minHeap.add(c);
+		maxHeap.add(a);
+		maxHeap.add(b);
+		maxHeap.add(c);
+		while (!minHeap.isEmpty() && !maxHeap.isEmpty()) {
+			int max = maxHeap.poll() - 1;
+			int min = minHeap.poll() - 1;
+			ans++;
+			if (max > 0) {
+				maxHeap.add(max);
+				minHeap.remove(max + 1);
+				minHeap.add(max);
+			}
+			if (min > 0) {
+				minHeap.add(min);
+				maxHeap.remove(min + 1);
+				maxHeap.add(min);
+			}
+			if (min == 0) {
+				maxHeap.remove(min + 1);
+			}
+			if (minHeap.size() < 2 || maxHeap.size() < 2) {
+				break;
+			}
+		}
+		return ans;
+	}
+}

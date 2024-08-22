@@ -1,0 +1,39 @@
+class Solution {
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < numCourses; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int pair: prerequisites) {	
+			adj.get(pair[0]).add(pair[1]);
+		}
+		boolean visited = new boolean[numCourses];
+		boolean dfsVisited = new boolean[numCourses];
+		for (int i = 0; i < adj.size(); i++) {
+			if (!visited[i]) {
+				boolean ans = cycleChecker(i,visited,dfsVisited,adj);
+				if (ans) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	boolean cycleChecker(int i, boolean visited, boolean dfsvisited, ArrayList<ArrayList<Integer>> adj) {
+		visited[i] = true;
+		dfsvisited[i] = true;
+		for (Integer neighbor: adj.get(i)) {	
+			if (!visited[neighbor]) {
+				boolean ans = cycleChecker(neighbor,visited,dfsvisited,adj);
+				if (ans) {
+					return true;
+				}
+			} 
+			else if (dfsvisited[neighbor]) {
+				return true;
+			}
+		}
+		dfsvisited[i] = false;
+		return false;
+	}
+}

@@ -1,0 +1,31 @@
+class Solution {
+	int longestSquareStreak(int[] nums) {
+		Set<Double> set = new HashSet<>();
+		for (int num: nums) {	
+			set.add((double) num);
+		}
+		int maxLen = 1;
+		for (int j = 0; j < nums.length; j++) {
+			double num = (double) nums[j];
+			if (!set.contains(num)) {
+				continue;
+			}
+			set.remove(num);
+			double prev = num;
+			int len = 1;
+			while (set.contains(prev * prev)) {
+				len++;
+				set.remove(prev * prev);
+				prev *= prev;
+			}
+			prev = num;
+			while (set.contains(Math.sqrt(prev))) {
+				len++;
+				set.remove(Math.sqrt(prev));
+				prev = Math.sqrt(prev);
+			}
+			maxLen = Math.max(maxLen,len);
+		}
+		return (maxLen > 1) ? maxLen : -1;
+	}
+}

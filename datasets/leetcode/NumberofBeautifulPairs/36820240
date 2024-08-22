@@ -1,0 +1,45 @@
+class Solution {
+	int countBeautifulPairs(int[] nums) {
+		Map<String, Integer> hash = new HashMap<>();
+		int bPairs = 0;
+		for (int i = 0; i < nums.length; i++) {
+			int fDigit = getFirstDigit(nums[i]);
+			for (int j = i + 1; j < nums.length; j++) {
+				int lDigit = getLastDigit(nums[j]);
+				String num = "" + fDigit;
+				if (hash.get(num) == null) {
+					boolean coPrime;
+					int gc = gcd(fDigit,lDigit);
+					if (gc == 1) {
+						bPairs++;
+					}
+					hash.put(num,gc);
+				} 
+				else {
+					int gc = hash.get(num);
+					if (gc == 1) {
+						bPairs++;
+					}
+				}
+			}
+		}
+		return bPairs;
+	}
+	int gcd(int a, int b) {
+		if (a == 0) {
+			return b;
+		}
+		return gcd(b % a,a);
+	}
+	int getFirstDigit(int num) {
+		int rem = 0;
+		while (num > 0) {
+			rem = num % 10;
+			num = num / 10;
+		}
+		return rem;
+	}
+	int getLastDigit(int num) {
+		return num % 10;
+	}
+}

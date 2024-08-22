@@ -1,0 +1,66 @@
+class Solution {
+	int dfs(int index, HashMap<Integer, ArrayList<Integer>> map, boolean stackVisited) {
+		if (stackVisited[index] == true) {
+			return 0;
+		}
+		stackVisited[index] = true;
+		if (map.containsKey(index) == false) {
+			return 1;
+		}
+		ArrayList<Integer> list = map.get(index);
+		int answer = 1;
+		for (int i = 0; i < list.size(); i++) {
+			int temp = dfs(list.get(i),map,stackVisited);
+			answer += temp;
+		}
+		return answer;
+	}
+	int maximumDetonation(int[][] bombs) {
+		HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+		for (int i = 0; i < bombs.length; i++) {
+			for (int j = i + 1; j < bombs.length; j++) {
+				long value = ((long) bombs[j][0] - (long) bombs[i][0]) * ((long) bombs[j][0] - (long) bombs[i][0]) + ((long) bombs[j][1] - (long) bombs[i][1]) * ((long) bombs[j][1] - (long) bombs[i][1]);
+				if (value <= (long) bombs[i][2] * (long) bombs[i][2]) {
+					if (map.containsKey(i)) {
+						ArrayList<Integer> list = map.get(i);
+						list.add(j);
+					} 
+					else {
+						ArrayList<Integer> list = new ArrayList<>();
+						list.add(j);
+						map.put(i,list);
+					}
+				}
+				if (value <= (long) bombs[j][2] * (long) bombs[j][2]) {
+					if (map.containsKey(j)) {
+						ArrayList<Integer> list = map.get(j);
+						list.add(i);
+					} 
+					else {
+						ArrayList<Integer> list = new ArrayList<>();
+						list.add(i);
+						map.put(j,list);
+					}
+				}
+			}
+		}
+		for (int i = 0; i < bombs.length; i++) {
+			if (map.containsKey(i) == false) {
+				System.out.println(i + "not any children ");
+			} 
+			else {
+				System.out.println(map.get(i));
+			}
+		}
+		int visited = new int[bombs.length];
+		int answer = Integer.MIN_VALUE;
+		for (int i = 0; i < bombs.length; i++) {
+			boolean stackVisited = new boolean[bombs.length];
+			int temp = dfs(i,map,stackVisited);
+			if (temp > answer) {
+				answer = temp;
+			}
+		}
+		return answer;
+	}
+}

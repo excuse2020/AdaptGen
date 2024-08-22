@@ -1,0 +1,41 @@
+class Solution {
+	long distinctNames(String[] ideas) {
+		Map<Character, Set<String>> map = new HashMap<>();
+		long ans = 0;
+		for (String word: ideas) {	
+			char fch = word.charAt(0);
+			String suffix = word.length() > 1 ? word.substring(1) : "";
+			Set<String> set = null;
+			if (map.containsKey(fch)) {
+				set = map.get(fch);
+				set.add(suffix);
+				map.put(fch,set);
+			} 
+			else {
+				set = new HashSet();
+				set.add(suffix);
+				map.put(fch,set);
+			}
+		}
+		for (Map.Entry<Character, Set<String>> itr1: map.entrySet()) {	
+			for (Map.Entry<Character, Set<String>> itr2: map.entrySet()) {	
+				if (itr1.getKey() < itr2.getKey()) {
+					int c1 = 0;
+					int c2 = 0;
+					for (String s: itr1.getValue()) {	
+						if (itr2.getValue().contains(s) == false) {
+							c1++;
+						}
+					}
+					for (String s: itr2.getValue()) {	
+						if (itr1.getValue().contains(s) == false) {
+							c2++;
+						}
+					}
+					ans += c1 * c2;
+				}
+			}
+		}
+		return ans;
+	}
+}

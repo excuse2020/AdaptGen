@@ -1,0 +1,26 @@
+class Solution {
+	int gcd(int a, int b) {
+		while (b != 0) {
+			int t = a % b;
+			a = b;
+			b = t;
+		}
+		return a;
+	}
+	int nthMagicalNumber(int n, int a, int b) {
+		long lcm = a * b / gcd(a,b);
+		long k = (long) (n * lcm / (lcm / a + lcm / b - 1));
+		long[] variants = new long[4];
+		variants[0] = (k / a + (k % a != 0 ? 1 : 0)) * a;
+		variants[1] = (k / b + (k % b != 0 ? 1 : 0)) * b;
+		variants[2] = variants[0] - a;
+		variants[3] = variants[1] - b;
+		for (long t: variants) {	
+			long p = t / a + t / b - t / lcm;
+			if (p == n) {
+				return (int) (t % 1000000007);
+			}
+		}
+		return -1;
+	}
+}

@@ -1,0 +1,46 @@
+class lengthComparator {
+	int compare(String a, String b) {
+		return Integer.compare(a.length(),b.length());
+	}
+}
+class Solution {
+	boolean isPredecessor(String word1, String word2) {
+		if (word1.length() != word2.length() - 1) {
+			return false;
+		}
+		int i = 0, j = 0;
+		int n = word1.length(), m = word2.length();
+		while (j < m) {
+			if (i < n && word1.charAt(i) == word2.charAt(j)) {
+				i++;
+				j++;
+			} 
+			else {
+				j++;
+			}
+		}
+		if (i == n && j == m) {
+			return true;
+		} 
+		else {
+			return false;
+		}
+	}
+	int longestStrChain(String[] words) {
+		int longStrChainLen = 0;
+		Arrays.sort(words,new lengthComparator());
+		int[] dp = new int[words.length];
+		Arrays.fill(dp,1);
+		for (int i = 0; i < words.length; i++) {
+			String word2 = words[i];
+			for (int prev = 0; prev < i; prev++) {
+				String word1 = words[prev];
+				if (isPredecessor(word1,word2) && dp[prev] + 1 > dp[i]) {
+					dp[i] = 1 + dp[prev];
+				}
+			}
+			longStrChainLen = Math.max(longStrChainLen,dp[i]);
+		}
+		return longStrChainLen;
+	}
+}

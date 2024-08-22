@@ -1,0 +1,47 @@
+class Solution {
+	int MAX = (int) 1e8;
+	int t;
+	int helper(int[] houses, int[][] cost, int n, int ind, int prev, int target) {
+		if (ind < 0 && target == 0) {
+			return 0;
+		} 
+		else if (ind < 0 || target < 0) {
+			return MAX;
+		}
+		if (t[ind][prev][target] != -1) {
+			return t[ind][prev][target];
+		}
+		if (houses[ind] != 0) {
+			if (prev == 0 || prev != houses[ind]) {
+				t[ind][prev][target] = helper(houses,cost,n,ind - 1,houses[ind],target - 1);
+			} 
+			else {
+				t[ind][prev][target] = helper(houses,cost,n,ind - 1,houses[ind],target);
+			}
+			return t[ind][prev][target];
+		}
+		int min = MAX;
+		for (int i = 1; i <= n; i++) {
+			int temp = Integer.MAX_VALUE;
+			if (prev == 0 || prev != i) {
+				temp = helper(houses,cost,n,ind - 1,i,target - 1);
+			} 
+			else {
+				temp = helper(houses,cost,n,ind - 1,i,target);
+			}
+			min = Math.min(min,temp + cost[ind][i - 1]);
+		}
+		t[ind][prev][target] = min;
+		return min;
+	}
+	int minCost(int[] houses, int[][] cost, int m, int n, int target) {
+		t = new int[houses.length + 1][n + 1][target + 1];
+		for (int i = 0; i < t.length; i++) {
+			for (int j = 0; j < t[0].length; j++) {
+				Arrays.fill(t[i][j],-1);
+			}
+		}
+		int ans = helper(houses,cost,n,houses.length - 1,0,target);
+		return ans == MAX ? -1 : ans;
+	}
+}

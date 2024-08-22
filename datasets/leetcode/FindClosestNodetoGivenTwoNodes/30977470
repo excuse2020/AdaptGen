@@ -1,0 +1,36 @@
+class Solution {
+	int[] bfs(int[] edges, int n, int startNode) {
+		int[] shortPathes = new int[n];
+		Arrays.fill(shortPathes,Integer.MAX_VALUE);
+		shortPathes[startNode] = 0;
+		Queue<Integer> q = new LinkedList<>();
+		q.add(startNode);
+		boolean[] visited = new boolean[n];
+		visited[startNode] = true;
+		while (!q.isEmpty()) {
+			int curNode = q.remove();
+			int child = edges[curNode];
+			if (child == -1 || visited[child]) {
+				continue;
+			}
+			visited[child] = true;
+			shortPathes[child] = shortPathes[curNode] + 1;
+			q.add(child);
+		}
+		return shortPathes;
+	}
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		int n = edges.length;
+		int[] pathesFromNode1 = bfs(edges,n,node1);
+		int[] pathesFromNode2 = bfs(edges,n,node2);
+		int minNode = -1;
+		int minPath = Integer.MAX_VALUE;
+		for (int i = 0; i < n; i++) {
+			if (Math.max(pathesFromNode1[i],pathesFromNode2[i]) < minPath) {
+				minNode = i;
+				minPath = Math.max(pathesFromNode1[i],pathesFromNode2[i]);
+			}
+		}
+		return minNode;
+	}
+}

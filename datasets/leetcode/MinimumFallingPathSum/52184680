@@ -1,0 +1,42 @@
+class Solution {
+	int dp(int[][] matrix, int row, int col, int[][] dp) {
+		if (row == 0) {
+			return matrix[row][col];
+		}
+		if (col == 0) {
+			int up = (dp[row - 1][col] == -10001) ? dp(matrix,row - 1,col,dp) : dp[row - 1][col];
+			int upright = (dp[row - 1][col + 1] == -10001) ? dp(matrix,row - 1,col + 1,dp) : dp[row - 1][col + 1];
+			dp[row][col] = Math.min(up,upright) + matrix[row][col];
+			return dp[row][col];
+		} 
+		else if (col == matrix.length - 1) {
+			int up = (dp[row - 1][col] == -10001) ? dp(matrix,row - 1,col,dp) : dp[row - 1][col];
+			int upleft = (dp[row - 1][col - 1] == -10001) ? dp(matrix,row - 1,col - 1,dp) : dp[row - 1][col - 1];
+			dp[row][col] = Math.min(up,upleft) + matrix[row][col];
+			return dp[row][col];
+		} 
+		else {
+			int up = (dp[row - 1][col] == -10001) ? dp(matrix,row - 1,col,dp) : dp[row - 1][col];
+			int upleft = (dp[row - 1][col - 1] == -10001) ? dp(matrix,row - 1,col - 1,dp) : dp[row - 1][col - 1];
+			int upright = (dp[row - 1][col + 1] == -10001) ? dp(matrix,row - 1,col + 1,dp) : dp[row - 1][col + 1];
+			dp[row][col] = Math.min(up,Math.min(upright,upleft)) + matrix[row][col];
+			return dp[row][col];
+		}
+	}
+	int minFallingPathSum(int[][] matrix) {
+		int[][] dp = new int[matrix.length][matrix.length];
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix.length; j++) {
+				dp[i][j] = -10001;
+			}
+		}
+		if (matrix.length == 1) {
+			return matrix[0][0];
+		}
+		int res = Integer.MAX_VALUE;
+		for (int i = 0; i < matrix.length; i++) {
+			res = Math.min(res,dp(matrix,matrix.length - 1,i,dp));
+		}
+		return res;
+	}
+}

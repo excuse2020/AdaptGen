@@ -1,0 +1,76 @@
+class Solution {
+	void help(int[][] edges, int[][] w) {
+		for (int e: edges) {	
+			int u = e[0];
+			int v = e[1];
+			e[2] = w[u][v];
+			if (e[2] == -1) {
+				e[2] = (int) 1e9 + 1;
+			}
+		}
+	}
+	int[][] modifiedGraphEdges(int n, int[][] edges, int src, int dst, int t) {
+		int[][] dp = new int[n][n];
+		for (int i = 0; i < n; i++) {
+			Arrays.fill(dp[i],(int) 1e9 + 1);
+		}
+		for (int i = 0; i < n; i++) {
+			dp[i][i] = 0;
+		}
+		List<int[]> list = new ArrayList();
+		int[][] w = new int[n][n];
+		for (int e: edges) {	
+			int u = e[0];
+			int v = e[1];
+			int d = e[2];
+			w[u][v] = d;
+			w[v][u] = d;
+			if (d != -1) {
+				dp[u][v] = d;
+				dp[v][u] = d;
+			} 
+			else {
+				list.add(new int{u, v});
+			}
+		}
+		for (int k = 0; k < n; k++) {
+			for (int i = 0; i < n; i++) {
+				for (int j = 0; j < n; j++) {
+					dp[i][j] = Math.min(dp[i][j],dp[i][k] + dp[k][j]);
+				}
+			}
+		}
+		if (dp[src][dst] < t) {
+			return new int[0][0];
+		}
+		if (dp[src][dst] == t) {
+			help(edges,w);
+			return edges;
+		}
+		for (int[] e: list) {	
+			int u = e[0];
+			int v = e[1];
+			w[u][v] = 1;
+			w[v][u] = 1;
+			dp[u][v] = 1;
+			dp[v][u] = 1;
+			for (int i = 0; i < n; i++) {
+				for (int j = 0; j < n; j++) {
+					dp[i][j] = Math.min(dp[i][j],dp[i][u] + dp[u][j]);
+				}
+			}
+			for (int i = 0; i < n; i++) {
+				for (int j = 0; j < n; j++) {
+					dp[i][j] = Math.min(dp[i][j],dp[i][v] + dp[v][j]);
+				}
+			}
+			if (dp[src][dst] <= t) {
+				w[u][v] += t - dp[src][dst];
+				w[v][u] += t - dp[src][dst];
+				help(edges,w);
+				return edges;
+			}
+		}
+		return new int[0][0];
+	}
+}

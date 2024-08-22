@@ -1,0 +1,27 @@
+class Solution {
+	TreeNode sortedListToBST(ListNode head) {
+		if (head == null) {
+			return null;
+		}
+		if (head.next == null) {
+			return new TreeNode(head.val);
+		}
+		ListNode slowParent = null;
+		ListNode slow = head;
+		ListNode fast = head;
+		while (slow.next != null && fast.next != null && fast.next.next != null) {
+			slowParent = slow;
+			slow = slow.next;
+			fast = fast.next.next;
+		}
+		TreeNode root = new TreeNode(slow.val);
+		if (slow != head) {
+			slowParent.next = null;
+			root.left = sortedListToBST(head);
+		}
+		if (slow.next != null) {
+			root.right = sortedListToBST(slow.next);
+		}
+		return root;
+	}
+}

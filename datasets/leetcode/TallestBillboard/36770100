@@ -1,0 +1,27 @@
+class Solution {
+	int dp;
+	int offset = 5000;
+	int helper(int rods, int idx, int diff) {
+		if (idx >= rods.length) {
+			if (diff == 0) {
+				return 0;
+			}
+			return Integer.MIN_VALUE;
+		}
+		if (dp[idx][diff + offset] != -1) {
+			return dp[idx][diff + offset];
+		}
+		int ans1 = helper(rods,idx + 1,diff);
+		int ans2 = rods[idx] + helper(rods,idx + 1,diff + rods[idx]);
+		int ans3 = helper(rods,idx + 1,diff - rods[idx]);
+		return dp[idx][diff + offset] = Math.max(ans1,Math.max(ans2,ans3));
+	}
+	int tallestBillboard(int[] rods) {
+		dp = new int[rods.length][2 * offset + 1];
+		for (var a: dp) {	
+			Arrays.fill(a,-1);
+		}
+		int ans = helper(rods,0,0);
+		return ans < 0 ? 0 : ans;
+	}
+}

@@ -1,0 +1,23 @@
+class Solution {
+	int maxPerformance(int n, int[] speed, int[] efficiency, int k) {
+		long mat = new long[n][2];
+		int mod = (int) 1e9 + 7;
+		for (int i = 0; i < n; i++) {
+			mat[i][0] = 1L * speed[i];
+			mat[i][1] = 1L * efficiency[i];
+		}
+		Arrays.sort(mat,(a, b) -> {Long.compare(b[1],a[1])});
+		PriorityQueue<Long> pq = new PriorityQueue<>();
+		long curr = 0;
+		long ans = 0;
+		for (int i = 0; i < n; i++) {
+			curr += mat[i][0];
+			if (pq.size() == k) {
+				curr -= pq.poll();
+			}
+			pq.add(mat[i][0]);
+			ans = Math.max(ans,curr * mat[i][1]);
+		}
+		return (int) (ans % mod);
+	}
+}

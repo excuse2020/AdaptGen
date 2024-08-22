@@ -1,0 +1,38 @@
+class Solution {
+	ArrayList<ArrayList<Integer>> permute(int[] num) {
+		ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
+		if (num.length == 0) {
+			return result;
+		}
+		if (num.length == 1) {
+			ArrayList<Integer> tmp = new ArrayList<Integer>();
+			tmp.add(num[0]);
+			result.add(tmp);
+			return result;
+		}
+		int firstNum = num[0];
+		int[] lastNums = new int[num.length - 1];
+		for (int index = 1; index < num.length; index++) {
+			lastNums[index - 1] = num[index];
+		}
+		ArrayList<ArrayList<Integer>> tmpResult = new ArrayList<ArrayList<Integer>>();
+		tmpResult = permute(lastNums);
+		for (int i = 0; i < tmpResult.size(); i++) {
+			for (int addIndex = 0; addIndex <= lastNums.length; addIndex++) {
+				ArrayList<Integer> tmp = new ArrayList<Integer>();
+				int x = 0;
+				for (; x < tmpResult.get(i).size(); x++) {
+					if (x == addIndex) {
+						tmp.add(firstNum);
+					}
+					tmp.add(tmpResult.get(i).get(x));
+				}
+				if (x == addIndex) {
+					tmp.add(firstNum);
+				}
+				result.add(tmp);
+			}
+		}
+		return result;
+	}
+}

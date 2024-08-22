@@ -1,0 +1,30 @@
+class Solution {
+	long subArrayRanges(int[] nums) {
+		Deque<Integer> stack = new ArrayDeque<>();
+		long res = 0;
+		long[] dp = new long[nums.length];
+		for (int i = 0; i < nums.length; i++) {
+			while (!stack.isEmpty() && nums[stack.getLast()] > nums[i]) {
+				stack.removeLast();
+			}
+			int j = stack.isEmpty() ? -1 : stack.getLast();
+			long lastElementMinSum = j < 0 ? 0 : dp[j];
+			dp[i] = lastElementMinSum + (long) (i - j) * nums[i];
+			res -= dp[i];
+			stack.addLast(i);
+		}
+		stack.clear();
+		dp = new long[nums.length];
+		for (int i = 0; i < nums.length; i++) {
+			while (!stack.isEmpty() && nums[stack.getLast()] < nums[i]) {
+				stack.removeLast();
+			}
+			int j = stack.isEmpty() ? -1 : stack.getLast();
+			long lastElementMaxSum = j < 0 ? 0 : dp[j];
+			dp[i] = lastElementMaxSum + (long) (i - j) * nums[i];
+			res += dp[i];
+			stack.addLast(i);
+		}
+		return res;
+	}
+}

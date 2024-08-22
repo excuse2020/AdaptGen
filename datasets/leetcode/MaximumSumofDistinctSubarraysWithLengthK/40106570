@@ -1,0 +1,23 @@
+class Solution {
+	long maximumSubarraySum(int[] nums, int k) {
+		long maxSubarraySum = 0;
+		long windowSum = 0;
+		int windowStart = 0;
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < nums.length; i++) {
+			windowSum += nums[i];
+			map.put(nums[i],map.getOrDefault(nums[i],0) + 1);
+			if (i >= k - 1) {
+				if (map.size() == k) {
+					maxSubarraySum = Math.max(maxSubarraySum,windowSum);
+				}
+				windowSum -= nums[i + 1 - k];
+				map.put(nums[i + 1 - k],map.get(nums[i + 1 - k]) - 1);
+				if (map.get(nums[i + 1 - k]) == 0) {
+					map.remove(nums[i + 1 - k]);
+				}
+			}
+		}
+		return maxSubarraySum;
+	}
+}

@@ -1,0 +1,29 @@
+class Solution {
+	int integerReplacement(int n) {
+		if (n == Integer.MAX_VALUE) {
+			return 32;
+		}
+		Map<Integer, Integer> dp = new HashMap<>();
+		return solve(n,dp);
+	}
+	int solve(int n, Map<Integer, Integer> dp) {
+		if (n == 1) {
+			return 0;
+		}
+		if (dp.get(n) != null) {
+			return dp.get(n);
+		}
+		int evenMove = Integer.MAX_VALUE;
+		int oddMove1 = Integer.MAX_VALUE;
+		int oddMove2 = Integer.MAX_VALUE;
+		if (n % 2 == 0) {
+			evenMove = 1 + solve(n / 2,dp);
+		} 
+		else {
+			oddMove1 = 1 + solve(n + 1,dp);
+			oddMove2 = 1 + solve(n - 1,dp);
+		}
+		dp.put(n,Math.min(evenMove,Math.min(oddMove1,oddMove2)));
+		return Math.min(evenMove,Math.min(oddMove1,oddMove2));
+	}
+}

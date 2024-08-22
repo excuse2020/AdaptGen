@@ -1,0 +1,35 @@
+class Solution {
+	int maxPathSum(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(root);
+		int max = Integer.MIN_VALUE;
+		while (!queue.isEmpty()) {
+			TreeNode top = queue.poll();
+			int sum = top.val;
+			if (top.left != null) {
+				queue.add(top.left);
+				int sumLeft = sumOfPath(top.left);
+				sum = sum + sumLeft;
+			}
+			if (top.right != null) {
+				queue.add(top.right);
+				int sumRight = sumOfPath(top.right);
+				sum = sum + sumRight;
+			}
+			max = Math.max(max,sum);
+		}
+		return max;
+	}
+	int sumOfPath(TreeNode node) {
+		if (node == null) {
+			return 0;
+		}
+		int leftMax = sumOfPath(node.left);
+		int rightMax = sumOfPath(node.right);
+		int ans = Math.max(leftMax,rightMax) + node.val;
+		return ans > 0 ? ans : 0;
+	}
+}

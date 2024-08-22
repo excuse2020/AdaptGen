@@ -1,0 +1,56 @@
+class Solution {
+	int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
+		int n = startTime.length;
+		int s = 0;
+		int[] mem = new int[n];
+		Arrays.fill(mem,-1);
+		StartIndex[] list = new StartIndex[n];
+		for (int i = 0; i < n; i++) {
+			StartIndex a = new StartIndex();
+			a.start = startTime[i];
+			a.end = endTime[i];
+			a.profit = profit[i];
+			list[i] = a;
+		}
+		Arrays.sort(list);
+		return solve(list,n,s,mem);
+	}
+	int solve(StartIndex[] list, int n, int s, int[] mem) {
+		if (n - s == 1) {
+			return list[s].profit;
+		}
+		if (s >= n) {
+			return 0;
+		}
+		if (mem[s] != -1) {
+			return mem[s];
+		}
+		int notIncluded = solve(list,n,s + 1,mem);
+		int e = list[s].end;
+		int newStart = n;
+		int l = s;
+		int r = n;
+		while (l < r) {
+			int mid = (l + r) / 2;
+			if (list[mid].start >= e) {
+				r = mid;
+				newStart = mid;
+			} 
+			else {
+				l = mid + 1;
+			}
+		}
+		int included = list[s].profit + solve(list,n,newStart,mem);
+		int result = Math.max(included,notIncluded);
+		mem[s] = result;
+		return result;
+	}
+}
+class StartIndex {
+	int end;
+	int profit;
+	int start;
+	int compareTo(StartIndex obj) {
+		return this.start - obj.start;
+	}
+}

@@ -1,0 +1,48 @@
+class Solution {
+	double minimumAverage(int[] nums) {
+		int max = nums[0];
+		for (int num: nums) {	
+			if (num > max) {
+				max = num;
+			}
+		}
+		int[] copy = new int[max + 1];
+		for (int num: nums) {	
+			copy[num]++;
+		}
+		int start = 0;
+		int end = copy.length - 1;
+		double minAvg = Double.MAX_VALUE;
+		while (start <= end) {
+			double loaclMin = 0d;
+			double localMax = 0d;
+			if (copy[start] > 0) {
+				loaclMin = start;
+			} 
+			else {
+				start++;
+			}
+			if (copy[end] > 0) {
+				localMax = end;
+			} 
+			else {
+				end--;
+			}
+			if (loaclMin > 0 && localMax > 0) {
+				copy[start]--;
+				copy[end]--;
+				double avg = (loaclMin + localMax) / 2;
+				if (avg < minAvg) {
+					minAvg = avg;
+				}
+				if (copy[start] <= 0) {
+					start++;
+				}
+				if (copy[end] <= 0) {
+					end--;
+				}
+			}
+		}
+		return minAvg;
+	}
+}

@@ -1,0 +1,33 @@
+class Solution {
+	ListNode merge(ListNode p1, ListNode p2) {
+		if (p1 == null) {
+			return p2;
+		}
+		if (p2 == null) {
+			return p1;
+		}
+		if (p1.val < p2.val) {
+			p1.next = merge(p1.next,p2);
+			return p1;
+		} 
+		else {
+			p2.next = merge(p1,p2.next);
+			return p2;
+		}
+	}
+	ListNode mergeKLists(ArrayList<ListNode> lists) {
+		if (lists.size() == 0) {
+			return null;
+		}
+		return split(lists,0,lists.size() - 1);
+	}
+	ListNode split(ArrayList<ListNode> lists, int i, int j) {
+		if (i == j) {
+			return lists.get(i);
+		}
+		int m = (i + j) >>> 1;
+		ListNode p1 = split(lists,i,m);
+		ListNode p2 = split(lists,m + 1,j);
+		return merge(p1,p2);
+	}
+}

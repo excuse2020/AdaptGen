@@ -1,0 +1,43 @@
+class Solution {
+	String PrintMinNumber(int[] numbers) {
+		if (numbers == null || numbers.length < 1) {
+			return "";
+		}
+		String[] sts = new String[numbers.length];
+		for (int i = 0; i < numbers.length; i++) {
+			sts[i] = String.valueOf(numbers[i]);
+		}
+		StringBuilder sb = new StringBuilder();
+		partition(sts,0,numbers.length - 1);
+		for (String num: sts) {	
+			sb.append(num);
+		}
+		return sb.toString();
+	}
+	void partition(String[] nums, int left, int right) {
+		if (nums == null || nums.length < 1) {
+			return;
+		}
+		if (left >= right) {
+			return;
+		}
+		int i = left;
+		int j = right;
+		String temp = nums[i];
+		while (i < j) {
+			while ((nums[j] + nums[left]).compareTo(nums[left] + nums[j]) >= 0 && i < j) {
+				j--;
+			}
+			while ((nums[i] + nums[left]).compareTo(nums[left] + nums[i]) <= 0 && i < j) {
+				i++;
+			}
+			temp = nums[i];
+			nums[i] = nums[j];
+			nums[j] = temp;
+		}
+		nums[i] = nums[left];
+		nums[left] = temp;
+		partition(nums,left,i - 1);
+		partition(nums,i + 1,right);
+	}
+}

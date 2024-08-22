@@ -1,0 +1,35 @@
+class Solution {
+	int maxTotalR(int[] rewards, int[] tracker, int[] remember, int res) {
+		int maxRw = 0, r = res;
+		if (remember[res] > 0) {
+			return remember[res];
+		}
+		for (int i = r + 1; i < tracker.length; i++) {
+			res = r;
+			if (tracker[i] > 0) {
+				res += i;
+				res = Math.max(res,maxTotalR(rewards,tracker,remember,res));
+				if (res > maxRw) {
+					maxRw = res;
+				}
+			}
+			remember[res] = maxRw;
+		}
+		remember[res] = maxRw;
+		return maxRw;
+	}
+	int maxTotalReward(int[] rewardValues) {
+		int max = 0;
+		for (int j = 0; j < rewardValues.length; j++) {
+			if (rewardValues[j] > max) {
+				max = rewardValues[j];
+			}
+		}
+		int[] tracker = new int[max + 2];
+		int[] remember = new int[4000];
+		for (int i = 0; i < rewardValues.length; i++) {
+			tracker[rewardValues[i]] = 1;
+		}
+		return maxTotalR(rewardValues,tracker,remember,0);
+	}
+}

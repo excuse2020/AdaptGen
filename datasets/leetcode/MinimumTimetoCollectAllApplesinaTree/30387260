@@ -1,0 +1,32 @@
+class Solution {
+	int dfs(int v, List<List<Integer>> graph, List<Boolean> hasApple, boolean[] visited) {
+		int mytime = 0;
+		if (visited[v] == true) {
+			return 0;
+		}
+		visited[v] = true;
+		for (int i = 0; i < graph.get(v).size(); i++) {
+			mytime += dfs(graph.get(v).get(i),graph,hasApple,visited);
+		}
+		if (hasApple.get(v) == true && mytime == 0) {
+			return 2;
+		}
+		if (hasApple.get(v) == false && mytime == 0) {
+			return 0;
+		}
+		return mytime + 2;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		List<List<Integer>> graph = new ArrayList();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList());
+		}
+		for (int a: edges) {	
+			graph.get(a[0]).add(a[1]);
+			graph.get(a[1]).add(a[0]);
+		}
+		boolean[] visited = new boolean[n];
+		int ans = dfs(0,graph,hasApple,visited);
+		return ans == 0 ? 0 : ans - 2;
+	}
+}

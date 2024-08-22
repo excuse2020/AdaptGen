@@ -1,0 +1,42 @@
+class Solution {
+	Map<Integer, List<Integer>> adjMap;
+	int dfs(int i, boolean[] visited) {
+		int ans = 1;
+		visited[i] = true;
+		for (int next: adjMap.get(i)) {	
+			if (visited[next]) {
+				continue;
+			}
+			ans += dfs(next,visited);
+		}
+		return ans;
+	}
+	boolean inRange(int[] bomb1, int[] bomb2) {
+		long x2 = (long) (bomb1[0] - bomb2[0]) * (bomb1[0] - bomb2[0]);
+		long y2 = (long) (bomb1[1] - bomb2[1]) * (bomb1[1] - bomb2[1]);
+		long r2 = (long) bomb1[2] * bomb1[2];
+		return r2 >= x2 + y2;
+	}
+	int maximumDetonation(int[][] bombs) {
+		adjMap = new HashMap<>();
+		int n = bombs.length;
+		for (int i = 0; i < n; i++) {
+			adjMap.put(i,new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (i == j) {
+					continue;
+				}
+				if (inRange(bombs[i],bombs[j])) {
+					adjMap.get(i).add(j);
+				}
+			}
+		}
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			ans = Math.max(ans,dfs(i,new boolean[n]));
+		}
+		return ans;
+	}
+}

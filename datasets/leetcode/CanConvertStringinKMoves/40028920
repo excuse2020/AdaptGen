@@ -1,0 +1,37 @@
+class Solution {
+	boolean canConvert(String s, String t, int[] modulos) {
+		char first, second;
+		int distance;
+		for (int i = 0; i < s.length(); i++) {
+			first = s.charAt(i);
+			second = t.charAt(i);
+			if (first != second) {
+				distance = first < second ? second - first : (26 - first) + second;
+				if (--modulos[distance] < 0) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	boolean canConvertString(String s, String t, int k) {
+		if (k == 0) {
+			return s.equals(t);
+		} 
+		else if (s.length() != t.length()) {
+			return false;
+		}
+		int[] modulos = getModulos(k);
+		return canConvert(s,t,modulos);
+	}
+	int[] getModulos(int k) {
+		int[] modulos = new int[26];
+		int div = k / 26;
+		Arrays.fill(modulos,div);
+		k = k % 26;
+		while (k >= 0) {
+			modulos[k--]++;
+		}
+		return modulos;
+	}
+}

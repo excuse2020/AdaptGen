@@ -1,0 +1,27 @@
+class Solution {
+	int MOD = (int) 1E9 + 7;
+	int maxSumMinProduct(int[] nums) {
+		if (nums == null || nums.length == 0) {
+			return 0;
+		}
+		int N = nums.length;
+		long[] sums = new long[N + 1];
+		for (int i = 1; i <= N; i++) {
+			sums[i] = sums[i - 1] + nums[i - 1];
+		}
+		long res = Long.MIN_VALUE;
+		Deque<Integer> stack = new ArrayDeque<>();
+		for (int i = 0; i <= N; i++) {
+			int cur = i == N ? 0 : nums[i];
+			while (!stack.isEmpty() && cur <= nums[stack.peek()]) {
+				int min = nums[stack.pop()];
+				int j = stack.isEmpty() ? 0 : stack.peek() + 1;
+				long sum = sums[i] - sums[j];
+				long prod = min * sum;
+				res = Math.max(res,prod);
+			}
+			stack.push(i);
+		}
+		return (int) (res % MOD);
+	}
+}

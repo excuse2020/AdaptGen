@@ -1,0 +1,48 @@
+class Solution {
+	int maxNumberOfAlloys(int n, int k, int b, List<List<Integer>> cn, List<Integer> st, List<Integer> co) {
+		int[][] ca = new int[k][n];
+		int[] s = new int[n];
+		int smax = 0;
+		int[] c = new int[n];
+		for (int i = 0; i < n; i++) {
+			s[i] = st.get(i);
+			c[i] = co.get(i);
+			if (smax < s[i]) {
+				smax = s[i];
+			}
+		}
+		for (int i = 0; i < k; i++) {
+			List<Integer> li = cn.get(i);
+			for (int j = 0; j < n; j++) {
+				ca[i][j] = li.get(j);
+			}
+		}
+		int l, r, m, max = 0;
+		for (int[] q: ca) {	
+			l = 0;
+			r = b / n + smax;
+			while (l < r) {
+				m = (l + r) / 2;
+				if (possible(m,s,c,b,q)) {
+					l = m;
+				} 
+				else {
+					r = m - 1;
+				}
+			}
+			if (max < r) {
+				max = r;
+			}
+		}
+		return max;
+	}
+	boolean possible(long x, int[] s, int[] c, long b, int[] q) {
+		for (int i = 0; i < q.length; i++) {
+			b -= Math.max(x * q[i] - s[i],0L) * c[i];
+			if (b < 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

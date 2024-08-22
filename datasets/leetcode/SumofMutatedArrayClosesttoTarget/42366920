@@ -1,0 +1,47 @@
+class Solution {
+	int findBestValue(int[] arr, int target) {
+		int right = arr[0];
+		int left;
+		int sum = 0;
+		for (int num: arr) {	
+			right = Math.max(right,num);
+		}
+		left = (int) Math.round((double) target / arr.length);
+		while (left < right) {
+			int mid = left + (right - left) / 2;
+			int temp_sum = 0;
+			for (int num: arr) {	
+				temp_sum += mid < num ? mid : num;
+			}
+			if (temp_sum > target) {
+				right = mid - 1;
+			} 
+			else if (temp_sum < target) {
+				left = mid + 1;
+			} 
+			else {
+				return mid;
+			}
+		}
+		int left_one = left - 1;
+		int right_one = left + 1;
+		int sum_left_one = 0, sum_left = 0, sum_right_one = 0;
+		for (int num: arr) {	
+			sum_left_one += left_one < num ? left_one : num;
+			sum_left += left < num ? left : num;
+			sum_right_one += right_one < num ? right_one : num;
+		}
+		sum_left_one = Math.abs(sum_left_one - target);
+		sum_left = Math.abs(sum_left - target);
+		sum_right_one = Math.abs(sum_right_one - target);
+		if (sum_left_one <= sum_left && sum_left_one <= sum_right_one) {
+			return left_one;
+		} 
+		else if (sum_left < sum_left_one && sum_left <= sum_right_one) {
+			return left;
+		} 
+		else {
+			return right_one;
+		}
+	}
+}

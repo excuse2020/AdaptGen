@@ -1,0 +1,32 @@
+class Solution {
+	int maxPointsInsideSquare(int[][] points, String s) {
+		List<Integer> halfSides = new ArrayList<>(points.length);
+		for (int[] point: points) {	
+			halfSides.add(Math.max(Math.abs(point[0]),Math.abs(point[1])));
+		}
+		Map<Character, Integer> tagMaxHalfSide = new HashMap<>();
+		int discardLimit = Integer.MAX_VALUE;
+		for (int i = 0; i < halfSides.size(); i++) {
+			char ch = s.charAt(i);
+			Integer now = halfSides.get(i);
+			if (tagMaxHalfSide.containsKey(ch)) {
+				if (now < tagMaxHalfSide.get(ch)) {
+					int temp = tagMaxHalfSide.get(ch);
+					tagMaxHalfSide.put(ch,now);
+					now = temp;
+				}
+				discardLimit = Math.min(discardLimit,now);
+			} 
+			else {
+				tagMaxHalfSide.put(ch,now);
+			}
+		}
+		int ans = 0;
+		for (int halfSide: halfSides) {	
+			if (halfSide < discardLimit) {
+				ans++;
+			}
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,50 @@
+class Solution {
+	boolean canFormGroup(int node, List<Integer>[] adj, boolean[] group1, boolean[] group2, boolean isGroup1) {
+		for (int neighbour: adj[node]) {	
+			if (isGroup1) {
+				if (group2[neighbour]) {
+					return false;
+				}
+				if (!group1[neighbour]) {
+					group1[neighbour] = true;
+					if (!canFormGroup(neighbour,adj,group1,group2,!isGroup1)) {
+						return false;
+					}
+				}
+			} 
+			else {
+				if (group1[neighbour]) {
+					return false;
+				}
+				if (!group2[neighbour]) {
+					group2[neighbour] = true;
+					if (!canFormGroup(neighbour,adj,group1,group2,!isGroup1)) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		List<Integer>[] adj = new List[n + 1];
+		for (int i = 0; i < adj.length; i++) {
+			adj[i] = new ArrayList<>();
+		}
+		for (int[] dislike: dislikes) {	
+			adj[dislike[0]].add(dislike[1]);
+			adj[dislike[1]].add(dislike[0]);
+		}
+		boolean[] group1 = new boolean[n + 1];
+		boolean[] group2 = new boolean[n + 1];
+		for (int node = 1; node <= n; node++) {
+			if (!group1[node] && !group2[node]) {
+				group1[node] = true;
+				if (!canFormGroup(node,adj,group1,group2,false)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

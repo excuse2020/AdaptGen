@@ -1,0 +1,57 @@
+class Solution {
+	int minSideJumps(int[] obstacles) {
+		int curr_lane = 2;
+		int pos = 0;
+		Integer memo = new Integer[obstacles.length][4];
+		return solve(pos,curr_lane,obstacles,memo);
+	}
+	int solve(int pos, int curr_lane, int obstacles, Integer memo) {
+		if (pos >= obstacles.length || pos == obstacles.length - 1) {
+			return 0;
+		}
+		if (memo[pos][curr_lane] != null) {
+			return memo[pos][curr_lane];
+		}
+		int ans = Integer.MAX_VALUE;
+		if (obstacles[pos + 1] != curr_lane) {
+			return 0 + solve(pos + 1,curr_lane,obstacles,memo);
+		} 
+		else {
+			if (curr_lane == 2) {
+				int ans1 = Integer.MAX_VALUE;
+				int ans2 = Integer.MAX_VALUE;
+				if (obstacles[pos] != 1) {
+					ans1 = 1 + solve(pos,1,obstacles,memo);
+				}
+				if (obstacles[pos] != 3) {
+					ans2 = 1 + solve(pos,3,obstacles,memo);
+				}
+				ans = Math.min(ans1,ans2);
+			}
+			if (curr_lane == 1) {
+				int ans1 = Integer.MAX_VALUE;
+				int ans2 = Integer.MAX_VALUE;
+				if (obstacles[pos] != 2) {
+					ans1 = 1 + solve(pos,2,obstacles,memo);
+				}
+				if (obstacles[pos] != 3) {
+					ans2 = 1 + solve(pos,3,obstacles,memo);
+				}
+				ans = Math.min(ans1,ans2);
+			}
+			if (curr_lane == 3) {
+				int ans1 = Integer.MAX_VALUE;
+				int ans2 = Integer.MAX_VALUE;
+				if (obstacles[pos] != 1) {
+					ans1 = 1 + solve(pos,1,obstacles,memo);
+				}
+				if (obstacles[pos] != 2) {
+					ans2 = 1 + solve(pos,2,obstacles,memo);
+				}
+				ans = Math.min(ans1,ans2);
+			}
+		}
+		memo[pos][curr_lane] = ans;
+		return ans;
+	}
+}

@@ -1,0 +1,42 @@
+class Solution {
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		List<List<Integer>> res = new ArrayList<>();
+		var vis = new boolean[n];
+		var timeIn = new int[n];
+		var lowTime = new int[n];
+		var adj = generateAdj(n,connections);
+		dfs(0,-1,0,adj,vis,timeIn,lowTime,res);
+		return res;
+	}
+	void dfs(int v, int parent, int count, Map<Integer, List<Integer>> adj, boolean[] vis, int[] timeIn, int[] lowTime, List<List<Integer>> res) {
+		if (vis[v]) {
+			return;
+		}
+		if (!vis[v]) {
+			timeIn[v] = count;
+			lowTime[v] = count;
+		}
+		vis[v] = true;
+		for (var nei: adj.get(v)) {	
+			if (nei == parent) {
+				continue;
+			}
+			dfs(nei,v,count + 1,adj,vis,timeIn,lowTime,res);
+			lowTime[v] = Math.min(lowTime[nei],lowTime[v]);
+			if (timeIn[v] < lowTime[nei]) {
+				res.add(List.of(v,nei));
+			}
+		}
+	}
+	Map<Integer, List<Integer>> generateAdj(int n, List<List<Integer>> connections) {
+		Map<Integer, List<Integer>> res = new HashMap<>();
+		for (int v = 0; v < n; v++) {
+			res.put(v,new ArrayList<>());
+		}
+		for (var connection: connections) {	
+			res.get(connection.get(0)).add(connection.get(1));
+			res.get(connection.get(1)).add(connection.get(0));
+		}
+		return res;
+	}
+}

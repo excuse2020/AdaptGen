@@ -1,0 +1,27 @@
+class Solution {
+	int[] cache = new int[5100];
+	int[][] costs;
+	int n;
+	int bestCost(int i, int aCount) {
+		if (i == costs.length) {
+			return 0;
+		}
+		int k = i + 100 * aCount;
+		if (cache[k] != 0) {
+			return cache[k];
+		}
+		cache[k] = Integer.MAX_VALUE;
+		if (aCount < n) {
+			cache[k] = costs[i][0] + bestCost(i + 1,aCount + 1);
+		}
+		if (i - aCount < n) {
+			cache[k] = Math.min(cache[k],costs[i][1] + bestCost(i + 1,aCount));
+		}
+		return cache[k];
+	}
+	int twoCitySchedCost(int[][] costs) {
+		n = costs.length / 2;
+		this.costs = costs;
+		return bestCost(0,0);
+	}
+}

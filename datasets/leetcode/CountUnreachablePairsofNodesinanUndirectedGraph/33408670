@@ -1,0 +1,38 @@
+class Solution {
+	long countPairs(int n, int[][] edges) {
+		long ans = 0;
+		ArrayList<ArrayList<Integer>> arr = new ArrayList<ArrayList<Integer>>();
+		for (int i = 0; i < n; i++) {
+			arr.add(new ArrayList<Integer>());
+		}
+		for (int i: edges) {	
+			arr.get(i[0]).add(i[1]);
+			arr.get(i[1]).add(i[0]);
+		}
+		int vis = new int[n];
+		ArrayList<Long> con = new ArrayList<Long>();
+		long sum = 0;
+		for (int i = 0; i < n; i++) {
+			if (vis[i] == 0) {
+				long tmp = dfs(i,vis,arr);
+				sum += tmp;
+				con.add(tmp);
+			}
+		}
+		for (long it: con) {	
+			sum -= it;
+			ans += (it * sum);
+		}
+		return ans;
+	}
+	long dfs(int edge, int[] vis, ArrayList<ArrayList<Integer>> graph) {
+		vis[edge] = 1;
+		long count = 1;
+		for (int adj: graph.get(edge)) {	
+			if (vis[adj] == 0) {
+				count += dfs(adj,vis,graph);
+			}
+		}
+		return count;
+	}
+}

@@ -1,0 +1,67 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		if (head1 == null || head2 == null) {
+			return null;
+		}
+		ListNode p1 = reverseListNode(head1);
+		ListNode p2 = reverseListNode(head2);
+		ListNode res = new ListNode(0);
+		ListNode cur = res;
+		int carry = 0;
+		while (p1 != null || p2 != null || carry > 0) {
+			int value1 = p1 != null ? p1.val : 0;
+			int value2 = p2 != null ? p2.val : 0;
+			int temp = value1 + value2;
+			carry = temp / 10;
+			cur.next = new ListNode(temp % 10);
+			cur = cur.next;
+			p1 = p1 == null ? null : p1.next;
+			p2 = p2 == null ? null : p2.next;
+		}
+		return reverseListNode(res.next);
+	}
+	ListNode addInList2(ListNode head1, ListNode head2) {
+		Stack<Integer> s1 = new Stack<Integer>();
+		Stack<Integer> s2 = new Stack<Integer>();
+		Stack<Integer> s3 = new Stack<Integer>();
+		while (head1 != null) {
+			s1.push(head1.val);
+			head1 = head1.next;
+		}
+		while (head2 != null) {
+			s2.push(head2.val);
+			head2 = head2.next;
+		}
+		ListNode res = new ListNode(0);
+		ListNode cur = res;
+		int result = 0;
+		int enter = 0;
+		while (!s1.isEmpty() || !s2.isEmpty()) {
+			int value1 = s1.isEmpty() ? 0 : s1.pop();
+			int value2 = s2.isEmpty() ? 0 : s2.pop();
+			int value = value1 + value2;
+			enter = value >= 10 ? 1 : 0;
+			int point = value % 10;
+			s3.push(point);
+		}
+		if (enter == 1) {
+			s3.push(enter);
+		}
+		while (!s3.isEmpty()) {
+			cur.next = new ListNode(s3.pop());
+			cur = cur.next;
+		}
+		return res.next;
+	}
+	ListNode reverseListNode(ListNode head) {
+		ListNode pre = null;
+		ListNode cur = head;
+		while (cur != null) {
+			ListNode temp = cur.next;
+			cur.next = pre;
+			pre = cur;
+			cur = temp;
+		}
+		return pre;
+	}
+}

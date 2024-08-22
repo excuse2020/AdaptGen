@@ -1,0 +1,43 @@
+class Solution {
+	String largestNumber(int[] cost, int target) {
+		Set<Integer> set = new HashSet();
+		for (int i = 8; i >= 0; i--) {
+			if (set.contains(cost[i])) {
+				cost[i] = -1;
+			} 
+			else {
+				set.add(cost[i]);
+			}
+		}
+		Map<Integer, StringBuilder> dp = new HashMap<>();
+		StringBuilder reverseAns = recurseLargeNumber(cost,target,dp);
+		if (reverseAns == null) {
+			return "0";
+		} 
+		else {
+			return reverseAns.reverse().toString();
+		}
+	}
+	StringBuilder recurseLargeNumber(int[] cost, int target, Map<Integer, StringBuilder> dp) {
+		if (target == 0) {
+			return new StringBuilder();
+		}
+		if (dp.containsKey(target)) {
+			return dp.get(target);
+		}
+		int maxLenSoFar = 0;
+		StringBuilder ans = null;
+		for (int i = 8; i >= 0; i--) {
+			if (cost[i] != -1 && cost[i] <= target) {
+				StringBuilder subProblemAns = recurseLargeNumber(cost,target - cost[i],dp);
+				if (subProblemAns != null && subProblemAns.length() + 1 > maxLenSoFar) {
+					subProblemAns = new StringBuilder(subProblemAns);
+					ans = subProblemAns.append(String.valueOf(i + 1));
+					maxLenSoFar = ans.length();
+				}
+			}
+		}
+		dp.put(target,ans);
+		return ans;
+	}
+}

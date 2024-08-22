@@ -1,0 +1,27 @@
+class Solution {
+	Long[][] dp;
+	long mod = 1000000007;
+	int numRollsToTarget(int n, int k, int target) {
+		dp = new Long[n + 1][target + 1];
+		return (int) (solve(n,k,target) % mod);
+	}
+	long solve(int n, int k, int target) {
+		if (n <= 0) {
+			if (target == 0) {
+				return 1;
+			}
+			return 0;
+		}
+		if (target < 0) {
+			return 0;
+		}
+		if (dp[n][target] != null) {
+			return dp[n][target];
+		}
+		long res = 0;
+		for (int i = 1; i <= k; i++) {
+			res = (res % mod + solve(n - 1,k,target - i) % mod) % mod;
+		}
+		return dp[n][target] = res % mod;
+	}
+}

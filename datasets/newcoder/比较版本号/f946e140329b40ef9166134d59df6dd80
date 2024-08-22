@@ -1,0 +1,50 @@
+class Solution {
+	int compare(String version1, String version2) {
+		if (version1 == null && version2 == null) {
+			return 0;
+		}
+		if (version1 == null) {
+			return -1;
+		}
+		if (version2 == null) {
+			return 1;
+		}
+		String[] parts1 = version1.split("\\.");
+		String[] parts2 = version2.split("\\.");
+		List<String> partList1 = new ArrayList<>(Arrays.asList(parts1));
+		List<String> partList2 = new ArrayList<>(Arrays.asList(parts2));
+		int len1 = partList1.size();
+		int len2 = partList2.size();
+		int maxLen = Math.max(len1,len2);
+		for (int i = 0; i < maxLen; i++) {
+			String str1 = i < len1 ? partList1.get(i) : "";
+			String str2 = i < len2 ? partList2.get(i) : "";
+			int res = helper(str1,str2);
+			if (res != 0) {
+				return res;
+			}
+		}
+		return 0;
+	}
+	int helper(String part1, String part2) {
+		part1 = trimPrefixZero(part1);
+		part2 = trimPrefixZero(part2);
+		if (part1.equals(part2)) {
+			return 0;
+		}
+		long num1 = part1.equals("") ? 0 : Long.parseLong(part1);
+		long num2 = part2.equals("") ? 0 : Long.parseLong(part2);
+		return num1 > num2 ? 1 : -1;
+	}
+	String trimPrefixZero(String str) {
+		char[] arr = str.toCharArray();
+		if (arr.length < 1) {
+			return str;
+		}
+		int i = 0;
+		while (i < arr.length && arr[i] == '0') {
+			i++;
+		}
+		return i == arr.length ? "" : str.substring(i);
+	}
+}

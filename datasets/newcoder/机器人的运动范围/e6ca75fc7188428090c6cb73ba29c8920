@@ -1,0 +1,52 @@
+class Solution {
+	int cols;
+	int rows;
+	int threshold;
+	boolean isValid(int x, int y) {
+		StringBuffer sb = new StringBuffer("");
+		sb.append(x);
+		sb.append(y);
+		int num = 0;
+		for (int i = 0; i < sb.length(); i++) {
+			num += Integer.valueOf(sb.charAt(i) + "");
+		}
+		if (num <= threshold) {
+			return true;
+		} 
+		else {
+			return false;
+		}
+	}
+	int movingCount(int threshold, int rows, int cols) {
+		this.threshold = threshold;
+		this.rows = rows;
+		this.cols = cols;
+		int[][] matrix = new int[rows][cols];
+		int[][] sign = new int[rows][cols];
+		process(matrix,0,0,sign);
+		int res = 0;
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				if (matrix[i][j] == 1) {
+					res++;
+				}
+			}
+		}
+		return res;
+	}
+	void process(int[][] matrix, int x, int y, int[][] sign) {
+		if (x < 0 || x >= rows || y < 0 || y >= cols || sign[x][y] == 1) {
+			return;
+		}
+		sign[x][y] = 1;
+		if (!isValid(x,y)) {
+			return;
+		}
+		matrix[x][y] = 1;
+		process(matrix,x - 1,y,sign);
+		process(matrix,x + 1,y,sign);
+		process(matrix,x,y - 1,sign);
+		process(matrix,x,y + 1,sign);
+		sign[x][y] = 0;
+	}
+}

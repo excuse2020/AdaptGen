@@ -1,0 +1,59 @@
+class Solution {
+	ListNode deleteDuplicates(ListNode head) {
+		if (head == null) {
+			return null;
+		}
+		int curValue = head.val;
+		boolean dup = false;
+		boolean flip = false;
+		ListNode pre = head;
+		ListNode res = head;
+		ListNode next = head.next;
+		head = next;
+		ListNode start = next;
+		while (head != null) {
+			next = head.next;
+			if (head.val == curValue) {
+				dup = true;
+			} 
+			else {
+				if (pre != start && start != head && !dup) {
+					pre = start;
+					start = head;
+				}
+				if (start == pre && start != head && !dup) {
+					start = head;
+				}
+				if (dup) {
+					flip = true;
+				}
+				curValue = head.val;
+			}
+			if (flip) {
+				if (pre == res && pre.val == start.val) {
+					pre = head;
+					res = head;
+				}
+				start = head;
+				if (pre != start) {
+					pre.next = start;
+				}
+				flip = false;
+				dup = false;
+			}
+			head = next;
+		}
+		if (dup) {
+			if (pre == res && pre.val == start.val) {
+				return null;
+			}
+			if (pre == res && pre.val != start.val) {
+				pre.next = null;
+			}
+			if (pre != res) {
+				pre.next = null;
+			}
+		}
+		return res;
+	}
+}

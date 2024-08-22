@@ -1,0 +1,27 @@
+class Solution {
+	int[] maxLeft = new int[1001];
+	int[] maxRight = new int[1001];
+	TreeNode lcaDeepestLeaves(TreeNode root) {
+		setDepth(root);
+		return solve(root);
+	}
+	int setDepth(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		maxLeft[root.val] = setDepth(root.left);
+		maxRight[root.val] = setDepth(root.right);
+		return Math.max(maxLeft[root.val],maxRight[root.val]) + 1;
+	}
+	TreeNode solve(TreeNode root) {
+		if (maxLeft[root.val] == maxRight[root.val]) {
+			return root;
+		} 
+		else if (maxLeft[root.val] > maxRight[root.val]) {
+			return solve(root.left);
+		} 
+		else {
+			return solve(root.right);
+		}
+	}
+}

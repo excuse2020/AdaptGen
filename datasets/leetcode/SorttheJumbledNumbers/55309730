@@ -1,0 +1,33 @@
+class Solution {
+	int mapping(int n, int[] mapping) {
+		if (n == 0) {
+			return mapping[0];
+		}
+		int ans = 0;
+		int powerOf10 = 1;
+		while (n > 0) {
+			int digit = n % 10;
+			int mappedDigit = mapping[digit];
+			ans += mappedDigit * powerOf10;
+			powerOf10 *= 10;
+			n /= 10;
+		}
+		return ans;
+	}
+	int[] sortJumbled(int[] mapping, int[] nums) {
+		int n = nums.length;
+		List<List<Integer>> mappedNums = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			List<Integer> entry = new ArrayList<>();
+			entry.add(mapping(nums[i],mapping));
+			entry.add(i);
+			mappedNums.add(entry);
+		}
+		Collections.sort(mappedNums,(l1, l2) -> {l1.get(0) == l2.get(0) ? l1.get(1) - l2.get(1) : l1.get(0) - l2.get(0)});
+		int[] ans = new int[n];
+		for (int i = 0; i < n; i++) {
+			ans[i] = nums[mappedNums.get(i).get(1)];
+		}
+		return ans;
+	}
+}

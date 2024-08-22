@@ -1,0 +1,27 @@
+class Solution {
+	int longestSquareStreak(int[] nums) {
+		Arrays.sort(nums);
+		boolean[] vals = new boolean[100001];
+		int maxVal = 0;
+		for (int num: nums) {	
+			vals[num] = true;
+			maxVal = Math.max(num,maxVal);
+		}
+		int max = -1;
+		int curr;
+		for (int num: nums) {	
+			curr = 1;
+			int sq = num;
+			if (!vals[sq]) {
+				continue;
+			}
+			while ((long) sq * sq <= maxVal && vals[sq * sq]) {
+				curr++;
+				sq *= sq;
+				vals[sq] = false;
+			}
+			max = Math.max(max,curr);
+		}
+		return max == 1 ? -1 : max;
+	}
+}

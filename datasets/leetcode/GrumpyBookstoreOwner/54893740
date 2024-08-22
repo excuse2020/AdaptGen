@@ -1,0 +1,28 @@
+class Solution {
+	int maxSatisfied(int[] customers, int[] grumpy, int minutes) {
+		int satisfied_customers = 0;
+		if (grumpy.length == minutes) {
+			for (int ele: customers) {	
+				satisfied_customers += ele;
+			}
+			return satisfied_customers;
+		}
+		int extra_customers = 0;
+		int additional_customer = 0;
+		for (int j = 0; j < minutes; j++) {
+			additional_customer += customers[j] * grumpy[j];
+		}
+		int n = customers.length;
+		for (int i = 0; i <= n - minutes; i++) {
+			satisfied_customers += customers[i] * (1 - grumpy[i]);
+			if (i > 0) {
+				additional_customer += customers[i + minutes - 1] * grumpy[i + minutes - 1] - customers[i - 1] * grumpy[i - 1];
+			}
+			extra_customers = Math.max(extra_customers,additional_customer);
+		}
+		for (int i = n - minutes + 1; i < n; i++) {
+			satisfied_customers += customers[i] * (1 - grumpy[i]);
+		}
+		return satisfied_customers + extra_customers;
+	}
+}

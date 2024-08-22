@@ -1,0 +1,51 @@
+class Solution {
+	TreeNode rNode = null, rParent = null;
+	int redleft = 0, redright = 0;
+	boolean btreeGameWinningMove(TreeNode root, int n, int x) {
+		int red = 0;
+		findNode(root,x,null);
+		if (rParent == null) {
+			int lsub = 0, rsub = 0;
+			lsub += dfsCount(rNode.left);
+			rsub += dfsCount(rNode.right);
+			if (lsub == rsub) {
+				return false;
+			}
+			return true;
+		}
+		red += dfsCount(rNode);
+		if (n - red <= n / 2) {
+			if (redleft > n - redleft || redright > n - redright) {
+				return true;
+			}
+			return false;
+		}
+		return true;
+	}
+	int dfsCount(TreeNode node) {
+		if (node == null) {
+			return 0;
+		}
+		int x = dfsCount(node.left);
+		if (rNode.left != null && node.left != null && rNode.left.val == node.left.val) {
+			redleft = x;
+		}
+		int y = dfsCount(node.right);
+		if (rNode.right != null && node.right != null && rNode.right.val == node.right.val) {
+			redright = y;
+		}
+		return 1 + x;
+	}
+	void findNode(TreeNode node, int x, TreeNode parent) {
+		if (node == null) {
+			return;
+		}
+		if (node.val == x) {
+			rNode = node;
+			rParent = parent;
+			return;
+		}
+		findNode(node.left,x,node);
+		findNode(node.right,x,node);
+	}
+}

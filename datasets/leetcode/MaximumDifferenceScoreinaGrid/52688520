@@ -1,0 +1,28 @@
+class Solution {
+	int helper(int i, int j, List<List<Integer>> grid, Integer[][] dp) {
+		if (i == grid.size() - 1 && j == grid.get(0).size() - 1) {
+			return (int) (-1e9);
+		}
+		if (dp[i][j] != null) {
+			return dp[i][j];
+		}
+		int right = (int) (-1e9), down = (int) (-1e9);
+		if (j < grid.get(0).size() - 1) {
+			right = (grid.get(i).get(j + 1) - grid.get(i).get(j)) + Math.max(0,helper(i,j + 1,grid,dp));
+		}
+		if (i < grid.size() - 1) {
+			down = (grid.get(i + 1).get(j) - grid.get(i).get(j)) + Math.max(0,helper(i + 1,j,grid,dp));
+		}
+		return dp[i][j] = Math.max(right,down);
+	}
+	int maxScore(List<List<Integer>> grid) {
+		Integer[][] dp = new Integer[grid.size()][grid.get(0).size()];
+		int ans = (int) (-1e9);
+		for (int i = 0; i < grid.size(); i++) {
+			for (int j = 0; j < grid.get(0).size(); j++) {
+				ans = Math.max(helper(i,j,grid,dp),ans);
+			}
+		}
+		return ans;
+	}
+}

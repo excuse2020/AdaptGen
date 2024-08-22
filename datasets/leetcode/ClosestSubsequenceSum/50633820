@@ -1,0 +1,32 @@
+class Solution {
+	int[] left = new int[1 << 20];
+	int[] right = new int[1 << 20];
+	int minAbsDifference(int[] nums, int goal) {
+		if (nums == null || nums.length == 0) {
+			return goal;
+		}
+		int N = nums.length;
+		int leftN = process(nums,0,N >> 1,0,0,left);
+		int rightN = process(nums,N >> 1,N,0,0,right);
+		Arrays.sort(left,0,leftN);
+		Arrays.sort(right,0,rightN--);
+		int ans = Math.abs(goal);
+		for (int i = 0; i < leftN; i++) {
+			while (rightN > 0 && Math.abs(goal - left[i]) >= Math.abs(goal - left[i])) {
+				rightN--;
+			}
+			ans = Math.min(ans,Math.abs(goal - left[i]));
+		}
+		return ans;
+	}
+	int process(int[] nums, int index, int end, int sum, int fill, int[] arr) {
+		if (index == end) {
+			arr[fill++] = sum;
+		} 
+		else {
+			fill = process(nums,index + 1,end,sum,fill,arr);
+			fill = process(nums,index + 1,end,sum + nums[index],fill,arr);
+		}
+		return fill;
+	}
+}

@@ -1,0 +1,54 @@
+class Solution {
+	boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
+		if (k == 0) {
+			return false;
+		}
+		TreeMap<Long, Integer> map = new TreeMap<>();
+		for (int i = 1; i < Math.min(nums.length,k + 1); i++) {
+			map.put((long) nums[i],map.getOrDefault((long) nums[i],0) + 1);
+		}
+		int check = 0;
+		int end = k + 1;
+		while (end < nums.length) {
+			if (map.ceilingKey((long) nums[check] - (long) t) != null) {
+				long x = map.ceilingKey((long) nums[check] - (long) t);
+				if (nums[check] >= x) {
+					return true;
+				}
+			}
+			if (map.floorKey((long) nums[check] + (long) t) != null) {
+				long x = map.floorKey((long) nums[check] + (long) t);
+				if (nums[check] <= x) {
+					return true;
+				}
+			}
+			check++;
+			map.put((long) nums[check],map.get((long) nums[check]) - 1);
+			if (map.get((long) nums[check]) == 0) {
+				map.remove((long) nums[check]);
+			}
+			map.put((long) nums[end],map.getOrDefault((long) nums[end],0) + 1);
+			end++;
+		}
+		while (check < nums.length - 1) {
+			if (map.ceilingKey((long) nums[check] - (long) t) != null) {
+				long x = map.ceilingKey((long) nums[check] - (long) t);
+				if (nums[check] >= x) {
+					return true;
+				}
+			}
+			if (map.floorKey((long) nums[check] + (long) t) != null) {
+				long x = map.floorKey((long) nums[check] + (long) t);
+				if (nums[check] <= x) {
+					return true;
+				}
+			}
+			check++;
+			map.put((long) nums[check],map.get((long) nums[check]) - 1);
+			if (map.get((long) nums[check]) == 0) {
+				map.remove((long) nums[check]);
+			}
+		}
+		return false;
+	}
+}

@@ -1,0 +1,34 @@
+class Solution {
+	int longestSquareStreak(int[] nums) {
+		Map<Integer, int[]> map = new HashMap<>();
+		int ans = -1;
+		for (int n: nums) {	
+			if (map.containsKey(n)) {
+				continue;
+			}
+			map.put(n,new int{n, 1});
+			int lo = n, hi = n, len = 1;
+			if (1l * n < Integer.MAX_VALUE) {
+				if (map.containsKey(n * n)) {
+					int[] tmp = map.get(n * n);
+					hi = tmp[0];
+					len += tmp[1];
+				}
+			}
+			int v1 = (int) Math.pow(n,0.5);
+			if (v1 * v1 == n) {
+				if (map.containsKey(v1)) {
+					int[] tmp = map.get(v1);
+					lo = tmp[0];
+					len += tmp[1];
+				}
+			}
+			map.put(lo,new int{hi, len});
+			map.put(hi,new int{lo, len});
+			if (len > 1) {
+				ans = Math.max(ans,len);
+			}
+		}
+		return ans;
+	}
+}

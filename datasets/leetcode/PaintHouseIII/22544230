@@ -1,0 +1,83 @@
+class Solution {
+	int INF = (int) Math.pow(10,6) + 1;
+	int getAns(int[] houses, int houseIndex, int[][] cost, int colorIndex, int target, int m, int n, int neighbours, int[][][] dp) {
+		if (houseIndex == m) {
+			int ans = neighbours == target ? 0 : INF;
+			return dp[houseIndex][colorIndex][neighbours] = ans;
+		}
+		if (neighbours > target) {
+			return dp[houseIndex][colorIndex][neighbours] = INF;
+		}
+		if (dp[houseIndex][colorIndex][neighbours] != -1) {
+			return dp[houseIndex][colorIndex][neighbours];
+		}
+		int min = Integer.MAX_VALUE;
+		if (houses[houseIndex] == 0) {
+			if (houseIndex == 0) {
+				for (int i = 0; i < n; i++) {
+					int ans = cost[houseIndex][i] + getAns(houses,houseIndex + 1,cost,i + 1,target,m,n,neighbours + 1,dp);
+					min = Math.min(min,ans);
+				}
+			} 
+			else {
+				for (int i = 0; i < n; i++) {
+					if (i + 1 == colorIndex) {
+						int ans = cost[houseIndex][i] + getAns(houses,houseIndex + 1,cost,colorIndex,target,m,n,neighbours,dp);
+						min = Math.min(min,ans);
+					} 
+					else {
+						int ans = cost[houseIndex][i] + getAns(houses,houseIndex + 1,cost,i + 1,target,m,n,neighbours + 1,dp);
+						min = Math.min(min,ans);
+					}
+				}
+			}
+		} 
+		else {
+			if (houseIndex == 0) {
+				int ans = getAns(houses,houseIndex + 1,cost,houses[houseIndex],target,m,n,neighbours + 1,dp);
+				min = Math.min(min,ans);
+			} 
+			else {
+				int ans = getAns(houses,houseIndex + 1,cost,houses[houseIndex] == colorIndex ? colorIndex : houses[houseIndex],target,m,n,houses[houseIndex] == colorIndex ? neighbours : neighbours + 1,dp);
+				min = Math.min(min,ans);
+			}
+		}
+		return dp[houseIndex][colorIndex][neighbours] = min;
+	}
+	int minCost(int[] houses, int[][] cost, int m, int n, int target) {
+		boolean hasUnpaintedHouse = false;
+		int[][][] dp = new int[m + 1][n + 1][target + 2];
+		for (int[][] arr: dp) {	
+			for (int[] temp: arr) {	
+				Arrays.fill(temp,-1);
+			}
+		}
+		for (int i: houses) {	
+			if (i == 0) {
+				hasUnpaintedHouse = true;
+				break;
+			}
+		}
+		if (!hasUnpaintedHouse) {
+			int neighbours = 0;
+			for (int i = 0; i < houses.length; i++) {
+				if (i == 0) {
+					neighbours++;
+				} 
+				else {
+					if (houses[i] != houses[i - 1]) {
+						neighbours++;
+					}
+				}
+			}
+			if (target != neighbours) {
+				return -1;
+			} 
+			else {
+				return 0;
+			}
+		}
+		int ans = getAns(houses,0,cost,0,target,m,n,0,dp);
+		return ans >= INF ? -1 : ans;
+	}
+}

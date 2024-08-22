@@ -1,0 +1,30 @@
+class Solution {
+	List<List<Integer>> getSkyline(int[][] buildings) {
+		PriorityQueue<int[]> pq = new PriorityQueue<>(2 * buildings.length, (a, b) -> {Integer.compare(a[0],b[0])});
+		PriorityQueue<int[]> live = new PriorityQueue<>(buildings.length, (a, b) -> {Integer.compare(b[0],a[0])});
+		for (int b = 0; b < buildings.length; b++) {
+			pq.add(new int{buildings[b][0], b});
+			pq.add(new int{buildings[b][1], b});
+		}
+		List<List<Integer>> ans = new ArrayList<>();
+		while (!pq.isEmpty()) {
+			int currX = pq.peek()[0];
+			while (!pq.isEmpty() && pq.peek()[0] == currX) {
+				int[] b = buildings[pq.peek()[1]];
+				if (b[0] == pq.peek()[0]) {
+					live.add(new int{b[2], b[1]});
+				}
+				pq.poll();
+			}
+			while (!live.isEmpty() && live.peek()[1] <= currX) {
+				live.poll();
+			}
+			int h = live.isEmpty() ? 0 : live.peek()[0];
+			int prevH = ans.isEmpty() ? 0 : ans.get(ans.size() - 1).get(1);
+			if (prevH != h) {
+				ans.add(Arrays.asList(currX,h));
+			}
+		}
+		return ans;
+	}
+}

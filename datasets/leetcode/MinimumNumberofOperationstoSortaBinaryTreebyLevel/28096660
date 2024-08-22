@@ -1,0 +1,62 @@
+class Solution {
+	int getSwaps(List<Integer> level) {
+		int minCount = 0;
+		int minIdx = 0;
+		for (int i = 0; i < level.size(); i++) {
+			int newMinIdx = minIdx;
+			for (int j = minIdx; j < level.size(); j++) {
+				if (level.get(j) < level.get(newMinIdx)) {
+					newMinIdx = j;
+				}
+			}
+			if (minIdx != newMinIdx) {
+				swap(minIdx,newMinIdx,level);
+				minCount++;
+			}
+			minIdx++;
+		}
+		return minCount;
+	}
+	int getSwaps1(List<Integer> level) {
+		Map<Integer, Integer> lookUp = new HashMap<>();
+		for (int i = 0; i < level.size(); i++) {
+			lookUp.put(level.get(i),i);
+		}
+		Collections.sort(level);
+		int minIdx = 0, n = level.size();
+		int minSwaps = 0;
+		while (minIdx < n) {
+			if (minIdx != lookUp.get(level.get(minIdx))) {
+				minSwaps++;
+				swap(minIdx,lookUp.get(level.get(minIdx)),level);
+			} 
+			else {
+				minIdx++;
+			}
+		}
+		return minSwaps;
+	}
+	int minimumOperations(TreeNode root) {
+		Map<Integer, List<Integer>> levelOrder = new HashMap<>();
+		updateLevelOrder(root,0,levelOrder);
+		int min = 0;
+		for (Map.Entry<Integer, List<Integer>> entry: levelOrder.entrySet()) {	
+			min += getSwaps1(entry.getValue());
+		}
+		return min;
+	}
+	void swap(int minIdx, int newMinIdx, List<Integer> level) {
+		int temp = level.get(minIdx);
+		level.set(minIdx,level.get(newMinIdx));
+		level.set(newMinIdx,temp);
+	}
+	void updateLevelOrder(TreeNode root, int level, Map<Integer, List<Integer>> levelOrder) {
+		if (root == null) {
+			return;
+		}
+		levelOrder.putIfAbsent(level,new ArrayList<>());
+		levelOrder.get(level).add(root.val);
+		updateLevelOrder(root.left,level + 1,levelOrder);
+		updateLevelOrder(root.right,level + 1,levelOrder);
+	}
+}

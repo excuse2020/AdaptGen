@@ -1,0 +1,55 @@
+class Solution {
+	void fun(ArrayList<Character> arr, String s1, String s2) {
+		boolean changed = true;
+		while (changed) {
+			boolean flag = false;
+			for (int i = 0; i < s1.length(); i++) {
+				if (arr.contains(s1.charAt(i))) {
+					if (!arr.contains(s2.charAt(i))) {
+						arr.add(s2.charAt(i));
+						flag = true;
+					}
+				}
+				if (arr.contains(s2.charAt(i))) {
+					if (!arr.contains(s1.charAt(i))) {
+						arr.add(s1.charAt(i));
+						flag = true;
+					}
+				}
+			}
+			if (!flag) {
+				break;
+			}
+		}
+	}
+	String smallestEquivalentString(String s1, String s2, String baseStr) {
+		ArrayList<ArrayList<Character>> arr = new ArrayList<>();
+		int i = 0;
+		while (i < s1.length()) {
+			ArrayList<Character> temp = new ArrayList<>();
+			temp.add(s1.charAt(i));
+			temp.add(s2.charAt(i));
+			fun(temp,s1,s2);
+			arr.add(temp);
+			i++;
+		}
+		for (ArrayList<Character> temp: arr) {	
+			Collections.sort(temp);
+		}
+		String ans = "";
+		for (i = 0; i < baseStr.length(); i++) {
+			boolean flag = false;
+			for (ArrayList<Character> temp: arr) {	
+				if (temp.contains(baseStr.charAt(i))) {
+					flag = true;
+					ans += temp.get(0);
+					break;
+				}
+			}
+			if (!flag) {
+				ans += baseStr.charAt(i);
+			}
+		}
+		return ans;
+	}
+}

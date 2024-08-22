@@ -1,0 +1,37 @@
+class Solution {
+	Set<Integer> visited;
+	int dfs(int i, int[][] bombs, int[] dp) {
+		int count = 1;
+		if (visited.contains(i)) {
+			return 0;
+		}
+		visited.add(i);
+		int sourceX = bombs[i][0];
+		int sourceY = bombs[i][1];
+		int sourceR = bombs[i][2];
+		for (int j = 0; j < bombs.length; j++) {
+			if (j != i) {
+				int linkX = bombs[j][0];
+				int linkY = bombs[j][1];
+				int diffX = Math.abs(linkX - sourceX);
+				int diffY = Math.abs(linkY - sourceY);
+				if (Math.pow(diffX,2) + Math.pow(diffY,2) <= Math.pow(sourceR,2)) {
+					count += dfs(j,bombs,dp);
+				}
+			}
+		}
+		return dp[i] = count;
+	}
+	int maximumDetonation(int[][] bombs) {
+		int n = bombs.length;
+		int[] dp = new int[n];
+		for (int i = 0; i < n; i++) {
+			visited = new HashSet<>();
+			if (dp[i] == 0) {
+				dp[i] = dfs(i,bombs,dp);
+				System.out.println(i + " ");
+			}
+		}
+		return Arrays.stream(dp).max().getAsInt();
+	}
+}

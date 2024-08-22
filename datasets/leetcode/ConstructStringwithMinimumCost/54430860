@@ -1,0 +1,48 @@
+class Solution {
+	long base = 256;
+	Map<Long, Integer> hashList = new HashMap<>();
+	long modulus = 1000000007;
+	long hash(long rollingHash, String word) {
+		for (long i = 0; i < word.length(); i++) {
+			long v = word.charAt((int) i);
+			rollingHash = (rollingHash * base + v) % modulus;
+		}
+		return rollingHash;
+	}
+	int minCost(String target, int idx, int[] dp, long rollingHash) {
+		if (idx == target.length()) {
+			return 0;
+		}
+		if (dp[idx] != -1) {
+			return dp[idx];
+		}
+		int ans = 100000000;
+		for (int i = idx; i < target.length(); i++) {
+			int v = target.charAt(i);
+			rollingHash = (rollingHash * base + v) % modulus;
+			int tmp = hashList.getOrDefault(rollingHash,-1);
+			if (tmp != -1) {
+				ans = Math.min(ans,tmp + minCost(target,i + 1,dp,0));
+			}
+		}
+		return dp[idx] = ans;
+	}
+	int minimumCost(String target, String[] words, int[] costs) {
+		int[] dp = new int[target.length()];
+		Arrays.fill(dp,-1);
+		int idx = 0;
+		for (String word: words) {	
+			long hashCode = hash(0,word);
+			if (hashList.containsKey(hashCode)) {
+				int c = Math.min(hashList.get(hashCode),costs[idx]);
+				hashList.put(hashCode,c);
+			} 
+			else {
+				hashList.put(hashCode,costs[idx]);
+			}
+			idx += 1;
+		}
+		int ans = minCost(target,0,dp,0);
+		return ans == 100000000 ? -1 : ans;
+	}
+}

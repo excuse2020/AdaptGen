@@ -1,0 +1,41 @@
+class Solution {
+	int count = 0;
+	int mod = 1000000007;
+	int InversePairs(int[] array) {
+		int[] tmp = new int[array.length];
+		mergesort(array,tmp,0,array.length - 1);
+		return count;
+	}
+	void merge(int[] arr, int[] tmp, int left, int mid, int right) {
+		int pLeft = left;
+		int pRight = mid + 1;
+		int pTmp = left;
+		while (pLeft <= mid && pRight <= right) {
+			if (arr[pLeft] <= arr[pRight]) {
+				tmp[pTmp++] = arr[pLeft++];
+			} 
+			else {
+				tmp[pTmp++] = arr[pRight++];
+				count += mid - pLeft + 1;
+				count %= mod;
+			}
+		}
+		while (pLeft <= mid) {
+			tmp[pTmp++] = arr[pLeft++];
+		}
+		while (pRight <= right) {
+			tmp[pTmp++] = arr[pRight++];
+		}
+		for (int i = left; i < pTmp; i++) {
+			arr[i] = tmp[i];
+		}
+	}
+	void mergesort(int[] arr, int[] tmp, int left, int right) {
+		if (left < right) {
+			int mid = (left + right) / 2;
+			mergesort(arr,tmp,left,mid);
+			mergesort(arr,tmp,mid + 1,right);
+			merge(arr,tmp,left,mid,right);
+		}
+	}
+}

@@ -1,0 +1,58 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		if (head1 == null) {
+			return head2;
+		} 
+		else if (head2 == null) {
+			return head1;
+		}
+		int carry = 0;
+		ListNode temp1 = new ListNode(-9999);
+		temp1.next = reverseList(head1);
+		ListNode temp2 = new ListNode(-9999);
+		temp2.next = reverseList(head2);
+		ListNode newNode = new ListNode(-9999);
+		ListNode flagNode = newNode;
+		while (temp1.next != null || temp2.next != null || carry != 0) {
+			if (temp1.next == null) {
+				temp1.val = 0;
+			}
+			if (temp2.next == null) {
+				temp2.val = 0;
+			}
+			if (temp1.next != null) {
+				temp1 = temp1.next;
+			}
+			if (temp2.next != null) {
+				temp2 = temp2.next;
+			}
+			if (temp1.val + temp2.val < 10) {
+				flagNode.next = new ListNode(temp1.val + temp2.val);
+				carry = 0;
+			} 
+			else {
+				flagNode.next = new ListNode((temp1.val + temp2.val) % 10);
+				carry = 1;
+			}
+			flagNode = flagNode.next;
+		}
+		return reverseList(newNode.next);
+	}
+	ListNode reverseList(ListNode head) {
+		if (head == null) {
+			return head;
+		}
+		ListNode flagNode = head;
+		Stack<Integer> stack = new Stack<>();
+		while (flagNode != null) {
+			stack.push(flagNode.val);
+			flagNode = flagNode.next;
+		}
+		flagNode = head;
+		while (!stack.isEmpty()) {
+			flagNode.val = stack.pop();
+			flagNode = flagNode.next;
+		}
+		return head;
+	}
+}

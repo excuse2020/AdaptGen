@@ -1,0 +1,34 @@
+class Solution {
+	int maxScore(List<List<Integer>> g) {
+		int[][] m = new int[g.size()][g.get(0).size()];
+		for (int i = 0; i < m.length; i++) {
+			for (int j = 0; j < m[0].length; j++) {
+				m[i][j] = Integer.MIN_VALUE / 10;
+			}
+		}
+		m[m.length - 1][m[0].length - 1] = g.get(m.length - 1).get(m[0].length - 1);
+		for (int i = g.size() - 1; i >= 0; i--) {
+			for (int j = g.get(0).size() - 1; j >= 0; j--) {
+				if (i < m.length - 1) {
+					m[i][j] = Math.max(m[i][j],m[i + 1][j]);
+				}
+				if (j < m[0].length - 1) {
+					m[i][j] = Math.max(m[i][j],m[i][j + 1]);
+				}
+				m[i][j] = Math.max(m[i][j],g.get(i).get(j));
+			}
+		}
+		int ans = Integer.MIN_VALUE / 10;
+		for (int i = 0; i < m.length; i++) {
+			for (int j = 0; j < m[0].length; j++) {
+				if (i < m.length - 1) {
+					ans = Math.max(ans,m[i + 1][j] - g.get(i).get(j));
+				}
+				if (j < m[0].length - 1) {
+					ans = Math.max(ans,m[i][j + 1] - g.get(i).get(j));
+				}
+			}
+		}
+		return ans;
+	}
+}

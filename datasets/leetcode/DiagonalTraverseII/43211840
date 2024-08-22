@@ -1,0 +1,33 @@
+class Solution {
+	int[] findDiagonalOrder(List<List<Integer>> nums) {
+		List<Integer> ans = new LinkedList();
+		if (nums.size() == 0) {
+			return ans.stream().mapToInt((i) -> {i}).toArray();
+		}
+		Queue<Integer> qx = new LinkedList();
+		Queue<Integer> qy = new LinkedList();
+		qx.add(0);
+		qy.add(0);
+		ans.add(nums.get(0).get(0));
+		while (!qx.isEmpty()) {
+			int siz = qx.size();
+			for (int l = 0; l < siz; l++) {
+				int i = qx.poll();
+				int j = qy.poll();
+				if (i + 1 < nums.size() && nums.get(i + 1).size() > j && nums.get(i + 1).get(j) != null) {
+					qx.add(i + 1);
+					qy.add(j);
+					ans.add(nums.get(i + 1).get(j));
+					nums.get(i + 1).set(j,null);
+				}
+				if (nums.get(i).size() > j + 1 && nums.get(i).get(j + 1) != null) {
+					qx.add(i);
+					qy.add(j + 1);
+					ans.add(nums.get(i).get(j + 1));
+					nums.get(i).set(j + 1,null);
+				}
+			}
+		}
+		return ans.stream().mapToInt((i) -> {i}).toArray();
+	}
+}

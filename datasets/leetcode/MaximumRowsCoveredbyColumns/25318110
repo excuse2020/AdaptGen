@@ -1,0 +1,44 @@
+class Solution {
+	int result = 0;
+	List<List<Integer>> findColPerms(int cols, int start, int nums) {
+		List<List<Integer>> result = new ArrayList<>();
+		for (int i = start; i < nums; i++) {
+			if (cols == 1) {
+				List<Integer> ll = new ArrayList<>();
+				ll.add(i);
+				result.add(ll);
+			} 
+			else {
+				List<List<Integer>> list = findColPerms(cols - 1,i + 1,nums);
+				for (List<Integer> ll: list) {	
+					ll.add(i);
+					result.add(ll);
+				}
+			}
+		}
+		return result;
+	}
+	int maximumRows(int[][] mat, int cols) {
+		List<List<Integer>> onesList = new ArrayList<>();
+		for (int i = 0; i < mat.length; i++) {
+			List<Integer> ll = new ArrayList<>();
+			for (int j = 0; j < mat[0].length; j++) {
+				if (mat[i][j] == 1) {
+					ll.add(j);
+				}
+			}
+			onesList.add(ll);
+		}
+		List<List<Integer>> perms = findColPerms(cols,0,mat[0].length);
+		for (List<Integer> perm: perms) {	
+			int res = 0;
+			for (List<Integer> list: onesList) {	
+				if (perm.containsAll(list)) {
+					res++;
+				}
+			}
+			result = Math.max(res,result);
+		}
+		return result;
+	}
+}

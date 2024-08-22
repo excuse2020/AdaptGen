@@ -1,0 +1,47 @@
+class Solution {
+	int[] moves;
+	String str;
+	int[] tree;
+	int query(int leftB, int rightB, int ti, int index) {
+		int[] arr = tree;
+		int mid = (leftB + rightB) / 2;
+		if (index > rightB || index < leftB) {
+			return 0;
+		}
+		if (leftB == rightB) {
+			return tree[ti];
+		}
+		return tree[ti] + query(leftB,mid,ti * 2 + 1,index);
+	}
+	String shiftingLetters(String s, int[][] shifts) {
+		tree = new int[s.length() * 4];
+		moves = new int[s.length() - 1];
+		for (int[] arr: shifts) {	
+			if (arr[2] != 1) {
+				update(0,s.length() - 1,0,arr[0],arr[1],-1);
+			} 
+			else {
+				update(0,s.length() - 1,0,arr[0],arr[1],1);
+			}
+		}
+		char[] arr = s.toCharArray();
+		int range = 26;
+		int i = 0;
+		int value = query(0,s.length() - 1,0,i);
+		int currentOffset;
+	}
+	void update(int leftB, int rightB, int index, int l, int r, int sign) {
+		int[] arr = tree;
+		int mid = (leftB + rightB) / 2;
+		if (l > rightB || leftB > r) {
+			return;
+		}
+		if (l <= leftB && r >= rightB) {
+			tree[index] += sign;
+		} 
+		else {
+			update(leftB,mid,index * 2 + 1,l,r,sign);
+			update(mid + 1,rightB,index * 2 + 2,l,r,sign);
+		}
+	}
+}

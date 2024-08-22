@@ -1,0 +1,60 @@
+class Solution {
+	long total = 0l;
+	long countPaths(int n, int[][] edges) {
+		boolean[] isPrimeArray = new boolean[n + 1];
+		for (int i = 2; i <= n; i++) {
+			isPrimeArray[i] = true;
+		}
+		for (int i = 2; i <= n; i++) {
+			if (isPrimeArray[i]) {
+				for (long j = (long) i * i; j <= n; j += i) {
+					isPrimeArray[(int)(j % Integer.MAX_VALUE)] = false;
+				}
+			}
+		}
+		List<Integer>[] nexts = new List[n + 1];
+		for (int i = 0; i <= n; i++) {
+			nexts[i] = new ArrayList<>();
+		}
+		for (int[] edge: edges) {	
+			int u = edge[0], v = edge[1];
+			nexts[u].add(v);
+			nexts[v].add(u);
+		}
+		dfs(nexts,isPrimeArray,1,-1);
+		return total;
+	}
+	int[] dfs(List<Integer>[] nexts, boolean[] isPrimeArray, int index, int pre) {
+		List<Integer> next = nexts[index];
+		int size = next.size();
+		int[] res = new int[2];
+		boolean isPrime = isPrimeArray[index];
+		List<int[]> subResList = new ArrayList<>();
+		for (int node: next) {	
+			if (node != pre) {
+				int[] subRes = dfs(nexts,isPrimeArray,node,index);
+				subResList.add(subRes);
+				res[0] += subRes[0];
+				res[1] += subRes[1];
+			}
+		}
+		if (isPrime) {
+			long cur = 0l;
+			for (int[] subRes: subResList) {	
+				cur += (long) (res[0] - subRes[0]) * subRes[0];
+			}
+			total += cur / 2;
+			total += res[0];
+			res[1] = res[0] + 1;
+			res[0] = 0;
+		} 
+		else {
+			for (int[] subRes: subResList) {	
+				total += (long) (res[0] - subRes[0]) * subRes[1];
+			}
+			res[0] = res[0] + 1;
+			total += res[1];
+		}
+		return res;
+	}
+}

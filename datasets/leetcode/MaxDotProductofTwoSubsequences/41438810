@@ -1,0 +1,37 @@
+class Solution {
+	int[][][] dp = new int[501][501][2];
+	int helper(int i, int j, int[] nums1, int[] nums2, int l) {
+		if (i == nums1.length || j == nums2.length) {
+			if (l == 1) {
+				return 0;
+			} 
+			else {
+				return -1;
+			}
+		}
+		if (dp[i][j][l] != Integer.MIN_VALUE) {
+			return dp[i][j][l];
+		} 
+		else {
+			int op1 = nums1[i] * nums2[j] + helper(i + 1,j + 1,nums1,nums2,1);
+			int op2 = helper(i + 1,j,nums1,nums2,l);
+			int op3 = helper(i,j + 1,nums1,nums2,l);
+			return dp[i][j][l] = Math.max(op1,Math.max(op2,op3));
+		}
+	}
+	int maxDotProduct(int[] nums1, int[] nums2) {
+		for (int i = 0; i < nums1.length; i++) {
+			for (int j = 0; j < nums2.length; j++) {
+				dp[i][j][0] = Integer.MIN_VALUE;
+				dp[i][j][1] = Integer.MIN_VALUE;
+			}
+		}
+		int ans = helper(0,0,nums1,nums2,0);
+		if (ans == -1) {
+			Arrays.sort(nums1);
+			Arrays.sort(nums2);
+			return Math.max(nums1[0] * nums2[nums2.length - 1],nums1[nums1.length - 1] * nums2[0]);
+		}
+		return ans;
+	}
+}

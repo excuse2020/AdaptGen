@@ -1,0 +1,36 @@
+class Solution {
+	List<Integer>[] graph;
+	int[] visited;
+	boolean dfs(int current, int length) {
+		if (visited[current] != 0) {
+			if (length > visited[current]) {
+				return (length - visited[current]) % 2 == 0;
+			}
+			return true;
+		}
+		visited[current] = length;
+		for (int adj: graph[current]) {	
+			if (!dfs(adj,length + 1)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		graph = new LinkedList[n + 1];
+		visited = new int[n + 1];
+		for (int i = 1; i <= n; i++) {
+			graph[i] = new LinkedList<Integer>();
+		}
+		for (int[] dislike: dislikes) {	
+			graph[dislike[0]].add(dislike[1]);
+			graph[dislike[1]].add(dislike[0]);
+		}
+		for (int i = 1; i <= n; i++) {
+			if (visited[i] == 0 && !dfs(i,1)) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

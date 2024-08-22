@@ -1,0 +1,63 @@
+class Solution {
+	int find(int[] parent, int x) {
+		if (x == parent[x]) {
+			return x;
+		}
+		return parent[x] = find(parent,parent[x]);
+	}
+	String findTheString(int[][] lcp) {
+		int n = lcp.length;
+		int[] parent = new int[n], rank = new int[n], chars = new int[n], str = new int[n];
+		for (int i = 0; i < n; ++i) {
+			parent[i] = i;
+			rank[i] = 1;
+		}
+		for (int i = 0; i < n; ++i) {
+			for (int j = i + 1; j < n; ++j) {
+				if (lcp[i][j] > 0) {
+					union(parent,rank,i,j);
+				}
+			}
+		}
+		int c = 0, par;
+		for (int i = 0; i < n; ++i) {
+			par = find(parent,i);
+			if (chars[par] == 0) {
+				chars[par] = ++c;
+			}
+			if (c > 26) {
+				return "";
+			}
+			str[i] = chars[par];
+		}
+		int val;
+		int[][] lcpNew = new int[n][n];
+		for (int i = n - 1; i >= 0; --i) {
+			for (int j = n - 1; j >= 0; --j) {
+				val = (i + 1) < n && (j + 1) < n ? lcpNew[i + 1][j + 1] : 0;
+				val = str[i] == str[j] ? 1 + val : 0;
+				lcpNew[i][j] = val;
+				if (lcpNew[i][j] != lcp[i][j]) {
+					return "";
+				}
+			}
+		}
+		StringBuilder sb = new StringBuilder();
+	}
+	void union(int[] parent, int[] rank, int u, int v) {
+		u = find(parent,u);
+		v = find(parent,v);
+		if (u == v) {
+			return;
+		}
+		if (rank[u] >= rank[v]) {
+			parent[v] = u;
+			rank[u] += rank[v];
+		} 
+		else {
+			parent[u] = v;
+			rank[v] += rank[u];
+		}
+		return;
+	}
+}

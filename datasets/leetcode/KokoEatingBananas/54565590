@@ -1,0 +1,33 @@
+class Solution {
+	int curr_speed = Integer.MIN_VALUE;
+	boolean canEat(int[] piles, int speed, int hours) {
+		long count = 0;
+		for (int i: piles) {	
+			count += (i) / speed;
+			if ((i % speed) != 0) {
+				count++;
+			}
+		}
+		return count <= hours;
+	}
+	int minEatingSpeed(int[] piles, int h) {
+		for (int ele: piles) {	
+			curr_speed = Math.max(curr_speed,ele);
+		}
+		min_speed(piles,1,curr_speed,h);
+		return curr_speed;
+	}
+	void min_speed(int[] piles, int low, int high, int h) {
+		while (low <= high) {
+			int mid = (low + high) / 2;
+			if (canEat(piles,mid,h)) {
+				curr_speed = mid;
+				high = mid - 1;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		return;
+	}
+}

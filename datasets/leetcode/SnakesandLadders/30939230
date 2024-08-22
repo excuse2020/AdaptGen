@@ -1,0 +1,50 @@
+class Solution {
+	int[] makeBoard1D(int[][] board, int n, int n2) {
+		int[] ar = new int[n2];
+		int index = 0;
+		boolean leftToRight = true;
+		for (int i = n - 1; i >= 0; i--) {
+			if (leftToRight) {
+				for (int j = 0; j < n; j++) {
+					ar[index++] = board[i][j];
+				}
+			} 
+			else {
+				for (int j = n - 1; j >= 0; j--) {
+					ar[index++] = board[i][j];
+				}
+			}
+			leftToRight = !leftToRight;
+		}
+		return ar;
+	}
+	int snakesAndLadders(int[][] board) {
+		int n = board.length, n2 = n * n;
+		int[] ar = makeBoard1D(board,n,n2);
+		Queue<Integer> qu = new LinkedList<>();
+		boolean[] visited = new boolean[n * n];
+		visited[0] = true;
+		qu.add(0);
+		int minSteps = 0;
+		while (!qu.isEmpty()) {
+			minSteps++;
+			for (int x = qu.size(); x > 0; x--) {
+				int curr = qu.remove();
+				for (int i = 1; i <= 6 && (curr + i) < n2; i++) {
+					int next = curr + i;
+					if (ar[next] != -1) {
+						next = ar[next] - 1;
+					}
+					if (next == ar.length - 1) {
+						return minSteps;
+					}
+					if (!visited[next]) {
+						qu.add(next);
+					}
+					visited[next] = true;
+				}
+			}
+		}
+		return -1;
+	}
+}

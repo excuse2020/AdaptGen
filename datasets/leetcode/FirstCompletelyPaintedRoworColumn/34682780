@@ -1,0 +1,41 @@
+class Solution {
+	int firstCompleteIndex(int[] arr, int[][] mat) {
+		Map<Integer, int[]> map = new HashMap<>();
+		for (int row = 0; row < mat.length; row++) {
+			for (int col = 0; col < mat[0].length; col++) {
+				map.put(mat[row][col],new int{row, col});
+			}
+		}
+		int[] rowSums = new int[mat.length];
+		int[] colSums = new int[mat[0].length];
+		for (int row = 0; row < mat.length; row++) {
+			int sum = 0;
+			for (int col = 0; col < mat[0].length; col++) {
+				sum = sum + mat[row][col];
+			}
+			rowSums[row] = sum;
+		}
+		for (int col = 0; col < mat[0].length; col++) {
+			int sum = 0;
+			for (int row = 0; row < mat.length; row++) {
+				sum = sum + mat[row][col];
+			}
+			colSums[col] = sum;
+		}
+		for (int i = 0; i < arr.length; i++) {
+			int value = arr[i];
+			int[] position = map.get(value);
+			int row = position[0];
+			int col = position[1];
+			rowSums[row] = rowSums[row] - value;
+			if (rowSums[row] == 0) {
+				return i;
+			}
+			colSums[col] = colSums[col] - value;
+			if (colSums[col] == 0) {
+				return i;
+			}
+		}
+		return Integer.MAX_VALUE;
+	}
+}

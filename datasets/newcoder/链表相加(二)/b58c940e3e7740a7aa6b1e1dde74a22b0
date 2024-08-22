@@ -1,0 +1,66 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		if (head1 == null) {
+			return head2;
+		}
+		if (head2 == null) {
+			return head1;
+		}
+		ListNode newHead1 = reverseNode(head1);
+		ListNode newHead2 = reverseNode(head2);
+		ListNode cur1 = newHead1;
+		ListNode cur2 = newHead2;
+		int sum = 0;
+		int shi = 0;
+		int ge = 0;
+		ListNode yummy = new ListNode(-1);
+		ListNode pre = yummy;
+		while (cur1 != null && cur2 != null) {
+			sum += cur1.val + cur2.val;
+			shi = sum / 10;
+			ge = sum % 10;
+			ListNode cur = new ListNode(ge);
+			pre.next = cur;
+			pre = cur;
+			sum = sum / 10;
+			cur1 = cur1.next;
+			cur2 = cur2.next;
+		}
+		while (cur1 != null) {
+			sum += cur1.val;
+			shi = sum / 10;
+			ge = sum % 10;
+			ListNode cur = new ListNode(ge);
+			pre.next = cur;
+			pre = cur;
+			sum = sum / 10;
+			cur1 = cur1.next;
+		}
+		while (cur2 != null) {
+			sum += cur2.val;
+			shi = sum / 10;
+			ge = sum % 10;
+			ListNode cur = new ListNode(ge);
+			pre.next = cur;
+			pre = cur;
+			sum = sum / 10;
+			cur2 = cur2.next;
+		}
+		return reverseNode(yummy.next);
+	}
+	ListNode reverseNode(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode dummy = new ListNode(-1);
+		dummy.next = head;
+		ListNode pre = dummy;
+		while (head.next != null) {
+			ListNode next = head.next;
+			head.next = next.next;
+			next.next = pre.next;
+			pre.next = next;
+		}
+		return dummy.next;
+	}
+}

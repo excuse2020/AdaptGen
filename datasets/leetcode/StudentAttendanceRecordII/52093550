@@ -1,0 +1,35 @@
+class Solution {
+	long MOD = (int) (1e9 + 7);
+	Long[][][] dp;
+	boolean check(int absenceCount, int consecutiveLateCount) {
+		if (absenceCount >= 2) {
+			return false;
+		}
+		if (consecutiveLateCount >= 3) {
+			return false;
+		}
+		return true;
+	}
+	int checkRecord(int n) {
+		dp = new Long[n + 1][3][3];
+		return (int) (solve(n,0,0) % MOD);
+	}
+	long solve(int n, int absenceCount, int consecutiveLateCount) {
+		if (!check(absenceCount,consecutiveLateCount)) {
+			return 0;
+		}
+		if (n == 0) {
+			return 1;
+		}
+		if (dp[n][absenceCount][consecutiveLateCount] != null) {
+			return dp[n][absenceCount][consecutiveLateCount];
+		}
+		long absence = solve(n - 1,absenceCount + 1,0);
+		long present = solve(n - 1,absenceCount,0);
+		long late = 0;
+		if (consecutiveLateCount < 2) {
+			late = solve(n - 1,absenceCount,consecutiveLateCount + 1);
+		}
+		return dp[n][absenceCount][consecutiveLateCount] = (absence + present) % MOD;
+	}
+}

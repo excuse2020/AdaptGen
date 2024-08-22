@@ -1,0 +1,26 @@
+class Solution {
+	int helper(int idx, int parent, List<List<Integer>> adj, List<Boolean> hasApple) {
+		int tot = 0;
+		for (int nbr: adj.get(idx)) {	
+			if (nbr == parent) {
+				continue;
+			}
+			int time_from_child = helper(nbr,idx,adj,hasApple);
+			if (time_from_child > 0 || hasApple.get(nbr)) {
+				tot += time_from_child + 2;
+			}
+		}
+		return tot;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		List<List<Integer>> ls = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			ls.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			ls.get(edge[0]).add(edge[1]);
+			ls.get(edge[1]).add(edge[0]);
+		}
+		return helper(0,-1,ls,hasApple);
+	}
+}

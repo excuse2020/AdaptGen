@@ -1,0 +1,31 @@
+class Solution {
+	int count = 0;
+	int[][] memo;
+	int find(int[] nums1, int[] nums2, int n, int m) {
+		if (count == 0) {
+			memo = new int[n + 1][m + 1];
+			for (int[] i: memo) {	
+				Arrays.fill(i,-1);
+			}
+			count++;
+		}
+		if (memo[n][m] != -1) {
+			return memo[n][m];
+		}
+		if (n == 0 || m == 0) {
+			memo[n][m] = 0;
+		} 
+		else {
+			if (nums1[n - 1] == nums2[m - 1]) {
+				memo[n][m] = 1 + find(nums1,nums2,n - 1,m - 1);
+			} 
+			else {
+				memo[n][m] = Math.max(find(nums1,nums2,n - 1,m),find(nums1,nums2,n,m - 1));
+			}
+		}
+		return memo[n][m];
+	}
+	int maxUncrossedLines(int[] nums1, int[] nums2) {
+		return find(nums1,nums2,nums1.length,nums2.length);
+	}
+}

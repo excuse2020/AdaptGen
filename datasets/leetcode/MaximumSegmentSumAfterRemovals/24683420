@@ -1,0 +1,48 @@
+class Solution {
+	long getSumWithinRange(int floor, int ceil, long[] prefix) {
+		if (floor > ceil) {
+			return 0L;
+		}
+		if (floor == 0) {
+			return prefix[ceil];
+		} 
+		else {
+			return prefix[ceil] - prefix[floor - 1];
+		}
+	}
+	long[] maximumSegmentSum(int[] nums, int[] removeQueries) {
+		int n = nums.length;
+		long[] prefix = new long[n];
+		for (int i = 0; i < n; i++) {
+			if (i == 0) {
+				prefix[i] = nums[i];
+			} 
+			else {
+				prefix[i] += (nums[i] + prefix[i - 1]);
+			}
+		}
+		long[] ans = new long[n];
+		TreeSet<Integer> poppedIndex = new TreeSet();
+		TreeMap<Long, Long> segmentSum = new TreeMap();
+		segmentSum.put(prefix[n - 1],1L);
+		for (int i = 0; i < n; i++) {
+			int idx = removeQueries[i];
+			Integer floorIdx = poppedIndex.floor(idx);
+			Integer ceilIdx = poppedIndex.ceiling(idx);
+			int floor = floorIdx != null ? floorIdx + 1 : 0;
+			int ceil = ceilIdx != null ? ceilIdx - 1 : n - 1;
+			long sumInRange = getSumWithinRange(floor,ceil,prefix);
+			long leftSum = getSumWithinRange(floor,idx - 1,prefix);
+			long rightSum = getSumWithinRange(idx + 1,ceil,prefix);
+			segmentSum.put(sumInRange,segmentSum.get(sumInRange) - 1);
+			if (segmentSum.get(sumInRange) == 0) {
+				segmentSum.remove(sumInRange);
+			}
+			segmentSum.put(leftSum,segmentSum.getOrDefault(leftSum,0L) + 1);
+			segmentSum.put(rightSum,segmentSum.getOrDefault(rightSum,0L) + 1);
+			ans[i] = segmentSum.lastKey();
+			poppedIndex.add(idx);
+		}
+		return ans;
+	}
+}

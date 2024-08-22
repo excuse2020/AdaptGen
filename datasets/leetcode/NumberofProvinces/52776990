@@ -1,0 +1,36 @@
+class Solution {
+	void bfs(ArrayList<ArrayList<Integer>> graph, boolean[] visited, int i) {
+		Queue<Integer> q = new ArrayDeque<>();
+		q.add(i);
+		visited[i] = true;
+		while (!q.isEmpty()) {
+			int val = q.remove();
+			for (int nei: graph.get(val)) {	
+				if (visited[nei] == false) {
+					bfs(graph,visited,nei);
+				}
+			}
+		}
+	}
+	int findCircleNum(int[][] isConnected) {
+		ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+		int n = isConnected.length;
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+			for (int j = 0; j < n; j++) {
+				if (i != j && isConnected[i][j] == 1) {
+					graph.get(i).add(j);
+				}
+			}
+		}
+		boolean[] visited = new boolean[n];
+		int count = 0;
+		for (int i = 0; i < n; i++) {
+			if (visited[i] == false) {
+				count++;
+				bfs(graph,visited,i);
+			}
+		}
+		return count;
+	}
+}

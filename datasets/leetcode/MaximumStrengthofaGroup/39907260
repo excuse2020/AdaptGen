@@ -1,0 +1,53 @@
+class Solution {
+	long maxStrength(int[] nums) {
+		Arrays.sort(nums);
+		long ans = nums[nums.length - 1];
+		int firstNegativeIndex = -1;
+		if (ans < 0) {
+			firstNegativeIndex = nums.length - 1;
+			ans = 1;
+		} 
+		else {
+			for (int i = nums.length - 2; i >= 0; i--) {
+				if (nums[i] >= 0) {
+					ans = Math.max(ans * nums[i],ans);
+				} 
+				else if (nums[i] < 0) {
+					firstNegativeIndex = i;
+					break;
+				}
+			}
+		}
+		if (firstNegativeIndex != -1) {
+			if ((firstNegativeIndex + 1) % 2 == 0) {
+				int index = firstNegativeIndex;
+				if (ans == 0) {
+					ans = 1;
+				}
+				while (index >= 0) {
+					ans = ans * nums[index];
+					index--;
+				}
+			} 
+			else {
+				int index = firstNegativeIndex - 1;
+				if (index < 0) {
+					if (firstNegativeIndex != (nums.length - 1)) {
+						return nums[nums.length - 1] == 0 ? 0 : ans;
+					}
+					index = 0;
+				} 
+				else {
+					if (ans == 0) {
+						ans = 1;
+					}
+				}
+				while (index >= 0) {
+					ans = ans * nums[index];
+					index--;
+				}
+			}
+		}
+		return ans;
+	}
+}

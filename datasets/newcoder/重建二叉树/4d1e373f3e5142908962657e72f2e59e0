@@ -1,0 +1,31 @@
+class Solution {
+	TreeNode construct(TreeNode root, int[] pre, int[] vin, int vinLeft, int vinRight, int preLeft, int preRight) {
+		if (vinLeft >= vinRight || preLeft >= preRight) {
+			return null;
+		}
+		root = new TreeNode(pre[preLeft]);
+		int vin_mid = getIndex(vin,vinLeft,vinRight,pre[preLeft]);
+		int left_count = Math.max(0,vin_mid - vinLeft);
+		int right_count = Math.max(0,vinRight - vin_mid);
+		root.left = construct(root.left,pre,vin,vinLeft,vin_mid,preLeft + 1,preLeft + left_count);
+		root.right = construct(root.right,pre,vin,vin_mid + 1,vinRight,preLeft + left_count,preRight);
+		return root;
+	}
+	int getIndex(int[] vin, int l, int r, int val) {
+		for (int i = l; i < r; ++i) {
+			if (vin[i] == val) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] vin) {
+		if (pre.length == 0) {
+			return null;
+		}
+		TreeNode root = null;
+		int vinLeft = 0, vinRight = vin.length, preLeft = 0, preRight = pre.length;
+		root = construct(root,pre,vin,vinLeft,vinRight,preLeft,preRight);
+		return root;
+	}
+}

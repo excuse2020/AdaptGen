@@ -1,0 +1,28 @@
+class Solution {
+	Map<Integer, Integer> memo = new HashMap<>();
+	int get(int n) {
+		if (memo.containsKey(n)) {
+			return memo.get(n);
+		}
+		double r = Math.pow(n,0.5);
+		int R = (int) r;
+		if (r - R == 0) {
+			return 2 * get(R);
+		}
+		int res = 0;
+		for (int i = R; i >= 2; i--) {
+			if (n % i == 0) {
+				res = get(i) + get(n / i);
+			}
+		}
+		res = res == 0 ? n : res;
+		memo.put(n,res);
+		return res;
+	}
+	int smallestValue(int n) {
+		while (get(n) != n) {
+			n = get(n);
+		}
+		return n;
+	}
+}

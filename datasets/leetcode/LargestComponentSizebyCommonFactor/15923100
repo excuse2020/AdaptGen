@@ -1,0 +1,38 @@
+class Solution {
+	boolean[] prime = new boolean[100001];
+	int[] root = new int[100001];
+	int find(int a) {
+		if (root[a] != a) {
+			return find(root[a]);
+		}
+		return root[a];
+	}
+	int largestComponentSize(int[] nums) {
+		for (int i = 0; i < 100000; i++) {
+			root[i] = i;
+			prime[i] = true;
+		}
+		Set<Integer> set = new HashSet<>();
+		for (int n: nums) {	
+			set.add(n);
+		}
+		for (int i = 2; i <= 100000; i++) {
+			if (prime[i]) {
+				for (int j = i * 2; j <= 100000; j += i) {
+					prime[j] = false;
+					if (set.contains(j)) {
+						root[find(j)] = find(i);
+					}
+				}
+			}
+		}
+		Map<Integer, Integer> rootCount = new HashMap<>();
+		int largestSize = 1;
+		for (int i = 0; i < nums.length; i++) {
+			int rootCur = find(nums[i]);
+			rootCount.put(rootCur,rootCount.getOrDefault(rootCur,0) + 1);
+			largestSize = Math.max(rootCount.get(rootCur),largestSize);
+		}
+		return largestSize;
+	}
+}

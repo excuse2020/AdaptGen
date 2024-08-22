@@ -1,0 +1,28 @@
+class Solution {
+	int VISITED_ELEMENT_MARKER = -999;
+	List<List<Integer>> uniquePermutations = new ArrayList<>();
+	List<List<Integer>> permuteUnique(int[] numbers) {
+		Arrays.sort(numbers);
+		recursivePermutation(numbers,0,new ArrayList<>());
+		return uniquePermutations;
+	}
+	void recursivePermutation(int[] nums, int startIndex, List<Integer> currentPermutation) {
+		if (currentPermutation.size() == nums.length) {
+			uniquePermutations.add(new ArrayList<>(currentPermutation));
+			return;
+		}
+		for (int i = 0; i < nums.length; i++) {
+			int currentNumber = nums[i];
+			if ((i > 0 && currentNumber != nums[i - 1]) || i == 0) {
+				if (nums[i] != VISITED_ELEMENT_MARKER) {
+					currentPermutation.add(currentNumber);
+					int temp = nums[i];
+					nums[i] = VISITED_ELEMENT_MARKER;
+					recursivePermutation(nums,startIndex,currentPermutation);
+					nums[i] = temp;
+					currentPermutation.remove(currentPermutation.size() - 1);
+				}
+			}
+		}
+	}
+}

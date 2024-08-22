@@ -1,0 +1,44 @@
+class Solution {
+	int maximumDetonation(int[][] bombs) {
+		int len = bombs.length;
+		int i, j;
+		ArrayList<Integer>[] bombsDenListArr = new ArrayList[len];
+		for (i = 0; i < len; i++) {
+			bombsDenListArr[i] = new ArrayList<Integer>();
+		}
+		for (i = 0; i < len; i++) {
+			long xi = bombs[i][0];
+			long yi = bombs[i][1];
+			long r = bombs[i][2];
+			for (j = 0; j < len; j++) {
+				if (j != i) {
+					long xj = bombs[j][0];
+					long yj = bombs[j][1];
+					if ((xi - xj) * (xi - xj) + (yi - yj) * (yi - yj) <= (r * r)) {
+						bombsDenListArr[i].add(j);
+					}
+				}
+			}
+		}
+		int[] denotedCt = new int[len];
+		int[] maxBombsDen = new int[2];
+		for (i = 0; i < len; i++) {
+			boolean[] visited = new boolean[len];
+			maximumDetonationUtil(i,bombsDenListArr,denotedCt,maxBombsDen,visited);
+		}
+		return maxBombsDen[0];
+	}
+	int maximumDetonationUtil(int currBomb, ArrayList<Integer>[] bombsDenListArr, int[] denotedCt, int[] maxBombsDen, boolean[] visited) {
+		if (visited[currBomb]) {
+			return 0;
+		}
+		visited[currBomb] = true;
+		ArrayList<Integer> denBombsList = bombsDenListArr[currBomb];
+		int bombsConnected = 1;
+		for (Integer bombInd: denBombsList) {	
+			bombsConnected = bombsConnected + maximumDetonationUtil(bombInd,bombsDenListArr,denotedCt,maxBombsDen,visited);
+		}
+		maxBombsDen[0] = Math.max(maxBombsDen[0],bombsConnected);
+		return bombsConnected;
+	}
+}

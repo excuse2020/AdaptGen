@@ -1,0 +1,49 @@
+class Solution {
+	boolean binary_search(List<Integer> nm, int val) {
+		int i = 0, j = nm.size() - 1;
+		while (i <= j) {
+			int mid = i + (j - i) / 2;
+			if (nm.get(mid) == val) {
+				return true;
+			} 
+			else if (nm.get(mid) > val) {
+				j = mid - 1;
+			} 
+			else {
+				i = mid + 1;
+			}
+		}
+		return false;
+	}
+	List<List<Integer>> findPrimePairs(int n) {
+		List<List<Integer>> nm = new ArrayList<>();
+		if (n <= 2) {
+			return nm;
+		}
+		boolean k = new boolean[n + 1];
+		Arrays.fill(k,true);
+		k[0] = k[1] = false;
+		for (int i = 2; i <= Math.sqrt(n); i++) {
+			if (k[i]) {
+				for (int j = i * i; j <= n; j += i) {
+					k[j] = false;
+				}
+			}
+		}
+		List<Integer> kk = new ArrayList<>();
+		for (int i = 2; i <= n; i++) {
+			if (k[i]) {
+				kk.add(i);
+			}
+		}
+		for (int i = 0; i < kk.size(); i++) {
+			int a = kk.get(i);
+			int b = n - a;
+			boolean value = binary_search(kk,b);
+			if (value && a <= b) {
+				nm.add(new ArrayList<>(Arrays.asList(a,b)));
+			}
+		}
+		return nm;
+	}
+}

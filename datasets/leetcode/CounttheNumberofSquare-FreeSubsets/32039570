@@ -1,0 +1,49 @@
+class Solution {
+	void getNums(Set<Long> set, List<Long> arr, int idx, int curCount, int max, long cur) {
+		if (curCount == max) {
+			set.add(cur);
+			return;
+		}
+		if (idx >= arr.size()) {
+			return;
+		}
+		for (int i = idx + 1; i < arr.size(); i++) {
+			getNums(set,arr,i,curCount + 1,max,cur * arr.get(i));
+		}
+	}
+	int squareFreeSubsets(int[] nums) {
+		int mod = 1000000007;
+		int ans = 0;
+		Set<Long> set = new HashSet<>();
+		Map<Long, Integer> map = new HashMap<>();
+		List<Long> arr = new ArrayList<Long>(Arrays.asList(2L,3L,5L,7L,11L,13L,17L,19L,23L,29L));
+		for (int i = 2; i <= arr.size(); i++) {
+			for (int j = 0; j < arr.size(); j++) {
+				getNums(set,arr,j,1,i,arr.get(j));
+			}
+		}
+		for (int i = 0; i < arr.size(); i++) {
+			set.add(arr.get(i));
+		}
+		set.add(1L);
+		map.put(1L,1);
+		for (int i = 0; i < nums.length; i++) {
+			boolean flag = set.contains((long) nums[i]);
+			if (!flag) {
+				continue;
+			}
+			Map<Long, Integer> tmp = new HashMap<>();
+			for (long key: map.keySet()) {	
+				long cur = key * nums[i];
+				if (set.contains(cur)) {
+					ans = (ans + map.get(key)) % mod;
+					tmp.put(cur,(map.getOrDefault(cur,0) + map.get(key)) % mod);
+				}
+			}
+			for (long key: tmp.keySet()) {	
+				map.put(key,tmp.get(key));
+			}
+		}
+		return ans;
+	}
+}

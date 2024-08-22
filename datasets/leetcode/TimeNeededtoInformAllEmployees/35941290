@@ -1,0 +1,32 @@
+class Solution {
+	List<List<Integer>> buildAdj(int[] manager) {
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < manager.length; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < manager.length; i++) {
+			if (manager[i] != -1) {
+				adj.get(manager[i]).add(i);
+			}
+		}
+		return adj;
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		List<List<Integer>> adj = buildAdj(manager);
+		Queue<int[]> queue = new LinkedList<>();
+		int minTime = 0;
+		queue.offer(new int{headID, 0});
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			while (size-- != 0) {
+				int node = queue.peek()[0];
+				int time = queue.poll()[1];
+				minTime = Math.max(minTime,time);
+				for (int neighbour: adj.get(node)) {	
+					queue.offer(new int{neighbour, informTime[node] + time});
+				}
+			}
+		}
+		return minTime;
+	}
+}

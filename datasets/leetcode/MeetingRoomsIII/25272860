@@ -1,0 +1,34 @@
+class Solution {
+	int mostBooked(int n, int[][] meetings) {
+		int[] rooms = new int[n];
+		PriorityQueue<List<Long>> occupiedRooms = new PriorityQueue<>((x, y) -> {Long.compare(x.get(1),y.get(1))});
+		PriorityQueue<Long> freeRooms = new PriorityQueue<>();
+		for (int i = 0; i < n; i++) {
+			freeRooms.add((long) i);
+		}
+		Arrays.sort(meetings,(x, y) -> {Integer.compare(x[0],y[0])});
+		long currentTime = 0;
+		for (int[] meeting: meetings) {	
+			currentTime = Math.max(meeting[0],currentTime);
+			if (freeRooms.isEmpty()) {
+				long earliestFreeTime = occupiedRooms.peek().get(1);
+				currentTime = Math.max(earliestFreeTime,currentTime);
+			}
+			while (!occupiedRooms.isEmpty() && occupiedRooms.peek().get(1) <= currentTime) {
+				long freedRoom = occupiedRooms.poll().get(2);
+				freeRooms.add(freedRoom);
+			}
+			long nextRoom = freeRooms.poll();
+			rooms[(int)nextRoom] += 1;
+			occupiedRooms.add(List.of(currentTime,currentTime + (meeting[1] - meeting[0]),nextRoom));
+		}
+		int max = 0, ansRoom = 0;
+		for (int i = n - 1; i >= 0; i--) {
+			if (rooms[i] >= max) {
+				max = rooms[i];
+				ansRoom = i;
+			}
+		}
+		return ansRoom;
+	}
+}

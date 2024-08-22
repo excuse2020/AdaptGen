@@ -1,0 +1,48 @@
+class Solution {
+	void postorder(List<Integer> list, TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		postorder(list,root.left);
+		postorder(list,root.right);
+		list.add(root.val);
+	}
+	int[] postorderTraversal(TreeNode root) {
+		return solution2(root);
+	}
+	int[] solution1(TreeNode root) {
+		List<Integer> list = new ArrayList<>();
+		postorder(list,root);
+		int[] result = new int[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			result[i] = list.get(i);
+		}
+		return result;
+	}
+	int[] solution2(TreeNode root) {
+		List<Integer> list = new ArrayList<>();
+		Stack<TreeNode> stack = new Stack<>();
+		TreeNode curr;
+		TreeNode last = null;
+		while (root != null || !stack.isEmpty()) {
+			while (root != null) {
+				stack.push(root);
+				root = root.left;
+			}
+			curr = stack.pop();
+			if (curr.right == null || curr.right == last) {
+				list.add(curr.val);
+				last = curr;
+			} 
+			else {
+				stack.push(curr);
+				root = curr.right;
+			}
+		}
+		int[] result = new int[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			result[i] = list.get(i);
+		}
+		return result;
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	int atmostK(String word, int k) {
+		int left = 0, right = 0, count = 0;
+		Map<Character, Integer> map = new HashMap<>();
+		while (right < word.length()) {
+			char cr = word.charAt(right);
+			if (!isVowel(cr)) {
+				left = right + 1;
+				right++;
+				map.clear();
+				continue;
+			}
+			map.put(cr,map.getOrDefault(cr,0) + 1);
+			while (map.size() > k) {
+				char cl = word.charAt(left);
+				map.put(cl,map.getOrDefault(cl,0) - 1);
+				if (map.get(cl) == 0) {
+					map.remove(cl);
+				}
+				left++;
+			}
+			count += right - left + 1;
+			right++;
+		}
+		return count;
+	}
+	int countVowelSubstrings(String word) {
+		return atmostK(word,5) - atmostK(word,4);
+	}
+	boolean isVowel(char c) {
+	}
+}

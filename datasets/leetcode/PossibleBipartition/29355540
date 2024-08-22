@@ -1,0 +1,40 @@
+class Solution {
+	boolean res = true;
+	void dfs(List<Integer>[] graph, int[] color, boolean sign, int cur) {
+		if (!res) {
+			return;
+		}
+		if (color[cur] != 0) {
+			if ((sign && color[cur] == 2) || (!sign && color[cur] == 1)) {
+				res = false;
+			}
+			return;
+		}
+		color[cur] = sign ? 1 : 2;
+		sign = !sign;
+		for (int next: graph[cur]) {	
+			dfs(graph,color,sign,next);
+		}
+		return;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		if (dislikes.length == 0) {
+			return true;
+		}
+		List<Integer>[] graph = new ArrayList[n + 1];
+		for (int i = 1; i <= n; ++i) {
+			graph[i] = new ArrayList<Integer>();
+		}
+		for (int[] dislike: dislikes) {	
+			graph[dislike[0]].add(dislike[1]);
+			graph[dislike[1]].add(dislike[0]);
+		}
+		int[] color = new int[n + 1];
+		for (int i = 1; i <= n; ++i) {
+			if (color[i] == 0) {
+				dfs(graph,color,true,i);
+			}
+		}
+		return res;
+	}
+}

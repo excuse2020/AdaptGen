@@ -1,0 +1,66 @@
+class Solution {
+	int prime = 101;
+	int Rabin(char[] text, char[] pattern) {
+		int tlen = text.length;
+		int plen = pattern.length;
+		long thash = calHash(text,0,plen - 1);
+		long phash = calHash(pattern,0,plen - 1);
+		for (int i = 1; i <= (tlen - plen + 1); i++) {
+			if (thash == phash && check(text,i - 1,i + plen - 2,pattern,0,plen - 1)) {
+				return i - 1;
+			}
+			if (i < (tlen - plen + 1)) {
+				thash = recalHash(text,i - 1,i + plen - 1,thash,plen);
+			}
+		}
+		return -1;
+	}
+	long calHash(char[] text, int start, int end) {
+		long hash = 0;
+		for (int i = start; i <= end; i++) {
+			hash += text[i] * Math.pow(prime,i);
+		}
+		return hash;
+	}
+	boolean check(char[] text, int start1, int end1, char[] pattern, int start2, int end2) {
+		if (end1 - start1 != end2 - start2) {
+			return false;
+		}
+		while (start1 <= end1 && start2 <= end2) {
+			if (text[start1] != pattern[start2]) {
+				return false;
+			}
+			start1++;
+			start2++;
+		}
+		return true;
+	}
+	long recalHash(char[] text, int oldindx, int newindx, long oldhash, int m) {
+		long newHash = oldhash - text[oldindx];
+		newHash = newHash / prime;
+		newHash += text[newindx] * (Math.pow(prime,m - 1));
+		return newHash;
+	}
+	int repeatedStringMatch(String a, String b) {
+		if (a.equals(b)) {
+			return 1;
+		}
+		int i = 0;
+		String str = "";
+		while (str.length() < b.length()) {
+			i++;
+			str += a;
+		}
+		if (str.equals(b)) {
+			return i;
+		}
+		if (Rabin(str.toCharArray(),b.toCharArray()) != -1) {
+			return i;
+		}
+		str += a;
+		if (Rabin(str.toCharArray(),b.toCharArray()) != -1) {
+			return i + 1;
+		}
+		return -1;
+	}
+}

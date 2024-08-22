@@ -1,0 +1,46 @@
+class Solution {
+	String largestNumber(int[] cost, int target) {
+		String[][] dp = new String[cost.length][target + 1];
+		for (int i = 0; i < dp.length; i++) {
+			dp[i][0] = "0";
+			for (int t = 1; t < dp[i].length; t++) {
+				if (t < cost[i]) {
+					dp[i][t] = i == 0 ? "-1" : dp[i - 1][t];
+				} 
+				else {
+					String prev = dp[i][t - cost[i]];
+					if (!prev.equals("-1")) {
+						int v = i + 1;
+						String include = prev.equals("0") ? Integer.toString(v) : v + prev;
+						dp[i][t] = i == 0 ? include : max(include,dp[i - 1][t]);
+					} 
+					else {
+						dp[i][t] = i == 0 ? "-1" : dp[i - 1][t];
+					}
+				}
+			}
+		}
+		String result = dp[cost.length - 1][target];
+		return result.equals("-1") ? "0" : dp[cost.length - 1][target];
+	}
+	String max(String a, String b) {
+		if (b.equals("-1")) {
+			return a;
+		}
+		if (a.length() > b.length()) {
+			return a;
+		}
+		if (a.length() < b.length()) {
+			return b;
+		}
+		for (int i = 0; i < a.length(); i++) {
+			if (a.charAt(i) > b.charAt(i)) {
+				return a;
+			}
+			if (a.charAt(i) < b.charAt(i)) {
+				return b;
+			}
+		}
+		return a;
+	}
+}

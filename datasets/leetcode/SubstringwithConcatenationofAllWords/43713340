@@ -1,0 +1,46 @@
+class Solution {
+	List<Integer> findSubstring(String s, String[] words) {
+		List<Integer> result = new ArrayList<>();
+		if (s == null || s.length() == 0 || words == null || words.length == 0) {
+			return result;
+		}
+		int wordLen = words[0].length();
+		int totalLen = wordLen * words.length;
+		int sLen = s.length();
+		Map<String, Integer> wordFreq = new HashMap<>();
+		for (String word: words) {	
+			wordFreq.put(word,wordFreq.getOrDefault(word,0) + 1);
+		}
+		for (int i = 0; i < wordLen; i++) {
+			int left = i;
+			int count = 0;
+			Map<String, Integer> seen = new HashMap<>();
+			for (int j = i; j <= sLen - wordLen; j += wordLen) {
+				String sub = s.substring(j,j + wordLen);
+				if (wordFreq.containsKey(sub)) {
+					seen.put(sub,seen.getOrDefault(sub,0) + 1);
+					count++;
+					while (seen.getOrDefault(sub,0) > wordFreq.getOrDefault(sub,0)) {
+						String leftSub = s.substring(left,left + wordLen);
+						seen.put(leftSub,seen.get(leftSub) - 1);
+						count--;
+						left += wordLen;
+					}
+					if (count == words.length) {
+						result.add(left);
+						String leftSub = s.substring(left,left + wordLen);
+						seen.put(leftSub,seen.get(leftSub) - 1);
+						count--;
+						left += wordLen;
+					}
+				} 
+				else {
+					seen.clear();
+					count = 0;
+					left = j + wordLen;
+				}
+			}
+		}
+		return result;
+	}
+}

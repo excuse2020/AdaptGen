@@ -1,0 +1,37 @@
+class Solution {
+	int nextGreaterElement(int n) {
+		List<Long> list = new ArrayList<>();
+		while (n != 0) {
+			list.add(0,(long) n % 10);
+			n /= 10;
+		}
+		int i = list.size() - 2;
+		while (i >= 0 && list.get(i) >= list.get(i + 1)) {
+			i--;
+		}
+		if (i == -1) {
+			return -1;
+		}
+		int j = list.size() - 1;
+		while (j > i && list.get(j) <= list.get(i)) {
+			j--;
+		}
+		swap(list,i,j);
+		int start = i + 1;
+		int end = list.size() - 1;
+		while (start < end) {
+			swap(list,start++,end--);
+		}
+		long result = 0;
+		for (long num: list) {	
+			result = result * 10 + num;
+		}
+		return result > Integer.MAX_VALUE ? -1 : (int) result;
+	}
+	void swap(List<Long> list, int i, int j) {
+		long tempI = list.get(i);
+		long tempJ = list.get(j);
+		list.set(j,tempI);
+		list.set(i,tempJ);
+	}
+}

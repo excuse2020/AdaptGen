@@ -1,0 +1,52 @@
+class Solution {
+	TreeNode buildTree(int[] preOrder, int[] inOrder) {
+		if (preOrder == null || inOrder == null || preOrder.length == 0) {
+			return null;
+		}
+		int rootValue = preOrder[0];
+		int pos = 0;
+		TreeNode root = new TreeNode(rootValue);
+		if (preOrder.length == 1 || inOrder.length == 1) {
+			return root;
+		}
+		for (int i = 0; i < inOrder.length; i++) {
+			if (rootValue == inOrder[i]) {
+				pos = i;
+				break;
+			}
+		}
+		root.left = buildTree(Arrays.copyOfRange(preOrder,1,pos + 1),Arrays.copyOfRange(inOrder,0,pos));
+		root.right = buildTree(Arrays.copyOfRange(preOrder,pos + 1,preOrder.length),Arrays.copyOfRange(inOrder,pos + 1,inOrder.length));
+		return root;
+	}
+	List<Integer> rightView(TreeNode root) {
+		Queue<TreeNode> queue = new LinkedList<TreeNode>();
+		queue.add(root);
+		List<Integer> rightList = new ArrayList<>();
+		while (!queue.isEmpty()) {
+			int l = queue.size();
+			int v = 0;
+			for (int i = 0; i < l; i++) {
+				TreeNode node = queue.poll();
+				v = node.val;
+				if (node.left != null) {
+					queue.add(node.left);
+				}
+				if (node.right != null) {
+					queue.add(node.right);
+				}
+			}
+			rightList.add(v);
+		}
+		return rightList;
+	}
+	int[] solve(int[] preOrder, int[] inOrder) {
+		TreeNode root = buildTree(preOrder,inOrder);
+		List<Integer> rightList = rightView(root);
+		int[] rightArray = new int[rightList.size()];
+		for (int i = 0; i < rightList.size(); i++) {
+			rightArray[i] = rightList.get(i);
+		}
+		return rightArray;
+	}
+}

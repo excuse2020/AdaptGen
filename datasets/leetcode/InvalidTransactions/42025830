@@ -1,0 +1,55 @@
+class Solution {
+	List<String> invalidTransactions(String[] transactions) {
+		Map<String, List<Transaction>> transactionMap = new HashMap<>();
+		List<String> invalidTransactionsList = new ArrayList<>();
+		for (String txnString: transactions) {	
+			Transaction newTransaction = Transaction.parse(txnString);
+			List<Transaction> oldTransactionList = transactionMap.getOrDefault(newTransaction.name,new ArrayList<>());
+			if (Transaction.invalidAmount(newTransaction)) {
+				invalidTransactionsList.add(txnString);
+				newTransaction.isValid = false;
+			}
+			for (Transaction oldTransaction: oldTransactionList) {	
+				if (Transaction.invalidCity(oldTransaction,newTransaction)) {
+					if (newTransaction.isValid) {
+						invalidTransactionsList.add(txnString);
+						newTransaction.isValid = false;
+					}
+					if (oldTransaction.isValid) {
+						invalidTransactionsList.add(oldTransaction.toString());
+						oldTransaction.isValid = false;
+					}
+				}
+			}
+			oldTransactionList.add(newTransaction);
+			transactionMap.put(newTransaction.name,oldTransactionList);
+		}
+		return invalidTransactionsList;
+	}
+}
+class Transaction {
+	int amount;
+	String city;
+	boolean isValid;
+	String name;
+	int time;
+	boolean invalidAmount(Transaction newTransaction) {
+		return newTransaction.amount > 1000;
+	}
+	boolean invalidCity(Transaction oldTransaction, Transaction newTransaction) {
+		return oldTransaction != null && Objects.equals(oldTransaction.name,newTransaction.name) && !Objects.equals(oldTransaction.city,newTransaction.city) && Math.abs(newTransaction.time - oldTransaction.time) <= 60;
+	}
+	Transaction parse(String transaction) {
+		String[] values = transaction.split(",");
+		Transaction transactionObj = new Transaction();
+		transactionObj.name = values[0];
+		transactionObj.time = Integer.parseInt(values[1]);
+		transactionObj.amount = Integer.parseInt(values[2]);
+		transactionObj.city = values[3];
+		transactionObj.isValid = true;
+		return transactionObj;
+	}
+	String toString() {
+		return name + ",";
+	}
+}

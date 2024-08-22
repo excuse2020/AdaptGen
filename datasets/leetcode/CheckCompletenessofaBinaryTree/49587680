@@ -1,0 +1,49 @@
+class Solution {
+	boolean isCompleteTree(TreeNode root) {
+		int expected = 1;
+		Queue<TreeNode> queue = new LinkedList();
+		queue.add(root);
+		TreeNode node;
+		int levelSize = 0;
+		int thisLevel = 0;
+		boolean lookingForAnotherLevel = true;
+		ArrayList<TreeNode> levelarr = new ArrayList();
+		while (!queue.isEmpty()) {
+			levelarr = new ArrayList();
+			levelSize = queue.size();
+			thisLevel = 0;
+			for (int i = 0; i < levelSize; i++) {
+				node = queue.poll();
+				levelarr.add(node);
+				if (node != null) {
+					thisLevel++;
+				} 
+				else {
+					continue;
+				}
+				queue.add(node.left);
+				queue.add(node.right);
+			}
+			if (expected != thisLevel) {
+				break;
+			}
+			expected *= 2;
+		}
+		while (!queue.isEmpty()) {
+			node = queue.poll();
+			if (node != null) {
+				return false;
+			}
+		}
+		boolean gate = false;
+		for (TreeNode kik: levelarr) {	
+			if (kik == null && !gate) {
+				gate = true;
+			}
+			if (kik != null && gate) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

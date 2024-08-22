@@ -1,0 +1,32 @@
+class Solution {
+	int countPaths(int[][] grid) {
+		long[][] table = new long[grid.length][grid[0].length];
+		int[][] dates = new int[grid.length * grid[0].length][3];
+		long ans = 0;
+		for (int i = 0, id = 0; i != grid.length; i++) {
+			for (int j = 0; j != grid[0].length; j++, id++) {
+				dates[id][0] = grid[i][j];
+				dates[id][1] = i;
+				dates[id][2] = j;
+			}
+		}
+		Arrays.sort(dates,(a, b) -> {a[0] - b[0]});
+		for (int data: dates) {	
+			ans = (ans + ++table[data[1]][data[2]]) % 1000000007;
+			table[data[1]][data[2]] %= 1000000007;
+			if (data[1] != 0 && grid[data[1] - 1][data[2]] > grid[data[1]][data[2]]) {
+				table[data[1] - 1][data[2]] += table[data[1]][data[2]];
+			}
+			if (data[1] != grid.length - 1 && grid[data[1] + 1][data[2]] > grid[data[1]][data[2]]) {
+				table[data[1] + 1][data[2]] += table[data[1]][data[2]];
+			}
+			if (data[2] != 0 && grid[data[1]][data[2] - 1] > grid[data[1]][data[2]]) {
+				table[data[1]][data[2] - 1] += table[data[1]][data[2]];
+			}
+			if (data[2] != grid[0].length - 1 && grid[data[1]][data[2] + 1] > grid[data[1]][data[2]]) {
+				table[data[1]][data[2] + 1] += table[data[1]][data[2]];
+			}
+		}
+		return (int) (ans % 1000000007);
+	}
+}

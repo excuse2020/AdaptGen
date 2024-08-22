@@ -1,0 +1,82 @@
+class Solution {
+	int binarySearch(MountainArray arr, int lower, int upper, int target) {
+		System.out.println("binary search for " + target);
+		if (lower == 0) {
+			while (upper >= lower) {
+				int mid = (lower + upper) / 2;
+				int curr = arr.get(mid);
+				if (target > curr) {
+					lower = mid + 1;
+				} 
+				else if (target < curr) {
+					upper = mid - 1;
+				} 
+				else {
+					return mid;
+				}
+			}
+			return -1;
+		} 
+		else {
+			while (upper >= lower) {
+				int mid = (lower + upper) / 2;
+				int curr = arr.get(mid);
+				if (target < curr) {
+					lower = mid + 1;
+				} 
+				else if (target > curr) {
+					upper = mid - 1;
+				} 
+				else {
+					return mid;
+				}
+			}
+			return -1;
+		}
+	}
+	int findInMountainArray(int target, MountainArray mountainArr) {
+		int len = mountainArr.length();
+		HashMap<Integer, Integer> knownValues = new HashMap<Integer, Integer>();
+		int peakInd = findPeak(mountainArr,len - 1,0,knownValues);
+		System.out.println(peakInd);
+		int searchOne = binarySearch(mountainArr,0,peakInd,target);
+		if (searchOne != -1) {
+			return searchOne;
+		}
+		return binarySearch(mountainArr,peakInd,mountainArr.length() - 1,target);
+	}
+	int findPeak(MountainArray arr, int upper, int lower, HashMap<Integer, Integer> knownValues) {
+		System.out.println("finding peak between upper = " + upper);
+		int mid = (upper + lower) / 2;
+		int curr = getVal(arr,knownValues,mid);
+		if (arr.get(mid - 1) < curr && arr.get(mid + 1) < curr) {
+			return mid;
+		}
+		int upperVal = getVal(arr,knownValues,upper);
+		int beforeUpperVal = getVal(arr,knownValues,upper - 1);
+		int lowerVal = getVal(arr,knownValues,lower);
+		int afterLowerVal = getVal(arr,knownValues,lower + 1);
+		int upperSlope = upperVal - beforeUpperVal;
+		int lowerSlope = afterLowerVal - lowerVal;
+		if (upperSlope * lowerSlope > 0) {
+			return -1;
+		}
+		int tryOne = findPeak(arr,upper,mid,knownValues);
+		if (tryOne != -1) {
+			return tryOne;
+		}
+		int tryTwo = findPeak(arr,mid,lower,knownValues);
+		return tryTwo;
+	}
+	int getVal(MountainArray arr, HashMap<Integer, Integer> knownValues, int index) {
+		int res;
+		if (knownValues.containsKey(index)) {
+			res = knownValues.get(index);
+		} 
+		else {
+			res = arr.get(index);
+			knownValues.put(index,res);
+		}
+		return res;
+	}
+}

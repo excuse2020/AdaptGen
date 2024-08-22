@@ -1,0 +1,29 @@
+class Solution {
+	long matrixSumQueries(int n, int[][] queries) {
+		int row = n;
+		int col = n;
+		HashMap<Integer, Integer> m = new HashMap<>();
+		Set<Integer> unqRow = new HashSet<>();
+		Set<Integer> unqCol = new HashSet<>();
+		int len = queries.length - 1;
+		while (len >= 0) {
+			int[] arr = queries[len];
+			if (arr[0] == 1 && !unqCol.contains(arr[1])) {
+				m.put(arr[2],m.getOrDefault(arr[2],0) + row);
+				unqCol.add(arr[1]);
+				col--;
+			}
+			if (arr[0] == 0 && !unqRow.contains(arr[1])) {
+				m.put(arr[2],m.getOrDefault(arr[2],0) + col);
+				unqRow.add(arr[1]);
+				row--;
+			}
+			len--;
+		}
+		long total = 0;
+		for (int key: m.keySet()) {	
+			total += (long) key * m.get(key);
+		}
+		return total;
+	}
+}

@@ -1,0 +1,37 @@
+class Solution {
+	Integer[][] dp;
+	int getAlicesMaxPoint(int aliceTurn, int ind, int[] stoneValue) {
+		if (ind > stoneValue.length - 1) {
+			return 0;
+		}
+		if (dp[aliceTurn][ind] != null) {
+			return dp[aliceTurn][ind];
+		}
+		int ans = aliceTurn == 1 ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+		if (aliceTurn == 1) {
+			int sum = 0;
+			for (int i = ind; i - ind <= 2 && i < stoneValue.length; i++) {
+				sum += stoneValue[i];
+				ans = Math.max(ans,sum + getAlicesMaxPoint(0,i + 1,stoneValue));
+			}
+		} 
+		else {
+			int sum = 0;
+			for (int i = ind; i - ind <= 2 && i < stoneValue.length; i++) {
+				sum += stoneValue[i];
+				ans = Math.min(ans,getAlicesMaxPoint(1,i + 1,stoneValue));
+			}
+		}
+		return dp[aliceTurn][ind] = ans;
+	}
+	String stoneGameIII(int[] stoneValue) {
+		dp = new Integer[2][stoneValue.length];
+		int sum = 0;
+		for (int stoneVal: stoneValue) {	
+			sum += stoneVal;
+		}
+		int aliceMaxPoint = getAlicesMaxPoint(1,0,stoneValue);
+		int bobMaxPoint = sum - aliceMaxPoint;
+		return aliceMaxPoint == bobMaxPoint ? "Tie" : (aliceMaxPoint > bobMaxPoint ? "Alice" : "Bob");
+	}
+}

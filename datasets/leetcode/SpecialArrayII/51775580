@@ -1,0 +1,37 @@
+class Solution {
+	boolean[] isArraySpecial(int[] nums, int[][] queries) {
+		if (nums.length == 1) {
+			boolean[] res = new boolean[queries.length];
+			Arrays.fill(res,true);
+			return res;
+		}
+		int[] adjSpecial = new int[nums.length - 1];
+		for (int i = 0; i < nums.length - 1; i++) {
+			adjSpecial[i] = (nums[i] % 2) != (nums[i + 1] % 2) ? 1 : 0;
+		}
+		int countOnes = 0;
+		int[] freqOnes = new int[adjSpecial.length];
+		for (int i = 0; i < adjSpecial.length; i++) {
+			if (adjSpecial[i] == 1) {
+				countOnes++;
+			}
+			freqOnes[i] = countOnes;
+		}
+		boolean[] result = new boolean[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			int from = queries[i][0];
+			int to = queries[i][1];
+			int subLength = to - from + 1;
+			if (from == to) {
+				result[i] = true;
+			} 
+			else {
+				int tillToCount = freqOnes[to - 1];
+				int tillFromCount = from == 0 ? 0 : freqOnes[from - 1];
+				int specialPairs = tillToCount - tillFromCount;
+				result[i] = specialPairs == subLength - 1;
+			}
+		}
+		return result;
+	}
+}

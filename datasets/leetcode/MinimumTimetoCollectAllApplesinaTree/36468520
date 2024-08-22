@@ -1,0 +1,46 @@
+class Solution {
+	List<List<Integer>> adjency = new ArrayList<>();
+	int[] timeCount;
+	boolean[] visited;
+	int dfs(int node, int level, List<Boolean> hasApple) {
+		if (this.adjency.get(node) == null || this.visited[node]) {
+			return 0;
+		}
+		this.visited[node] = true;
+		if (hasApple.get(node)) {
+			this.timeCount[node] = level;
+		}
+		int neighboursHavingApples = 0;
+		int totalTimeForNeighbours = 0;
+		for (int neighbour: this.adjency.get(node)) {	
+			int currentTime = dfs(neighbour,level + 1,hasApple);
+			totalTimeForNeighbours += currentTime;
+			if (currentTime > 0) {
+				neighboursHavingApples += 1;
+			}
+		}
+		if (neighboursHavingApples > 0) {
+			int totalTime = (neighboursHavingApples > 0) ? totalTimeForNeighbours : 0;
+			if (neighboursHavingApples > 1) {
+				totalTime = totalTime - level * (neighboursHavingApples - 1);
+			}
+			this.timeCount[node] = totalTime;
+		}
+		return (this.timeCount[node] > 0) ? this.timeCount[node] + 1 : 0;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		this.timeCount = new int[n];
+		this.visited = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			this.adjency.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			int a = edge[0];
+			int b = edge[1];
+			this.adjency.get(a).add(b);
+			this.adjency.get(b).add(a);
+		}
+		dfs(0,0,hasApple);
+		return this.timeCount[0];
+	}
+}

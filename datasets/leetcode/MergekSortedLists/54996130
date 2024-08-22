@@ -1,0 +1,46 @@
+class Solution {
+	ListNode merge(ListNode n1, ListNode n2) {
+		ListNode dummy = new ListNode(Integer.MIN_VALUE);
+		ListNode p = dummy;
+		while (n1 != null && n2 != null) {
+			if (n1.val < n2.val) {
+				ListNode prev = n1;
+				p.next = n1;
+				n1 = n1.next;
+				prev.next = null;
+				p = p.next;
+			} 
+			else {
+				ListNode prev = n2;
+				p.next = n2;
+				n2 = n2.next;
+				prev.next = null;
+				p = p.next;
+			}
+		}
+		if (n1 != null) {
+			p.next = n1;
+		} 
+		else {
+			p.next = n2;
+		}
+		return dummy.next;
+	}
+	ListNode mergeKLists(ListNode[] lists) {
+		return mergeLists(lists,0,lists.length);
+	}
+	ListNode mergeLists(ListNode[] lists, int l, int r) {
+		if (l < r) {
+			int m = (r + l) / 2;
+			ListNode n1 = mergeLists(lists,l,m);
+			ListNode n2 = mergeLists(lists,m + 1,r);
+			return merge(n1,n2);
+		}
+		if (l == lists.length) {
+			return null;
+		} 
+		else {
+			return lists[l];
+		}
+	}
+}

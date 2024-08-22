@@ -1,0 +1,43 @@
+class Solution {
+	RandomListNode Clone(RandomListNode pHead) {
+		RandomListNode newHead = initList();
+		for (RandomListNode curr = pHead; curr != null; curr = curr.next) {
+			addLast(newHead,curr.label);
+		}
+		for (RandomListNode curr = pHead; curr != null; curr = curr.next) {
+			if (curr.random != null) {
+				RandomListNode newLoc = findNode(newHead,curr.label);
+				newLoc.random = findNode(newHead,curr.random.label);
+			}
+		}
+		return newHead.next;
+	}
+	void addLast(RandomListNode head, int val) {
+		RandomListNode lastNode = findLast(head);
+		RandomListNode temp = new RandomListNode(val);
+		temp.next = null;
+		temp.next = lastNode.next;
+		lastNode.next = temp;
+	}
+	RandomListNode findLast(RandomListNode head) {
+		RandomListNode curr = null;
+		for (curr = head; curr.next != null; ) {
+			curr = curr.next;
+		}
+		return curr;
+	}
+	RandomListNode findNode(RandomListNode head, int val) {
+		RandomListNode curr = null;
+		for (curr = head.next; curr != null; curr = curr.next) {
+			if (val == curr.label) {
+				break;
+			}
+		}
+		return curr;
+	}
+	RandomListNode initList() {
+		RandomListNode head = new RandomListNode(Integer.MIN_VALUE);
+		head.next = null;
+		return head;
+	}
+}

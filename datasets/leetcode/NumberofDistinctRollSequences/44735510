@@ -1,0 +1,40 @@
+class Solution {
+	int distinctSequences(int n) {
+		int[][][] dp = new int[n][7][7];
+		for (int i = 0; i < dp.length; i++) {
+			for (int j = 0; j <= 6; j++) {
+				Arrays.fill(dp[i][j],-1);
+			}
+		}
+		return recur(0,n,-1,-1,dp,(int) (1e9 + 7));
+	}
+	int recur(int i, int n, int prev, int secondPrev, int[][][] dp, int mod) {
+		if (i == n) {
+			return 1;
+		}
+		if (prev != -1 && secondPrev != -1 && dp[i][prev][secondPrev] != -1) {
+			return dp[i][prev][secondPrev];
+		}
+		int total = 0;
+		for (int j = 1; j <= 6; j++) {
+			if (j == prev || j == secondPrev) {
+				continue;
+			}
+			if ((j == 2 || j == 4 || j == 6) && (prev == 2 || prev == 4 || prev == 6)) {
+				continue;
+			}
+			if (j == 3 && prev == 6) {
+				continue;
+			}
+			if (j == 6 && prev == 3) {
+				continue;
+			}
+			total = total + recur(i + 1,n,j,prev,dp,mod);
+			total = total % mod;
+		}
+		if (prev != -1 && secondPrev != -1) {
+			dp[i][prev][secondPrev] = total;
+		}
+		return total;
+	}
+}

@@ -1,0 +1,73 @@
+class Solution {
+	Boolean[][] memo;
+	boolean dfs(String s, int l, int r) {
+		if (l >= r) {
+			return memo[l][r] = true;
+		}
+		if (memo[l][r] != null) {
+			return memo[l][r];
+		}
+		dfs(s,l + 1,r);
+		dfs(s,l,r - 1);
+		if (s.charAt(l) == s.charAt(r)) {
+			return memo[l][r] = dfs(s,l + 1,r - 1);
+		} 
+		else {
+			return memo[l][r] = false;
+		}
+	}
+	int dp(List<int[]> list, int[] memo2, int index) {
+		if (index == list.size() - 1) {
+			return 1;
+		}
+		if (index == list.size()) {
+			return 0;
+		}
+		if (memo2[index] != -1) {
+			return memo2[index];
+		}
+		int sub = 0;
+		for (int i = index + 1; i < list.size(); i++) {
+			if (list.get(index)[1] < list.get(i)[0]) {
+				sub = Math.max(dp(list,memo2,i),sub);
+			}
+		}
+		dp(list,memo2,index + 1);
+		return memo2[index] = sub + 1;
+	}
+	int getNonOverlap(List<int[]> list) {
+		int[] memo2 = new int[list.size()];
+		Arrays.fill(memo2,-1);
+		dp(list,memo2,0);
+		int res = 0;
+		for (int i = 0; i < memo2.length; i++) {
+			res = Math.max(res,memo2[i]);
+		}
+		return res;
+	}
+	int maxPalindromes(String s, int k) {
+		this.memo = new Boolean[s.length() + 1][s.length() + 1];
+		if (k == 1) {
+			return s.length();
+		}
+		if (s.length() == 1) {
+			return 1;
+		}
+		if (dfs(s,0,s.length() - 1)) {
+			return s.length() % k == 0 ? s.length() / k : 1;
+		}
+		dfs(s,0,s.length() - 1);
+		List<int[]> list = new ArrayList();
+		for (int i = 0; i < memo.length; i++) {
+			for (int j = 0; j < memo[0].length; j++) {
+				if (memo[i][j] != null && memo[i][j] && j - i + 1 >= k) {
+					list.add(new int{i, j});
+				}
+			}
+		}
+		if (list.size() == 1) {
+			return 1;
+		}
+		return getNonOverlap(list);
+	}
+}

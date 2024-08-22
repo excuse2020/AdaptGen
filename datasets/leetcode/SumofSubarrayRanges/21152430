@@ -1,0 +1,40 @@
+class Solution {
+	long pushToMaxStack(Stack<Integer> maxStack, int[] nums, int i) {
+		long maxSum = 0;
+		while (!maxStack.isEmpty() && (i == nums.length || nums[maxStack.peek()] < nums[i])) {
+			int popped_i = maxStack.pop();
+			int prev_i = maxStack.isEmpty() ? -1 : maxStack.peek();
+			maxSum += (long) ((i - popped_i) * (popped_i - prev_i));
+		}
+		maxStack.push(i);
+		return maxSum;
+	}
+	long pushToMinStack(Stack<Integer> minStack, int[] nums, int i) {
+		long minSum = 0;
+		while (!minStack.isEmpty() && (i == nums.length || nums[minStack.peek()] > nums[i])) {
+			int popped_i = minStack.pop();
+			int prev_i = minStack.isEmpty() ? -1 : minStack.peek();
+			minSum += (long) ((i - popped_i) * (popped_i - prev_i));
+		}
+		minStack.push(i);
+		return minSum;
+	}
+	long subArrayRanges(int[] nums) {
+		Stack<Integer> maxStack = new Stack<>();
+		Stack<Integer> minStack = new Stack<>();
+		long totalMaxSum = 0;
+		long totalMinSum = 0;
+		int n = nums.length;
+		long sum = 0;
+		long maxSum = 0;
+		long minSum = 0;
+		for (int i = 0; i <= n; i++) {
+			maxSum += pushToMaxStack(maxStack,nums,i);
+		}
+		for (int i = 0; i <= n; i++) {
+			minSum += pushToMinStack(minStack,nums,i);
+		}
+		sum = maxSum - minSum;
+		return sum;
+	}
+}

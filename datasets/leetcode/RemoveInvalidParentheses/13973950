@@ -1,0 +1,49 @@
+class Solution {
+	char close;
+	char open;
+	Set<String> result = new HashSet<>();
+	void findValidExpr(String s, int index, int openCount, int closeCount, int openRem, int closeRem, StringBuilder sb) {
+		if (index == s.length()) {
+			if (openRem == 0 && closeRem == 0) {
+				result.add(sb.toString());
+			}
+		} 
+		else {
+			char ch = s.charAt(index);
+			int len = sb.length();
+			if ((ch == open && openRem > 0) || (ch == close && closeRem > 0)) {
+				this.findValidExpr(s,index + 1,openCount,closeCount,ch == open ? openRem - 1 : openRem,ch == close ? closeRem - 1 : closeRem,sb);
+			}
+			sb.append(ch);
+			if (ch != open && ch != close) {
+				this.findValidExpr(s,index + 1,openCount,closeCount,openRem,closeRem,sb);
+			} 
+			else if (ch == open) {
+				this.findValidExpr(s,index + 1,openCount + 1,closeCount,openRem,closeRem,sb);
+			} 
+			else if (closeCount < openCount) {
+				this.findValidExpr(s,index + 1,openCount,closeCount + 1,openRem,closeRem,sb);
+			}
+			sb.deleteCharAt(len);
+		}
+	}
+	List<String> removeInvalidParentheses(String s) {
+		int openRem = 0;
+		int closeRem = 0;
+		for (char ch: s.toCharArray()) {	
+			if (ch == open) {
+				openRem++;
+			} 
+			else if (ch == close) {
+				if (openRem == 0) {
+					closeRem++;
+				}
+				if (openRem > 0) {
+					openRem--;
+				}
+			}
+		}
+		findValidExpr(s,0,0,0,openRem,closeRem,new StringBuilder());
+		return new ArrayList<>(result);
+	}
+}

@@ -1,0 +1,42 @@
+class Solution {
+	int findKth(int[] a, int n, int K) {
+		return quickSort(a,0,n - 1,K);
+	}
+	int partition(int[] a, int left, int right) {
+		int pivot = left;
+		swap(a,pivot,(left + right) >> 1);
+		while (left < right) {
+			while (left < right && a[right] <= a[pivot]) {
+				right--;
+			}
+			while (left < right && a[left] >= a[pivot]) {
+				left++;
+			}
+			if (left < right) {
+				swap(a,left,right);
+			}
+		}
+		swap(a,left,pivot);
+		return left;
+	}
+	int quickSort(int[] a, int left, int right, int K) {
+		if (left > right) {
+			return -1;
+		}
+		int index = partition(a,left,right);
+		if (K - 1 > index) {
+			return quickSort(a,index + 1,right,K);
+		} 
+		else if (K - 1 < index) {
+			return quickSort(a,left,index - 1,K);
+		} 
+		else {
+			return a[index];
+		}
+	}
+	void swap(int[] a, int i, int j) {
+		int tmp = a[i];
+		a[i] = a[j];
+		a[j] = tmp;
+	}
+}

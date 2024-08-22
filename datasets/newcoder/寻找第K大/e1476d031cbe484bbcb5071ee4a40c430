@@ -1,0 +1,54 @@
+class Solution {
+	void addToHeap(int[] a, int idx, int k) {
+		if (a[0] > a[idx]) {
+			return;
+		}
+		a[0] = a[idx];
+		adjust(a,0,k);
+	}
+	void adjust(int[] a, int start, int k) {
+		while (true) {
+			int minIdx = 2 * start + 1;
+			if (minIdx >= k) {
+				break;
+			}
+			int right = 2 * start + 2;
+			if (right < k) {
+				minIdx = a[minIdx] < a[right] ? minIdx : right;
+			}
+			if (a[start] > a[minIdx]) {
+				swap(a,start,minIdx);
+				start = minIdx;
+			} 
+			else {
+				break;
+			}
+		}
+	}
+	int findKth(int[] a, int n, int K) {
+		initHeap(a,K);
+		for (int i = K; i < n; i++) {
+			addToHeap(a,i,K);
+		}
+		return a[0];
+	}
+	void initHeap(int[] a, int k) {
+		int l = (k - 2) / 2;
+		for (int i = k - 1; i >= l; i--) {
+			int child = i;
+			while (child != 0) {
+				int parent = (child - 1) / 2;
+				if (a[child] < a[parent]) {
+					swap(a,child,parent);
+					adjust(a,child,k);
+				}
+				child = parent;
+			}
+		}
+	}
+	void swap(int[] a, int i, int j) {
+		int t = a[i];
+		a[i] = a[j];
+		a[j] = t;
+	}
+}

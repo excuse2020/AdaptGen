@@ -1,0 +1,45 @@
+class Solution {
+	boolean can(String A, int begin, int end) {
+		while (begin < end) {
+			if (A.charAt(begin) == A.charAt(end)) {
+				begin++;
+				end--;
+			} 
+			else {
+				return false;
+			}
+		}
+		return true;
+	}
+	int[] findNextFromEnd(String A, int i, char next) {
+		ArrayList<Integer> result = new ArrayList<>();
+		for (int j = A.length() - 1; j > i; j--) {
+			char next2 = A.charAt(j);
+			if (next2 == next) {
+				result.add(j);
+			}
+		}
+		int[] res = new int[result.size()];
+		for (int k = 0; k < result.size(); k++) {
+			res[k] = result.get(k);
+		}
+		return res;
+	}
+	int getLongestPalindrome(String A, int n) {
+		if (n == 0 || n == 1) {
+			return n;
+		}
+		int maxLength = 0;
+		for (int i = 0; i < n; i++) {
+			char next = A.charAt(i);
+			int[] ends = findNextFromEnd(A,i,next);
+			for (int j = 0; j < ends.length; j++) {
+				boolean b = can(A,i,ends[j]);
+				if (b) {
+					maxLength = Math.max(maxLength,ends[j] - i + 1);
+				}
+			}
+		}
+		return maxLength;
+	}
+}

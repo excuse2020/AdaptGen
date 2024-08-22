@@ -1,0 +1,31 @@
+class Solution {
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			if (manager[i] >= 0) {
+				graph.get(manager[i]).add(i);
+			}
+		}
+		Queue<Integer> queue = new LinkedList<>();
+		queue.add(headID);
+		int x = new int[n];
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			while (size-- > 0) {
+				int cur = queue.poll();
+				for (int neigh: graph.get(cur)) {	
+					x[neigh] = x[cur] + informTime[cur];
+					queue.add(neigh);
+				}
+			}
+		}
+		int ans = Integer.MIN_VALUE;
+		for (int time: x) {	
+			ans = Math.max(ans,time);
+		}
+		return ans;
+	}
+}

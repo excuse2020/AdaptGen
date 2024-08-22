@@ -1,0 +1,31 @@
+class Solution {
+	TreeNode replaceValueInTree(TreeNode root) {
+		Deque<TreeNode> q = new LinkedList<>();
+		q.offerFirst(root);
+		int levelSum = root.val;
+		while (!q.isEmpty()) {
+			int n = q.size();
+			Iterator<TreeNode> iter = q.iterator();
+			for (int i = 0; i < n; i++) {
+				TreeNode p = iter.next();
+				p.val = levelSum - p.val;
+			}
+			levelSum = 0;
+			for (int i = 0; i < n; i++) {
+				TreeNode p = q.pollFirst();
+				int sibSum = p.left != null ? p.left.val : 0;
+				sibSum += p.right != null ? p.right.val : 0;
+				levelSum += sibSum;
+				if (p.left != null) {
+					p.left.val = sibSum;
+					q.offerLast(p.left);
+				}
+				if (p.right != null) {
+					p.right.val = sibSum;
+					q.offerLast(p.right);
+				}
+			}
+		}
+		return root;
+	}
+}

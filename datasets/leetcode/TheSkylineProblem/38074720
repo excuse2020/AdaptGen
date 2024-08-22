@@ -1,0 +1,36 @@
+class Solution {
+	List<List<Integer>> getSkyline(int[][] nums) {
+		PriorityQueue<int[]> q = new PriorityQueue<>((a, b) -> {a[1] == b[1] ? b[2] - a[2] : a[1] - b[1]});
+		TreeSet<int[]> s = new TreeSet<>((a, b) -> {a[2] == b[2] ? b[1] - a[1] : b[2] - a[2]});
+		List<List<Integer>> ans = new ArrayList<>();
+		for (int i = 0; i < nums.length; i++) {
+			while (!q.isEmpty() && q.peek()[1] < nums[i][0]) {
+				int[] curr = q.peek();
+				while (!q.isEmpty() && curr[1] == q.peek()[1]) {
+					s.remove(q.poll());
+				}
+				if (s.isEmpty() || curr[2] > s.first()[2]) {
+					ans.add(Arrays.asList(curr[1],s.isEmpty() ? 0 : s.first()[2]));
+				}
+			}
+			for (int k = i; k < nums.length && nums[i][0] == nums[k][0]; k++) {
+				q.add(nums[k]);
+				s.add(nums[k]);
+				i = k;
+			}
+			if (ans.isEmpty() || (ans.get(ans.size() - 1).get(0) != s.first()[0] && ans.get(ans.size() - 1).get(1) != s.first()[2])) {
+				ans.add(Arrays.asList(s.first()[0],s.first()[2]));
+			}
+		}
+		while (!q.isEmpty()) {
+			int[] curr = q.peek();
+			while (!q.isEmpty() && curr[1] == q.peek()[1]) {
+				s.remove(q.poll());
+			}
+			if (s.isEmpty() || curr[2] > s.first()[2]) {
+				ans.add(Arrays.asList(curr[1],s.isEmpty() ? 0 : s.first()[2]));
+			}
+		}
+		return ans;
+	}
+}

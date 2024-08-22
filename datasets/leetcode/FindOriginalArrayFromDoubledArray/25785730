@@ -1,0 +1,30 @@
+class Solution {
+	int[] findOriginalArray(int[] changed) {
+		if (changed.length % 2 == 1) {
+			return new int[0];
+		}
+		int[] res = new int[changed.length / 2];
+		Arrays.sort(changed);
+		Map<Integer, Integer> mp = new HashMap<>();
+		for (int ch: changed) {	
+			mp.put(ch,mp.getOrDefault(ch,0) + 1);
+		}
+		if (mp.containsKey(0) && mp.get(0) % 2 == 1) {
+			return new int[0];
+		}
+		int i = 0;
+		for (int ch: changed) {	
+			if (mp.get(ch) == 0) {
+				continue;
+			}
+			if (!mp.containsKey(ch * 2) || mp.get(ch * 2) == 0) {
+				return new int[0];
+			}
+			mp.put(ch,mp.get(ch) - 1);
+			mp.put(ch * 2,mp.get(ch * 2) - 1);
+			res[i] = ch;
+			i++;
+		}
+		return res;
+	}
+}

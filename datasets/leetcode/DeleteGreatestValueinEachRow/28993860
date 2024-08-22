@@ -1,0 +1,36 @@
+class Solution {
+	boolean check(boolean[][] picked) {
+		for (int i = 0; i < picked.length; i++) {
+			for (int j = 0; j < picked[0].length; j++) {
+				if (!picked[i][j]) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	int deleteGreatestValue(int[][] grid) {
+		boolean[][] picked = new boolean[grid.length][grid[0].length];
+		int result = 0;
+		while (!check(picked)) {
+			int maxValue = Integer.MIN_VALUE;
+			for (int row = 0; row < grid.length; row++) {
+				int maxValueForRow = Integer.MIN_VALUE;
+				int maxColIndexForRow = 0;
+				for (int col = 0; col < grid[0].length; col++) {
+					if (picked[row][col]) {
+						continue;
+					}
+					if (grid[row][col] >= maxValueForRow) {
+						maxValueForRow = grid[row][col];
+						maxColIndexForRow = col;
+					}
+				}
+				picked[row][maxColIndexForRow] = true;
+				maxValue = Math.max(maxValue,maxValueForRow);
+			}
+			result = result + maxValue;
+		}
+		return result;
+	}
+}

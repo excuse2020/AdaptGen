@@ -1,0 +1,31 @@
+class Solution {
+	int[] getSubarrayBeauty(int[] nums, int k, int x) {
+		List<Integer> result = new ArrayList<>();
+		Map<Integer, Integer> numAndFreq = new TreeMap<>();
+		int l = 0;
+		for (int r = 0; r < nums.length; r++) {
+			int currentBeauty = 0;
+			numAndFreq.put(nums[r],numAndFreq.getOrDefault(nums[r],0) + 1);
+			if (r - l + 1 == k) {
+				int countSum = 0;
+				for (var entry: numAndFreq.entrySet()) {	
+					if (entry.getKey() > 0) {
+						break;
+					}
+					countSum += entry.getValue();
+					if (countSum >= x) {
+						currentBeauty = entry.getKey();
+						break;
+					}
+				}
+				result.add(currentBeauty);
+				numAndFreq.put(nums[l],numAndFreq.get(nums[l]) - 1);
+				if (numAndFreq.getOrDefault(nums[l],0) == 0) {
+					numAndFreq.remove(nums[l]);
+				}
+				l++;
+			}
+		}
+		return result.stream().mapToInt().toArray();
+	}
+}

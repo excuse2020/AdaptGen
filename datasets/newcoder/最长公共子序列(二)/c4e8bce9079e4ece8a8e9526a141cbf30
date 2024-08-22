@@ -1,0 +1,39 @@
+class Solution {
+	String LCS(String s1, String s2) {
+		int str1Len = s1.length();
+		int str2Len = s2.length();
+		int[][] cLenNUm = new int[s1.length() + 1][s2.length() + 1];
+		for (int i = 1; i <= str1Len; i++) {
+			for (int j = 1; j <= str2Len; j++) {
+				if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
+					cLenNUm[i][j] = cLenNUm[i - 1][j - 1] + 1;
+				} 
+				else {
+					cLenNUm[i][j] = Math.max(cLenNUm[i][j - 1],cLenNUm[i - 1][j]);
+				}
+			}
+		}
+		int i = str1Len;
+		int j = str2Len;
+		StringBuffer sb = new StringBuffer();
+		while (i > 0 && j > 0) {
+			if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
+				sb.append(s1.charAt(i - 1));
+				i--;
+				j--;
+			} 
+			else {
+				if (cLenNUm[i][j - 1] > cLenNUm[i - 1][j]) {
+					j--;
+				} 
+				else if (cLenNUm[i][j - 1] < cLenNUm[i - 1][j]) {
+					i--;
+				} 
+				else if (cLenNUm[i][j - 1] == cLenNUm[i - 1][j]) {
+					j--;
+				}
+			}
+		}
+		return sb.reverse().toString();
+	}
+}

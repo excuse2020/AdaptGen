@@ -1,0 +1,54 @@
+class Solution {
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i <= n - 1; ++i) {
+			List<Integer> l = new ArrayList<>();
+			adj.add(l);
+		}
+		int m = connections.size();
+		for (int i = 0; i <= m - 1; ++i) {
+			int u = connections.get(i).get(0);
+			int v = connections.get(i).get(1);
+			adj.get(u).add(v);
+			adj.get(v).add(u);
+		}
+		int[] time_in = new int[n];
+		int[] time_low = new int[n];
+		int[] v = new int[n];
+		for (int i = 0; i <= n - 1; ++i) {
+			time_in[i] = 0;
+			time_low[i] = 0;
+			v[i] = 0;
+		}
+		List<List<Integer>> ans = new ArrayList<>();
+		int i = 0;
+		int d = 0;
+		int par = 0;
+		helper(i,d,par,n,adj,time_in,time_low,v,ans);
+		return ans;
+	}
+	void helper(int i, int d, int par, int n, List<List<Integer>> adj, int[] time_in, int[] time_low, int[] v, List<List<Integer>> ans) {
+		v[i] = 1;
+		time_in[i] = d;
+		time_low[i] = d;
+		for (int j: adj.get(i)) {	
+			if (v[j] != 1) {
+				helper(j,d + 1,i,n,adj,time_in,time_low,v,ans);
+			}
+		}
+		if (i != 0) {
+			for (int j: adj.get(i)) {	
+				if (j != par) {
+					time_low[i] = Math.min(time_low[i],time_low[j]);
+				}
+			}
+			time_low[par] = Math.min(time_low[par],time_low[i]);
+			if (time_in[par] < time_low[i]) {
+				List<Integer> l = new ArrayList<>();
+				l.add(par);
+				l.add(i);
+				ans.add(l);
+			}
+		}
+	}
+}

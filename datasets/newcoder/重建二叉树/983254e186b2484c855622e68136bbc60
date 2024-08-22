@@ -1,0 +1,31 @@
+class Solution {
+	int[] _pre, _vin;
+	Map<Integer, Integer> vinMap = new HashMap<>();
+	TreeNode build(int preS, int preE, int inS, int inE) {
+		TreeNode root = new TreeNode(_pre[preS]);
+		if (preS == preE) {
+			return root;
+		}
+		int rootVinIdex = vinMap.get(_pre[preS]);
+		int leftSize = rootVinIdex - inS;
+		int rightSize = inE - rootVinIdex;
+		if (leftSize > 0) {
+			root.left = build(preS + 1,preS + leftSize,inS,rootVinIdex - 1);
+		}
+		if (rightSize > 0) {
+			root.right = build(preS + leftSize,preE,rootVinIdex + 1,inE);
+		}
+		return root;
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] vin) {
+		if (pre.length == 0) {
+			return null;
+		}
+		_pre = pre;
+		_vin = vin;
+		for (int i = 0; i < vin.length; i++) {
+			vinMap.put(vin[i],i);
+		}
+		return build(0,pre.length - 1,0,vin.length - 1);
+	}
+}

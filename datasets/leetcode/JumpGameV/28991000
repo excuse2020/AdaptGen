@@ -1,0 +1,41 @@
+class Solution {
+	int dfs(int[] arr, int i, int d, int[] dp) {
+		if (dp[i] > 0) {
+			return dp[i];
+		}
+		int maxVisited = 1;
+		for (int j = i - 1; j >= 0 && j >= i - d; j--) {
+			if (arr[i] > arr[j]) {
+				maxVisited = Math.max(maxVisited,dfs(arr,j,d,dp) + 1);
+			} 
+			else {
+				break;
+			}
+		}
+		for (int j = i + 1; j < arr.length && j <= i + d; j++) {
+			if (arr[i] > arr[j]) {
+				maxVisited = Math.max(maxVisited,dfs(arr,j,d,dp) + 1);
+			} 
+			else {
+				break;
+			}
+		}
+		dp[i] = maxVisited;
+		return maxVisited;
+	}
+	int maxJumps(int[] arr, int d) {
+		int n = arr.length;
+		Map<Integer, List<Integer>> indexMap = new TreeMap<>(Collections.reverseOrder());
+		for (int i = 0; i < n; i++) {
+			indexMap.computeIfAbsent(arr[i],(k) -> {new ArrayList<>()}).add(i);
+		}
+		int[] dp = new int[n];
+		int maxVisited = 0;
+		for (List<Integer> indices: indexMap.values()) {	
+			for (int i: indices) {	
+				maxVisited = Math.max(maxVisited,dfs(arr,i,d,dp));
+			}
+		}
+		return maxVisited;
+	}
+}

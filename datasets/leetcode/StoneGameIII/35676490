@@ -1,0 +1,35 @@
+class Solution {
+	Integer dp;
+	int recur(int index, int[] stoneValue) {
+		if (index >= stoneValue.length) {
+			return 0;
+		}
+		if (dp[index] != null) {
+			return dp[index];
+		}
+		int sum = 0;
+		int max = Integer.MIN_VALUE;
+		for (int i = 0; i < 3; i++) {
+			if (index + i >= stoneValue.length) {
+				break;
+			}
+			sum += stoneValue[index + i];
+			max = Math.max(max,sum - recur(index + i,stoneValue));
+		}
+		dp[index] = max;
+		return max;
+	}
+	String stoneGameIII(int[] stoneValue) {
+		dp = new Integer[(int) (5 * 1e4 + 1)];
+		int value = recur(0,stoneValue);
+		if (value > 0) {
+			return "Alice";
+		} 
+		else if (value < 0) {
+			return "Bob";
+		} 
+		else {
+			return "Tie";
+		}
+	}
+}

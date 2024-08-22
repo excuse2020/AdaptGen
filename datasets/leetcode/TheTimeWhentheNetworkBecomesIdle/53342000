@@ -1,0 +1,46 @@
+class Solution {
+	List<List<Integer>> createGraph(int n, int[][] edges) {
+		List<List<Integer>> graph = new ArrayList<List<Integer>>();
+		for (int i = 0; i < n; i++) {
+			List<Integer> nrs = new ArrayList<>();
+			graph.add(nrs);
+		}
+		for (int[] edge: edges) {	
+			graph.get(edge[0]).add(edge[1]);
+			graph.get(edge[1]).add(edge[0]);
+		}
+		return graph;
+	}
+	int networkBecomesIdle(int[][] edges, int[] patience) {
+		int n = patience.length;
+		List<List<Integer>> graph = createGraph(n,edges);
+		int[] length = new int[n];
+		Arrays.fill(length,-1);
+		Queue<Integer> q = new LinkedList<>();
+		q.add(0);
+		length[0] = 0;
+		while (!q.isEmpty()) {
+			int idx = q.poll();
+			for (Integer nr: graph.get(idx)) {	
+				if (length[nr] == -1) {
+					q.add(nr);
+					length[nr] = length[idx] + 1;
+				}
+			}
+		}
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			int l = length[i] * 2;
+			int p = patience[i];
+			if (p >= l) {
+				ans = Math.max(ans,l + 1);
+			} 
+			else {
+				int div = l % p == 0 ? (l / p) - 1 : l / p;
+				int t = (p * div) + l;
+				ans = Math.max(ans,t);
+			}
+		}
+		return ans;
+	}
+}

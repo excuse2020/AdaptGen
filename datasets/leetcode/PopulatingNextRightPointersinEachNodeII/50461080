@@ -1,0 +1,56 @@
+class Solution {
+	Node connect(Node root) {
+		if (root == null || (root.left == null && root.right == null)) {
+			return root;
+		}
+		dfs(root,null);
+		return root;
+	}
+	void dfs(Node currNode, Node rightNode) {
+		if (currNode == null) {
+			return;
+		}
+		currNode.next = rightNode;
+		if (rightNode == null) {
+			dfs(currNode.right,null);
+		} 
+		else {
+			while (rightNode != null && rightNode.left == null && rightNode.right == null) {
+				rightNode = rightNode.next;
+			}
+			if (rightNode != null) {
+				if (rightNode.left != null) {
+					dfs(currNode.right,rightNode.left);
+				} 
+				else if (rightNode.right != null) {
+					dfs(currNode.right,rightNode.right);
+				}
+			} 
+			else {
+				dfs(currNode.right,null);
+			}
+		}
+		if (currNode.right != null) {
+			dfs(currNode.left,currNode.right);
+		} 
+		else if (rightNode != null) {
+			while (rightNode != null && rightNode.left == null && rightNode.right == null) {
+				rightNode = rightNode.next;
+			}
+			if (rightNode != null) {
+				if (rightNode.left != null) {
+					dfs(currNode.left,rightNode.left);
+				} 
+				else if (rightNode.right != null) {
+					dfs(currNode.left,rightNode.right);
+				}
+			} 
+			else {
+				dfs(currNode.left,null);
+			}
+		} 
+		else {
+			dfs(currNode.left,null);
+		}
+	}
+}

@@ -1,0 +1,76 @@
+class Solution {
+	String Add(String a, String b) {
+		String str = "";
+		int aLen = a.length() - 1;
+		int ai = 0;
+		int bLen = b.length() - 1;
+		int bi = 0;
+		int ten = 0;
+		while (aLen >= ai && bLen >= bi) {
+			int tmp = (a.charAt(ai++) - '0') + (b.charAt(bi++) - '0');
+			tmp += ten;
+			ten = tmp / 10;
+			str += tmp % 10;
+		}
+		while (aLen >= ai) {
+			int tmp = a.charAt(ai++) - '0';
+			tmp += ten;
+			ten = tmp / 10;
+			str += tmp % 10;
+		}
+		while (bLen >= bi) {
+			int tmp = b.charAt(bi++) - '0';
+			tmp += ten;
+			ten = tmp / 10;
+			str += tmp % 10;
+		}
+		if (ten != 0) {
+			str += ten;
+		}
+		return str;
+	}
+	String alongMultiply(String s, char t) {
+		String ret = "";
+		if (s.charAt(0) == '0' || t == '0') {
+			return "0";
+		}
+		int tt = t - '0';
+		int ten = 0;
+		for (int i = s.length() - 1; i >= 0; i--) {
+			int tmp = s.charAt(i) - '0';
+			tmp *= tt;
+			tmp += ten;
+			ten = tmp / 10;
+			ret += tmp % 10;
+		}
+		if (ten != 0) {
+			ret += ten;
+		}
+		return ret;
+	}
+	String solve(String s, String t) {
+		if (s.charAt(0) == '0' || t.charAt(0) == '0') {
+			return "0";
+		}
+		String ret = "0";
+		String[] tmp = new String[t.length()];
+		for (int i = t.length() - 1; i >= 0; i--) {
+			tmp[i] = "";
+			int j = t.length() - 1;
+			while (j - i > 0) {
+				tmp[i] += '0';
+				j--;
+			}
+			tmp[i] += alongMultiply(s,t.charAt(i));
+		}
+		for (int i = t.length() - 1; i >= 0; i--) {
+			ret = Add(tmp[i],ret);
+		}
+		StringBuffer stringBuffer = new StringBuffer();
+		for (int i = ret.length() - 1; i >= 0; i--) {
+			stringBuffer.append(ret.charAt(i));
+		}
+		ret = stringBuffer.toString();
+		return ret;
+	}
+}

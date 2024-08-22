@@ -1,0 +1,36 @@
+class Solution {
+	int minReorder(int n, int[][] connections) {
+		List<List<Integer>> outdegree = new ArrayList<>();
+		List<List<Integer>> indegree = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			outdegree.add(new ArrayList<>());
+			indegree.add(new ArrayList<>());
+		}
+		for (int[] connection: connections) {	
+			outdegree.get(connection[0]).add(connection[1]);
+			indegree.get(connection[1]).add(connection[0]);
+		}
+		Queue<Integer> q = new LinkedList<>();
+		boolean[] visited = new boolean[n];
+		int res = 0;
+		q.offer(0);
+		visited[0] = true;
+		while (!q.isEmpty()) {
+			int city = q.poll();
+			for (int nei: indegree.get(city)) {	
+				if (!visited[nei]) {
+					q.offer(nei);
+					visited[nei] = true;
+				}
+			}
+			for (int nei: outdegree.get(city)) {	
+				if (!visited[nei]) {
+					res++;
+					q.offer(nei);
+					visited[nei] = true;
+				}
+			}
+		}
+		return res;
+	}
+}

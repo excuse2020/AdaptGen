@@ -1,0 +1,44 @@
+class Solution {
+	boolean dfs(ArrayList<ArrayList<Integer>> graph, boolean vis, boolean rec, Stack<Integer> s, int cur) {
+		vis[cur] = true;
+		rec[cur] = true;
+		for (int i = 0; i < graph.get(cur).size(); i++) {
+			int n = graph.get(cur).get(i);
+			if (!vis[n]) {
+				if (dfs(graph,vis,rec,s,n)) {
+					return true;
+				}
+			} 
+			else if (rec[n]) {
+				return true;
+			}
+		}
+		rec[cur] = false;
+		s.push(cur);
+		return false;
+	}
+	int[] findOrder(int c, int[][] prerequisites) {
+		int[] res = new int[c];
+		ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < c; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int i = 0; i < prerequisites.length; i++) {
+			graph.get(prerequisites[i][1]).add(prerequisites[i][0]);
+		}
+		boolean vis = new boolean[c];
+		boolean rec = new boolean[c];
+		Stack<Integer> s = new Stack<>();
+		for (int i = 0; i < graph.size(); i++) {
+			if (!vis[i]) {
+				if (dfs(graph,vis,rec,s,i)) {
+					return new int[0];
+				}
+			}
+		}
+		for (int i = 0; i < c; i++) {
+			res[i] = s.pop();
+		}
+		return res;
+	}
+}

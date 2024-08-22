@@ -1,0 +1,21 @@
+class Solution {
+	TreeNode BintreeConst(int[] inorder, int startInorder, int endInorder, int[] postorder, int startPost, int endPost, HashMap<Integer, Integer> hp) {
+		if (startInorder > endInorder || startPost > endPost) {
+			return null;
+		}
+		int rootvalue = postorder[endPost];
+		TreeNode root = new TreeNode(rootvalue);
+		int idx = hp.get(rootvalue);
+		int leftree = idx - startInorder;
+		root.left = BintreeConst(inorder,startInorder,idx - 1,postorder,startPost,startPost + leftree - 1,hp);
+		root.right = BintreeConst(inorder,idx + 1,endInorder,postorder,startPost + leftree,endPost - 1,hp);
+		return root;
+	}
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		HashMap<Integer, Integer> hp = new HashMap<>();
+		for (int i = 0; i < inorder.length; i++) {
+			hp.put(inorder[i],i);
+		}
+		return BintreeConst(inorder,0,inorder.length - 1,postorder,0,postorder.length - 1,hp);
+	}
+}

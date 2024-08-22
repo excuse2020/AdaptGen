@@ -1,0 +1,38 @@
+class Solution {
+	boolean helper(String str, String sub, int i, int j, HashMap<Character, HashSet<Character>> map) {
+		if (j == sub.length()) {
+			return true;
+		}
+		if (i == str.length()) {
+			return false;
+		}
+		if (str.charAt(i) == sub.charAt(j)) {
+			return helper(str,sub,i + 1,j + 1,map);
+		}
+		if (map.containsKey(sub.charAt(j)) == false || map.get(sub.charAt(j)).contains(str.charAt(i)) == false) {
+			return false;
+		}
+		return helper(str,sub,i + 1,j + 1,map);
+	}
+	boolean matchReplacement(String str, String sub, char[][] mappings) {
+		HashMap<Character, HashSet<Character>> map = new HashMap();
+		for (int i = 0; i < mappings.length; i++) {
+			if (map.containsKey(mappings[i][0]) == false) {
+				map.put(mappings[i][0],new HashSet<Character>());
+			}
+			map.get(mappings[i][0]).add(mappings[i][1]);
+		}
+		int i = 0, j = 0, m = str.length(), n = sub.length();
+		if (n > m) {
+			return false;
+		}
+		while (i < m && j < n) {
+			boolean ans = helper(str,sub,i,j,map);
+			if (ans) {
+				return true;
+			}
+			i++;
+		}
+		return false;
+	}
+}

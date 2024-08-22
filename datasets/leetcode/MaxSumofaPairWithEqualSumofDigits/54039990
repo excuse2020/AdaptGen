@@ -1,0 +1,41 @@
+class Solution {
+	int maximumSum(int[] nums) {
+		int sum = 0;
+		int summax = 0;
+		TreeMap<Integer, ArrayList<Integer>> map = new TreeMap<>(Collections.reverseOrder());
+		int max = Integer.MIN_VALUE;
+		for (int i = 0; i <= nums.length - 1; i++) {
+			ArrayList<Integer> list1 = new ArrayList<>();
+			int num = nums[i];
+			while (num > 0) {
+				int rem = num % 10;
+				sum = sum + rem;
+				num = num / 10;
+			}
+			if (map.containsKey(sum)) {
+				ArrayList<Integer> list2 = map.get(sum);
+				list2.add(nums[i]);
+				map.put(sum,list2);
+			} 
+			else {
+				list1.add(nums[i]);
+				map.put(sum,list1);
+			}
+			sum = 0;
+		}
+		for (Map.Entry<Integer, ArrayList<Integer>> e: map.entrySet()) {	
+			ArrayList<Integer> list3 = e.getValue();
+			Collections.sort(list3);
+			if (list3.size() >= 2) {
+				summax = (list3.get(list3.size() - 2) + list3.get(list3.size() - 1));
+				if (max < summax) {
+					max = summax;
+				}
+			}
+		}
+		if (max == Integer.MIN_VALUE) {
+			max = -1;
+		}
+		return max;
+	}
+}

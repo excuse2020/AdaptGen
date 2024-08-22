@@ -1,0 +1,23 @@
+class Solution {
+	int indicatorOfNodeToRemove;
+	ListNode findPredecessorOfNodeToRemove(ListNode node) {
+		if (node == null) {
+			return null;
+		}
+		var prevNode = findPredecessorOfNodeToRemove(node.next);
+		if (indicatorOfNodeToRemove > 0 && --indicatorOfNodeToRemove == 0) {
+			prevNode = node;
+		}
+		return prevNode;
+	}
+	ListNode removeNthFromEnd(ListNode head, int n) {
+		indicatorOfNodeToRemove = n + 1;
+		ListNode stub = new ListNode(0);
+		stub.next = head;
+		var prevNode = findPredecessorOfNodeToRemove(stub);
+		if (prevNode != null) {
+			prevNode.next = prevNode.next.next;
+		}
+		return stub.next;
+	}
+}

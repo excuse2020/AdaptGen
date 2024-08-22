@@ -1,0 +1,26 @@
+class Solution {
+	int dps(int start, int end, int[] nums, int[] dp) {
+		if (start > end) {
+			return 0;
+		}
+		if (dp[start] != -1) {
+			return dp[start];
+		}
+		int choosen = dps(start + 2,end,nums,dp) + nums[start];
+		int notChoosen = dps(start + 1,end,nums,dp);
+		int sum = Math.max(choosen,notChoosen);
+		dp[start] = sum;
+		return dp[start];
+	}
+	int rob(int[] nums) {
+		int[] dp = new int[nums.length];
+		Arrays.fill(dp,-1);
+		if (nums.length == 1) {
+			return nums[0];
+		}
+		int first = dps(0,nums.length - 2,nums,dp);
+		Arrays.fill(dp,-1);
+		int second = dps(1,nums.length - 1,nums,dp);
+		return Math.max(first,second);
+	}
+}

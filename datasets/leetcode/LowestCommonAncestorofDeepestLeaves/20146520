@@ -1,0 +1,45 @@
+class Solution {
+	Set<TreeNode> deepest;
+	TreeMap<Integer, Set<TreeNode>> map;
+	void findDeepest(TreeNode node, int depth) {
+		if (node == null) {
+			return;
+		}
+		if (node.left == null && node.right == null) {
+			if (!map.containsKey(depth)) {
+				map.put(depth,new HashSet<>());
+			}
+			map.get(depth).add(node);
+		}
+		findDeepest(node.left,depth + 1);
+		findDeepest(node.right,depth + 1);
+	}
+	TreeNode findLCA(TreeNode node) {
+		if (node == null) {
+			return null;
+		}
+		if (deepest.contains(node)) {
+			return node;
+		}
+		TreeNode leftlca = findLCA(node.left);
+		TreeNode rightlca = findLCA(node.right);
+		if (leftlca == null && rightlca == null) {
+			return null;
+		} 
+		else if (leftlca == null) {
+			return rightlca;
+		} 
+		else if (rightlca == null) {
+			return leftlca;
+		} 
+		else {
+			return node;
+		}
+	}
+	TreeNode lcaDeepestLeaves(TreeNode root) {
+		map = new TreeMap<>();
+		findDeepest(root,0);
+		deepest = map.get(map.lastKey());
+		return findLCA(root);
+	}
+}

@@ -1,0 +1,62 @@
+class Solution {
+	void addEmptySpace(int len, StringBuilder sb) {
+		for (int i = 0; i < len; i++) {
+			sb.append(" ");
+		}
+	}
+	List<String> fullJustify(String[] words, int maxWidth) {
+		List<String> justified = new ArrayList();
+		Queue<String> currentLine = new LinkedList();
+		StringBuilder sb = new StringBuilder();
+		int currentLineLen = 0;
+		for (String word: words) {	
+			int n = word.length();
+			int m = currentLine.size();
+			if (currentLineLen + n <= maxWidth) {
+				currentLine.add(word);
+				currentLineLen += n;
+			} 
+			else {
+				int extraSpace = maxWidth - currentLineLen;
+				justified.add(getLine(extraSpace,currentLine,sb));
+				currentLine.add(word);
+				sb.setLength(0);
+				currentLineLen = n;
+			}
+		}
+		if (!currentLine.isEmpty()) {
+			int remainingSpace = maxWidth - (currentLineLen + currentLine.size() - 1);
+			justified.add(generateLastLine(remainingSpace,currentLine,sb));
+		}
+		return justified;
+	}
+	String generateLastLine(int remainingSpace, Queue<String> currentLine, StringBuilder sb) {
+		while (!currentLine.isEmpty()) {
+			sb.append(currentLine.poll());
+			if (!currentLine.isEmpty()) {
+				sb.append(" ");
+			}
+		}
+		if (remainingSpace > 0) {
+			addEmptySpace(remainingSpace,sb);
+		}
+		return sb.toString();
+	}
+	String getLine(int extraSpace, Queue<String> currentLine, StringBuilder sb) {
+		int wordCount = currentLine.size() - 1;
+		boolean singleWordLine = wordCount == 0;
+		while (!currentLine.isEmpty()) {
+			sb.append(currentLine.poll());
+			if (!currentLine.isEmpty() || singleWordLine) {
+				int currentSpace = !singleWordLine ? extraSpace / wordCount : extraSpace;
+				if (!singleWordLine && extraSpace % wordCount != 0) {
+					currentSpace++;
+				}
+				addEmptySpace(currentSpace,sb);
+				extraSpace -= currentSpace;
+				wordCount--;
+			}
+		}
+		return sb.toString();
+	}
+}

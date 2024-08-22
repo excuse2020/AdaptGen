@@ -1,0 +1,56 @@
+class Solution {
+	int[] parent;
+	int[] rank;
+	void Union(int x, int y) {
+		int x_parent = find(x);
+		int y_parent = find(y);
+		if (rank[x_parent] > rank[y_parent]) {
+			parent[y_parent] = x_parent;
+		} 
+		else if (rank[x_parent] < rank[y_parent]) {
+			parent[x_parent] = y_parent;
+		} 
+		else {
+			parent[x_parent] = y_parent;
+			rank[y_parent]++;
+		}
+	}
+	long countPairs(int n, int[][] edges) {
+		parent = new int[n];
+		rank = new int[n];
+		for (int i = 0; i < parent.length; i++) {
+			parent[i] = i;
+			rank[i] = 0;
+		}
+		for (int i = 0; i < edges.length; i++) {
+			if (find(edges[i][0]) != find(edges[i][1])) {
+				Union(edges[i][0],edges[i][1]);
+			}
+		}
+		HashMap<Integer, Integer> hs = new HashMap<>();
+		for (int i = 0; i < parent.length; i++) {
+			if (hs.containsKey(find(i))) {
+				hs.put(find(i),hs.get(find(i)) + 1);
+			} 
+			else {
+				hs.put(find(i),1);
+			}
+		}
+		if (hs.size() == 1) {
+			return 0;
+		}
+		long rem = n;
+		long count = 0;
+		for (Map.Entry<Integer, Integer> dm: hs.entrySet()) {	
+			count = count + (long) (dm.getValue() * (rem - dm.getValue()));
+			rem = rem - dm.getValue();
+		}
+		return count;
+	}
+	int find(int x) {
+		if (x == parent[x]) {
+			return x;
+		}
+		return parent[x] = find(parent[x]);
+	}
+}

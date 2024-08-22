@@ -1,0 +1,38 @@
+class Solution {
+	int createNumber(int n, int[] map) {
+		int edge = Integer.MAX_VALUE / 10;
+		for (int i = 0; i < 10; i++) {
+			while (map[i] > 0) {
+				if (n > edge) {
+					return -1;
+				}
+				n = n * 10 + i;
+				map[i]--;
+			}
+		}
+		return n <= 0 ? -1 : n;
+	}
+	int getGreater(int[] map, int start) {
+		for (int i = start; i < 10; i++) {
+			if (map[i] > 0) {
+				map[i]--;
+				return i;
+			}
+		}
+		return -1;
+	}
+	int nextGreaterElement(int n) {
+		int[] map = new int[10];
+		while (n > 0) {
+			int digit = n % 10;
+			map[digit]++;
+			n /= 10;
+			int greaterDigit = getGreater(map,digit + 1);
+			if (greaterDigit != -1) {
+				n = n * 10 + greaterDigit;
+				return createNumber(n,map);
+			}
+		}
+		return -1;
+	}
+}

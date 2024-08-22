@@ -1,0 +1,47 @@
+class Solution {
+	int evalRPN(String[] tokens) {
+		if (tokens == null || tokens.length < 1) {
+			throw new IllegalArgumentException("bad params")
+		}
+		Stack<Integer> stack = new Stack<>();
+		for (String token: tokens) {	
+			if (isNumber(token)) {
+				stack.push(Integer.parseInt(token));
+			} 
+			else {
+				int second = stack.pop();
+				int first = stack.pop();
+				int tmp = 0;
+				if (token.equals("+")) {
+					tmp = first + second;
+				} 
+				else if (token.equals("-")) {
+					tmp = first - second;
+				} 
+				else if (token.equals("*")) {
+					tmp = first * second;
+				} 
+				else if (token.equals("/")) {
+					tmp = first / second;
+				} 
+				else {
+					throw new IllegalArgumentException("Illegal operator")
+				}
+				stack.push(tmp);
+			}
+		}
+		return stack.pop();
+	}
+	boolean isNumber(String str) {
+		char[] arr = str.toCharArray();
+		for (int i = 0; i < arr.length; i++) {
+			if (i == 0 && arr.length > 1 && arr[i] == '-') {
+				continue;
+			}
+			if (arr[i] < '0' || arr[i] > '9') {
+				return false;
+			}
+		}
+		return true;
+	}
+}

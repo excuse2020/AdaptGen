@@ -1,0 +1,27 @@
+class Solution {
+	int mctFromLeafValues(int[] arr) {
+		Stack<Integer> stack = new Stack<>();
+		int count = 0;
+		for (int x: arr) {	
+			if (stack.isEmpty() || stack.peek() >= x) {
+				stack.push(x);
+			} 
+			else {
+				while (!stack.isEmpty() && stack.peek() < x) {
+					int cur = stack.pop();
+					if (stack.isEmpty() || stack.peek() >= x) {
+						count += cur * x;
+					} 
+					else {
+						count += cur * stack.peek();
+					}
+				}
+				stack.push(x);
+			}
+		}
+		while (stack.size() > 1) {
+			count += stack.pop() * stack.peek();
+		}
+		return count;
+	}
+}

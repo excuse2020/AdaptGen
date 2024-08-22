@@ -1,0 +1,55 @@
+class Solution {
+	int numBusesToDestination(int[][] routes, int source, int target) {
+		Map<Integer, List<Integer>> busesForStop = new HashMap<>();
+		for (int busId = 0; busId < routes.length; busId++) {
+			for (int stopId: routes[busId]) {	
+				if (!busesForStop.containsKey(stopId)) {
+					busesForStop.put(stopId,new ArrayList<>());
+				}
+				busesForStop.get(stopId).add(busId);
+			}
+		}
+		if (source == target) {
+			return 0;
+		}
+		if (!busesForStop.containsKey(source) || !busesForStop.containsKey(source)) {
+			return -1;
+		}
+		Set<Integer> stopVisited = new HashSet<>();
+		boolean[] busUsed = new boolean[routes.length];
+		Queue<Integer> q = new LinkedList<>();
+		int count = 0;
+		q.add(source);
+		q.add(null);
+		stopVisited.add(source);
+		while (!q.isEmpty()) {
+			Integer stop = q.poll();
+			if (stop == null) {
+				count++;
+				if (!q.isEmpty()) {
+					q.add(null);
+				}
+				continue;
+			}
+			if (stop == target) {
+				return count;
+			}
+			for (int bus: busesForStop.get(stop)) {	
+				if (!busUsed[bus]) {
+					busUsed[bus] = true;
+					int[] busRoute = routes[bus];
+					for (int stopInRoute: busRoute) {	
+						if (!stopVisited.contains(stopInRoute)) {
+							if (stopInRoute == target) {
+								return count + 1;
+							}
+							stopVisited.add(stopInRoute);
+							q.add(stopInRoute);
+						}
+					}
+				}
+			}
+		}
+		return -1;
+	}
+}

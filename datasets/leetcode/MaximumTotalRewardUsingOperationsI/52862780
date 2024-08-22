@@ -1,0 +1,26 @@
+class Solution {
+	int maxTotalReward(int[] rewardValues) {
+		int n = rewardValues.length;
+		Arrays.sort(rewardValues);
+		int[][] dp = new int[n + 1][rewardValues[n - 1] + 1];
+		for (int[] row: dp) {	
+			Arrays.fill(row,-1);
+		}
+		return solve(0,0,dp,rewardValues);
+	}
+	int solve(int index, int sum, int[][] dp, int[] nums) {
+		int n = nums.length;
+		if (sum > nums[n - 1]) {
+			return sum;
+		}
+		if (index == n) {
+			return sum;
+		}
+		if (dp[index][sum] != -1) {
+			return dp[index][sum];
+		}
+		int take = (sum < nums[index]) ? solve(index + 1,sum + nums[index],dp,nums) : sum;
+		int notTake = solve(index + 1,sum,dp,nums);
+		return dp[index][sum] = Math.max(take,notTake);
+	}
+}

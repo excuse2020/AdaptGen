@@ -1,0 +1,61 @@
+class Solution {
+	List<Integer> list = new ArrayList<>();
+	int ceil(int val) {
+		int ans = -1;
+		int l = 0, h = list.size() - 1;
+		while (l <= h) {
+			int m = (l + h) / 2;
+			if (list.get(m) == val) {
+				return val;
+			} 
+			else if (list.get(m) > val) {
+				ans = list.get(m);
+				h = m - 1;
+			} 
+			else {
+				l = m + 1;
+			}
+		}
+		return ans;
+	}
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		preorder(root);
+		List<List<Integer>> res = new ArrayList<>();
+		int n = queries.size();
+		for (int i = 0; i < n; i++) {
+			int min = floor(queries.get(i));
+			int max = ceil(queries.get(i));
+			List<Integer> l = new ArrayList<>();
+			l.add(min);
+			l.add(max);
+			res.add(l);
+		}
+		return res;
+	}
+	int floor(int val) {
+		int ans = -1;
+		int l = 0, h = list.size() - 1;
+		while (l <= h) {
+			int m = (l + h) / 2;
+			if (list.get(m) == val) {
+				return val;
+			} 
+			else if (list.get(m) > val) {
+				h = m - 1;
+			} 
+			else {
+				ans = list.get(m);
+				l = m + 1;
+			}
+		}
+		return ans;
+	}
+	void preorder(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		preorder(root.left);
+		list.add(root.val);
+		preorder(root.right);
+	}
+}

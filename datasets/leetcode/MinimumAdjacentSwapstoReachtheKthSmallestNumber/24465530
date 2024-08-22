@@ -1,0 +1,70 @@
+class Solution {
+	int getMinSwaps(String num, int k) {
+		int n = num.length();
+		int[] org = new int[n];
+		int[] nums = new int[n];
+		for (int i = 0; i < n; i++) {
+			org[i] = Character.getNumericValue(num.charAt(i));
+			nums[i] = Character.getNumericValue(num.charAt(i));
+		}
+		while (k >= 1) {
+			newPermutation(nums,n);
+			k--;
+		}
+		int ans = 0;
+		for (int each: nums) {	
+			System.out.print(each);
+		}
+		int i = 0;
+		for (i = 0; i < n; i++) {
+			if (org[i] != nums[i]) {
+				int j = 0;
+				for (j = i + 1; j < n; j++) {
+					if (nums[i] == org[j]) {
+						break;
+					}
+				}
+				while (j > 0 && j != i) {
+					swap(org,j - 1,j);
+					ans++;
+					j--;
+				}
+			}
+		}
+		return ans;
+	}
+	void newPermutation(int[] nums, int n) {
+		if (nums.length == 1) {
+			return;
+		}
+		int first = n - 2;
+		while (first >= 0 && nums[first] >= nums[first + 1]) {
+			first--;
+		}
+		if (first < 0) {
+			return;
+		}
+		int second = n - 1;
+		while (first < second && nums[first] >= nums[second]) {
+			second--;
+		}
+		swap(nums,first,second);
+		reverse(nums,first + 1,n);
+	}
+	void reverse(int[] nums, int i, int n) {
+		int j = n - 1;
+		while (i < j) {
+			swap(nums,i,j);
+			i++;
+			j--;
+		}
+	}
+	void swap(int[] nums, int i, int j) {
+		if (i == j) {
+			return;
+		}
+		int temp = nums[i];
+		nums[i] = nums[j];
+		nums[j] = temp;
+	}
+}

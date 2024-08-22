@@ -1,0 +1,19 @@
+class Solution {
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		if (inorder.length != postorder.length || inorder == null || postorder.length == 0) {
+			return null;
+		}
+		int buildroot = postorder[postorder.length - 1];
+		TreeNode newTree = new TreeNode(buildroot);
+		int index = 0;
+		for (int i = 0; i < inorder.length; i++) {
+			if (inorder[i] == buildroot) {
+				index = i;
+				break;
+			}
+		}
+		newTree.left = buildTree(Arrays.copyOfRange(inorder,0,index),Arrays.copyOfRange(postorder,0,index));
+		newTree.right = buildTree(Arrays.copyOfRange(inorder,index + 1,inorder.length),Arrays.copyOfRange(postorder,index,inorder.length - 1));
+		return newTree;
+	}
+}

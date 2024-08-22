@@ -1,0 +1,44 @@
+class Solution {
+	int numBusesToDestination(int[][] routes, int source, int target) {
+		Map<Integer, List<Integer>> hashMap = new HashMap<>();
+		for (int i = 0; i < routes.length; i++) {
+			for (int j = 0; j < routes[i].length; j++) {
+				int busStopNo = routes[i][j];
+				List<Integer> buses = hashMap.getOrDefault(busStopNo,new ArrayList<>());
+				buses.add(i);
+				hashMap.put(busStopNo,buses);
+			}
+		}
+		Queue<Integer> queue = new LinkedList<>();
+		Set<Integer> busVisited = new HashSet<>();
+		Set<Integer> busStopVisited = new HashSet<>();
+		int level = 0;
+		queue.offer(source);
+		busStopVisited.add(source);
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			while (size-- > 0) {
+				int currStop = queue.poll();
+				if (currStop == target) {
+					return level;
+				}
+				List<Integer> buses = hashMap.get(currStop);
+				for (int bus: buses) {	
+					if (busVisited.contains(bus) == true) {
+						continue;
+					}
+					int[] busStops = routes[bus];
+					for (int busStop: busStops) {	
+						if (!busStopVisited.contains(busStop)) {
+							busStopVisited.add(busStop);
+							queue.add(busStop);
+						}
+					}
+					busVisited.add(bus);
+				}
+			}
+			level++;
+		}
+		return -1;
+	}
+}

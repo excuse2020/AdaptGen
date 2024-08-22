@@ -1,0 +1,48 @@
+class Solution {
+	TreeNode Deserialize(String str) {
+		if (str.equals("{}")) {
+			return null;
+		}
+		String[] vals = str.substring(1,str.length() - 1).split(",");
+		TreeNode root = new TreeNode(Integer.parseInt(vals[0]));
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.offer(root);
+		int i = 1;
+		while (!queue.isEmpty()) {
+			TreeNode node = queue.poll();
+			if (!vals[i].equals("#")) {
+				node.left = new TreeNode(Integer.parseInt(vals[i]));
+				queue.offer(node.left);
+			}
+			i++;
+			if (!vals[i].equals("#")) {
+				node.right = new TreeNode(Integer.parseInt(vals[i]));
+				queue.offer(node.right);
+			}
+			i++;
+		}
+		return root;
+	}
+	String Serialize(TreeNode root) {
+		if (root == null) {
+			return "{}";
+		}
+		Queue<TreeNode> queue = new LinkedList<>();
+		StringBuilder sb = new StringBuilder("{");
+		queue.offer(root);
+		while (!queue.isEmpty()) {
+			TreeNode node = queue.poll();
+			if (node != null) {
+				sb.append(node.val + ",");
+				queue.offer(node.left);
+				queue.offer(node.right);
+			} 
+			else {
+				sb.append("#,");
+			}
+		}
+		sb.deleteCharAt(sb.length() - 1);
+		sb.append("}");
+		return sb.toString();
+	}
+}

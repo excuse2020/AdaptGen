@@ -1,0 +1,43 @@
+class Solution {
+	int largestRectangleArea(int[] heights) {
+		if (heights.length == 0) {
+			return 0;
+		}
+		if (heights.length == 1) {
+			return heights[0];
+		}
+		int ans = 0;
+		LinkedList<Integer> list = new LinkedList<>();
+		list.add(0);
+		for (int i = 1; i < heights.length; i++) {
+			if (heights[list.peekLast()] <= heights[i]) {
+				list.addLast(i);
+			} 
+			else {
+				while (!list.isEmpty() && heights[list.peekLast()] > heights[i]) {
+					int temp = list.pollLast();
+					if (list.isEmpty()) {
+						ans = Math.max(ans,heights[temp] * (i - (-1)));
+					} 
+					else {
+						ans = Math.max(ans,heights[temp] * (i - list.peekLast()));
+					}
+				}
+				list.add(i);
+			}
+		}
+		while (!list.isEmpty()) {
+			int temp = list.pollLast();
+			while (!list.isEmpty() && heights[temp] == heights[list.peekLast()]) {
+				temp = list.pollLast();
+			}
+			if (list.isEmpty()) {
+				ans = Math.max(ans,heights[temp] * (heights.length - (-1)));
+			} 
+			else {
+				ans = Math.max(ans,heights[temp] * (heights.length - list.peekLast()));
+			}
+		}
+		return ans;
+	}
+}

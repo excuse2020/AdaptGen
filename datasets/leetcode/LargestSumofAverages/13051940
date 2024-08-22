@@ -1,0 +1,25 @@
+class Solution {
+	double average(int[] arr, int start, int end) {
+		double avg = 0;
+		for (int i = start; i < end; i++) {
+			avg += arr[i];
+		}
+		avg /= (end - start);
+		return avg;
+	}
+	double largestSumOfAverages(int[] nums, int k) {
+		return recurse(nums,k,nums.length);
+	}
+	double recurse(int[] nums, int k, int size) {
+		if (k == 1) {
+			return average(nums,0,size);
+		}
+		double avg = 0, res = 0;
+		for (int i = size - 1; i >= k - 1; i--) {
+			int n = size - i;
+			avg = (avg * (n - 1) + nums[i]) / n;
+			res = Math.max(res,avg + recurse(nums,k - 1,i));
+		}
+		return res;
+	}
+}

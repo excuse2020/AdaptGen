@@ -1,0 +1,38 @@
+class Solution {
+	int bs(ArrayList<Integer> list, int num) {
+		if (list.size() == 0) {
+			return -1;
+		}
+		int left = 0;
+		int right = list.size() - 1;
+		while (left < right) {
+			int mid = (left + right) / 2;
+			if (list.get(mid) < num) {
+				left = mid;
+			} 
+			else {
+				right = mid - 1;
+			}
+		}
+		if (list.get(0) >= num) {
+			return -1;
+		}
+		return left;
+	}
+	ArrayList<Integer> smallerCount(ArrayList<Integer> nums) {
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		ArrayList<Integer> ans = new ArrayList<Integer>();
+		for (int i = nums.size() - 1; i >= 0; i--) {
+			int num = nums.get(i);
+			ans.add(bs(list,num) + 1);
+			if (list.size() == 0) {
+				list.add(num);
+			} 
+			else {
+				list.add(bs(list,num) + 1,num);
+			}
+		}
+		Collections.reverse(ans);
+		return ans;
+	}
+}

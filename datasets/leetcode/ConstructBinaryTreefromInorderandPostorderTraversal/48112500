@@ -1,0 +1,32 @@
+class Solution {
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		return buildTreeHelper(inorder,0,inorder.length - 1,postorder,0,postorder.length - 1);
+	}
+	TreeNode buildTreeHelper(int[] inorder, int inStart, int inEnd, int[] postorder, int postStart, int postEnd) {
+		if (inStart > inEnd || postStart > postEnd) {
+			return null;
+		}
+		int rootValue = postorder[postEnd];
+		TreeNode root = new TreeNode(rootValue);
+		int rootIndexInInorder = findRootIndexInInorder(inorder,inStart,inEnd,rootValue);
+		int rightSubtreeSize = inEnd - rootIndexInInorder;
+		root.left = buildTreeHelper(inorder,inStart,rootIndexInInorder - 1,postorder,postStart,postEnd - rightSubtreeSize);
+		root.right = buildTreeHelper(inorder,rootIndexInInorder + 1,inEnd,postorder,postEnd - rightSubtreeSize,postEnd - 1);
+		return root;
+	}
+	int findRootIndexInInorder(int[] inorder, int start, int end, int rootValue) {
+		for (int i = start; i <= end; i++) {
+			if (inorder[i] == rootValue) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	void inorderTraversal(TreeNode root) {
+		if (root != null) {
+			inorderTraversal(root.left);
+			System.out.print(root.val + " ");
+			inorderTraversal(root.right);
+		}
+	}
+}

@@ -1,0 +1,33 @@
+class Solution {
+	List<List<Integer>> adj;
+	int count = 0;
+	boolean[] visited;
+	void dfs(int node) {
+		visited[node] = true;
+		count++;
+		for (int nei: adj.get(node)) {	
+			if (!visited[nei]) {
+				dfs(nei);
+			}
+		}
+	}
+	int reachableNodes(int n, int[][] edges, int[] restricted) {
+		adj = new ArrayList<>();
+		visited = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int[] e: edges) {	
+			adj.get(e[0]).add(e[1]);
+			adj.get(e[1]).add(e[0]);
+		}
+		for (int x: restricted) {	
+			visited[x] = true;
+		}
+		if (visited[0]) {
+			return count;
+		}
+		dfs(0);
+		return count;
+	}
+}

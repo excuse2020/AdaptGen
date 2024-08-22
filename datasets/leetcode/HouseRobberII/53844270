@@ -1,0 +1,45 @@
+class Solution {
+	int maxTillIdx(int idx, ArrayList<Integer> dp, ArrayList<Integer> nums) {
+		if (idx == 0) {
+			return nums.get(0);
+		}
+		if (dp.get(idx) != -1) {
+			return dp.get(idx);
+		}
+		int temp;
+		if (idx >= 2) {
+			temp = maxTillIdx(idx - 2,dp,nums);
+		} 
+		else {
+			temp = 0;
+		}
+		int pick = temp + nums.get(idx);
+		int leave = maxTillIdx(idx - 1,dp,nums);
+		int max_amt = Math.max(pick,leave);
+		dp.set(idx,max_amt);
+		return max_amt;
+	}
+	int rob(int[] nums) {
+		int len = nums.length;
+		if (len == 1) {
+			return nums[0];
+		}
+		ArrayList<Integer> dp1 = new ArrayList<>();
+		ArrayList<Integer> dp2 = new ArrayList<>();
+		for (int i = 0; i < len - 1; i++) {
+			dp1.add(-1);
+			dp2.add(-1);
+		}
+		ArrayList<Integer> first = new ArrayList<>();
+		for (int i = 0; i < len - 1; i++) {
+			first.add(nums[i]);
+		}
+		ArrayList<Integer> second = new ArrayList<>();
+		for (int i = 1; i < len; i++) {
+			second.add(nums[i]);
+		}
+		int result_first = maxTillIdx(len - 2,dp1,first);
+		int result_second = maxTillIdx(len - 2,dp2,second);
+		return Math.max(result_first,result_second);
+	}
+}

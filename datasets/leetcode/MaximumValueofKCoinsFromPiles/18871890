@@ -1,0 +1,24 @@
+class Solution {
+	Integer[][] dp;
+	int maxPoints(List<List<Integer>> piles, int i, int k) {
+		if (i < 0 || k <= 0) {
+			return 0;
+		}
+		if (dp[i][k] != null) {
+			return dp[i][k];
+		}
+		int notTake = maxPoints(piles,i - 1,k);
+		int take = 0;
+		for (int j = 0, sum = 0; j < Math.min(piles.get(i).size(),k); j++) {
+			sum += piles.get(i).get(j);
+			take = Math.max(sum + maxPoints(piles,i - 1,k - j),take);
+		}
+		int res = Math.max(take,notTake);
+		dp[i][k] = res;
+		return res;
+	}
+	int maxValueOfCoins(List<List<Integer>> piles, int k) {
+		dp = new Integer[piles.size() + 1][k + 1];
+		return maxPoints(piles,piles.size() - 1,k);
+	}
+}

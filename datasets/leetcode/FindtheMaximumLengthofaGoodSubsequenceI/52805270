@@ -1,0 +1,23 @@
+class Solution {
+	int find(int[] nums, int idx, int k, int prev, int[][][] dp) {
+		if (idx == nums.length) {
+			return 0;
+		}
+		if (dp[idx + 1][prev + 1][k + 1] != 0) {
+			return dp[idx + 1][prev + 1][k + 1];
+		}
+		int take = 0;
+		if (prev == -1 || nums[prev] == nums[idx]) {
+			take = 1 + find(nums,idx + 1,k,idx,dp);
+		}
+		if (k != 0 && prev != -1 && nums[prev] != nums[idx]) {
+			take = 1 + find(nums,idx + 1,k - 1,idx,dp);
+		}
+		return dp[idx + 1][prev + 1][k + 1] = Math.max(take,find(nums,idx + 1,k,prev,dp));
+	}
+	int maximumLength(int[] nums, int k) {
+		int n = nums.length;
+		int[][][] dp = new int[n + 1][n + 1][k + 2];
+		return find(nums,0,k,-1,dp);
+	}
+}

@@ -1,0 +1,31 @@
+class Solution {
+	int mod = (int) (1e9 + 7);
+	int checkRecord(int n) {
+		int[][][] memo = new int[n + 1][2][3];
+		for (int[][] plane: memo) {	
+			for (int[] row: plane) {	
+				Arrays.fill(row,-1);
+			}
+		}
+		return helper(1,0,0,n,memo) % mod;
+	}
+	int helper(int day, int absent, int consecutiveLate, int n, int[][][] memo) {
+		if (day == n + 1) {
+			System.out.println(day + " ");
+			return 1;
+		}
+		if (memo[day][absent][consecutiveLate] != -1) {
+			return memo[day][absent][consecutiveLate];
+		}
+		int case1 = helper(day + 1,absent,0,n,memo) % mod;
+		int case2 = 0;
+		if (absent == 0) {
+			case2 = helper(day + 1,absent + 1,0,n,memo) % mod;
+		}
+		int case3 = 0;
+		if (consecutiveLate < 2) {
+			case3 = helper(day + 1,absent,consecutiveLate + 1,n,memo) % mod;
+		}
+		return memo[day][absent][consecutiveLate] = ((case1 + case2) % mod + case3) % mod;
+	}
+}

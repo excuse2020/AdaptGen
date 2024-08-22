@@ -1,0 +1,28 @@
+class Solution {
+	int dfs(int[][] grid, int[][] moveCost, int[][] cache, int row, int col) {
+		if (row == grid.length - 1) {
+			return grid[row][col];
+		}
+		if (cache[row][col] != Integer.MAX_VALUE) {
+			return cache[row][col];
+		}
+		int output = Integer.MAX_VALUE;
+		int[] currentMoveCost = moveCost[grid[row][col]];
+		for (int i = 0; i < currentMoveCost.length; i++) {
+			output = Math.min(output,grid[row][col] + currentMoveCost[i]);
+		}
+		cache[row][col] = output;
+		return output;
+	}
+	int minPathCost(int[][] grid, int[][] moveCost) {
+		int[][] cache = new int[grid.length][grid[0].length];
+		for (int[] row: cache) {	
+			Arrays.fill(row,Integer.MAX_VALUE);
+		}
+		int maximum = Integer.MAX_VALUE;
+		for (int i = 0; i < grid[0].length; i++) {
+			maximum = Math.min(maximum,dfs(grid,moveCost,cache,0,i));
+		}
+		return maximum;
+	}
+}

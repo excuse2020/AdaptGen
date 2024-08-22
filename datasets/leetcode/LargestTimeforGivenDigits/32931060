@@ -1,0 +1,49 @@
+class Solution {
+	boolean canMake(int hour, int mins, int[] freq) {
+		int[] reqFreq = new int[10];
+		reqFreq[hour / 10]++;
+		reqFreq[hour % 10]++;
+		reqFreq[mins / 10]++;
+		reqFreq[mins % 10]++;
+		for (int i = 0; i < 10; i++) {
+			if (reqFreq[i] != freq[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+	String formatTime(int hour, int mins) {
+		StringBuilder sb = new StringBuilder();
+		if (hour < 10) {
+			sb.append("0");
+		}
+		sb.append(hour);
+		sb.append(":");
+		if (mins < 10) {
+			sb.append("0");
+		}
+		sb.append(mins);
+		return sb.toString();
+	}
+	String largestTimeFromDigits(int[] arr) {
+		int[] freq = new int[10];
+		for (int num: arr) {	
+			freq[num]++;
+		}
+		int hour = 23;
+		int mins = 59;
+		while (!canMake(hour,mins,freq)) {
+			if (mins == 0) {
+				mins = 59;
+				hour--;
+				if (hour < 0) {
+					return "";
+				}
+			} 
+			else {
+				mins--;
+			}
+		}
+		return formatTime(hour,mins);
+	}
+}

@@ -1,0 +1,33 @@
+class Solution {
+	ArrayList<Interval> merge(ArrayList<Interval> intervals) {
+		if (intervals.size() <= 1) {
+			return intervals;
+		}
+		int maxLength = 200001;
+		int[] lengthArray = new int[maxLength];
+		for (Interval interval: intervals) {	
+			lengthArray[interval.start] = Math.max(interval.end - interval.start + 1,lengthArray[interval.start]);
+		}
+		int startPos = -1;
+		int length = -1;
+		ArrayList<Interval> resultList = new ArrayList<>();
+		for (int i = 0; i < maxLength; i++) {
+			if (length > 0) {
+				length--;
+				if (length == 0) {
+					resultList.add(new Interval(startPos, i - 1));
+					length = -1;
+					startPos = -1;
+				}
+			}
+			if (length > 0 && lengthArray[i] > 0) {
+				length = Math.max(length,lengthArray[i]);
+			} 
+			else if (length == -1 && lengthArray[i] > 0) {
+				startPos = i;
+				length = lengthArray[i];
+			}
+		}
+		return resultList;
+	}
+}

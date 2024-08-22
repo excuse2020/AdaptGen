@@ -1,0 +1,32 @@
+class Solution {
+	int equalSubstring(String s, String t, int maxCost) {
+		int cost = 0;
+		int length = 0;
+		int maxLength = 0;
+		int left = 0;
+		int[] costAtIndex = new int[s.length()];
+		for (int i = left; i < s.length(); i++) {
+			if (s.charAt(i) != t.charAt(i)) {
+				int c = Math.abs(s.charAt(i) - t.charAt(i));
+				costAtIndex[i] = c;
+				cost += c;
+				if (cost > maxCost) {
+					maxLength = Math.max(length,maxLength);
+					while (left < s.length() && cost > maxCost) {
+						cost -= costAtIndex[left];
+						left = left + 1;
+					}
+					length = i - left + 1;
+				} 
+				else {
+					length++;
+				}
+			} 
+			else {
+				length++;
+			}
+		}
+		maxLength = Math.max(length,maxLength);
+		return maxLength;
+	}
+}

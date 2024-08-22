@@ -1,0 +1,42 @@
+class Solution {
+	int numTeams(int[] rating) {
+		int n = rating.length;
+		int result = 0;
+		int smallerCount;
+		int greaterCount;
+		int[][] smallerDp = new int[2][n];
+		int[][] largerDp = new int[2][n];
+		for (int i = 1; i < n; i++) {
+			smallerCount = 0;
+			greaterCount = 0;
+			for (int j = 0; j < i; j++) {
+				if (rating[j] < rating[i]) {
+					smallerCount++;
+				} 
+				else {
+					greaterCount++;
+				}
+			}
+			smallerDp[0][i] = smallerCount;
+			largerDp[0][i] = greaterCount;
+		}
+		for (int i = n - 2; i >= 0; i--) {
+			smallerCount = 0;
+			greaterCount = 0;
+			for (int j = i + 1; j < n; j++) {
+				if (rating[j] < rating[i]) {
+					smallerCount++;
+				} 
+				else {
+					greaterCount++;
+				}
+			}
+			smallerDp[1][i] = smallerCount;
+			largerDp[1][i] = greaterCount;
+		}
+		for (int i = 0; i < n; i++) {
+			result += smallerDp[0][i] * largerDp[1][i] + smallerDp[1][i] * largerDp[0][i];
+		}
+		return result;
+	}
+}

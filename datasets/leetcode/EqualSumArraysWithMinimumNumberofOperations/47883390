@@ -1,0 +1,48 @@
+class Solution {
+	void add(PriorityQueue<Integer> pq, int[] nums) {
+		for (int num: nums) {	
+			pq.add(num);
+		}
+	}
+	int getMin(PriorityQueue<Integer> minPQ, PriorityQueue<Integer> maxPQ, int minSum, int maxSum) {
+		int ops = 0;
+		while (minSum != maxSum) {
+			if (minPQ.peek() != 6 && (6 - minPQ.peek() >= maxPQ.peek() - 1)) {
+				int top = minPQ.poll();
+				int newVal = Math.min(maxSum - minSum,6 - top);
+				minSum += newVal;
+				minPQ.add(top + newVal);
+			} 
+			else if (maxPQ.peek() != 1) {
+				int top = maxPQ.poll();
+				int newVal = Math.min(maxSum - minSum,top - 1);
+				maxSum -= newVal;
+				maxPQ.add(top - newVal);
+			} 
+			else {
+				return -1;
+			}
+			ops++;
+		}
+		return ops;
+	}
+	int minOperations(int[] nums1, int[] nums2) {
+		int min1 = nums1.length, max1 = min1 * 6;
+		int min2 = nums2.length, max2 = min2 * 6;
+		if (min1 > max2 || min2 > max1) {
+			return -1;
+		}
+		int sum1 = 0, sum2 = 0;
+		for (int num: nums1) {	
+			sum1 += num;
+		}
+		for (int num: nums2) {	
+			sum2 += num;
+		}
+		PriorityQueue<Integer> minPQ = new PriorityQueue<>();
+		PriorityQueue<Integer> maxPQ = new PriorityQueue<>((a, b) -> {b - a});
+		add(minPQ,sum1 < sum2 ? nums1 : nums2);
+		add(maxPQ,sum1 < sum2 ? nums2 : nums1);
+		return getMin(minPQ,maxPQ,Math.min(sum1,sum2),Math.max(sum1,sum2));
+	}
+}

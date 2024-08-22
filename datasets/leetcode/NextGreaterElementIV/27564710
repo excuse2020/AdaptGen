@@ -1,0 +1,27 @@
+class Solution {
+	int[] secondGreaterElement(int[] nums) {
+		Stack<Integer> fs = new Stack<>(), ss = new Stack<>();
+		int[] res = new int[nums.length];
+		for (int i = 0; i < nums.length; i += 1) {
+			while (!ss.isEmpty() && nums[i] > nums[ss.peek()]) {
+				int idx = ss.pop();
+				res[idx] = nums[i];
+			}
+			Stack<Integer> s = new Stack<>();
+			while (!fs.isEmpty() && nums[i] > nums[fs.peek()]) {
+				s.push(fs.pop());
+			}
+			while (!s.isEmpty()) {
+				ss.push(s.pop());
+			}
+			fs.push(i);
+		}
+		while (!fs.isEmpty()) {
+			res[fs.pop()] = -1;
+		}
+		while (!ss.isEmpty()) {
+			res[ss.pop()] = -1;
+		}
+		return res;
+	}
+}

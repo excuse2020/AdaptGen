@@ -1,0 +1,52 @@
+class Solution {
+	List<String> alertNames(String[] keyName, String[] keyTime) {
+		List<String> res = new ArrayList<>();
+		Map<String, List<String>> map = new HashMap<>();
+		for (int i = 0; i < keyName.length; i++) {
+			if (!map.containsKey(keyName[i])) {
+				map.put(keyName[i],new ArrayList<>());
+			}
+			map.get(keyName[i]).add(keyTime[i]);
+		}
+		for (String name: map.keySet()) {	
+			List<String> sortedTimes = sortTimes(map.get(name));
+			int count = 0;
+			boolean isAlert = false;
+			for (int i = 2; i < sortedTimes.size(); i++) {
+				String time = sortedTimes.get(i);
+				String prev = sortedTimes.get(i - 2);
+				if (prev == null || !isWithinAnHour(prev,time)) {
+					continue;
+				} 
+				else {
+					isAlert = true;
+				}
+			}
+			if (isAlert) {
+				res.add(name);
+			}
+		}
+		Collections.sort(res);
+		return res;
+	}
+	boolean isWithinAnHour(String time1, String time2) {
+		int counter1 = toFakeEpoch(time1);
+		int counter2 = toFakeEpoch(time2);
+		if (Math.abs(counter1 - counter2) > 60) {
+			return false;
+		}
+		return true;
+	}
+	List<String> sortTimes(List<String> times) {
+		List<String> timesContainer = times;
+		Collections.sort(timesContainer,new Comparator<String>());
+		return timesContainer;
+	}
+	int toFakeEpoch(String time) {
+		String[] timeSplit = time.split(":");
+		int timeHH = Integer.parseInt(timeSplit[0]);
+		int timeMM = Integer.parseInt(timeSplit[1]);
+		int counter = (timeHH * 60) + timeMM;
+		return counter;
+	}
+}

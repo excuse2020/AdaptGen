@@ -1,0 +1,51 @@
+class Solution {
+	int getMaxPrevGainInd(List<int[]> a, int k) {
+		int l = 0, h = a.size() - 1;
+		while (l <= h) {
+			int m = (l + h) / 2;
+			if (a.get(m)[1] > k) {
+				h = m - 1;
+			} 
+			else {
+				l = m + 1;
+			}
+		}
+		return h;
+	}
+	int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
+		int n = profit.length, maxProfit = 0;
+		Map<Integer, List<int[]>> m = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			List<int[]> l = m.get(endTime[i]);
+			if (l == null) {
+				l = new ArrayList<>();
+				m.put(endTime[i],l);
+			}
+			l.add(new int{startTime[i], profit[i]});
+		}
+		int endTimeSet = new int[m.size()], ind = 0;
+		for (int et: m.keySet()) {	
+			endTimeSet[ind++] = et;
+		}
+		Arrays.sort(endTimeSet);
+		List<int[]> dp = new ArrayList<>();
+		for (int etime: endTimeSet) {	
+			int[] currMax = new int[2];
+			for (int val: m.get(etime)) {	
+				int stime = val[0], gain = val[1], maxPrevGainInd = getMaxPrevGainInd(dp,stime);
+				if (maxPrevGainInd != -1) {
+					gain += dp.get(maxPrevGainInd)[0];
+				}
+				if (gain > currMax[0]) {
+					currMax[0] = gain;
+					currMax[1] = etime;
+				}
+			}
+			if (dp.isEmpty() || dp.get(dp.size() - 1)[0] < currMax[0]) {
+				dp.add(currMax);
+				maxProfit = Math.max(maxProfit,currMax[0]);
+			}
+		}
+		return maxProfit;
+	}
+}

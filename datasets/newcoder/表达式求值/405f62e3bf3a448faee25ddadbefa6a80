@@ -1,0 +1,88 @@
+class Solution {
+	void calc(Stack<Integer> num_stack, Stack<Character> op_stack, char op) {
+		if ((op == '+' || op == '-') && !op_stack.isEmpty()) {
+			char op1 = op_stack.peek();
+			if (op1 == '+') {
+				op_stack.pop();
+				int n1 = num_stack.pop();
+				int n2 = num_stack.pop();
+				num_stack.push(n1 + n2);
+			} 
+			else if (op1 == '-') {
+				op_stack.pop();
+				int n1 = num_stack.pop();
+				int n2 = num_stack.pop();
+				num_stack.push(n2 - n1);
+			} 
+			else if (op1 == '*') {
+				op_stack.pop();
+				int n1 = num_stack.pop();
+				int n2 = num_stack.pop();
+				num_stack.push(n2 * n1);
+			}
+		} 
+		else if (op == '*' && !op_stack.isEmpty()) {
+			char op1 = op_stack.peek();
+			if (op1 == '*') {
+				op_stack.pop();
+				int n1 = num_stack.pop();
+				int n2 = num_stack.pop();
+				num_stack.push(n2 * n1);
+			}
+		}
+	}
+	int solve(String s) {
+		Stack<Integer> num_stack = new Stack<>();
+		Stack<Character> op_stack = new Stack<>();
+		int result = 0;
+		char op;
+		for (int i = 0; i < s.length(); ) {
+			if (s.charAt(i) >= '0' && s.charAt(i) <= '9') {
+				int m = 0;
+				while (i < s.length() && s.charAt(i) >= '0' && s.charAt(i) <= '9') {
+					m = m * 10 + s.charAt(i) - '0';
+					i++;
+				}
+				num_stack.push(m);
+			} 
+			else if (s.charAt(i) == ')') {
+				i++;
+				while ((op = op_stack.pop()) != '(') {
+					int m1 = num_stack.pop();
+					int m2 = num_stack.pop();
+					if (op == '+') {
+						num_stack.push(m1 + m2);
+					} 
+					else if (op == '*') {
+						num_stack.push(m1 * m2);
+					} 
+					else {
+						num_stack.push(m2 - m1);
+					}
+				}
+			} 
+			else {
+				if (s.charAt(i) != '(') {
+					calc(num_stack,op_stack,s.charAt(i));
+				}
+				op_stack.push(s.charAt(i));
+				i++;
+			}
+		}
+		while (!op_stack.isEmpty()) {
+			op = op_stack.pop();
+			int m1 = num_stack.pop();
+			int m2 = num_stack.pop();
+			if (op == '+') {
+				num_stack.push(m1 + m2);
+			} 
+			else if (op == '*') {
+				num_stack.push(m1 * m2);
+			} 
+			else {
+				num_stack.push(m2 - m1);
+			}
+		}
+		return num_stack.pop();
+	}
+}

@@ -1,0 +1,34 @@
+class Solution {
+	void DFS(int i, int[] edges, HashMap<Integer, Integer> map, boolean[] visited, int dist) {
+		if (i == -1 || visited[i] == true) {
+			return;
+		}
+		visited[i] = true;
+		map.put(i,dist);
+		DFS(edges[i],edges,map,visited,dist + 1);
+	}
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		int n = edges.length;
+		HashMap<Integer, Integer> map1 = new HashMap<>();
+		HashMap<Integer, Integer> map2 = new HashMap<>();
+		DFS(node1,edges,map1,new boolean[n],0);
+		DFS(node2,edges,map2,new boolean[n],0);
+		int min = Integer.MAX_VALUE;
+		int res = -1;
+		for (int key: map1.keySet()) {	
+			int val1 = map1.get(key);
+			if (map2.containsKey(key) == false) {
+				continue;
+			}
+			int val2 = map2.get(key);
+			if (Math.max(val1,val2) == min) {
+				res = Math.min(res,key);
+			} 
+			else if (Math.max(val1,val2) < min) {
+				min = Math.max(val1,val2);
+				res = key;
+			}
+		}
+		return res;
+	}
+}

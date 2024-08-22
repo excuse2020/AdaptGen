@@ -1,0 +1,44 @@
+class Solution {
+	int maxProfit(int[] inventory, int orders) {
+		return partition(Arrays.copyOf(inventory,inventory.length),0,inventory.length,orders,0,0,0,new Random(4782987397424892L));
+	}
+	int partition(int[] inventory, int low, int high, int orders, int extraColors, int extraCounts, int value, Random random) {
+		if (orders == 0) {
+			return value;
+		}
+		if (high - low == 0) {
+			if ((long) extraColors * extraCounts <= orders) {
+				return (int) ((value + (extraColors * ((long) extraCounts + 1)) % 1000000007 * extraCounts / 2) % 1000000007);
+			}
+			return (int) ((value + extraColors * ((2L * extraCounts - orders / extraColors + 1) * (orders / extraColors) / 2 % 1000000007) + orders % extraColors * ((long) extraCounts - orders / extraColors) % 1000000007) % 1000000007);
+		}
+		long pivot = inventory[low + random.nextInt(high - low)];
+		int i = low;
+		int j = high;
+		int k = low;
+		long newCounts = 0;
+		long newValue = 0;
+		while (k < j) {
+			if (inventory[k] < pivot) {
+				inventory[i] = inventory[k];
+				i++;
+				k++;
+				continue;
+			}
+			if (inventory[k] == pivot) {
+				k++;
+				continue;
+			}
+			j--;
+			int tmp = inventory[j];
+			inventory[j] = inventory[k];
+			inventory[k] = tmp;
+			newCounts += inventory[j] - pivot;
+			newValue = (newValue + (inventory[j] - pivot) * (inventory[j] + pivot) / 2) % 1000000007;
+		}
+		if (newCounts + extraColors * (extraCounts - pivot) > orders) {
+			return partition(inventory,j,high,orders,extraColors,extraCounts,value,random);
+		}
+		return partition(inventory,low,i,(int) (orders - newCounts),extraColors - i + high,(int) pivot,(int) (((long) value + newValue) % 1000000007),random);
+	}
+}

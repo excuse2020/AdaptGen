@@ -1,0 +1,29 @@
+class Solution {
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		Map<Integer, List<Integer>> managerEmployee = new HashMap<>();
+		for (int i = 0; i < manager.length; i++) {
+			if (manager[i] != -1) {
+				managerEmployee.putIfAbsent(manager[i],new ArrayList<>());
+				managerEmployee.get(manager[i]).add(i);
+			}
+		}
+		Queue<Integer> queue = new ArrayDeque<>();
+		queue.offer(headID);
+		Queue<Integer> times = new ArrayDeque<>();
+		times.offer(informTime[headID]);
+		int totalTime = 0;
+		while (!queue.isEmpty()) {
+			Integer employee = queue.poll();
+			Integer it = times.poll();
+			List<Integer> subordinates = managerEmployee.get(employee);
+			if (subordinates != null) {
+				for (int sub: subordinates) {	
+					queue.offer(sub);
+					times.offer(it + informTime[sub]);
+				}
+			}
+			totalTime = Math.max(totalTime,it);
+		}
+		return totalTime;
+	}
+}

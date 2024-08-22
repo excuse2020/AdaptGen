@@ -1,0 +1,42 @@
+class Solution {
+	int dfs(ArrayList<Integer>[] canDetonate, boolean[] visited, int src) {
+		if (visited[src]) {
+			return 0;
+		}
+		visited[src] = true;
+		int detonate = 1;
+		for (int node: canDetonate[src]) {	
+			detonate += dfs(canDetonate,visited,node);
+		}
+		return detonate;
+	}
+	int maximumDetonation(int[][] bombs) {
+		int n = bombs.length;
+		ArrayList<Integer>[] canDetonate = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			canDetonate[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < n; i++) {
+			int x1 = bombs[i][0];
+			int y1 = bombs[i][1];
+			int r1 = bombs[i][2];
+			for (int j = i + 1; j < n; j++) {
+				int x2 = bombs[j][0];
+				int y2 = bombs[j][1];
+				int r2 = bombs[j][2];
+				int distance = (int) Math.ceil(Math.sqrt(Math.pow(x1 - x2,2) + Math.pow(y1 - y2,2)));
+				if (distance <= r1) {
+					canDetonate[i].add(j);
+				}
+				if (distance <= r2) {
+					canDetonate[j].add(i);
+				}
+			}
+		}
+		int result = 1;
+		for (int i = 0; i < n; i++) {
+			result = Math.max(result,dfs(canDetonate,new boolean[n],i));
+		}
+		return result;
+	}
+}

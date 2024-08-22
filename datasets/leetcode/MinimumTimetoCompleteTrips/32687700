@@ -1,0 +1,39 @@
+class Solution {
+	long getMinTripCnt(long t, int time) {
+		long tripCnt = 0;
+		for (int i = 0; i < time.length; i++) {
+			tripCnt += t / time[i];
+		}
+		return tripCnt;
+	}
+	long minimumTime(int[] time, int totalTrips) {
+		int n = time.length;
+		long minVal = time[0];
+		for (int i = 1; i < n; i++) {
+			minVal = Math.min(minVal,time[i]);
+		}
+		long low = 1;
+		long high = minVal * totalTrips;
+		long minTime = high;
+		if (n == 1) {
+			return minTime;
+		}
+		while (low <= high) {
+			long mid = (low + high) / 2;
+			long tripCnt = getMinTripCnt(mid,time);
+			if (tripCnt >= totalTrips) {
+				if (getMinTripCnt(mid - 1,time) < totalTrips) {
+					minTime = Math.min(minTime,mid);
+					break;
+				} 
+				else {
+					high = mid - 1;
+				}
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		return minTime;
+	}
+}

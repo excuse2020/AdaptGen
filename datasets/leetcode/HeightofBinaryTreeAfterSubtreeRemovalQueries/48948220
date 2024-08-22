@@ -1,0 +1,54 @@
+class Solution {
+	Map<Integer, int[]> eachLevelMap = new HashMap<>();
+	Map<Integer, Integer> queryMap = new HashMap<>();
+	void deletedNodeHeight(TreeNode node, int level, int originalHeight) {
+		if (node == null) {
+			return;
+		}
+		if (level == 0) {
+			queryMap.put(node.val,0);
+		}
+		int[] curLevel = eachLevelMap.get(level);
+		if (curLevel[2] == node.val) {
+			int heightAfter = originalHeight - curLevel[0] + curLevel[1];
+			queryMap.put(node.val,heightAfter);
+		} 
+		else {
+			queryMap.put(node.val,originalHeight);
+		}
+		deletedNodeHeight(node.left,level + 1,originalHeight);
+		deletedNodeHeight(node.right,level + 1,originalHeight);
+	}
+	int treeHeight(TreeNode node, int level) {
+		if (node == null) {
+			return 0;
+		}
+		int curHeight = Math.max(treeHeight(node.left,level + 1),treeHeight(node.right,level + 1)) + 1;
+		int[] curLevel = eachLevelMap.getOrDefault(level,new int[4]);
+		if (curHeight >= curLevel[0]) {
+			curLevel[1] = curLevel[0];
+			curLevel[0] = curHeight;
+			curLevel[3] = curLevel[2];
+			curLevel[2] = node.val;
+		} 
+		else if (curHeight > curLevel[1]) {
+			curLevel[1] = curHeight;
+		}
+		eachLevelMap.put(level,curLevel);
+		return curHeight;
+	}
+	int[] treeQueries(TreeNode root, int[] queries) {
+		List<Integer> res = new ArrayList<>();
+		int originalHeight = treeHeight(root,0);
+		deletedNodeHeight(root,0,originalHeight);
+		for (Integer query: queries) {	
+			int height = queryMap.get(query);
+			res.add(height - 1);
+		}
+		int[] ans = new int[res.size()];
+		for (int i = 0; i < res.size(); i++) {
+			ans[i] = res.get(i);
+		}
+		return ans;
+	}
+}

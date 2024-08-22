@@ -1,0 +1,25 @@
+class Solution {
+	Map<TreeNode, Integer> nodeHeight = new HashMap<>();
+	int getHeight(TreeNode node) {
+		if (node == null) {
+			return 0;
+		}
+		if (nodeHeight.containsKey(node)) {
+			return nodeHeight.get(node);
+		}
+		int height = 1 + Math.max(getHeight(node.left),getHeight(node.right));
+		nodeHeight.put(node,height);
+		return height;
+	}
+	TreeNode lcaDeepestLeaves(TreeNode root) {
+		int leftHeight = getHeight(root.left);
+		int rightHeight = getHeight(root.right);
+		if (leftHeight < rightHeight) {
+			return lcaDeepestLeaves(root.right);
+		} 
+		else if (leftHeight > rightHeight) {
+			return lcaDeepestLeaves(root.left);
+		}
+		return root;
+	}
+}

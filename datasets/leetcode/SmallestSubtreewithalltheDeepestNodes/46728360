@@ -1,0 +1,27 @@
+class Solution {
+	int deepestNode;
+	TreeNode subTreeRoot;
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		subtreeWithAllDeepestRec(root,0);
+		return subTreeRoot;
+	}
+	int subtreeWithAllDeepestRec(TreeNode node, int depth) {
+		if (null == node) {
+			return 0;
+		}
+		if (node.left == null && node.right == null) {
+			if (depth >= deepestNode) {
+				deepestNode = depth;
+				subTreeRoot = node;
+			}
+			return depth;
+		}
+		int l = subtreeWithAllDeepestRec(node.left,depth + 1);
+		int r = subtreeWithAllDeepestRec(node.right,depth + 1);
+		if (l == r && l >= deepestNode) {
+			deepestNode = l;
+			subTreeRoot = node;
+		}
+		return Math.max(l,r);
+	}
+}

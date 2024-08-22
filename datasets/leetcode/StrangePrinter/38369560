@@ -1,0 +1,27 @@
+class Solution {
+	int help(char[] boxes, int l, int r, int[][] dp) {
+		if (l > r) {
+			return 0;
+		}
+		if (dp[l][r] > 0) {
+			return dp[l][r];
+		}
+		int l_Ori = l;
+		int r_Ori = r;
+		while (l + 1 <= r && boxes[l] == boxes[l + 1]) {
+			l++;
+		}
+		int ans = 1 + help(boxes,l + 1,r,dp);
+		for (int i = l + 1; i <= r; i++) {
+			if (boxes[l] == boxes[i]) {
+				ans = Math.min(ans,help(boxes,l + 1,i - 1,dp) + help(boxes,i,r,dp));
+			}
+		}
+		return dp[l_Ori][r_Ori] = ans;
+	}
+	int strangePrinter(String s) {
+		int n = s.length();
+		int[][] dp = new int[n + 1][n + 1];
+		return help(s.toCharArray(),0,n - 1,dp);
+	}
+}

@@ -1,0 +1,34 @@
+class Solution {
+	HashMap<Integer, Integer> occurence = new HashMap<>();
+	int countMaxOrSubsets(int[] nums) {
+		Arrays.sort(nums);
+		subset(0,nums,new ArrayList<>());
+		int maxVal = 0, val = 0;
+		for (Integer key: occurence.keySet()) {	
+			if (key > maxVal) {
+				val = occurence.get(key);
+				maxVal = key;
+			}
+		}
+		return val;
+	}
+	int getOrVal(ArrayList<Integer> cur) {
+		int r = 0;
+		for (Integer i: cur) {	
+			r |= i;
+		}
+		return r;
+	}
+	void subset(int index, int[] nums, ArrayList<Integer> cur) {
+		if (index >= nums.length) {
+			return;
+		}
+		cur.add(nums[index]);
+		int orVal = getOrVal(cur);
+		int occ = occurence.getOrDefault(orVal,0);
+		occurence.put(orVal,occ + 1);
+		subset(index + 1,nums,cur);
+		cur.remove(cur.size() - 1);
+		subset(index + 1,nums,cur);
+	}
+}

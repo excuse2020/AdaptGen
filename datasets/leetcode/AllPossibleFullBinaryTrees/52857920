@@ -1,0 +1,38 @@
+class Solution {
+	List<TreeNode> allPossibleFBT(int n) {
+		List<List<TreeNode>> memo = new ArrayList<>();
+		List<TreeNode> res = new ArrayList<>();
+		res.add(new TreeNode(0));
+		memo.add(res);
+		for (int i = 0; i < n; i++) {
+			memo.add(null);
+		}
+		return allPossibleFBTHelper(n,memo);
+	}
+	List<TreeNode> allPossibleFBTHelper(int n, List<List<TreeNode>> memo) {
+		if (memo.get(n - 1) != null) {
+			return memo.get(n - 1);
+		}
+		List<TreeNode> res = new ArrayList<>();
+		int left = 1;
+		int right = n - 2;
+		while (right > 0) {
+			List<TreeNode> lefttrees = allPossibleFBTHelper(left,memo);
+			List<TreeNode> righttrees = allPossibleFBTHelper(right,memo);
+			int a = lefttrees.size();
+			int b = righttrees.size();
+			for (int i = 0; i < a; i++) {
+				for (int j = 0; j < b; j++) {
+					TreeNode node = new TreeNode(0);
+					node.left = lefttrees.get(i);
+					node.right = righttrees.get(j);
+					res.add(node);
+				}
+			}
+			right--;
+			left++;
+		}
+		memo.set(n - 1,res);
+		return res;
+	}
+}

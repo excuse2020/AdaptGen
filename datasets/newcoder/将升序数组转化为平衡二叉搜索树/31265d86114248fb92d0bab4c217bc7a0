@@ -1,0 +1,48 @@
+class Solution {
+	void addNode(TreeNode treeNode, TreeNode toAddNode) {
+		if (toAddNode.val == treeNode.val) {
+			return;
+		}
+		if (toAddNode.val > treeNode.val) {
+			if (treeNode.right != null) {
+				treeNode = treeNode.right;
+			} 
+			else {
+				treeNode.right = toAddNode;
+				return;
+			}
+		} 
+		else {
+			if (treeNode.left != null) {
+				treeNode = treeNode.left;
+			} 
+			else {
+				treeNode.left = toAddNode;
+				return;
+			}
+		}
+		addNode(treeNode,toAddNode);
+	}
+	void getBST(TreeNode treeNode, int[] nums) {
+		if (nums.length == 0) {
+			return;
+		}
+		int midIndex = nums.length / 2;
+		TreeNode toAddNode = new TreeNode(nums[midIndex]);
+		addNode(treeNode,toAddNode);
+		if (nums.length > 1) {
+			int[] leftNums = Arrays.copyOfRange(nums,0,midIndex);
+			getBST(treeNode,leftNums);
+			int[] rightNums = Arrays.copyOfRange(nums,midIndex + 1,nums.length);
+			getBST(treeNode,rightNums);
+		}
+	}
+	TreeNode sortedArrayToBST(int[] nums) {
+		if (nums.length == 0) {
+			return null;
+		}
+		TreeNode treeNode = new TreeNode(nums[nums.length / 2]);
+		getBST(treeNode,nums);
+		return treeNode;
+	}
+}

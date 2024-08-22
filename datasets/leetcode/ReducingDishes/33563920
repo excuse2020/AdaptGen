@@ -1,0 +1,22 @@
+class Solution {
+	int[][] memo;
+	int getResult(int[] nums, int idx, int time) {
+		if (idx == nums.length) {
+			return 0;
+		}
+		if (memo[idx][time] != Integer.MIN_VALUE) {
+			return memo[idx][time];
+		}
+		int include = nums[idx] * time + getResult(nums,idx + 1,time + 1);
+		int exclude = getResult(nums,idx + 1,time);
+		return memo[idx][time] = Math.max(include,exclude);
+	}
+	int maxSatisfaction(int[] satisfaction) {
+		memo = new int[satisfaction.length][satisfaction.length + 1];
+		for (int[] arr: memo) {	
+			Arrays.fill(arr,Integer.MIN_VALUE);
+		}
+		Arrays.sort(satisfaction);
+		return getResult(satisfaction,0,1);
+	}
+}

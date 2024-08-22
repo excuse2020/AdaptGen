@@ -1,0 +1,25 @@
+class Solution {
+	int modulo = (int) Math.pow(10,9) + 7;
+	long getValidPlaylist(int index, int uniqueSongs, int n, int goal, int k, Long[][] memo) {
+		if (index == goal + 1) {
+			return uniqueSongs == n ? 1 : 0;
+		}
+		if (memo[index][uniqueSongs] != null) {
+			return memo[index][uniqueSongs];
+		}
+		long ways = 0;
+		if (uniqueSongs < n) {
+			ways += ((n - uniqueSongs) * getValidPlaylist(index + 1,uniqueSongs + 1,n,goal,k,memo)) % modulo;
+			ways %= modulo;
+		}
+		if (uniqueSongs > k) {
+			ways += ((uniqueSongs - k) * getValidPlaylist(index + 1,uniqueSongs,n,goal,k,memo)) % modulo;
+			ways %= modulo;
+		}
+		return memo[index][uniqueSongs] = ways % modulo;
+	}
+	int numMusicPlaylists(int n, int goal, int k) {
+		Long[][] memo = new Long[goal + 1][n + 1];
+		return (int) getValidPlaylist(1,0,n,goal,k,memo);
+	}
+}

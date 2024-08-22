@@ -1,0 +1,55 @@
+class Solution {
+	ArrayList<int[]>[] nextG, preG;
+	void makeGraph(int n, int[][] edges) {
+		nextG = new ArrayList[n];
+		preG = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			nextG[i] = new ArrayList<int[]>();
+			preG[i] = new ArrayList<int[]>();
+		}
+		for (int[] edge: edges) {	
+			int from = edge[0], to = edge[1], weight = edge[2];
+			nextG[from].add(new int{to, weight});
+			preG[to].add(new int{from, weight});
+		}
+	}
+	long minimumWeight(int n, int[][] edges, int src1, int src2, int dest) {
+		makeGraph(n,edges);
+		long[] src1To = new long[n], src2To = new long[n], toDest = new long[n];
+		Arrays.fill(src1To,-1);
+		Arrays.fill(src2To,-1);
+		Arrays.fill(toDest,-1);
+		shortestPath(src1,src1To,nextG);
+		shortestPath(src2,src2To,nextG);
+		shortestPath(dest,toDest,preG);
+		long res = -1;
+		for (int i = 0; i < n; i++) {
+			long d1 = src1To[i], d2 = src2To[i], d3 = toDest[i];
+			if (d1 >= 0 && d2 >= 0 && d3 >= 0) {
+				long d = d1 + d2;
+				if (res == -1 || d < res) {
+					res = d;
+				}
+			}
+		}
+		return res;
+	}
+	void shortestPath(int src, long[] srcTo, ArrayList<int[]>[] graph) {
+		PriorityQueue<long[]> heap = new PriorityQueue<>((a, b) -> {(a[1] == b[1] ? 0 : (a[1] < b[1] ? -1 : 1))});
+		for (int[] next: graph[src]) {	
+			heap.offer(new long{next[0], next[1]});
+		}
+		srcTo[src] = 0;
+		while (!heap.isEmpty()) {
+			long[] node = heap.poll();
+			long to = node[0], dist = node[1];
+			if (srcTo[(int)to] != -1 && srcTo[(int)to] <= dist) {
+				continue;
+			}
+			srcTo[(int)to] = dist;
+			for (int[] next: graph[(int)to]) {	
+				heap.offer(new long{next[0], dist + next[1]});
+			}
+		}
+	}
+}

@@ -1,0 +1,48 @@
+class Solution {
+	int[] countServers(int n, int[][] logs, int x, int[] queries) {
+		TreeMap<Integer, List<Integer>> treeMap = new TreeMap<>();
+		for (int[] log: logs) {	
+			List<Integer> list = treeMap.getOrDefault(log[1],new ArrayList<>());
+			list.add(log[0]);
+			treeMap.put(log[1],list);
+		}
+		int[] res = new int[queries.length];
+		int[] order = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			order[i] = queries[i];
+		}
+		Arrays.sort(queries);
+		int j = queries[0] - x;
+		int r = 0;
+		int i = queries[0] - x;
+		Map<Integer, Integer> map = new HashMap<>();
+		Map<Integer, Integer> slideWindowCountmap = new HashMap<>();
+		while (r < queries.length) {
+			while (j <= queries[r]) {
+				if (treeMap.containsKey(j)) {
+					for (Integer log: treeMap.get(j)) {	
+						slideWindowCountmap.put(log,slideWindowCountmap.getOrDefault(log,0) + 1);
+					}
+				}
+				j += 1;
+			}
+			while (i < queries[r] - x) {
+				if (treeMap.containsKey(i)) {
+					for (Integer log: treeMap.get(i)) {	
+						slideWindowCountmap.put(log,slideWindowCountmap.get(log) - 1);
+						if (slideWindowCountmap.get(log) == 0) {
+							slideWindowCountmap.remove(log);
+						}
+					}
+				}
+				i += 1;
+			}
+			map.put(queries[r],n - slideWindowCountmap.size());
+			r += 1;
+		}
+		for (int k = 0; k < res.length; k++) {
+			res[k] = map.get(order[k]);
+		}
+		return res;
+	}
+}

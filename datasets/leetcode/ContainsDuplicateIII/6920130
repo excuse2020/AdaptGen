@@ -1,0 +1,25 @@
+class Solution {
+	boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
+		if (t < 0) {
+			return false;
+		}
+		TreeSet<Integer> ts = new TreeSet<Integer>();
+		for (int i = 0; i < nums.length; i++) {
+			if (i > k) {
+				ts.remove(nums[i - k - 1]);
+			}
+			if (ts.contains(nums[i])) {
+				return true;
+			}
+			if (t > 0) {
+				Integer highest_num_less_curr = ts.lower(nums[i]);
+				Integer lowest_num_greater_curr = ts.higher(nums[i]);
+				if (highest_num_less_curr != null && Math.abs((long) highest_num_less_curr - nums[i]) <= t || lowest_num_greater_curr != null && Math.abs((long) lowest_num_greater_curr - nums[i]) <= t) {
+					return true;
+				}
+			}
+			ts.add(nums[i]);
+		}
+		return false;
+	}
+}

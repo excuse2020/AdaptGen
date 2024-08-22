@@ -1,0 +1,97 @@
+class Solution {
+	void build(int arr, int seg, int ind, int low, int high) {
+		if (low == high) {
+			seg[ind] = arr[low];
+			return;
+		}
+		int mid = low + (high - low) / 2;
+		build(arr,seg,2 * ind + 1,low,mid);
+		build(arr,seg,2 * ind + 2,mid + 1,high);
+		seg[ind] = Math.max(seg[2 * ind + 1],seg[2 * ind + 2]);
+	}
+	void dfs(int u, int par, ArrayList<ArrayList<Integer>> adj, ArrayList<Integer> flat, int depth) {
+		flat.add(u);
+		for (int v: adj.get(u)) {	
+			if (v != par) {
+				depth[v] = 1 + depth[u];
+				dfs(v,u,adj,flat,depth);
+			}
+		}
+		flat.add(u);
+	}
+	int query(int arr, int seg, int ind, int low, int high, int l, int r) {
+		if (low >= l && high <= r) {
+			return seg[ind];
+		}
+		if (low > r || high < l) {
+			return Integer.MIN_VALUE;
+		}
+		int mid = low + (high - low) / 2;
+		int left = query(arr,seg,2 * ind + 1,low,mid,l,r);
+		int right = query(arr,seg,2 * ind + 2,mid + 1,high,l,r);
+		return Math.max(left,right);
+	}
+	int[] treeQueries(TreeNode root, int[] queries) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i <= 100000 + 5; i++) {
+			adj.add(new ArrayList<>());
+		}
+		Queue<TreeNode> q = new LinkedList<>();
+		q.offer(root);
+		while (!q.isEmpty()) {
+			int len = q.size();
+			for (int i = 0; i < len; i++) {
+				if (q.peek().left != null) {
+					q.offer(q.peek().left);
+					int u = q.peek().val;
+					int v = q.peek().left.val;
+					adj.get(u).add(v);
+					adj.get(v).add(u);
+				}
+				if (q.peek().right != null) {
+					q.offer(q.peek().right);
+					int u = q.peek().val;
+					int v = q.peek().right.val;
+					adj.get(u).add(v);
+					adj.get(v).add(u);
+				}
+				q.poll();
+			}
+		}
+		int depth = new int[100000 + 5];
+		ArrayList<Integer> flat = new ArrayList<>();
+		dfs(root.val,-1,adj,flat,depth);
+		int len = flat.size();
+		int res = new int[len];
+		int first = new int[100000 + 1];
+		int last = new int[100000 + 1];
+		Arrays.fill(first,-1);
+		Arrays.fill(last,-1);
+		for (int i = 0; i < len; i++) {
+			res[i] = depth[flat.get(i)];
+		}
+		for (int i = 0; i < flat.size(); i++) {
+			int current = flat.get(i);
+			if (first[current] == -1) {
+				first[current] = i;
+			} 
+			else {
+				last[current] = i;
+			}
+		}
+		int seg = new int[4 * len + 10];
+		build(res,seg,0,0,len - 1);
+		int ans = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			int current = queries[i];
+			if (current == root.val) {
+				ans[i] = 0;
+				continue;
+			}
+			int x = query(res,seg,0,0,len - 1,0,first[current] - 1);
+			int y = query(res,seg,0,0,len - 1,last[current] + 1,len - 1);
+			ans[i] = Math.max(x,y);
+		}
+		return ans;
+	}
+}

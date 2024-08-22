@@ -1,0 +1,79 @@
+class Solution {
+	List ans = new ArrayList<ArrayList<String>>();
+	void addNewPath(String[] path) {
+		List<String> ll = new ArrayList<>();
+		for (int i = path.length - 1; i >= 0; i--) {
+			ll.add(path[i]);
+		}
+		ans.add(ll);
+	}
+	List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+		Set<String> dicto = new HashSet<String>(wordList);
+		if (!dicto.contains(endWord) || beginWord.length() != endWord.length()) {
+			return ans;
+		}
+		if (beginWord.equals(endWord)) {
+			List<String> ans1 = new ArrayList<>();
+			ans1.add(beginWord);
+			ans1.add(endWord);
+			ans.add(ans1);
+			return ans;
+		}
+		Set<String> start = new HashSet<>();
+		boolean matched = false;
+		start.add(beginWord);
+		LinkedList<Set<String>> levels = new LinkedList<>();
+		while (!start.isEmpty() && !matched) {
+			Set<String> next = new HashSet<>();
+			for (var word: start) {	
+				var iterator = dicto.iterator();
+				while (iterator.hasNext()) {
+					var dict = iterator.next();
+					if (isLadder(word,dict)) {
+						if (dict.equals(endWord)) {
+							matched = true;
+						} 
+						else {
+							next.add(dict);
+							iterator.remove();
+						}
+					}
+				}
+			}
+			levels.addFirst(start);
+			start = next;
+		}
+		if (matched) {
+			String[] path = new String[levels.size() + 1];
+			path[0] = endWord;
+			getPaths(levels,endWord,path,0);
+		}
+		return ans;
+	}
+	void getPaths(LinkedList<Set<String>> levels, String end, String[] path, int floor) {
+		if (floor == levels.size()) {
+			addNewPath(path);
+			return;
+		}
+		Set<String> level = levels.get(floor);
+		for (var word: level) {	
+			if (isLadder(word,end)) {
+				path[floor + 1] = word;
+				getPaths(levels,word,path,floor + 1);
+			}
+		}
+	}
+	boolean isLadder(String a, String b) {
+		int i;
+		int count = 0;
+		for (i = 0; i < a.length(); i++) {
+			if (a.charAt(i) != b.charAt(i)) {
+				count++;
+				if (count > 1) {
+					return false;
+				}
+			}
+		}
+		return count == 1;
+	}
+}

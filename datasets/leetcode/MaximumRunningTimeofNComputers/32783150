@@ -1,0 +1,46 @@
+class Solution {
+	int[] batteries;
+	int n;
+	boolean canRunIn(long days) {
+		long rem = 0;
+		int computers = 0;
+		for (int battery: batteries) {	
+			if (battery > days) {
+				computers++;
+			} 
+			else {
+				if (rem + battery >= days) {
+					computers++;
+				}
+				rem = (rem + battery) % days;
+			}
+			if (computers == n) {
+				return true;
+			}
+		}
+		return false;
+	}
+	long maxRunTime(int n, int[] batteries) {
+		this.n = n;
+		this.batteries = batteries;
+		long low = Long.MAX_VALUE;
+		long high = 0L;
+		for (int battery: batteries) {	
+			low = Math.min(battery,low);
+			high += battery;
+		}
+		if (low * batteries.length == high) {
+			return low * batteries.length / n;
+		}
+		while (low <= high) {
+			long middle = low + (high - low) / 2;
+			if (canRunIn(middle)) {
+				low = middle + 1;
+			} 
+			else {
+				high = middle - 1;
+			}
+		}
+		return high;
+	}
+}

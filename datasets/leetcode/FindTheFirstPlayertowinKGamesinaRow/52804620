@@ -1,0 +1,31 @@
+class Solution {
+	int findWinningPlayer(int[] skills, int k) {
+		int[] pl = new int[skills.length];
+		int[] ng = nextGreater(skills);
+		for (int i = 0; i < skills.length; i++) {
+			pl[i] = pl[i] + ng[i] - i - 1;
+			if (pl[i] >= k || ng[i] == skills.length) {
+				return i;
+			}
+			pl[ng[i]] = 1;
+			if (ng[i] - i != 1) {
+				i = ng[i] - 1;
+			}
+		}
+		return -1;
+	}
+	int[] nextGreater(int[] skills) {
+		Stack<Integer> st = new Stack();
+		int ans = new int[skills.length];
+		for (int i = 0; i < skills.length; i++) {
+			while (!st.isEmpty() && skills[i] > skills[st.peek()]) {
+				ans[st.pop()] = i;
+			}
+			st.add(i);
+		}
+		while (!st.isEmpty()) {
+			ans[st.pop()] = skills.length;
+		}
+		return ans;
+	}
+}

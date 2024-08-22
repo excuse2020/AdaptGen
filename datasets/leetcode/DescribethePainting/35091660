@@ -1,0 +1,29 @@
+class Solution {
+	List<List<Long>> splitPainting(int[][] segments) {
+		TreeMap<Long, Long> tm = new TreeMap<>();
+		for (int[] seg: segments) {	
+			tm.put((long) seg[0],tm.getOrDefault((long) seg[0],0L) + (long) seg[2]);
+			tm.put((long) seg[1],tm.getOrDefault((long) seg[1],0L) - (long) seg[2]);
+		}
+		List<List<Long>> ans = new ArrayList<>();
+		long acc = 0L;
+		boolean st = true;
+		List<Long> currentSegment = null;
+		for (var entry: tm.entrySet()) {	
+			acc += entry.getValue();
+			if (!st) {
+				currentSegment.set(1,entry.getKey());
+				st = !st;
+			}
+			if (st && acc > 0) {
+				currentSegment = new ArrayList<>();
+				currentSegment.add(entry.getKey());
+				currentSegment.add(-1L);
+				currentSegment.add(acc);
+				ans.add(currentSegment);
+				st = !st;
+			}
+		}
+		return ans;
+	}
+}

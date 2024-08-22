@@ -1,0 +1,33 @@
+class Solution {
+	long numberOfPairs(int[] nums1, int[] nums2, int k) {
+		int max = 0;
+		for (int i = 0; i < nums1.length; i++) {
+			if (nums1[i] % k == 0) {
+				nums1[i] /= k;
+			} 
+			else {
+				nums1[i] = 0;
+			}
+			max = Math.max(max,nums1[i]);
+		}
+		int[] f = new int[max + 1];
+		for (int v: nums2) {	
+			if (v < f.length) {
+				f[v]++;
+			}
+		}
+		for (int i = max; i >= 1; i--) {
+			if (f[i] == 0) {
+				continue;
+			}
+			for (int j = i * 2; j <= max; j += i) {
+				f[j] += f[i];
+			}
+		}
+		long ans = 0;
+		for (int v: nums1) {	
+			ans += f[v];
+		}
+		return ans;
+	}
+}

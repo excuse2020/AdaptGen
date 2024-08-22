@@ -1,0 +1,29 @@
+class Solution {
+	int sumSubarrayMins(int[] a) {
+		int sum = 0, n = a.length, mod = (int) 1e9 + 7;
+		int left = new int[n], right = new int[n];
+		Stack<Pair<Integer, Integer>> sLeft = new Stack<>(), sRight = new Stack<>();
+		for (int i = 0; i < n; i++) {
+			int c = 1;
+			while (!sLeft.isEmpty() && sLeft.peek().getKey() > a[i]) {
+				c += sLeft.peek().getValue();
+				sLeft.pop();
+			}
+			sLeft.push(new Pair<>(a[i], c));
+			left[i] = c;
+		}
+		for (int i = n - 1; i >= 0; i--) {
+			int c = 1;
+			while (!sRight.isEmpty() && sRight.peek().getKey() >= a[i]) {
+				c += sRight.peek().getValue();
+				sRight.pop();
+			}
+			sRight.push(new Pair<>(a[i], c));
+			right[i] = c;
+		}
+		for (int i = 0; i < n; i++) {
+			sum = (int) (sum + ((long) a[i] * (left[i] * right[i]) % mod) % mod) % mod;
+		}
+		return sum;
+	}
+}

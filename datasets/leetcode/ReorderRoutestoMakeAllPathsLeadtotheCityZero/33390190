@@ -1,0 +1,33 @@
+class Solution {
+	int minReorder(int n, int[][] connections) {
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		Set<String> hs = new HashSet<>();
+		for (int i = 0; i < connections.length; i++) {
+			adj.get(connections[i][0]).add(connections[i][1]);
+			adj.get(connections[i][1]).add(connections[i][0]);
+			hs.add(String.valueOf(connections[i][0]) + "#");
+		}
+		int x = 0;
+		boolean[] vis = new boolean[n];
+		Queue<Integer> q = new LinkedList<>();
+		q.add(0);
+		while (q.isEmpty() == false) {
+			int k = q.poll();
+			if (vis[k] == false) {
+				vis[k] = true;
+				for (int it: adj.get(k)) {	
+					q.add(it);
+					System.out.println(k + " ");
+					System.out.println(hs.contains(String.valueOf(k) + "#"));
+					if (vis[it] == false && hs.contains(String.valueOf(k) + "#")) {
+						x++;
+					}
+				}
+			}
+		}
+		return x;
+	}
+}

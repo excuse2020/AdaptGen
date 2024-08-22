@@ -1,0 +1,56 @@
+class Solution {
+	int[] computelps(String b, int len) {
+		int[] lps = new int[len];
+		lps[0] = 0;
+		int i = 0;
+		int j = 1;
+		while (j < len) {
+			if (b.charAt(i) == b.charAt(j)) {
+				lps[j] = i + 1;
+				i++;
+				j++;
+			} 
+			else {
+				if (i != 0) {
+					i = lps[i - 1];
+				} 
+				else {
+					lps[j] = 0;
+					j++;
+				}
+			}
+		}
+		return lps;
+	}
+	int repeatedStringMatch(String a, String b) {
+		int lenA = a.length();
+		int lenB = b.length();
+		int[] lps = computelps(b,lenB);
+		int i = 0;
+		int j = 0;
+		String str = a;
+		int res = 1;
+		while (j < lenB && i < lenA + lenB) {
+			if (i == a.length() - 1 && j != lenB - 1) {
+				res++;
+				a = a + str;
+			}
+			if (a.charAt(i) == b.charAt(j)) {
+				i++;
+				j++;
+			} 
+			else {
+				if (j != 0) {
+					j = lps[j - 1];
+				} 
+				else {
+					i++;
+				}
+			}
+		}
+		if (j == lenB) {
+			return res;
+		}
+		return -1;
+	}
+}

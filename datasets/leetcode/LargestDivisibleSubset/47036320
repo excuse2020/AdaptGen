@@ -1,0 +1,32 @@
+class Solution {
+	List<Integer> largestDivisibleSubset(int[] nums) {
+		int n = nums.length;
+		Arrays.sort(nums);
+		int[] dp = new int[n];
+		Arrays.fill(dp,1);
+		int pre = new int[n];
+		Arrays.fill(pre,-1);
+		int last = 0;
+		int maxl = 1;
+		for (int i = 1; i < n; ++i) {
+			for (int j = 0; j < i; ++j) {
+				if (nums[i] % nums[j] == 0) {
+					if (dp[i] < dp[j] + 1) {
+						dp[i] = dp[j] + 1;
+						pre[i] = j;
+					}
+					if (dp[i] > maxl) {
+						maxl = dp[i];
+						last = i;
+					}
+				}
+			}
+		}
+		List<Integer> result = new ArrayList<>();
+		while (last != -1) {
+			result.add(nums[last]);
+			last = pre[last];
+		}
+		return result;
+	}
+}

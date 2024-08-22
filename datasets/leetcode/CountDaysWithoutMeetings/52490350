@@ -1,0 +1,28 @@
+class Solution {
+	int countDays(int days, int[][] meetings) {
+		var stack = new Stack<Integer>();
+		int count = 0;
+		Arrays.sort(meetings,(a, b) -> {a[0] - b[0]});
+		Integer prev = null;
+		for (int i = 0; i < meetings.length; i++) {
+			int[] cur = meetings[i];
+			int start = cur[0];
+			var end = cur[1];
+			if (prev != null && prev < start - 1) {
+				count += start - (prev == null ? 1 : prev + 1);
+				prev = Math.max(end,prev);
+			} 
+			else if (prev == null) {
+				count += start - 1;
+				prev = end;
+			} 
+			else {
+				prev = Math.max(end,prev);
+			}
+		}
+		if (prev < days) {
+			count += days - prev;
+		}
+		return count;
+	}
+}

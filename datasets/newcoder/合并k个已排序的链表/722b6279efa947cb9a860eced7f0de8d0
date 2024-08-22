@@ -1,0 +1,31 @@
+class Solution {
+	ListNode mergeKLists(ArrayList<ListNode> lists) {
+		return mergeList(lists,0,lists.size() - 1);
+	}
+	ListNode mergeList(ArrayList<ListNode> lists, int left, int right) {
+		if (left > right) {
+			return null;
+		}
+		if (left == right) {
+			return lists.get(left);
+		}
+		int mid = left + (right - left) / 2;
+		return mergeListNode(mergeList(lists,left,mid),mergeList(lists,mid + 1,right));
+	}
+	ListNode mergeListNode(ListNode head1, ListNode head2) {
+		if (head1 == null) {
+			return head2;
+		}
+		if (head2 == null) {
+			return head1;
+		}
+		if (head1.val <= head2.val) {
+			head1.next = mergeListNode(head1.next,head2);
+			return head1;
+		} 
+		else {
+			head2.next = mergeListNode(head1,head2.next);
+			return head2;
+		}
+	}
+}

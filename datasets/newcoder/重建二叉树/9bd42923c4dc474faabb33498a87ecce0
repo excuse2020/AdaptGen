@@ -1,0 +1,44 @@
+class Solution {
+	TreeNode buildTree(int[] pre, int prePos, int preLength, int[] vin, int vinPos, int vinLength) {
+		if (preLength <= 0) {
+			return null;
+		}
+		int header = pre[prePos];
+		TreeNode headerNode = new TreeNode(header);
+		if (preLength == 1) {
+			return headerNode;
+		}
+		int leftLength = 0;
+		for (int i = 0; i < vinLength; i++) {
+			if (vin[i + vinPos] == header) {
+				break;
+			} 
+			else {
+				leftLength++;
+			}
+		}
+		int newLeftPrePos = prePos + 1;
+		int newLeftPreLength = leftLength;
+		int newLeftVinPos = vinPos;
+		int newLeftVinLength = leftLength;
+		TreeNode leftNode = buildTree(pre,newLeftPrePos,newLeftPreLength,vin,newLeftVinPos,newLeftVinLength);
+		headerNode.left = leftNode;
+		int newRightPrePos = prePos + 1;
+		int newRightPreLength = preLength - 1;
+		int newRightVinPos = vinPos + 1;
+		int newRightVinLength = vinLength - 1;
+		TreeNode rightNode = buildTree(pre,newRightPrePos,newRightPreLength,vin,newRightVinPos,newRightVinLength);
+		headerNode.right = rightNode;
+		return headerNode;
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] vin) {
+		if (pre.length == 0 || vin.length == 0) {
+			return null;
+		}
+		int prePos = 0;
+		int preLength = pre.length;
+		int vinPos = 0;
+		int vinLength = vin.length;
+		return buildTree(pre,prePos,preLength,vin,vinPos,vinLength);
+	}
+}

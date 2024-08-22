@@ -1,0 +1,33 @@
+class Solution {
+	boolean dfs(int i, List<ArrayList<Integer>> cources, List<Integer> result, int[] visited) {
+		visited[i] = 1;
+		for (int p: cources.get(i)) {	
+			if (visited[p] == 1) {
+				return false;
+			}
+			if (visited[p] == 0 && !dfs(p,cources,result,visited)) {
+				return false;
+			}
+		}
+		visited[i] = 2;
+		result.add(i);
+		return true;
+	}
+	int[] findOrder(int numCourses, int[][] prerequisites) {
+		List<ArrayList<Integer>> cources = new ArrayList<>();
+		for (int i = 0; i < numCourses; i++) {
+			cources.add(new ArrayList<>());
+		}
+		for (int[] prerequisite: prerequisites) {	
+			cources.get(prerequisite[0]).add(prerequisite[1]);
+		}
+		List<Integer> result = new ArrayList<>();
+		int[] visited = new int[numCourses];
+		for (int i = 0; i < numCourses; i++) {
+			if (visited[i] == 0 && !dfs(i,cources,result,visited)) {
+				return new int[0];
+			}
+		}
+		return result.stream().mapToInt().toArray();
+	}
+}

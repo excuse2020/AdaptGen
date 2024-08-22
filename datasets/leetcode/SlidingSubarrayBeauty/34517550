@@ -1,0 +1,74 @@
+class Solution {
+	int[] getSubarrayBeauty(int[] nums, int k, int x) {
+		int[] ans = new int[nums.length - k + 1];
+		TreeMap<Integer, Integer> map = new TreeMap<>();
+		int count = 0;
+		int ind = 0;
+		int si = 0;
+		int i = 0;
+		for (; i < nums.length; i++) {
+			if (count == k) {
+				int sum = 0;
+				for (Map.Entry<Integer, Integer> entry: map.entrySet()) {	
+					sum = sum + entry.getValue();
+					if (sum >= x) {
+						ans[ind] = entry.getKey();
+						ind++;
+						break;
+					}
+				}
+				if (sum < x) {
+					ans[ind] = 0;
+					ind++;
+				}
+				if (nums[si] <= 0) {
+					if (map.get(nums[si]) == 1) {
+						map.remove(nums[si]);
+					} 
+					else {
+						map.put(nums[si],map.get(nums[si]) - 1);
+					}
+				}
+				si++;
+				count--;
+			}
+			if (count < k) {
+				if (nums[i] <= 0) {
+					if (!map.containsKey(nums[i])) {
+						map.put(nums[i],1);
+					} 
+					else {
+						map.put(nums[i],map.get(nums[i]) + 1);
+					}
+				}
+				count++;
+			}
+		}
+		if (count == k) {
+			int sum = 0;
+			for (Map.Entry<Integer, Integer> entry: map.entrySet()) {	
+				sum = sum + entry.getValue();
+				if (sum >= x) {
+					ans[ind] = entry.getKey();
+					ind++;
+					break;
+				}
+			}
+			if (sum < x) {
+				ans[ind] = 0;
+				ind++;
+			}
+			if (nums[si] <= 0) {
+				if (map.get(nums[si]) == 1) {
+					map.remove(nums[si]);
+				} 
+				else {
+					map.put(nums[si],map.get(nums[si]) - 1);
+				}
+			}
+			si++;
+			count--;
+		}
+		return ans;
+	}
+}

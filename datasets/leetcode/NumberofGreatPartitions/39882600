@@ -1,0 +1,49 @@
+class Solution {
+	Long[][] dp;
+	Long[][] dp1;
+	Long[][] dp2;
+	int countPartitions(int[] nums, int k) {
+		int n = nums.length;
+		dp1 = new Long[n + 1][k + 1];
+		dp2 = new Long[n + 1][k + 1];
+		dp = new Long[n + 1][n + 1];
+		return (int) solve(nums,0,0,0,k);
+	}
+	long pow(int x, int k, long mod) {
+		long ans = 1;
+		if (dp[x][k] != null) {
+			return dp[x][k];
+		}
+		if (k == 1) {
+			return dp[x][k] = (long) x;
+		}
+		return dp[x][k] = (x * pow(x,k - 1,mod)) % mod;
+	}
+	long solve(int[] nums, int curr, long g1, long g2, int k) {
+		int n = nums.length;
+		long m = 1_000_000_007;
+		if (curr >= n) {
+			if (g1 >= k && g2 >= k) {
+				return 1;
+			}
+			return 0;
+		}
+		if (g1 >= k && g2 >= k) {
+			return pow(2,n - curr,m);
+		}
+		if (g1 <= k && dp1[curr][(int)g1] != null) {
+			return dp1[curr][(int)g1];
+		}
+		if (g2 <= k && dp2[curr][(int)g2] != null) {
+			return dp2[curr][(int)g2];
+		}
+		long ans = (solve(nums,curr + 1,g1 + (long) nums[curr],g2,k) + solve(nums,curr + 1,g1,g2 + (long) nums[curr],k)) % m;
+		if (g1 <= k) {
+			dp1[curr][(int)g1] = ans;
+		}
+		if (g2 <= k) {
+			dp2[curr][(int)g2] = ans;
+		}
+		return ans;
+	}
+}

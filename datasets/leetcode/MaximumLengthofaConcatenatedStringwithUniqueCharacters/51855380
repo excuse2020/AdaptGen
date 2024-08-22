@@ -1,0 +1,59 @@
+class Solution {
+	boolean isValid(String val2, Set<Character> currSet, boolean uniqueCheck) {
+		for (char ch: val2.toCharArray()) {	
+			if (currSet.contains(ch)) {
+				return false;
+			}
+			if (!uniqueCheck) {
+				continue;
+			}
+			currSet.add(ch);
+		}
+		return true;
+	}
+	int maxLength(List<String> arr) {
+		if (arr == null || arr.isEmpty()) {
+			return 0;
+		}
+		if (arr.size() == 1) {
+			return isValid(arr.get(0),new HashSet<>(),true) ? arr.get(0).length() : 0;
+		}
+		int maxLen = 0;
+		for (int i = 0; i < arr.size(); i++) {
+			Set<Character> set = new HashSet<>();
+			boolean dup = false;
+			for (char ch: arr.get(i).toCharArray()) {	
+				if (set.contains(ch)) {
+					dup = true;
+					break;
+				}
+				set.add(ch);
+			}
+			if (dup) {
+				continue;
+			}
+			maxLen = Math.max(maxLen,arr.get(i).length() + maxLength(arr,i + 1,set));
+		}
+		return maxLen;
+	}
+	int maxLength(List<String> arr, int idx, Set<Character> set) {
+		if (idx == arr.size()) {
+			return 0;
+		}
+		int maxLen = 0;
+		if (!isValid(arr.get(idx),set,false)) {
+			return maxLength(arr,idx + 1,set);
+		}
+		int exLen = maxLength(arr,idx + 1,new HashSet<>(set));
+		boolean dup = false;
+		for (char ch: arr.get(idx).toCharArray()) {	
+			if (set.contains(ch)) {
+				dup = true;
+				break;
+			}
+			set.add(ch);
+		}
+		int incLen = dup ? 0 : arr.get(idx).length() + maxLength(arr,idx + 1,set);
+		return Math.max(incLen,exLen);
+	}
+}

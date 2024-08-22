@@ -1,0 +1,55 @@
+class Solution {
+	int longestStrChain(String[] str) {
+		Arrays.sort(str,(a, b) -> {a.length() - b.length()});
+		int n = str.length;
+		int[] dp = new int[n];
+		Arrays.fill(dp,1);
+		int max = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < i; j++) {
+				if (str[i].length() == str[j].length() + 1 && dp[i] < dp[j] + 1) {
+					if (preceder(str[j],str[i])) {
+						dp[i] = dp[j] + 1;
+						max = Math.max(dp[i],max);
+					}
+				}
+			}
+		}
+		if (max == 0) {
+			return 1;
+		}
+		return max;
+	}
+	boolean preceder(String a, String b) {
+		int i = 0;
+		int j = 0;
+		while (j < b.length()) {
+			if (i < a.length() && a.charAt(i) == b.charAt(j)) {
+				i++;
+				j++;
+			} 
+			else {
+				j++;
+			}
+		}
+		return i == a.length() && j == b.length();
+	}
+	boolean receder(String s, String t) {
+		int n = s.length();
+		int m = t.length();
+		int[] prev = new int[m + 1];
+		for (int i = 1; i <= n; i++) {
+			int[] curr = new int[m + 1];
+			for (int j = 1; j <= m; j++) {
+				if (s.charAt(i - 1) == t.charAt(j - 1)) {
+					curr[j] = prev[j - 1] + 1;
+				} 
+				else {
+					curr[j] = Math.max(prev[j],curr[j - 1]);
+				}
+			}
+			prev = curr;
+		}
+		return prev[m] == s.length();
+	}
+}

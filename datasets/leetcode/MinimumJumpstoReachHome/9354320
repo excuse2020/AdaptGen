@@ -1,0 +1,40 @@
+class Solution {
+	int minimumJumps(int[] forbidden, int a, int b, int x) {
+		if (x == 0) {
+			return 0;
+		}
+		Set<Integer> forbiddenSet = new HashSet<>(Arrays.stream(forbidden).boxed().collect(Collectors.toSet()));
+		int[] dp = new int[4000];
+		dp[0] = 0;
+		for (int i = 1; i < dp.length; i++) {
+			dp[i] = -1;
+		}
+		int leftLimitIndex = 0;
+		int rightLimitIndex = dp.length;
+		int curIndex = 0;
+		int numJumps = 0;
+		Queue<Integer> ways = new LinkedList<>();
+		ways.offer(curIndex);
+		Set<Integer> prevBackwards = new HashSet<>();
+		while (!ways.isEmpty()) {
+			curIndex = ways.poll();
+			if (curIndex - b >= leftLimitIndex && !forbiddenSet.contains(curIndex - b) && !prevBackwards.contains(curIndex)) {
+				if (dp[curIndex - b] == -1 || dp[curIndex - b] > dp[curIndex] + 1) {
+					dp[curIndex - b] = dp[curIndex] + 1;
+					ways.offer(curIndex - b);
+					prevBackwards.add(curIndex - b);
+				}
+			} 
+			else {
+				prevBackwards.remove(curIndex - b);
+			}
+			if (curIndex + a < rightLimitIndex && !forbiddenSet.contains(curIndex + a)) {
+				if (dp[curIndex + a] == -1 || dp[curIndex + a] > dp[curIndex] + 1) {
+					dp[curIndex + a] = dp[curIndex] + 1;
+					ways.offer(curIndex + a);
+				}
+			}
+		}
+		return dp[x];
+	}
+}

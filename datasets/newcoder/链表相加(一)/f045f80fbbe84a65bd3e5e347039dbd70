@@ -1,0 +1,42 @@
+class Solution {
+	ListNode ListAdd(ListNode l1, ListNode l2) {
+		int carryBit = 0;
+		ListNode p1 = l1;
+		ListNode p2 = l2;
+		Queue<ListNode> queue = new LinkedList<>();
+		while (null != p1 && null != p2) {
+			int tmpVal = p1.val + p2.val;
+			ListNode tmpNode = new ListNode(tmpVal % 10);
+			queue.add(tmpNode);
+			carryBit = tmpVal / 10;
+			p1 = p1.next;
+			p2 = p2.next;
+		}
+		while (null != p1) {
+			int tmpVal = p1.val + carryBit;
+			ListNode tmpNode = new ListNode(tmpVal % 10);
+			queue.add(tmpNode);
+			carryBit = tmpVal / 10;
+			p1 = p1.next;
+		}
+		while (null != p2) {
+			int tmpVal = p2.val + carryBit;
+			ListNode tmpNode = new ListNode(tmpVal % 10);
+			queue.add(tmpNode);
+			carryBit = tmpVal / 10;
+			p2 = p2.next;
+		}
+		if (carryBit == 1) {
+			ListNode tmpNode = new ListNode(1);
+			queue.add(tmpNode);
+		}
+		ListNode head = queue.poll();
+		ListNode node = head;
+		while (!queue.isEmpty()) {
+			node.next = queue.poll();
+			node = node.next;
+		}
+		node.next = null;
+		return head;
+	}
+}

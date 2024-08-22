@@ -1,0 +1,37 @@
+class Solution {
+	int ans = 0;
+	int minReorder(int n, int[][] connections) {
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n - 1; i++) {
+			int l = connections[i][0];
+			int r = connections[i][1];
+			graph.get(l).add(r);
+			graph.get(r).add(l);
+		}
+		List<HashSet<Integer>> con = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			con.add(new HashSet<>());
+		}
+		for (int i = 0; i < n - 1; i++) {
+			int l = connections[i][0];
+			int r = connections[i][1];
+			con.get(l).add(r);
+		}
+		solve(con,graph,0,-1);
+		return ans;
+	}
+	void solve(List<HashSet<Integer>> con, List<List<Integer>> graph, int i, int par) {
+		for (int j = 0; j < graph.get(i).size(); j++) {
+			int l = graph.get(i).get(j);
+			if (l != par) {
+				if (con.get(i).contains(l)) {
+					ans++;
+				}
+				solve(con,graph,l,i);
+			}
+		}
+	}
+}

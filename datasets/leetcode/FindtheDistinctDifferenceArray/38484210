@@ -1,0 +1,17 @@
+class Solution {
+	int[] distinctDifferenceArray(int[] nums) {
+		int[] diff = new int[nums.length];
+		Set<Integer> leftDistinctNumbers = new HashSet<>();
+		Map<Integer, Integer> rightOccurencesByNumber = new HashMap<>();
+		for (int num: nums) {	
+			rightOccurencesByNumber.compute(num,(k, v) -> {(v == null) ? 1 : v + 1});
+		}
+		for (int i = 0; i < nums.length; i++) {
+			leftDistinctNumbers.add(nums[i]);
+			rightOccurencesByNumber.compute(nums[i],(k, v) -> {v - 1});
+			rightOccurencesByNumber.remove(nums[i],0);
+			diff[i] = leftDistinctNumbers.size() - rightOccurencesByNumber.size();
+		}
+		return diff;
+	}
+}

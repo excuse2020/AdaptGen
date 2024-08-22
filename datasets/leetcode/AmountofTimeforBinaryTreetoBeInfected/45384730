@@ -1,0 +1,46 @@
+class Solution {
+	HashMap<Integer, List<Integer>> map = new HashMap<>();
+	int amountOfTime(TreeNode root, int start) {
+		inTraversal(root,-1);
+		HashSet<Integer> visited = new HashSet<>();
+		Queue<Integer> queue = new LinkedList<>();
+		Map<Integer, Integer> distances = new HashMap<>();
+		queue.add(start);
+		visited.add(start);
+		distances.put(start,0);
+		while (!queue.isEmpty()) {
+			int poppedNode = queue.poll();
+			for (int neighbor: map.get(poppedNode)) {	
+				if (!visited.contains(neighbor)) {
+					visited.add(neighbor);
+					queue.add(neighbor);
+					distances.put(neighbor,distances.get(poppedNode) + 1);
+				}
+			}
+		}
+		int maxDistance = 0;
+		for (int key: distances.keySet()) {	
+			maxDistance = Math.max(maxDistance,distances.get(key));
+		}
+		return maxDistance;
+	}
+	void inTraversal(TreeNode root, int prev) {
+		if (root == null) {
+			return;
+		}
+		map.put(root.val,new ArrayList<>());
+		List<Integer> temp = map.get(root.val);
+		if (prev != -1) {
+			temp.add(prev);
+		}
+		if (root.left != null) {
+			temp.add(root.left.val);
+		}
+		if (root.right != null) {
+			temp.add(root.right.val);
+		}
+		prev = root.val;
+		inTraversal(root.left,prev);
+		inTraversal(root.right,prev);
+	}
+}

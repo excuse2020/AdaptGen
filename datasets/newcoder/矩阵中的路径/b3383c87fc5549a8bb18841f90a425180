@@ -1,0 +1,43 @@
+class Solution {
+	boolean hasPath(char[][] matrix, String word) {
+		int len = word.length();
+		int count = 0;
+		int n = matrix.length;
+		int m = matrix[0].length;
+		Boolean isVis = new Boolean[n * m];
+		for (int i = 0; i < isVis.length; i++) {
+			isVis[i] = false;
+		}
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				if (isFind(matrix,i,j,count,word,isVis)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	boolean isFind(char[][] matrix, int row, int col, int count, String word, Boolean isVis) {
+		boolean is = false;
+		count++;
+		if (row < 0 || row > matrix.length - 1 || col < 0 || col > matrix[0].length - 1) {
+			return false;
+		}
+		if (isVis[row * matrix[0].length + col]) {
+			return false;
+		}
+		if (word.charAt(count - 1) != matrix[row][col]) {
+			return false;
+		}
+		isVis[row * matrix[0].length + col] = true;
+		if (count == word.length()) {
+			return true;
+		}
+		is = isFind(matrix,row,col + 1,count,word,isVis) || isFind(matrix,row + 1,col,count,word,isVis);
+		if (!is) {
+			count--;
+			isVis[row * matrix[0].length + col] = false;
+		}
+		return is;
+	}
+}

@@ -1,0 +1,62 @@
+class Solution {
+	int countSubarrays(int[] nums, int k) {
+		for (int i = 0; i < nums.length; i++) {
+			if (nums[i] == k) {
+				nums[i] = 0;
+			} 
+			else if (nums[i] > k) {
+				nums[i] = 1;
+			} 
+			else {
+				nums[i] = -1;
+			}
+		}
+		int ans = 0;
+		ans += getCount(nums,nums.length,1);
+		ans += getCount(nums,nums.length,0);
+		List<Integer> leftList = new ArrayList();
+		List<Integer> rightList = new ArrayList();
+		boolean seen = false;
+		for (int i = 0; i < nums.length; i++) {
+			if (nums[i] != 0 && seen == false) {
+				leftList.add(nums[i]);
+			}
+			if (nums[i] != 0 && seen == true) {
+				rightList.add(nums[i]);
+			}
+			if (nums[i] == 0) {
+				seen = true;
+			}
+		}
+		int[] left = new int[leftList.size()];
+		int j = 0;
+		for (int pos = 0; pos < leftList.size(); pos++) {
+			left[j++] = leftList.get(pos);
+		}
+		int[] right = new int[rightList.size()];
+		j = 0;
+		for (int pos = 0; pos < rightList.size(); pos++) {
+			right[j++] = rightList.get(pos);
+		}
+		ans -= getCount(left,left.length,0);
+		ans -= getCount(right,right.length,0);
+		ans -= getCount(left,left.length,1);
+		ans -= getCount(right,right.length,1);
+		return ans;
+	}
+	int getCount(int[] arr, int len, int k) {
+		Map<Integer, Integer> map = new HashMap();
+		int[] pre = new int[len + 1];
+		for (int i = 0; i < len; i++) {
+			pre[i + 1] = pre[i] + arr[i];
+		}
+		int ans = 0;
+		map.put(0,1);
+		for (int i = 0; i < len; i++) {
+			int pair = map.getOrDefault(pre[i + 1] - k,0);
+			ans += pair;
+			map.put(pre[i + 1],map.getOrDefault(pre[i + 1],0) + 1);
+		}
+		return ans;
+	}
+}

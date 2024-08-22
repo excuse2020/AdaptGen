@@ -1,0 +1,44 @@
+class Solution {
+	boolean[] color;
+	boolean isPossible = true;
+	boolean[] visited;
+	List<Integer>[] buildgraph(int n, int[][] dislikes) {
+		List<Integer>[] graph = new LinkedList[n + 1];
+		for (int i = 1; i <= n; i++) {
+			graph[i] = new LinkedList<>();
+		}
+		for (int[] edge: dislikes) {	
+			int v = edge[1];
+			int w = edge[0];
+			graph[v].add(w);
+			graph[w].add(v);
+		}
+		return graph;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		color = new boolean[n + 1];
+		visited = new boolean[n + 1];
+		List<Integer>[] graph = buildgraph(n,dislikes);
+		for (int v = 1; v <= n; v++) {
+			traverse(graph,v);
+		}
+		return isPossible;
+	}
+	void traverse(List<Integer>[] graph, int v) {
+		if (!isPossible) {
+			return;
+		}
+		visited[v] = true;
+		for (int neighbor: graph[v]) {	
+			if (!visited[neighbor]) {
+				color[neighbor] = !color[v];
+				traverse(graph,neighbor);
+			} 
+			else {
+				if (color[neighbor] == color[v]) {
+					isPossible = false;
+				}
+			}
+		}
+	}
+}

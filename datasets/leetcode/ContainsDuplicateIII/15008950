@@ -1,0 +1,28 @@
+class Solution {
+	boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
+		if (nums == null || nums.length < 2 || k < 1 || t < 0) {
+			return false;
+		}
+		HashMap<Long, Long> buckets = new HashMap<>();
+		long bucketSize = (long) t + 1;
+		for (int i = 0; i < nums.length; i++) {
+			if (i > k) {
+				long lastBucket = ((long) nums[i - k - 1] - Integer.MIN_VALUE) / bucketSize;
+				buckets.remove(lastBucket);
+			}
+			long remappedNum = (long) nums[i] - Integer.MIN_VALUE;
+			long bucket = remappedNum / bucketSize;
+			if (buckets.containsKey(bucket)) {
+				return true;
+			}
+			if (buckets.containsKey(bucket - 1) && remappedNum - buckets.get(bucket - 1) <= t) {
+				return true;
+			}
+			if (buckets.containsKey(bucket + 1) && buckets.get(bucket + 1) - remappedNum <= t) {
+				return true;
+			}
+			buckets.put(bucket,remappedNum);
+		}
+		return false;
+	}
+}

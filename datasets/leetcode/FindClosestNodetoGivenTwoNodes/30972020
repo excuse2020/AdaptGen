@@ -1,0 +1,45 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < edges.length; i++) {
+			map.put(i,edges[i]);
+		}
+		int[] dist1 = new int[edges.length];
+		int[] dist2 = new int[edges.length];
+		for (int i = 0; i < edges.length; i++) {
+			dist1[i] = -1;
+			dist2[i] = -1;
+		}
+		dist1[node1] = 0;
+		dist2[node2] = 0;
+		ArrayDeque<Integer> queue = new ArrayDeque<>();
+		queue.add(node1);
+		while (!queue.isEmpty()) {
+			int node = queue.remove();
+			if (map.get(node) != -1 && dist1[map.get(node)] == -1) {
+				dist1[map.get(node)] = dist1[node] + 1;
+				queue.add(map.get(node));
+			}
+		}
+		queue.add(node2);
+		while (!queue.isEmpty()) {
+			int node = queue.remove();
+			if (map.get(node) != -1 && dist2[map.get(node)] == -1) {
+				dist2[map.get(node)] = dist2[node] + 1;
+				queue.add(map.get(node));
+			}
+		}
+		int minDist = Integer.MAX_VALUE;
+		int minNode = -1;
+		for (int i = 0; i < edges.length; i++) {
+			if (dist1[i] != -1 && dist2[i] != -1) {
+				int maxDist = Math.max(dist1[i],dist2[i]);
+				if (maxDist < minDist) {
+					minDist = maxDist;
+					minNode = i;
+				}
+			}
+		}
+		return minNode;
+	}
+}

@@ -1,0 +1,48 @@
+class Solution {
+	int consume(int unused, int i) {
+		return unused & ~(1 << i);
+	}
+	boolean isConsumed(int unused, int i) {
+		return ((unused >> i) & 1) == 0;
+	}
+	String overlapShortestString(String a, String b) {
+		int maxOverlap = 0;
+		for (int i = 1; i <= Math.min(a.length(),b.length()); i++) {
+			String substringA = a.substring(a.length() - i);
+			String substringB = b.substring(0,i);
+			if (substringA.equals(substringB)) {
+				maxOverlap = i;
+			}
+		}
+		return a + b.substring(maxOverlap);
+	}
+	String shortestSuperstring(String[] words) {
+		Map<String, String> map = new HashMap<>();
+		int unused = 0;
+		for (int i = 0; i < words.length; i++) {
+			unused |= 1 << i;
+		}
+		return shortestSuperstring(words,"",unused,map);
+	}
+	String shortestSuperstring(String[] words, String startWord, int unused, Map<String, String> map) {
+		if (unused == 0) {
+			return startWord;
+		}
+		String key = startWord + "|";
+		if (map.containsKey(key)) {
+			return map.get(key);
+		}
+		String shortest = null;
+		for (int i = 0; i < words.length; i++) {
+			if (!isConsumed(unused,i)) {
+				String superstring = shortestSuperstring(words,words[i],consume(unused,i),map);
+				String appended = overlapShortestString(startWord,superstring);
+				if (shortest == null || appended.length() < shortest.length()) {
+					shortest = appended;
+				}
+			}
+		}
+		map.put(key,shortest);
+		return shortest;
+	}
+}

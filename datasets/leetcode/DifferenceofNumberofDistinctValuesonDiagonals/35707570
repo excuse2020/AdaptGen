@@ -1,0 +1,50 @@
+class Solution {
+	int[][] differenceOfDistinctValues(int[][] grid) {
+		int[][] ans = new int[grid.length][grid[0].length];
+		int[][] idx = new int[grid.length][grid[0].length];
+		Map<Integer, Set<Integer>> map = new HashMap<>();
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[i].length; j++) {
+				if (i == 0) {
+					idx[i][j] = j;
+					Set<Integer> set = new HashSet<>();
+					set.add(grid[i][j]);
+					map.put(idx[i][j],set);
+					ans[i][j] = 0;
+				} 
+				else if (j == 0) {
+					idx[i][j] = (i * -1);
+					Set<Integer> set = new HashSet<>();
+					set.add(grid[i][j]);
+					map.put(idx[i][j],set);
+					ans[i][j] = 0;
+				} 
+				else {
+					idx[i][j] = idx[i - 1][j - 1];
+					ans[i][j] = map.get(idx[i][j]).size();
+					Set<Integer> set = map.get(idx[i][j]);
+					set.add(grid[i][j]);
+					map.put(idx[i][j],set);
+				}
+			}
+		}
+		map.clear();
+		for (int i = grid.length - 1; i >= 0; i--) {
+			for (int j = grid[i].length - 1; j >= 0; j--) {
+				if (i == grid.length - 1 || j == grid[0].length - 1) {
+					Set<Integer> set = new HashSet<>();
+					set.add(grid[i][j]);
+					map.put(idx[i][j],set);
+					ans[i][j] = Math.abs(0 - ans[i][j]);
+				} 
+				else {
+					ans[i][j] = Math.abs(ans[i][j] - map.get(idx[i + 1][j + 1]).size());
+					Set<Integer> set = map.get(idx[i + 1][j + 1]);
+					set.add(grid[i][j]);
+					map.put(idx[i][j],set);
+				}
+			}
+		}
+		return ans;
+	}
+}

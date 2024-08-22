@@ -1,0 +1,54 @@
+class Solution {
+	void helper(TreeNode root, TreeNode previousNode, boolean leftSubTree) {
+		if (root.left == null && root.right == null) {
+			if (root.val == 0) {
+				if (leftSubTree) {
+					previousNode.left = null;
+				} 
+				else {
+					previousNode.right = null;
+				}
+			}
+			return;
+		}
+		if (root.left != null && root.right != null) {
+			helper(root.left,root,true);
+			helper(root.right,root,false);
+		} 
+		else if (root.left != null) {
+			helper(root.left,root,true);
+		} 
+		else {
+			helper(root.right,root,false);
+		}
+		if (root.left == null && root.right == null && root.val == 0) {
+			if (leftSubTree) {
+				previousNode.left = null;
+			} 
+			else {
+				previousNode.right = null;
+			}
+		}
+	}
+	TreeNode pruneTree(TreeNode root) {
+		if (root.left == null && root.right == null) {
+			if (root.val == 0) {
+				return null;
+			}
+		}
+		TreeNode previousNode = root;
+		TreeNode head = root;
+		if (head.left != null) {
+			helper(head.left,previousNode,true);
+		}
+		if (head.right != null) {
+			helper(head.right,previousNode,false);
+		}
+		if (root.left == null && root.right == null) {
+			if (root.val == 0) {
+				return null;
+			}
+		}
+		return root;
+	}
+}

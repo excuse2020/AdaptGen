@@ -1,0 +1,47 @@
+class Solution {
+	ArrayList<Integer> getPath(TreeNode root, int o) {
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		if (root.val == o) {
+			list.add(root.val);
+			return list;
+		}
+		boolean res = false;
+		if (root.left != null) {
+			list = getPath(root.left,o);
+			if (list.size() != 0) {
+				res = true;
+				list.add(root.val);
+			}
+		}
+		if (root.right != null && res == false) {
+			list = getPath(root.right,o);
+			if (list.size() != 0) {
+				res = true;
+				list.add(root.val);
+			}
+		}
+		return list;
+	}
+	int lowestCommonAncestor(TreeNode root, int o1, int o2) {
+		if (root == null) {
+			return -1;
+		}
+		List<Integer> path = getPath(root,o1);
+		List<Integer> path1 = getPath(root,o2);
+		if (path.size() < path1.size()) {
+			List<Integer> temp = path;
+			path = path1;
+			path1 = temp;
+		}
+		int i = path.size() - path1.size(), j = 0;
+		while (i < path.size() && j < path1.size()) {
+			int x = path.get(i), y = path1.get(j);
+			if (x == y) {
+				return path.get(i);
+			}
+			i++;
+			j++;
+		}
+		return -1;
+	}
+}

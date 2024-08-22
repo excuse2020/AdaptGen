@@ -1,0 +1,20 @@
+class Solution {
+	int sumSubarrayMins(int[] n) {
+		int mod = 1_000_000_007;
+		int a = 0;
+		int[][] sta = new int[n.length + 1][2];
+		sta[0][0] = sta[0][1] = -1;
+		int si = 0, ss = 0;
+		for (int i = 0; i < n.length; i++) {
+			while (n[i] < sta[si][0]) {
+				ss += (sta[si][1] - sta[si - 1][1]) * (n[i] - sta[si][0]);
+				si--;
+			}
+			sta[++si][0] = n[i];
+			sta[si][1] = i;
+			ss += n[i];
+			a = (a + ss) % mod;
+		}
+		return a;
+	}
+}

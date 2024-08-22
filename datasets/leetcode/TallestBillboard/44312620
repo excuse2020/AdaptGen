@@ -1,0 +1,22 @@
+class Solution {
+	long slv(int n, int diff, int[] rods, long[][] memo) {
+		if (n >= rods.length) {
+			return diff == 0 ? 0 : (int) -1e9;
+		}
+		if (memo[n][5000 + diff] != -1) {
+			return memo[n][5000 + diff];
+		}
+		long max = Integer.MIN_VALUE;
+		max = Math.max(max,rods[n] + slv(n + 1,diff + rods[n],rods,memo));
+		max = Math.max(max,slv(n + 1,diff - rods[n],rods,memo));
+		max = Math.max(max,slv(n + 1,diff,rods,memo));
+		return memo[n][5000 + diff] = max;
+	}
+	int tallestBillboard(int[] rods) {
+		long[][] memo = new long[rods.length][10000];
+		for (long[] row: memo) {	
+			Arrays.fill(row,-1);
+		}
+		return (int) slv(0,0,rods,memo);
+	}
+}

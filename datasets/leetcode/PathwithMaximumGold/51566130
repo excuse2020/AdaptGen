@@ -1,0 +1,56 @@
+class Solution {
+	int backtracking(int[][] grid, int x, int y, int currentGold) {
+		currentGold += grid[x][y];
+		int valueInCell = grid[x][y];
+		int maxGold = currentGold;
+		int aux = 0;
+		if (y < grid[0].length - 1 && grid[x][y + 1] != 0) {
+			grid[x][y] = 0;
+			aux = backtracking(grid,x,y + 1,currentGold);
+			grid[x][y] = valueInCell;
+			if (aux > maxGold) {
+				maxGold = aux;
+			}
+		}
+		if (x < grid.length - 1 && grid[x + 1][y] != 0) {
+			grid[x][y] = 0;
+			aux = backtracking(grid,x + 1,y,currentGold);
+			grid[x][y] = valueInCell;
+			if (aux > maxGold) {
+				maxGold = aux;
+			}
+		}
+		if (y > 0 && grid[x][y - 1] != 0) {
+			grid[x][y] = 0;
+			aux = backtracking(grid,x,y - 1,currentGold);
+			grid[x][y] = valueInCell;
+			if (aux > maxGold) {
+				maxGold = aux;
+			}
+		}
+		if (x > 0 && grid[x - 1][y] != 0) {
+			grid[x][y] = 0;
+			aux = backtracking(grid,x - 1,y,currentGold);
+			grid[x][y] = valueInCell;
+			if (aux > maxGold) {
+				maxGold = aux;
+			}
+		}
+		return maxGold;
+	}
+	int getMaximumGold(int[][] grid) {
+		int maximumGold = 0;
+		int aux = 0;
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				if (grid[i][j] != 0) {
+					aux = backtracking(grid,i,j,0);
+					if (aux > maximumGold) {
+						maximumGold = aux;
+					}
+				}
+			}
+		}
+		return maximumGold;
+	}
+}

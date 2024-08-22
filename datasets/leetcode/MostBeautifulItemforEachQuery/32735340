@@ -1,0 +1,78 @@
+class Solution {
+	int BinarySearch(int price, int[][] items) {
+		int low = 0;
+		int high = items.length - 1;
+		int maxBeauty = 0;
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			if (items[mid][0] <= price) {
+				maxBeauty = items[mid][1];
+				low = mid + 1;
+			} 
+			else {
+				high = mid - 1;
+			}
+		}
+		return maxBeauty;
+	}
+	int[] maximumBeauty(int[][] items, int[] queries) {
+		PriorityQueue<int[]> pqCap = new PriorityQueue<>((a, b) -> {a[0] - b[0]});
+		PriorityQueue<int[]> pqProfit = new PriorityQueue<>((a, b) -> {b[1] - a[1]});
+		int[] temp = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			temp[i] = queries[i];
+		}
+		Arrays.sort(queries);
+		HashMap<Integer, Integer> map = new HashMap<>();
+		int[] res = new int[queries.length];
+		for (int i = 0; i < items.length; i++) {
+			pqCap.add(new int{items[i][0], items[i][1]});
+		}
+		for (int i = 0; i < queries.length; i++) {
+			while (pqCap.size() > 0 && pqCap.peek()[0] <= queries[i]) {
+				pqProfit.add(pqCap.poll());
+			}
+			if (pqProfit.size() > 0) {
+				if (!map.containsKey(queries[i])) {
+					map.put(queries[i],pqProfit.peek()[1]);
+				}
+			} 
+			else if (!map.containsKey(queries[i])) {
+				map.put(queries[i],0);
+			}
+		}
+		for (int i = 0; i < temp.length; i++) {
+			res[i] = map.get(temp[i]);
+		}
+		return res;
+		Arrays.sort(items,(a, b) -> {a[0] - b[0]});
+		int maxBeauty = items[0][1];
+		for (int i = 1; i < items.length; i++) {
+			maxBeauty = Math.max(maxBeauty,items[i][1]);
+			items[i][1] = maxBeauty;
+		}
+		int[] res = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			res[i] = BinarySearch(queries[i],items);
+		}
+		return res;
+		Arrays.sort(items,(a, b) -> {a[0] - b[0]});
+		int[] res = new int[queries.length];
+		List<int[]> list = new ArrayList<>();
+		for (int i = 0; i < queries.length; i++) {
+			list.add(new int{queries[i], i});
+		}
+		Collections.sort(list,(a, b) -> {a[0] - b[0]});
+		int maxBeauty = 0;
+		int j = 0;
+		for (int i = 0; i < list.size(); i++) {
+			int[] val = list.get(i);
+			while (j < items.length && items[j][0] <= val[0]) {
+				maxBeauty = Math.max(maxBeauty,items[j][1]);
+				j++;
+			}
+			res[val[1]] = maxBeauty;
+		}
+		return res;
+	}
+}

@@ -1,0 +1,27 @@
+class Solution {
+	int sumOfPower(int[] nums) {
+		long mod = 1000000000 + 7;
+		Arrays.sort(nums);
+		long s = 0;
+		long pow2 = new long[nums.length + 5];
+		pow2[0] = 1;
+		for (int i = 1; i < nums.length + 5; i++) {
+			pow2[i] = (pow2[i] * 2) % mod;
+		}
+		long pre = new long[nums.length];
+		pre[0] = nums[0];
+		for (int i = 1; i < nums.length; i++) {
+			pre[i] = (pre[i - 1] * 2 + nums[i]) % mod;
+		}
+		for (int i = 0; i < nums.length; i++) {
+			long x = (long) nums[i];
+			s = (s + (((x * x) % mod) * x) % mod) % mod;
+		}
+		for (int i = 1; i < nums.length; i++) {
+			long x = (long) nums[i];
+			long res = ((x * x) % mod * pre[i - 1]) % mod;
+			s = (s + res) % mod;
+		}
+		return (int) s;
+	}
+}

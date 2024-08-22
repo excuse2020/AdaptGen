@@ -1,0 +1,64 @@
+class Solution {
+	ListNode Mergelist(ListNode head1, ListNode head2) {
+		if (head1 == null) {
+			return head2;
+		}
+		if (head2 == null) {
+			return head1;
+		}
+		ListNode newhead = (head1.val >= head2.val) ? head2 : head1;
+		ListNode otherhead = (head1.val >= head2.val) ? head1 : head2;
+		ListNode cur1 = newhead.next;
+		ListNode cur2 = otherhead;
+		ListNode cur1_pre = newhead;
+		while (cur1 != null && cur2 != null) {
+			if (cur1.val > cur2.val) {
+				cur1_pre.next = cur2;
+				cur2 = cur2.next;
+				cur1_pre.next.next = cur1;
+				cur1_pre = cur1_pre.next;
+			} 
+			else {
+				cur1_pre = cur1;
+				cur1 = cur1.next;
+			}
+		}
+		if (cur2 != null) {
+			cur1_pre.next = cur2;
+		}
+		return newhead;
+	}
+	ListNode Reverselist(ListNode head2) {
+		if (head2 == null || head2.next == null) {
+			return head2;
+		}
+		ListNode pre = null;
+		ListNode cur = head2;
+		ListNode cur_next;
+		while (cur != null) {
+			cur_next = cur.next;
+			cur.next = pre;
+			pre = cur;
+			cur = cur_next;
+		}
+		return pre;
+	}
+	ListNode sortLinkedList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode head1 = head;
+		ListNode head2 = head.next;
+		ListNode cur1 = head1;
+		ListNode cur2 = head2;
+		while (cur2 != null && cur2.next != null) {
+			cur1.next = cur2.next;
+			cur1 = cur1.next;
+			cur2.next = cur1.next;
+			cur2 = cur2.next;
+		}
+		cur1.next = null;
+		head2 = Reverselist(head2);
+		return Mergelist(head1,head2);
+	}
+}

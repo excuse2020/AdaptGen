@@ -1,0 +1,62 @@
+class Solution {
+	boolean is_ipv4(String IP) {
+		if (IP.indexOf('.') == -1) {
+			return false;
+		}
+		String ipv4 = IP.split("\\.");
+		if (ipv4.length != 4) {
+			return false;
+		}
+		for (int i = 0; i < ipv4.length; i++) {
+			if (ipv4[i].length() == 0) {
+				return false;
+			}
+			if (ipv4[i].length() < 0 || ipv4[i].length() > 3 || (ipv4[i].charAt(0) == '0' && ipv4[i].length() != 1)) {
+				return false;
+			}
+			int num = 0;
+			for (int j = 0; j < ipv4[i].length(); j++) {
+				char c = ipv4[i].charAt(j);
+				if (c < '0' || c > '9') {
+					return false;
+				}
+				num = num * 10 + (int) (c - '0');
+				if (num < 0 || num > 255) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	boolean is_ipv6(String IP) {
+		if (IP.indexOf(':') == -1) {
+			return false;
+		}
+		String s = IP.split(":",-1);
+		if (s.length != 8) {
+			return false;
+		}
+		for (int i = 0; i < s.length; i++) {
+			if (s[i].length() == 0 || s[i].length() > 4) {
+				return false;
+			}
+			for (int j = 0; j < s[i].length(); j++) {
+				char c = s[i].charAt(j);
+				boolean expr = ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f'));
+				if (!expr) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	String solve(String IP) {
+		if (is_ipv4(IP) == true) {
+			return "IPv4";
+		} 
+		else if (is_ipv6(IP) == true) {
+			return "IPv6";
+		}
+		return "Neither";
+	}
+}

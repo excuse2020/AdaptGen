@@ -1,0 +1,47 @@
+class Solution {
+	int[] LIS(int[] arr) {
+		int n = arr.length;
+		if (n < 1) {
+			return new int[0];
+		}
+		int[] res = new int[n];
+		int[] maxLen = new int[n];
+		res[0] = arr[0];
+		maxLen[0] = 1;
+		int idx_res = 1;
+		int idx_len = 1;
+		for (int i = 1; i < n; i++) {
+			if (arr[i] > res[idx_res - 1]) {
+				res[idx_res++] = arr[i];
+				maxLen[idx_len++] = idx_res;
+			} 
+			else {
+				int pos = binarySearch(res,0,idx_res - 1,arr[i]);
+				res[pos] = arr[i];
+				maxLen[idx_len++] = pos + 1;
+			}
+		}
+		for (int i = n - 1, j = idx_res; j > 0; i--) {
+			if (maxLen[i] == j) {
+				res[--j] = arr[i];
+			}
+		}
+		int[] ans = new int[idx_res];
+		for (int i = 0; i < idx_res; i++) {
+			ans[i] = res[i];
+		}
+		return ans;
+	}
+	int binarySearch(int[] arr, int left, int right, int num) {
+		while (left < right) {
+			int mid = left + (right - left) / 2;
+			if (arr[mid] < num) {
+				left = mid + 1;
+			} 
+			else {
+				right = mid;
+			}
+		}
+		return left;
+	}
+}

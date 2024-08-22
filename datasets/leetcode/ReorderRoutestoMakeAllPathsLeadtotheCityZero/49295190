@@ -1,0 +1,39 @@
+class Solution {
+	int dfs(int node, int index, boolean[] visited, List<List<Integer>> indexForNodes, int[][] connections) {
+		int ans = 0;
+		visited[index] = true;
+		if (connections[index][1] == node) {
+			for (Integer i: indexForNodes.get(connections[index][0])) {	
+				if (visited[i] == false) {
+					ans += dfs(connections[index][0],i,visited,indexForNodes,connections);
+				}
+			}
+			return ans;
+		} 
+		else {
+			for (Integer i: indexForNodes.get(connections[index][1])) {	
+				if (visited[i] == false) {
+					ans += dfs(connections[index][1],i,visited,indexForNodes,connections);
+				}
+			}
+			return 1 + ans;
+		}
+	}
+	int minReorder(int n, int[][] connections) {
+		boolean[] visited = new boolean[connections.length];
+		List<List<Integer>> indexForNodes = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			List<Integer> arrayList = new ArrayList<>();
+			indexForNodes.add(arrayList);
+		}
+		for (int i = 0; i < n; i++) {
+			indexForNodes.get(connections[i][0]).add(i);
+			indexForNodes.get(connections[i][1]).add(i);
+		}
+		int ans = 0;
+		for (int index: indexForNodes.get(0)) {	
+			ans += dfs(0,index,visited,indexForNodes,connections);
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,66 @@
+class Solution {
+	int countPairs(TreeNode root, int distance) {
+		HashMap<TreeNode, TreeNode> map = new HashMap();
+		List<TreeNode> list = new ArrayList();
+		Set<TreeNode> set = new HashSet();
+		traversal(root,map,list);
+		int count = 0;
+		for (int i = 0; i < list.size(); i++) {
+			System.out.println(list.get(i).val);
+		}
+		HashSet<TreeNode> temp = new HashSet();
+		for (int i = 0; i < list.size(); i++) {
+			set.add(list.get(i));
+			System.out.print(" " + list.get(i).val);
+			temp.clear();
+			count += dfs(list.get(i),distance,0,map,set,temp);
+		}
+		return count;
+	}
+	int dfs(TreeNode root, int distance, int dist, HashMap<TreeNode, TreeNode> map, Set<TreeNode> set, HashSet<TreeNode> temp) {
+		if (dist > distance) {
+			return 0;
+		}
+		if (set.contains(root) && dist != 0) {
+			return 0;
+		}
+		int count = 0;
+		temp.add(root);
+		if (root.left == null && root.right == null && dist <= distance && !set.contains(root)) {
+			System.out.print(" haha" + root.val);
+			return 1;
+		}
+		if (map.containsKey(root) && !temp.contains(map.get(root))) {
+			count += dfs(map.get(root),distance,dist + 1,map,set,temp);
+		}
+		if (root.left != null && !temp.contains(root.left)) {
+			count += dfs(root.left,distance,dist + 1,map,set,temp);
+		}
+		if (root.right != null && !temp.contains(root.right)) {
+			count += dfs(root.right,distance,dist + 1,map,set,temp);
+		}
+		return count;
+	}
+	void traversal(TreeNode root, HashMap<TreeNode, TreeNode> map, List<TreeNode> list) {
+		if (root.left == null || root.right == null) {
+			if (root.left == null && root.right == null) {
+				list.add(root);
+				return;
+			} 
+			else if (root.left == null) {
+				map.put(root.right,root);
+				traversal(root.right,map,list);
+			} 
+			else {
+				map.put(root.left,root);
+				traversal(root.left,map,list);
+			}
+		} 
+		else {
+			map.put(root.left,root);
+			map.put(root.right,root);
+			traversal(root.left,map,list);
+			traversal(root.right,map,list);
+		}
+	}
+}

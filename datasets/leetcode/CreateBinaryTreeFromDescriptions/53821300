@@ -1,0 +1,31 @@
+class Solution {
+	int rootVal = -1;
+	void buildTree(int[][] arr, HashMap<Integer, TreeNode> map, HashSet<Integer> set) {
+		for (int[] description: arr) {	
+			int parent = description[0];
+			int child = description[1];
+			int isLeft = description[2];
+			map.putIfAbsent(parent,new TreeNode(parent));
+			map.putIfAbsent(child,new TreeNode(child));
+			set.add(child);
+			if (isLeft == 1) {
+				map.get(parent).left = map.get(child);
+			} 
+			else {
+				map.get(parent).right = map.get(child);
+			}
+		}
+		for (int[] description: arr) {	
+			if (!set.contains(description[0])) {
+				rootVal = description[0];
+				break;
+			}
+		}
+	}
+	TreeNode createBinaryTree(int[][] descriptions) {
+		HashMap<Integer, TreeNode> map = new HashMap<>();
+		HashSet<Integer> set = new HashSet<>();
+		buildTree(descriptions,map,set);
+		return map.get(rootVal);
+	}
+}

@@ -1,0 +1,46 @@
+class Solution {
+	int parent;
+	int find(int v) {
+		if (v == parent[v]) {
+			return v;
+		}
+		parent[v] = find(parent[v]);
+		return parent[v];
+	}
+	String smallestStringWithSwaps(String s, List<List<Integer>> pairs) {
+		int n = s.length();
+		parent = new int[n];
+		for (int i = 0; i < n; i++) {
+			parent[i] = i;
+		}
+		for (List<Integer> l: pairs) {	
+			union(l.get(0),l.get(1));
+		}
+		for (int i = 0; i < n; i++) {
+			parent[i] = find(i);
+		}
+		Map<Integer, PriorityQueue<Character>> map = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			if (map.containsKey(parent[i])) {
+				map.get(parent[i]).add(s.charAt(i));
+			} 
+			else {
+				map.put(parent[i],new PriorityQueue<>());
+				map.get(parent[i]).add(s.charAt(i));
+			}
+		}
+		System.out.println(map);
+		String res = "";
+		for (int i = 0; i < n; i++) {
+			res += map.get(parent[i]).poll();
+		}
+		return res;
+	}
+	void union(int u, int v) {
+		int rootu = find(u);
+		int rootv = find(v);
+		if (rootu != rootv) {
+			parent[rootv] = rootu;
+		}
+	}
+}

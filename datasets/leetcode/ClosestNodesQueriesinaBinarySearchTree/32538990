@@ -1,0 +1,57 @@
+class Solution {
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		List<List<Integer>> result = new ArrayList<>();
+		List<Integer> nodes = new ArrayList<>();
+		inorder(root,nodes);
+		for (int query: queries) {	
+			result.add(findClosest(query,nodes));
+		}
+		return result;
+	}
+	List<Integer> findClosest(int query, List<Integer> nodes) {
+		List<Integer> result = new ArrayList<>();
+		if (query < nodes.get(0)) {
+			result.add(-1);
+			result.add(nodes.get(0));
+			return result;
+		}
+		if (query > nodes.get(nodes.size() - 1)) {
+			result.add(nodes.get(nodes.size() - 1));
+			result.add(-1);
+			return result;
+		}
+		if (query == nodes.get(0) || query == nodes.get(nodes.size() - 1)) {
+			result.add(query);
+			result.add(query);
+			return result;
+		}
+		int left = 0;
+		int right = nodes.size() - 1;
+		while (right - left > 1) {
+			int middle = (right + left) / 2;
+			int middleVal = nodes.get(middle);
+			if (middleVal == query) {
+				result.add(query);
+				result.add(query);
+				return result;
+			} 
+			else if (middleVal < query) {
+				left = middle;
+			} 
+			else {
+				right = middle;
+			}
+		}
+		result.add(nodes.get(left));
+		result.add(nodes.get(right));
+		return result;
+	}
+	void inorder(TreeNode node, List<Integer> result) {
+		if (node == null) {
+			return;
+		}
+		inorder(node.left,result);
+		result.add(node.val);
+		inorder(node.right,result);
+	}
+}

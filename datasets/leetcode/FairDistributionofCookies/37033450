@@ -1,0 +1,30 @@
+class Solution {
+	int distributeCookies(int[] cookies, int k) {
+		int len = cookies.length;
+		return solve(cookies,new int[k],k,0,len);
+	}
+	int solve(int[] cookies, int[] kids, int poor, int bag, int len) {
+		if (bag == len) {
+			int ret = 0;
+			int k = kids.length;
+			for (int i = 0; i < k; i++) {
+				ret = Math.max(ret,kids[i]);
+			}
+			return ret;
+		}
+		int children = kids.length;
+		int ret = Integer.MAX_VALUE;
+		for (int i = 0; i < children; i++) {
+			if (kids[i] == 0) {
+				poor--;
+				kids[i] = cookies[bag];
+			} 
+			else {
+				kids[i] = kids[i] + cookies[bag];
+			}
+			ret = Math.min(ret,solve(cookies,kids,poor,bag + 1,len));
+			kids[i] = kids[i] - cookies[bag];
+		}
+		return ret;
+	}
+}

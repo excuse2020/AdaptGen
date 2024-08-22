@@ -1,0 +1,27 @@
+class Solution {
+	void dfs(Map<Integer, List<Integer>> graph, boolean[] visited, int currentVertex) {
+		if (visited[currentVertex]) {
+			return;
+		}
+		visited[currentVertex] = true;
+		for (int vertex: graph.get(currentVertex)) {	
+			dfs(graph,visited,vertex);
+		}
+	}
+	boolean validPath(int n, int[][] edges, int source, int destination) {
+		if (source == destination) {
+			return true;
+		}
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			graph.put(i,new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			graph.get(edge[0]).add(edge[1]);
+			graph.get(edge[1]).add(edge[0]);
+		}
+		boolean[] visited = new boolean[n];
+		dfs(graph,visited,source);
+		return visited[destination];
+	}
+}

@@ -1,0 +1,47 @@
+class Solution {
+	int MOD = 1000000007;
+	int[][] applesInRemainingPiece;
+	int[][][] cache;
+	int m, n;
+	int[][][] numOfApples;
+	void init(String[] pizza, int k) {
+		m = pizza.length;
+		n = pizza[0].length();
+		numOfApples = new int[m][n][2];
+		int r = m - 1;
+		int c = n - 1;
+	}
+	int ways(String[] pizza, int k) {
+		init(pizza,k);
+		return ways(k - 1,0,0);
+	}
+	int ways(int cuts, int r, int c) {
+		if (r >= m || c >= n) {
+			return 0;
+		}
+		if (cuts == 0) {
+			return applesInRemainingPiece[r][c] > 0 ? 1 : 0;
+		}
+		if (cache[r][c][cuts] > -1) {
+			return cache[r][c][cuts];
+		}
+		cache[r][c][cuts] = 0;
+		int applesInThisPiece = 0;
+		for (int i = r; i < m; ++i) {
+			applesInThisPiece += numOfApples[i][c][0];
+			if (applesInThisPiece == 0) {
+				continue;
+			}
+			cache[r][c][cuts] = (cache[r][c][cuts] + ways(cuts - 1,i + 1,c)) % MOD;
+		}
+		applesInThisPiece = 0;
+		for (int i = c; i < n; ++i) {
+			applesInThisPiece += numOfApples[r][i][1];
+			if (applesInThisPiece == 0) {
+				continue;
+			}
+			cache[r][c][cuts] = (cache[r][c][cuts] + ways(cuts - 1,r,i + 1)) % MOD;
+		}
+		return cache[r][c][cuts];
+	}
+}

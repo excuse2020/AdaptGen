@@ -1,0 +1,28 @@
+class Solution {
+	Integer[][] dp;
+	int helper(List<List<Integer>> piles, int currentPile, int remainingCoins) {
+		if (currentPile < 0 || remainingCoins == 0) {
+			return 0;
+		}
+		if (dp[currentPile][remainingCoins] != null) {
+			return dp[currentPile][remainingCoins];
+		}
+		int valueIfCurrentPileUsed = 0;
+		int valueIfCurrentPileNotUsed = helper(piles,currentPile - 1,remainingCoins);
+		int numCoinsAllowed = Math.min(remainingCoins,piles.get(currentPile).size());
+		int tempSum = 0;
+		for (int i = 0; i < numCoinsAllowed; ++i) {
+			tempSum += piles.get(currentPile).get(i);
+			int candidate = tempSum + helper(piles,currentPile - 1,remainingCoins - i);
+			if (valueIfCurrentPileUsed < candidate) {
+				valueIfCurrentPileUsed = candidate;
+			}
+		}
+		return dp[currentPile][remainingCoins] = Math.max(valueIfCurrentPileUsed,valueIfCurrentPileNotUsed);
+	}
+	int maxValueOfCoins(List<List<Integer>> piles, int k) {
+		int n = piles.size();
+		dp = new Integer[n + 1][k + 1];
+		return helper(piles,n - 1,k);
+	}
+}

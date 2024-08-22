@@ -1,0 +1,48 @@
+class Solution {
+	int helper(int[][] mat, int k, int col) {
+		if (col >= mat[0].length) {
+			if (k == 0) {
+				return maxRowCoverdCount(mat);
+			}
+			return 0;
+		}
+		List<Integer> pos = new ArrayList();
+		for (int i = 0; i < mat.length; i++) {
+			if (mat[i][col] == 1) {
+				mat[i][col] = 0;
+				pos.add(i);
+			}
+		}
+		int pick = helper(mat,k - 1,col + 1);
+		for (int i = 0; i < mat.length; i++) {
+			if (pos.contains(i)) {
+				mat[i][col] = 1;
+			}
+		}
+		pos.clear();
+		int notPick = helper(mat,k,col + 1);
+		return Math.max(pick,notPick);
+	}
+	int maxRowCoverdCount(int[][] mat) {
+		int count = 0;
+		for (int i = 0; i < mat.length; i++) {
+			int temp = 0;
+			for (int j = 0; j < mat[0].length; j++) {
+				if (mat[i][j] == 0) {
+					temp++;
+				}
+			}
+			if (temp == mat[0].length) {
+				count++;
+			}
+		}
+		return count;
+	}
+	int maximumRows(int[][] mat, int cols) {
+		int max = 0;
+		for (int i = 0; i < mat.length; i++) {
+			max = Math.max(max,helper(mat,cols,i));
+		}
+		return max;
+	}
+}

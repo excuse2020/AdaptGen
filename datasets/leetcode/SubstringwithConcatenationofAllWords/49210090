@@ -1,0 +1,39 @@
+class Solution {
+	String[] ws;
+	List<Integer> findSubstring(String s, String[] words) {
+		int wl = words[0].length();
+		int ss = wl * words.length;
+		List<Integer> retList = new ArrayList<>();
+		if (wl == 1 && (new HashSet<>(Arrays.asList(words)).size() == 1)) {
+			String fw = words[0].repeat(ss);
+			for (int i = 0; i < s.length() - ss + 1; i++) {
+				if (s.indexOf(fw,i) >= 0) {
+					retList.add(i);
+				}
+			}
+			return retList;
+		}
+		this.ws = words;
+		for (int i = 0; i < (s.length() - ss + 1); i++) {
+			if (isMatch(s.substring(i,i + ss))) {
+				retList.add(i);
+			}
+		}
+		return retList;
+	}
+	boolean isMatch(String s) {
+		List<String> strings = new ArrayList<>();
+		int chunkSize = ws[0].length();
+		for (int i = 0; i < s.length(); i += chunkSize) {
+			strings.add(s.substring(i,Math.min(s.length(),i + chunkSize)));
+		}
+		for (int i = 0; i < ws.length; i++) {
+			String w = ws[i];
+			if (!strings.contains(w)) {
+				return false;
+			}
+			strings.remove(w);
+		}
+		return true;
+	}
+}

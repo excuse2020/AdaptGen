@@ -1,0 +1,74 @@
+class Solution {
+	void inorder(TreeNode root, ArrayList<Integer> list) {
+		Stack<TreeNode> s2 = new Stack<>();
+		if (root == null) {
+			return;
+		}
+		TreeNode p = root;
+		while (!s2.empty() || p != null) {
+			while (p != null) {
+				s2.push(p);
+				p = p.left;
+			}
+			p = s2.pop();
+			list.add(p.val);
+			p = p.right;
+		}
+	}
+	void postOrder(TreeNode root, ArrayList<Integer> list) {
+		Stack<TreeNode> s3 = new Stack<>();
+		if (root == null) {
+			return;
+		}
+		TreeNode p = root, last = null;
+		while (!s3.empty() || p != null) {
+			while (p != null) {
+				s3.push(p);
+				p = p.left;
+			}
+			p = s3.peek();
+			if (p.right == null || last == p.right) {
+				s3.pop();
+				list.add(p.val);
+				last = p;
+				p = null;
+			} 
+			else {
+				p = p.right;
+			}
+		}
+	}
+	void preorder(TreeNode root, ArrayList<Integer> list) {
+		Stack<TreeNode> s1 = new Stack<>();
+		if (root == null) {
+			return;
+		}
+		TreeNode p = root;
+		s1.push(p);
+		while (!s1.empty()) {
+			p = s1.pop();
+			list.add(p.val);
+			if (p.right != null) {
+				s1.push(p.right);
+			}
+			if (p.left != null) {
+				s1.push(p.left);
+			}
+		}
+	}
+	int[][] threeOrders(TreeNode root) {
+		ArrayList<Integer> list1 = new ArrayList<>();
+		ArrayList<Integer> list2 = new ArrayList<>();
+		ArrayList<Integer> list3 = new ArrayList<>();
+		preorder(root,list1);
+		inorder(root,list2);
+		postOrder(root,list3);
+		int[][] res = new int[3][list1.size()];
+		for (int i = 0; i < list1.size(); i++) {
+			res[0][i] = list1.get(i);
+			res[1][i] = list2.get(i);
+			res[2][i] = list3.get(i);
+		}
+		return res;
+	}
+}

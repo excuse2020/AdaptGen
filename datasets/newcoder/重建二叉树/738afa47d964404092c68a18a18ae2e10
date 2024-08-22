@@ -1,0 +1,23 @@
+class Solution {
+	Map<Integer, Integer> map = new HashMap<>();
+	TreeNode reBuildBinTree(int[] pre, int[] vin, int pL, int pR, int vL, int vR) {
+		if (pL > pR || vL > vR) {
+			return null;
+		}
+		int index = map.get(pre[pL]);
+		TreeNode root = new TreeNode(pre[pL]);
+		root.left = reBuildBinTree(pre,vin,pL + 1,pL + index - vL,vL,index - 1);
+		root.right = reBuildBinTree(pre,vin,pL + index - vL + 1,pR,index + 1,vR);
+		return root;
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] vin) {
+		if (pre == null || vin == null || pre.length != vin.length) {
+			return null;
+		}
+		int len = pre.length;
+		for (int i = 0; i < len; i++) {
+			map.put(vin[i],i);
+		}
+		return reBuildBinTree(pre,vin,0,len - 1,0,len - 1);
+	}
+}

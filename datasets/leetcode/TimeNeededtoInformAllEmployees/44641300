@@ -1,0 +1,31 @@
+class Solution {
+	void createAdj(int n, int manager, ArrayList<ArrayList<Integer>> adj) {
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			if (manager[i] != -1) {
+				adj.get(manager[i]).add(i);
+			}
+		}
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		createAdj(n,manager,adj);
+		boolean vis = new boolean[n + 1];
+		int ans = solve(headID,adj,informTime,vis);
+		return ans;
+	}
+	int solve(int ind, ArrayList<ArrayList<Integer>> adj, int time, boolean vis) {
+		vis[ind] = true;
+		int t = 0;
+		int ans = 0;
+		for (int i: adj.get(ind)) {	
+			if (vis[i] == false) {
+				t = time[ind] + solve(i,adj,time,vis);
+			}
+			ans = Math.max(ans,t);
+		}
+		return ans;
+	}
+}

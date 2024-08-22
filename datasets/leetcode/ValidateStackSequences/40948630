@@ -1,0 +1,54 @@
+class Solution {
+	boolean validateStackSequences(int[] pushed, int[] popped) {
+		int l = pushed.length;
+		int top = -1;
+		boolean end = false;
+		for (int i = 0; i < l; i++) {
+			int pop = popped[i];
+			if (top == -1) {
+				top++;
+				if (end) {
+					return false;
+				}
+				while (top < l && pushed[top] != pop) {
+					top++;
+				}
+				if (top == l) {
+					return false;
+				}
+				if (top == l - 1) {
+					end = true;
+				}
+				pushed[top] = -1;
+				top--;
+			} 
+			else {
+				if (pushed[top] == pop) {
+					pushed[top] = -1;
+					while (top >= 0 && pushed[top] < 0) {
+						top--;
+					}
+				} 
+				else {
+					if (end) {
+						return false;
+					}
+					while (top < l && pushed[top] != pop) {
+						top++;
+					}
+					if (top == l) {
+						return false;
+					}
+					if (top == l - 1) {
+						end = true;
+					}
+					pushed[top] = -1;
+					while (top >= 0 && pushed[top] < 0) {
+						top--;
+					}
+				}
+			}
+		}
+		return true;
+	}
+}

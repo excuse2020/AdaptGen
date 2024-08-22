@@ -1,0 +1,33 @@
+class Solution {
+	Map<Integer, List<Integer>> giveNextGreater(int[] nums) {
+		Map<Integer, List<Integer>> nextGreaterMap = new HashMap<>();
+		Stack<Pair<Integer, Integer>> stack = new Stack<>();
+		for (int i = 0; i < nums.length; i++) {
+			while (!stack.empty() && stack.peek().getKey() < nums[i]) {
+				Pair<Integer, Integer> currPair = stack.pop();
+				List<Integer> tempList = nextGreaterMap.getOrDefault(i,new ArrayList<Integer>());
+				tempList.add(currPair.getValue());
+				nextGreaterMap.put(i,tempList);
+			}
+			stack.push(new Pair(nums[i], i));
+		}
+		return nextGreaterMap;
+	}
+	int[] secondGreaterElement(int[] nums) {
+		Map<Integer, List<Integer>> nextGreaterMap = giveNextGreater(nums);
+		Queue<Pair<Integer, Integer>> minHeap = new PriorityQueue<>((p1, p2) -> {p1.getKey() >= p2.getKey() ? 1 : -1});
+		int[] answer = new int[nums.length];
+		Arrays.fill(answer,-1);
+		for (int i = 0; i < nums.length; i++) {
+			while (minHeap.size() > 0 && minHeap.peek().getKey() < nums[i]) {
+				answer[minHeap.peek().getValue()] = nums[i];
+				minHeap.poll();
+			}
+			for (Integer x: nextGreaterMap.getOrDefault(i,new ArrayList<Integer>())) {	
+				Pair<Integer, Integer> p = new Pair<Integer, Integer>(nums[x], x);
+				minHeap.add(p);
+			}
+		}
+		return answer;
+	}
+}

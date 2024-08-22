@@ -1,0 +1,50 @@
+class Solution {
+	int ALICE_TURN = 1;
+	int BOB_TURN = 0;
+	int calculateScore(int index, int[] stoneValues, int turn) {
+		if (index >= stoneValues.length) {
+			return 0;
+		}
+		if (turn == ALICE_TURN) {
+			int scoreOne = Integer.MIN_VALUE, scoreTwo = Integer.MIN_VALUE, scoreThree = Integer.MIN_VALUE;
+			if (index < stoneValues.length) {
+				scoreOne = stoneValues[index] + calculateScore(index + 1,stoneValues,BOB_TURN);
+			}
+			if (index + 1 < stoneValues.length) {
+				scoreTwo = stoneValues[index] + stoneValues[index + 1];
+			}
+			if (index + 2 < stoneValues.length) {
+				scoreThree = stoneValues[index] + stoneValues[index + 1];
+			}
+			return Math.max(scoreOne,Math.max(scoreTwo,scoreThree));
+		} 
+		else {
+			int scoreOne = Integer.MAX_VALUE, scoreTwo = Integer.MAX_VALUE, scoreThree = Integer.MAX_VALUE;
+			scoreOne = calculateScore(index + 1,stoneValues,ALICE_TURN);
+			scoreTwo = calculateScore(index + 2,stoneValues,ALICE_TURN);
+			scoreThree = calculateScore(index + 3,stoneValues,ALICE_TURN);
+			return Math.min(scoreOne,Math.min(scoreTwo,scoreThree));
+		}
+	}
+	int calculateTotalSum(int[] stoneValues) {
+		int sum = 0;
+		for (int value: stoneValues) {	
+			sum += value;
+		}
+		return sum;
+	}
+	String stoneGameIII(int[] stoneValue) {
+		int aliceScore = calculateScore(0,stoneValue,ALICE_TURN);
+		int totalSum = calculateTotalSum(stoneValue);
+		int bobScore = totalSum - aliceScore;
+		if (aliceScore > bobScore) {
+			return "Alice";
+		} 
+		else if (aliceScore < bobScore) {
+			return "Bob";
+		} 
+		else {
+			return "Tie";
+		}
+	}
+}

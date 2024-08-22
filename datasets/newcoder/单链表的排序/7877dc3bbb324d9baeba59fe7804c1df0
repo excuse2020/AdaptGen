@@ -1,0 +1,31 @@
+class Solution {
+	ListNode sortInList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode slow = head, fast = head.next;
+		while (fast != null && fast.next != null) {
+			slow = slow.next;
+			fast = fast.next.next;
+		}
+		ListNode temp = slow.next;
+		slow.next = null;
+		ListNode l = sortInList(head);
+		ListNode r = sortInList(temp);
+		ListNode newHead = new ListNode(-1);
+		ListNode list = newHead;
+		while (l != null && r != null) {
+			if (l.val < r.val) {
+				list.next = l;
+				l = l.next;
+			} 
+			else {
+				list.next = r;
+				r = r.next;
+			}
+			list = list.next;
+		}
+		list.next = l != null ? l : r;
+		return newHead.next;
+	}
+}

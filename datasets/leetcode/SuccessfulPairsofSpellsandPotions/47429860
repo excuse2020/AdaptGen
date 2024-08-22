@@ -1,0 +1,42 @@
+class Solution {
+	int getCount(int[] p, long s, long suc) {
+		int l = 0, h = p.length - 1, m = (l + h) / 2;
+		while (true) {
+			long high = (long) p[h];
+			long low = (long) p[l];
+			if (high * s < suc) {
+				break;
+			}
+			if (l == 0 && low * s >= suc) {
+				return p.length;
+			}
+			if (l > 0 && low * s >= suc && (long) p[l - 1] * s < suc) {
+				return p.length - l;
+			}
+			if (h - l == 1) {
+				return p.length - h;
+			}
+			long mid = (long) p[m];
+			if (mid * s >= suc) {
+				h = m;
+				m = (l + h) / 2;
+				continue;
+			}
+			if (mid * s < suc) {
+				l = m;
+				m = (l + h) / 2;
+				continue;
+			}
+		}
+		return 0;
+	}
+	int[] successfulPairs(int[] spells, int[] potions, long success) {
+		int[] ans = new int[spells.length];
+		Arrays.sort(potions);
+		int idx = 0;
+		for (int s: spells) {	
+			ans[idx++] = getCount(potions,(long) s,success);
+		}
+		return ans;
+	}
+}

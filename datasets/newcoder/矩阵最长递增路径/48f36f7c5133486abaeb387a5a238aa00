@@ -1,0 +1,32 @@
+class Solution {
+	int max;
+	boolean[][] used;
+	void dfs(int[][] matrix, int i, int j, int count, int n) {
+		if (i < 0 || j < 0 || i >= matrix.length || j >= matrix[0].length) {
+			return;
+		}
+		if (matrix[i][j] <= n || used[i][j]) {
+			max = Math.max(max,count);
+			return;
+		}
+		used[i][j] = true;
+		n = matrix[i][j];
+		dfs(matrix,i + 1,j,count + 1,n);
+		dfs(matrix,i - 1,j,count + 1,n);
+		dfs(matrix,i,j + 1,count + 1,n);
+		dfs(matrix,i,j - 1,count + 1,n);
+		used[i][j] = false;
+	}
+	int solve(int[][] matrix) {
+		if (matrix == null || matrix.length == 0) {
+			return 0;
+		}
+		used = new boolean[matrix.length][matrix[0].length];
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix[0].length; j++) {
+				dfs(matrix,i,j,0,-1);
+			}
+		}
+		return max;
+	}
+}

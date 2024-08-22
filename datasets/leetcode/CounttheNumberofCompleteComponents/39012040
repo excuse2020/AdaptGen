@@ -1,0 +1,43 @@
+class Solution {
+	int countCompleteComponents(int n, int[][] edges) {
+		int[] indegree = new int[n];
+		for (int[] e: edges) {	
+			indegree[e[0]]++;
+			indegree[e[1]]++;
+		}
+		int result = 0;
+		Set<Integer> visited = new HashSet<>();
+		for (int i = 0; i < n; i++) {
+			if (!visited.contains(i)) {
+				Set<Integer> subGraph = new HashSet<>();
+				fillSubGraph(i,edges,visited,subGraph);
+				int edgeCount = subGraph.size() - 1;
+				for (int v: subGraph) {	
+					if (indegree[v] != edgeCount) {
+						subGraph.clear();
+						break;
+					}
+				}
+				if (!subGraph.isEmpty()) {
+					result++;
+				}
+			}
+		}
+		return result;
+	}
+	void fillSubGraph(int source, int[][] edges, Set<Integer> visited, Set<Integer> subGraph) {
+		if (visited.contains(source)) {
+			return;
+		}
+		visited.add(source);
+		subGraph.add(source);
+		for (int[] e: edges) {	
+			if (e[0] == source) {
+				fillSubGraph(e[1],edges,visited,subGraph);
+			}
+			if (e[1] == source) {
+				fillSubGraph(e[0],edges,visited,subGraph);
+			}
+		}
+	}
+}

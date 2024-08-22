@@ -1,0 +1,65 @@
+class Solution {
+	int dfs1(int cur, int par, int[] xor, List<List<Integer>> edg, int[] nums, LinkedList<Integer> pars, boolean[][] parent) {
+		int curXor = nums[cur];
+		for (int i: pars) {	
+			parent[i][cur] = true;
+		}
+		pars.addFirst(cur);
+		for (int i: edg.get(cur)) {	
+			if (i == par) {
+				continue;
+			}
+			curXor ^= dfs1(i,cur,xor,edg,nums,pars,parent);
+		}
+		pars.pollFirst();
+		xor[cur] = curXor;
+		return curXor;
+	}
+	int minimumScore(int[] nums, int[][] edges) {
+		int[] xor = new int[nums.length];
+		List<List<Integer>> edg = new ArrayList<>();
+		for (int i = 0; i < nums.length; i++) {
+			edg.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			edg.get(edges[i][0]).add(edges[i][1]);
+			edg.get(edges[i][1]).add(edges[i][0]);
+		}
+		int ans = Integer.MAX_VALUE;
+		boolean[][] parents = new boolean[nums.length][nums.length];
+		dfs1(0,-1,xor,edg,nums,new LinkedList<>(),parents);
+		for (int i = 0; i < edges.length; i++) {
+			for (int j = i + 1; j < edges.length; j++) {
+				int p1 = 0, p2 = edges[i][1], p3 = edges[j][1];
+				if (parents[edges[i][1]][edges[i][0]]) {
+					p2 = edges[i][0];
+				}
+				if (parents[edges[j][1]][edges[j][0]]) {
+					p3 = edges[j][0];
+				}
+				if (p2 == 0 || p3 == 0 || p2 == p3) {
+					continue;
+				}
+				if (!parents[p2][p3] && !parents[p3][p2]) {
+					int x1 = xor[0] ^ xor[p2];
+					int x2 = xor[p2];
+					int x3 = xor[p3];
+					ans = Math.min(ans,Math.max(x1,Math.max(x2,x3)) - Math.min(x1,Math.min(x2,x3)));
+				} 
+				else if (parents[p2][p3]) {
+					int x1 = xor[0] ^ xor[p2];
+					int x2 = xor[p2] ^ xor[p3];
+					int x3 = xor[p3];
+					ans = Math.min(ans,Math.max(x1,Math.max(x2,x3)) - Math.min(x1,Math.min(x2,x3)));
+				} 
+				else {
+					int x1 = xor[0] ^ xor[p3];
+					int x2 = xor[p2];
+					int x3 = xor[p3] ^ xor[p2];
+					ans = Math.min(ans,Math.max(x1,Math.max(x2,x3)) - Math.min(x1,Math.min(x2,x3)));
+				}
+			}
+		}
+		return ans;
+	}
+}

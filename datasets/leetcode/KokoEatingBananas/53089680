@@ -1,0 +1,32 @@
+class Solution {
+	boolean isPossibleToComplete(int[] piles, int k, int h) {
+		int timeTaken = 0;
+		for (int i: piles) {	
+			timeTaken += (i + k - 1) / k;
+			if (timeTaken > h) {
+				return false;
+			}
+		}
+		return timeTaken <= h;
+	}
+	int minEatingSpeed(int[] piles, int h) {
+		int maxPile = -1;
+		for (int i: piles) {	
+			maxPile = Math.max(i,maxPile);
+		}
+		int minK = 1;
+		int l = minK, r = maxPile;
+		int res = maxPile;
+		while (l <= r) {
+			int mid = l + (r - l) / 2;
+			if (isPossibleToComplete(piles,mid,h)) {
+				res = Math.min(mid,res);
+				r = mid - 1;
+			} 
+			else {
+				l = mid + 1;
+			}
+		}
+		return res;
+	}
+}

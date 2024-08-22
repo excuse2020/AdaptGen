@@ -1,0 +1,53 @@
+class Solution {
+	int[] rank;
+	int[] root;
+	int find(int x) {
+		if (root[x] == x) {
+			return x;
+		}
+		return root[x] = find(root[x]);
+	}
+	String smallestStringWithSwaps(String s, List<List<Integer>> pairs) {
+		this.root = new int[s.length()];
+		this.rank = new int[s.length()];
+		for (int i = 0; i < s.length(); i++) {
+			root[i] = i;
+			rank[i] = i;
+		}
+		for (int i = 0; i < pairs.size(); i++) {
+			union(pairs.get(i).get(0),pairs.get(i).get(1));
+		}
+		Map<Integer, List<Character>> charMap = new HashMap<>();
+		for (int i = 0; i < s.length(); i++) {
+			root[i] = find(i);
+			if (!charMap.containsKey(root[i])) {
+				charMap.put(i,new ArrayList<>());
+			}
+			charMap.get(root[i]).add(s.charAt(i));
+		}
+		for (List<Character> charList: charMap.values()) {	
+			Collections.sort(charList);
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < s.length(); i++) {
+			int rootIdx = root[i];
+			char minChar = charMap.get(rootIdx).get(0);
+			charMap.get(rootIdx).remove(0);
+			sb.append(minChar);
+		}
+		return sb.toString();
+	}
+	void union(int i, int j) {
+		int i_p = find(i);
+		int j_p = find(j);
+		if (i_p == j_p) {
+			return;
+		}
+		if (rank[i_p] < rank[j_p]) {
+			root[j_p] = i_p;
+		} 
+		else if (rank[j_p] < rank[i_p]) {
+			root[i_p] = j_p;
+		}
+	}
+}

@@ -1,0 +1,27 @@
+class Solution {
+	int[] minInterval(int[][] in, int[] queries) {
+		Map<Integer, Integer> resp = new HashMap();
+		int[] q = queries.clone();
+		Arrays.sort(q);
+		Queue<int[]> pq = new PriorityQueue<int[]>((a, b) -> {a[1] - a[0]});
+		Arrays.sort(in,(a, b) -> {a[0] - b[0]});
+		int elegible = 0;
+		for (int next: q) {	
+			if (resp.containsKey(next)) {
+				continue;
+			}
+			while (elegible < in.length && in[elegible][0] <= next) {
+				pq.add(in[elegible++]);
+			}
+			while (!pq.isEmpty() && pq.peek()[1] < next) {
+				pq.remove();
+			}
+			resp.put(next,pq.isEmpty() ? -1 : pq.peek()[1] - pq.peek()[0] + 1);
+		}
+		int[] r = new int[q.length];
+		for (int i = 0; i < r.length; i++) {
+			r[i] = resp.get(queries[i]);
+		}
+		return r;
+	}
+}

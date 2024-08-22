@@ -1,0 +1,32 @@
+class Solution {
+	int minAbsoluteSumDiff(int[] nums1, int[] nums2) {
+		if (Arrays.equals(nums1,nums2)) {
+			return 0;
+		}
+		int mod = 1000000007;
+		PriorityQueue<Integer> maxHeap = new PriorityQueue(Collections.reverseOrder());
+		int[] arr = new int[nums1.length];
+		int max = Integer.MIN_VALUE;
+		int max_i = -1;
+		for (int i = 0; i < nums1.length; i++) {
+			int val = Math.abs(nums1[i] - nums2[i]);
+			if (max < val) {
+				max = val;
+				max_i = i;
+			}
+			maxHeap.add(Math.abs(nums1[i] - nums2[i]));
+		}
+		maxHeap.poll();
+		PriorityQueue<Integer> minHeap = new PriorityQueue();
+		for (int i = 0; i < nums1.length; i++) {
+			minHeap.add(Math.abs(nums1[i] - nums2[max_i]));
+		}
+		maxHeap.add(minHeap.peek());
+		long sum = 0;
+		while (!maxHeap.isEmpty()) {
+			sum += maxHeap.poll();
+		}
+		long rs = sum % mod;
+		return (int) rs;
+	}
+}

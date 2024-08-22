@@ -1,0 +1,31 @@
+class Solution {
+	int max = Integer.MIN_VALUE;
+	void dfs(ArrayList<ArrayList<Integer>> graph, int start, int k, int[] vals) {
+		max = Math.max(max,vals[start]);
+		int sum = vals[start];
+		PriorityQueue<Integer> pq = new PriorityQueue(Collections.reverseOrder());
+		for (int i: graph.get(start)) {	
+			pq.add(vals[i]);
+		}
+		int i = 0;
+		while (!pq.isEmpty() && i < k) {
+			sum += pq.remove();
+			max = Math.max(max,sum);
+			i++;
+		}
+	}
+	int maxStarSum(int[] vals, int[][] edges, int k) {
+		ArrayList<ArrayList<Integer>> graph = new ArrayList();
+		for (int i = 0; i < vals.length; i++) {
+			graph.add(new ArrayList());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			graph.get(edges[i][0]).add(edges[i][1]);
+			graph.get(edges[i][1]).add(edges[i][0]);
+		}
+		for (int i = 0; i < vals.length; i++) {
+			dfs(graph,i,k,vals);
+		}
+		return max;
+	}
+}

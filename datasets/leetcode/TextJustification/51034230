@@ -1,0 +1,70 @@
+class Solution {
+	List<String> results;
+	void addLine(int b, int f, int textLength, String[] words, int maxWidth) {
+		int numOfSpaces = maxWidth - textLength;
+		int numOfWords = f - b;
+		numOfSpaces += (numOfWords - 1);
+		int spaceLength = 0;
+		int remainder = 0;
+		if (numOfWords > 1) {
+			spaceLength = numOfSpaces / (numOfWords - 1);
+			remainder = numOfSpaces % (numOfWords - 1);
+		}
+		StringBuilder result = new StringBuilder();
+		for (int i = b; i < f - 1; i++) {
+			result.append(words[i]);
+			result.append(numOfSpaces >= spaceLength ? " ".repeat(spaceLength) : " ".repeat(numOfSpaces));
+			if (remainder > 0) {
+				result.append(" ");
+				numOfSpaces -= 1;
+				remainder -= 1;
+			}
+			numOfSpaces -= spaceLength;
+		}
+		result.append(words[f - 1]);
+		if (numOfWords == 1) {
+			result.append(" ".repeat(maxWidth - words[f - 1].length()));
+		}
+		results.add(result.toString());
+	}
+	List<String> fullJustify(String[] words, int maxWidth) {
+		results = new ArrayList<>();
+		int i = 0;
+		int length = words.length;
+		int bIndex = 0;
+		int fIndex = 0;
+		int textLength = 0;
+		while (i < length) {
+			textLength = 0;
+			bIndex = i;
+			textLength += words[i].length();
+			while (i < length) {
+				i++;
+				if (i == length) {
+					break;
+				}
+				if (words[i].length() > maxWidth - textLength) {
+					fIndex = i;
+					break;
+				}
+				textLength += words[i].length() + 1;
+			}
+			if (fIndex == i) {
+				addLine(bIndex,fIndex,textLength,words,maxWidth);
+			} 
+			else {
+				StringBuilder result = new StringBuilder();
+				for (int j = bIndex; j < length - 1; j++) {
+					result.append(words[j]);
+					result.append(" ");
+				}
+				result.append(words[length - 1]);
+				int numOfSpaces = maxWidth - result.length();
+				result.append(" ".repeat(numOfSpaces));
+				results.add(result.toString());
+				break;
+			}
+		}
+		return results;
+	}
+}

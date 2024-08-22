@@ -1,0 +1,24 @@
+class Solution {
+	int[] dp;
+	int dpTree(TreeSet<Integer> rewards, int target) {
+		if (target <= 0 || rewards.contains(target)) {
+			return target;
+		}
+		int max = 0;
+		for (int i: rewards.headSet(target,true)) {	
+			int nexTarget = Math.min(target - i,i - 1);
+			max = Math.max(max,i + dpTree(rewards,nexTarget));
+		}
+		return max;
+	}
+	int maxTotalReward(int[] rewardValues) {
+		int n = rewardValues.length;
+		TreeSet<Integer> rewards = new TreeSet<>();
+		int max = 0;
+		for (int r: rewardValues) {	
+			rewards.add(r);
+			max = Math.max(max,r);
+		}
+		return max + dpTree(rewards,max - 1);
+	}
+}

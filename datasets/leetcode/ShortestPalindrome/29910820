@@ -1,0 +1,39 @@
+class Solution {
+	String shortestPalindrome(String string) {
+		StringBuilder str = new StringBuilder();
+		str.append(string);
+		str.append("$");
+		String reversedString = new StringBuilder(string).reverse().toString();
+		str.append(reversedString);
+		int n = string.length();
+		int m = str.length();
+		int[] z = new int[m];
+		for (int i = 1, l = 0, r = 0; i < m; i++) {
+			if (i < r) {
+				z[i] = Math.min(r - i + 1,z[i - l]);
+			}
+			while (i + z[i] < m && str.charAt(z[i]) == str.charAt(i + z[i])) {
+				z[i]++;
+			}
+			if (i + z[i] - 1 > r) {
+				l = i;
+				r = i + z[i] - 1;
+			}
+		}
+		int maxCommonSuffix = 0;
+		int startingInd = -1;
+		for (int i = n + 1; i < m; i++) {
+			if (i + z[i] == m && z[i] > maxCommonSuffix) {
+				maxCommonSuffix = z[i];
+				startingInd = i - n;
+			}
+		}
+		if (startingInd < 0) {
+			return string;
+		}
+		StringBuilder result = new StringBuilder();
+		result.append(reversedString.substring(0,startingInd));
+		result.append(string);
+		return result.toString();
+	}
+}

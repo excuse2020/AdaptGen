@@ -1,0 +1,30 @@
+class Solution {
+	int memo;
+	int findingMaximumSum(int arr, int n, int k) {
+		if (n == arr.length) {
+			return 0;
+		}
+		if (memo[n] != -1) {
+			return memo[n];
+		}
+		int largest = Integer.MIN_VALUE;
+		int length = 0;
+		int maxSum = Integer.MIN_VALUE;
+		for (int i = n; i < Math.min(k + n,arr.length); i++) {
+			length++;
+			if (largest < arr[i]) {
+				largest = arr[i];
+			}
+			int sum = length * largest + findingMaximumSum(arr,i + 1,k);
+			if (maxSum < sum) {
+				maxSum = sum;
+			}
+		}
+		return memo[n] = maxSum;
+	}
+	int maxSumAfterPartitioning(int[] arr, int k) {
+		memo = new int[arr.length];
+		Arrays.fill(memo,-1);
+		return findingMaximumSum(arr,0,k);
+	}
+}

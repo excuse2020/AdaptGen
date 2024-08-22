@@ -1,0 +1,19 @@
+class Solution {
+	int fnFreq(String word) {
+		int smallest = word.chars().min().getAsInt();
+		return (int) word.chars().filter((c) -> {c == smallest}).count();
+	}
+	int[] numSmallerByFrequency(String[] queries, String[] words) {
+		TreeMap<Integer, List<String>> wordFreq = new TreeMap<>();
+		for (var word: words) {	
+			wordFreq.computeIfAbsent(fnFreq(word),(k) -> {new ArrayList<String>()}).add(word);
+		}
+		int[] result = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			int queryFreq = fnFreq(queries[i]);
+			var tailMap = wordFreq.tailMap(queryFreq,false);
+			result[i] = (int) tailMap.values().stream().flatMap().count();
+		}
+		return result;
+	}
+}

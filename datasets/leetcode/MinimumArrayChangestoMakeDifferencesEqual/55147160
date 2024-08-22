@@ -1,0 +1,42 @@
+class Solution {
+	int minChanges(int[] nums, int k) {
+		int n = nums.length;
+		Map<Integer, Integer> zeroCntMap = new HashMap<>();
+		Map<Integer, Integer> maxOneCntmap = new HashMap<>();
+		for (int i = 0; i < n / 2; i++) {
+			int l = nums[i];
+			int r = nums[n - i - 1];
+			int diff = Math.abs(r - l);
+			if (zeroCntMap.containsKey(diff)) {
+				zeroCntMap.put(diff,zeroCntMap.get(diff) + 1);
+			} 
+			else {
+				zeroCntMap.put(diff,1);
+			}
+			int max = Math.max(l,r);
+			int min = Math.min(l,r);
+			int maxDiffWithOneChange = Math.max(k - min,max - 0);
+			if (maxOneCntmap.containsKey(maxDiffWithOneChange)) {
+				maxOneCntmap.put(maxDiffWithOneChange,maxOneCntmap.get(maxDiffWithOneChange) + 1);
+			} 
+			else {
+				maxOneCntmap.put(maxDiffWithOneChange,1);
+			}
+		}
+		int suffixSum = new int[k + 1];
+		suffixSum[k] = maxOneCntmap.containsKey(k) ? maxOneCntmap.get(k) : 0;
+		for (int i = k - 1; i >= 0; i--) {
+			suffixSum[i] = suffixSum[i + 1] + ((maxOneCntmap.containsKey(i)) ? maxOneCntmap.get(i) : 0);
+		}
+		int ans = Integer.MAX_VALUE;
+		for (int i = 0; i <= k; i++) {
+			int totalPairs = n / 2;
+			int numOfZeroChangePairs = zeroCntMap.containsKey(i) ? zeroCntMap.get(i) : 0;
+			int numOfOneChangePairs = suffixSum[i] - numOfZeroChangePairs;
+			int numOfTwoChangePairs = totalPairs - numOfZeroChangePairs;
+			int totalChange = numOfOneChangePairs + numOfTwoChangePairs * 2;
+			ans = Math.min(ans,totalChange);
+		}
+		return ans;
+	}
+}

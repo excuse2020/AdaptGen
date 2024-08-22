@@ -1,0 +1,33 @@
+class Solution {
+	int f(int i, int j, int size, int[] arr, int n, int[][] dp) {
+		if (i == j) {
+			return arr[i];
+		}
+		if (dp[i][j] != -1) {
+			return dp[i][j];
+		}
+		int maxsum = arr[i];
+		int maxele = arr[i];
+		for (int p = 0; p < size && i + p < n; p++) {
+			maxele = Math.max(maxele,arr[i + p]);
+			int leftsum = (p + 1) * maxele;
+			int rightsum = 0;
+			if (i + p < n) {
+				rightsum = f(i + p,j,size,arr,n,dp);
+			}
+			maxsum = Math.max(maxsum,leftsum + rightsum);
+		}
+		return dp[i][j] = maxsum;
+	}
+	int maxSumAfterPartitioning(int[] arr, int k) {
+		if (arr.length == 1) {
+			return arr[0];
+		}
+		int n = arr.length;
+		int[][] dp = new int[n][n];
+		for (int[] row: dp) {	
+			Arrays.fill(row,-1);
+		}
+		return f(0,n - 1,k,arr,n,dp);
+	}
+}

@@ -1,0 +1,34 @@
+class Solution {
+	String decodeAtIndex(String s, int k) {
+		long decodedLength = 0;
+		int n = s.length();
+		for (int i = 0; i < n; i++) {
+			char c = s.charAt(i);
+			if (Character.isDigit(c)) {
+				int digit = Character.getNumericValue(c);
+				decodedLength *= digit;
+			} 
+			else {
+				decodedLength++;
+			}
+		}
+		for (int i = n - 1; i >= 0; i--) {
+			char c = s.charAt(i);
+			if (Character.isDigit(c)) {
+				int digit = Character.getNumericValue(c);
+				decodedLength /= digit;
+				k %= decodedLength;
+				if (k == 0 && Character.isLetter(s.charAt(i - 1))) {
+					return Character.toString(s.charAt(i - 1));
+				}
+			} 
+			else {
+				if (k == decodedLength || k == 0) {
+					return Character.toString(c);
+				}
+				decodedLength--;
+			}
+		}
+		return null;
+	}
+}

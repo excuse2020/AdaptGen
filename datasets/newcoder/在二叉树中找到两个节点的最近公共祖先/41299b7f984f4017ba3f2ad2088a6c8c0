@@ -1,0 +1,50 @@
+class Solution {
+	int lowestCommonAncestor(TreeNode root, int o1, int o2) {
+		List<Integer> list = new ArrayList<>();
+		List<TreeNode> level = new LinkedList<>();
+		level.add(root);
+		int cnt = 0;
+		int index1 = 0;
+		int index2 = 0;
+		while (cnt < 2) {
+			for (TreeNode node: level) {	
+				if (node != null) {
+					list.add(node.val);
+				} 
+				else {
+					list.add(null);
+				}
+				if (node != null && (node.val == o1 || node.val == o2)) {
+					if (node.val == o1) {
+						index1 = list.size();
+					} 
+					else {
+						index2 = list.size();
+					}
+					cnt++;
+				}
+			}
+			List<TreeNode> tempLevel = new LinkedList<>();
+			for (TreeNode node: level) {	
+				if (node == null) {
+					tempLevel.add(null);
+					tempLevel.add(null);
+				} 
+				else {
+					tempLevel.add(node.left);
+					tempLevel.add(node.right);
+				}
+			}
+			level = tempLevel;
+		}
+		while (index1 != index2) {
+			if (index1 > index2) {
+				index1 = index1 / 2;
+			} 
+			else {
+				index2 = index2 / 2;
+			}
+		}
+		return list.get(index1 - 1);
+	}
+}

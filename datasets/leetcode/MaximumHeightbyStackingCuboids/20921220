@@ -1,0 +1,39 @@
+class Solution {
+	boolean compareDisks(int[] disk1, int[] disk2) {
+		if (disk1[0] <= disk2[0]) {
+			if (disk1[1] <= disk2[1]) {
+				if (disk1[2] <= disk2[2]) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	int maxHeight(int[][] cuboids) {
+		for (int[] a: cuboids) {	
+			Arrays.sort(a);
+		}
+		Arrays.sort(cuboids,new Comparator<int[]>());
+		int heights = new int[cuboids.length];
+		for (int i = 0; i < cuboids.length; i++) {
+			heights[i] = cuboids[i][2];
+		}
+		if (cuboids.length == 1) {
+			return cuboids[0][2];
+		}
+		int maxHeight = cuboids[0][2];
+		for (int i = 1; i < cuboids.length; i++) {
+			for (int j = 0; j < i; j++) {
+				if (compareDisks(cuboids[j],cuboids[i])) {
+					if (heights[i] < heights[j] + cuboids[i][2]) {
+						heights[i] = heights[j] + cuboids[i][2];
+					}
+				}
+				if (heights[i] > maxHeight) {
+					maxHeight = heights[i];
+				}
+			}
+		}
+		return maxHeight;
+	}
+}

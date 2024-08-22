@@ -1,0 +1,33 @@
+class Solution {
+	int[] arr;
+	Map<Integer, Integer>[] dp;
+	int k;
+	int find(int state, int i) {
+		if (dp[i] != null && dp[i].containsKey(state)) {
+			return dp[i].get(state);
+		}
+		int res = Integer.MAX_VALUE;
+		state &= arr[i];
+		res = Math.min(res,Math.abs(state - k));
+		if (i != arr.length - 1) {
+			res = Math.min(res,find(state,i + 1));
+		}
+		if (dp[i] == null) {
+			dp[i] = new HashMap<>();
+		}
+		dp[i].put(state,res);
+		return res;
+	}
+	int minimumDifference(int[] nums, int target) {
+		dp = new HashMap[nums.length];
+		arr = nums;
+		k = target;
+		int res = Integer.MAX_VALUE;
+		for (int i = 0; i < nums.length - 1; i++) {
+			res = Math.min(res,Math.abs(nums[i] - k));
+			res = Math.min(res,find(nums[i],i + 1));
+		}
+		res = Math.min(res,Math.abs(nums[nums.length - 1] - k));
+		return res;
+	}
+}

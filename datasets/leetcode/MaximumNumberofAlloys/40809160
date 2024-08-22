@@ -1,0 +1,31 @@
+class Solution {
+	int maxAlloys(int n, long budget, List<Integer> currComposition, List<Integer> stock, List<Integer> cost) {
+		int ans = 0;
+		int low, high, mid;
+		low = 0;
+		high = Integer.MAX_VALUE;
+		while (low <= high) {
+			mid = low + (high - low) / 2;
+			long totalCost = 0;
+			for (int i = 0; i < n; ++i) {
+				long metalExtraStockNeeded = Math.max(0L,1L * mid - stock.get(i));
+				totalCost += (metalExtraStockNeeded * cost.get(i));
+			}
+			if (totalCost <= budget) {
+				ans = Math.max(ans,mid);
+				low = mid + 1;
+			} 
+			else {
+				high = mid - 1;
+			}
+		}
+		return ans;
+	}
+	int maxNumberOfAlloys(int n, int k, int budget, List<List<Integer>> composition, List<Integer> stock, List<Integer> cost) {
+		int ans = 0;
+		for (List<Integer> currComposition: composition) {	
+			ans = Math.max(ans,maxAlloys(n,1L * budget,currComposition,stock,cost));
+		}
+		return ans;
+	}
+}

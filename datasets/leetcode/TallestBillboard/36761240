@@ -1,0 +1,24 @@
+class Solution {
+	Map<String, Integer> map = new HashMap<>();
+	int solve(int i, int diff, int rods) {
+		if (i >= rods.length) {
+			if (diff == 0) {
+				return 0;
+			}
+			return Integer.MIN_VALUE;
+		}
+		String key = diff + "+";
+		if (map.containsKey(key)) {
+			return map.get(key);
+		}
+		int excl = solve(i + 1,diff,rods);
+		int inclLarge = solve(i + 1,diff + rods[i],rods) + rods[i];
+		int inclSmall = solve(i + 1,diff - rods[i],rods);
+		int max = Math.max(excl,Math.max(inclLarge,inclSmall));
+		map.put(key,max);
+		return max;
+	}
+	int tallestBillboard(int[] rods) {
+		return solve(0,0,rods);
+	}
+}

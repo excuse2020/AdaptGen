@@ -1,0 +1,49 @@
+class Solution {
+	int[] maxSlidingWindow(int[] a, int k) {
+		int ans = new int[arr.length - k + 1];
+		int n = arr.length;
+		for (int i = 0; i <= n - k; i++) {
+			int max = arr[i];
+			for (int j = 1; j < k; j++) {
+				max = Math.max(max,arr[i + j]);
+			}
+			ans[i] = max;
+		}
+		return ans;
+		PriorityQueue<Integer> pq = new PriorityQueue<>((n1, n2) -> {n2 - n1});
+		int n = arr.length;
+		ArrayList<Integer> ans = new ArrayList<>();
+		for (int i = 0; i < k; i++) {
+			pq.add(arr[i]);
+		}
+		ans.add(pq.peek());
+		pq.remove(arr[0]);
+		for (int i = k; i < n; i++) {
+			pq.add(arr[i]);
+			ans.add(pq.peek());
+			pq.remove(arr[i - k + 1]);
+		}
+		int a = new int[ans.size()];
+		for (int j = 0; j < ans.size(); j++) {
+			a[j] = ans.get(j);
+		}
+		return a;
+		int n = a.length;
+		int[] r = new int[n - k + 1];
+		int ri = 0;
+		Deque<Integer> q = new ArrayDeque<>();
+		for (int i = 0; i < a.length; i++) {
+			if (!q.isEmpty() && q.peek() == i - k) {
+				q.remove();
+			}
+			while (!q.isEmpty() && a[q.peekLast()] <= a[i]) {
+				q.pollLast();
+			}
+			q.add(i);
+			if (i >= k - 1) {
+				r[ri++] = a[q.peek()];
+			}
+		}
+		return r;
+	}
+}

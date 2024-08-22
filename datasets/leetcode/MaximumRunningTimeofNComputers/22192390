@@ -1,0 +1,41 @@
+class Solution {
+	long maxRunTime(int n, int[] batteries) {
+		PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+		for (int battery: batteries) {	
+			if (battery == 0) {
+				continue;
+			}
+			pq.add(battery);
+		}
+		int ans = 0;
+		while (!pq.isEmpty()) {
+			int[] nums = new int[n];
+			int idx = 0;
+			boolean shouldExit = false;
+			int min = Integer.MAX_VALUE;
+			while (idx < nums.length) {
+				if (pq.isEmpty()) {
+					shouldExit = true;
+					break;
+				}
+				nums[idx] = pq.remove();
+				min = Math.min(min,nums[idx]);
+				idx++;
+			}
+			if (shouldExit) {
+				break;
+			} 
+			else {
+				min = Math.max(--min,1);
+				ans += min;
+				for (int num: nums) {	
+					if (num == min) {
+						continue;
+					}
+					pq.add(num - min);
+				}
+			}
+		}
+		return ans;
+	}
+}

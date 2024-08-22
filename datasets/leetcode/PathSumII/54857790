@@ -1,0 +1,27 @@
+class Solution {
+	List<List<Integer>> paths = new ArrayList<>();
+	List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+		pathSumRec(root,targetSum,new ArrayList<>(),0);
+		return paths;
+	}
+	void pathSumRec(TreeNode root, int target, List<Integer> thisPath, int thisSum) {
+		if (root == null) {
+			return;
+		}
+		if (root.left == null && root.right == null) {
+			thisSum += root.val;
+			if (thisSum != target) {
+				return;
+			}
+			List<Integer> path = new ArrayList<>();
+			path.addAll(thisPath);
+			path.add(root.val);
+			paths.add(path);
+			return;
+		}
+		thisPath.add(root.val);
+		pathSumRec(root.left,target,thisPath,thisSum + root.val);
+		pathSumRec(root.right,target,thisPath,thisSum + root.val);
+		thisPath.remove(thisPath.size() - 1);
+	}
+}

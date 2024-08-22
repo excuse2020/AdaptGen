@@ -1,0 +1,49 @@
+class Solution {
+	int add = 0;
+	ListNode addInList(ListNode head1, ListNode head2) {
+		Deque<ListNode> stack1 = new LinkedList<>();
+		Deque<ListNode> stack2 = new LinkedList<>();
+		while (head1 != null) {
+			stack1.push(head1);
+			head1 = head1.next;
+		}
+		while (head2 != null) {
+			stack2.push(head2);
+			head2 = head2.next;
+		}
+		ListNode fake_head = new ListNode(-1);
+		ListNode tail = fake_head.next;
+		int add = 0;
+		while (!stack1.isEmpty() && !stack2.isEmpty()) {
+			int val = stack1.pop().val + stack2.pop().val;
+			add = val / 10;
+			ListNode node = new ListNode(val % 10);
+			node.next = tail;
+			fake_head.next = node;
+			tail = node;
+		}
+		while (!stack1.isEmpty()) {
+			int val = stack1.pop().val + add;
+			add = val / 10;
+			ListNode node = new ListNode(val % 10);
+			node.next = tail;
+			fake_head.next = node;
+			tail = node;
+		}
+		while (!stack2.isEmpty()) {
+			int val = stack2.pop().val + add;
+			add = val / 10;
+			ListNode node = new ListNode(val % 10);
+			node.next = tail;
+			fake_head.next = node;
+			tail = node;
+		}
+		if (add != 0) {
+			ListNode node = new ListNode(add);
+			node.next = tail;
+			fake_head.next = node;
+			tail = node;
+		}
+		return fake_head.next;
+	}
+}

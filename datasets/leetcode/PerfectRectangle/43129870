@@ -1,0 +1,41 @@
+class Solution {
+	Set<String> set = new HashSet<>();
+	void checkAndUpdate(String hash) {
+		if (set.contains(hash)) {
+			set.remove(hash);
+		} 
+		else {
+			set.add(hash);
+		}
+	}
+	String getHash(int x, int y) {
+		return x + ":";
+	}
+	boolean isRectangleCover(int[][] rectangles) {
+		int maxX = Integer.MIN_VALUE;
+		int minX = Integer.MAX_VALUE;
+		int maxY = Integer.MIN_VALUE;
+		int minY = Integer.MAX_VALUE;
+		int totalArea = 0;
+		for (int i = 0; i < rectangles.length; i++) {
+			minX = Integer.min(minX,rectangles[i][0]);
+			minY = Integer.min(minY,rectangles[i][1]);
+			maxX = Integer.max(maxX,rectangles[i][2]);
+			maxY = Integer.max(maxY,rectangles[i][3]);
+			totalArea += (rectangles[i][2] - rectangles[i][0]) * (rectangles[i][3] - rectangles[i][1]);
+			checkAndUpdate(getHash(rectangles[i][0],rectangles[i][1]));
+			checkAndUpdate(getHash(rectangles[i][0],rectangles[i][3]));
+			checkAndUpdate(getHash(rectangles[i][2],rectangles[i][1]));
+			checkAndUpdate(getHash(rectangles[i][2],rectangles[i][3]));
+		}
+		checkAndUpdate(getHash(minX,minY));
+		checkAndUpdate(getHash(minX,maxY));
+		checkAndUpdate(getHash(maxX,minY));
+		checkAndUpdate(getHash(maxX,maxY));
+		if (set.size() != 0) {
+			return false;
+		}
+		int expectedArea = (maxX - minX) * (maxY - minY);
+		return expectedArea == totalArea;
+	}
+}

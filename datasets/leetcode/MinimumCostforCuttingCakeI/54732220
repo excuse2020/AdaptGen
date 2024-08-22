@@ -1,0 +1,40 @@
+class Solution {
+	int helper(int startm, int m, int startn, int n, int[] x, int[] y, int[][][][] dp) {
+		if (m - startm == 0) {
+			int sum = 0;
+			for (int i = startn; i < n; i++) {
+				sum += y[i];
+			}
+			return sum;
+		}
+		if (n - startn == 0) {
+			int sum = 0;
+			for (int i = startm; i < m; i++) {
+				sum += x[i];
+			}
+			return sum;
+		}
+		if (dp[startm][m][startn][n] != -1) {
+			return dp[startm][m][startn][n];
+		}
+		int mini = Integer.MAX_VALUE;
+		for (int i = startm; i < m; i++) {
+			mini = Math.min(mini,x[i] + helper(startm,i,startn,n,x,y,dp));
+		}
+		for (int i = startn; i < n; i++) {
+			mini = Math.min(mini,y[i] + helper(startm,m,startn,i,x,y,dp));
+		}
+		return dp[startm][m][startn][n] = mini;
+	}
+	int minimumCost(int m, int n, int[] x, int[] y) {
+		int[][][][] dp = new int[m][m][n][n];
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < m; j++) {
+				for (int k = 0; k < n; k++) {
+					Arrays.fill(dp[i][j][k],-1);
+				}
+			}
+		}
+		return helper(0,m - 1,0,n - 1,x,y,dp);
+	}
+}

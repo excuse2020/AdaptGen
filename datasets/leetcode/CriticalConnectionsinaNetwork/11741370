@@ -1,0 +1,38 @@
+class Solution {
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		List<List<Integer>> ans = new LinkedList<>();
+		for (List<Integer> connection: connections) {	
+			int a = connection.get(0);
+			int b = connection.get(1);
+			graph.putIfAbsent(a,new LinkedList<>());
+			graph.putIfAbsent(b,new LinkedList<>());
+			graph.get(a).add(b);
+			graph.get(b).add(a);
+		}
+		int[] rank = new int[n];
+		for (int i = 0; i < n; ++i) {
+			rank[i] = i;
+		}
+		boolean[] visited = new boolean[n];
+		int prevNode = -1, curNode = 0, curRank = 0;
+		dfs(visited,rank,prevNode,curNode,curRank,graph,ans);
+		return ans;
+	}
+	void dfs(boolean[] visited, int[] rank, int prevNode, int curNode, int curRank, Map<Integer, List<Integer>> graph, List<List<Integer>> ans) {
+		rank[curNode] = curRank;
+		visited[curNode] = true;
+		for (int neighbor: graph.get(curNode)) {	
+			if (neighbor == prevNode) {
+				continue;
+			}
+			if (!visited[neighbor]) {
+				dfs(visited,rank,curNode,neighbor,curRank + 1,graph,ans);
+			}
+			rank[curNode] = Math.min(rank[curNode],rank[neighbor]);
+			if (rank[neighbor] == curRank + 1) {
+				ans.add(Arrays.asList(curNode,neighbor));
+			}
+		}
+	}
+}

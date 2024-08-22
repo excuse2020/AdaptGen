@@ -1,0 +1,55 @@
+class Solution {
+	int val;
+	int findKth(int[] a, int n, int K) {
+		if (n <= 0) {
+			return -1;
+		}
+		solved(a,n,0,n - 1,K);
+		return val;
+	}
+	int partition(int[] a, int left, int right) {
+		int temp = a[left];
+		int k = left;
+		while (left < right) {
+			while (left < right && a[right] > temp) {
+				right--;
+			}
+			if (left < right) {
+				swap(a,k,right);
+				k = right;
+				left++;
+			}
+			while (left < right && a[left] <= temp) {
+				left++;
+			}
+			if (left < right) {
+				swap(a,k,left);
+				k = left;
+				right--;
+			}
+		}
+		return k;
+	}
+	void solved(int[] a, int n, int left, int right, int K) {
+		if (left > right) {
+			return;
+		}
+		int index = partition(a,left,right);
+		if (n - index == K) {
+			val = a[index];
+			return;
+		}
+		if (index < n - K) {
+			solved(a,n,index + 1,right,K);
+		} 
+		else {
+			solved(a,n,left,index - 1,K);
+		}
+	}
+	void swap(int[] arr, int index1, int index2) {
+		int temp = arr[index1];
+		arr[index1] = arr[index2];
+		arr[index2] = temp;
+		return;
+	}
+}

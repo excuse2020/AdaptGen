@@ -1,0 +1,54 @@
+class Solution {
+	void bfs(int[] dist, boolean[] visited, ArrayList<ArrayList<Integer>> arr, int node) {
+		Queue<Integer> pq = new LinkedList<>();
+		pq.add(node);
+		visited[node] = true;
+		int step = 0;
+		while (!pq.isEmpty()) {
+			int size = pq.size();
+			while (size-- > 0) {
+				int am = pq.poll();
+				dist[am] = step;
+				for (Integer a: arr.get(am)) {	
+					if (!visited[a]) {
+						pq.add(a);
+						visited[a] = true;
+					}
+				}
+			}
+			step++;
+		}
+	}
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		ArrayList<ArrayList<Integer>> arr = new ArrayList<>();
+		for (int i = 0; i < edges.length; i++) {
+			arr.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			if (edges[i] != -1) {
+				arr.get(i).add(edges[i]);
+			}
+		}
+		int[] dist = new int[edges.length];
+		boolean[] visited = new boolean[edges.length];
+		Arrays.fill(visited,false);
+		Arrays.fill(dist,Integer.MAX_VALUE);
+		int[] dist1 = new int[edges.length];
+		Arrays.fill(dist1,Integer.MAX_VALUE);
+		bfs(dist,visited,arr,node1);
+		Arrays.fill(visited,false);
+		bfs(dist1,visited,arr,node2);
+		int min = Integer.MAX_VALUE;
+		int node = -1;
+		for (int i = 0; i < edges.length; i++) {
+			if (dist[i] == Integer.MAX_VALUE || dist1[i] == Integer.MAX_VALUE) {
+				continue;
+			} 
+			else if (min > (Math.max(dist[i],dist1[i]))) {
+				min = Math.max(dist[i],dist1[i]);
+				node = i;
+			}
+		}
+		return min == Integer.MAX_VALUE ? -1 : node;
+	}
+}

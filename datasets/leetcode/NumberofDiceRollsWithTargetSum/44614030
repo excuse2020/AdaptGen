@@ -1,0 +1,34 @@
+class Solution {
+	int MOD = 1000000007;
+	int numRollsToTarget(int x, int k, int t) {
+		if (x == 0) {
+			if (t == 0) {
+				return 1;
+			}
+			return 0;
+		}
+		int sum = 0;
+		for (int i = 1; i <= k; i++) {
+			if (t < i) {
+				break;
+			}
+			int p = numRollsToTarget(x - 1,k,t - i);
+			sum += p;
+		}
+		return sum;
+	}
+	int numRollsToTargetTabulation(int x, int k, int t) {
+		int[][] dp = new int[x + 1][t + 1];
+		for (int i = 1; i <= k && i <= t; i++) {
+			dp[1][i] = 1;
+		}
+		for (int n = 2; n <= x; n++) {
+			for (int target = 1; target <= t; target++) {
+				for (int i = 1; i <= k && i < target; i++) {
+					dp[n][target] = (dp[n][target] + dp[n - 1][target - i]) % MOD;
+				}
+			}
+		}
+		return dp[x][t];
+	}
+}

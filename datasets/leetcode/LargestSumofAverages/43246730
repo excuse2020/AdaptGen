@@ -1,0 +1,23 @@
+class Solution {
+	double largestSumOfAverages(int[] nums, int k) {
+		double[][][] memo = new double[nums.length][nums.length][k];
+		for (double[][] arr: memo) {	
+			for (double[] row: arr) {	
+				Arrays.fill(row,-1);
+			}
+		}
+		return slv(0,0,0,k - 1,nums,memo);
+	}
+	double slv(int n, int sum, int count, int k, int[] nums, double[][][] memo) {
+		if (n >= nums.length) {
+			return count == 0 ? 0 : (sum * 1.0) / count;
+		}
+		if (memo[n][count][k] != -1) {
+			return memo[n][count][k];
+		}
+		if (k == 0 || count == 0) {
+			return memo[n][count][k] = slv(n + 1,sum + nums[n],count + 1,k,nums,memo);
+		}
+		return memo[n][count][k] = Math.max(slv(n + 1,sum + nums[n],count + 1,k,nums,memo),(sum * 1.0) / count + slv(n + 1,nums[n],1,k - 1,nums,memo));
+	}
+}

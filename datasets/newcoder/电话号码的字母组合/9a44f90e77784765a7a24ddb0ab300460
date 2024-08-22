@@ -1,0 +1,39 @@
+class Solution {
+	ArrayList<String> ans = new ArrayList<>();
+	ArrayList<String> phoneNumber(String num) {
+		HashMap<Character, ArrayList<Character>> hashMap = new HashMap<>();
+		int index = 0;
+		for (int i = 2; i <= 9; i++) {
+			ArrayList<Character> tmpArr = new ArrayList<>();
+			if (i == 7 || i == 9) {
+				for (int j = 0; j < 4; j++) {
+					tmpArr.add((char) ('A' + index));
+					index++;
+				}
+			} 
+			else {
+				for (int j = 0; j < 3; j++) {
+					tmpArr.add((char) ('A' + index));
+					index++;
+				}
+			}
+			hashMap.put((char) ('0' + i),tmpArr);
+		}
+		char[] nums = num.toCharArray();
+		process("",nums,0,hashMap);
+		return ans;
+	}
+	void process(String previousString, char[] nums, int index, HashMap<Character, ArrayList<Character>> hashMap) {
+		if (index >= nums.length) {
+			ans.add(new String(previousString));
+			return;
+		}
+		char currentChar = nums[index];
+		ArrayList<Character> chrs = hashMap.get(currentChar);
+		for (char chr: chrs) {	
+			previousString += chr;
+			process(previousString,nums,index + 1,hashMap);
+			previousString = previousString.substring(0,previousString.length() - 1);
+		}
+	}
+}

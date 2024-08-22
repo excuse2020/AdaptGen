@@ -1,0 +1,21 @@
+class Solution {
+	int maxSumAfterPartitioning(int[] arr, int k) {
+		int[] dp = new int[arr.length];
+		Arrays.fill(dp,-1);
+		return maxSumAfterPartitioning(0,arr,k,dp);
+	}
+	int maxSumAfterPartitioning(int i, int[] arr, int k, int[] dp) {
+		if (i == arr.length) {
+			return 0;
+		}
+		if (dp[i] != -1) {
+			return dp[i];
+		}
+		int res = 0, curr_max = -1;
+		for (int j = i; j < arr.length && j - i + 1 <= k; j++) {
+			curr_max = Math.max(curr_max,arr[j]);
+			res = Math.max(res,(j - i + 1) * curr_max + maxSumAfterPartitioning(j + 1,arr,k,dp));
+		}
+		return dp[i] = res;
+	}
+}

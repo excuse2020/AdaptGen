@@ -1,0 +1,63 @@
+class Solution {
+	int[] buses, passengers;
+	int capacity;
+	boolean canWeOccupyCurrentBusAtBusArrivalTime(int seatsOccupied, int busId, int lastSelectedPassengId) {
+		if (seatsOccupied == 0) {
+			return true;
+		}
+		if (seatsOccupied < capacity && passengers[lastSelectedPassengId] < buses[busId]) {
+			return true;
+		}
+		return false;
+	}
+	int findMaxPossibleTimeWithPassengers(int[] passengers, int earlistPassengId, int latestPassengId) {
+		int curPassengId = earlistPassengId;
+		int arrivalTimeOfPrevPasseng = earlistPassengId == 0 ? 0 : passengers[earlistPassengId - 1];
+		int latestTime = Integer.MIN_VALUE;
+		while (curPassengId <= latestPassengId) {
+			int arrivalTimeOfCurPasseng = passengers[curPassengId];
+			if (arrivalTimeOfCurPasseng - arrivalTimeOfPrevPasseng > 1) {
+				latestTime = arrivalTimeOfCurPasseng - 1;
+			}
+			arrivalTimeOfPrevPasseng = arrivalTimeOfCurPasseng;
+			curPassengId++;
+		}
+		return latestTime;
+	}
+	int getLastIdOfPassengThatCanOccupySeat(int[] passengers, int busTime, int curPassengId) {
+		int count = 0;
+		while (count < capacity && curPassengId < passengers.length && passengers[curPassengId] <= busTime) {
+			curPassengId++;
+			count++;
+		}
+		return curPassengId - 1;
+	}
+	int latestTimeCatchTheBus(int[] buses, int[] passengers, int capacity) {
+		this.buses = buses;
+		this.capacity = capacity;
+		this.passengers = passengers;
+		Arrays.sort(buses);
+		Arrays.sort(passengers);
+		int curBusId = 0;
+		int curPassengId = 0;
+		int result = 1;
+		while (curBusId < buses.length && curPassengId < passengers.length) {
+			int lastSelectedPassengId = getLastIdOfPassengThatCanOccupySeat(passengers,buses[curBusId],curPassengId);
+			int seatsOccupied = lastSelectedPassengId - curPassengId + 1;
+			int latestTimeIfWeSitInCurrentBus;
+			if (canWeOccupyCurrentBusAtBusArrivalTime(seatsOccupied,curBusId,lastSelectedPassengId)) {
+				latestTimeIfWeSitInCurrentBus = buses[curBusId];
+			} 
+			else {
+				latestTimeIfWeSitInCurrentBus = findMaxPossibleTimeWithPassengers(passengers,curPassengId,lastSelectedPassengId);
+			}
+			result = Math.max(result,latestTimeIfWeSitInCurrentBus);
+			curPassengId = lastSelectedPassengId + 1;
+			curBusId++;
+		}
+		if (curBusId < buses.length) {
+			result = buses[buses.length - 1];
+		}
+		return result;
+	}
+}

@@ -1,0 +1,25 @@
+class Solution {
+	int sumSubarrayMins(int[] arr) {
+		int n = arr.length;
+		int[] leftMin = new int[n];
+		int[] rightMin = new int[n];
+		Stack<Integer> st = new Stack<>();
+		for (int i = 0; i < n; i++) {
+			while (!st.isEmpty() && arr[st.peek()] >= arr[i]) {
+				rightMin[st.pop()] = i;
+			}
+			leftMin[i] = st.isEmpty() ? -1 : st.peek();
+			st.push(i);
+		}
+		while (!st.isEmpty()) {
+			rightMin[st.pop()] = n;
+		}
+		int mod = (int) (1e9 + 7);
+		int sum = 0;
+		for (int i = 0; i < n; i++) {
+			int count = (int) ((1L * (i - leftMin[i])) % mod);
+			sum = (sum + count) % mod;
+		}
+		return sum;
+	}
+}

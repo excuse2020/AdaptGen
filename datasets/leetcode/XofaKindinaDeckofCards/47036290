@@ -1,0 +1,58 @@
+class Solution {
+	boolean hasGroupsSizeX(int[] deck) {
+		int min = deck[0];
+		int max = deck[0];
+		for (int card: deck) {	
+			min = Math.min(min,card);
+			max = Math.max(max,card);
+		}
+		int[] cnt = new int[max - min + 1];
+		for (int card: deck) {	
+			cnt[card - min]++;
+		}
+		int minCards = Integer.MAX_VALUE;
+		for (int freq: cnt) {	
+			if (freq != 0) {
+				minCards = Math.min(minCards,freq);
+			}
+		}
+		if (minCards == 1) {
+			return false;
+		}
+		List<Integer> primeFactors = primeFactors(minCards);
+		for (int groupSize: primeFactors) {	
+			boolean flag = true;
+			for (int freq: cnt) {	
+				if (freq % groupSize != 0) {
+					flag = false;
+					break;
+				}
+			}
+			if (flag) {
+				return true;
+			}
+		}
+		return false;
+	}
+	List<Integer> primeFactors(int n) {
+		List<Integer> res = new ArrayList<>();
+		if (n % 2 == 0) {
+			res.add(2);
+			while (n % 2 == 0) {
+				n /= 2;
+			}
+		}
+		for (int i = 3; i * i < n; i += 2) {
+			if (n % i == 0) {
+				res.add(i);
+				while (n % i == 0) {
+					n /= i;
+				}
+			}
+		}
+		if (n > 1) {
+			res.add(n);
+		}
+		return res;
+	}
+}

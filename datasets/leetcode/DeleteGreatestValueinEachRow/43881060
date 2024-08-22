@@ -1,0 +1,26 @@
+class Solution {
+	int deleteGreatestValue(int[][] grid) {
+		PriorityQueue<Pair<Integer, Integer>> matrixMaxHeap = new PriorityQueue<>((a, b) -> {b.getKey() - a.getKey()});
+		PriorityQueue<Pair<Integer, Integer>> rowMaxHeap = new PriorityQueue<>((a, b) -> {b.getKey() - a.getKey()});
+		int sum = 0;
+		int len = grid[0].length;
+		for (int index = 0; index < len; index++) {
+			matrixMaxHeap.clear();
+			int rows = grid.length;
+			for (int i = 0; i < rows; i++) {
+				rowMaxHeap.clear();
+				int columns = grid[i].length;
+				for (int j = 0; j < columns; j++) {
+					if (grid[i][j] != -1) {
+						rowMaxHeap.add(new Pair(grid[i][j], j));
+					}
+				}
+				matrixMaxHeap.add(rowMaxHeap.peek());
+				int columnWithLargestValue = rowMaxHeap.peek().getValue();
+				grid[i][columnWithLargestValue] = -1;
+			}
+			sum += matrixMaxHeap.peek().getKey();
+		}
+		return sum;
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	boolean isValid(List<String> nums, int n) {
+		int sum = 0;
+		for (String s: nums) {	
+			sum += Integer.valueOf(s);
+		}
+		return n == sum;
+	}
+	int punishmentNumber(int n) {
+		Set<Integer> result = new HashSet<>();
+		result.add(1);
+		for (int i = 2; i <= n; i++) {
+			String newNum = String.valueOf(i * i);
+			rec(newNum,i,new ArrayList<>(),result);
+		}
+		int sum = 0;
+		for (int i = 1; i <= n; i++) {
+			if (result.contains(i)) {
+				sum += (i * i);
+			}
+		}
+		return sum;
+	}
+	void rec(String str, int num, List<String> partition, Set<Integer> result) {
+		if (str.isEmpty()) {
+			if (isValid(partition,num)) {
+				result.add(num);
+			}
+			return;
+		}
+		int len = str.length();
+		for (int i = 1; i <= len; i++) {
+			String sub = str.substring(0,i);
+			partition.add(sub);
+			rec(str.substring(i),num,partition,result);
+			partition.remove(partition.size() - 1);
+		}
+	}
+}

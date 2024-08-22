@@ -1,0 +1,57 @@
+class Solution {
+	boolean isvalidpredecessor(String a, String b) {
+		if (a.length() != b.length() - 1) {
+			return false;
+		}
+		int diffcount = 0;
+		char[] ac = a.toCharArray();
+		char[] bc = b.toCharArray();
+		int i = 0;
+		int j = 0;
+		while (i < ac.length && j < bc.length) {
+			if (ac[i] != bc[j]) {
+				diffcount++;
+				if (diffcount > 1) {
+					return false;
+				}
+				j++;
+			} 
+			else {
+				i++;
+				j++;
+			}
+		}
+		while (j < bc.length && diffcount < 2) {
+			diffcount++;
+			j++;
+		}
+		if (diffcount == 1) {
+			return true;
+		} 
+		else {
+			return false;
+		}
+	}
+	int longestStrChain(String[] words) {
+		Arrays.sort(words,new Comparator<String>());
+		int result = new int[words.length];
+		result[0] = 1;
+		for (int i = 1; i < words.length; i++) {
+			int temp = 0;
+			for (int j = 0; j < i; j++) {
+				if (isvalidpredecessor(words[j],words[i])) {
+					temp = Math.max(temp,result[j]);
+				}
+			}
+			temp++;
+			result[i] = temp;
+		}
+		int max = -1;
+		for (int i = 0; i < result.length; i++) {
+			if (max < result[i]) {
+				max = result[i];
+			}
+		}
+		return max;
+	}
+}

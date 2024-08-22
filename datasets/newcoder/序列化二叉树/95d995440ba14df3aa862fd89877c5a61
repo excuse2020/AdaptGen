@@ -1,0 +1,78 @@
+class Solution {
+	StringBuilder in = new StringBuilder();
+	StringBuilder pre = new StringBuilder();
+	TreeNode Deserialize(String str) {
+		if (str == null || str.equals("")) {
+			return null;
+		}
+		String[] s = str.split(";");
+		String p = s[0];
+		String i = s[1];
+		String[] pWord = p.split(",");
+		String[] iWord = i.split(",");
+		return generateTree(toIntegerArray(pWord),toIntegerArray(iWord));
+	}
+	String Serialize(TreeNode root) {
+		if (root == null) {
+			return "";
+		}
+		preOrderTraverse(root);
+		inOrderTraverse(root);
+		pre = pre.append(";").append(in);
+		return pre.toString();
+	}
+	TreeNode generateTree(int[] preorder, int[] infixorder) {
+		if (preorder == null || infixorder == null || preorder.length == 0) {
+			return null;
+		}
+		if (preorder.length == 1) {
+			return new TreeNode(preorder[0]);
+		}
+		int n = 0;
+		for (int i = 0; i < infixorder.length; ++i) {
+			if (infixorder[i] == preorder[0]) {
+				n = i;
+				break;
+			}
+		}
+		int[] p1 = new int[n];
+		int[] p2 = new int[preorder.length - n];
+		int[] i1 = new int[n];
+		int[] i2 = new int[p2.length];
+		for (int i = 0; i < n; ++i) {
+			p1[i] = preorder[i + 1];
+			i1[i] = infixorder[i];
+		}
+		for (int i = 0; i < p2.length; ++i) {
+			p2[i] = preorder[i + n + 1];
+			i2[i] = infixorder[i + n + 1];
+		}
+		TreeNode root = new TreeNode(preorder[0]);
+		root.left = generateTree(p1,i1);
+		root.right = generateTree(p2,i2);
+		return root;
+	}
+	void inOrderTraverse(TreeNode treeNode) {
+		if (treeNode == null) {
+			return;
+		}
+		inOrderTraverse(treeNode.left);
+		in.append(treeNode.val).append(",");
+		inOrderTraverse(treeNode.right);
+	}
+	void preOrderTraverse(TreeNode treeNode) {
+		if (treeNode == null) {
+			return;
+		}
+		pre.append(treeNode.val).append(",");
+		preOrderTraverse(treeNode.left);
+		preOrderTraverse(treeNode.right);
+	}
+	int[] toIntegerArray(String[] str) {
+		int[] res = new int[str.length];
+		for (int i = 0; i < str.length; ++i) {
+			res[i] = Integer.valueOf(str[i]);
+		}
+		return res;
+	}
+}

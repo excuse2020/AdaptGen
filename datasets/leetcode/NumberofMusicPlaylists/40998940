@@ -1,0 +1,41 @@
+class Solution {
+	int MOD = (int) (1e9 + 7);
+	long memoizationUtility(int n, int k, int currGoal, int oldSongs, long[][] cache) {
+		if (currGoal == 0 && oldSongs == n) {
+			return 1;
+		}
+		if (currGoal == 0 || oldSongs > n) {
+			return 0;
+		}
+		if (cache[currGoal][oldSongs] != -1) {
+			return cache[currGoal][oldSongs];
+		}
+		long ans = 0;
+		ans = ((n - oldSongs) * memoizationUtility(n,k,currGoal - 1,oldSongs + 1,cache)) % MOD;
+		if (oldSongs > k) {
+			ans += ((oldSongs - k) * memoizationUtility(n,k,currGoal - 1,oldSongs,cache)) % MOD;
+		}
+		return cache[currGoal][oldSongs] = ans % MOD;
+	}
+	int numMusicPlaylists(int n, int goal, int k) {
+		long[][] cache = new long[goal + 1][n + 1];
+		for (long[] row: cache) {	
+			Arrays.fill(row,-1);
+		}
+		return (int) memoizationUtility(n,k,goal,0,cache);
+	}
+	long recursionUtility(int n, int k, int currGoal, int oldSongs) {
+		if (currGoal == 0 && oldSongs == n) {
+			return 1;
+		}
+		if (currGoal == 0 || oldSongs > n) {
+			return 0;
+		}
+		long ans = 0;
+		ans = ((n - oldSongs) * recursionUtility(n,k,currGoal - 1,oldSongs + 1)) % MOD;
+		if (oldSongs > k) {
+			ans += ((oldSongs - k) * recursionUtility(n,k,currGoal - 1,oldSongs)) % MOD;
+		}
+		return ans % MOD;
+	}
+}

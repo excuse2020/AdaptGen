@@ -1,0 +1,27 @@
+class Solution {
+	Map<Integer, Integer> memo = new HashMap<>();
+	int n;
+	TreeSet<Integer> set = new TreeSet<>();
+	int helper(int i, int j) {
+		int key = i * (n + 1) + j;
+		if (memo.containsKey(key)) {
+			return memo.get(key);
+		}
+		int res = Integer.MAX_VALUE;
+		for (int c: set.subSet(i,false,j,false)) {	
+			res = Math.min(res,(j - i) + helper(i,c));
+		}
+		if (res == Integer.MAX_VALUE) {
+			res = 0;
+		}
+		memo.put(key,res);
+		return res;
+	}
+	int minCost(int n, int[] cuts) {
+		for (int c: cuts) {	
+			set.add(c);
+		}
+		this.n = n;
+		return helper(0,n);
+	}
+}

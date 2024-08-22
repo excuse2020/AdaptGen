@@ -1,0 +1,24 @@
+class Solution {
+	HashMap<String, Integer> dp = new HashMap<>();
+	int memo(int l, int r, int cuts) {
+		if (r - l == 1) {
+			return 0;
+		}
+		String key = Integer.toString(l) + "_";
+		if (dp.containsKey(key)) {
+			return dp.get(key);
+		}
+		int ans = Integer.MAX_VALUE;
+		for (int c: cuts) {	
+			if (l < c && c < r) {
+				ans = Math.min((r - l) + memo(l,c,cuts),ans);
+			}
+		}
+		ans = ans == Integer.MAX_VALUE ? 0 : ans;
+		dp.put(key,ans);
+		return ans;
+	}
+	int minCost(int n, int[] cuts) {
+		return memo(0,n,cuts);
+	}
+}

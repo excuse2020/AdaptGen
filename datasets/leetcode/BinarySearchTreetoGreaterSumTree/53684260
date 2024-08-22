@@ -1,0 +1,31 @@
+class Solution {
+	TreeNode bstToGst(TreeNode root) {
+		HashMap<Integer, Integer> mp = new HashMap<>();
+		PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+		traverse(root,pq);
+		int sum = 0;
+		while (!pq.isEmpty()) {
+			int curr = pq.remove();
+			sum += curr;
+			mp.put(curr,sum);
+		}
+		buildSumTree(root,mp);
+		return root;
+	}
+	void buildSumTree(TreeNode root, Map<Integer, Integer> mp) {
+		if (root == null) {
+			return;
+		}
+		root.val = mp.get(root.val);
+		buildSumTree(root.left,mp);
+		buildSumTree(root.right,mp);
+	}
+	void traverse(TreeNode root, PriorityQueue<Integer> pq) {
+		if (root == null) {
+			return;
+		}
+		pq.add(root.val);
+		traverse(root.left,pq);
+		traverse(root.right,pq);
+	}
+}

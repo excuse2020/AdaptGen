@@ -1,0 +1,85 @@
+class Solution {
+	boolean diffByOne(String s1, String s2) {
+		if (s1.length() != s2.length()) {
+			return false;
+		}
+		int count = 0;
+		for (int i = 0; i < s1.length(); i++) {
+			if (s1.charAt(i) != s2.charAt(i)) {
+				count++;
+			}
+		}
+		return count == 1 ? true : false;
+	}
+	List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+		wordList.add(0,beginWord);
+		HashMap<String, List<String>> adj_list = graph(wordList);
+		Map<String, Integer> levels = new HashMap<>();
+		levels.put(beginWord,0);
+		Set<String> visited = new HashSet<>(wordList.size());
+		Queue<String> q = new LinkedList<>();
+		q.add(beginWord);
+		visited.add(beginWord);
+		int cnt = 0;
+		int lev = 0;
+		while (!q.isEmpty()) {
+			int size = q.size();
+			for (int i = 0; i < size; i++) {
+				String poll = q.poll();
+				int currLevel = levels.get(poll);
+				if (poll.equals(endWord)) {
+					lev = cnt;
+					break;
+				}
+				List<String> neighs = adj_list.get(poll);
+				for (String neigh: neighs) {	
+					if (!visited.contains(neigh)) {
+						visited.add(neigh);
+						q.add(neigh);
+						levels.put(neigh,currLevel + 1);
+					}
+				}
+			}
+			cnt++;
+		}
+		List<List<String>> res = new ArrayList<>();
+		if (lev != 0) {
+			reverseTraverse(res,beginWord,endWord,new ArrayList<String>(),adj_list,levels);
+			return res;
+		}
+		return res;
+	}
+	HashMap<String, List<String>> graph(List<String> wordList) {
+		HashMap<String, List<String>> adj_list = new HashMap<>();
+		for (String word: wordList) {	
+			adj_list.put(word,new ArrayList<String>());
+		}
+		for (int i = 0; i < wordList.size(); i++) {
+			for (int j = i + 1; j < wordList.size(); j++) {
+				if (diffByOne(wordList.get(i),wordList.get(j))) {
+					adj_list.get(wordList.get(i)).add(wordList.get(j));
+					adj_list.get(wordList.get(j)).add(wordList.get(i));
+				}
+			}
+		}
+		return adj_list;
+	}
+	void reverseTraverse(List<List<String>> res, String beginWord, String endWord, List<String> path, HashMap<String, List<String>> adj_list, Map<String, Integer> levels) {
+		if (endWord == beginWord) {
+			List<String> path_copy = new ArrayList<>();
+			for (String p: path) {	
+				path_copy.add(0,p);
+			}
+			path_copy.add(0,beginWord);
+			res.add(path_copy);
+			return;
+		}
+		path.add(endWord);
+		for (String neigh: adj_list.get(endWord)) {	
+			if (levels.get(endWord) != null && levels.get(neigh) != null && levels.get(endWord) - 1 == levels.get(neigh)) {
+				reverseTraverse(res,beginWord,neigh,path,adj_list,levels);
+			}
+		}
+		path.remove(path.size() - 1);
+	}
+}

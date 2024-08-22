@@ -1,0 +1,35 @@
+class Solution {
+	Integer[] dp;
+	int ch(int i, List<List<Integer>> h, int[] t) {
+		int m = 0;
+		if (dp[i] != null) {
+			return dp[i];
+		}
+		for (int j: h.get(i)) {	
+			m = Math.max(m,ch(j,h,t));
+		}
+		return dp[i] = m + t[i - 1];
+	}
+	int minimumTime(int n, int[][] relations, int[] time) {
+		List<List<Integer>> h = new ArrayList<>();
+		HashSet<Integer> hs = new HashSet<>();
+		dp = new Integer[n + 1];
+		for (int i = 0; i <= n; i++) {
+			h.add(new ArrayList<>());
+			if (i != n) {
+				hs.add(i + 1);
+			}
+		}
+		for (int[] a: relations) {	
+			h.get(a[1]).add(a[0]);
+			if (hs.contains(a[0])) {
+				hs.remove(a[0]);
+			}
+		}
+		int ans = 0;
+		for (int i: hs) {	
+			ans = Math.max(ans,ch(i,h,time));
+		}
+		return ans;
+	}
+}

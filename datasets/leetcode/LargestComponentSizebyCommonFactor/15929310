@@ -1,0 +1,67 @@
+class Solution {
+	int findParent(int a, int x) {
+		if (a[x] > 0) {
+			return x;
+		}
+		a[x] = -findParent(a,-a[x]);
+		return -a[x];
+	}
+	int largestComponentSize(int[] nums) {
+		int parent = new int[100001];
+		int sieve = new int[100001];
+		sieve(sieve);
+		Arrays.fill(parent,1);
+		int max = Integer.MIN_VALUE;
+		for (int i = 0; i < nums.length; i++) {
+			int y = nums[i];
+			if (y == 1) {
+				max = Math.max(max,1);
+				continue;
+			}
+			int p = -1;
+			while (y > 1) {
+				int divisor = sieve[y];
+				if (divisor == 0) {
+					divisor = y;
+				}
+				y /= divisor;
+				if (p == -1) {
+					p = divisor;
+				} 
+				else {
+					int A = findParent(parent,p);
+					int B = findParent(parent,divisor);
+					if (A == B) {
+					} 
+					else {
+						parent[A] += parent[B] - 1;
+						parent[B] = -A;
+					}
+				}
+			}
+			parent[findParent(parent,p)]++;
+			max = Math.max(max,parent[findParent(parent,p)]);
+		}
+		return max - 1;
+	}
+	void print(int a, int n) {
+		for (int i = 0; i < n; i++) {
+			System.out.print(a[i] + " ");
+		}
+		System.out.println();
+	}
+	void sieve(int a) {
+		int n = a.length;
+		for (int i = 2; i * i < a.length; i++) {
+			if (a[i] != 0) {
+				continue;
+			}
+			a[i] = i;
+			for (int j = i * i; j < a.length; j += i) {
+				if (a[j] == 0) {
+					a[j] = i;
+				}
+			}
+		}
+	}
+}

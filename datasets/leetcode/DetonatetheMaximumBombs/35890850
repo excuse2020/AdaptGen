@@ -1,0 +1,47 @@
+class Solution {
+	List<List<Integer>> createGraph(int[][] bombs) {
+		int n = bombs.length;
+		List<List<Integer>> adjList = new ArrayList<>(n);
+		for (int node = 0; node < n; node++) {
+			adjList.add(new ArrayList<>());
+			long x1 = bombs[node][0];
+			long y1 = bombs[node][1];
+			long r1 = bombs[node][2];
+			for (int otherNode = 0; otherNode < n; otherNode++) {
+				if (node != otherNode) {
+					long x2 = bombs[otherNode][0];
+					long y2 = bombs[otherNode][1];
+					long X = Math.abs(x1 - x2);
+					long Y = Math.abs(y1 - y2);
+					if (X * X + Y * Y <= r1 * r1) {
+						adjList.get(node).add(otherNode);
+					}
+				}
+			}
+		}
+		return adjList;
+	}
+	void dfs(int node, List<List<Integer>> adjList, boolean[] vis, int count) {
+		vis[node] = true;
+		count[0]++;
+		for (Integer adjNode: adjList.get(node)) {	
+			if (!vis[adjNode]) {
+				dfs(adjNode,adjList,vis,count);
+			}
+		}
+	}
+	int maximumDetonation(int[][] bombs) {
+		int n = bombs.length;
+		List<List<Integer>> adjList = createGraph(bombs);
+		boolean[] vis = new boolean[n];
+		int[] count = new int[1];
+		int maxValue = Integer.MIN_VALUE;
+		for (int node = 0; node < n; node++) {
+			Arrays.fill(vis,false);
+			count[0] = 0;
+			dfs(node,adjList,vis,count);
+			maxValue = Math.max(maxValue,count[0]);
+		}
+		return maxValue;
+	}
+}

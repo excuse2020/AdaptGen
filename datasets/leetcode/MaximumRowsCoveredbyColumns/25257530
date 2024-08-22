@@ -1,0 +1,45 @@
+class Solution {
+	void generatePossibilities(List<Set<Integer>> possibilities, HashSet<Integer> possibility, int maxCols, int colsToUse, int index) {
+		if (possibility.size() == colsToUse) {
+			possibilities.add(possibility);
+			return;
+		}
+		for (int i = index; i < maxCols; i++) {
+			if (possibility.contains(i)) {
+				continue;
+			}
+			possibility.add(i);
+			generatePossibilities(possibilities,new HashSet<Integer>(possibility),maxCols,colsToUse,i);
+			possibility.remove(i);
+		}
+	}
+	int getMaxCombination(Set<Integer> possibility, int[][] mat) {
+		int count = 0;
+		for (int row = 0; row < mat.length; row++) {
+			boolean possible = true;
+			for (int col = 0; col < mat[0].length; col++) {
+				if (mat[row][col] == 1) {
+					if (!possibility.contains(col)) {
+						possible = false;
+						break;
+					}
+				}
+			}
+			if (possible) {
+				count++;
+			}
+		}
+		return count;
+	}
+	int maximumRows(int[][] mat, int cols) {
+		List<Set<Integer>> possibilities = new ArrayList<>();
+		for (int i = 0; i < mat[0].length; i++) {
+			generatePossibilities(possibilities,new HashSet<Integer>(),mat[0].length,cols,i);
+		}
+		int result = Integer.MIN_VALUE;
+		for (Set<Integer> possibility: possibilities) {	
+			result = Math.max(result,getMaxCombination(possibility,mat));
+		}
+		return result;
+	}
+}

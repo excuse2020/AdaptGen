@@ -1,0 +1,43 @@
+class Solution {
+	int minSwaps(int[] arr) {
+		int swapsCount = 0;
+		for (int i = 0; i < arr.length - 1; i++) {
+			int minIndex = i;
+			for (int j = i + 1; j < arr.length; j++) {
+				if (arr[j] < arr[minIndex]) {
+					minIndex = j;
+				}
+			}
+			if (minIndex != i) {
+				int temp = arr[minIndex];
+				arr[minIndex] = arr[i];
+				arr[i] = temp;
+				swapsCount++;
+			}
+		}
+		return swapsCount;
+	}
+	int minimumOperations(TreeNode root) {
+		int ans = 0;
+		List<List<Integer>> list = new ArrayList<>();
+		Queue<TreeNode> q = new LinkedList<>();
+		q.offer(root);
+		while (!q.isEmpty()) {
+			int index = 0;
+			int s = q.size();
+			int[] arr = new int[s];
+			for (int i = 0; i < s; i++) {
+				TreeNode curr = q.poll();
+				arr[index++] = curr.val;
+				if (curr.left != null) {
+					q.add(curr.left);
+				}
+				if (curr.right != null) {
+					q.add(curr.right);
+				}
+			}
+			ans += minSwaps(arr);
+		}
+		return ans;
+	}
+}

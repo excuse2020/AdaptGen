@@ -1,0 +1,40 @@
+class Solution {
+	int mod = 1000000007;
+	int numRollsToTarget_dp(int n, int k, int target) {
+		int[][] dp = new int[n + 1][target + 1];
+		dp[0][0] = 1;
+		for (int nn = 0; nn <= n; nn++) {
+			for (int tt = 0; tt <= target; tt++) {
+				for (int i = 1; i <= k; i++) {
+					if (tt >= i && nn >= 1) {
+						dp[nn][tt] = (dp[nn][tt] + dp[nn - 1][tt - i]) % mod;
+					}
+				}
+			}
+		}
+		return dp[n][target];
+	}
+	int numRollsToTarget_memo(int n, int k, int target) {
+		Integer[][] memo = new Integer[n + 1][target + 1];
+		return recurse(n,k,target,memo);
+	}
+	int recurse(int n, int k, int target, Integer[][] memo) {
+		if (target == 0 && n == 0) {
+			return 1;
+		}
+		if (target < 0) {
+			return 0;
+		}
+		if (n < 0) {
+			return 0;
+		}
+		if (memo[n][target] != null) {
+			return memo[n][target];
+		}
+		int count = 0;
+		for (int i = 1; i <= k; i++) {
+			count = (count + recurse(n - 1,k,target - i,memo)) % mod;
+		}
+		return memo[n][target] = count;
+	}
+}

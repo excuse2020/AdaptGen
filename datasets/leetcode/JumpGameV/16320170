@@ -1,0 +1,38 @@
+class Solution {
+	int mem;
+	int helper(int[] arr, int d, int index) {
+		if (index >= arr.length || index < 0) {
+			return 0;
+		}
+		if (mem[index] != -1) {
+			return mem[index];
+		}
+		int result1 = 0;
+		for (int i = 1; i <= d; i++) {
+			if (index + i >= arr.length || arr[index + i] >= arr[index]) {
+				break;
+			}
+			result1 = Math.max(result1,1 + helper(arr,d,index + i));
+		}
+		int result2 = 0;
+		for (int i = 1; i <= d; i++) {
+			if (index - i < 0 || arr[index - i] >= arr[index]) {
+				break;
+			}
+			result2 = Math.max(result2,1 + helper(arr,d,index - i));
+		}
+		mem[index] = Math.max(result1,result2);
+		return mem[index];
+	}
+	int maxJumps(int[] arr, int d) {
+		int ans = 0;
+		mem = new int[arr.length + 1];
+		for (int i = 0; i < arr.length; i++) {
+			mem[i] = -1;
+		}
+		for (int i = 0; i < arr.length; i++) {
+			ans = Math.max(ans,helper(arr,d,i));
+		}
+		return 1 + ans;
+	}
+}

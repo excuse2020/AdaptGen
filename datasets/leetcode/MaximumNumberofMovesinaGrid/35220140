@@ -1,0 +1,54 @@
+class Solution {
+	int maxM(int[][] grid, int row, int col, int[][] mem) {
+		if (col >= grid[0].length || col < 0) {
+			return 0;
+		} 
+		else if (row >= grid.length || row < 0) {
+			return 0;
+		} 
+		else {
+			int co = 0, a = 0, b = 0, c = 0;
+			if (row - 1 >= 0 && col + 1 < grid[0].length) {
+				if (grid[row][col] < grid[row - 1][col + 1]) {
+					a = (mem[row - 1][col + 1] != -1) ? mem[row - 1][col + 1] : (maxM(grid,row - 1,col + 1,mem) + 1);
+					if (mem[row - 1][col + 1] == -1) {
+						mem[row - 1][col + 1] = a;
+					}
+				}
+			}
+			if (col + 1 < grid[0].length) {
+				if (grid[row][col] < grid[row][col + 1]) {
+					b = (mem[row][col + 1] != -1) ? mem[row][col + 1] : (maxM(grid,row,col + 1,mem) + 1);
+					if (mem[row][col + 1] == -1) {
+						mem[row][col + 1] = b;
+					}
+				}
+			}
+			if (row + 1 < grid.length && col + 1 < grid[0].length) {
+				if (grid[row][col] < grid[row + 1][col + 1]) {
+					c = (mem[row + 1][col + 1] != -1) ? mem[row + 1][col + 1] : (maxM(grid,row + 1,col + 1,mem) + 1);
+					if (mem[row + 1][col + 1] == -1) {
+						mem[row + 1][col + 1] = c;
+					}
+				}
+			}
+			co = (int) Math.max(a,b);
+			co = (int) Math.max(co,c);
+			return co;
+		}
+	}
+	int maxMoves(int[][] grid) {
+		int max = 0, temp = 0;
+		int[][] mem = new int[grid.length][grid[0].length];
+		for (int i = 0; i < grid.length; i++) {
+			Arrays.fill(mem[i],-1);
+		}
+		for (int i = 0; i < grid.length; i++) {
+			temp = maxM(grid,i,0,mem);
+			if (temp > max) {
+				max = temp;
+			}
+		}
+		return max;
+	}
+}

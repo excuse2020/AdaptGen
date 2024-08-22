@@ -1,0 +1,93 @@
+class Solution {
+	int buildMap(List<String> list, HashMap<String, Integer> stringMap, int[] start, int[] target, int[][] road, int len) {
+		int cnt = 0;
+		String index;
+		for (int i = 0; i < len; i++) {
+			int[] cur = road[i];
+			index = String.valueOf(cur[0]) + "_";
+			if (!stringMap.containsKey(index)) {
+				stringMap.put(index,cnt++);
+				list.add(index);
+			}
+			index = String.valueOf(cur[2]) + "_";
+			if (!stringMap.containsKey(index)) {
+				list.add(index);
+				stringMap.put(index,cnt++);
+			}
+		}
+		index = String.valueOf(start[0]) + "_";
+		if (!stringMap.containsKey(index)) {
+			stringMap.put(index,cnt++);
+			list.add(index);
+		}
+		index = String.valueOf(target[0]) + "_";
+		if (!stringMap.containsKey(index)) {
+			stringMap.put(index,cnt++);
+			list.add(index);
+		}
+		return cnt;
+	}
+	int distance(int x1, int y1, int x2, int y2) {
+		return Math.abs(x1 - x2) + Math.abs(y1 - y2);
+	}
+	int minimumCost(int[] start, int[] target, int[][] roads) {
+		int roadLen = pickTheBest(roads);
+		Arrays.sort(roads,0,roadLen,(a, b) -> {a[0] == b[0] ? a[1] - b[1] : a[0] - b[0]});
+		List<String> list = new ArrayList<>();
+		HashMap<String, Integer> map = new HashMap<>();
+		int cnt = buildMap(list,map,start,target,roads,roadLen);
+		int[][] graph = new int[cnt][cnt];
+		String fromIndex;
+		String toIndex;
+		for (int i = 0; i < cnt; i++) {
+			for (int j = 0; j < cnt; j++) {
+				String[] from = list.get(i).split("_");
+				int x1 = Integer.valueOf(from[0]);
+				int y1 = Integer.valueOf(from[1]);
+				String[] to = list.get(j).split("_");
+				int x2 = Integer.valueOf(to[0]);
+				int y2 = Integer.valueOf(to[1]);
+				graph[i][j] = distance(x1,y1,x2,y2);
+			}
+		}
+		for (int i = 0; i < roadLen; i++) {
+			fromIndex = roads[i][0] + "_";
+			toIndex = roads[i][2] + "_";
+			int fromi = map.get(fromIndex);
+			int toi = map.get(toIndex);
+			graph[fromi][toi] = Math.min(graph[fromi][toi],roads[i][4]);
+		}
+		for (int i = 0; i < cnt; i++) {
+			for (int from = 0; from < cnt; from++) {
+				for (int to = 0; to < cnt; to++) {
+					graph[from][to] = Math.min(graph[from][to],graph[from][i] + graph[i][to]);
+				}
+			}
+		}
+		String startIndex = start[0] + "_";
+		int starti = map.get(startIndex);
+		String targetIndex = target[0] + "_";
+		int targeti = map.get(targetIndex);
+		return graph[starti][targeti];
+	}
+	int pickTheBest(int[][] roads) {
+		int r = roads.length;
+		for (int i = 0; i < r; i++) {
+			int[] road = roads[i];
+			int distance = distance(road[0],road[1],road[2],road[3]);
+			if (distance > road[4]) {
+				continue;
+			} 
+			else {
+				swap(roads,i,--r);
+				i--;
+			}
+		}
+		return r;
+	}
+	void swap(int[][] roads, int l, int r) {
+		int[] temp = roads[l];
+		roads[l] = roads[r];
+		roads[r] = temp;
+	}
+}

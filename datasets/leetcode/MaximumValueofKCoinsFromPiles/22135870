@@ -1,0 +1,36 @@
+class Solution {
+	int helper(List<List<Integer>> piles, int k, int start, int dp) {
+		if (start >= piles.size()) {
+			if (k != 0) {
+				return Integer.MIN_VALUE;
+			}
+			if (k == 0) {
+				return 0;
+			}
+		}
+		if (dp[start][k] != -1) {
+			return dp[start][k];
+		}
+		if (k == 0) {
+			return dp[start][k] = 0;
+		}
+		int op = helper(piles,k,start + 1,dp);
+		int n = Math.min(piles.get(start).size(),k);
+		int sum = 0;
+		for (int i = 0; i < n; i++) {
+			sum += piles.get(start).get(i);
+			int op2 = helper(piles,k - i,start + 1,dp);
+			if (op2 != Integer.MIN_VALUE) {
+				op = Math.max(op,sum + op2);
+			}
+		}
+		return dp[start][k] = op;
+	}
+	int maxValueOfCoins(List<List<Integer>> piles, int k) {
+		int dp = new int[piles.size()][k + 1];
+		for (int x: dp) {	
+			Arrays.fill(x,-1);
+		}
+		return helper(piles,k,0,dp);
+	}
+}

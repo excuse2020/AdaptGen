@@ -1,0 +1,35 @@
+class Solution {
+	HashMap<Integer, Integer> hm = new HashMap<>();
+	int lowestCommonAncestor(TreeNode root, int o1, int o2) {
+		if (root.val == o1 || root.val == o2) {
+			return root.val;
+		}
+		ArrayList<Integer> list = new ArrayList<>();
+		recur(root);
+		list.add(o1);
+		while (hm.get(o1) != null) {
+			list.add(hm.get(o1));
+			o1 = hm.get(o1);
+		}
+		if (list.contains(o2)) {
+			return o2;
+		}
+		while (hm.get(o2) != null) {
+			o2 = hm.get(o2);
+			if (list.contains(o2)) {
+				return o2;
+			}
+		}
+		return -1;
+	}
+	void recur(TreeNode root) {
+		if (root.left != null) {
+			hm.put(root.left.val,root.val);
+			recur(root.left);
+		}
+		if (root.right != null) {
+			hm.put(root.right.val,root.val);
+			recur(root.right);
+		}
+	}
+}

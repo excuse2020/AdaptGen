@@ -1,0 +1,39 @@
+class Solution {
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		ArrayList<Integer>[] graph = new ArrayList[n];
+		int[] discovery = new int[n];
+		int[] low = new int[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		while (!connections.isEmpty()) {
+			graph[connections.getFirst().getFirst()].add(connections.getFirst().get(1));
+			graph[connections.getFirst().get(1)].add(connections.getFirst().getFirst());
+			connections.removeFirst();
+		}
+		tarjansAlgo(connections,graph,discovery,low,new boolean[n],0,-1);
+		return connections;
+	}
+	void tarjansAlgo(List<List<Integer>> criticalPoints, ArrayList<Integer>[] graph, int[] dt, int[] low, boolean[] visited, int curr, int parent) {
+		visited[curr] = true;
+		for (int node: graph[curr]) {	
+			if (node == parent) {
+				continue;
+			}
+			if (visited[node]) {
+				low[curr] = Math.min(dt[node],low[curr]);
+			} 
+			else {
+				low[node] = dt[node] = dt[curr] + 1;
+				tarjansAlgo(criticalPoints,graph,dt,low,visited,node,curr);
+				low[curr] = Math.min(low[curr],low[node]);
+				if (dt[curr] < low[node]) {
+					List<Integer> inner = new ArrayList<>();
+					inner.add(curr);
+					inner.add(node);
+					criticalPoints.add(inner);
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,31 @@
+class Solution {
+	void dfs(int[] nums, boolean[] isUseds, int depth, Deque<Integer> path, ArrayList<ArrayList<Integer>> res) {
+		int len = nums.length;
+		if (path.size() == len) {
+			res.add(new ArrayList<Integer>(path));
+			return;
+		}
+		for (int i = 0; i < len; i++) {
+			int num = nums[i];
+			if (isUseds[i]) {
+				continue;
+			}
+			path.add(num);
+			isUseds[i] = true;
+			dfs(nums,isUseds,depth + 1,path,res);
+			isUseds[i] = false;
+			path.removeLast();
+		}
+	}
+	ArrayList<ArrayList<Integer>> permute(int[] num) {
+		int len = num.length;
+		ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
+		if (len == 0) {
+			return res;
+		}
+		Deque<Integer> path = new LinkedList<Integer>();
+		boolean[] isUseds = new boolean[len];
+		dfs(num,isUseds,0,path,res);
+		return res;
+	}
+}

@@ -1,0 +1,41 @@
+class Solution {
+	ListNode merge(ListNode l1, ListNode l2) {
+		ListNode fake_head = new ListNode(-1);
+		ListNode pre = fake_head;
+		ListNode cur1 = l1, cur2 = l2;
+		while (cur1 != null && cur2 != null) {
+			if (cur1.val < cur2.val) {
+				pre.next = cur1;
+				cur1 = cur1.next;
+			} 
+			else {
+				pre.next = cur2;
+				cur2 = cur2.next;
+			}
+			pre = pre.next;
+		}
+		if (cur1 != null) {
+			pre.next = cur1;
+		}
+		if (cur2 != null) {
+			pre.next = cur2;
+		}
+		return fake_head.next;
+	}
+	ListNode mergeHelper(ArrayList<ListNode> lists, int left, int right) {
+		if (left > right) {
+			return null;
+		}
+		if (left == right) {
+			return lists.get(left);
+		}
+		int mid = left + (right - left) / 2;
+		return merge(mergeHelper(lists,left,mid),mergeHelper(lists,mid + 1,right));
+	}
+	ListNode mergeKLists(ArrayList<ListNode> lists) {
+		if (lists == null || lists.size() < 1) {
+			return null;
+		}
+		return mergeHelper(lists,0,lists.size() - 1);
+	}
+}

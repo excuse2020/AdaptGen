@@ -1,0 +1,27 @@
+class Solution {
+	int numSubmatrixSumTarget(int[][] matrix, int target) {
+		int n = matrix.length;
+		int m = matrix[0].length;
+		for (int i = 0; i < n; i++) {
+			for (int j = 1; j < m; j++) {
+				matrix[i][j] = matrix[i][j] + matrix[i][j - 1];
+			}
+		}
+		int ans = 0;
+		for (int c2 = 0; c2 < m; c2++) {
+			for (int c1 = c2; c1 < m; c1++) {
+				HashMap<Integer, Integer> mp = new HashMap<>();
+				mp.put(0,1);
+				int sum = 0;
+				for (int row = 0; row < n; row++) {
+					sum += matrix[row][c1] - ((c2 > 0) ? matrix[row][c2 - 1] : 0);
+					if (mp.containsKey(sum - target)) {
+						ans += mp.get(sum - target);
+					}
+					mp.put(sum,mp.getOrDefault(sum,0) + 1);
+				}
+			}
+		}
+		return ans;
+	}
+}

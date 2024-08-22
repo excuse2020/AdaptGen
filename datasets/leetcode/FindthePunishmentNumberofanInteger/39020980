@@ -1,0 +1,42 @@
+class Solution {
+	boolean isPartitionPossible(int n) {
+		if (n == 1 || n == 9) {
+			return true;
+		}
+		if (n < 9) {
+			return false;
+		}
+		int sq = n * n, i = sq, digits = 0;
+		String no = Integer.toString(sq);
+		while (i > 0) {
+			i /= 10;
+			digits++;
+		}
+		if (partition(digits,no,n) == n) {
+			return true;
+		}
+		return false;
+	}
+	int partition(int digits, String no, int n) {
+		if (digits == 1 || Integer.valueOf(no) == n) {
+			return Integer.valueOf(no);
+		}
+		for (int j = 1; j < digits; j++) {
+			if (Integer.valueOf(no.substring(0,j)) + partition(digits - j,no.substring(j),n - Integer.valueOf(no.substring(0,j))) == n) {
+				return n;
+			}
+		}
+		return 0;
+	}
+	int punishmentNumber(int n) {
+		if (n == 0) {
+			return 0;
+		}
+		if (isPartitionPossible(n)) {
+			return n * n + punishmentNumber(n - 1);
+		} 
+		else {
+			return punishmentNumber(n - 1);
+		}
+	}
+}

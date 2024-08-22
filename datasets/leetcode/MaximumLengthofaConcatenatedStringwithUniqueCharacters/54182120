@@ -1,0 +1,26 @@
+class Solution {
+	int maxLength(List<String> arr) {
+		return recurse(arr,0,new HashSet<>());
+	}
+	int recurse(List<String> arr, int i, HashSet<Character> currSet) {
+		if (i == arr.size()) {
+			return currSet.size();
+		}
+		int len1 = recurse(arr,i + 1,currSet);
+		int len2 = 0;
+		String curr = arr.get(i);
+		boolean isValid = true;
+		HashSet<Character> newSet = new HashSet<>(currSet);
+		for (char c: curr.toCharArray()) {	
+			if (newSet.contains(c)) {
+				isValid = false;
+				break;
+			}
+			newSet.add(c);
+		}
+		if (isValid) {
+			len2 = recurse(arr,i + 1,newSet);
+		}
+		return Math.max(len1,len2);
+	}
+}

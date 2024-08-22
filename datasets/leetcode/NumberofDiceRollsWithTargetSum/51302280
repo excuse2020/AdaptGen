@@ -1,0 +1,42 @@
+class Solution {
+	int MOD = (int) 1e9 + 7;
+	int f(int n, int k, int target) {
+		if (n == 0) {
+			return target == 0 ? 1 : 0;
+		}
+		int count = 0;
+		for (int diceRollValue = 1; diceRollValue <= k; ++diceRollValue) {
+			count = (count + f(n - 1,k,target - diceRollValue)) % MOD;
+		}
+		return count;
+	}
+	int memoize(int n, int k, int target, int[][] dp) {
+		if (n == 0 || target < 0) {
+			return target == 0 ? 1 : 0;
+		}
+		if (dp[n][target] != -1) {
+			return dp[n][target];
+		}
+		int count = 0;
+		for (int diceRollValue = 1; diceRollValue <= k; ++diceRollValue) {
+			count = (count + memoize(n - 1,k,target - diceRollValue,dp)) % MOD;
+		}
+		return dp[n][target] = count;
+	}
+	int numRollsToTarget(int n, int k, int target) {
+		int[][] dp = new int[n + 1][target + 1];
+		dp[0][0] = 1;
+		for (int i = 1; i <= n; ++i) {
+			for (int j = 0; j <= target; ++j) {
+				int count = 0;
+				for (int diceRollValue = 1; diceRollValue <= k; ++diceRollValue) {
+					if (j - diceRollValue >= 0) {
+						count = (count + dp[i - 1][j - diceRollValue]) % MOD;
+					}
+				}
+				dp[i][j] = count;
+			}
+		}
+		return dp[n][target];
+	}
+}

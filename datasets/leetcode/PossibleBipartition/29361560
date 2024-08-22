@@ -1,0 +1,40 @@
+class Solution {
+	boolean dfs(Map<Integer, List<Integer>> graph, Map<Integer, Integer> groups, int assngdGroup, int person) {
+		if (groups.containsKey(person)) {
+			if (groups.get(person) == assngdGroup) {
+				return true;
+			} 
+			else {
+				return false;
+			}
+		}
+		groups.put(person,assngdGroup);
+		int counterGroup = assngdGroup ^ 1;
+		for (int neighb: graph.get(person)) {	
+			if (!dfs(graph,groups,counterGroup,neighb)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		if (dislikes.length == 0) {
+			return true;
+		}
+		Map<Integer, Integer> groups = new HashMap<>();
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		for (int[] dislike: dislikes) {	
+			int first = dislike[0], second = dislike[1];
+			graph.computeIfAbsent(first,(value) -> {new ArrayList<>()}).add(second);
+			graph.computeIfAbsent(second,(value) -> {new ArrayList<>()}).add(first);
+		}
+		for (int person: graph.keySet()) {	
+			if (!groups.containsKey(person)) {
+				if (!dfs(graph,groups,1,person)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

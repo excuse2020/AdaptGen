@@ -1,0 +1,50 @@
+class Solution {
+	Map<Integer, Set<Integer>> mp;
+	int[][] mtx;
+	List<Boolean> checkIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
+		mtx = new int[numCourses][numCourses];
+		mp = new HashMap();
+		for (int[] pre: prerequisites) {	
+			Set<Integer> tos = mp.getOrDefault(pre[0],new HashSet());
+			mtx[pre[0]][pre[1]] = 1;
+			tos.add(pre[1]);
+			mp.put(pre[0],tos);
+			mp.putIfAbsent(pre[1],new HashSet());
+		}
+		List<Boolean> res = new LinkedList();
+		for (int[] query: queries) {	
+			res.add(dfs(query[0],query[1]));
+		}
+		return res;
+	}
+	boolean dfs(int start, int end) {
+		if (!mp.containsKey(start) || !mp.containsKey(end)) {
+			mtx[start][end] = -1;
+			return false;
+		}
+		if (start == end) {
+			mtx[start][end] = 1;
+			return true;
+		}
+		if (mtx[start][end] == 1) {
+			return true;
+		} 
+		else if (mtx[start][end] == -1) {
+			return false;
+		} 
+		else {
+			for (int s: mp.get(start)) {	
+				if (dfs(s,end)) {
+					mtx[s][end] = 1;
+					mtx[start][end] = 1;
+					return true;
+				} 
+				else {
+					mtx[s][end] = -1;
+				}
+			}
+			mtx[start][end] = -1;
+			return false;
+		}
+	}
+}

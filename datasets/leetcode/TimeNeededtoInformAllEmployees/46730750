@@ -1,0 +1,23 @@
+class Solution {
+	int dfs(Map<Integer, List<Integer>> map, int node, int[] informTime) {
+		int time = informTime[node];
+		int max = 0;
+		for (int emp: map.getOrDefault(node,new ArrayList<>())) {	
+			int maxEmpTime = dfs(map,emp,informTime);
+			max = Math.max(max,time + maxEmpTime);
+		}
+		return max;
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			int man = manager[i];
+			if (man == -1) {
+				continue;
+			}
+			map.putIfAbsent(man,new ArrayList<>());
+			map.get(man).add(i);
+		}
+		return dfs(map,headID,informTime);
+	}
+}

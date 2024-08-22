@@ -1,0 +1,40 @@
+class Solution {
+	void backtrackBinaryWatch(int turnedOn, int currSum, List<String> resultList) {
+		var minutesMask = 0b111111;
+		var hours = (currSum >>> 6);
+		var minutes = currSum & minutesMask;
+		if (Integer.bitCount(currSum) == turnedOn) {
+			var timeSB = new StringBuilder();
+			timeSB.append(hours).append(":");
+			if (minutes > 9) {
+				timeSB.append(minutes);
+			} 
+			else {
+				timeSB.append("0").append(minutes);
+			}
+			resultList.add(timeSB.toString());
+		} 
+		else {
+			var index = 0b1;
+			while (index <= 0b1000000000) {
+				var currMask = ((index << 1) - 1);
+				if (((currMask & currSum) == 0) && ((hours | (index >>> 6)) <= 11)) {
+					backtrackBinaryWatch(turnedOn,currSum | index,resultList);
+				}
+				index <<= 1;
+			}
+		}
+	}
+	List<String> readBinaryWatch(int turnedOn) {
+		var result = new LinkedList<String>();
+		if (turnedOn == 9) {
+			return result;
+		}
+		if (turnedOn == 0) {
+			result.add("0:00");
+			return result;
+		}
+		backtrackBinaryWatch(turnedOn,0,result);
+		return result;
+	}
+}

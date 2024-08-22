@@ -1,0 +1,42 @@
+class Solution {
+	int binarySearch(int target, List<Integer> l) {
+		int left = 0, right = l.size();
+		while (left < right) {
+			int mid = (right + left) / 2;
+			if (target < l.get(mid)) {
+				right = mid;
+			} 
+			else {
+				left = mid + 1;
+			}
+		}
+		return left;
+	}
+	int longestArithSeqLength(int[] nums) {
+		int n = nums.length;
+		HashMap<Integer, List<Integer>> map = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			map.computeIfAbsent(nums[i],(k) -> {new ArrayList<>()}).add(i);
+		}
+		int answer = 1;
+		for (Map.Entry<Integer, List<Integer>> entry: map.entrySet()) {	
+			for (int diff = -500; diff <= 500; diff++) {
+				int cur = 1;
+				int value = entry.getKey();
+				int i = entry.getValue().get(0);
+				while (map.containsKey(value + diff)) {
+					List<Integer> indices = map.get(value + diff);
+					int idx = binarySearch(i,indices);
+					if (idx == indices.size()) {
+						break;
+					}
+					i = indices.get(idx);
+					value = nums[i];
+					cur++;
+				}
+				answer = Math.max(answer,cur);
+			}
+		}
+		return answer;
+	}
+}

@@ -1,0 +1,55 @@
+class Solution {
+	int findWinningPlayer(int[] skills, int k) {
+		if (k >= skills.length) {
+			int maxValue = skills[0];
+			int maxIndex = 0;
+			for (int i = 1; i < skills.length; i++) {
+				if (skills[i] > maxValue) {
+					maxValue = skills[i];
+					maxIndex = i;
+				}
+			}
+			return maxIndex;
+		}
+		Map<Integer, Integer> map = new HashMap<>();
+		LinkedList<Integer> list = new LinkedList<>();
+		for (int i = 0; i < skills.length; i++) {
+			list.add(skills[i]);
+			map.put(skills[i],i);
+		}
+		int winner = 0;
+		int count = 0;
+		while (true) {
+			int value1 = list.get(0);
+			int value2 = list.get(1);
+			if (value1 > value2) {
+				list.remove(1);
+				list.add(value2);
+				if (winner == value1) {
+					count++;
+				} 
+				else {
+					winner = value1;
+					count = 1;
+				}
+				if (count == k) {
+					return map.get(value1);
+				}
+			} 
+			else {
+				list.remove(0);
+				list.add(value1);
+				if (winner == value2) {
+					count++;
+				} 
+				else {
+					winner = value2;
+					count = 1;
+				}
+				if (count == k) {
+					return map.get(value2);
+				}
+			}
+		}
+	}
+}

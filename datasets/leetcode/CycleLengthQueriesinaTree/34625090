@@ -1,0 +1,31 @@
+class Solution {
+	int[] cycleLengthQueries(int n, int[][] queries) {
+		int ans = new int[queries.length];
+		int index = 0;
+		for (int[] query: queries) {	
+			int a = query[0];
+			int b = query[1];
+			if (a == b) {
+				ans[index++] = 1;
+				continue;
+			}
+			HashSet<Integer> set1 = new HashSet();
+			while (a > 0) {
+				set1.add(a);
+				a = (a % 2 == 0) ? a : --a;
+				a /= 2;
+			}
+			HashSet<Integer> set2 = new HashSet();
+			while (b > 0) {
+				set2.add(b);
+				b = (b % 2 == 0) ? b : --b;
+				b /= 2;
+			}
+			int res = set1.size() + set2.size();
+			set1.retainAll(set2);
+			res += -2 * set1.size() + 1;
+			ans[index++] = res;
+		}
+		return ans;
+	}
+}

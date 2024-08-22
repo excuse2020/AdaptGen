@@ -1,0 +1,33 @@
+class Solution {
+	String LCS(String s1, String s2) {
+		int len1 = s1.length();
+		int len2 = s2.length();
+		char[] arr1 = s1.toCharArray();
+		char[] arr2 = s2.toCharArray();
+		int[][] dp = new int[len1 + 1][len2 + 1];
+		for (int i = 1; i < len1 + 1; i++) {
+			for (int j = 1; j < len2 + 1; j++) {
+				if (arr1[i - 1] == arr2[j - 1]) {
+					dp[i][j] = dp[i - 1][j - 1] + 1;
+				} 
+				else {
+					dp[i][j] = Math.max(dp[i - 1][j],dp[i][j - 1]);
+				}
+			}
+		}
+		StringBuffer sb = new StringBuffer();
+		for (int i = len1, j = len2; i >= 0 && j >= 0 && sb.length() < dp[len1][len2]; i--, j--) {
+			while (dp[i][j - 1] == dp[i][j]) {
+				j--;
+			}
+			while (dp[i - 1][j] == dp[i][j]) {
+				i--;
+			}
+			sb.insert(0,arr1[i - 1]);
+		}
+		if (sb.length() == 0) {
+			return "-1";
+		}
+		return sb.toString();
+	}
+}

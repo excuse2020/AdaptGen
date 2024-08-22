@@ -1,0 +1,58 @@
+class Solution {
+	boolean isNumber(String str) {
+		char[] chars = str.toCharArray();
+		boolean flag = false;
+		for (char aChar: chars) {	
+			if (aChar >= '0' && aChar <= '9') {
+				flag = true;
+			} 
+			else {
+				return false;
+			}
+		}
+		return flag;
+	}
+	String solve(String IP) {
+		if (IP.contains(".")) {
+			String[] ips = IP.split("\\.");
+			if (ips.length != 4 || IP.startsWith(".") || IP.endsWith(".")) {
+				return "Neither";
+			}
+			for (int i = 0; i < ips.length; i++) {
+				String str = ips[i];
+				if (!isNumber(str)) {
+					return "Neither";
+				}
+				if ("".equals(str) || str.startsWith("0")) {
+					return "Neither";
+				}
+			}
+			return "IPv4";
+		} 
+		else if (IP.contains(":")) {
+			if (IP.startsWith(":") || IP.endsWith(":")) {
+				return "Neither";
+			}
+			String[] ips = IP.split("\\:");
+			if (ips.length != 8) {
+				return "Neither";
+			}
+			for (int i = 0; i < ips.length; i++) {
+				String str = ips[i];
+				if ("".equals(str) || str.length() > 4 || str.length() == 0) {
+					return "Neither";
+				}
+				for (char c: str.toCharArray()) {	
+					if ((c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F')) {
+						continue;
+					} 
+					else {
+						return "Neither";
+					}
+				}
+			}
+			return "IPv6";
+		}
+		return "Neither";
+	}
+}

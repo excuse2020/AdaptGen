@@ -1,0 +1,39 @@
+class Solution {
+	int solve(char[][] grid) {
+		int nr = grid.length;
+		int nc = grid[0].length;
+		int count = 0;
+		for (int r = 0; r < nr; r++) {
+			for (int c = 0; c < nc; c++) {
+				if (grid[r][c] == '1') {
+					count++;
+					grid[r][c] = '0';
+					Queue<Integer> bfs = new LinkedList<>();
+					bfs.offer(r * nc + c);
+					while (!bfs.isEmpty()) {
+						int temp = bfs.poll();
+						int row = temp / nc;
+						int col = temp % nc;
+						if (row - 1 >= 0 && grid[row - 1][col] == '1') {
+							bfs.offer((row - 1) * nc + col);
+							grid[row - 1][col] = '0';
+						}
+						if (row + 1 < nr && grid[row + 1][col] == '1') {
+							bfs.offer((row + 1) * nc + col);
+							grid[row + 1][col] = '0';
+						}
+						if (col - 1 >= 0 && grid[row][col - 1] == '1') {
+							bfs.offer(row * nc + col - 1);
+							grid[row][col - 1] = '0';
+						}
+						if (col + 1 < nc && grid[row][col + 1] == '1') {
+							bfs.offer(row * nc + col + 1);
+							grid[row][col + 1] = '0';
+						}
+					}
+				}
+			}
+		}
+		return count;
+	}
+}

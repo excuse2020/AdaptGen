@@ -1,0 +1,33 @@
+class Solution {
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		int inDegree = new int[numCourses];
+		List<List<Integer>> adjList = new ArrayList<>(numCourses);
+		for (int i = 0; i < numCourses; i++) {
+			adjList.add(new ArrayList<>());
+		}
+		for (int i = 0; i < prerequisites.length; i++) {
+			int[] prerequisite = prerequisites[i];
+			adjList.get(prerequisite[1]).add(prerequisite[0]);
+			inDegree[prerequisite[0]]++;
+		}
+		Queue<Integer> deque = new ArrayDeque<>();
+		for (int i = 0; i < numCourses; i++) {
+			if (inDegree[i] == 0) {
+				deque.offer(i);
+			}
+		}
+		int count = 0;
+		while (!deque.isEmpty()) {
+			int node = deque.poll();
+			count++;
+			for (int i = 0; i < adjList.get(node).size(); i++) {
+				int neighbor = adjList.get(node).get(i);
+				inDegree[neighbor]--;
+				if (inDegree[neighbor] == 0) {
+					deque.offer(neighbor);
+				}
+			}
+		}
+		return count == numCourses;
+	}
+}

@@ -1,0 +1,78 @@
+class Solution {
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		List<List<Integer>> ans = new ArrayList<>();
+		List<Integer> nodes = new ArrayList<>();
+		dfs(root,nodes);
+		Collections.sort(nodes);
+		for (int x: queries) {	
+			int a = searchA(nodes,x);
+			int b = searchB(nodes,x);
+			ans.add(new ArrayList(List.of(a,b)));
+		}
+		return ans;
+	}
+	void dfs(TreeNode root, List<Integer> nodes) {
+		if (root == null) {
+			return;
+		}
+		nodes.add(root.val);
+		dfs(root.left,nodes);
+		dfs(root.right,nodes);
+	}
+	int searchA(List<Integer> nodes, int target) {
+		if (target < nodes.get(0)) {
+			return -1;
+		}
+		if (target > nodes.get(nodes.size() - 1)) {
+			return nodes.get(nodes.size() - 1);
+		}
+		int l = 0;
+		int r = nodes.size() - 1;
+		int res = -1;
+		while (l <= r) {
+			int mid = l + (r - l) / 2;
+			if (nodes.get(mid) == target) {
+				res = nodes.get(mid);
+				break;
+			}
+			if (nodes.get(mid) < target) {
+				l = mid + 1;
+			}
+			if (nodes.get(mid) > target) {
+				r = mid - 1;
+				if (r >= 0 && r < nodes.size()) {
+					res = nodes.get(r);
+				}
+			}
+		}
+		return res;
+	}
+	int searchB(List<Integer> nodes, int target) {
+		if (target > nodes.get(nodes.size() - 1)) {
+			return -1;
+		}
+		if (target < nodes.get(0)) {
+			return nodes.get(0);
+		}
+		int l = 0;
+		int r = nodes.size() - 1;
+		int res = -1;
+		while (l <= r) {
+			int mid = l + (r - l) / 2;
+			if (nodes.get(mid) == target) {
+				res = nodes.get(mid);
+				break;
+			}
+			if (nodes.get(mid) < target) {
+				l = mid + 1;
+				if (l >= 0 && l < nodes.size()) {
+					res = nodes.get(l);
+				}
+			}
+			if (nodes.get(mid) > target) {
+				r = mid - 1;
+			}
+		}
+		return res;
+	}
+}

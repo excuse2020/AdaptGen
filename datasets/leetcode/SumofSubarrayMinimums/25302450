@@ -1,0 +1,18 @@
+class Solution {
+	int sumSubarrayMins(int[] arr) {
+		int modulo = 1_000_000_007;
+		int n = arr.length;
+		long res = 0;
+		Deque<Integer> mono = new ArrayDeque();
+		for (int idx = 0; idx < n + 1; idx++) {
+			while (!mono.isEmpty() && arr[mono.peekLast()] > (idx == n ? 0 : arr[idx])) {
+				int minIdx = mono.pollLast();
+				int fromIdx = mono.isEmpty() ? -1 : mono.peekLast();
+				int subarrayNo = ((minIdx - fromIdx) * (idx - minIdx));
+				res = (res + (long) arr[minIdx] * subarrayNo % modulo) % modulo;
+			}
+			mono.offerLast(idx);
+		}
+		return (int) res % modulo;
+	}
+}

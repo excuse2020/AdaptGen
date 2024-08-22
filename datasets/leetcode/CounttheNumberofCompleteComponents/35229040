@@ -1,0 +1,71 @@
+class Solution {
+	List<int[]> bfs(Map<Integer, List<Integer>> adjList, int start) {
+		List<int[]> ans = new ArrayList<>();
+		Queue<Integer> q = new LinkedList<>();
+		q.offer(start);
+		while (!q.isEmpty()) {
+			int u = q.poll();
+			for (int v: adjList.get(u)) {	
+				ans.add(new int{u, v});
+				q.offer(v);
+				adjList.get(v).remove(Integer.valueOf(u));
+			}
+			adjList.get(u).clear();
+		}
+		return ans;
+	}
+	int countCompleteComponents(int n, int[][] edges) {
+		List<List<int[]>> al = new ArrayList<>();
+		Set<Integer> globalSet = new HashSet<>();
+		Map<Integer, List<Integer>> adjList = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			adjList.put(i,new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			globalSet.add(edge[0]);
+			globalSet.add(edge[1]);
+			adjList.get(edge[0]).add(edge[1]);
+			adjList.get(edge[1]).add(edge[0]);
+		}
+		for (int vertex: adjList.keySet()) {	
+			if (!adjList.get(vertex).isEmpty()) {
+				al.add(bfs(adjList,vertex));
+			}
+		}
+		int count = 0;
+		for (List<int[]> l: al) {	
+			if (isCompleteConnectedComponent(l)) {
+				count++;
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			if (!globalSet.contains(i)) {
+				count++;
+			}
+		}
+		return count;
+	}
+	boolean hasEdge(List<int[]> edges, int u, int v) {
+		for (int[] edge: edges) {	
+			if ((edge[0] == u && edge[1] == v) || (edge[0] == v && edge[1] == u)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	boolean isCompleteConnectedComponent(List<int[]> edges) {
+		Set<Integer> vertices = new HashSet<>();
+		for (int[] edge: edges) {	
+			vertices.add(edge[0]);
+			vertices.add(edge[1]);
+		}
+		for (int u: vertices) {	
+			for (int v: vertices) {	
+				if (u != v && !hasEdge(edges,u,v)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

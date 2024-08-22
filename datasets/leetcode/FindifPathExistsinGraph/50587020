@@ -1,0 +1,32 @@
+class Solution {
+	boolean dfs(List<List<Integer>> adj, int source, int destination, boolean visited) {
+		visited[source] = true;
+		if (source == destination) {
+			return true;
+		}
+		for (int neighbour: adj.get(source)) {	
+			if (!visited[neighbour]) {
+				boolean found = dfs(adj,neighbour,destination,visited);
+				if (found) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	boolean validPath(int n, int[][] edges, int source, int destination) {
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			int u = edges[i][0];
+			int v = edges[i][1];
+			adj.get(u).add(v);
+			adj.get(v).add(u);
+		}
+		boolean visited = new boolean[n];
+		boolean found = dfs(adj,source,destination,visited);
+		return found;
+	}
+}

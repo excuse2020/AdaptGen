@@ -1,0 +1,40 @@
+class Solution {
+	int INF = 0x3f3f3f3f;
+	int N = 510, M = 5010;
+	int[] dist = new int[N];
+	int n, k;
+	boolean[] vis = new boolean[N];
+	int[][] w = new int[N][N];
+	void dijkstra() {
+		Arrays.fill(vis,false);
+		Arrays.fill(dist,INF);
+		dist[1] = 0;
+		for (int p = 1; p <= n; p++) {
+			int t = -1;
+			for (int i = 1; i <= n; i++) {
+				if (!vis[i] && (t == -1 || dist[i] < dist[t])) {
+					t = i;
+				}
+			}
+			vis[t] = true;
+			for (int i = 1; i <= n; i++) {
+				dist[i] = Math.min(dist[i],dist[t] + w[t][i]);
+			}
+		}
+	}
+	int findShortestPath(int _n, int _k, int[][] graph) {
+		n = _n;
+		k = _k;
+		for (int i = 1; i <= n; i++) {
+			for (int j = 1; j <= n; j++) {
+				w[i][j] = w[j][i] = i == j ? 0 : INF;
+			}
+		}
+		for (int[] t: graph) {	
+			int u = t[0], v = t[1], c = t[2];
+			w[u][v] = Math.min(w[u][v],c);
+		}
+		dijkstra();
+		return dist[n] >= INF / 2 ? -1 : dist[n];
+	}
+}

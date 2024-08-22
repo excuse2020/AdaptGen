@@ -1,0 +1,88 @@
+class Solution {
+	int bestDouble(int[][] grid) {
+		int answer = Integer.MAX_VALUE;
+		for (int i = 1; i <= grid.length - 1; i++) {
+			int[][] gridA = obtainGrid(grid,0,0,i - 1,grid[0].length - 1);
+			int[][] gridB = obtainGrid(grid,i,0,grid.length - 1,grid[0].length - 1);
+			if (oneCount(gridA) > 0 && oneCount(gridB) > 0) {
+				answer = Math.min(answer,bestSingle(gridA) + bestSingle(gridB));
+			}
+		}
+		for (int j = 1; j <= grid[0].length - 1; j++) {
+			int[][] gridA = obtainGrid(grid,0,0,grid.length - 1,j - 1);
+			int[][] gridB = obtainGrid(grid,0,j,grid.length - 1,grid[0].length - 1);
+			if (oneCount(gridA) > 0 && oneCount(gridB) > 0) {
+				answer = Math.min(answer,bestSingle(gridA) + bestSingle(gridB));
+			}
+		}
+		if (answer == Integer.MAX_VALUE) {
+			System.out.println("ISSUE");
+			for (int i = 0; i < grid.length; i++) {
+				for (int j = 0; j < grid[i].length; j++) {
+					System.out.print(grid[i][j] + " ");
+				}
+				System.out.println();
+			}
+		}
+		return answer;
+	}
+	int bestSingle(int[][] grid) {
+		int minr = Integer.MAX_VALUE;
+		int maxr = Integer.MIN_VALUE;
+		int minc = minr;
+		int maxc = maxr;
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[i].length; j++) {
+				if (grid[i][j] == 1) {
+					minr = Math.min(minr,i);
+					maxr = Math.max(maxr,i);
+					minc = Math.min(minc,j);
+					maxc = Math.max(maxc,j);
+				}
+			}
+		}
+		return (maxr - minr + 1) * (maxc - minc + 1);
+	}
+	int minimumSum(int[][] grid) {
+		int answer = Integer.MAX_VALUE;
+		for (int i = 1; i <= grid.length - 1; i++) {
+			int[][] gridA = obtainGrid(grid,0,0,i - 1,grid[0].length - 1);
+			int[][] gridB = obtainGrid(grid,i,0,grid.length - 1,grid[0].length - 1);
+			if (oneCount(gridA) > 1 && oneCount(gridB) > 0) {
+				answer = Math.min(answer,bestDouble(gridA) + bestSingle(gridB));
+			}
+			if (oneCount(gridA) > 0 && oneCount(gridB) > 1) {
+				answer = Math.min(answer,bestSingle(gridA) + bestDouble(gridB));
+			}
+		}
+		for (int j = 1; j <= grid[0].length - 1; j++) {
+			int[][] gridA = obtainGrid(grid,0,0,grid.length - 1,j - 1);
+			int[][] gridB = obtainGrid(grid,0,j,grid.length - 1,grid[0].length - 1);
+			if (oneCount(gridA) > 1 && oneCount(gridB) > 0) {
+				answer = Math.min(answer,bestDouble(gridA) + bestSingle(gridB));
+			}
+			if (oneCount(gridA) > 0 && oneCount(gridB) > 1) {
+				answer = Math.min(answer,bestSingle(gridA) + bestDouble(gridB));
+			}
+		}
+		return answer;
+	}
+	int[][] obtainGrid(int[][] src, int a, int b, int c, int d) {
+		int[][] answer = new int[c - a + 1][d - b + 1];
+		for (int i = a; i <= c; i++) {
+			for (int j = b; j <= d; j++) {
+				answer[i - a][j - b] = src[i][j];
+			}
+		}
+		return answer;
+	}
+	int oneCount(int[][] src) {
+		int ct = 0;
+		for (int i = 0; i < src.length; i++) {
+			for (int j = 0; j < src[i].length; j++) {
+				ct += src[i][j];
+			}
+		}
+		return ct;
+	}
+}

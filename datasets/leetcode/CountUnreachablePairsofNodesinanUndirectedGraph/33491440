@@ -1,0 +1,40 @@
+class Solution {
+	int bfs(int src, List<List<Integer>> graph, boolean[] vis) {
+		Queue<Integer> qu = new LinkedList<>();
+		qu.add(src);
+		int count = 1;
+		while (!qu.isEmpty()) {
+			int curr = qu.poll();
+			for (int adj: graph.get(curr)) {	
+				if (!vis[adj]) {
+					qu.add(adj);
+					count++;
+					vis[adj] = true;
+				}
+			}
+		}
+		return count;
+	}
+	long countPairs(int n, int[][] edges) {
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			graph.get(edges[i][0]).add(edges[i][1]);
+			graph.get(edges[i][1]).add(edges[i][0]);
+		}
+		long sum = n;
+		long ans = 0;
+		boolean vis = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			if (!vis[i]) {
+				vis[i] = true;
+				int cnt = bfs(i,graph,vis);
+				sum -= cnt;
+				ans += (sum * cnt);
+			}
+		}
+		return ans;
+	}
+}

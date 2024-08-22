@@ -1,0 +1,32 @@
+class Solution {
+	boolean isTimeValid(int[] time, long mid, int totalTrips) {
+		long trips = 0;
+		for (int t: time) {	
+			trips += (mid / t);
+			if (trips >= totalTrips) {
+				return true;
+			}
+		}
+		return false;
+	}
+	long minimumTime(int[] time, int totalTrips) {
+		int n = time.length;
+		long ans = 0, left = 0, right = 0, mini = time[0], maxi = time[0];
+		for (int t: time) {	
+			mini = Math.min(mini,t);
+			maxi = Math.max(maxi,t);
+		}
+		left = mini * (long) Math.ceil((double) totalTrips / n);
+		right = maxi * (long) Math.ceil((double) totalTrips / n);
+		while (left < right) {
+			long mid = left + (right - left) / 2;
+			if (isTimeValid(time,mid,totalTrips)) {
+				right = mid;
+			} 
+			else {
+				left = mid + 1;
+			}
+		}
+		return left;
+	}
+}

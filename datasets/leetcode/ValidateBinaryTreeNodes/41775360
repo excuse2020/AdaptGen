@@ -1,0 +1,58 @@
+class Solution {
+	int size;
+	boolean f(int i, int[] leftChild, int[] rightChild, Set<Integer> nonLeafNodes, Set<Integer> visitedNodes) {
+		if (i == -1) {
+			return true;
+		}
+		if (visitedNodes.contains(i)) {
+			return false;
+		}
+		visitedNodes.add(i);
+		nonLeafNodes.remove(i);
+		++this.size;
+		boolean val = f(leftChild[i],leftChild,rightChild,nonLeafNodes,visitedNodes);
+		if (!val) {
+			return false;
+		}
+		val = f(rightChild[i],leftChild,rightChild,nonLeafNodes,visitedNodes);
+		return val;
+	}
+	Set<Integer> getNonLeafNodes(int n, int[] leftChild, int[] rightChild) {
+		Set<Integer> nonLeafNodes = new HashSet<>();
+		for (int i = 0; i < n; ++i) {
+			if (leftChild[i] != -1 || rightChild[i] != -1) {
+				nonLeafNodes.add(i);
+			}
+		}
+		return nonLeafNodes;
+	}
+	List<Integer> getRoot(int n, int[] leftChild, int[] rightChild) {
+		Set<Integer> nodes = new HashSet<>();
+		for (int i = 0; i < n; ++i) {
+			nodes.add(i);
+		}
+		for (int i = 0; i < n; ++i) {
+			nodes.remove(leftChild[i]);
+			nodes.remove(rightChild[i]);
+		}
+		List<Integer> rootList = new ArrayList<>();
+		rootList.addAll(nodes);
+		return rootList;
+	}
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		Set<Integer> nonLeafNodes = getNonLeafNodes(n,leftChild,rightChild);
+		List<Integer> rootList = getRoot(n,leftChild,rightChild);
+		if (rootList.size() == 0 || rootList.size() > 1) {
+			return false;
+		}
+		int root = rootList.get(0);
+		boolean val = f(root,leftChild,rightChild,nonLeafNodes,new HashSet<>());
+		if (!val) {
+			return false;
+		}
+		if (!nonLeafNodes.isEmpty()) {
+			return false;
+		}
+		return size == n;
+	}
+}

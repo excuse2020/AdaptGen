@@ -1,0 +1,52 @@
+class Solution {
+	int[] set;
+	int size = 0;
+	void connect(int i, int j) {
+		int root_i = unionFind(i);
+		int root_j = unionFind(j);
+		if (root_i == root_j) {
+			return;
+		}
+		int temp = set[root_i] + set[root_j];
+		if (set[root_i] < set[root_j]) {
+			set[root_i] = temp;
+			set[root_j] = root_i;
+		} 
+		else {
+			set[root_j] = temp;
+			set[root_i] = root_j;
+		}
+	}
+	int findCircleNum(int[][] isConnected) {
+		size = isConnected.length;
+		set = new int[size];
+		for (int i = 0; i < size; ++i) {
+			set[i] = -1;
+		}
+		for (int i = 0; i < size - 1; ++i) {
+			for (int j = i + 1; j < size; ++j) {
+				if (isConnected[i][j] == 1) {
+					connect(i,j);
+				}
+			}
+		}
+		int count = 0;
+		for (int i = 0; i < size; ++i) {
+			int val = set[i];
+			if (val < 0) {
+				++count;
+			}
+		}
+		return count;
+	}
+	int unionFind(int node) {
+		int trail, root = node, lead;
+		for (; set[root] >= 0; root = set[root]) {
+		}
+		for (trail = node; trail != root; trail = lead) {
+			lead = set[trail];
+			set[trail] = root;
+		}
+		return root;
+	}
+}

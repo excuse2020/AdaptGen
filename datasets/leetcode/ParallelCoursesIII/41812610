@@ -1,0 +1,32 @@
+class Solution {
+	Integer dp;
+	List<List<Integer>> graph;
+	int getMinMonths(int source, int[] time) {
+		if (dp[source] != null) {
+			return dp[source];
+		}
+		int timeForCurrent = time[source];
+		int timeFromNext = 0;
+		for (int next: graph.get(source)) {	
+			timeFromNext = Math.max(timeFromNext,getMinMonths(next,time));
+		}
+		return dp[source] = timeForCurrent + timeFromNext;
+	}
+	int minimumTime(int n, int[][] relations, int[] time) {
+		graph = new ArrayList<>();
+		dp = new Integer[n];
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<Integer>());
+		}
+		for (int[] relation: relations) {	
+			int source = relation[0] - 1;
+			int destination = relation[1] - 1;
+			graph.get(source).add(destination);
+		}
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			ans = Math.max(ans,getMinMonths(i,time));
+		}
+		return ans;
+	}
+}

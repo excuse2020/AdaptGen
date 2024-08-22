@@ -1,0 +1,22 @@
+class Solution {
+	int[] fullBloomFlowers(int[][] flowers, int[] people) {
+		PriorityQueue<Integer> intrestPoints = new PriorityQueue<>((a, b) -> {Integer.compare(Math.abs(a),Math.abs(b))});
+		PriorityQueue<Integer> persons = new PriorityQueue<>((a, b) -> {Integer.compare(people[a],people[b])});
+		for (int[] flower: flowers) {	
+			intrestPoints.offer(flower[0]);
+			intrestPoints.offer(-(flower[1] + 1));
+		}
+		for (int i = 0; i < people.length; i++) {
+			persons.offer(i);
+		}
+		int answer = new int[people.length], flowersCount = 0;
+		for (int i = 0; i < people.length; i++) {
+			int nextPerson = persons.poll();
+			while (!intrestPoints.isEmpty() && Math.abs(intrestPoints.peek()) <= people[nextPerson]) {
+				flowersCount += intrestPoints.poll() > 0 ? 1 : -1;
+			}
+			answer[nextPerson] = flowersCount;
+		}
+		return answer;
+	}
+}

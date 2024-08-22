@@ -1,0 +1,38 @@
+class Solution {
+	long countPairs(int n, int[][] edges) {
+		int parent = new int[n];
+		Arrays.fill(parent,-1);
+		for (int edge: edges) {	
+			unionByWeight(parent,edge[0],edge[1]);
+		}
+		long pairs = 0;
+		for (long val: parent) {	
+			if (val < 0) {
+				val = -val;
+				pairs += val * (n - val);
+			}
+		}
+		return pairs / 2;
+	}
+	int findParent(int parent, int u) {
+		if (parent[u] < 0) {
+			return u;
+		}
+		return parent[u] = findParent(parent,parent[u]);
+	}
+	boolean unionByWeight(int parent, int u, int v) {
+		int pu = findParent(parent,u), pv = findParent(parent,v);
+		if (pu == pv) {
+			return false;
+		}
+		if (parent[pu] < parent[pv]) {
+			parent[pu] += parent[pv];
+			parent[pv] = pu;
+		} 
+		else {
+			parent[pv] += parent[pu];
+			parent[pu] = pv;
+		}
+		return true;
+	}
+}

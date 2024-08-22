@@ -1,0 +1,46 @@
+class Solution {
+	int BFS(int s, int n, Map<Integer, List<Integer>> directedg, Map<Integer, List<Integer>> inCount) {
+		int count = 0;
+		boolean[] visited = new boolean[n];
+		Queue<int[]> q = new ArrayDeque<>();
+		q.add(new int{s, 0});
+		visited[0] = true;
+		while (!q.isEmpty()) {
+			int[] cur = q.remove();
+			int curNode = cur[0];
+			int prevNode = cur[1];
+			List<Integer> directed = directedg.getOrDefault(curNode,new ArrayList<>());
+			List<Integer> inList = inCount.getOrDefault(curNode,new ArrayList<>());
+			directed.addAll(inList);
+			directed.remove((Object) prevNode);
+			for (int i: directed) {	
+				if (!visited[i]) {
+					visited[i] = true;
+					int c = count;
+					if (!inList.contains(i)) {
+						count += 1;
+					}
+					q.add(new int{i, curNode});
+				}
+			}
+		}
+		return count;
+	}
+	int minReorder(int n, int[][] connections) {
+		Map<Integer, List<Integer>> g = new HashMap<>();
+		Map<Integer, List<Integer>> inCount = new HashMap<>();
+		List<Integer> connected = new ArrayList<>();
+		for (int[] i: connections) {	
+			int e1 = i[0];
+			int e2 = i[1];
+			List<Integer> listd = g.getOrDefault(e1,new ArrayList<>());
+			listd.add(e2);
+			g.put(e1,listd);
+			List<Integer> inList = inCount.getOrDefault(e2,new ArrayList<>());
+			inList.add(e1);
+			inCount.put(e2,inList);
+		}
+		int ans = BFS(0,n,g,inCount);
+		return ans;
+	}
+}

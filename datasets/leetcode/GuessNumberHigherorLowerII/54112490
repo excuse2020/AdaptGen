@@ -1,0 +1,26 @@
+class Solution {
+	int getMoneyAmount(int n) {
+		int[][] dp = new int[n + 1][n + 1];
+		for (int i = 0; i < n; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		return helper(1,n,dp);
+	}
+	int helper(int start, int end, int[][] dp) {
+		if (start >= end) {
+			return 0;
+		}
+		if (start + 1 == end) {
+			return start;
+		}
+		if (dp[start][end] != -1) {
+			return dp[start][end];
+		}
+		int minCost = Integer.MAX_VALUE;
+		for (int mid = start + 1; mid < end; mid++) {
+			int cost = mid + Math.max(helper(start,mid - 1,dp),helper(mid + 1,end,dp));
+			minCost = Math.min(minCost,cost);
+		}
+		return dp[start][end] = minCost;
+	}
+}

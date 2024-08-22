@@ -1,0 +1,45 @@
+class Solution {
+	int[] bruteForce(int[] nums, int k) {
+		if (k == 0) {
+			return nums;
+		}
+		int[] result = new int[nums.length];
+		for (int i = 0; i < nums.length; i++) {
+			if (i - k >= 0 && i + k < nums.length) {
+				int left = i - 1;
+				int right = i + 1;
+				int sum = nums[i];
+				while (left >= i - k) {
+					sum += nums[left--];
+				}
+				while (right <= i + k) {
+					sum += nums[right++];
+				}
+				sum /= (2 * k) + 1;
+				result[i] = sum;
+			} 
+			else {
+				result[i] = -1;
+			}
+		}
+		return result;
+	}
+	int[] getAverages(int[] nums, int k) {
+		int[] result = new int[nums.length];
+		Arrays.fill(result,-1);
+		int left = 0, right = 0;
+		long sum = 0l;
+		while (right < nums.length) {
+			if (right - left != (2 * k)) {
+				sum += nums[right++];
+			} 
+			else {
+				sum += nums[right++];
+				int mid = left + (right - left) / 2;
+				result[mid] = (int) (sum / ((2 * k) + 1));
+				sum -= nums[left++];
+			}
+		}
+		return result;
+	}
+}

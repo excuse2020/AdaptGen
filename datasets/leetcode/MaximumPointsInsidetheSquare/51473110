@@ -1,0 +1,45 @@
+class Solution {
+	int maxPointsInsideSquare(int[][] p, String s) {
+		int n = p.length;
+		int[][] db = new int[n][3];
+		for (int i = 0; i < n; i++) {
+			p[i][0] = Math.abs(p[i][0]);
+			p[i][1] = Math.abs(p[i][1]);
+			Arrays.sort(p[i]);
+		}
+		for (int i = 0; i < n; i++) {
+			db[i][0] = p[i][0];
+			db[i][1] = p[i][1];
+			db[i][2] = (int) s.charAt(i);
+		}
+		Arrays.sort(db,Comparator.comparingInt((o) -> {o[1]}));
+		int res = 0, flag = 0;
+		Set<Integer> set = new HashSet<>();
+		for (int i = 0; i < n; i++) {
+			if (set.contains(db[i][2])) {
+				break;
+			}
+			int e = db[i][1];
+			set.add(db[i][2]);
+			for (int j = i + 1; j < n; j++) {
+				int ee = db[j][1];
+				if (e == ee) {
+					i++;
+					if (set.contains(db[j][2])) {
+						flag = 1;
+						break;
+					}
+					set.add(db[j][2]);
+				} 
+				else {
+					break;
+				}
+			}
+			if (flag == 1) {
+				break;
+			}
+			res = i + 1;
+		}
+		return res;
+	}
+}

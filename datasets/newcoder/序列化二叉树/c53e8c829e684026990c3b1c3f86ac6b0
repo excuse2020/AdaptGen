@@ -1,0 +1,48 @@
+class Solution {
+	int index = 0;
+	TreeNode Deserialize(String str) {
+		if (str == "#") {
+			return null;
+		}
+		TreeNode res = de(str);
+		return res;
+	}
+	String Serialize(TreeNode root) {
+		if (root == null) {
+			return "#";
+		}
+		StringBuilder res = new StringBuilder();
+		se(root,res);
+		return res.toString();
+	}
+	TreeNode de(String str) {
+		if (str.charAt(index) == '#') {
+			index++;
+			return null;
+		}
+		int val = 0;
+		while (str.charAt(index) != '!' && index != str.length()) {
+			val = val * 10 + ((str.charAt(index)) - '0');
+			index++;
+		}
+		TreeNode root = new TreeNode(val);
+		if (index == str.length()) {
+			return root;
+		} 
+		else {
+			index++;
+		}
+		root.left = de(str);
+		root.right = de(str);
+		return root;
+	}
+	void se(TreeNode root, StringBuilder str) {
+		if (root == null) {
+			str.append("#");
+			return;
+		}
+		str.append(root.val).append('!');
+		se(root.left,str);
+		se(root.right,str);
+	}
+}

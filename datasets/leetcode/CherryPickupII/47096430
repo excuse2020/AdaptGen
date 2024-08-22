@@ -1,0 +1,31 @@
+class Solution {
+	Integer dp;
+	int cherryPickup(int[][] grid) {
+		int m = grid.length, n = grid[0].length;
+		dp = new Integer[m + 1][n + 1][n + 1];
+		return helper(grid,0,0,0,n - 1,0);
+	}
+	int helper(int a, int row, int col1, int rob1, int col2, int rob2) {
+		if (col1 < 0 || col2 < 0 || col1 >= a[0].length || col2 >= a[0].length) {
+			return 0;
+		}
+		if (row == a.length) {
+			return rob1 + rob2;
+		}
+		if (dp[row][col1][col2] != null) {
+			return dp[row][col1][col2];
+		}
+		int max = 0;
+		max = Math.max(max,helper(a,row + 1,col1 - 1,rob1,col2 - 1,rob2));
+		max = Math.max(max,helper(a,row + 1,col1 - 1,rob1,col2,rob2));
+		max = Math.max(max,helper(a,row + 1,col1 - 1,rob1,col2 + 1,rob2));
+		max = Math.max(max,helper(a,row + 1,col1,rob1,col2 - 1,rob2));
+		max = Math.max(max,helper(a,row + 1,col1,rob1,col2,rob2));
+		max = Math.max(max,helper(a,row + 1,col1,rob1,col2 + 1,rob2));
+		max = Math.max(max,helper(a,row + 1,col1 + 1,rob1,col2 - 1,rob2));
+		max = Math.max(max,helper(a,row + 1,col1 + 1,rob1,col2,rob2));
+		max = Math.max(max,helper(a,row + 1,col1 + 1,rob1,col2 + 1,rob2));
+		dp[row][col1][col2] = col1 == col2 ? max + a[row][col1] : max + a[row][col1];
+		return dp[row][col1][col2];
+	}
+}

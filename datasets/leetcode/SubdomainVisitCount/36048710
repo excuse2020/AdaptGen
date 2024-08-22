@@ -1,0 +1,38 @@
+class Solution {
+	List<String> subdomainVisits(String[] cpdomains) {
+		HashMap<String, Integer> map = new HashMap<>();
+		List<String> list = new ArrayList<>();
+		Boolean flag = false;
+		for (String cpdomain: cpdomains) {	
+			flag = true;
+			String[] str2 = cpdomain.split("\\\\s+",2);
+			String[] str = str2[1].split("[.]");
+			StringBuilder sb = new StringBuilder(str[str.length - 1]);
+			for (int i = str.length - 1; i >= 0; i--) {
+				Integer count = map.get(String.valueOf(sb));
+				if (count == null) {
+					count = Integer.valueOf(str2[0]);
+					map.put(String.valueOf(sb),Integer.valueOf(str2[0]));
+				} 
+				else {
+					if (flag) {
+						count += Integer.valueOf(str2[0]);
+						map.put(String.valueOf(sb),count);
+					} 
+					else {
+						map.put(String.valueOf(sb),count + 1);
+					}
+				}
+				if (i != 0) {
+					sb = new StringBuilder(str[i - 1] + ".");
+				}
+			}
+			flag = false;
+		}
+		List<Map.Entry<String, Integer>> mapList = new ArrayList<>(map.entrySet());
+		for (int j = 0; j < map.size(); j++) {
+			list.add(mapList.get(j).getValue() + " ");
+		}
+		return list;
+	}
+}

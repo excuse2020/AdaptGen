@@ -1,0 +1,39 @@
+class Solution {
+	long maximumSumOfHeights(int[] heights) {
+		Stack<Integer> s = new Stack<>();
+		long max = 0l;
+		int n = heights.length;
+		for (int i = 0; i < n; i++) {
+			int curr = heights[i];
+			long currsum = 0;
+			s.push(curr);
+			for (int j = i - 1; j >= 0; j--) {
+				if (s.peek() < heights[j]) {
+					s.push(s.peek());
+				} 
+				else {
+					s.push(heights[j]);
+				}
+				currsum += s.peek();
+			}
+			while (!s.isEmpty()) {
+				s.pop();
+			}
+			s.push(curr);
+			for (int j = i + 1; j < n; j++) {
+				if (s.peek() < heights[j]) {
+					s.push(s.peek());
+				} 
+				else {
+					s.push(heights[j]);
+				}
+				currsum += s.peek();
+			}
+			while (!s.isEmpty()) {
+				s.pop();
+			}
+			max = Math.max(currsum + curr,max);
+		}
+		return max;
+	}
+}

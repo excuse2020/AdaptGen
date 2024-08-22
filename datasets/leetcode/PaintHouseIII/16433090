@@ -1,0 +1,42 @@
+class Solution {
+	int[][] cost;
+	int[] houses;
+	int m;
+	int[][][] memo;
+	int n;
+	int target;
+	int dp(int i, int clr, int group) {
+		if (i == m) {
+			return group != target ? -1 : 0;
+		}
+		if (group > target) {
+			return -1;
+		}
+		if (memo[i][clr][group] != 0) {
+			return memo[i][clr][group];
+		}
+		int min = Integer.MAX_VALUE;
+		if (houses[i] == 0) {
+			for (int c = 1; c <= n; ++c) {
+				int price = clr == c ? dp(i + 1,c,group) : dp(i + 1,c,group + 1);
+				if (price >= 0) {
+					min = Math.min(min,cost[i][c - 1] + price);
+				}
+			}
+		} 
+		else {
+			min = dp(i + 1,houses[i],houses[i] == clr ? group : group + 1);
+		}
+		return memo[i][clr][group] = min == Integer.MAX_VALUE ? -1 : min;
+	}
+	int minCost(int[] houses, int[][] cost, int m, int n, int target) {
+		this.houses = houses;
+		this.cost = cost;
+		this.m = m;
+		this.n = n;
+		this.target = target;
+		this.memo = new int[m][n + 1][target + 1];
+		int minPrice = dp(0,0,0);
+		return minPrice == Integer.MAX_VALUE ? -1 : minPrice;
+	}
+}

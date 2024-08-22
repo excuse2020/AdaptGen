@@ -1,0 +1,36 @@
+class SolutionDP {
+	int combinationSum4(int[] nums, int target) {
+		int[] dp = new int[target + 1];
+		dp[0] = 1;
+		for (int i = 0; i <= target; i++) {
+			for (int num: nums) {	
+				dp[i] += (i >= num) ? dp[i - num] : 0;
+			}
+		}
+		return dp[target];
+	}
+}
+class Solution {
+	Map<Integer, Integer> map;
+	int combinationSum4(int[] nums, int target) {
+		map = new HashMap();
+		return sol(nums,target);
+	}
+	int sol(int[] nums, int tar) {
+		if (tar == 0) {
+			return 1;
+		}
+		if (tar < 0) {
+			return 0;
+		}
+		if (map.containsKey(tar)) {
+			return map.get(tar);
+		}
+		int ans = 0;
+		for (int i = 0; i < nums.length; i++) {
+			ans += sol(nums,tar - nums[i]);
+		}
+		map.put(tar,ans);
+		return ans;
+	}
+}

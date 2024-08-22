@@ -1,0 +1,33 @@
+class Solution {
+	List<List<String>> mostPopularCreator(String[] creators, String[] ids, int[] views) {
+		int n = creators.length;
+		List<List<String>> res = new ArrayList<>();
+		TreeMap<String, Long> map = new TreeMap<>();
+		TreeMap<String, Integer> maxViews = new TreeMap<>();
+		HashMap<String, TreeSet<String>> ts = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			String g = creators[i];
+			map.put(g,map.getOrDefault(g,(long) 0) + views[i]);
+			maxViews.put(g,Math.max(maxViews.getOrDefault(g,0),views[i]));
+		}
+		for (int i = 0; i < n; i++) {
+			String g = creators[i];
+			if (!ts.containsKey(g)) {
+				ts.put(g,new TreeSet<String>());
+			}
+			if (maxViews.get(g) == views[i]) {
+				ts.get(g).add(ids[i]);
+			}
+		}
+		long max = Collections.max(map.values());
+		for (Map.Entry<String, Long> entry: map.entrySet()) {	
+			if (entry.getValue() == max) {
+				List<String> f = new ArrayList<>();
+				f.add(entry.getKey());
+				f.add(ts.get(entry.getKey()).first());
+				res.add(f);
+			}
+		}
+		return res;
+	}
+}

@@ -1,0 +1,67 @@
+class Solution {
+	boolean binarySearch(int target, List<Integer> list) {
+		int start = 0, end = list.size(), mid = 0;
+		while (end > start) {
+			mid = start + (end - start) / 2;
+			if (list.get(mid) == target) {
+				return true;
+			}
+			if (target < list.get(mid)) {
+				end = mid;
+			} 
+			else {
+				start = mid + 1;
+			}
+		}
+		return false;
+	}
+	List<List<Integer>> findPrimePairs(int n) {
+		List<List<Integer>> answer = new ArrayList<>();
+		List<Integer> primeList = getPrimeNumbers(n);
+		List<Integer> numList = new ArrayList<>();
+		int num1 = 0, num2 = 0;
+		for (int i = 0; i < primeList.size(); i++) {
+			num1 = primeList.get(i);
+			num2 = n - num1;
+			if (binarySearch(num2,numList)) {
+				if (num1 < num2) {
+					answer.add(Arrays.asList(num1,num2));
+				} 
+				else {
+					answer.add(Arrays.asList(num2,num1));
+				}
+			} 
+			else {
+				numList.add(num1);
+			}
+			if (num1 + num1 == n) {
+				answer.add(Arrays.asList(num1,num1));
+			}
+		}
+		Collections.sort(answer,(a, b) -> {Integer.compare(a.get(0),b.get(0))});
+		return answer;
+	}
+	List<Integer> getPrimeNumbers(int n) {
+		List<Integer> primeList = new ArrayList<>();
+		if (n < 2) {
+			return primeList;
+		}
+		boolean[] notPrime = new boolean[n];
+		notPrime[0] = true;
+		notPrime[1] = true;
+		for (int i = 2; i * i <= n; i++) {
+			if (notPrime[i]) {
+				continue;
+			}
+			for (int j = i * 2; j < n; j += i) {
+				notPrime[j] = true;
+			}
+		}
+		for (int i = 2; i < n; i++) {
+			if (!notPrime[i]) {
+				primeList.add(i);
+			}
+		}
+		return primeList;
+	}
+}

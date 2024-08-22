@@ -1,0 +1,78 @@
+class Solution {
+	HashMap<String, String> mem = new HashMap<>();
+	String concatString(String word1, String word2, int n, int m) {
+		if (n == 0 && m == 0) {
+			return "";
+		}
+		if (n == 0) {
+			return word2;
+		}
+		if (m == 0) {
+			return word1;
+		}
+		String key = word1 + word2;
+		if (mem.containsKey(key)) {
+			return mem.get(key);
+		}
+		String merge = "";
+		int i = 0;
+		int j = 0;
+		while (i < n && j < m) {
+			if (word1.charAt(i) > word2.charAt(j)) {
+				merge += word1.charAt(i);
+				i++;
+			} 
+			else if (word1.charAt(i) < word2.charAt(j)) {
+				merge += word2.charAt(j);
+				j++;
+			} 
+			else {
+				int k = 1;
+				boolean isNextSmall = isNextCharSmall(word1,word2,i + k,j + k,n,m);
+				while (i + k < n && j + k < m && !isNextSmall && word1.charAt(i + k) == word2.charAt(j + k)) {
+					k++;
+					isNextSmall = isNextCharSmall(word1,word2,i + k,j + k,n,m);
+				}
+				if (i + k < n && j + k < m && !isNextSmall && word1.charAt(i + k) < word2.charAt(j + k)) {
+					merge = merge + word2.substring(j,j + k);
+					j = j + k;
+				} 
+				else if (i + k < n && j + k < m && !isNextSmall && word1.charAt(i + k) > word2.charAt(j + k)) {
+					merge = merge + word1.substring(i,i + k);
+					i = i + k;
+				} 
+				else {
+					String ma = word1.substring(i,i + k) + concatString(word1.substring(i + k),word2.substring(j),n - i,m - j);
+					String mb = word2.substring(j,j + k) + concatString(word1.substring(i),word2.substring(j + k),n - i,m - j);
+					merge = ma.compareTo(mb) > 0 ? merge + ma : merge + mb;
+					break;
+				}
+			}
+		}
+		if (i == n && j < m) {
+			merge = merge + word2.substring(j);
+		}
+		if (i < n && j == m) {
+			merge = merge + word1.substring(i);
+		}
+		mem.put(key,merge);
+		return merge;
+	}
+	boolean isNextCharSmall(String word1, String word2, int i, int j, int n, int m) {
+		if (i == 0 || j == 0 || i >= n || j >= m) {
+			return false;
+		}
+		if (word1.charAt(i) < word1.charAt(i - 1)) {
+			return true;
+		}
+		if (word2.charAt(j) < word2.charAt(j - 1)) {
+			return true;
+		}
+		return false;
+	}
+	String largestMerge(String word1, String word2) {
+		int n = word1.length();
+		int m = word2.length();
+		return concatString(word1,word2,n,m);
+	}
+}

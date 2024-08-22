@@ -1,0 +1,31 @@
+class Solution {
+	int[][] differenceOfDistinctValues(int[][] grid) {
+		int m = grid.length;
+		int n = grid[0].length;
+		int[][] ans = new int[m][n];
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				Set<Integer> s1 = new HashSet<>();
+				Set<Integer> s2 = new HashSet<>();
+				int lt = leftTop(s1,i - 1,j - 1,grid);
+				int rb = rightBottom(s2,i + 1,j + 1,grid);
+				ans[i][j] = Math.abs((lt - rb));
+			}
+		}
+		return ans;
+	}
+	int leftTop(Set<Integer> leftTop, int a, int b, int[][] matrix) {
+		if (a < 0 || b < 0) {
+			return leftTop.size();
+		}
+		leftTop.add(matrix[a][b]);
+		return leftTop(leftTop,a - 1,b - 1,matrix);
+	}
+	int rightBottom(Set<Integer> rightBottom, int a, int b, int[][] matrix) {
+		if (a > matrix.length - 1 || b > matrix[0].length - 1) {
+			return rightBottom.size();
+		}
+		rightBottom.add(matrix[a][b]);
+		return rightBottom(rightBottom,a + 1,b + 1,matrix);
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	int minSubArrayLen(int target, int[] nums) {
+		var newArray = Arrays.copyOf(nums,nums.length);
+		Arrays.sort(newArray);
+		var sum = 0;
+		var minCount = 0;
+		for (int i = newArray.length - 1; i >= 0; i--) {
+			sum += newArray[i];
+			if (sum >= target) {
+				minCount = newArray.length - i;
+				break;
+			}
+		}
+		if (minCount == 0) {
+			return 0;
+		}
+		System.out.println(minCount);
+		var result = 0;
+		for (int i = minCount; i <= nums.length; i++) {
+			var firstSubarraySum = 0;
+			for (int j = 0; j < i; j++) {
+				firstSubarraySum += nums[j];
+			}
+			if (firstSubarraySum >= target) {
+				result = result == 0 ? i : i < result ? i : result;
+				continue;
+			}
+			var nextSubarraySum = firstSubarraySum;
+			for (int j = i; j < nums.length; j++) {
+				nextSubarraySum = nextSubarraySum - nums[j - i] + nums[j];
+				if (nextSubarraySum >= target) {
+					result = result == 0 ? i : i < result ? i : result;
+					return result;
+				}
+			}
+		}
+		return result;
+	}
+}

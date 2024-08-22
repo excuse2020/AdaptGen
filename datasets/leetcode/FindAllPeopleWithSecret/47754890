@@ -1,0 +1,67 @@
+class Solution {
+	int TIME_IDX = 2;
+	int X_IDX = 0;
+	int Y_IDX = 1;
+	int find(int u, int[] parents) {
+		if (parents[u] == u) {
+			return u;
+		}
+		return (parents[u] = find(parents[u],parents));
+	}
+	List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+		int maxTime = 0;
+		for (int[] mtg: meetings) {	
+			if (mtg[TIME_IDX] > maxTime) {
+				maxTime = mtg[TIME_IDX];
+			}
+		}
+		ArrayList<int[]>[] mtgsByTime = new ArrayList[maxTime + 1];
+		for (int[] mtg: meetings) {	
+			ArrayList<int[]> list = mtgsByTime[mtg[TIME_IDX]];
+			if (list == null) {
+				list = mtgsByTime[mtg[TIME_IDX]] = new ArrayList<int[]>();
+			}
+			list.add(mtg);
+		}
+		int[] parents = new int[n];
+		for (int i = 1; i < n; i++) {
+			parents[i] = i;
+		}
+		parents[firstPerson] = 0;
+		int[] people = new int[meetings.length * 2];
+		for (int tim = 1; tim <= maxTime; tim++) {
+			if (mtgsByTime[tim] != null) {
+				int peopleCount = 0;
+				for (int[] mtg: mtgsByTime[tim]) {	
+					int x = find(mtg[X_IDX],parents);
+					int y = find(mtg[Y_IDX],parents);
+					if (x != y) {
+						if (x < y) {
+							parents[y] = x;
+						} 
+						else {
+							parents[x] = y;
+						}
+						if (x != 0 && y != 0) {
+							people[peopleCount++] = mtg[X_IDX];
+							people[peopleCount++] = mtg[Y_IDX];
+						}
+					}
+				}
+				for (int i = 0; i < peopleCount; i++) {
+					int person = people[i];
+					if (find(person,parents) != 0) {
+						parents[person] = person;
+					}
+				}
+			}
+		}
+		ArrayList<Integer> knowsList = new ArrayList();
+		for (int person = 0; person < n; person++) {
+			if (parents[person] == 0) {
+				knowsList.add(person);
+			}
+		}
+		return knowsList;
+	}
+}

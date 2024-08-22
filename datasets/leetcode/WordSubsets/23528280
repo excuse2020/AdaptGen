@@ -1,0 +1,36 @@
+class Solution {
+	List<String> wordSubsets(String[] words1, String[] words2) {
+		int m = words1.length;
+		int n = words2.length;
+		int[] freq = new int[26];
+		for (int i = 0; i < n; i++) {
+			int[] letterCount = new int[26];
+			String word = words2[i];
+			for (int j = 0; j < word.length(); j++) {
+				letterCount[word.charAt(j) - 97]++;
+			}
+			for (int j = 0; j < 26; j++) {
+				freq[j] = Math.max(freq[j],letterCount[j]);
+			}
+		}
+		List<String> ans = new ArrayList<>();
+		for (int i = 0; i < m; i++) {
+			int[] letterCount = new int[26];
+			String word = words1[i];
+			for (int j = 0; j < word.length(); j++) {
+				letterCount[word.charAt(j) - 97]++;
+			}
+			boolean universal = true;
+			for (int j = 0; j < 26; j++) {
+				if (letterCount[j] < freq[j]) {
+					universal = false;
+					break;
+				}
+			}
+			if (universal) {
+				ans.add(word);
+			}
+		}
+		return ans;
+	}
+}

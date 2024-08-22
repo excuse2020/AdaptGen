@@ -1,0 +1,44 @@
+class Solution {
+	int lowestCommonAncestor(TreeNode root, int o1, int o2) {
+		HashMap<Integer, Integer> hashMap = new HashMap<>();
+		TreeNode root1 = root;
+		preOrder(root1,hashMap);
+		ArrayList<Integer> arrayList1 = new ArrayList<>();
+		int key1 = o1;
+		arrayList1.add(o1);
+		while (hashMap.containsKey(key1)) {
+			key1 = hashMap.get(key1);
+			arrayList1.add(key1);
+		}
+		ArrayList<Integer> arrayList2 = new ArrayList<>();
+		int key2 = o2;
+		arrayList2.add(o2);
+		while (hashMap.containsKey(key2)) {
+			key2 = hashMap.get(key2);
+			arrayList2.add(key2);
+		}
+		int len1 = arrayList1.size();
+		int len2 = arrayList2.size();
+		for (int i = 0; i < len1; i++) {
+			for (int j = 0; j < len2; j++) {
+				if (arrayList1.get(i) == arrayList2.get(j)) {
+					return arrayList1.get(i);
+				}
+			}
+		}
+		return root.val;
+	}
+	void preOrder(TreeNode root, HashMap<Integer, Integer> hashMap) {
+		if (root == null) {
+			return;
+		}
+		if (root.left != null) {
+			hashMap.put(root.left.val,root.val);
+			preOrder(root.left,hashMap);
+		}
+		if (root.right != null) {
+			hashMap.put(root.right.val,root.val);
+			preOrder(root.right,hashMap);
+		}
+	}
+}

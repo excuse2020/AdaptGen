@@ -1,0 +1,38 @@
+class Solution {
+	int countGoodTriplets(int[] arr, int a, int b, int c) {
+		int length = arr.length;
+		int ans = 0;
+		int[] pre = new int[1001], post = new int[1001];
+		pre[arr[0]] = 1;
+		for (int i = length - 1; i > 1; i--) {
+			post[arr[i]]++;
+		}
+		for (int i = 1; i <= 1000; i++) {
+			post[i] = post[i - 1] + post[i];
+		}
+		for (int j = 1; j < length - 1; j++) {
+			int v = arr[j];
+			int a1 = Math.max(0,v - a), a2 = Math.min(1000,v + a);
+			int b1 = Math.max(0,v - b), b2 = Math.min(1000,v + b);
+			for (int s = a1; s <= a2; s++) {
+				if (pre[s] == 0) {
+					continue;
+				}
+				int m1 = Math.max(b1,s - c), m2 = Math.min(b2,s + c);
+				if (m2 >= m1) {
+					if (m1 == 0) {
+						ans += pre[s] * post[m2];
+					} 
+					else {
+						ans += pre[s] * (post[m2] - post[m1 - 1]);
+					}
+				}
+			}
+			pre[v]++;
+			for (int i = arr[j + 1]; i <= 1000; i++) {
+				post[i]--;
+			}
+		}
+		return ans;
+	}
+}

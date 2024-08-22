@@ -1,0 +1,25 @@
+class Solution {
+	HashMap<Integer, Integer> mMap = new HashMap<Integer, Integer>();
+	int FindPath(TreeNode root, int sum) {
+		if (root == null) {
+			return 0;
+		}
+		mMap.put(0,1);
+		return deepS(root,sum,0);
+	}
+	int deepS(TreeNode root, int sum, int last) {
+		if (root == null) {
+			return 0;
+		}
+		int lastSum = last + root.val;
+		int res = 0;
+		if (mMap.containsKey(lastSum - sum) == true) {
+			res += mMap.get(lastSum - sum);
+		}
+		mMap.put(lastSum,mMap.getOrDefault(lastSum,0) + 1);
+		res += deepS(root.left,sum,lastSum);
+		res += deepS(root.right,sum,lastSum);
+		mMap.put(lastSum,mMap.getOrDefault(lastSum,0) - 1);
+		return res;
+	}
+}

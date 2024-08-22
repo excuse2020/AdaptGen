@@ -1,0 +1,29 @@
+class Solution {
+	boolean isValid(int mid, int[] nums) {
+		if (mid < nums[0]) {
+			return false;
+		}
+		long previous = nums[0];
+		for (int i = 1; i < nums.length; i++) {
+			long diff = mid - previous;
+			previous = nums[i] - diff;
+			if (previous > mid) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int minimizeArrayValue(int[] nums) {
+		int low = 0, high = Arrays.stream(nums).max().getAsInt();
+		while (low < high) {
+			int mid = (low + high) / 2;
+			if (isValid(mid,nums)) {
+				high = mid;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		return high;
+	}
+}

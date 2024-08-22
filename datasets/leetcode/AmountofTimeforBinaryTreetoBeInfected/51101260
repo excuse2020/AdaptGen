@@ -1,0 +1,28 @@
+class Solution {
+	int amountOfTime(TreeNode root, int start) {
+		List<Integer>[] adj = new ArrayList[100001];
+		traverse(root,null,adj);
+		return dfs(start,-1,adj) - 1;
+	}
+	int dfs(int curr, int prev, List<Integer>[] adj) {
+		int longest = 0;
+		for (int next: adj[curr]) {	
+			if (next != prev) {
+				longest = Math.max(longest,dfs(next,curr,adj));
+			}
+		}
+		return longest + 1;
+	}
+	void traverse(TreeNode curr, TreeNode parent, List<Integer>[] adj) {
+		if (curr == null) {
+			return;
+		}
+		adj[curr.val] = new ArrayList<>();
+		if (parent != null) {
+			adj[curr.val].add(parent.val);
+			adj[parent.val].add(curr.val);
+		}
+		traverse(curr.left,curr,adj);
+		traverse(curr.right,curr,adj);
+	}
+}

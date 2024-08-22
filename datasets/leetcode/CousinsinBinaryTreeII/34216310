@@ -1,0 +1,43 @@
+class Solution {
+	Map<Integer, Integer> levelSum = new HashMap<>();
+	Map<TreeNode, Integer> siblings = new HashMap<>();
+	Map<Integer, List<TreeNode>> tree = new HashMap<>();
+	void dfs(TreeNode root, int depth) {
+		if (root == null) {
+			return;
+		}
+		levelSum.put(depth,levelSum.getOrDefault(depth,0) + root.val);
+		if (tree.get(depth) == null) {
+			tree.put(depth,new ArrayList<>());
+		}
+		tree.get(depth).add(root);
+		if (root.left != null) {
+			siblings.put(root.left,root.left.val);
+			if (root.right != null) {
+				siblings.put(root.left,root.left.val + root.right.val);
+			}
+		}
+		if (root.right != null) {
+			siblings.put(root.right,root.right.val);
+			if (root.left != null) {
+				siblings.put(root.right,root.right.val + root.left.val);
+			}
+		}
+		dfs(root.left,depth + 1);
+		dfs(root.right,depth + 1);
+	}
+	TreeNode replaceValueInTree(TreeNode root) {
+		dfs(root,0);
+		siblings.put(root,root.val);
+		for (Map.Entry<Integer, List<TreeNode>> entry: tree.entrySet()) {	
+			int depth = entry.getKey();
+			List<TreeNode> list = entry.getValue();
+			int levelsum = levelSum.get(depth);
+			for (TreeNode t: list) {	
+				int siblingSum = siblings.get(t);
+				t.val = levelsum - siblingSum;
+			}
+		}
+		return root;
+	}
+}

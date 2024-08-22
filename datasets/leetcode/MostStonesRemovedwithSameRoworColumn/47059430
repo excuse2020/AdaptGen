@@ -1,0 +1,36 @@
+class Solution {
+	void explore(Pair<Integer, Integer> currCell, Map<Integer, List<Integer>> rows, Map<Integer, List<Integer>> cols, Set<Pair<Integer, Integer>> visited) {
+		if (visited.contains(currCell)) {
+			return;
+		}
+		visited.add(currCell);
+		int currRow = currCell.getKey();
+		for (int col: rows.get(currRow)) {	
+			explore(new Pair<>(currRow, col),rows,cols,visited);
+		}
+		int currCol = currCell.getValue();
+		for (int row: cols.get(currCol)) {	
+			explore(new Pair<>(row, currCol),rows,cols,visited);
+		}
+	}
+	int removeStones(int[][] stones) {
+		Map<Integer, List<Integer>> rows = new HashMap<>();
+		Map<Integer, List<Integer>> cols = new HashMap<>();
+		for (int i = 0; i < stones.length; i++) {
+			int stone = stones[i];
+			rows.computeIfAbsent(stone[0],(l) -> {new ArrayList<>()}).add(stone[1]);
+			cols.computeIfAbsent(stone[1],(l) -> {new ArrayList<>()}).add(stone[0]);
+		}
+		int count = 0;
+		Set<Pair<Integer, Integer>> visited = new HashSet<>();
+		for (int i = 0; i < stones.length; i++) {
+			int stone = stones[i];
+			Pair<Integer, Integer> currCell = new Pair<>(stone[0], stone[1]);
+			if (!visited.contains(currCell)) {
+				explore(currCell,rows,cols,visited);
+				count++;
+			}
+		}
+		return stones.length - count;
+	}
+}

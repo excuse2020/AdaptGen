@@ -1,0 +1,39 @@
+class Solution {
+	Long dp;
+	long mod = (long) 1e9 + 7;
+	int countPaths(int[][] grid) {
+		long count = 0;
+		int rows = grid.length;
+		int cols = grid[0].length;
+		dp = new Long[rows][cols];
+		for (int row = 0; row < rows; row++) {
+			for (int col = 0; col < cols; col++) {
+				count = (count % mod + dfs(grid,row,col,rows,cols) % mod) % mod;
+			}
+		}
+		int finalAns = (int) (count % mod);
+		if (finalAns < 0) {
+			finalAns += (int) mod;
+		}
+		return finalAns;
+	}
+	long dfs(int grid, int row, int col, int rows, int cols) {
+		long count = 0;
+		if (dp[row][col] != null) {
+			return dp[row][col];
+		}
+		if (row - 1 >= 0 && grid[row - 1][col] > grid[row][col]) {
+			count = (count % mod + dfs(grid,row - 1,col,rows,cols) % mod) % mod;
+		}
+		if (row + 1 < rows && grid[row + 1][col] > grid[row][col]) {
+			count = (count % mod + dfs(grid,row + 1,col,rows,cols) % mod) % mod;
+		}
+		if (col - 1 >= 0 && grid[row][col - 1] > grid[row][col]) {
+			count = (count % mod + dfs(grid,row,col - 1,rows,cols) % mod) % mod;
+		}
+		if (col + 1 < cols && grid[row][col + 1] > grid[row][col]) {
+			count = (count % mod + dfs(grid,row,col + 1,rows,cols) % mod) % mod;
+		}
+		return dp[row][col] = count + 1;
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	boolean canBeConcatenated(int[] nums, int j, int[] group) {
+		for (int i = group.length - 1; i >= 0; i--, j--) {
+			if (nums[j] != group[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean canChoose(int[][] groups, int[] nums) {
+		int[] groupLength = getGroupLength(groups);
+		int groupIndex = groups.length - 1;
+		for (int j = nums.length - 1; groupIndex >= 0 && j >= groupLength[groupIndex] - 1; ) {
+			if (canBeConcatenated(nums,j,groups[groupIndex])) {
+				j -= groups[groupIndex].length;
+				groupIndex--;
+			} 
+			else {
+				j--;
+			}
+		}
+		return groupIndex == -1;
+	}
+	int[] getGroupLength(int[][] groups) {
+		int[] groupLength = new int[groups.length];
+		groupLength[0] = groups[0].length;
+		for (int i = 1; i < groupLength.length; i++) {
+			groupLength[i] = groupLength[i - 1] + groups[i].length;
+		}
+		return groupLength;
+	}
+}

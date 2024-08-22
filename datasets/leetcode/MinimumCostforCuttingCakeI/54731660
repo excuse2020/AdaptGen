@@ -1,0 +1,27 @@
+class Solution {
+	int minimumCost(int m, int n, int[] horizontalCut, int[] verticalCut) {
+		int total = m - 1 + n - 1;
+		int[][] cuts = new int[total][2];
+		for (int i = 0; i < m - 1; i++) {
+			cuts[i][0] = horizontalCut[i];
+		}
+		for (int i = 0; i < n - 1; i++) {
+			cuts[i + m - 1][0] = verticalCut[i];
+			cuts[i + m - 1][1] = 1;
+		}
+		Arrays.sort(cuts,(a, b) -> {b[0] - a[0]});
+		int res = 0, hor = 1, vert = 1;
+		for (int i = 0; i < total; i++) {
+			int[] cur = cuts[i];
+			if (cur[1] == 1) {
+				res += (hor * cur[0]);
+				vert++;
+			} 
+			else {
+				res += (vert * cur[0]);
+				hor++;
+			}
+		}
+		return res;
+	}
+}

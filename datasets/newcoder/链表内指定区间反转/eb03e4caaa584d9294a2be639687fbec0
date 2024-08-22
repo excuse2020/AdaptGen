@@ -1,0 +1,57 @@
+class Solution {
+	ListNode reverseBetween(ListNode head, int m, int n) {
+		if (head == null) {
+			return head;
+		}
+		ListNode lefthead = new ListNode(-1);
+		lefthead.next = head;
+		ListNode curr = lefthead;
+		ListNode midNode = null;
+		int i = 1;
+		while (curr != null) {
+			if (i == m) {
+				midNode = curr.next;
+				curr.next = null;
+				break;
+			}
+			curr = curr.next;
+			i++;
+		}
+		ListNode ptr = midNode;
+		ListNode rightNode = null;
+		int j = 1;
+		while (ptr != null) {
+			if (j == n - m + 1) {
+				rightNode = ptr.next;
+				ptr.next = null;
+			}
+			ptr = ptr.next;
+			j++;
+		}
+		ListNode reversedMidNode = reverseListNode(midNode);
+		ListNode p = lefthead;
+		while (p.next != null) {
+			p = p.next;
+		}
+		p.next = reversedMidNode;
+		while (p.next != null) {
+			p = p.next;
+		}
+		p.next = rightNode;
+		return lefthead.next;
+	}
+	ListNode reverseListNode(ListNode head) {
+		if (head == null) {
+			return head;
+		}
+		ListNode prev = null;
+		ListNode curr = head;
+		while (curr != null) {
+			ListNode nextNode = curr.next;
+			curr.next = prev;
+			prev = curr;
+			curr = nextNode;
+		}
+		return prev;
+	}
+}

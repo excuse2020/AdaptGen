@@ -1,0 +1,28 @@
+class Solution {
+	int answer = Integer.MIN_VALUE;
+	int helper(int r, int c, int[][] grid, int[][] dp, int prev) {
+		if (r < 0 || c < 0 || r >= grid.length || c >= grid[0].length || grid[r][c] <= prev) {
+			return 0;
+		}
+		if (dp[r][c] != Integer.MIN_VALUE) {
+			return dp[r][c];
+		}
+		int dd = 1 + helper(r - 1,c + 1,grid,dp,grid[r][c]);
+		int lc = 1 + helper(r,c + 1,grid,dp,grid[r][c]);
+		int ud = 1 + helper(r + 1,c + 1,grid,dp,grid[r][c]);
+		dp[r][c] = Math.max(lc,Math.max(dd,ud));
+		answer = Math.max(answer,dp[r][c]);
+		return dp[r][c];
+	}
+	int maxMoves(int[][] grid) {
+		int[][] dp = new int[grid.length][grid[0].length];
+		for (int[] i: dp) {	
+			Arrays.fill(i,Integer.MIN_VALUE);
+		}
+		for (int i = 0; i < grid.length; i++) {
+			int val = helper(i,0,grid,dp,-1);
+			answer = Math.max(answer,val);
+		}
+		return answer < 0 ? 0 : answer - 1;
+	}
+}

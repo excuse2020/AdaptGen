@@ -1,0 +1,42 @@
+class Solution {
+	void dfs(int v, List<Integer>[] adjList, String s, List<Character> chars, List<Integer> indices, boolean[] visited) {
+		if (visited[v]) {
+			return;
+		}
+		visited[v] = true;
+		chars.add(s.charAt(v));
+		indices.add(v);
+		if (adjList[v] != null) {
+			for (int neighbour: adjList[v]) {	
+				dfs(neighbour,adjList,s,chars,indices,visited);
+			}
+		}
+	}
+	String smallestStringWithSwaps(String s, List<List<Integer>> pairs) {
+		int n = s.length();
+		List<Integer>[] adjList = new ArrayList[n];
+		for (List<Integer> edge: pairs) {	
+			if (adjList[edge.get(0)] == null) {
+				adjList[edge.get(0)] = new ArrayList<>();
+			}
+			if (adjList[edge.get(1)] == null) {
+				adjList[edge.get(1)] = new ArrayList<>();
+			}
+			adjList[edge.get(0)].add(edge.get(1));
+			adjList[edge.get(1)].add(edge.get(0));
+		}
+		char[] result = new char[n];
+		boolean[] visited = new boolean[n];
+		for (int v = 0; v < n; v++) {
+			List<Character> chars = new ArrayList<>();
+			List<Integer> indices = new ArrayList<>();
+			dfs(v,adjList,s,chars,indices,visited);
+			Collections.sort(chars);
+			Collections.sort(indices);
+			for (int i = 0; i < chars.size(); i++) {
+				result[indices.get(i)] = chars.get(i);
+			}
+		}
+		return new String(result);
+	}
+}

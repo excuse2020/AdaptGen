@@ -1,0 +1,43 @@
+class Solution {
+	int amountOfTime(TreeNode root, int start) {
+		Set<Integer> isInfected = new HashSet<>();
+		Map<Integer, Pair<TreeNode, TreeNode>> childParentMap = new HashMap<>();
+		fillChildParentMap(childParentMap,root,null);
+		int time = -1;
+		Queue<TreeNode> q = new LinkedList<>();
+		if (childParentMap.get(start) != null) {
+			q.offer(childParentMap.get(start).getKey());
+		}
+		while (!q.isEmpty()) {
+			int n = q.size();
+			for (int i = 0; i < n; i++) {
+				TreeNode curr = q.poll();
+				isInfected.add(curr.val);
+				TreeNode parent = childParentMap.get(curr.val).getValue();
+				if (parent != null && !isInfected.contains(parent.val)) {
+					q.offer(parent);
+				}
+				if (curr.left != null && !isInfected.contains(curr.left.val)) {
+					q.offer(curr.left);
+				}
+				if (curr.right != null && !isInfected.contains(curr.right.val)) {
+					q.offer(curr.right);
+				}
+			}
+			time++;
+		}
+		return time;
+	}
+	void fillChildParentMap(Map<Integer, Pair<TreeNode, TreeNode>> m, TreeNode node, TreeNode parent) {
+		if (node == null) {
+			return;
+		}
+		m.put(node.val,new Pair<>(node, parent));
+		if (node.left != null) {
+			fillChildParentMap(m,node.left,node);
+		}
+		if (node.right != null) {
+			fillChildParentMap(m,node.right,node);
+		}
+	}
+}

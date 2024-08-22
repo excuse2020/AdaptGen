@@ -1,0 +1,33 @@
+class Solution {
+	String removeDuplicates(String s, int k) {
+		Stack<Pair<Character, Integer>> stack = new Stack<>();
+		int size = 0;
+		for (int i = 0; i < s.length(); i++) {
+			char c = s.charAt(i);
+			if (!stack.isEmpty() && stack.peek().getKey().equals(c)) {
+				Integer value = stack.pop().getValue();
+				stack.push(new Pair<>(c, value + 1));
+				size++;
+			} 
+			else {
+				stack.push(new Pair<>(c, 1));
+				size++;
+			}
+			if (stack.peek().getValue().equals(k)) {
+				stack.pop();
+				size = size - k;
+			}
+		}
+		char[] ans = new char[size];
+		int index = ans.length - 1;
+		while (!stack.isEmpty()) {
+			Integer value = stack.peek().getValue();
+			while (value != 0) {
+				ans[index--] = stack.peek().getKey();
+				value--;
+			}
+			stack.pop();
+		}
+		return String.valueOf(ans);
+	}
+}

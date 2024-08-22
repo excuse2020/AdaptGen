@@ -1,0 +1,32 @@
+class Solution {
+	TreeNode balanceBST(TreeNode root) {
+		List<TreeNode> inorder = new ArrayList<>();
+		traverseInOrder(root,inorder);
+		return buildTree(inorder,0,inorder.size() - 1);
+	}
+	TreeNode buildTree(List<TreeNode> inorder, int start, int end) {
+		TreeNode toReturn;
+		if (start == end) {
+			toReturn = inorder.get(start);
+			toReturn.left = null;
+			toReturn.right = null;
+			return toReturn;
+		} 
+		else if (start > end) {
+			return null;
+		}
+		int mid = (start + end) / 2;
+		toReturn = inorder.get(mid);
+		toReturn.left = buildTree(inorder,start,mid - 1);
+		toReturn.right = buildTree(inorder,mid + 1,end);
+		return toReturn;
+	}
+	void traverseInOrder(TreeNode node, List<TreeNode> inorder) {
+		if (node == null) {
+			return;
+		}
+		traverseInOrder(node.left,inorder);
+		inorder.add(node);
+		traverseInOrder(node.right,inorder);
+	}
+}

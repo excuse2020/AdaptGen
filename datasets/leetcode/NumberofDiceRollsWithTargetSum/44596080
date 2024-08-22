@@ -1,0 +1,23 @@
+class Solution {
+	int mod = (int) 1e9 + 7;
+	int f(int idx, int n, int k, int target, Integer[][] dp) {
+		if (idx == n) {
+			return target == 0 ? 1 : 0;
+		}
+		if (dp[idx][target] != null) {
+			return dp[idx][target];
+		}
+		int count = 0;
+		for (int i = 1; i <= k; i++) {
+			if (target < i) {
+				break;
+			}
+			count = (count + f(idx + 1,n,k,target - i,dp) % mod) % mod;
+		}
+		return dp[idx][target] = count % mod;
+	}
+	int numRollsToTarget(int n, int k, int target) {
+		Integer[][] dp = new Integer[n + 1][target + 1];
+		return f(0,n,k,target,dp);
+	}
+}

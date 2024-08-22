@@ -1,0 +1,80 @@
+class Solution {
+	Map<Integer, Integer> oldToNewMap;
+	int size;
+	int[] tree;
+	void build(int ss, int se, int si, int[] nums) {
+		if (ss > se) {
+			return;
+		}
+		if (ss == se) {
+			tree[si] = nums[ss];
+			return;
+		}
+		int mid = ss + (se - ss) / 2;
+		build(ss,mid,2 * si + 1,nums);
+		build(mid + 1,se,2 * si + 2,nums);
+		tree[si] = tree[2 * si + 1] + tree[2 * si + 2];
+	}
+	void coordinateCompression(List<Integer> rating) {
+		Collections.sort(rating);
+		size = 0;
+		for (Integer i: rating) {	
+			oldToNewMap.put(i,size++);
+		}
+	}
+	int numTeams(int[] rating) {
+		oldToNewMap = new HashMap<>();
+		List<Integer> list = Arrays.stream(rating).boxed().collect(Collectors.toList());
+		coordinateCompression(list);
+		int n = rating.length;
+		tree = new int[4 * size];
+		int[] leftSmall = new int[n];
+		int[] leftGreat = new int[n];
+		for (int i = 0; i < n; i++) {
+			int num = oldToNewMap.get(rating[i]);
+			int small = query(0,num - 1,0,size - 1,0);
+			int big = query(num + 1,size - 1,0,size - 1,0);
+			leftSmall[i] = small;
+			leftGreat[i] = big;
+			update(0,size - 1,0,num,1);
+		}
+		tree = new int[4 * size];
+		for (int i = n - 1; i >= 0; i--) {
+			int num = oldToNewMap.get(rating[i]);
+			int small = query(0,num - 1,0,size - 1,0);
+			int big = query(num + 1,size - 1,0,size - 1,0);
+			leftSmall[i] *= big;
+			leftGreat[i] *= small;
+			update(0,size - 1,0,num,1);
+		}
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			ans += leftSmall[i];
+			ans += leftGreat[i];
+		}
+		return ans;
+	}
+	int query(int qs, int qe, int ss, int se, int si) {
+		if (qs > se || qe < ss) {
+			return 0;
+		}
+		if (qs <= ss && qe >= se) {
+			return tree[si];
+		}
+		int mid = ss + (se - ss) / 2;
+		return query(qs,qe,ss,mid,2 * si + 1) + query(qs,qe,mid + 1,se,2 * si + 2);
+	}
+	void update(int ss, int se, int si, int updateIndex, int diff) {
+		if (ss > se || updateIndex < ss || updateIndex > se) {
+			return;
+		}
+		if (ss == se) {
+			tree[si] += diff;
+			return;
+		}
+		int mid = ss + (se - ss) / 2;
+		update(ss,mid,2 * si + 1,updateIndex,diff);
+		update(mid + 1,se,2 * si + 2,updateIndex,diff);
+		tree[si] = tree[2 * si + 1] + tree[2 * si + 2];
+	}
+}

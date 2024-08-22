@@ -1,0 +1,35 @@
+class Solution {
+	ListNode reverseBetween(ListNode head, int m, int n) {
+		ListNode leftNode = new ListNode(0);
+		ListNode rightNode = null;
+		ListNode newHead = new ListNode(-1);
+		newHead.next = head;
+		Stack<Integer> st = new Stack<Integer>();
+		leftNode.next = head;
+		for (int i = 1; i < m; i++) {
+			leftNode = leftNode.next;
+		}
+		rightNode = leftNode.next;
+		for (int j = 0; j <= n - m; j++) {
+			st.push(rightNode.val);
+			rightNode = rightNode.next;
+		}
+		for (int k = 0; k <= n - m; k++) {
+			if (!st.isEmpty()) {
+				ListNode node = new ListNode(st.pop());
+				if (leftNode.next == head) {
+					newHead.next = node;
+					leftNode = newHead.next;
+				} 
+				else {
+					leftNode.next = node;
+					leftNode = leftNode.next;
+				}
+			}
+		}
+		if (rightNode != null) {
+			leftNode.next = rightNode;
+		}
+		return newHead.next;
+	}
+}

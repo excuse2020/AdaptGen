@@ -1,0 +1,27 @@
+class Solution {
+	int countGoodSubstrings(String s) {
+		Map<Character, Integer> map = new HashMap<>();
+		int count = 0;
+		int k = 3;
+		if (s.length() < k) {
+			return count;
+		}
+		for (int i = 0; i < k; i++) {
+			map.put(s.charAt(i),map.getOrDefault(s.charAt(i),0) + 1);
+		}
+		if (map.size() == k) {
+			count++;
+		}
+		for (int i = k; i < s.length(); i++) {
+			map.put(s.charAt(i),map.getOrDefault(s.charAt(i),0) + 1);
+			map.put(s.charAt(i - k),map.getOrDefault(s.charAt(i - k),0) - 1);
+			if (map.get(s.charAt(i - k)) == 0) {
+				map.remove(s.charAt(i - k));
+			}
+			if (map.size() == k) {
+				count++;
+			}
+		}
+		return count;
+	}
+}

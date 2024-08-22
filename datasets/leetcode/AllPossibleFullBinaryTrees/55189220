@@ -1,0 +1,26 @@
+class Solution {
+	Map<Integer, List<TreeNode>> dp = new HashMap<>();
+	List<TreeNode> allPossibleFBT(int n) {
+		return bk(n);
+	}
+	List<TreeNode> bk(int n) {
+		if (n % 2 == 0) {
+			return List.of();
+		}
+		if (n == 1) {
+			return List.of(new TreeNode(0));
+		}
+		if (dp.containsKey(n)) {
+			return dp.get(n);
+		}
+		List<TreeNode> res = new ArrayList<>();
+		for (int l = 0; l < n; l++) {
+			var r = n - 1;
+			var lt = bk(l);
+			var rt = bk(r);
+			lt.forEach((a) -> {rt.forEach((b) -> {res.add(new TreeNode(0, a, b))})});
+		}
+		dp.put(n,res);
+		return res;
+	}
+}

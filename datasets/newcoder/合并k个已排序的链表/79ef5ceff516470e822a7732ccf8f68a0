@@ -1,0 +1,46 @@
+class Solution {
+	ListNode mergeKLists(ArrayList<ListNode> lists) {
+		if (lists == null || lists.size() == 0) {
+			return null;
+		}
+		ListNode first = lists.get(0);
+		if (lists.size() == 1) {
+			return first;
+		}
+		ListNode head = null;
+		for (int i = 1; i < lists.size(); i++) {
+			ListNode h = lists.get(i);
+			first = mergreNodes(first,h);
+		}
+		return first;
+	}
+	ListNode mergreNodes(ListNode head1, ListNode head2) {
+		if (head1 == null) {
+			return head2;
+		}
+		if (head2 == null) {
+			return head1;
+		}
+		ListNode dummy = new ListNode(-10000);
+		ListNode pos = dummy;
+		while (head1 != null && head2 != null) {
+			if (head1.val <= head2.val) {
+				pos.next = head1;
+				pos = pos.next;
+				head1 = head1.next;
+			} 
+			else {
+				pos.next = head2;
+				pos = pos.next;
+				head2 = head2.next;
+			}
+		}
+		if (head1 == null) {
+			pos.next = head2;
+		} 
+		else {
+			pos.next = head1;
+		}
+		return dummy.next;
+	}
+}

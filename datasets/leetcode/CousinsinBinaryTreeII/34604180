@@ -1,0 +1,60 @@
+class Solution {
+	Map<Integer, Integer> levelSum;
+	Map<Integer, Set<TreeNode>> levelToParents;
+	int maxLevel;
+	void helper(TreeNode root, int level, TreeNode parent) {
+		if (root == null) {
+			return;
+		}
+		maxLevel = Math.max(maxLevel,level);
+		levelToParents.putIfAbsent(level,new HashSet<>());
+		levelToParents.get(level).add(parent);
+		levelSum.put(level,levelSum.getOrDefault(level,0) + root.val);
+		helper(root.left,level + 1,root);
+		helper(root.right,level + 1,root);
+	}
+	TreeNode replaceValueInTree(TreeNode root) {
+		levelToParents = new HashMap<>();
+		levelSum = new HashMap<>();
+		maxLevel = 0;
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(root);
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				TreeNode currRoot = queue.poll();
+				levelToParents.putIfAbsent(maxLevel + 1,new HashSet<>());
+				levelToParents.get(maxLevel + 1).add(currRoot);
+				levelSum.put(maxLevel,levelSum.getOrDefault(maxLevel,0) + currRoot.val);
+				if (currRoot.left != null) {
+					queue.add(currRoot.left);
+				}
+				if (currRoot.right != null) {
+					queue.add(currRoot.right);
+				}
+			}
+			maxLevel++;
+		}
+		for (int level = 0; level < maxLevel; level++) {
+			if (level == 0) {
+				root.val = 0;
+			} 
+			else {
+				int levelWiseSum = levelSum.get(level);
+				for (TreeNode parent: levelToParents.get(level)) {	
+					int childSum = 0;
+					childSum += parent.left == null ? 0 : parent.left.val;
+					childSum += parent.right == null ? 0 : parent.right.val;
+					int update = levelWiseSum - childSum;
+					if (parent.left != null) {
+						parent.left.val = update;
+					}
+					if (parent.right != null) {
+						parent.right.val = update;
+					}
+				}
+			}
+		}
+		return root;
+	}
+}

@@ -1,0 +1,65 @@
+class Solution {
+	boolean isNumeric(String str) {
+		int flag = 0;
+		boolean sign = false;
+		boolean dot = false;
+		boolean number = false;
+		String s = "";
+		for (int i = 0; i < str.length(); i++) {
+			s = str.charAt(i) == ' ' ? s : s + String.valueOf(str.charAt(i));
+			if (str.charAt(i) >= 'A' && str.charAt(i) <= 'z' && str.charAt(i) != 'e' && str.charAt(i) != 'E') {
+				return false;
+			}
+		}
+		if (s.equals("")) {
+			return false;
+		}
+		for (int i = 0; i < s.length(); i++) {
+			if (flag == 0) {
+				if (s.charAt(i) >= 'A' && s.charAt(i) <= 'z') {
+					return false;
+				} 
+				else {
+					sign = (s.charAt(i) == '+' || s.charAt(i) == '-') ? true : sign;
+					number = (s.charAt(i) >= '0' && s.charAt(i) <= '9') ? true : number;
+					dot = (s.charAt(i) == '.') ? true : dot;
+					flag = 1;
+				}
+			} 
+			else if (flag == 1) {
+				if ((s.charAt(i) == '+' || s.charAt(i) == '-') && (sign || number)) {
+					return false;
+				} 
+				else if (s.charAt(i) == '.' && dot) {
+					return false;
+				} 
+				else {
+					dot = (s.charAt(i) == '.') ? true : dot;
+					number = (s.charAt(i) >= '0' && s.charAt(i) <= '9') ? true : number;
+					if ((s.charAt(i) == 'e' || s.charAt(i) == 'E')) {
+						if (number) {
+							flag = 2;
+							sign = false;
+							number = false;
+						} 
+						else {
+							return false;
+						}
+					}
+				}
+			} 
+			else if (flag == 2) {
+				if (s.charAt(i) == '.' || s.charAt(i) == 'e' || s.charAt(i) == 'E') {
+					return false;
+				} 
+				else {
+					number = (s.charAt(i) >= '0' && s.charAt(i) <= '9') ? true : number;
+				}
+			}
+			if ((!number) && i == s.length() - 1) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

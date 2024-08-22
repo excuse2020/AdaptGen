@@ -1,0 +1,50 @@
+class Solution {
+	int findWinningPlayer(int[] skills, int k) {
+		if (k >= skills.length) {
+			int in = 0;
+			int res = skills[0];
+			for (int i = 1; i < skills.length; i++) {
+				if (skills[i] > res) {
+					res = skills[i];
+					in = i;
+				}
+			}
+			return in;
+		}
+		Queue<Integer> q = new LinkedList<>();
+		for (int i: skills) {	
+			q.add(i);
+		}
+		int m1 = q.poll();
+		int m2 = q.poll();
+		int c = 0;
+		int chk = Integer.MAX_VALUE;
+		int p = chk;
+		while (c != k) {
+			if (m1 > m2) {
+				q.add(m2);
+				m2 = q.poll();
+				p = chk;
+				chk = m1;
+			} 
+			else {
+				q.add(m1);
+				m1 = q.poll();
+				p = chk;
+				chk = m2;
+			}
+			if (chk == p) {
+				c++;
+			} 
+			else {
+				c = 1;
+			}
+		}
+		for (int i = 0; i < skills.length; i++) {
+			if (skills[i] == chk) {
+				return i;
+			}
+		}
+		return 0;
+	}
+}

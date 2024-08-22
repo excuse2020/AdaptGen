@@ -1,0 +1,33 @@
+class Solution {
+	int longestWPI(int[] hours) {
+		int n = hours.length;
+		int[] sums = new int[n];
+		int max = 0;
+		int sum = 0;
+		for (int i = 0; i < n; i++) {
+			hours[i] = hours[i] > 8 ? 1 : -1;
+			sum += hours[i];
+			sums[i] = sum;
+			if (sum > 0) {
+				max = i + 1;
+			} 
+			else {
+				int j = i - max;
+				while (j >= 0) {
+					int diff = sums[i] - sums[j];
+					if (diff > 0) {
+						max = Math.max(max,i - j);
+						if (j == 0) {
+							break;
+						}
+						j = Math.max(0,j - Math.max(1,diff - 1));
+					} 
+					else {
+						j = j - 1 + diff;
+					}
+				}
+			}
+		}
+		return max;
+	}
+}

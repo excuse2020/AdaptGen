@@ -1,0 +1,28 @@
+class Solution {
+	Integer[] createHeightIndex(int[] heights) {
+		Integer[] heightIndex = new Integer[heights.length];
+		for (int i = 0; i < heights.length; i++) {
+			heightIndex[i] = i;
+		}
+		Arrays.sort(heightIndex,(a, b) -> {Integer.compare(heights[a],heights[b])});
+		return heightIndex;
+	}
+	int maxJumps(int[] heights, int maxJump) {
+		Integer[] heightIndex = createHeightIndex(heights);
+		int[] numJumps = new int[heights.length];
+		int maxSequence = 0;
+		for (int i = 0; i < heightIndex.length; i++) {
+			int curIndex = heightIndex[i];
+			int curHeight = heights[curIndex];
+			numJumps[curIndex] = 1;
+			for (int next = curIndex + 1; next < Math.min(curIndex + 1,heights.length) && heights[next] < curHeight; next++) {
+				numJumps[curIndex] = Math.max(numJumps[curIndex],1 + numJumps[next]);
+			}
+			for (int next = curIndex - 1; next >= Math.max(0,curIndex - maxJump) && heights[next] < curHeight; next--) {
+				numJumps[curIndex] = Math.max(numJumps[curIndex],1 + numJumps[next]);
+			}
+			maxSequence = Math.max(numJumps[curIndex],maxSequence);
+		}
+		return maxSequence;
+	}
+}

@@ -1,0 +1,31 @@
+class Solution {
+	TreeNode processRecursionHashMap(int[] pre, int[] in) {
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < in.length; i++) {
+			map.put(in[i],i);
+		}
+		int preEnd = pre.length - 1;
+		int inEnd = in.length - 1;
+		return recursion(map,pre,0,preEnd,in,0,inEnd);
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] in) {
+		if (pre == null || pre.length == 0) {
+			return null;
+		}
+		TreeNode root = processRecursionHashMap(pre,in);
+		return root;
+	}
+	TreeNode recursion(Map<Integer, Integer> map, int[] pre, int preStart, int preEnd, int[] in, int inStart, int inEnd) {
+		if (preStart > preEnd) {
+			return null;
+		}
+		if (preStart == preEnd) {
+			return new TreeNode(pre[preStart]);
+		}
+		TreeNode currRoot = new TreeNode(pre[preStart]);
+		int index = map.get(currRoot.val);
+		currRoot.left = recursion(map,pre,preStart + 1,preStart + index - inStart,in,inStart,index - 1);
+		currRoot.right = recursion(map,pre,preStart + index - inStart + 1,preEnd,in,index + 1,inEnd);
+		return currRoot;
+	}
+}

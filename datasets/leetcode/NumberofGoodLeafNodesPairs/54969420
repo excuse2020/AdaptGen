@@ -1,0 +1,61 @@
+class Solution {
+	int[] ans = new int[1];
+	int countPairs(TreeNode root, int distance) {
+		ArrayList<TreeNode> leafNodes = new ArrayList<>();
+		Map<TreeNode, ArrayList<TreeNode>> adj = new HashMap<>();
+		helper(root,leafNodes,adj);
+		System.out.println(leafNodes);
+		for (TreeNode leaf: leafNodes) {	
+			Set<TreeNode> set = new HashSet<>();
+			dfs(leaf,adj,set,0,distance);
+		}
+		return ans[0] / 2;
+	}
+	void dfs(TreeNode node, Map<TreeNode, ArrayList<TreeNode>> adj, Set<TreeNode> set, int currDist, int distance) {
+		if (set.contains(node)) {
+			return;
+		}
+		if (currDist > distance) {
+			return;
+		}
+		if (node.left == null && node.right == null && currDist <= distance && currDist > 0) {
+			ans[0]++;
+			return;
+		}
+		set.add(node);
+		if (adj.containsKey(node) == false) {
+			return;
+		}
+		for (TreeNode nei: adj.get(node)) {	
+			dfs(nei,adj,set,currDist + 1,distance);
+		}
+	}
+	void helper(TreeNode node, ArrayList<TreeNode> leafNodes, Map<TreeNode, ArrayList<TreeNode>> adj) {
+		if (node == null) {
+			return;
+		}
+		if (node.left == null && node.right == null) {
+			leafNodes.add(node);
+			return;
+		}
+		if (adj.containsKey(node) == false) {
+			adj.put(node,new ArrayList<TreeNode>());
+		}
+		if (node.left != null) {
+			adj.get(node).add(node.left);
+			if (adj.containsKey(node.left) == false) {
+				adj.put(node.left,new ArrayList<TreeNode>());
+			}
+			adj.get(node.left).add(node);
+		}
+		if (node.right != null) {
+			adj.get(node).add(node.right);
+			if (adj.containsKey(node.right) == false) {
+				adj.put(node.right,new ArrayList<TreeNode>());
+			}
+			adj.get(node.right).add(node);
+		}
+		helper(node.left,leafNodes,adj);
+		helper(node.right,leafNodes,adj);
+	}
+}

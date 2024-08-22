@@ -1,0 +1,28 @@
+class Solution {
+	int max = -1;
+	void find(int node, int[] edges, int[] count, int num, HashSet<Integer> set) {
+		if (count[node] != -1) {
+			if (set.contains(node)) {
+				max = Math.max(max,num - count[node]);
+			}
+			return;
+		}
+		count[node] = num;
+		set.add(node);
+		if (edges[node] != -1) {
+			find(edges[node],edges,count,num + 1,set);
+		}
+	}
+	int longestCycle(int[] edges) {
+		int e = edges.length;
+		int[] count = new int[e];
+		Arrays.fill(count,-1);
+		HashSet<Integer> set = new HashSet<>();
+		for (int i = 0; i < e; i++) {
+			if (count[i] == -1) {
+				find(i,edges,count,1,new HashSet<>());
+			}
+		}
+		return max;
+	}
+}

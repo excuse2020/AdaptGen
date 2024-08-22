@@ -1,0 +1,35 @@
+class Solution {
+	int MOD = 1000000007;
+	int numberOfPaths(int[][] grid, int k) {
+		int m = grid.length;
+		int n = grid[0].length;
+		int[][] curr = null;
+		int[][] prev = new int[n][k];
+		int sum = 0;
+		for (int j = 0; j < n; j++) {
+			sum = (sum + grid[0][j]) % k;
+			prev[j][sum]++;
+		}
+		for (int i = 1; i < m; i++) {
+			curr = new int[n][k];
+			for (int j = 0; j < n; j++) {
+				if (j != 0) {
+					for (int h = 0; h < k; h++) {
+						if (curr[j - 1][h] > 0) {
+							sum = (h + grid[i][j]) % k;
+							curr[j][sum] = curr[j - 1][h];
+						}
+					}
+				}
+				for (int h = 0; h < k; h++) {
+					if (prev[j][h] > 0) {
+						sum = (h + grid[i][j]) % k;
+						curr[j][sum] = (curr[j][sum] + prev[j][h]) % MOD;
+					}
+				}
+			}
+			prev = curr;
+		}
+		return prev[n - 1][0];
+	}
+}

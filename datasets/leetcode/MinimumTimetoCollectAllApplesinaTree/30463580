@@ -1,0 +1,23 @@
+class Solution {
+	int dfs(int curr, Map<Integer, List<Integer>> map, List<Boolean> hasApple) {
+		int res = 0;
+		for (int next: map.get(curr)) {	
+			map.get(next).remove(new Integer(curr));
+			int temp = dfs(next,map,hasApple);
+			if (temp > 0 || hasApple.get(next)) {
+				res += temp + 2;
+			}
+		}
+		return res;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int[] edge: edges) {	
+			map.putIfAbsent(edge[0],new ArrayList<>());
+			map.putIfAbsent(edge[1],new ArrayList<>());
+			map.get(edge[0]).add(edge[1]);
+			map.get(edge[1]).add(edge[0]);
+		}
+		return dfs(0,map,hasApple);
+	}
+}

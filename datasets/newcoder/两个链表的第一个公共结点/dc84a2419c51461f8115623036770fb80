@@ -1,0 +1,59 @@
+class Solution {
+	ListNode FindFirstCommonNode(ListNode pHead1, ListNode pHead2) {
+		if (pHead1 == null || pHead2 == null) {
+			return null;
+		}
+		ListNode p1 = pHead1;
+		ListNode p2 = pHead2;
+		while (p1 != p2) {
+			p1 = (p1 == null ? pHead2 : p1.next);
+			p2 = (p2 == null ? pHead1 : p2.next);
+		}
+		return p1;
+	}
+	ListNode FindFirstCommonNode2(ListNode pHead1, ListNode pHead2) {
+		if (pHead1 == null || pHead2 == null) {
+			return null;
+		}
+		int length1 = getListsNodeLength(pHead1);
+		int length2 = getListsNodeLength(pHead2);
+		ListNode cur1 = pHead1;
+		ListNode cur2 = pHead2;
+		if (length1 >= length2) {
+			int n = length1 - length2;
+			cur1 = pHead1;
+			while (n > 0) {
+				cur1 = cur1.next;
+				n--;
+			}
+			cur2 = pHead2;
+			return findTheSameNodeWithSameLength(cur1,cur2);
+		} 
+		else {
+			int n = length2 - length1;
+			cur2 = pHead2;
+			while (n > 0) {
+				cur2 = cur2.next;
+				n--;
+			}
+			cur1 = pHead1;
+			return findTheSameNodeWithSameLength(cur1,cur2);
+		}
+	}
+	ListNode findTheSameNodeWithSameLength(ListNode p1, ListNode p2) {
+		while (p1 != p2) {
+			p1 = p1.next;
+			p2 = p2.next;
+		}
+		return p1;
+	}
+	int getListsNodeLength(ListNode node) {
+		int length = 0;
+		ListNode curr = node;
+		while (curr != null) {
+			length++;
+			curr = curr.next;
+		}
+		return length;
+	}
+}

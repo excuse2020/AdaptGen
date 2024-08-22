@@ -1,0 +1,49 @@
+class Solution {
+	List<List<Integer>> findPrimePairs(int n) {
+		List<List<Integer>> ans = new ArrayList<>();
+		int x, y;
+		List<Integer> primes = sieveoferothenes(n);
+		if (primes.size() == 0) {
+			return ans;
+		} 
+		else {
+			x = 0;
+			y = primes.size() - 1;
+			System.out.println(primes.size());
+			while (x <= y) {
+				if (primes.get(x) + primes.get(y) == n) {
+					ans.add(List.of(primes.get(x),primes.get(y)));
+					x++;
+					y--;
+				} 
+				else if (primes.get(x) + primes.get(y) < n) {
+					x++;
+				} 
+				else if (primes.get(x) + primes.get(y) > n) {
+					y--;
+				}
+			}
+		}
+		return ans;
+	}
+	List<Integer> sieveoferothenes(int n) {
+		List<Integer> primes = new ArrayList<>();
+		boolean[] arr = new boolean[n + 1];
+		for (int i = 0; i <= n; i++) {
+			arr[i] = true;
+		}
+		for (int i = 2; i * i <= n; i++) {
+			if (arr[i] == true) {
+				for (int j = i * i; j <= n; j += i) {
+					arr[j] = false;
+				}
+			}
+		}
+		for (int i = 2; i <= n; i++) {
+			if (arr[i] == true) {
+				primes.add(i);
+			}
+		}
+		return primes;
+	}
+}

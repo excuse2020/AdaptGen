@@ -1,0 +1,39 @@
+class Solution {
+	List<List<String>> mostPopularCreator(String[] creators, String[] ids, int[] views) {
+		HashMap<String, Creator> map = new HashMap<>();
+		for (int i = 0; i < creators.length; i++) {
+			String name = creators[i];
+			if (!map.containsKey(name)) {
+				map.put(name,new Creator());
+				map.get(name).name = name;
+			}
+			if (!map.get(name).viewCount.containsKey(views[i])) {
+				map.get(name).viewCount.put(views[i],new ArrayList<>());
+			}
+			map.get(name).viewCount.get(views[i]).add(ids[i]);
+			map.get(name).total += views[i];
+		}
+		ArrayList<Creator> arrList = new ArrayList<>(map.values());
+		Collections.sort(arrList,(x, y) -> {y.total - x.total});
+		List<List<String>> ans = new ArrayList<>();
+		int max = arrList.get(0).total;
+		for (int i = 0; i < arrList.size(); i++) {
+			Creator c = arrList.get(i);
+			if (c.total == max) {
+				List<String> entry = new ArrayList<>();
+				entry.add(c.name);
+				entry.add(Collections.min(c.viewCount.lastEntry().getValue()));
+				ans.add(entry);
+			} 
+			else {
+				break;
+			}
+		}
+		return ans;
+	}
+	class Creator {
+		String name;
+		int total = 0;
+		TreeMap<Integer, List<String>> viewCount = new TreeMap<>();
+	}
+}

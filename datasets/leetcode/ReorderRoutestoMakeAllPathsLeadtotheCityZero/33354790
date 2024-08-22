@@ -1,0 +1,43 @@
+class Solution {
+	int minReorder(int n, int[][] connections) {
+		List<List<Integer>> allNeighbour = new ArrayList<>();
+		List<List<Integer>> directedNeighbour = new ArrayList<>();
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			allNeighbour.add(new ArrayList<>());
+			directedNeighbour.add(new ArrayList<>());
+		}
+		for (int i = 0; i < connections.length; i++) {
+			directedNeighbour.get(connections[i][0]).add(connections[i][1]);
+			allNeighbour.get(connections[i][0]).add(connections[i][1]);
+			allNeighbour.get(connections[i][1]).add(connections[i][0]);
+		}
+		Queue<Integer> q = new LinkedList<>();
+		int[] reach = new int[n];
+		int[] vis = new int[n];
+		q.add(0);
+		vis[0] = reach[0] = 1;
+		while (!q.isEmpty()) {
+			int cur = q.poll();
+			for (int nbr: allNeighbour.get(cur)) {	
+				if (reach[nbr] == 1 || vis[nbr] == 1) {
+					continue;
+				}
+				boolean canReach = false;
+				for (int anotherNeighbour: directedNeighbour.get(nbr)) {	
+					if (reach[anotherNeighbour] == 1) {
+						canReach = true;
+						break;
+					}
+				}
+				q.add(nbr);
+				vis[nbr] = 1;
+				if (!canReach) {
+					ans++;
+				}
+				reach[nbr] = 1;
+			}
+		}
+		return ans;
+	}
+}

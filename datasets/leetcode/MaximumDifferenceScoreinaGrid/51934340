@@ -1,0 +1,38 @@
+class Solution {
+	Integer[][] dp;
+	int maxScore(List<List<Integer>> grid) {
+		int n = grid.size();
+		int m = grid.get(0).size();
+		int ans = -100000;
+		dp = new Integer[n][m];
+		for (int i = 0; i < grid.size(); i++) {
+			for (int j = 0; j < grid.get(0).size(); j++) {
+				if (i < n - 1 && j < m - 1) {
+					ans = Math.max(ans,Math.max(grid.get(i + 1).get(j) - grid.get(i).get(j) + solve(i + 1,j,grid,n,m),grid.get(i).get(j + 1) - grid.get(i).get(j) + solve(i,j + 1,grid,n,m)));
+				} 
+				else if (i == n - 1 && j < m - 1) {
+					ans = Math.max(ans,grid.get(i).get(j + 1) - grid.get(i).get(j) + solve(i,j + 1,grid,n,m));
+				} 
+				else if (j == m - 1 && i < n - 1) {
+					ans = Math.max(grid.get(i + 1).get(j) - grid.get(i).get(j) + solve(i + 1,j,grid,n,m),ans);
+				}
+			}
+		}
+		return ans;
+	}
+	int solve(int row, int col, List<List<Integer>> grid, int n, int m) {
+		if (dp[row][col] != null) {
+			return dp[row][col];
+		}
+		int ans = 0;
+		int a = 0;
+		int b = 0;
+		if (row + 1 < n) {
+			a = Math.max(a,grid.get(row + 1).get(col) - grid.get(row).get(col) + solve(row + 1,col,grid,n,m));
+		}
+		if (col + 1 < m) {
+			b = Math.max(b,grid.get(row).get(col + 1) - grid.get(row).get(col) + solve(row,col + 1,grid,n,m));
+		}
+		return dp[row][col] = Math.max(a,b);
+	}
+}

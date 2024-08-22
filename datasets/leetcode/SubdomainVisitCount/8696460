@@ -1,0 +1,54 @@
+class Solution {
+	String DOT_REGEX = "\\\\.";
+	String DOT_STRING = ".";
+	String SEPARATOR = " ";
+	TrieNode root = new TrieNode();
+	void addCount(String cpdomain) {
+		int si = cpdomain.indexOf(SEPARATOR);
+		int count = Integer.parseInt(cpdomain.substring(0,si));
+		String domainString = cpdomain.substring(si + 1);
+		String[] levels = domainString.split(DOT_REGEX);
+		TrieNode cursor = root;
+		for (int i = levels.length - 1; i >= 0; i--) {
+			String level = levels[i];
+			cursor.children.putIfAbsent(level,new TrieNode());
+			cursor = cursor.children.get(level);
+			cursor.visitCount += count;
+		}
+	}
+	void buildOutput(TrieNode cursor, StringBuilder sb, List<String> collector) {
+		for (String child: cursor.children.keySet()) {	
+			int sbLength = sb.length();
+			sb.append(child);
+			sb.append(DOT_STRING);
+			buildOutput(cursor.children.get(child),sb,collector);
+			StringBuilder entrySb = new StringBuilder(Integer.toString(cursor.children.get(child).visitCount));
+			entrySb.append(SEPARATOR);
+			entrySb.append(reverseTokens(sb));
+			collector.add(entrySb.toString());
+			sb.setLength(sbLength);
+		}
+	}
+	String reverseTokens(StringBuilder sb) {
+		StringBuilder answer = new StringBuilder();
+		String[] tokens = sb.toString().split(DOT_REGEX);
+		for (int i = tokens.length - 1; i >= 0; i--) {
+			answer.append(tokens[i]);
+			answer.append(DOT_STRING);
+		}
+		return answer.toString().substring(0,answer.length() - 1);
+	}
+	List<String> subdomainVisits(String[] cpdomains) {
+		for (String cpd: cpdomains) {	
+			addCount(cpd);
+		}
+		List<String> answer = new ArrayList<>();
+		StringBuilder sb = new StringBuilder();
+		buildOutput(root,sb,answer);
+		return answer;
+	}
+	class TrieNode {
+		Map<String, TrieNode> children = new HashMap<>();
+		int visitCount = 0;
+	}
+}

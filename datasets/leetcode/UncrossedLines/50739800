@@ -1,0 +1,54 @@
+class Solution {
+	int get(int r, int[] d) {
+		int l = 2048;
+		r += 2048;
+		int z = 0;
+		while (l <= r) {
+			if (l % 2 == 1) {
+				if (z < d[l]) {
+					z = d[l];
+				}
+				l++;
+			}
+			if (r % 2 == 0) {
+				if (z < d[r]) {
+					z = d[r];
+				}
+				r--;
+			}
+			l >>= 1;
+			r >>= 1;
+		}
+		return z;
+	}
+	int maxUncrossedLines(int[] n1, int[] n2) {
+		ArrayList<Integer>[] p = new ArrayList[2_001];
+		for (int i = 0; i <= 2_000; i++) {
+			p[i] = new ArrayList<>();
+		}
+		for (int i = n2.length - 1; i >= 0; i--) {
+			p[n2[i]].add(i);
+		}
+		int a = 0, t;
+		int[] d = new int[4_096];
+		for (int x: n1) {	
+			for (int y: p[x]) {	
+				t = get(y - 1,d) + 1;
+				update(y,t,d);
+				if (a < t) {
+					a = t;
+				}
+			}
+		}
+		return a;
+	}
+	void update(int x, int v, int[] d) {
+		x += 2048;
+		for (; x > 0; x >>= 1) {
+			if (d[x] >= v) {
+				return;
+			}
+			d[x] = v;
+		}
+	}
+}

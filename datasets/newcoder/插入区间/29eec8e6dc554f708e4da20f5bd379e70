@@ -1,0 +1,35 @@
+class Solution {
+	Interval[] insertInterval(Interval[] Intervals, Interval newInterval) {
+		List<Interval> list = new LinkedList<>();
+		boolean flag = false;
+		for (int i = 0; i < Intervals.length; ++i) {
+			list.add(Intervals[i]);
+		}
+		for (int i = 0; i < list.size(); ++i) {
+			if (list.get(i).start > newInterval.start) {
+				list.add(i,newInterval);
+				flag = true;
+				break;
+			}
+		}
+		if (!flag) {
+			list.add(newInterval);
+		}
+		List<Interval> reslist = new LinkedList<>();
+		reslist.add(list.get(0));
+		for (int i = 1; i < list.size(); ++i) {
+			if (list.get(i).start > reslist.get(reslist.size() - 1).end) {
+				reslist.add(list.get(i));
+			} 
+			else {
+				reslist.get(reslist.size() - 1).end = Math.max(list.get(i).end,reslist.get(reslist.size() - 1).end);
+			}
+		}
+		Interval[] res = new Interval[reslist.size()];
+		int index = 0;
+		for (Interval i: reslist) {	
+			res[index++] = i;
+		}
+		return res;
+	}
+}

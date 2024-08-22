@@ -1,0 +1,22 @@
+class Solution {
+	int maxSatisfaction(int[] satisfaction) {
+		Arrays.sort(satisfaction);
+		int n = satisfaction.length;
+		int[][] dp = new int[n + 1][n + 1];
+		for (int[] a: dp) {	
+			Arrays.fill(a,-1);
+		}
+		return maxSatisfactionMemo(satisfaction,0,0,dp);
+	}
+	int maxSatisfactionMemo(int[] satisfaction, int index, int time, int[][] dp) {
+		if (index == satisfaction.length) {
+			return 0;
+		}
+		if (dp[index][time] != -1) {
+			return dp[index][time];
+		}
+		int includeDish = (satisfaction[index] * (time + 1)) + maxSatisfactionMemo(satisfaction,index + 1,time + 1,dp);
+		int excludeDish = maxSatisfactionMemo(satisfaction,index + 1,time,dp);
+		return dp[index][time] = Math.max(includeDish,excludeDish);
+	}
+}

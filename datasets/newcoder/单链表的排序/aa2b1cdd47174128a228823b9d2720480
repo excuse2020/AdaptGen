@@ -1,0 +1,47 @@
+class Solution {
+	ListNode mergerListNode(ListNode left, ListNode right) {
+		if (left == null) {
+			return right;
+		}
+		if (right == null) {
+			return left;
+		}
+		ListNode newNode = new ListNode(0);
+		ListNode tail = newNode;
+		while (left != null && right != null) {
+			if (left.val > right.val) {
+				newNode.next = right;
+				right = right.next;
+			} 
+			else {
+				newNode.next = left;
+				left = left.next;
+			}
+			newNode = newNode.next;
+		}
+		if (left != null) {
+			newNode.next = left;
+		} 
+		else {
+			newNode.next = right;
+		}
+		return tail.next;
+	}
+	ListNode sortInList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode pre = head;
+		ListNode cur = head.next;
+		while (cur != null && cur.next != null) {
+			pre = pre.next;
+			cur = cur.next.next;
+		}
+		ListNode mid = pre.next;
+		pre.next = null;
+		ListNode left = sortInList(head);
+		ListNode right = sortInList(mid);
+		ListNode listNode = mergerListNode(left,right);
+		return listNode;
+	}
+}

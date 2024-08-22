@@ -1,0 +1,39 @@
+class Solution {
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		List<List<Integer>> ans = new ArrayList<>();
+		int[] row = new int[2];
+		for (int i: queries) {	
+			Arrays.fill(row,-1);
+			findFloor(root,i,row);
+			findCeil(root,i,row);
+			ans.add(Arrays.asList(row[0],row[1]));
+		}
+		return ans;
+	}
+	void findCeil(TreeNode root, int val, int[] row) {
+		if (root == null) {
+			return;
+		}
+		if (root.val >= val) {
+			row[1] = root.val;
+			findCeil(root.left,val,row);
+			return;
+		} 
+		else {
+			findCeil(root.right,val,row);
+		}
+	}
+	void findFloor(TreeNode root, int val, int[] row) {
+		if (root == null) {
+			return;
+		}
+		if (root.val <= val) {
+			row[0] = root.val;
+			findFloor(root.right,val,row);
+			return;
+		} 
+		else {
+			findFloor(root.left,val,row);
+		}
+	}
+}

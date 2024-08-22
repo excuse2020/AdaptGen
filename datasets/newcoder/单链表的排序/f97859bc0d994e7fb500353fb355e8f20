@@ -1,0 +1,51 @@
+class Solution {
+	void KuaiPaiSort(int[] arr, int start, int end) {
+		int right = end;
+		int left = start;
+		int temp = arr[start];
+		while (left < right) {
+			while (left < right) {
+				if (temp > arr[right]) {
+					arr[left] = arr[right];
+					break;
+				}
+				right--;
+			}
+			while (left < right) {
+				if (temp < arr[left]) {
+					arr[right] = arr[left];
+					break;
+				}
+				left++;
+			}
+		}
+		arr[left] = temp;
+		if (left - start > 0) {
+			KuaiPaiSort(arr,start,left);
+		}
+		if (end - left > 0) {
+			KuaiPaiSort(arr,left + 1,end);
+		}
+	}
+	ListNode sortInList(ListNode head) {
+		ListNode p = head;
+		ArrayList<Integer> list = new ArrayList<>();
+		while (p != null) {
+			list.add(p.val);
+			p = p.next;
+		}
+		int[] arr = new int[list.size()];
+		for (int j = 0; j < list.size(); j++) {
+			arr[j] = list.get(j);
+		}
+		KuaiPaiSort(arr,0,arr.length - 1);
+		int i = 0;
+		p = head;
+		while (head != null) {
+			head.val = arr[i];
+			head = head.next;
+			i++;
+		}
+		return p;
+	}
+}

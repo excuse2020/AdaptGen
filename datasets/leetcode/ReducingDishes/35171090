@@ -1,0 +1,23 @@
+class Solution {
+	int maxLikeTime(int ind, int time, int satisfaction, int n, int dp) {
+		if (ind == n) {
+			return 0;
+		}
+		if (dp[ind][time] != -1) {
+			return dp[ind][time];
+		}
+		int take = 0, notTake = 0;
+		take += time * satisfaction[ind] + maxLikeTime(ind + 1,time + 1,satisfaction,n,dp);
+		notTake += maxLikeTime(ind + 1,time,satisfaction,n,dp);
+		return dp[ind][time] = Math.max(take,notTake);
+	}
+	int maxSatisfaction(int[] satisfaction) {
+		int n = satisfaction.length;
+		Arrays.sort(satisfaction);
+		int dp = new int[n + 1][n + 1];
+		for (int row: dp) {	
+			Arrays.fill(row,-1);
+		}
+		return maxLikeTime(0,1,satisfaction,n,dp);
+	}
+}

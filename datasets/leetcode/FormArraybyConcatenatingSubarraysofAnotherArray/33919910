@@ -1,0 +1,47 @@
+class Solution {
+	boolean canChoose(int[][] groups, int[] nums) {
+		int lo = 0;
+		for (int[] g: groups) {	
+			lo = match(nums,lo,g,suffixPrefix(g));
+			if (lo < 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int match(int[] text, int lo, int[] ptn, int[] suffixPrefix) {
+		int j = lo, i = 0;
+		while (j < text.length) {
+			if (text[j] == ptn[i]) {
+				i++;
+				j++;
+			} 
+			else if (i == 0) {
+				j++;
+			} 
+			else {
+				i = suffixPrefix[i - 1];
+			}
+			if (i == ptn.length) {
+				return j;
+			}
+		}
+		return -1;
+	}
+	int[] suffixPrefix(int[] arr) {
+		int n = arr.length;
+		int[] ans = new int[n];
+		for (int i = 0, j = 1; j < n; ) {
+			if (arr[i] == arr[j]) {
+				ans[j++] = ++i;
+			} 
+			else if (i == 0) {
+				j++;
+			} 
+			else {
+				i = ans[i - 1];
+			}
+		}
+		return ans;
+	}
+}

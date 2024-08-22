@@ -1,0 +1,32 @@
+class Solution {
+	Map<TreeNode, Integer> cache = new HashMap<>();
+	int depth(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		if (cache.containsKey(root)) {
+			return cache.get(root);
+		}
+		int left = depth(root.left);
+		int right = depth(root.right);
+		cache.put(root,left > right ? left + 1 : right + 1);
+		return cache.get(root);
+	}
+	TreeNode dfs(TreeNode root) {
+		if (root == null || depth(root.left) == depth(root.right)) {
+			return root;
+		}
+		int left = depth(root.left);
+		int right = depth(root.right);
+		if (left > right) {
+			return dfs(root.left);
+		} 
+		else {
+			return dfs(root.right);
+		}
+	}
+	TreeNode lcaDeepestLeaves(TreeNode root) {
+		depth(root);
+		return dfs(root);
+	}
+}

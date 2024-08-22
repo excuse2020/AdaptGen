@@ -1,0 +1,62 @@
+class Solution {
+	List<TreeNode> leaf = new ArrayList<>();
+	Map<TreeNode, TreeNode> parent = new HashMap<>();
+	void bfs(TreeNode root) {
+		Queue<Pair<TreeNode, TreeNode>> q = new LinkedList<>();
+		q.add(new Pair(root, null));
+		while (!q.isEmpty()) {
+			var curr = q.poll();
+			TreeNode n = curr.getKey();
+			TreeNode p = curr.getValue();
+			parent.put(n,p);
+			if (n.left == null && n.right == null) {
+				leaf.add(n);
+			}
+			if (n.left != null) {
+				q.add(new Pair(n.left, n));
+			}
+			if (n.right != null) {
+				q.add(new Pair(n.right, n));
+			}
+		}
+	}
+	int countPairs(TreeNode root, int d) {
+		int res = 0;
+		bfs(root);
+		for (var node: leaf) {	
+			res += goodLeaf(node,new HashSet<>(),d);
+		}
+		return res / 2;
+	}
+	int goodLeaf(TreeNode node, Set<TreeNode> vis, int k) {
+		int count = -1;
+		Queue<Pair<TreeNode, Integer>> q = new LinkedList<>();
+		q.add(new Pair(node, 0));
+		vis.add(node);
+		while (!q.isEmpty()) {
+			var curr = q.poll();
+			TreeNode n = curr.getKey();
+			TreeNode p = parent.get(n);
+			int dist = curr.getValue();
+			if (dist > k) {
+				continue;
+			}
+			if (n.left == null && n.right == null) {
+				count++;
+			}
+			if (n.left != null && !vis.contains(n.left)) {
+				vis.add(n.left);
+				q.add(new Pair(n.left, dist + 1));
+			}
+			if (n.right != null && !vis.contains(n.right)) {
+				vis.add(n.right);
+				q.add(new Pair(n.right, dist + 1));
+			}
+			if (p != null && !vis.contains(p)) {
+				vis.add(p);
+				q.add(new Pair(p, dist + 1));
+			}
+		}
+		return count;
+	}
+}

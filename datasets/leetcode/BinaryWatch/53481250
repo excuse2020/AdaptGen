@@ -1,0 +1,40 @@
+class Solution {
+	void addResult(int hrs, int mins, TreeSet<String> res) {
+		if (hrs < 12 && mins < 60) {
+			StringBuilder s = new StringBuilder();
+			s.append(hrs).append(":");
+			if (mins < 10) {
+				s.append("0");
+			}
+			s.append(mins);
+			res.add(s.toString());
+		}
+	}
+	void generatePermutations(int hours, int minutes, int count, int position, TreeSet<String> res) {
+		if (count == 0) {
+			addResult(hours,minutes,res);
+			return;
+		}
+		for (int i = position; i < 10; i++) {
+			if (i < 6) {
+				minutes += 1 << i;
+				if (minutes < 60) {
+					generatePermutations(hours,minutes,count - 1,i + 1,res);
+				}
+				minutes -= 1 << i;
+			} 
+			else {
+				hours += 1 << (i - 6);
+				if (hours < 12) {
+					generatePermutations(hours,minutes,count - 1,i + 1,res);
+				}
+				hours -= 1 << (i - 6);
+			}
+		}
+	}
+	List<String> readBinaryWatch(int turnedOn) {
+		TreeSet<String> res = new TreeSet<>();
+		generatePermutations(0,0,turnedOn,0,res);
+		return new ArrayList<>(res);
+	}
+}

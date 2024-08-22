@@ -1,0 +1,33 @@
+class Solution {
+	int minIncUsingCounting(int[] nums) {
+		int moves = 0;
+		int max = 0;
+		for (int val: nums) {	
+			max = max < val ? val : max;
+		}
+		int[] bucket = new int[max + nums.length];
+		for (int i = 0; i < nums.length; i++) {
+			bucket[nums[i]] += 1;
+		}
+		for (int i = 1; i < bucket.length; i++) {
+			if (bucket[i - 1] > 1) {
+				bucket[i] += (bucket[i - 1] - 1);
+				moves += (bucket[i - 1] - 1);
+			}
+		}
+		return moves;
+	}
+	int minIncUsingSortOnly(int[] nums) {
+		int moves = 0;
+		for (int i = 1; i < nums.length; i++) {
+			if (nums[i] <= nums[i - 1]) {
+				moves += ((nums[i - 1] + 1) - nums[i]);
+				nums[i] += ((nums[i - 1] + 1) - nums[i]);
+			}
+		}
+		return moves;
+	}
+	int minIncrementForUnique(int[] nums) {
+		return minIncUsingCounting(nums);
+	}
+}

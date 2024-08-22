@@ -1,0 +1,46 @@
+class Solution {
+	boolean dfs(int n, int leftChild, int rightChild, boolean vis, int curr) {
+		if (curr == -1) {
+			return true;
+		}
+		if (vis[curr]) {
+			return false;
+		}
+		vis[curr] = true;
+		return (dfs(n,leftChild,rightChild,vis,leftChild[curr])) && (dfs(n,leftChild,rightChild,vis,rightChild[curr]));
+	}
+	int getRoot(int n, int leftChild, int rightChild) {
+		HashSet<Integer> childSet = new HashSet<>();
+		IntStream.of(leftChild).forEach();
+		IntStream.of(rightChild).forEach();
+		Set<Integer> parentSet = IntStream.range(0,n).boxed().collect(Collectors.toSet());
+		System.out.println("Updated HashSet: " + childSet);
+		System.out.println("Updated HashSet: " + parentSet);
+		parentSet.removeAll(childSet);
+		System.out.println("Updated HashSet: " + childSet);
+		System.out.println("Updated HashSet: " + parentSet);
+		int parent = 0;
+		if (parentSet.size() > 1) {
+			return -1;
+		}
+		for (int i: parentSet) {	
+			parent = i;
+		}
+		return parent;
+	}
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		boolean visited = new boolean[n];
+		int root = getRoot(n,leftChild,rightChild);
+		System.out.println("root : " + root);
+		if (root == -1) {
+			return false;
+		}
+		boolean ans = dfs(n,leftChild,rightChild,visited,root);
+		for (int i = 0; i < n; i++) {
+			if (!visited[i]) {
+				return false;
+			}
+		}
+		return ans;
+	}
+}

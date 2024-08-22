@@ -1,0 +1,69 @@
+class Solution {
+	void inOrder(TreeNode root, List<Integer> list) {
+		if (root == null) {
+			return;
+		}
+		ArrayDeque<TreeNode> stack = new ArrayDeque<>();
+		TreeNode curr = root;
+		while (!stack.isEmpty() || curr != null) {
+			if (curr != null) {
+				stack.push(curr);
+				curr = curr.left;
+			} 
+			else {
+				curr = stack.pop();
+				list.add(curr.val);
+				curr = curr.right;
+			}
+		}
+	}
+	void postOrder(TreeNode root, List<Integer> list) {
+		if (root == null) {
+			return;
+		}
+		ArrayDeque<TreeNode> stack = new ArrayDeque<>();
+		stack.push(root);
+		while (!stack.isEmpty()) {
+			TreeNode curr = stack.pop();
+			list.add(0,curr.val);
+			if (curr.left != null) {
+				stack.push(curr.left);
+			}
+			if (curr.right != null) {
+				stack.push(curr.right);
+			}
+		}
+	}
+	void preOrder(TreeNode root, List<Integer> list) {
+		if (root == null) {
+			return;
+		}
+		ArrayDeque<TreeNode> stack = new ArrayDeque<>();
+		stack.push(root);
+		while (!stack.isEmpty()) {
+			TreeNode curr = stack.pop();
+			list.add(curr.val);
+			if (curr.right != null) {
+				stack.push(curr.right);
+			}
+			if (curr.left != null) {
+				stack.push(curr.left);
+			}
+		}
+	}
+	int[][] threeOrders(TreeNode root) {
+		List<Integer> list1 = new ArrayList<>();
+		List<Integer> list2 = new ArrayList<>();
+		List<Integer> list3 = new ArrayList<>();
+		preOrder(root,list1);
+		inOrder(root,list2);
+		postOrder(root,list3);
+		int[][] res = new int[3][list1.size()];
+		for (int i = 0; i < list1.size(); i++) {
+			res[0][i] = list1.get(i);
+			res[1][i] = list2.get(i);
+			res[2][i] = list3.get(i);
+		}
+		return res;
+	}
+}

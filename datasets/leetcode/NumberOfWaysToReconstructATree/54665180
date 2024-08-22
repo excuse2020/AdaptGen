@@ -1,0 +1,46 @@
+class Solution {
+	int checkWays(int[][] pairs) {
+		Map<Integer, Set<Integer>> graph = new HashMap<>();
+		for (int[] pair: pairs) {	
+			graph.computeIfAbsent(pair[0],(k) -> {new HashSet<>()}).add(pair[1]);
+			graph.computeIfAbsent(pair[1],(k) -> {new HashSet<>()}).add(pair[0]);
+		}
+		List<Integer> nodes = new ArrayList<>(graph.keySet());
+		nodes.sort((a, b) -> {graph.get(b).size() - graph.get(a).size()});
+		int root = nodes.get(0);
+		if (graph.get(root).size() != graph.size() - 1) {
+			return 0;
+		}
+		int res = 1;
+		for (int node: nodes) {	
+			if (node == root) {
+				continue;
+			}
+			int currDegree = graph.get(node).size();
+			int parent = -1;
+			int parentDegree = Integer.MAX_VALUE;
+			for (int neighbor: graph.get(node)) {	
+				int degree = graph.get(neighbor).size();
+				if (degree < parentDegree && degree >= currDegree) {
+					parentDegree = degree;
+					parent = neighbor;
+				}
+			}
+			if (parent == -1) {
+				return 0;
+			}
+			for (int neighbor: graph.get(node)) {	
+				if (neighbor == parent) {
+					continue;
+				}
+				if (!graph.get(parent).contains(neighbor)) {
+					return 0;
+				}
+			}
+			if (parentDegree == currDegree) {
+				res = 2;
+			}
+		}
+		return res;
+	}
+}

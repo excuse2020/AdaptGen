@@ -1,0 +1,45 @@
+class Solution {
+	void bfs(ArrayList<Integer>[] g, boolean[] vis, int source) {
+		Queue<Integer> q = new LinkedList<>();
+		q.add(source);
+		vis[source] = true;
+		while (q.size() > 0) {
+			int u = q.poll();
+			for (int i = 0; i < g[u].size(); i++) {
+				int v = g[u].get(i);
+				if (vis[v] == false) {
+					q.add(v);
+					vis[v] = true;
+				}
+			}
+		}
+	}
+	int reachableNodes(int n, int[][] edges, int[] restricted) {
+		ArrayList<Integer>[] g = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			g[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < edges.length; i++) {
+			int u = edges[i][0];
+			int v = edges[i][1];
+			g[u].add(v);
+			g[v].add(u);
+		}
+		boolean[] vis = new boolean[n];
+		for (int r: restricted) {	
+			vis[r] = true;
+		}
+		for (int i = 0; i < n; i++) {
+			if (vis[i] == false) {
+				bfs(g,vis,0);
+			}
+		}
+		int count = 0;
+		for (boolean b: vis) {	
+			if (b) {
+				count++;
+			}
+		}
+		return count - restricted.length;
+	}
+}

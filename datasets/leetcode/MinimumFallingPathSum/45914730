@@ -1,0 +1,38 @@
+class Solution {
+	int getElementFromCell(int cellNumber, int[][] matrix) {
+		int y = cellNumber / matrix.length;
+		int x = cellNumber % matrix.length;
+		return matrix[y][x];
+	}
+	int minFallingPathSum(int[][] matrix) {
+		Map<Integer, Integer> cacheMap = new HashMap<>();
+		int min = Integer.MAX_VALUE;
+		for (int i = 0; i < matrix.length; i++) {
+			min = Math.min(minFallingPathSum(i,matrix,cacheMap),min);
+		}
+		return min;
+	}
+	int minFallingPathSum(int cellNumber, int[][] matrix, Map<Integer, Integer> cache) {
+		if (cellNumber / matrix.length == matrix.length - 1) {
+			return getElementFromCell(cellNumber,matrix);
+		}
+		if (cache.containsKey(cellNumber)) {
+			return cache.get(cellNumber);
+		}
+		int bottomCell = cellNumber + matrix.length;
+		int bottomEl = Integer.MAX_VALUE;
+		int bottomLeft = Integer.MAX_VALUE;
+		int bottomRight = Integer.MAX_VALUE;
+		bottomEl = minFallingPathSum(bottomCell,matrix,cache);
+		int row = cellNumber / matrix.length;
+		if ((bottomCell - 1) / matrix.length > row) {
+			bottomLeft = minFallingPathSum(bottomCell - 1,matrix,cache);
+		}
+		if ((bottomCell + 1) / matrix.length == row + 1) {
+			bottomRight = minFallingPathSum(bottomCell + 1,matrix,cache);
+		}
+		int min = Math.min(bottomEl,Math.min(bottomRight,bottomLeft)) + getElementFromCell(cellNumber,matrix);
+		cache.put(cellNumber,min);
+		return min;
+	}
+}

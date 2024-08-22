@@ -1,0 +1,42 @@
+class Solution {
+	double getDist(int x1, int y1, int x2, int y2) {
+		return Math.sqrt((double) Math.pow(x1 - x2,2) + (double) Math.pow(y1 - y2,2));
+	}
+	int maximumDetonation(int[][] bombs) {
+		int n = bombs.length;
+		int res = 0;
+		int dp = new int[n];
+		Arrays.fill(dp,-1);
+		for (int i = 0; i < n; i++) {
+			int arr = new int[1];
+			arr[0] = 0;
+			boolean denoted = new boolean[n];
+			if (dp[i] == -1) {
+				rec(bombs,i,arr,denoted,dp);
+				res = Math.max(res,arr[0]);
+			} 
+			else {
+				res = Math.max(res,dp[i]);
+			}
+		}
+		return res;
+	}
+	void rec(int[][] bombs, int src, int arr, boolean denoted, int[] dp) {
+		if (src < 0 || src >= bombs.length) {
+			return;
+		}
+		denoted[src] = true;
+		arr[0] += 1;
+		int x = bombs[src][0];
+		int y = bombs[src][1];
+		int r = bombs[src][2];
+		for (int i = 0; i < bombs.length; i++) {
+			double dist = getDist(bombs[i][0],bombs[i][1],x,y);
+			if (i != src && !denoted[i] && dist <= (double) r) {
+				rec(bombs,i,arr,denoted,dp);
+				dp[i] = arr[0];
+			}
+		}
+		dp[src] = arr[0];
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	ArrayList<String> res = new ArrayList();
+	void backtracking(String s, int index, ArrayList<Integer> list, int time) {
+		if (time > 3) {
+			return;
+		}
+		if (list.size() == 3) {
+			String a = s.substring(0,list.get(0));
+			String b = s.substring(list.get(0),list.get(1));
+			String c = s.substring(list.get(1),list.get(2));
+			String d = s.substring(list.get(2));
+			if (d.equals("") || (d.charAt(0) == '0' && (Integer.parseInt(d) != 0 || d.length() > 1))) {
+				return;
+			}
+			if (Integer.parseInt(d) <= 255) {
+				res.add(a + ".");
+			}
+		}
+		for (int j = 1; j <= 3; j++) {
+			if (index + j > s.length()) {
+				break;
+			}
+			String str2 = s.substring(index,index + j);
+			boolean b = true;
+			if (str2.charAt(0) == '0' && (Integer.parseInt(str2) != 0 || str2.length() > 1)) {
+				b = false;
+			}
+			if (b && Integer.parseInt(str2) <= 255) {
+				list.add(index + j);
+				backtracking(s,j + index,list,time + 1);
+				list.remove(list.size() - 1);
+			}
+		}
+	}
+	ArrayList<String> restoreIpAddresses(String s) {
+		backtracking(s,0,new ArrayList<Integer>(),0);
+		return res;
+	}
+}

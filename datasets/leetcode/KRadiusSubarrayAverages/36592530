@@ -1,0 +1,24 @@
+class Solution {
+	int[] getAverages(int[] nums, int k) {
+		int i = 0, n = nums.length;
+		int[] ans = new int[n];
+		long[] sum = new long[n];
+		sum[0] = nums[0];
+		for (i = 1; i < n; i++) {
+			sum[i] += sum[i - 1] + nums[i];
+		}
+		for (i = 0; i < n; i++) {
+			if (i >= k && i < n - k) {
+				long leftksum = i - k >= 0 ? sum[i - k - 1] : 0;
+				long rightksum = i + k < n ? sum[i + k] : 0;
+				long dif = rightksum - leftksum;
+				dif /= (2 * k + 1);
+				ans[i] = (int) dif;
+			} 
+			else {
+				ans[i] = -1;
+			}
+		}
+		return ans;
+	}
+}

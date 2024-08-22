@@ -1,0 +1,26 @@
+class Solution {
+	int minimumAverageDifference(int[] nums) {
+		long[] avgsLeft = new long[nums.length];
+		long sumOne = 0;
+		for (int i = 0; i < nums.length; i++) {
+			sumOne += nums[i];
+			avgsLeft[i] = sumOne / (i + 1);
+		}
+		long[] avgsRight = new long[nums.length];
+		long sumTwo = 0, count = 1;
+		for (int i = nums.length - 2; i >= 0; i--) {
+			sumTwo += nums[i + 1];
+			avgsRight[i] = sumTwo / (count++);
+		}
+		long min = Integer.MAX_VALUE;
+		int idx = 0;
+		for (int i = 0; i < avgsLeft.length; i++) {
+			avgsLeft[i] = Math.abs(avgsLeft[i] - avgsRight[i]);
+			if (min > avgsLeft[i]) {
+				min = avgsLeft[i];
+				idx = i;
+			}
+		}
+		return idx;
+	}
+}

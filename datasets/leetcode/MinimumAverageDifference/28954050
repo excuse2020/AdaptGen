@@ -1,0 +1,28 @@
+class Solution {
+	int minimumAverageDifference(int[] nums) {
+		int n = nums.length;
+		if (n == 1) {
+			return 0;
+		}
+		long leftSum = new long[n];
+		leftSum[0] = nums[0];
+		for (int i = 1; i < n; i++) {
+			leftSum[i] = leftSum[i - 1] + nums[i];
+		}
+		long avg = Math.abs(leftSum[0] - (leftSum[n - 1] - leftSum[0]) / (n - 1));
+		int index = 0;
+		for (int i = 1; i < n - 1; i++) {
+			long val = Math.abs((long) (leftSum[i] / (i + 1)) - (long) ((leftSum[n - 1] - leftSum[i]) / (n - i)));
+			if (val < avg) {
+				avg = val;
+				index = i;
+			}
+		}
+		long val = (long) (leftSum[n - 1] / n);
+		if (val < avg) {
+			avg = val;
+			index = n - 1;
+		}
+		return index;
+	}
+}

@@ -1,0 +1,51 @@
+class Solution {
+	Map<Integer, List<Integer>> mapStations(int[][] routes) {
+		Map<Integer, List<Integer>> stations = new HashMap();
+		for (int i = 0; i < routes.length; i++) {
+			for (int bus: routes[i]) {	
+				stations.putIfAbsent(bus,new ArrayList());
+				stations.get(bus).add(i);
+			}
+		}
+		return stations;
+	}
+	int numBusesToDestination(int[][] routes, int source, int target) {
+		Map<Integer, List<Integer>> stations = mapStations(routes);
+		Queue<Integer> q = new LinkedList();
+		Set<Integer> seen = new HashSet();
+		boolean[] routeSeen = new boolean[routes.length];
+		seen.add(source);
+		int tripLen = 0;
+		if (!stations.containsKey(source)) {
+			return -1;
+		}
+		if (source == target) {
+			return 0;
+		}
+		for (int station: stations.get(source)) {	
+			q.offer(station);
+		}
+		while (!q.isEmpty()) {
+			int size = q.size();
+			tripLen++;
+			for (int i = 0; i < size; i++) {
+				int cur = q.poll();
+				if (routeSeen[cur]) {
+					continue;
+				}
+				routeSeen[cur] = true;
+				for (int station: routes[cur]) {	
+					if (station == target) {
+						return tripLen;
+					}
+					if (seen.add(station)) {
+						for (int neighbor: stations.get(station)) {	
+							q.offer(neighbor);
+						}
+					}
+				}
+			}
+		}
+		return -1;
+	}
+}

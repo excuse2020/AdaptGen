@@ -1,0 +1,42 @@
+class Solution {
+	int findMin(int[] nums) {
+		return search(nums,0,nums.length - 1);
+	}
+	int search(int[] nums, int left, int right) {
+		int mid = 0;
+		int min = nums[0];
+		while (left <= right) {
+			mid = left + (right - left) / 2;
+			min = Math.min(min,Math.min(nums[left],Math.min(nums[right],nums[mid])));
+			if (left != right && nums[left] == nums[right]) {
+				while (right - 1 >= left && nums[right - 1] == nums[right]) {
+					right--;
+				}
+				while (left + 1 <= right && nums[left + 1] == nums[left]) {
+					left++;
+				}
+				mid = left + (right - left) / 2;
+				min = Math.min(min,Math.min(nums[left],Math.min(nums[right],nums[mid])));
+			}
+			if (nums[left] < nums[right]) {
+				right = mid - 1;
+				while (right - 1 >= 0 && nums[right - 1] == nums[right]) {
+					right--;
+				}
+			} 
+			else if (nums[mid] < nums[left]) {
+				right = mid - 1;
+				while (right - 1 >= 0 && nums[right - 1] == nums[right]) {
+					right--;
+				}
+			} 
+			else {
+				left = mid + 1;
+				while (left + 1 < nums.length && nums[left + 1] == nums[left]) {
+					left++;
+				}
+			}
+		}
+		return min;
+	}
+}

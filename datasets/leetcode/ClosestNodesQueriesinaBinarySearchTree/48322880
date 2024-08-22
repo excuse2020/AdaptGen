@@ -1,0 +1,45 @@
+class Solution {
+	TreeSet<Integer> set = new TreeSet<>();
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		List<List<Integer>> list = new ArrayList<>();
+		int max = -1;
+		int min = -1;
+		inOrder(root);
+		int idx = 0;
+		for (int q: queries) {	
+			ArrayList<Integer> base = new ArrayList<>();
+			if (set.contains(q)) {
+				min = q;
+				max = q;
+			} 
+			else {
+				Integer high = set.higher(q);
+				if (high == null) {
+					max = -1;
+				} 
+				else {
+					max = high;
+				}
+				Integer low = set.lower(q);
+				if (low == null) {
+					min = -1;
+				} 
+				else {
+					min = low;
+				}
+			}
+			base.add(min);
+			base.add(max);
+			list.add(base);
+		}
+		return list;
+	}
+	void inOrder(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		inOrder(root.left);
+		set.add(root.val);
+		inOrder(root.right);
+	}
+}

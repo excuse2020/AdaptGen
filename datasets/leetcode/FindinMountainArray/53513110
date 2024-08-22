@@ -1,0 +1,63 @@
+class Solution {
+	int findInMountainArray(int target, MountainArray mountainArr) {
+		int peak = peakElement(mountainArr);
+		int index1 = -1, index2 = -1;
+		index1 = orderAgnosticBinarySearch(mountainArr,0,peak,target);
+		if (index1 > -1) {
+			return index1;
+		} 
+		else {
+			index2 = orderAgnosticBinarySearch(mountainArr,peak + 1,mountainArr.length() - 1,target);
+		}
+		return index2;
+	}
+	int orderAgnosticBinarySearch(MountainArray mountainArr, int start, int end, int target) {
+		if (mountainArr.get(start) < mountainArr.get(end)) {
+			int middle = 0;
+			while (start <= end) {
+				middle = (start + end) / 2;
+				int m_val = mountainArr.get(middle);
+				if (m_val == target) {
+					return middle;
+				} 
+				else if (m_val > target) {
+					end = middle - 1;
+				} 
+				else {
+					start = middle + 1;
+				}
+			}
+		} 
+		else {
+			int middle = 0;
+			while (start <= end) {
+				middle = (start + end) / 2;
+				int m_val = mountainArr.get(middle);
+				if (m_val == target) {
+					return middle;
+				} 
+				else if (m_val > target) {
+					start = middle + 1;
+				} 
+				else {
+					end = middle - 1;
+				}
+			}
+		}
+		return -1;
+	}
+	int peakElement(MountainArray mountainArr) {
+		int start = 0, end = mountainArr.length() - 1, middle = 0;
+		while (start != end) {
+			middle = (start + end) / 2;
+			int m_val = mountainArr.get(middle), m1_val = mountainArr.get(middle + 1);
+			if (m_val > m1_val) {
+				end = middle;
+			}
+			if (m_val < m1_val) {
+				start = middle + 1;
+			}
+		}
+		return start;
+	}
+}

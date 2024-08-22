@@ -1,0 +1,59 @@
+class Solution {
+	void layerOrderTraversal(Queue<TreeNode> queue, List<Integer> rightNodes) {
+		int size = queue.size();
+		if (size == 0) {
+			return;
+		}
+		Queue<TreeNode> newQueue = new LinkedList<>();
+		while (!queue.isEmpty()) {
+			size--;
+			if (size == 0) {
+				rightNodes.add(queue.peek().val);
+			}
+			if (queue.peek().left != null) {
+				newQueue.offer(queue.peek().left);
+			}
+			if (queue.peek().right != null) {
+				newQueue.offer(queue.peek().right);
+			}
+			queue.poll();
+		}
+		layerOrderTraversal(newQueue,rightNodes);
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] vin) {
+		if (pre == null || vin == null || pre.length == 0 || vin.length == 0) {
+			return null;
+		}
+		return reConstructBinaryTree(pre,vin,0,pre.length - 1,0,vin.length - 1);
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] vin, int preStart, int preEnd, int vinStart, int vinEnd) {
+		if (preStart > preEnd || vinStart > vinEnd) {
+			return null;
+		}
+		TreeNode root = new TreeNode(pre[preStart]);
+		int index = 0;
+		while (vin[index] != root.val) {
+			index++;
+		}
+		int lenth = index - vinStart;
+		root.left = reConstructBinaryTree(pre,vin,preStart + 1,preStart + lenth,vinStart,index - 1);
+		root.right = reConstructBinaryTree(pre,vin,preStart + lenth,preEnd,index + 1,vinEnd);
+		return root;
+	}
+	int[] solve(int[] pre, int[] vin) {
+		if (pre == null || vin == null || pre.length == 0 || vin.length == 0) {
+			return new int[0];
+		}
+		TreeNode root = reConstructBinaryTree(pre,vin);
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.offer(root);
+		List<Integer> rightNodes = new ArrayList<>();
+		layerOrderTraversal(queue,rightNodes);
+		int[] newNodes = new int[rightNodes.size()];
+		int length = rightNodes.size();
+		for (int i = 0; i < length; i++) {
+			newNodes[i] = rightNodes.get(i);
+		}
+		return newNodes;
+	}
+}

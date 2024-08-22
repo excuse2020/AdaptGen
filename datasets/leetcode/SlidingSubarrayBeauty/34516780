@@ -1,0 +1,43 @@
+class Solution {
+	int[] getSubarrayBeauty(int[] nums, int k, int x) {
+		int st = 0;
+		int n = nums.length;
+		int[] res = new int[n - k + 1];
+		int freq = new int[51];
+		int itr = 0;
+		for (int i = 0; i < n; i++) {
+			int ele = -1 * nums[i];
+			if (ele > 0) {
+				freq[ele]++;
+			}
+			if (i >= k - 1) {
+				int cnt = x;
+				boolean flag = false;
+				for (int j = 50; j >= 1; j--) {
+					if (freq[j] > 0) {
+						cnt -= freq[j];
+						if (cnt <= 0) {
+							flag = true;
+							res[itr++] = -j;
+							int stEle = -1 * nums[st];
+							if (stEle > 0) {
+								freq[stEle]--;
+							}
+							st++;
+							break;
+						}
+					}
+				}
+				if (flag == false) {
+					res[itr++] = 0;
+					int stEle = -1 * nums[st];
+					if (stEle > 0) {
+						freq[stEle]--;
+					}
+					st++;
+				}
+			}
+		}
+		return res;
+	}
+}

@@ -1,0 +1,34 @@
+class Solution {
+	TreeNode balanceBST(TreeNode root) {
+		ArrayList<Integer> arr = new ArrayList<>();
+		inorder(arr,root);
+		int a = new int[arr.size()];
+		for (int i = 0; i < arr.size(); i++) {
+			a[i] = arr.get(i);
+		}
+		return create(a,0,a.length - 1);
+	}
+	TreeNode create(int[] nums, int s, int e) {
+		if (s > e) {
+			return null;
+		}
+		if (s == e) {
+			return new TreeNode(nums[s], null, null);
+		} 
+		else if (s + 1 == e) {
+			return new TreeNode(nums[e], (new TreeNode(nums[s], null, null)), null);
+		} 
+		else {
+			int mid = s + ((e - s) / 2);
+			return new TreeNode(nums[mid], create(nums,s,mid - 1), create(nums,mid + 1,e));
+		}
+	}
+	void inorder(ArrayList<Integer> arr, TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		inorder(arr,root.left);
+		arr.add(root.val);
+		inorder(arr,root.right);
+	}
+}

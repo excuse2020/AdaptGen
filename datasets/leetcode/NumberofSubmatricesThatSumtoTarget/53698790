@@ -1,0 +1,32 @@
+class Solution {
+	int numSubmatrixSumTarget(int[][] matrix, int target) {
+		int m = matrix.length;
+		int n = matrix[0].length;
+		for (int i = 0; i < m; i++) {
+			for (int j = 1; j < n; j++) {
+				matrix[i][j] = matrix[i][j] + matrix[i][j - 1];
+			}
+		}
+		int result = 0;
+		for (int col = 0; col < n; col++) {
+			for (int j = col; j < n; j++) {
+				HashMap<Integer, Integer> hs = new HashMap<>();
+				hs.put(0,1);
+				int cumSum = 0;
+				for (int row = 0; row < m; row++) {
+					cumSum = cumSum + matrix[row][j] - (col > 0 ? matrix[row][col - 1] : 0);
+					if (hs.containsKey(cumSum - target)) {
+						result = result + hs.get(cumSum - target);
+					}
+					if (hs.containsKey(cumSum)) {
+						hs.put(cumSum,hs.get(cumSum) + 1);
+					} 
+					else {
+						hs.put(cumSum,1);
+					}
+				}
+			}
+		}
+		return result;
+	}
+}

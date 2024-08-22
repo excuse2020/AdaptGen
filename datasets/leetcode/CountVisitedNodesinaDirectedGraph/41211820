@@ -1,0 +1,61 @@
+class Solution {
+	int[] dfsLow;
+	int[] dfsNum;
+	int dfsNumCounter;
+	List<Integer> edges;
+	int n;
+	int[] result;
+	Deque<Integer> stack;
+	boolean[] visited;
+	int[] countVisitedNodes(List<Integer> edges) {
+		this.edges = edges;
+		n = edges.size();
+		result = new int[n];
+		visited = new boolean[n];
+		stack = new ArrayDeque<>();
+		dfsNumCounter = 0;
+		dfsNum = new int[n];
+		dfsLow = new int[n];
+		for (int i = 0; i < n; i++) {
+			if (result[i] > 0) {
+				continue;
+			}
+			dfs(i);
+			stack.clear();
+		}
+		return result;
+	}
+	void dfs(int u) {
+		visited[u] = true;
+		stack.push(u);
+		dfsLow[u] = dfsNum[u] = dfsNumCounter++;
+		int v = edges.get(u);
+		if (result[v] > 0) {
+			result[u] = result[v] + 1;
+		} 
+		else {
+			if (!visited[v]) {
+				dfs(v);
+				if (dfsLow[u] >= dfsLow[v]) {
+					result[u] = result[v];
+				} 
+				else {
+					result[u] = result[v] + 1;
+				}
+			} 
+			else {
+				int counter = 0;
+				while (true) {
+					int t = stack.pop();
+					counter++;
+					if (t == v) {
+						break;
+					}
+				}
+				result[u] = counter;
+			}
+			dfsLow[u] = Math.min(dfsLow[u],dfsLow[v]);
+		}
+		visited[u] = false;
+	}
+}

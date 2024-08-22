@@ -1,0 +1,26 @@
+class Solution {
+	int res = 0;
+	int getMaxSum(int i, int[] cost) {
+		if (i > cost.length) {
+			return 0;
+		}
+		int leftSum = getMaxSum(2 * i,cost);
+		int rightSum = getMaxSum(2 * i + 1,cost);
+		return cost[i - 1] + Math.max(leftSum,rightSum);
+	}
+	int minIncrements(int n, int[] cost) {
+		int maxSum = getMaxSum(1,cost);
+		postorder(1,0,maxSum,cost);
+		return res;
+	}
+	int postorder(int i, int totalCost, int maxSum, int[] cost) {
+		int n = cost.length;
+		if (2 * i > n) {
+			return maxSum - (totalCost + cost[i - 1]);
+		}
+		int left = postorder(2 * i,totalCost + cost[i - 1],maxSum,cost);
+		int right = postorder(2 * i + 1,totalCost + cost[i - 1],maxSum,cost);
+		res += Math.abs(left - right);
+		return Math.min(left,right);
+	}
+}

@@ -1,0 +1,37 @@
+class Solution {
+	Map<String, Integer> map = new HashMap<>();
+	int allocateMailboxesRecursive(int[] houses, int k, int low, int high) {
+		String key = low + "-";
+		if (k == 0 && low - high + 1 > 0) {
+			return Integer.MAX_VALUE / 2;
+		} 
+		else if (map.containsKey(key)) {
+			return map.get(key);
+		} 
+		else if (k == high - low + 1) {
+			map.put(key,0);
+			return 0;
+		} 
+		else if (k == 1) {
+			int bestSpot = low + (high - low) / 2;
+			int ans = 0;
+			for (int i = low; i <= high; i++) {
+				ans += Math.abs(houses[bestSpot] - houses[i]);
+			}
+			map.put(key,ans);
+			return ans;
+		} 
+		else {
+			int ans = Integer.MAX_VALUE / 2;
+			for (int i = low; i <= high; i++) {
+				ans = Math.min(ans,allocateMailboxesRecursive(houses,1,low,i) + allocateMailboxesRecursive(houses,k - 1,i + 1,high));
+			}
+			map.put(key,ans);
+			return ans;
+		}
+	}
+	int minDistance(int[] houses, int k) {
+		Arrays.sort(houses);
+		return allocateMailboxesRecursive(houses,k,0,houses.length - 1);
+	}
+}

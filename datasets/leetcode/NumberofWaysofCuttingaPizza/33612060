@@ -1,0 +1,35 @@
+class Solution {
+	int mod = 1000000007;
+	int findWays(int x, int y, int m, int n, int k, Integer[][][] dp, int[][] suffixSum) {
+		if (suffixSum[x][y] == 0) {
+			return 0;
+		}
+		if (k == 0) {
+			return 1;
+		}
+		if (dp[k][x][y] != null) {
+			return dp[k][x][y];
+		}
+		int ways = 0;
+		for (int i = x + 1; i < m; i++) {
+			if (suffixSum[x][y] - suffixSum[i][y] > 0) {
+				ways = (ways + findWays(i,y,m,n,k - 1,dp,suffixSum)) % mod;
+			}
+		}
+		for (int j = y + 1; j < n; j++) {
+			if (suffixSum[x][y] - suffixSum[x][j] > 0) {
+				ways = (ways + findWays(x,j,m,n,k - 1,dp,suffixSum)) % mod;
+			}
+		}
+		return dp[k][x][y] = ways;
+	}
+	int ways(String[] pizza, int k) {
+		int m = pizza.length;
+		int n = pizza[0].length();
+		Integer dp = new Integer[k][m][n];
+		int[][] suffixSum = new int[m + 1][n + 1];
+		int i = m - 1;
+		int j = n - 1;
+		suffixSum[i][j] = suffixSum[i][j + 1] + suffixSum[i + 1][j] - suffixSum[i + 1][j + 1];
+	}
+}

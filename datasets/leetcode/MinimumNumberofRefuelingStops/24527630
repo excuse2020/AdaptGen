@@ -1,0 +1,40 @@
+class Solution {
+	int minRefuelStops(int target, int startFuel, int[][] stations) {
+		if (startFuel >= target) {
+			return 0;
+		}
+		int n = stations.length;
+		if (n == 0 && target > startFuel) {
+			return -1;
+		}
+		PriorityQueue<Integer> maxHeap = new PriorityQueue<Integer>(Collections.reverseOrder());
+		int ans = 0;
+		int reach = startFuel;
+		for (int[] station: stations) {	
+			if (station[0] > reach) {
+				while (!maxHeap.isEmpty()) {
+					reach += maxHeap.poll();
+					ans++;
+					if (reach >= station[0]) {
+						break;
+					}
+				}
+				if (reach >= target) {
+					return ans;
+				}
+				if (station[0] > reach) {
+					return -1;
+				}
+			}
+			maxHeap.offer(station[1]);
+		}
+		while (!maxHeap.isEmpty()) {
+			reach += maxHeap.poll();
+			ans++;
+			if (reach >= target) {
+				return ans;
+			}
+		}
+		return -1;
+	}
+}

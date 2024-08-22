@@ -1,0 +1,24 @@
+class Solution {
+	long minimumOperations(int[] nums, int[] target) {
+		for (int i = 0; i < nums.length; i++) {
+			nums[i] -= target[i];
+		}
+		return split(nums,0,nums.length - 1);
+	}
+	long split(int[] diff, int start, int end) {
+		if (start > end) {
+			return 0L;
+		}
+		if (start == end) {
+			return Math.abs(diff[start]);
+		}
+		int mid = (end - start) / 2 + start;
+		long l = split(diff,start,mid);
+		long r = split(diff,mid + 1,end);
+		long res = l + r;
+		if ((diff[mid] >= 0 && diff[mid + 1] >= 0) || (diff[mid] < 0 && diff[mid + 1] < 0)) {
+			res -= Math.min(Math.abs(diff[mid]),Math.abs(diff[mid + 1]));
+		}
+		return res;
+	}
+}

@@ -1,0 +1,40 @@
+class Solution {
+	int numMusicPlaylists(int n, int goal, int k) {
+		long[][] dp = new long[goal + 1][n + 1];
+		long mod = (long) (1e9 + 7);
+		long ln = n;
+		long lk = k;
+		for (int i = goal; i >= 0; i--) {
+			for (int j = Math.min(i,n); j >= 0; j--) {
+				if (i == goal) {
+					if (j == n) {
+						dp[i][j] = 1;
+					}
+				} 
+				else {
+					if (j == n) {
+						dp[i][j] = (ln - lk) * dp[i + 1][j];
+						dp[i][j] %= mod;
+					} 
+					else {
+						if (j >= k) {
+							long lj = j;
+							dp[i][j] = dp[i + 1][j] * (lj - lk);
+							dp[i][j] %= mod;
+						}
+						dp[i][j] += dp[i + 1][j + 1];
+						dp[i][j] %= mod;
+					}
+				}
+			}
+		}
+		long rem = dp[0][0];
+		rem %= (mod);
+		long eff = rem;
+		for (long i = 1; i <= ln; i++) {
+			eff *= i;
+			eff %= mod;
+		}
+		return (int) eff;
+	}
+}

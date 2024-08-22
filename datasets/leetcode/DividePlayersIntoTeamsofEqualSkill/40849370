@@ -1,0 +1,39 @@
+class Solution {
+	void bucketSort(int[] skills) {
+		int[] skillFrequencies = new int[1000];
+		for (int skill: skills) {	
+			skillFrequencies[skill - 1] += 1;
+		}
+		int index = 0;
+		for (int i = 0; i < skillFrequencies.length; i++) {
+			int skillFrequency = skillFrequencies[i];
+			while (skillFrequency > 0) {
+				skills[index++] = i + 1;
+				skillFrequency--;
+			}
+		}
+	}
+	long dividePlayers(int[] skills) {
+		bucketSort(skills);
+		long chemistrySum = -1;
+		int expectedSkillSum = -1;
+		for (int i = 0; i < skills.length / 2; i++) {
+			int skillSum = skills[i] + skills[skills.length - 1 - i];
+			long chemistry = skills[i] * skills[skills.length - 1 - i];
+			if (chemistrySum == -1) {
+				expectedSkillSum = skillSum;
+				chemistrySum = chemistry;
+			} 
+			else {
+				if (skillSum != expectedSkillSum) {
+					chemistrySum = -1;
+					break;
+				} 
+				else {
+					chemistrySum += chemistry;
+				}
+			}
+		}
+		return chemistrySum;
+	}
+}

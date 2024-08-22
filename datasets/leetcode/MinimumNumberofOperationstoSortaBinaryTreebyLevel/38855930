@@ -1,0 +1,47 @@
+class Solution {
+	Map<Integer, List<Integer>> map = new HashMap<>();
+	void helper(TreeNode root, int level) {
+		if (!map.containsKey(level)) {
+			map.put(level,new ArrayList<>());
+		}
+		map.get(level).add(root.val);
+		if (root.left != null) {
+			helper(root.left,level + 1);
+		}
+		if (root.right != null) {
+			helper(root.right,level + 1);
+		}
+	}
+	int minimumOperations(TreeNode root) {
+		int count = 0;
+		helper(root,0);
+		for (int i = 0; i < map.size(); i++) {
+			count += task(map.get(i));
+		}
+		return count;
+	}
+	int task(List<Integer> list) {
+		Map<Integer, Integer> mapp = new HashMap<>();
+		for (int i = 0; i < list.size(); i++) {
+			mapp.put(list.get(i),i);
+		}
+		Collections.sort(list);
+		boolean[] k = new boolean[list.size()];
+		int res = 0;
+		for (int i = 0; i < list.size(); i++) {
+			if (k[i] || mapp.get(list.get(i)) == i) {
+				continue;
+			}
+			int j = i, m = 0;
+			while (!k[j]) {
+				k[j] = true;
+				j = mapp.get(list.get(j));
+				m++;
+			}
+			if (m > 0) {
+				res += m - 1;
+			}
+		}
+		return res;
+	}
+}

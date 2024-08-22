@@ -1,0 +1,30 @@
+class Solution {
+	ListNode findMiddle(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode fast = head.next.next;
+		ListNode slow = head;
+		while (fast != null && fast.next != null) {
+			fast = fast.next.next;
+			slow = slow.next;
+		}
+		return slow;
+	}
+	TreeNode sortedListToBST(ListNode head) {
+		ListNode prevMid = findMiddle(head);
+		if (prevMid == null) {
+			return null;
+		}
+		if (prevMid.next == null) {
+			return new TreeNode(prevMid.val);
+		}
+		ListNode mid = prevMid.next;
+		ListNode midNext = mid.next;
+		TreeNode treeHead = new TreeNode(mid.val);
+		prevMid.next = null;
+		treeHead.left = sortedListToBST(head);
+		treeHead.right = sortedListToBST(midNext);
+		return treeHead;
+	}
+}

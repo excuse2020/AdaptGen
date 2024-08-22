@@ -1,0 +1,61 @@
+class Solution {
+	ArrayList<Integer> maxInWindows(int[] num, int size) {
+		Deque q = new ArrayDeque<int[]>();
+		if (size == 0 || size > num.length) {
+			return new ArrayList<Integer>();
+		}
+		int m = Integer.MIN_VALUE;
+		for (int i = 0; i < size; i++) {
+			m = Math.max(m,num[i]);
+			while (q.size() > 0) {
+				int[] fr = (int[]) q.peekLast();
+				int fid = fr[1], fx = fr[0];
+				if (num[i] >= fx) {
+					q.pollLast();
+				} 
+				else {
+					break;
+				}
+			}
+			q.addLast(new int{num[i], i});
+		}
+		int n = num.length;
+		int[] ans = new int[n - size + 1];
+		ans[0] = m;
+		for (int j = size; j < n; j++) {
+			int x = num[j];
+			if (q.size() > 0) {
+				int[] fr = (int[]) q.peekFirst();
+				int fid = fr[1];
+				if (fid <= j - size) {
+					q.pollFirst();
+				}
+			}
+			while (q.size() > 0) {
+				int[] fr = (int[]) q.peekLast();
+				int fid = fr[1], fx = fr[0];
+				System.out.println(x + ":");
+				if (x >= fx) {
+					q.pollLast();
+				} 
+				else {
+					break;
+				}
+			}
+			if (q.size() > 0) {
+				int[] fr = (int[]) q.peekFirst();
+				int fx = fr[0];
+				ans[j - size + 1] = fx;
+			} 
+			else {
+				ans[j - size + 1] = num[j];
+			}
+			q.addLast(new int{num[j], j});
+		}
+		ArrayList<Integer> res = new ArrayList<Integer>();
+		for (int i: ans) {	
+			res.add(i);
+		}
+		return res;
+	}
+}

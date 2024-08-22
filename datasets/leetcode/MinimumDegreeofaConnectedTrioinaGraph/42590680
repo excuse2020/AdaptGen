@@ -1,0 +1,43 @@
+class Solution {
+	int containsSame(boolean[][] g, int n, int x, int k, int[] count) {
+		int result = -1;
+		for (int i = 0; i < n; i++) {
+			if (g[x][i] == true && g[k][i] == true) {
+				int temp = (count[x] + count[k]) - 6;
+				result = (result == -1) ? temp : Math.min(result,temp);
+			}
+		}
+		return result;
+	}
+	boolean[][] makeAdjacencyMatrix(int[][] e, int n, int en) {
+		boolean[][] m = new boolean[n][n];
+		for (int i = 0; i < en; i++) {
+			m[Math.min(e[i][0],e[i][1]) - 1][Math.max(e[i][0],e[i][1]) - 1] = true;
+		}
+		return m;
+	}
+	int minTrioDegree(int n, int[][] edges) {
+		int en = edges.length;
+		int[] count = new int[n];
+		for (int i = 0; i < en; i++) {
+			count[edges[i][0] - 1]++;
+			count[edges[i][1] - 1]++;
+		}
+		boolean[][] g = makeAdjacencyMatrix(edges,n,en);
+		int x, k;
+		int result = -1;
+		for (int i = 0; i < n; i++) {
+			x = i;
+			for (int j = 0; j < n; j++) {
+				if (g[i][j] == true) {
+					k = j;
+					int r = containsSame(g,n,x,k,count);
+					if (r != -1) {
+						result = (result == -1) ? r : Math.min(r,result);
+					}
+				}
+			}
+		}
+		return result;
+	}
+}

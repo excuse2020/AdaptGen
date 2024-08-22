@@ -1,0 +1,36 @@
+class Solution {
+	int maximumPopulation(int[][] logs) {
+		int minYear = 2051;
+		int maxYear = 1950;
+		int maxPopulation = 0;
+		for (int i = 0; i < logs.length; i++) {
+			if (minYear > logs[i][0]) {
+				minYear = logs[i][0];
+			}
+			if (maxYear < logs[i][1]) {
+				maxYear = logs[i][1];
+			}
+		}
+		Map<Integer, Integer> freq = new TreeMap<>();
+		for (int i = minYear; i < maxYear; i++) {
+			freq.put(i,0);
+		}
+		int startYear = 0;
+		int endYear = 0;
+		for (int i = 0; i < logs.length; i++) {
+			startYear = logs[i][0];
+			endYear = logs[i][1] - 1;
+			while (startYear <= endYear) {
+				freq.put(startYear,freq.get(startYear) + 1);
+				startYear++;
+			}
+		}
+		for (Map.Entry<Integer, Integer> entry: freq.entrySet()) {	
+			if (entry.getValue().compareTo(maxPopulation) == 1) {
+				minYear = entry.getKey();
+				maxPopulation = entry.getValue();
+			}
+		}
+		return minYear;
+	}
+}

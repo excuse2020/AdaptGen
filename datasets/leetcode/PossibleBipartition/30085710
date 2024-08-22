@@ -1,0 +1,47 @@
+class Solution {
+	boolean possible = true;
+	List<Integer>[] buildGraph(int n, int[][] dislikes) {
+		List<Integer>[] graph = new ArrayList[n + 1];
+		for (int i = 0; i <= n; i++) {
+			graph[i] = new ArrayList<Integer>();
+		}
+		for (int[] dislike: dislikes) {	
+			int a = dislike[0];
+			int b = dislike[1];
+			graph[a].add(b);
+			graph[b].add(a);
+		}
+		return graph;
+	}
+	void dfs(List<Integer>[] graph, int person, boolean[] visited, boolean[] isGroup1) {
+		if (!possible) {
+			return;
+		}
+		visited[person - 1] = true;
+		List<Integer> neighbors = graph[person];
+		for (int i = 0; i < neighbors.size(); i++) {
+			if (!visited[neighbors.get(i) - 1]) {
+				isGroup1[neighbors.get(i) - 1] = !isGroup1[person - 1];
+				dfs(graph,neighbors.get(i),visited,isGroup1);
+			} 
+			else {
+				if (isGroup1[neighbors.get(i) - 1] == isGroup1[person - 1]) {
+					possible = false;
+					return;
+				}
+			}
+		}
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		boolean[] visited = new boolean[n];
+		boolean[] isGroup1 = new boolean[n];
+		List<Integer>[] graph = buildGraph(n,dislikes);
+		for (int i = 1; i <= n; i++) {
+			if (!visited[i - 1]) {
+				isGroup1[i - 1] = true;
+			}
+			dfs(graph,i,visited,isGroup1);
+		}
+		return possible;
+	}
+}

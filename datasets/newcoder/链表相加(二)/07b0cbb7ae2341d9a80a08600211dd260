@@ -1,0 +1,52 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		if (head1 == null) {
+			return head2;
+		}
+		if (head2 == null) {
+			return head1;
+		}
+		StringBuilder builder1 = new StringBuilder();
+		StringBuilder builder2 = new StringBuilder();
+		while (head1 != null) {
+			builder1.append(head1.val);
+			head1 = head1.next;
+		}
+		while (head2 != null) {
+			builder2.append(head2.val);
+			head2 = head2.next;
+		}
+		int value = builder1.charAt(builder1.length() - 1) + builder2.charAt(builder2.length() - 1) - 96;
+		ListNode head = new ListNode(value % 10);
+		int jin = value / 10;
+		for (int i = 1; i < builder1.length() || i < builder2.length(); i++) {
+			if (i > builder1.length() - 1) {
+				value = builder2.charAt(builder2.length() - 1) - 48 + jin;
+				ListNode listNode = new ListNode(value % 10);
+				listNode.next = head;
+				head = listNode;
+				jin = value / 10;
+			} 
+			else if (i > builder2.length() - 1) {
+				value = builder1.charAt(builder1.length() - 1) - 48 + jin;
+				ListNode listNode = new ListNode(value % 10);
+				listNode.next = head;
+				head = listNode;
+				jin = value / 10;
+			} 
+			else {
+				value = (builder1.charAt(builder1.length() - 1) + builder2.charAt(builder2.length() - 1) - 96 + jin);
+				ListNode listNode = new ListNode(value % 10);
+				jin = value / 10;
+				listNode.next = head;
+				head = listNode;
+			}
+		}
+		if (jin > 0) {
+			ListNode listNode = new ListNode(jin);
+			listNode.next = head;
+			head = listNode;
+		}
+		return head;
+	}
+}

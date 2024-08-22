@@ -1,0 +1,44 @@
+class Solution {
+	boolean dfs(String str, char[][] matrix, int x, int y, String word) {
+		if (str.equals(word)) {
+			return true;
+		}
+		if (!str.equals(word.substring(0,str.length()))) {
+			return false;
+		}
+		if (str.length() == word.length()) {
+			return false;
+		}
+		if (x >= 0 && x < matrix.length && y >= 0 && y < matrix[0].length) {
+			if (matrix[x][y] == '0') {
+				return false;
+			}
+			char tmp = matrix[x][y];
+			matrix[x][y] = '0';
+			if (dfs(str + tmp,matrix,x + 1,y,word)) {
+				return true;
+			}
+			if (dfs(str + tmp,matrix,x,y + 1,word)) {
+				return true;
+			}
+			if (dfs(str + tmp,matrix,x - 1,y,word)) {
+				return true;
+			}
+			if (dfs(str + tmp,matrix,x,y - 1,word)) {
+				return true;
+			}
+			matrix[x][y] = tmp;
+		}
+		return false;
+	}
+	boolean hasPath(char[][] matrix, String word) {
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix[0].length; j++) {
+				if (dfs("",matrix,i,j,word)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+}

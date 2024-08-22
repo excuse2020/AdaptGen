@@ -1,0 +1,80 @@
+class Solution {
+	long countPaths(int n, int[][] edges) {
+		if (n == 1) {
+			return 0;
+		}
+		boolean[] isPrime = sieve(n);
+		List<Integer>[] adjs = new List[n + 1];
+		for (int i = 0; i <= n; i++) {
+			adjs[i] = new ArrayList<>();
+		}
+		for (int[] edge: edges) {	
+			adjs[edge[0]].add(edge[1]);
+			adjs[edge[1]].add(edge[0]);
+		}
+		Map<Integer, List<Integer>> primeToChildrenSize = new HashMap<>();
+		boolean[] visited = new boolean[n + 1];
+		for (int i = 1; i <= n; i++) {
+			if (!isPrime[i] && !visited[i]) {
+				Set<Integer> connectedPrimes = new HashSet<>();
+				int temp = nonPrimeCounts(adjs,isPrime,i,visited,connectedPrimes);
+				for (int p: connectedPrimes) {	
+					if (!primeToChildrenSize.containsKey(p)) {
+						primeToChildrenSize.put(p,new ArrayList<>());
+					}
+					primeToChildrenSize.get(p).add(temp);
+				}
+			}
+		}
+		long count = 0;
+		for (int i = 1; i <= n; i++) {
+			if (isPrime[i] && primeToChildrenSize.containsKey(i)) {
+				List<Integer> childrenSize = primeToChildrenSize.get(i);
+				long countI = 0;
+				if (!childrenSize.isEmpty()) {
+					long sum = 0;
+					for (int s: childrenSize) {	
+						sum += s;
+					}
+					for (int s: childrenSize) {	
+						countI += s * (sum - s);
+					}
+					countI /= 2;
+					countI += sum;
+					count += countI;
+				}
+			}
+		}
+		return count;
+	}
+	int nonPrimeCounts(List<Integer>[] adjs, boolean[] isPrime, int curr, boolean[] visited, Set<Integer> connectedPrimes) {
+		if (visited[curr]) {
+			return 0;
+		}
+		visited[curr] = true;
+		int count = 1;
+		for (int next: adjs[curr]) {	
+			if (isPrime[next]) {
+				connectedPrimes.add(next);
+			} 
+			else if (!visited[next]) {
+				count += nonPrimeCounts(adjs,isPrime,next,visited,connectedPrimes);
+			}
+		}
+		return count;
+	}
+	boolean[] sieve(int n) {
+		boolean[] isPrime = new boolean[n + 1];
+		Arrays.fill(isPrime,true);
+		isPrime[0] = false;
+		isPrime[1] = false;
+		for (int i = 2; i * i <= isPrime.length; i++) {
+			if (isPrime[i]) {
+				for (int j = i * i; j < isPrime.length; j += i) {
+					isPrime[j] = false;
+				}
+			}
+		}
+		return isPrime;
+	}
+}

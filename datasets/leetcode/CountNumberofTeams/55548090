@@ -1,0 +1,60 @@
+class Solution {
+	int[][] calculateMatHigh(int[] rating) {
+		int n = rating.length;
+		int maxRating = Arrays.stream(rating).max().getAsInt();
+		int[][] mat_high = new int[maxRating + 1][n];
+		for (int j = 0; j < n; j++) {
+			int[] count = new int[maxRating + 1];
+			for (int k = 0; k <= j; k++) {
+				count[rating[k]]++;
+			}
+			for (int i = maxRating - 1; i >= 1; i--) {
+				count[i] += count[i + 1];
+			}
+			for (int i = 1; i <= maxRating; i++) {
+				if (i < maxRating) {
+					mat_high[i][j] = count[i + 1];
+				} 
+				else {
+					mat_high[i][j] = 0;
+				}
+			}
+		}
+		return mat_high;
+	}
+	int[][] calculateMatLow(int[] rating) {
+		int n = rating.length;
+		int maxRating = Arrays.stream(rating).max().getAsInt();
+		int[][] mat_low = new int[maxRating + 1][n];
+		for (int j = 0; j < n; j++) {
+			int[] count = new int[maxRating + 1];
+			for (int k = 0; k <= j; k++) {
+				count[rating[k]]++;
+			}
+			for (int i = 2; i <= maxRating; i++) {
+				count[i] += count[i - 1];
+			}
+			for (int i = 1; i <= maxRating; i++) {
+				mat_low[i][j] = count[i - 1];
+			}
+		}
+		return mat_low;
+	}
+	int numTeams(int[] rating) {
+		int[][] mat_high = calculateMatHigh(rating);
+		int[][] mat_low = calculateMatLow(rating);
+		int n = rating.length;
+		int result = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = i + 1; j < n; j++) {
+				if (rating[j] > rating[i]) {
+					result += -mat_high[rating[j]][j] + mat_high[rating[j]][n - 1];
+				} 
+				else {
+					result += -mat_low[rating[j]][j] + mat_low[rating[j]][n - 1];
+				}
+			}
+		}
+		return result;
+	}
+}

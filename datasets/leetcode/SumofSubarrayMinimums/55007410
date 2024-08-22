@@ -1,0 +1,40 @@
+class Solution {
+	int[] findnse(int[] a, int len) {
+		int[] nse = new int[len];
+		Stack<Integer> st = new Stack<>();
+		for (int i = len - 1; i >= 0; i--) {
+			while (!st.empty() && a[st.peek()] >= a[i]) {
+				st.pop();
+			}
+			nse[i] = st.empty() ? len : st.peek();
+			st.add(i);
+		}
+		return nse;
+	}
+	int[] findpse(int[] a, int len) {
+		int[] pse = new int[len];
+		Stack<Integer> st = new Stack<>();
+		for (int i = 0; i < len; i++) {
+			while (!st.empty() && a[st.peek()] > a[i]) {
+				st.pop();
+			}
+			pse[i] = st.empty() ? -1 : st.peek();
+			st.add(i);
+		}
+		return pse;
+	}
+	int sumSubarrayMins(int[] a) {
+		int len = a.length;
+		int[] nse = findnse(a,len);
+		int[] pse = findpse(a,len);
+		int total = 0;
+		int mod = (int) (1e9 + 7);
+		for (int i = 0; i < len; i++) {
+			int left = i - pse[i];
+			int right = nse[i] - i;
+			long contribution = ((long) left * right % mod) * a[i] % mod;
+			total = (total + (int) contribution) % mod;
+		}
+		return total;
+	}
+}

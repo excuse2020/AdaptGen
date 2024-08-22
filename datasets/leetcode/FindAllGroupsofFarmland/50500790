@@ -1,0 +1,35 @@
+class Solution {
+	List<Integer> dfs(int i, int j, int[][] land, List<Integer> coord) {
+		if (i == land.length || j == land[0].length || land[i][j] == 0) {
+			return null;
+		}
+		land[i][j] = 0;
+		if (i + j > coord.get(2) + coord.get(3)) {
+			coord.set(2,i);
+			coord.set(3,j);
+		}
+		dfs(i + 1,j,land,coord);
+		dfs(i,j + 1,land,coord);
+		return coord;
+	}
+	int[][] findFarmland(int[][] land) {
+		int rowLen = land.length;
+		int colLen = land[0].length;
+		List<List<Integer>> result = new ArrayList<>();
+		for (int i = 0; i < rowLen; i++) {
+			for (int j = 0; j < colLen; j++) {
+				if (land[i][j] == 1) {
+					List<Integer> l = new ArrayList<Integer>();
+					l.add(i);
+					l.add(j);
+					l.add(i);
+					l.add(j);
+					result.add(dfs(i,j,land,l));
+				}
+			}
+		}
+		System.out.println(result);
+		int[][] res = result.stream().map((x) -> {x.stream().mapToInt().toArray()}).toArray();
+		return res;
+	}
+}

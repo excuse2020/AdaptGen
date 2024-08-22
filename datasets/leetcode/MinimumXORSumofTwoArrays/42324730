@@ -1,0 +1,25 @@
+class Solution {
+	int dp;
+	boolean vis;
+	int minimumXORSum(int[] a, int[] b) {
+		dp = new int[1 << b.length];
+		vis = new boolean[b.length];
+		Arrays.fill(dp,Integer.MAX_VALUE);
+		return solve(a,b,0);
+	}
+	int solve(int a, int b, int idx) {
+		if (idx >= a.length) {
+			return 0;
+		}
+		int min = Integer.MAX_VALUE;
+		for (int j = 0; j < b.length; j++) {
+			if (vis[j]) {
+				continue;
+			}
+			vis[j] = true;
+			min = Math.min(min,solve(a,b,idx + 1) + (a[idx] ^ b[j]));
+			vis[j] = false;
+		}
+		return min < 0 ? Integer.MAX_VALUE : min;
+	}
+}

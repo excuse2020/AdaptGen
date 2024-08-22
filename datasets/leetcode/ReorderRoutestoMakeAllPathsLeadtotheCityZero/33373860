@@ -1,0 +1,29 @@
+class Solution {
+	int res;
+	void dfs(int[] visited, int node, List<List<Integer>> memo) {
+		visited[Math.abs(node)] = 1;
+		for (int i: memo.get(Math.abs(node))) {	
+			if (visited[Math.abs(i)] == 0) {
+				if (i > 0) {
+					this.res += 1;
+				}
+				dfs(visited,i,memo);
+			}
+		}
+	}
+	int minReorder(int n, int[][] connections) {
+		List<List<Integer>> memo = new ArrayList<>();
+		this.res = 0;
+		for (int i = 0; i < n; ++i) {
+			memo.add(new ArrayList<Integer>());
+		}
+		for (int connection: connections) {	
+			memo.get(connection[0]).add(connection[1]);
+			memo.get(connection[1]).add(-connection[0]);
+		}
+		int[] visited = new int[n];
+		Arrays.fill(visited,0);
+		dfs(visited,0,memo);
+		return this.res;
+	}
+}

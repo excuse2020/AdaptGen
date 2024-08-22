@@ -1,0 +1,35 @@
+class Solution {
+	int[] res;
+	int[] countSubTrees(int n, int[][] edges, String labels) {
+		res = new int[n];
+		List<Integer>[] adjList = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			adjList[i] = new ArrayList<>();
+		}
+		for (int[] edge: edges) {	
+			int u = edge[0];
+			int v = edge[1];
+			if (adjList[u] == null) {
+				adjList[u] = new ArrayList<>();
+			}
+			if (adjList[v] == null) {
+				adjList[v] = new ArrayList<>();
+			}
+			adjList[u].add(v);
+			adjList[v].add(u);
+		}
+		HashSet<Integer> seen = new HashSet<>();
+		dfs(adjList,0,labels,seen);
+		return res;
+	}
+	int[] dfs(List<Integer>[] adjList, int currNode, String labels, HashSet<Integer> seen) {
+		int[] cnt = new int[26];
+		char c = labels.charAt(currNode);
+		for (int neighbour: adjList[currNode]) {	
+			int[] arr = dfs(adjList,neighbour,labels,seen);
+			for (int i = 0; i < 26; i++) {
+				cnt[i] += arr[i];
+			}
+		}
+	}
+}

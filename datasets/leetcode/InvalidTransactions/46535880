@@ -1,0 +1,35 @@
+class Solution {
+	List<String> invalidTransactions(String[] transactions) {
+		int len = transactions.length;
+		List<String> res = new ArrayList<>();
+		for (int i = 0; i < len; i++) {
+			String str = transactions[i];
+			String[] arr = str.split(",");
+			String name = arr[0];
+			int time = Integer.parseInt(arr[1]);
+			int dollar = Integer.parseInt(arr[2]);
+			String city = arr[3];
+			if (dollar > 1000) {
+				res.add(str);
+			} 
+			else {
+				boolean isInValid = false;
+				for (int j = 0; j < len; j++) {
+					if (j != i) {
+						String s = transactions[j];
+						if (s.startsWith(name)) {
+							String[] temp = s.split(",");
+							if (Math.abs(time - Integer.parseInt(temp[1])) <= 60 && !city.equals(temp[3])) {
+								isInValid = true;
+							}
+						}
+					}
+				}
+				if (isInValid) {
+					res.add(str);
+				}
+			}
+		}
+		return res;
+	}
+}

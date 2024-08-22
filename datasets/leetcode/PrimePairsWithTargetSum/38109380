@@ -1,0 +1,29 @@
+class Solution {
+	List<List<Integer>> findPrimePairs(Integer sum) {
+		List<List<Integer>> res = new ArrayList<>();
+		boolean prime = new boolean[1000001];
+		Arrays.fill(prime,true);
+		for (int i = 2; i * i <= prime.length; i++) {
+			if (prime[i] && isPrime(i)) {
+				for (int j = i * i; j < prime.length; j = j + i) {
+					prime[j] = false;
+				}
+			}
+		}
+		for (int i = 2; i <= sum / 2; i++) {
+			if (prime[i] && prime[sum - i]) {
+				List<Integer> list = new ArrayList<>(Arrays.asList(i,sum - i));
+				res.add(list);
+			}
+		}
+		return res;
+	}
+	boolean isPrime(int num) {
+		for (int i = 2; i * i <= num; i++) {
+			if (num % i == 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

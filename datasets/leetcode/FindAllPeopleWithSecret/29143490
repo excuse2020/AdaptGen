@@ -1,0 +1,49 @@
+class Solution {
+	Map<Integer, List<Integer>> G;
+	boolean[] secret;
+	Set<Integer> seen;
+	void dfs(int p) {
+		if (!seen.add(p)) {
+			return;
+		}
+		secret[p] = true;
+		for (int o: G.get(p)) {	
+			dfs(o);
+		}
+	}
+	List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+		secret = new boolean[n];
+		secret[0] = true;
+		secret[firstPerson] = true;
+		Arrays.sort((Object[]) meetings,(i, j) -> {Integer.compare(((int[])i)[2],((int[])j)[2])});
+		List<int[]> ms = Arrays.asList(meetings);
+		int j = 0;
+		for (int i = 1; i < meetings.length; ++i) {
+			if (meetings[i][2] != meetings[j][2]) {
+				solve(ms.subList(j,i));
+				j = i;
+			}
+		}
+		solve(ms.subList(j,meetings.length));
+		List<Integer> ans = new ArrayList<>();
+		for (int i = 0; i < n; ++i) {
+			if (secret[i]) {
+				ans.add(i);
+			}
+		}
+		return ans;
+	}
+	void solve(List<int[]> meetings) {
+		G = new HashMap<>();
+		seen = new HashSet<>();
+		for (int[] m: meetings) {	
+			G.computeIfAbsent(m[0],(u) -> {new ArrayList<>()}).add(m[1]);
+			G.computeIfAbsent(m[1],(u) -> {new ArrayList<>()}).add(m[0]);
+		}
+		for (int[] m: meetings) {	
+			if (secret[m[0]] || secret[m[1]]) {
+				dfs(m[0]);
+			}
+		}
+	}
+}

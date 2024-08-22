@@ -1,0 +1,30 @@
+class Solution {
+	HashMap<Integer, ArrayList<Integer>> adjList;
+	int dfs(int city, HashMap<Integer, ArrayList<Integer>> adjList, Set<Integer> visited) {
+		int change = 0;
+		if (visited.contains(city)) {
+			return 0;
+		}
+		visited.add(city);
+		for (int con: adjList.get(city)) {	
+			if (con > 0 && !visited.contains(con)) {
+				change += dfs(con,adjList,visited) + 1;
+			} 
+			else if (con < 0) {
+				change += dfs(-con,adjList,visited);
+			}
+		}
+		return change;
+	}
+	int minReorder(int n, int[][] connections) {
+		HashMap<Integer, ArrayList<Integer>> adjList = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			adjList.put(i,new ArrayList<Integer>());
+		}
+		for (int[] connection: connections) {	
+			adjList.get(connection[0]).add(connection[1]);
+			adjList.get(connection[1]).add(connection[0] * -1);
+		}
+		return dfs(0,adjList,new HashSet<>());
+	}
+}

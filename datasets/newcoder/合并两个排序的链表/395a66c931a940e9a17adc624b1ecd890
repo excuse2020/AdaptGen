@@ -1,0 +1,55 @@
+class Solution {
+	ListNode Merge(ListNode pHead1, ListNode pHead2) {
+		if (pHead1 == null && pHead2 == null) {
+			return null;
+		}
+		if (pHead1 == null) {
+			return pHead2;
+		}
+		if (pHead2 == null) {
+			return pHead1;
+		}
+		ListNode node1;
+		ListNode node2;
+		if (pHead1.val <= pHead2.val) {
+			node1 = pHead1;
+			node2 = pHead2;
+		} 
+		else {
+			node1 = pHead2;
+			node2 = pHead1;
+		}
+		ListNode node = new ListNode(-1);
+		while (node1 != null) {
+			ListNode node3 = node1.next;
+			node1.next = null;
+			append(node,node1);
+			if (node3 != null) {
+				if (node2 == null || node3.val <= node2.val) {
+					node1 = node3;
+				} 
+				else {
+					node1 = node2;
+					node2 = node3;
+				}
+			} 
+			else {
+				node1 = node2;
+				node2 = null;
+			}
+		}
+		return node.next;
+	}
+	void append(ListNode listNode, ListNode appendNode) {
+		if (listNode != null) {
+			ListNode next = listNode;
+			while (next != null) {
+				if (next.next == null) {
+					next.next = appendNode;
+					break;
+				}
+				next = next.next;
+			}
+		}
+	}
+}

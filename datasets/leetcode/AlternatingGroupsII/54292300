@@ -1,0 +1,30 @@
+class Solution {
+	int helper(int[] colors, int idx, int k, int n) {
+		for (int i = 0; i < k - 1; ++i) {
+			if (colors[(idx + i) % n] == colors[(idx + i + 1) % n]) {
+				return 0;
+			}
+		}
+		return 1;
+	}
+	int numberOfAlternatingGroups(int[] colors, int k) {
+		int ans = 0, n = colors.length;
+		boolean prev = false;
+		for (int i = 0; i < n; ++i) {
+			if (prev) {
+				if (colors[(i + k - 2) % n] != colors[(i + k - 1) % n]) {
+					ans++;
+					prev = true;
+				} 
+				else {
+					prev = false;
+				}
+				continue;
+			}
+			int tmp = helper(colors,i,k,n);
+			prev = tmp == 1;
+			ans += tmp;
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,68 @@
+class Solution {
+	String LCS(String s1, String s2) {
+		int s1Len = s1.length();
+		int s2Len = s2.length();
+		if (s1Len <= 0 || s2Len <= 0) {
+			return "-1";
+		}
+		int maxLen = 0;
+		String maxString = "";
+		int[][] dp = new int[s1Len][s2Len];
+		char ch0 = s1.charAt(0);
+		boolean is = false;
+		for (int j0 = 0; j0 < s2Len; j0++) {
+			if (ch0 == s2.charAt(j0)) {
+				dp[0][j0] = 1;
+				is = true;
+			} 
+			else {
+				if (is) {
+					dp[0][j0] = 1;
+				}
+			}
+		}
+		char ch01 = s2.charAt(0);
+		is = false;
+		for (int i0 = 0; i0 < s1Len; i0++) {
+			if (ch01 == s1.charAt(i0)) {
+				dp[i0][0] = 1;
+				is = true;
+			} 
+			else {
+				if (is) {
+					dp[i0][0] = 1;
+				}
+			}
+		}
+		for (int i = 1; i < s1Len; i++) {
+			for (int j = 1; j < s2Len; j++) {
+				if (s1.charAt(i) == s2.charAt(j)) {
+					dp[i][j] = dp[i - 1][j - 1] + 1;
+					maxLen = Math.max(dp[i][j],maxLen);
+					maxLen = Math.max(Math.max(dp[i - 1][j],dp[i][j - 1]),maxLen);
+				} 
+				else {
+					dp[i][j] = Math.max(dp[i - 1][j],dp[i][j - 1]);
+					maxLen = Math.max(dp[i][j],maxLen);
+				}
+			}
+		}
+		int i2 = s1Len - 1;
+		int j2Max = s2Len - 1;
+		while (i2 >= 0 && maxLen >= 1) {
+			for (int j2 = j2Max; j2 >= 0; j2--) {
+				if (dp[i2][j2] == maxLen && s1.charAt(i2) == s2.charAt(j2)) {
+					maxString = s1.charAt(i2) + maxString;
+					maxLen--;
+					j2Max = j2;
+					break;
+				}
+			}
+			i2--;
+		}
+		if (maxString.equals("")) {
+			return "-1";
+		}
+		return maxString;
+	}
+}

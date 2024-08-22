@@ -1,0 +1,32 @@
+class Solution {
+	boolean op(int[] nums, int ind, Boolean[] memo) {
+		if (ind == nums.length) {
+			return true;
+		}
+		if (memo[ind] != null) {
+			return memo[ind];
+		}
+		for (int i = ind + 1; i - ind + 1 <= 3 && i < nums.length; i++) {
+			if (valid(nums,ind,i)) {
+				boolean res = op(nums,i + 1,memo);
+				memo[ind] = res;
+				if (res) {
+					return res;
+				}
+			}
+		}
+		return false;
+	}
+	boolean valid(int[] nums, int i, int j) {
+		if (j - i + 1 == 2) {
+			return nums[i] == nums[j];
+		}
+		if (j - i + 1 == 3) {
+			return (nums[i] == nums[j] && nums[i + 1] == nums[j]) || (nums[i] + 2 == nums[j] && nums[i + 1] + 1 == nums[j]);
+		}
+		return false;
+	}
+	boolean validPartition(int[] nums) {
+		return op(nums,0,new Boolean[nums.length]);
+	}
+}

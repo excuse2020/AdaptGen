@@ -1,0 +1,48 @@
+class Solution {
+	List<Integer>[] buildGraph(int numCourses, int[][] prerequisites, Boolean[][] memo) {
+		List<Integer>[] graph = new ArrayList[numCourses];
+		for (int i = 0; i < numCourses; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int[] pre: prerequisites) {	
+			int from = pre[0], to = pre[1];
+			graph[from].add(to);
+			memo[from][to] = true;
+			memo[to][from] = false;
+		}
+		return graph;
+	}
+	List<Boolean> checkIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
+		if (numCourses <= 0) {
+			return new ArrayList<>();
+		}
+		Boolean[][] memo = new Boolean[numCourses][numCourses];
+		List<Integer>[] graph = buildGraph(numCourses,prerequisites,memo);
+		List<Boolean> res = new ArrayList<>(queries.length);
+		for (int[] query: queries) {	
+			res.add(dfs(graph,query[0],query[1],memo));
+		}
+		return res;
+	}
+	Boolean dfs(List<Integer>[] graph, int start, int target, Boolean[][] memo) {
+		if (start == target) {
+			return true;
+		}
+		if (memo[start][target] != null) {
+			return memo[start][target];
+		}
+		List<Integer> neighbors = graph[start];
+		Boolean isPrerequisite = false;
+		for (int neighbor: neighbors) {	
+			isPrerequisite = dfs(graph,neighbor,target,memo);
+			if (isPrerequisite) {
+				break;
+			}
+		}
+		memo[start][target] = isPrerequisite;
+		if (isPrerequisite) {
+			memo[target][start] = false;
+		}
+		return isPrerequisite;
+	}
+}

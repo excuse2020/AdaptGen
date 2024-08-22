@@ -1,0 +1,49 @@
+class Solution {
+	void find_path(TreeNode root, List<TreeNode> temp, int startValue, List<TreeNode> start_path, List<Character> helper, List<Character> temp1) {
+		if (root == null) {
+			return;
+		}
+		temp.add(root);
+		if (root.val == startValue) {
+			for (TreeNode i: temp) {	
+				start_path.add(i);
+			}
+			for (Character i: helper) {	
+				temp1.add(i);
+			}
+			return;
+		}
+	}
+	String getDirections(TreeNode root, int startValue, int destValue) {
+		List<TreeNode> temp = new ArrayList<>();
+		List<TreeNode> start_path = new ArrayList<>();
+		List<TreeNode> dest_path = new ArrayList<>();
+		List<Character> helper = new ArrayList<>();
+		List<Character> temp1 = new ArrayList<>();
+		find_path(root,temp,startValue,start_path,helper,temp1);
+		temp.clear();
+		helper.clear();
+		temp1.clear();
+		find_path(root,temp,destValue,dest_path,helper,temp1);
+		TreeNode common = null;
+		int sp = 0, dp = 0;
+		while (sp < start_path.size() && dp < dest_path.size()) {
+			if (start_path.get(sp).val == dest_path.get(dp).val) {
+				common = start_path.get(sp);
+			} 
+			else {
+				break;
+			}
+			sp++;
+			dp++;
+		}
+		String ans = "";
+		for (int i = start_path.size() - 1; i >= sp; i--) {
+			ans += "U";
+		}
+		for (int i = dp - 1; i < temp1.size(); i++) {
+			ans += temp1.get(i);
+		}
+		return ans;
+	}
+}

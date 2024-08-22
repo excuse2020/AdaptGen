@@ -1,0 +1,25 @@
+class Solution {
+	int nonSpecialCount(int l, int r) {
+		int maxLimit = (int) Math.sqrt(r);
+		boolean[] isPrime = new boolean[maxLimit + 1];
+		Arrays.fill(isPrime,true);
+		isPrime[0] = isPrime[1] = false;
+		for (int i = 2; i * i <= maxLimit; i++) {
+			if (isPrime[i]) {
+				for (int j = i * i; j <= maxLimit; j += i) {
+					isPrime[j] = false;
+				}
+			}
+		}
+		int specialCount = 0;
+		for (int i = 2; i <= maxLimit; i++) {
+			if (isPrime[i]) {
+				long square = (long) i * i;
+				if (square >= l && square <= r) {
+					specialCount++;
+				}
+			}
+		}
+		return (r - l + 1) - specialCount;
+	}
+}

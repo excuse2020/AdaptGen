@@ -1,0 +1,35 @@
+class Solution {
+	int MOD = (int) (1e9 + 7);
+	HashMap<String, Integer> memo;
+	int dp(int n, int goal, int k, int[] used, int count, int current, int distinct) {
+		if (used[current] > 0 && count - used[current] <= k) {
+			return 0;
+		}
+		if (goal == count) {
+			return distinct == n ? 1 : 0;
+		}
+		String key = count + "_";
+		Integer v = memo.get(key);
+		if (v != null) {
+			return v;
+		}
+		int tmp = used[current];
+		used[current] = count;
+		int ways = 0;
+		for (int i = 1; i <= n; i++) {
+			ways = (ways + dp(n,goal,k,used,count + 1,i,used[i] == 0 ? distinct + 1 : distinct)) % MOD;
+		}
+		used[current] = tmp;
+		memo.put(key,ways);
+		return ways;
+	}
+	int numMusicPlaylists(int n, int goal, int k) {
+		int[] used = new int[n + 1];
+		memo = new HashMap<>();
+		int ways = 0;
+		for (int i = 1; i <= n; i++) {
+			ways = (ways + dp(n,goal,k,used,1,i,1)) % MOD;
+		}
+		return ways;
+	}
+}

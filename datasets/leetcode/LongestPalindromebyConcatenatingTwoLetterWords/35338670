@@ -1,0 +1,41 @@
+class Solution {
+	int longestPalindrome(String[] words) {
+		int n = words.length;
+		int[] vis = new int[n];
+		HashMap<String, TreeSet<Integer>> map = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			map.putIfAbsent(words[i],new TreeSet<>());
+			map.get(words[i]).add(i);
+		}
+		int cnt = 0;
+		int count = 0;
+		for (int i = 0; i < n; i++) {
+			if (vis[i] == 0) {
+				vis[i] = 1;
+				if (map.get(words[i]).size() == 1) {
+					map.remove(words[i]);
+				} 
+				else {
+					map.get(words[i]).remove(i);
+				}
+				String t = words[i].substring(1) + words[i].substring(0,1);
+				if (map.containsKey(t)) {
+					int x = map.get(t).first();
+					vis[x] = 1;
+					if (map.get(t).size() == 1) {
+						map.remove(t);
+					} 
+					else {
+						map.get(t).remove(x);
+					}
+					cnt += 4;
+				} 
+				else if (words[i].charAt(1) == words[i].charAt(0) && count == 0) {
+					cnt += 2;
+					count++;
+				}
+			}
+		}
+		return cnt;
+	}
+}

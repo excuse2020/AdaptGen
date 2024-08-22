@@ -1,0 +1,53 @@
+class Solution {
+	void findPreSum(List<Integer> maxHeights, double[] preSum) {
+		int n = maxHeights.size();
+		Stack<Integer> st = new Stack<>();
+		for (int i = 0; i < n; i++) {
+			while (!st.isEmpty() && maxHeights.get(st.peek()) >= maxHeights.get(i)) {
+				st.pop();
+			}
+			double diffSum = 0;
+			if (!st.isEmpty()) {
+				diffSum = ((double) maxHeights.get(i) * (i - st.peek()));
+				diffSum += preSum[st.peek()];
+			} 
+			else {
+				diffSum = ((double) maxHeights.get(i) * (i + 1));
+			}
+			preSum[i] = diffSum;
+			st.push(i);
+		}
+	}
+	void findSufSum(List<Integer> maxHeights, double[] sufSum) {
+		int n = maxHeights.size();
+		Stack<Integer> st = new Stack<>();
+		for (int i = n - 1; i >= 0; i--) {
+			while (!st.isEmpty() && maxHeights.get(st.peek()) >= maxHeights.get(i)) {
+				st.pop();
+			}
+			double diffSum = 0;
+			if (!st.isEmpty()) {
+				diffSum = ((double) maxHeights.get(i) * (st.peek() - i));
+				diffSum += sufSum[st.peek()];
+			} 
+			else {
+				diffSum = ((double) maxHeights.get(i) * (n - i));
+			}
+			sufSum[i] = diffSum;
+			st.push(i);
+		}
+	}
+	long maximumSumOfHeights(List<Integer> maxHeights) {
+		int n = maxHeights.size();
+		double[] preSum = new double[n];
+		double[] sufSum = new double[n];
+		findPreSum(maxHeights,preSum);
+		findSufSum(maxHeights,sufSum);
+		double mxSum = Long.MIN_VALUE;
+		for (int i = 0; i < n; i++) {
+			double curSum = ((double) preSum[i] + sufSum[i]) - maxHeights.get(i);
+			mxSum = Math.max(mxSum,curSum);
+		}
+		return (long) mxSum;
+	}
+}

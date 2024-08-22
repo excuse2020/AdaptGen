@@ -1,0 +1,44 @@
+class Solution {
+	boolean isPossible(int[] quantities, int n, int mid, int len) {
+		int count = 0;
+		int remaining = 0;
+		for (int i = 0; i < len; ) {
+			if (remaining == 0) {
+				if (quantities[i] <= mid) {
+					i++;
+				} 
+				else {
+					remaining = quantities[i] - mid;
+				}
+			} 
+			else {
+				remaining -= mid;
+				if (remaining <= 0) {
+					i++;
+					remaining = 0;
+				}
+			}
+			count++;
+			if (count > n) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int minimizedMaximum(int n, int[] quantities) {
+		int low = 0;
+		int high = 100000;
+		int ans = -1;
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			if (isPossible(quantities,n,mid,quantities.length)) {
+				ans = mid;
+				high = mid - 1;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		return ans;
+	}
+}

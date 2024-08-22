@@ -1,0 +1,28 @@
+class Solution {
+	void Preorder(TreeNode root, LinkedHashMap<Integer, List<Integer>> nodeMap, int level) {
+		if (root == null) {
+			return;
+		}
+		List<Integer> temp = new ArrayList<Integer>();
+		if (nodeMap.containsKey(level)) {
+			temp = nodeMap.get(level);
+		}
+		temp.add(root.val);
+		nodeMap.put(level,temp);
+		Preorder(root.left,nodeMap,level + 1);
+		Preorder(root.right,nodeMap,level + 1);
+	}
+	List<List<Integer>> levelOrderBottom(TreeNode root) {
+		List<List<Integer>> nodeLevel = new ArrayList<List<Integer>>();
+		LinkedHashMap<Integer, List<Integer>> nodeMap = new LinkedHashMap<Integer, List<Integer>>();
+		Preorder(root,nodeMap,1);
+		for (Map.Entry<Integer, List<Integer>> e: nodeMap.entrySet()) {	
+			nodeLevel.add(e.getValue());
+		}
+		List<List<Integer>> nodeLevel2 = new ArrayList<List<Integer>>();
+		for (int i = nodeLevel.size() - 1; i >= 0; i--) {
+			nodeLevel2.add(nodeLevel.get(i));
+		}
+		return nodeLevel2;
+	}
+}

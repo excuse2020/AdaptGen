@@ -1,0 +1,36 @@
+class Solution {
+	int minimumTime(int n, int[][] relations, int[] time) {
+		LinkedList<Integer>[] g = new LinkedList[n];
+		int[] connected = new int[n];
+		int[] endedTime = new int[n];
+		for (int i = 0; i != n; ++i) {
+			g[i] = new LinkedList<>();
+		}
+		for (int[] r: relations) {	
+			g[r[0] - 1].add(r[1] - 1);
+			++connected[r[1] - 1];
+		}
+		LinkedList<Integer> q = new LinkedList<>();
+		for (int i = 0; i != n; ++i) {
+			if (connected[i] == 0) {
+				q.add(i);
+			}
+		}
+		for (int lev; !q.isEmpty(); ) {
+			for (lev = q.size(); lev != 0; --lev) {
+				int node = q.pollFirst();
+				for (int next: g[node]) {	
+					endedTime[next] = Math.max(endedTime[next],endedTime[node] + time[node]);
+					if (--connected[next] == 0) {
+						q.addLast(next);
+					}
+				}
+			}
+		}
+		int ans = 0;
+		for (int i = 0; i != n; ++i) {
+			ans = Math.max(ans,endedTime[i] + time[i]);
+		}
+		return ans;
+	}
+}

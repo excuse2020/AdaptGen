@@ -1,0 +1,32 @@
+class Solution {
+	int count(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		return 1 + Math.max(count(root.left),count(root.right));
+	}
+	boolean isLeaf(TreeNode node) {
+		return node != null && node.left == null && node.right == null;
+	}
+	boolean isRight(TreeNode node) {
+		return node != null && node.left != null && node.right != null && count(node.left) <= 1 && count(node.right) <= 1;
+	}
+	TreeNode lcaDeepestLeaves(TreeNode root) {
+		TreeNode current = root;
+		if (isRight(current)) {
+			return current;
+		} 
+		else if (isLeaf(current)) {
+			return current;
+		}
+		if (count(current.left) > count(current.right)) {
+			return lcaDeepestLeaves(current.left);
+		} 
+		else if (count(current.left) < count(current.right)) {
+			return lcaDeepestLeaves(current.right);
+		} 
+		else {
+			return current;
+		}
+	}
+}

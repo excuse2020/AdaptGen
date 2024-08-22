@@ -1,0 +1,26 @@
+class Solution {
+	int findRoute(List<List<Integer>> graph, int u, int parent) {
+		int changes = 0;
+		for (int v: graph.get(u)) {	
+			if (Math.abs(v) == parent) {
+				continue;
+			}
+			if (v > 0) {
+				changes++;
+			}
+			changes += findRoute(graph,Math.abs(v),u);
+		}
+		return changes;
+	}
+	int minReorder(int n, int[][] connections) {
+		List<List<Integer>> graph = new ArrayList<List<Integer>>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<Integer>());
+		}
+		for (int[] a: connections) {	
+			graph.get(a[0]).add(a[1]);
+			graph.get(a[1]).add(-a[0]);
+		}
+		return findRoute(graph,0,-1);
+	}
+}

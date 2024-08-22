@@ -1,0 +1,39 @@
+class Solution {
+	int lmin = Integer.MAX_VALUE;
+	void djstra(int n, int m, int graph, int[] dist, int[] visit) {
+		int mindex = 0;
+		int min = 0;
+		visit[0] = 1;
+		for (int i = 1; i < n; i++) {
+			for (int k = 0; k < n; k++) {
+				if (visit[k] == 0 && dist[k] < Integer.MAX_VALUE) {
+					min = dist[k];
+					mindex = k;
+				}
+			}
+			for (int k = 0; k < n; k++) {
+				if (visit[k] == 0 && dist[k] < min) {
+					min = dist[k];
+					mindex = k;
+				}
+			}
+			visit[mindex] = 1;
+			for (int j = 0; j < m; j++) {
+				if (graph[j][0] - 1 == mindex && dist[mindex] + graph[j][2] < dist[graph[j][1] - 1]) {
+					dist[graph[j][1] - 1] = dist[mindex] + graph[j][2];
+				}
+			}
+		}
+	}
+	int findShortestPath(int n, int m, int[][] graph) {
+		int[][] lgraph = new int[n][n];
+		int[] dist = new int[n];
+		int[] visit = new int[n];
+		for (int i = 0; i < n; i++) {
+			dist[i] = Integer.MAX_VALUE;
+		}
+		dist[0] = 0;
+		djstra(n,m,graph,dist,visit);
+		return dist[n - 1];
+	}
+}

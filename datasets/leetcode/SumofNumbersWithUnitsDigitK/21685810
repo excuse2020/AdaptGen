@@ -1,0 +1,48 @@
+class Solution {
+	int minMm(int num, List<Integer> list, int i, int[][] dp) {
+		if (i == 0) {
+			int val = (int) list.get(0);
+			if (val == 0 && num == 0) {
+				return 0;
+			} 
+			else if (val == 0) {
+				return 9999999;
+			}
+			return num % val == 0 ? num / val : 9999999;
+		}
+		if (dp[i][num] != 999999) {
+			return dp[i][num];
+		}
+		int nottake = minMm(num,list,i - 1,dp);
+		int take = Integer.MAX_VALUE;
+		int val = (int) list.get(i);
+		if (val <= num) {
+			take = 1 + minMm(num - val,list,i,dp);
+		}
+		return dp[i][num] = Math.min(take,nottake);
+	}
+	int minimumNumbers(int num, int k) {
+		if (num == 0) {
+			return 0;
+		}
+		if (k > num) {
+			return -1;
+		}
+		if (k == num) {
+			return 1;
+		}
+		List<Integer> list = new ArrayList<>();
+		int t = k;
+		while (t <= num) {
+			list.add(t);
+			t += 10;
+		}
+		System.out.println(list);
+		int[][] dp = new int[list.size()][num + 1];
+		for (int[] x: dp) {	
+			Arrays.fill(x,999999);
+		}
+		int min = minMm(num,list,list.size() - 1,dp);
+		return min == 9999999 ? -1 : min;
+	}
+}

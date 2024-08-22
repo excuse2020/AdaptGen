@@ -1,0 +1,26 @@
+class Solution {
+	List<String> alertNames(String[] keyName, String[] keyTime) {
+		Map<String, TreeSet<Integer>> nameToKeyTimeMap = new HashMap<>();
+		for (int i = 0; i < keyName.length; i++) {
+			String currentPerson = keyName[i];
+			int currentTimestamp = convertToTimestamp(keyTime[i]);
+			nameToKeyTimeMap.computeIfAbsent(currentPerson,(t) -> {new TreeSet<Integer>()}).add(currentTimestamp);
+		}
+		List<String> alertedNames = new ArrayList<>();
+		for (String name: nameToKeyTimeMap.keySet()) {	
+			List<Integer> timestamps = new ArrayList<>(nameToKeyTimeMap.get(name));
+			for (int i = 2; i < timestamps.size(); i++) {
+				if (timestamps.get(i) - timestamps.get(i - 2) <= 60) {
+					alertedNames.add(name);
+					break;
+				}
+			}
+		}
+		alertedNames.sort((s1, s2) -> {s1.compareTo(s2)});
+		return alertedNames;
+	}
+	int convertToTimestamp(String keyTime) {
+		String[] time = keyTime.split(":");
+		return Integer.parseInt(time[0]) * 60 + Integer.parseInt(time[1]);
+	}
+}

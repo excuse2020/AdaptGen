@@ -1,0 +1,50 @@
+class Solution {
+	int[] ans;
+	int[] constructDistancedSequence(int n) {
+		ans = new int[((n - 1) * 2) + 1];
+		HashSet<Integer> hs = new HashSet<Integer>();
+		sol(n,0,hs);
+		return ans;
+	}
+	boolean sol(int n, int i, HashSet<Integer> hs) {
+		int a = n;
+		while (n != 0) {
+			if (!hs.contains(n)) {
+				if (n == 1) {
+					ans[i] = n;
+					hs.add(n);
+					int k = i;
+					if (hs.size() == a) {
+						return true;
+					}
+					while (k < ans.length && ans[k] != 0) {
+						k++;
+					}
+					if (sol(a,k,hs)) {
+						return true;
+					}
+					ans[i] = 0;
+					hs.remove(n);
+				} 
+				else if ((i + n) < ans.length && ans[i] == 0 && ans[i + n] == 0) {
+					hs.add(n);
+					ans[i] = ans[i + n] = n;
+					int k = i;
+					if (hs.size() == a) {
+						return true;
+					}
+					while (k < ans.length && ans[k] != 0) {
+						k++;
+					}
+					if (sol(a,k,hs)) {
+						return true;
+					}
+					ans[i] = ans[i + n] = 0;
+					hs.remove(n);
+				}
+			}
+			n--;
+		}
+		return false;
+	}
+}

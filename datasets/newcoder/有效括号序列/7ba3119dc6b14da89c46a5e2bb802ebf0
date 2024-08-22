@@ -1,0 +1,38 @@
+class Solution {
+	boolean isValid(String s) {
+		boolean result = true;
+		Map<Character, Character> symbol = new HashMap<>();
+		symbol.put('(',')');
+		symbol.put('[',']');
+		symbol.put('{','}');
+		Stack<Character> deq = new Stack<>();
+		Stack<Character> cache = new Stack<>();
+		for (int i = 0; i < s.length(); i++) {
+			if (symbol.values().contains(s.charAt(i)) || symbol.keySet().contains(s.charAt(i))) {
+				deq.push(s.charAt(i));
+			}
+		}
+		if (deq.size() % 2 != 0) {
+			return false;
+		}
+		while (!deq.isEmpty()) {
+			Character lastSym = deq.pop();
+			if (symbol.values().contains(lastSym)) {
+				cache.push(lastSym);
+				continue;
+			}
+			if (symbol.keySet().contains(lastSym)) {
+				if (cache.isEmpty()) {
+					result = false;
+					break;
+				}
+				Character endSym = cache.pop();
+				if (Objects.isNull(endSym) || !endSym.equals(symbol.get(lastSym))) {
+					result = false;
+					break;
+				}
+			}
+		}
+		return result;
+	}
+}

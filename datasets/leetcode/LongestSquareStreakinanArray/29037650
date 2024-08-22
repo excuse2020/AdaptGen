@@ -1,0 +1,30 @@
+class Solution {
+	int f(int low, int high, int x, int nums) {
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			if (nums[mid] * nums[mid] == x) {
+				return mid;
+			} 
+			else if (nums[mid] * nums[mid] > x) {
+				high = mid - 1;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		return -1;
+	}
+	int longestSquareStreak(int[] nums) {
+		Arrays.sort(nums);
+		int dp = new int[nums.length], res = 1;
+		Arrays.fill(dp,1);
+		for (int i = 0; i < nums.length; i++) {
+			int temp = f(0,i,nums[i],nums);
+			if (temp != -1) {
+				dp[i] += dp[temp];
+			}
+			res = Math.max(dp[i],res);
+		}
+		return res == 1 ? -1 : res;
+	}
+}

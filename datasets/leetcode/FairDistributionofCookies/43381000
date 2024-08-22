@@ -1,0 +1,34 @@
+class Solution {
+	int result = Integer.MAX_VALUE;
+	void backtrack(int[] cookies, int[] children, int k, int idx, int n) {
+		if (idx >= n) {
+			int unfairness = max(children);
+			result = Math.min(unfairness,result);
+			return;
+		}
+		if (result <= max(children)) {
+			return;
+		}
+		for (int i = 0; i < k; i++) {
+			children[i] += cookies[idx];
+			backtrack(cookies,children,k,idx + 1,n);
+			children[i] -= cookies[idx];
+		}
+	}
+	int distributeCookies(int[] cookies, int k) {
+		int n = cookies.length;
+		int idx = 0;
+		int[] children = new int[k];
+		backtrack(cookies,children,k,idx,n);
+		return result;
+	}
+	int max(int[] arr) {
+		int max = -1;
+		for (int i = 0; i < arr.length; i++) {
+			if (arr[i] > max) {
+				max = arr[i];
+			}
+		}
+		return max;
+	}
+}

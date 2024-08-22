@@ -1,0 +1,26 @@
+class Solution {
+	void calNode(TreeNode root, int lev, Map<Integer, Integer> map, int brother) {
+		if (root == null) {
+			return;
+		}
+		root.val = map.get(lev) - root.val;
+		int left = root.left == null ? 0 : root.left.val;
+		int right = root.right == null ? 0 : root.right.val;
+		calNode(root.left,lev + 1,map,right);
+		calNode(root.right,lev + 1,map,left);
+	}
+	TreeNode replaceValueInTree(TreeNode root) {
+		Map<Integer, Integer> map = new HashMap<>();
+		sumLayer(root,0,map);
+		calNode(root,0,map,0);
+		return root;
+	}
+	void sumLayer(TreeNode root, int lev, Map<Integer, Integer> map) {
+		if (root == null) {
+			return;
+		}
+		map.put(lev,map.getOrDefault(lev,0) + root.val);
+		sumLayer(root.left,lev + 1,map);
+		sumLayer(root.right,lev + 1,map);
+	}
+}

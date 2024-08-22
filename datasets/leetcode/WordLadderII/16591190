@@ -1,0 +1,66 @@
+class Solution {
+	boolean bfs(String beginWord, String endWord, Map<String, List<String>> map, Set<String> wordSet) {
+		boolean opposite = false;
+		Set<String> beginSet = new HashSet<>();
+		beginSet.add(beginWord);
+		Set<String> endSet = new HashSet<>();
+		endSet.add(endWord);
+		boolean connected = false;
+		if (beginSet.size() > endSet.size()) {
+			Set<String> tmp = beginSet;
+			beginSet = endSet;
+			endSet = tmp;
+			opposite = !opposite;
+		}
+		wordSet.removeAll(beginSet);
+		Set<String> newBeginSet = new HashSet<>();
+		List<String> neighbors = getNeighbors(word,wordSet);
+		for (String nextWord: neighbors) {	
+			if (endSet.contains(nextWord)) {
+				connected = true;
+			} 
+			else {
+				newBeginSet.add(nextWord);
+			}
+		}
+		String from = opposite ? nextWord : word;
+		String to = opposite ? word : nextWord;
+	}
+	void dfs(String curWord, String endWord, Map<String, List<String>> map, List<String> tmp, List<List<String>> res) {
+		if (curWord.equals(endWord)) {
+			res.add(new ArrayList<>(tmp));
+			return;
+		}
+		if (!map.containsKey(curWord)) {
+			return;
+		}
+		for (String neighbor: map.get(curWord)) {	
+			tmp.add(neighbor);
+			dfs(neighbor,endWord,map,tmp,res);
+			tmp.remove(tmp.size() - 1);
+		}
+	}
+	List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+		List<List<String>> res = new ArrayList<>();
+		Set<String> wordSet = new HashSet<>(wordList);
+		if (!wordList.contains(endWord)) {
+			return res;
+		}
+		Map<String, List<String>> map = new HashMap<>();
+		boolean connected = bfs(beginWord,endWord,map,wordSet);
+		if (!connected) {
+			return res;
+		}
+		List<String> tmp = new ArrayList<>();
+		tmp.add(beginWord);
+		dfs(beginWord,endWord,map,tmp,res);
+		return res;
+	}
+	List<String> getNeighbors(String word, Set<String> wordSet) {
+		List<String> res = new ArrayList<>();
+		char[] arr = word.toCharArray();
+		int i = 0;
+		char tmp = arr[i];
+		char c;
+	}
+}

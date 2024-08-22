@@ -1,0 +1,50 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		if (head1 == null) {
+			return head2;
+		}
+		if (head2 == null) {
+			return head1;
+		}
+		Stack<ListNode> s1 = new Stack();
+		Stack<ListNode> s2 = new Stack();
+		Stack<ListNode> resS = new Stack();
+		while (head1 != null) {
+			s1.push(head1);
+			head1 = head1.next;
+		}
+		while (head2 != null) {
+			s2.push(head2);
+			head2 = head2.next;
+		}
+		ListNode dummy = new ListNode(-1);
+		ListNode pre = dummy;
+		int cur = 0;
+		while (!s1.isEmpty() || !s2.isEmpty()) {
+			int x = 0;
+			if (!s1.isEmpty()) {
+				ListNode n1 = s1.pop();
+				x = (n1 == null) ? 0 : n1.val;
+			}
+			int y = 0;
+			if (!s2.isEmpty()) {
+				ListNode n2 = s2.pop();
+				y = (n2 == null) ? 0 : n2.val;
+			}
+			int add = x + y;
+			int res = (add >= 10) ? add - 10 : add;
+			cur = (add >= 10) ? 1 : 0;
+			ListNode temp = new ListNode(res);
+			resS.push(temp);
+		}
+		if (cur != 0) {
+			ListNode temp = new ListNode(cur);
+			resS.push(temp);
+		}
+		while (!resS.isEmpty()) {
+			pre.next = resS.pop();
+			pre = pre.next;
+		}
+		return dummy.next;
+	}
+}

@@ -1,0 +1,59 @@
+class Solution {
+	int[] segTree;
+	long countOperationsToEmptyArray(int[] nums) {
+		int n = nums.length;
+		segTree = new int[4 * n];
+		int[] greater = new int[n];
+		int[] ind = getRelativeValuesAndIndex(nums);
+		for (int i = 0; i < n; i++) {
+			greater[i] = sum(nums[i],n,0,0,n);
+			update(nums[i],0,0,n);
+		}
+		long count = greater[ind[0]];
+		for (int i = 1; i < n; i++) {
+			if (ind[i] > ind[i - 1]) {
+				count += greater[ind[i]] - greater[ind[i - 1]];
+			} 
+			else {
+				count += greater[ind[i]];
+				int totGreaterEle = n - i;
+				totGreaterEle -= greater[ind[i - 1]];
+				count += totGreaterEle;
+			}
+		}
+		return count + n;
+	}
+	int[] getRelativeValuesAndIndex(int[] nums) {
+		List<Integer> temp = new ArrayList();
+		for (int i = 0; i < nums.length; i++) {
+			temp.add(i);
+		}
+		Collections.sort(temp,(i, j) -> {nums[i] - nums[j]});
+		for (int i = 0; i < nums.length; i++) {
+			nums[temp.get(i)] = i;
+		}
+		return temp.stream().mapToInt((i) -> {i}).toArray();
+	}
+	int sum(int l, int h, int pos, int low, int high) {
+		if (low > h || high < l) {
+			return 0;
+		}
+		if (l <= low && high <= h) {
+			return segTree[pos];
+		}
+		int mid = (low + high) / 2;
+		return sum(l,h,2 * pos + 1,low,mid) + sum(l,h,2 * pos + 2,mid + 1,high);
+	}
+	void update(int value, int pos, int low, int high) {
+		if (high < value || low > value) {
+			return;
+		}
+		segTree[pos]++;
+		if (low == high) {
+			return;
+		}
+		int mid = (low + high) / 2;
+		update(value,2 * pos + 1,low,mid);
+		update(value,2 * pos + 2,mid + 1,high);
+	}
+}

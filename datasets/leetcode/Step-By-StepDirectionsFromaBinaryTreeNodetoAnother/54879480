@@ -1,0 +1,60 @@
+class Solution {
+	List<String> endDir = new LinkedList<>();
+	List<String> startDir = new LinkedList<>();
+	Direction to;
+	String getDirections(TreeNode root, int startValue, int destValue) {
+		TreeNode lca = getLCA(root,startValue,destValue);
+		boolean leftDir = getStart(lca,startValue);
+		Boolean rightDir = getEnd(lca,destValue);
+		Collections.reverse(endDir);
+		return String.join("",startDir) + String.join("",endDir);
+	}
+	boolean getEnd(TreeNode lca, int end) {
+		if (lca == null) {
+			return false;
+		}
+		if (lca.val == end) {
+			return true;
+		}
+		boolean lefts = getEnd(lca.left,end);
+		if (lefts) {
+			endDir.add("L");
+		}
+		boolean rights = getEnd(lca.right,end);
+		if (rights) {
+			endDir.add("R");
+		}
+		return lefts | rights;
+	}
+	TreeNode getLCA(TreeNode root, int start, int end) {
+		if (root == null) {
+			return root;
+		}
+		if (root.val == start || root.val == end) {
+			return root;
+		}
+		TreeNode leftLca = getLCA(root.left,start,end);
+		TreeNode rightLca = getLCA(root.right,start,end);
+		if (leftLca != null && rightLca != null) {
+			return root;
+		}
+		if (leftLca != null) {
+			return leftLca;
+		}
+		return rightLca;
+	}
+	boolean getStart(TreeNode lca, int start) {
+		if (lca == null) {
+			return false;
+		}
+		if (lca.val == start) {
+			return true;
+		}
+		boolean lefts = getStart(lca.left,start);
+		boolean rights = getStart(lca.right,start);
+		if (lefts | rights) {
+			startDir.add("U");
+		}
+		return lefts | rights;
+	}
+}

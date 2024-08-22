@@ -1,0 +1,28 @@
+class Solution {
+	int[] FindNumsAppearOnce(int[] arr) {
+		int[] ans = new int[2];
+		int num = arr[0];
+		for (int i = 1; i < arr.length; i++) {
+			num ^= arr[i];
+		}
+		int first_diff = -1;
+		for (int i = 0; i < 32; i++) {
+			if ((num & (1 << i)) != 0) {
+				first_diff = i;
+				break;
+			}
+		}
+		int l = 0, r = 0;
+		for (int val: arr) {	
+			if ((val & (1 << first_diff)) != 0) {
+				l ^= val;
+			} 
+			else {
+				r ^= val;
+			}
+		}
+		ans[0] = l < r ? l : r;
+		ans[1] = l > r ? l : r;
+		return ans;
+	}
+}

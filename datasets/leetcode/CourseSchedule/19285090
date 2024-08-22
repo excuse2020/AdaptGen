@@ -1,0 +1,40 @@
+class Solution {
+	List<List<Integer>> adjList;
+	int[] visited;
+	void buildGraph(int vertices, int[][] edges) {
+		for (int i = 0; i < vertices; i++) {
+			adjList.add(new ArrayList<Integer>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			adjList.get(edges[i][0]).add(edges[i][1]);
+		}
+	}
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		adjList = new ArrayList<>();
+		visited = new int[numCourses];
+		buildGraph(numCourses,prerequisites);
+		for (int i = 0; i < numCourses; i++) {
+			if (visited[i] == 0) {
+				if (isCycle(i)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	boolean isCycle(int vertex) {
+		if (visited[vertex] == 2) {
+			return true;
+		}
+		visited[vertex] = 2;
+		for (int neighbourVertex: adjList.get(vertex)) {	
+			if (visited[neighbourVertex] != 1) {
+				if (isCycle(neighbourVertex)) {
+					return true;
+				}
+			}
+		}
+		visited[vertex] = 1;
+		return false;
+	}
+}

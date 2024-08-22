@@ -1,0 +1,64 @@
+class Solution {
+	boolean dfs(List<Integer>[] graph, int source, int time, Map<Integer, Integer> bobTime) {
+		bobTime.put(source,time);
+		if (source == 0) {
+			return true;
+		}
+		for (int dest: graph[source]) {	
+			if (!bobTime.containsKey(dest) && dfs(graph,dest,time + 1,bobTime)) {
+				return true;
+			}
+		}
+		bobTime.remove(source);
+		return false;
+	}
+	int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+		int n = amount.length;
+		List<Integer>[] graph = new List[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int[] edge: edges) {	
+			graph[edge[0]].add(edge[1]);
+			graph[edge[1]].add(edge[0]);
+		}
+		Map<Integer, Integer> bobTime = new HashMap<>();
+		dfs(graph,bob,0,bobTime);
+		boolean[] visited = new boolean[n];
+		Queue<int[]> q = new ArrayDeque<>();
+		int time = -1;
+		q.offer(new int{0, 0});
+		visited[0] = true;
+		int ans = Integer.MIN_VALUE;
+		while (!q.isEmpty()) {
+			int size = q.size();
+			time += 1;
+			for (int i = 0; i < size; i++) {
+				int[] el = q.poll();
+				int node = el[0];
+				int prevCost = el[1];
+				visited[node] = true;
+				if (bobTime.containsKey(node)) {
+					if (bobTime.get(node) > time) {
+						prevCost += amount[node];
+					} 
+					else if (bobTime.get(node) == time) {
+						prevCost += (amount[node] / 2);
+					}
+				} 
+				else {
+					prevCost += amount[node];
+				}
+				if (node != 0 && graph[node].size() == 1) {
+					ans = Math.max(ans,prevCost);
+				}
+				for (int d: graph[node]) {	
+					if (!visited[d]) {
+						q.offer(new int{d, prevCost});
+					}
+				}
+			}
+		}
+		return ans;
+	}
+}

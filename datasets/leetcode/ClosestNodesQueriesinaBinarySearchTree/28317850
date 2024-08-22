@@ -1,0 +1,30 @@
+class Solution {
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		List<List<Integer>> result = new ArrayList<>();
+		List<Integer> order = new ArrayList<>();
+		collect(root,order);
+		int n = order.size();
+		for (int query: queries) {	
+			int index = Collections.binarySearch(order,query);
+			if (index >= 0) {
+				int value = order.get(index);
+				result.add(List.of(value,value));
+			} 
+			else {
+				index = -index - 1;
+				int max = (index < n) ? order.get(index) : -1;
+				index--;
+				int min = (index >= 0 && index < n) ? order.get(index) : -1;
+				result.add(List.of(min,max));
+			}
+		}
+		return result;
+	}
+	void collect(TreeNode root, List<Integer> order) {
+		if (root != null) {
+			collect(root.left,order);
+			order.add(root.val);
+			collect(root.right,order);
+		}
+	}
+}

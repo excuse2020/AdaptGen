@@ -1,0 +1,36 @@
+class Solution {
+	void dfs(List<List<Integer>> graph, boolean[] visited, int vertex) {
+		List<Integer> l = graph.get(vertex);
+		visited[vertex] = true;
+		for (int i = 0; i < l.size(); i++) {
+			if (visited[l.get(i)]) {
+				continue;
+			}
+			dfs(graph,visited,l.get(i));
+		}
+	}
+	int removeStones(int[][] stones) {
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < stones.length; i++) {
+			List<Integer> temp = new ArrayList<>();
+			for (int j = 0; j < stones.length; j++) {
+				if (i != j) {
+					if (stones[j][0] == stones[i][0] || stones[j][1] == stones[i][1]) {
+						temp.add(j);
+					}
+				}
+			}
+			graph.add(temp);
+		}
+		boolean[] visited = new boolean[stones.length];
+		int components = 0;
+		for (int i = 0; i < stones.length; i++) {
+			if (visited[i]) {
+				continue;
+			}
+			dfs(graph,visited,i);
+			components++;
+		}
+		return stones.length - components;
+	}
+}

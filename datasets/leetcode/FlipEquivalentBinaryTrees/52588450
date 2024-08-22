@@ -1,0 +1,98 @@
+class Solution {
+	boolean result = true;
+	boolean flipEquiv(TreeNode root1, TreeNode root2) {
+		if (root1 == null) {
+			if (root2 == null) {
+				return true;
+			} 
+			else {
+				return false;
+			}
+		}
+		if (root2 == null) {
+			return false;
+		}
+		if (root1.val != root2.val) {
+			return false;
+		}
+		boolean z = traverse(root1,root2);
+		return result;
+	}
+	void print(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		System.out.print(root.val + " ");
+		print(root.left);
+		print(root.right);
+	}
+	boolean traverse(TreeNode root1, TreeNode root2) {
+		if (root2 == null) {
+			return true;
+		}
+		if (root1.left != null && root1.right != null && root2.left != null && root2.right != null) {
+			if (root1.left.val != root2.left.val && root1.right.val != root2.right.val) {
+				TreeNode temp = root2.left;
+				root2.left = root2.right;
+				root2.right = temp;
+			}
+			if (root1.left.val != root2.left.val && root1.right.val != root2.right.val) {
+				result = false;
+				return result;
+			}
+		} 
+		else if (root1.left == null && root2.left != null && root1.right != null && root2.right == null) {
+			if (root2.left.val == root1.right.val) {
+				TreeNode temp = root2.left;
+				root2.left = root2.right;
+				root2.right = temp;
+			}
+		} 
+		else if (root1.right == null && root2.right != null && root1.left != null && root2.left == null) {
+			if (root1.left.val == root2.right.val) {
+				TreeNode temp = root2.left;
+				root2.left = root2.right;
+				root2.right = temp;
+			}
+		} 
+		else if (root1.left == null && root1.right != null && root2.left == null && root2.right != null) {
+			if (root1.right.val != root2.right.val) {
+				result = false;
+				return result;
+			}
+		} 
+		else if (root1.left != null && root1.right == null && root2.left != null && root2.right == null) {
+			if (root1.left.val != root2.left.val) {
+				result = false;
+				return result;
+			}
+		} 
+		else if (root1.left == null && root1.right == null && (root2.left != null || root2.right != null)) {
+			result = false;
+			return result;
+		} 
+		else if (root2.left == null && root2.right == null && (root1.left != null || root2.right != null)) {
+			result = false;
+			return result;
+		} 
+		else if (root1.left != null && root1.right != null && (root2.left == null || root2.right == null)) {
+			result = false;
+			return result;
+		} 
+		else if (root2.left != null && root2.right != null && (root1.left == null || root2.right == null)) {
+			result = false;
+			return result;
+		}
+		boolean a = traverse(root1.left,root2.left);
+		if (a == false) {
+			return false;
+		}
+		boolean b = traverse(root1.right,root2.right);
+		if (b == false) {
+			return false;
+		} 
+		else {
+			return true;
+		}
+	}
+}

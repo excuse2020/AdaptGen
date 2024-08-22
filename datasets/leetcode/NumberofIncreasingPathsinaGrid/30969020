@@ -1,0 +1,42 @@
+class Solution {
+	long[][] dp;
+	int mod = (int) 1e9 + 7;
+	int countPaths(int[][] grid) {
+		int n = grid.length;
+		int m = grid[0].length;
+		dp = new long[n][m];
+		for (int i = 0; i < n; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		long ans = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				ans += f(i,j,grid,n,m);
+				ans %= mod;
+			}
+		}
+		return (int) ans;
+	}
+	long f(int x, int y, int[][] grid, int n, int m) {
+		if (dp[x][y] != -1) {
+			return dp[x][y];
+		}
+		long ans = 1;
+		if (isValid(x - 1,y,n,m) && grid[x - 1][y] < grid[x][y]) {
+			ans += f(x - 1,y,grid,n,m);
+		}
+		if (isValid(x + 1,y,n,m) && grid[x + 1][y] < grid[x][y]) {
+			ans += f(x + 1,y,grid,n,m);
+		}
+		if (isValid(x,y - 1,n,m) && grid[x][y - 1] < grid[x][y]) {
+			ans += f(x,y - 1,grid,n,m);
+		}
+		if (isValid(x,y + 1,n,m) && grid[x][y + 1] < grid[x][y]) {
+			ans += f(x,y + 1,grid,n,m);
+		}
+		return dp[x][y] = ans % mod;
+	}
+	boolean isValid(int x, int y, int n, int m) {
+		return x >= 0 && y >= 0 && x < n && y < m;
+	}
+}

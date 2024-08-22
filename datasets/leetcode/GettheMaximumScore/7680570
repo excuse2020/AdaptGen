@@ -1,0 +1,64 @@
+class Solution {
+	Map<Integer, Integer> map1;
+	Map<Integer, Integer> map2;
+	long dfs(int[] nums1, int idx1, int[] nums2, int idx2, int rowId, Long[][] cache) {
+		if (idx1 == nums1.length || idx2 == nums2.length) {
+			return 0;
+		}
+		int idx = rowId == 0 ? idx1 : idx2;
+		if (cache[rowId][idx] != null) {
+			return cache[rowId][idx];
+		}
+		long max = Long.MIN_VALUE;
+		if (rowId == 0) {
+			int curVal = nums1[idx1];
+			if (map2.containsKey(curVal)) {
+				int nextIdx = map2.get(curVal) + 1;
+				long val = dfs(nums1,idx1,nums2,nextIdx,1,cache);
+				if (val != Long.MIN_VALUE) {
+					max = Math.max(max,val + curVal);
+				}
+			}
+			long val = dfs(nums1,idx1 + 1,nums2,idx2,0,cache);
+			if (val != Long.MIN_VALUE) {
+				max = Math.max(max,val + curVal);
+			}
+		} 
+		else {
+			int curVal = nums2[idx2];
+			if (map1.containsKey(curVal)) {
+				int nextIdx = map1.get(curVal) + 1;
+				long val = dfs(nums1,nextIdx,nums2,idx2,0,cache);
+				if (val != Long.MIN_VALUE) {
+					max = Math.max(max,val + curVal);
+				}
+			}
+			long val = dfs(nums1,idx1,nums2,idx2 + 1,1,cache);
+			if (val != Long.MIN_VALUE) {
+				max = Math.max(max,val + curVal);
+			}
+		}
+		cache[rowId][idx] = max;
+		return max;
+	}
+	int maxSum(int[] nums1, int[] nums2) {
+		int mod = (int) 1e9 + 7;
+		map1 = new HashMap<>();
+		map2 = new HashMap<>();
+		for (int i = 0; i < nums1.length; i++) {
+			map1.put(nums1[i],i);
+		}
+		for (int i = 0; i < nums2.length; i++) {
+			map2.put(nums2[i],i);
+		}
+		Long[][] cache1 = new Long[2][Math.max(nums1.length,nums2.length) + 1];
+		long ans1 = dfs(nums1,0,nums2,0,0,cache1);
+		Long[][] cache2 = new Long[2][Math.max(nums1.length,nums2.length) + 1];
+		long ans2 = dfs(nums1,0,nums2,0,1,cache2);
+		long ans = Math.max(ans1,ans2);
+		if (ans == Long.MIN_VALUE) {
+			return -1;
+		}
+		return (int) (ans % mod);
+	}
+}

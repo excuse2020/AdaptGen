@@ -1,0 +1,25 @@
+class Solution {
+	int maxSum(int[] arr, int k, int[] cache, int start) {
+		if (start == arr.length) {
+			return 0;
+		}
+		if (cache[start] != -1) {
+			return cache[start];
+		}
+		int maxRes = Integer.MIN_VALUE;
+		int currMax = 0;
+		int windowSize = 0;
+		for (int j = start; j < Math.min(start + k,arr.length); j++) {
+			currMax = Math.max(currMax,arr[j]);
+			windowSize = j - start + 1;
+			maxRes = Math.max(maxRes,windowSize * currMax + maxSum(arr,k,cache,j + 1));
+		}
+		cache[start] = maxRes;
+		return maxRes;
+	}
+	int maxSumAfterPartitioning(int[] arr, int k) {
+		int[] cache = new int[arr.length];
+		Arrays.fill(cache,-1);
+		return maxSum(arr,k,cache,0);
+	}
+}

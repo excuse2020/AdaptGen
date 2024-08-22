@@ -1,0 +1,49 @@
+class Solution {
+	int[] fullBloomFlowers(int[][] flowers, int[] people) {
+		int[] startTime = new int[flowers.length];
+		int[] endTime = new int[flowers.length];
+		int[] res = new int[people.length];
+		for (int i = 0; i < flowers.length; i++) {
+			startTime[i] = flowers[i][0];
+			endTime[i] = flowers[i][1];
+		}
+		Arrays.sort(startTime);
+		Arrays.sort(endTime);
+		for (int i = 0; i < people.length; i++) {
+			int startCount = getStartCount(startTime,people[i]);
+			int endCount = getEndCount(endTime,people[i]);
+			res[i] = startCount - endCount;
+		}
+		return res;
+	}
+	int getEndCount(int[] times, int targetTime) {
+		int lo = -1;
+		int hi = times.length;
+		int mid = lo + ((hi - lo) / 2);
+		while (lo + 1 != hi) {
+			mid = lo + ((hi - lo) / 2);
+			if (times[mid] < targetTime) {
+				lo = mid;
+			} 
+			else {
+				hi = mid;
+			}
+		}
+		return Math.max(0,lo + 1);
+	}
+	int getStartCount(int[] times, int targetTime) {
+		int lo = -1;
+		int hi = times.length;
+		int mid = lo + ((hi - lo) / 2);
+		while (lo + 1 != hi) {
+			mid = lo + ((hi - lo) / 2);
+			if (times[mid] <= targetTime) {
+				lo = mid;
+			} 
+			else {
+				hi = mid;
+			}
+		}
+		return lo + 1;
+	}
+}

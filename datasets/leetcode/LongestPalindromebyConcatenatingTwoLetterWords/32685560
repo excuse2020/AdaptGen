@@ -1,0 +1,35 @@
+class Solution {
+	int longestPalindrome(String[] words) {
+		Map<String, Integer> countMap = new HashMap<>();
+		for (int i = 0; i < words.length; i++) {
+			countMap.put(words[i],countMap.getOrDefault(words[i],0) + 1);
+		}
+		int result = 0;
+		int count = 0;
+		for (String str: words) {	
+			String reverse = reverse(str);
+			if (reverse.equals(str) && countMap.containsKey(reverse)) {
+				int palindromeOddCount = countMap.get(str) % 2;
+				if (palindromeOddCount == 1) {
+					count = 2;
+				}
+				result += 2 * (countMap.get(str) - palindromeOddCount);
+			} 
+			else if (countMap.containsKey(reverse)) {
+				int matchCount = 2 * Math.min(countMap.get(reverse),countMap.get(str));
+				result = result + 2 * matchCount;
+				countMap.remove(reverse);
+			}
+			countMap.remove(str);
+		}
+		return result + count;
+	}
+	String reverse(String str) {
+		StringBuilder sb = new StringBuilder();
+		int n = str.length();
+		for (int i = n - 1; i >= 0; i--) {
+			sb.append(str.charAt(i));
+		}
+		return sb.toString();
+	}
+}

@@ -1,0 +1,34 @@
+class Solution {
+	List<List<Integer>> graph = new ArrayList<>();
+	boolean[] visit;
+	long countPairs(int n, int[][] edges) {
+		long ans = 0;
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			graph.get(edge[0]).add(edge[1]);
+			graph.get(edge[1]).add(edge[0]);
+		}
+		visit = new boolean[n];
+		long visitedInThisSearch = 0, visitedTotal = 0;
+		for (int i = 0; i < n; i++) {
+			if (!visit[i]) {
+				visitedInThisSearch = dfs(i);
+				ans += visitedTotal * visitedInThisSearch;
+				visitedTotal += visitedInThisSearch;
+			}
+		}
+		return ans;
+	}
+	int dfs(int node) {
+		int cnt = 1;
+		visit[node] = true;
+		for (int i: graph.get(node)) {	
+			if (!visit[i]) {
+				cnt += dfs(i);
+			}
+		}
+		return cnt;
+	}
+}

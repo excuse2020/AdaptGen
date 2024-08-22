@@ -1,0 +1,27 @@
+class Solution {
+	int dp = new int[500009][4];
+	int minSideJumps(int[] nums) {
+		int len = nums.length;
+		return solve(nums,0,2);
+	}
+	int solve(int nums, int index, int currPos) {
+		if (index == nums.length - 1) {
+			return 0;
+		}
+		if (dp[index][currPos] != 0) {
+			return dp[index][currPos];
+		}
+		int ans = Integer.MAX_VALUE;
+		for (int i = 1; i <= 3; i++) {
+			if (nums[index + 1] != i && nums[index] != i) {
+				if (i == currPos) {
+					ans = Math.min(ans,solve(nums,index + 1,i));
+				} 
+				else {
+					ans = Math.min(ans,1 + solve(nums,index + 1,i));
+				}
+			}
+		}
+		return dp[index][currPos] = ans;
+	}
+}

@@ -1,0 +1,40 @@
+class Solution {
+	int minimumTime(int n, int[][] relations, int[] time) {
+		int[] indegree = new int[n + 1];
+		int[] acc = new int[n + 1];
+		List<Integer>[] graph = new ArrayList[n + 1];
+		for (int i = 1; i < n + 1; i++) {
+			acc[i] = time[i - 1];
+			graph[i] = new ArrayList();
+		}
+		for (int[] r: relations) {	
+			graph[r[0]].add(r[1]);
+			indegree[r[1]]++;
+		}
+		Queue<Integer> q = new LinkedList();
+		for (int i = 1; i <= n; i++) {
+			if (indegree[i] == 0) {
+				q.offer(i);
+			}
+		}
+		int res = 0;
+		while (!q.isEmpty()) {
+			int len = q.size();
+			int max = 0;
+			for (int i = 0; i < len; i++) {
+				int cur = q.poll();
+				int t = acc[cur];
+				max = Math.max(max,t);
+				for (int nx: graph[cur]) {	
+					indegree[nx]--;
+					acc[nx] = Math.max(acc[nx],t + time[nx - 1]);
+					if (indegree[nx] == 0) {
+						q.offer(nx);
+					}
+				}
+			}
+			res = Math.max(res,max);
+		}
+		return res;
+	}
+}

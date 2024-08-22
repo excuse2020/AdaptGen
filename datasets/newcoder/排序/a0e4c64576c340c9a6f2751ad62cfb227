@@ -1,0 +1,42 @@
+class Solution {
+	int[] MySort(int[] arr) {
+		mergeSort(arr,0,arr.length - 1);
+		return arr;
+	}
+	void merge(int[] arr, int left, int mid, int right) {
+		if (left >= right) {
+			return;
+		}
+		int p1 = left, p2 = mid + 1;
+		int[] help = new int[right - left + 1];
+		int count = 0;
+		while (p1 <= mid || p2 <= right) {
+			if (p1 <= mid && p2 <= right) {
+				if (arr[p1] <= arr[p2]) {
+					help[count++] = arr[p1++];
+				} 
+				else {
+					help[count++] = arr[p2++];
+				}
+			} 
+			else if (p1 <= mid && p2 > right) {
+				help[count++] = arr[p1++];
+			} 
+			else if (p1 > mid && p2 <= right) {
+				help[count++] = arr[p2++];
+			}
+		}
+		for (int i = 0; i < count; ++i) {
+			arr[left + i] = help[i];
+		}
+	}
+	void mergeSort(int[] arr, int left, int right) {
+		if (left >= right) {
+			return;
+		}
+		int mid = (left + right) / 2;
+		mergeSort(arr,left,mid);
+		mergeSort(arr,mid + 1,right);
+		merge(arr,left,mid,right);
+	}
+}

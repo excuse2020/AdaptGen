@@ -1,0 +1,23 @@
+class Solution {
+	long binarySearch(int numberOfComputers, int[] batteries) {
+		long left = 1, right = Arrays.stream(batteries).asLongStream().sum() / numberOfComputers;
+		Arrays.sort(batteries);
+		while (left < right) {
+			long mid = right - (right - left) / 2;
+			if (canRunComputersSimultaneously(mid,numberOfComputers,batteries)) {
+				left = mid;
+			} 
+			else {
+				right = mid - 1;
+			}
+		}
+		return left;
+	}
+	boolean canRunComputersSimultaneously(long minutes, int numberOfComputers, int[] batteries) {
+		long total = Arrays.stream(batteries).asLongStream().map((battery) -> {Math.min(battery,minutes)}).sum();
+		return total >= minutes * numberOfComputers;
+	}
+	long maxRunTime(int n, int[] batteries) {
+		return binarySearch(n,batteries);
+	}
+}

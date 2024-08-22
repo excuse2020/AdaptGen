@@ -1,0 +1,22 @@
+class Solution {
+	int mod = (int) 1e9 + 7;
+	int numRollsToTarget(int n, int k, int target) {
+		return recurse(k,n,target,new Integer[n + 1][target + 1]);
+	}
+	int recurse(int k, int n, int target, Integer[][] dp) {
+		if (n == 0) {
+			return target == 0 ? 1 : 0;
+		}
+		if (target < 0 || (n * k) < target) {
+			return 0;
+		}
+		if (dp[n][target] != null) {
+			return dp[n][target];
+		}
+		int count = 0, maxDiceFace = Math.min(k,target);
+		for (int i = 1; i <= maxDiceFace; ++i) {
+			count = (count + recurse(k,n - 1,target - i,dp)) % mod;
+		}
+		return dp[n][target] = count;
+	}
+}

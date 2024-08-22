@@ -1,0 +1,40 @@
+class Solution {
+	int helper(ArrayList<Long> al, long num) {
+		int s = 0;
+		int e = al.size() - 1;
+		while (s <= e) {
+			int mid = s + (e - s) / 2;
+			long ele = al.get(mid);
+			if (ele == num) {
+				return mid;
+			} 
+			else if (ele < num) {
+				s = mid + 1;
+			} 
+			else {
+				e = mid - 1;
+			}
+		}
+		return s;
+	}
+	int minOperations(int n) {
+		ArrayList<Long> al = new ArrayList<>();
+		long i = 1;
+		while (i <= n) {
+			al.add(i);
+			i *= 2;
+		}
+		al.add(i);
+		int count = 0;
+		while (n > 0) {
+			int idx = helper(al,n);
+			int diff = Math.abs(n - (int) (al.get(idx) * 1L));
+			if (idx > 0) {
+				diff = Math.min(diff,Math.abs(n - (int) (al.get(idx - 1) * 1L)));
+			}
+			n = diff;
+			count++;
+		}
+		return count;
+	}
+}

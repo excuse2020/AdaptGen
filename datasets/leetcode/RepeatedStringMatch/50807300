@@ -1,0 +1,72 @@
+class Solution {
+	int KMP_SEARCH(String haystack, String needle) {
+		if (needle.length() == 0) {
+			return 0;
+		}
+		int first = 0, second = 0;
+		int[] lps = LPS(needle);
+		while (second < needle.length() && first < haystack.length()) {
+			if (needle.charAt(second) == haystack.charAt(first)) {
+				second++;
+				first++;
+			} 
+			else {
+				if (second == 0) {
+					first++;
+				} 
+				else {
+					second = lps[second - 1];
+				}
+			}
+		}
+		if (second == needle.length()) {
+			return 1;
+		} 
+		else {
+			return 0;
+		}
+	}
+	int[] LPS(String pattern) {
+		int[] lps = new int[pattern.length()];
+		int pre = 0;
+		int suf = 1;
+		while (suf < pattern.length()) {
+			if (pattern.charAt(pre) == pattern.charAt(suf)) {
+				lps[suf] = pre + 1;
+				pre++;
+				suf++;
+			} 
+			else {
+				if (pre == 0) {
+					lps[suf] = 0;
+					suf++;
+				} 
+				else {
+					pre = lps[pre - 1];
+				}
+			}
+		}
+		return lps;
+	}
+	int repeatedStringMatch(String a, String b) {
+		if (b.length() == 0 || b == null) {
+			return -1;
+		}
+		if (a.equals(b)) {
+			return 1;
+		}
+		int repeat = 1;
+		String temp = a;
+		while (temp.length() < b.length()) {
+			temp += a;
+			repeat++;
+		}
+		if (KMP_SEARCH(temp,b) == 1) {
+			return repeat;
+		}
+		if (KMP_SEARCH(temp + a,b) == 1) {
+			return repeat + 1;
+		}
+		return -1;
+	}
+}

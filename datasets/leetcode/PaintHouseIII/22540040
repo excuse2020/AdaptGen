@@ -1,0 +1,29 @@
+class Solution {
+	Integer[][][] dp;
+	int minCost(int[] houses, int[][] cost, int m, int n, int target) {
+		dp = new Integer[m][n + 1][target + 1];
+		int ans = solve(0,0,0,houses,cost,m,n,target);
+		return (ans == Integer.MAX_VALUE / 2) ? -1 : ans;
+	}
+	int solve(int i, int CI, int NB, int[] houses, int[][] cost, int m, int n, int target) {
+		if (NB > target) {
+			return Integer.MAX_VALUE / 2;
+		}
+		if (i == m) {
+			return (NB == target) ? 0 : Integer.MAX_VALUE / 2;
+		}
+		if (dp[i][CI][NB] != null) {
+			return dp[i][CI][NB];
+		}
+		int ans = Integer.MAX_VALUE / 2;
+		if (houses[i] == 0) {
+			for (int j = 0; j < n; j++) {
+				ans = Math.min(ans,cost[i][j] + solve(i + 1,j + 1,(CI == j + 1) ? NB : NB + 1,houses,cost,m,n,target));
+			}
+		} 
+		else {
+			ans = Math.min(ans,solve(i + 1,houses[i],(houses[i] == CI) ? NB : NB + 1,houses,cost,m,n,target));
+		}
+		return dp[i][CI][NB] = ans;
+	}
+}

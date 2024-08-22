@@ -1,0 +1,61 @@
+class Solution {
+	boolean downPath(TreeNode node, StringBuilder pb, int target) {
+		if (node == null) {
+			return false;
+		}
+		if (node.val == target) {
+			return true;
+		}
+		if (downPath(node.left,pb,target)) {
+			pb.append("L");
+			return true;
+		} 
+		else if (downPath(node.right,pb,target)) {
+			pb.append("R");
+			return true;
+		}
+		return false;
+	}
+	String getDirections(TreeNode root, int startValue, int destValue) {
+		TreeNode lca = getLCA(root,startValue,destValue);
+		StringBuilder pathBuilder = new StringBuilder();
+		if (lca.val == startValue) {
+			downPath(lca,pathBuilder,destValue);
+		} 
+		else if (lca.val == destValue) {
+			upPath(lca,pathBuilder,startValue);
+		} 
+		else {
+			downPath(lca,pathBuilder,destValue);
+			upPath(lca,pathBuilder,startValue);
+		}
+		return pathBuilder.reverse().toString();
+	}
+	TreeNode getLCA(TreeNode root, int startValue, int destValue) {
+		if (root == null) {
+			return null;
+		}
+		if (root.val == startValue || root.val == destValue) {
+			return root;
+		}
+		TreeNode leftLCA = getLCA(root.left,startValue,destValue);
+		TreeNode rightLCA = getLCA(root.right,startValue,destValue);
+		if (leftLCA != null && rightLCA != null) {
+			return root;
+		}
+		return (leftLCA != null) ? leftLCA : rightLCA;
+	}
+	boolean upPath(TreeNode node, StringBuilder pb, int target) {
+		if (node == null) {
+			return false;
+		}
+		if (node.val == target) {
+			return true;
+		}
+		if (upPath(node.left,pb,target) || upPath(node.right,pb,target)) {
+			pb.append("U");
+			return true;
+		}
+		return false;
+	}
+}

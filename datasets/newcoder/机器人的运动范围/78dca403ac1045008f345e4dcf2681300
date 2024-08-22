@@ -1,0 +1,33 @@
+class Solution {
+	boolean isValid(int x, int y, int k) {
+		int sum = 0;
+		while (x != 0 && y != 0) {
+			sum += x % 10 + y % 10;
+			x /= 10;
+			y /= 10;
+		}
+		while (x != 0) {
+			sum += x % 10;
+			x /= 10;
+		}
+		while (y != 0) {
+			sum += y % 10;
+			y /= 10;
+		}
+		return sum <= k ? true : false;
+	}
+	int movingCount(int threshold, int rows, int cols) {
+		if (threshold == 0) {
+			return 1;
+		}
+		int[][] sign = new int[rows][cols];
+		return process(0,0,rows,cols,threshold,sign);
+	}
+	int process(int x, int y, int m, int n, int k, int[][] sign) {
+		if (x < 0 || x >= m || y < 0 || y >= n || sign[x][y] == 1 || !isValid(x,y,k)) {
+			return 0;
+		}
+		sign[x][y] = 1;
+		return 1 + process(x - 1,y,m,n,k,sign);
+	}
+}

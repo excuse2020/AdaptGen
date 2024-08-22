@@ -1,0 +1,39 @@
+class Solution {
+	int max = 10000001;
+	int[][][] memo;
+	int calMinimumCostToPaintHouse(int[] houses, int[][] cost, int m, int n, int target, int houseIndex, int nbr, int prevColor) {
+		if (houseIndex == m) {
+			return nbr == target ? 0 : max;
+		}
+		if (nbr > target) {
+			return max;
+		}
+		if (memo[houseIndex][nbr][prevColor] != -1) {
+			return memo[houseIndex][nbr][prevColor];
+		}
+		if (houses[houseIndex] == 0) {
+			int minCost = max;
+			for (int c = 1; c <= n; c++) {
+				int newNbr = nbr;
+				if (prevColor != c) {
+					newNbr = nbr + 1;
+				}
+				minCost = Math.min(minCost,cost[houseIndex][c - 1] + calMinimumCostToPaintHouse(houses,cost,m,n,target,houseIndex + 1,newNbr,c));
+			}
+			return memo[houseIndex][nbr][prevColor] = minCost;
+		} 
+		else {
+			int newNbr = nbr;
+			if (houses[houseIndex] != prevColor) {
+				newNbr = nbr + 1;
+			}
+			return memo[houseIndex][nbr][prevColor] = calMinimumCostToPaintHouse(houses,cost,m,n,target,houseIndex + 1,newNbr,houses[houseIndex]);
+		}
+	}
+	int minCost(int[] houses, int[][] cost, int m, int n, int target) {
+		memo = new int[m][target + 1][n + 1];
+		Arrays.stream(memo).forEach((i) -> {Arrays.stream(i).forEach((y) -> {Arrays.fill(y,-1)})});
+		int res = calMinimumCostToPaintHouse(houses,cost,m,n,target,0,0,0);
+		return res == max ? -1 : res;
+	}
+}

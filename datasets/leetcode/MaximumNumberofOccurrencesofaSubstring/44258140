@@ -1,0 +1,26 @@
+class Solution {
+	int maxFreq(String s, int maxLetters, int minSize, int maxSize) {
+		int result = 0;
+		HashMap<String, Integer> substrings = new HashMap<>();
+		HashMap<Character, Integer> countMap = new HashMap<>();
+		int start = 0;
+		for (int end = 0; end < s.length(); end++) {
+			char ch = s.charAt(end);
+			countMap.put(ch,countMap.getOrDefault(ch,0) + 1);
+			while (end - start + 1 > minSize) {
+				char c = s.charAt(start);
+				countMap.put(c,countMap.get(c) - 1);
+				if (countMap.get(c) == 0) {
+					countMap.remove(c);
+				}
+				start++;
+			}
+			if (end - start + 1 == minSize && countMap.size() <= maxLetters) {
+				String substring = s.substring(start,end + 1);
+				substrings.put(substring,substrings.getOrDefault(substring,0) + 1);
+				result = Math.max(result,substrings.get(substring));
+			}
+		}
+		return result;
+	}
+}

@@ -1,0 +1,49 @@
+class Solution {
+	int networkBecomesIdle(int[][] edges, int[] patience) {
+		int n = patience.length;
+		List<List<Integer>> adjList = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adjList.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			adjList.get(edges[i][0]).add(edges[i][1]);
+			adjList.get(edges[i][1]).add(edges[i][0]);
+		}
+		boolean[] visited = new boolean[n];
+		PriorityQueue<int[]> patientList = new PriorityQueue<>((arr1, arr2) -> {Integer.compare(arr1[1],arr2[1])});
+		int[] sortestFromMaster = new int[n];
+		patientList.add(new int{0, 0});
+		while (!patientList.isEmpty()) {
+			int[] patientWithDistance = patientList.remove();
+			int patient = patientWithDistance[0];
+			int distance = patientWithDistance[1];
+			if (visited[patient]) {
+				continue;
+			}
+			sortestFromMaster[patient] = distance * 2;
+			visited[patient] = true;
+			for (int curPatient: adjList.get(patient)) {	
+				if (!visited[curPatient]) {
+					patientList.add(new int{curPatient, distance + 1});
+				}
+			}
+		}
+		int maxTime = -1;
+		for (int i = 1; i < n; i++) {
+			int time = -1;
+			if (sortestFromMaster[i] > patience[i]) {
+				if (sortestFromMaster[i] % patience[i] == 0) {
+					time = 2 * sortestFromMaster[i] - patience[i] + 1;
+				} 
+				else {
+					time = 2 * sortestFromMaster[i] - sortestFromMaster[i] % patience[i] + 1;
+				}
+			} 
+			else {
+				time = sortestFromMaster[i] + 1;
+			}
+			maxTime = Math.max(maxTime,time);
+		}
+		return maxTime;
+	}
+}

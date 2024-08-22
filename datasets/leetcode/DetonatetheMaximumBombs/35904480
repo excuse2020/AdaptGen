@@ -1,0 +1,32 @@
+class Solution {
+	int maximumDetonation(int[][] bombs) {
+		int n = bombs.length;
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			boolean visited = new boolean[n];
+			visited[i] = true;
+			ans = Math.max(ans,1 + util(bombs,i,visited));
+		}
+		return ans;
+	}
+	int util(int bombs, int i, boolean[] visited) {
+		long x1 = bombs[i][0];
+		long y1 = bombs[i][1];
+		long r1 = bombs[i][2];
+		int ret = 0;
+		for (int j = 0; j < bombs.length; j++) {
+			if (visited[j]) {
+				continue;
+			}
+			long x2 = bombs[j][0];
+			long y2 = bombs[j][1];
+			long r2 = bombs[j][2];
+			long sum = (long) Math.pow((x2 - x1),2) + (long) Math.pow((y2 - y1),2);
+			if (sum <= r1 * r1) {
+				visited[j] = true;
+				ret += 1 + util(bombs,j,visited);
+			}
+		}
+		return ret;
+	}
+}

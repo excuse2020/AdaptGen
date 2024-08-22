@@ -1,0 +1,24 @@
+class Solution {
+	int maxSumAfterPartitioning(int[] arr, int k) {
+		HashMap<String, Integer> memo = new HashMap<>();
+		return solve(0,arr,k,memo);
+	}
+	int solve(int ind, int[] arr, int k, HashMap<String, Integer> memo) {
+		int n = arr.length;
+		if (ind >= arr.length) {
+			return 0;
+		}
+		String currentKey = String.valueOf(ind);
+		if (memo.containsKey(currentKey)) {
+			return memo.get(currentKey);
+		}
+		int result = 0;
+		int currMax = -1;
+		for (int j = ind; j < n && j - ind + 1 <= k; j++) {
+			currMax = Math.max(currMax,arr[j]);
+			result = Math.max(result,((j - ind + 1) * currMax) + solve(j + 1,arr,k,memo));
+		}
+		memo.put(currentKey,result);
+		return result;
+	}
+}

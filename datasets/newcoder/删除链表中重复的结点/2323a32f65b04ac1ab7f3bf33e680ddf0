@@ -1,0 +1,32 @@
+class Solution {
+	ListNode deleteDuplication(ListNode pHead) {
+		if (null == pHead || null == pHead.next) {
+			return pHead;
+		}
+		Queue<ListNode> queue = new LinkedList<>();
+		int pre = 0;
+		ListNode node = pHead;
+		while (null != node) {
+			if (node.val == pre || (null != node.next && node.next.val == node.val)) {
+				pre = node.val;
+				node = node.next;
+			} 
+			else {
+				queue.add(node);
+				pre = node.val;
+				node = node.next;
+			}
+		}
+		if (queue.isEmpty()) {
+			return null;
+		}
+		pHead = queue.poll();
+		node = pHead;
+		while (!queue.isEmpty()) {
+			node.next = queue.poll();
+			node = node.next;
+		}
+		node.next = null;
+		return pHead;
+	}
+}

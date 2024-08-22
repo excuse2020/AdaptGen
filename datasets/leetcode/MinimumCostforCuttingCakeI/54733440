@@ -1,0 +1,35 @@
+class Solution {
+	HashMap<String, Integer> dp;
+	String key(int rS, int rE, int cS, int cE) {
+		return rS + ":";
+	}
+	int minimumCost(int n, int m, int[] H, int[] V) {
+		dp = new HashMap<>();
+		int ans = solve(0,n,0,m,n,H,m,V);
+		return ans;
+	}
+	int solve(int rS, int rE, int cS, int cE, int n, int[] H, int m, int[] V) {
+		String K = key(rS,rE,cS,cE);
+		if (dp.get(K) != null) {
+			return dp.get(K);
+		}
+		if (cE - cS == 1 && rE - rS == 1) {
+			return 0;
+		}
+		int min = Integer.MAX_VALUE;
+		for (int i = cS + 1; i < cE; i++) {
+			int A = solve(rS,rE,cS,i,n,H,m,V);
+			int B = solve(rS,rE,i,cE,n,H,m,V);
+			int C = V[i - 1];
+			min = Integer.min(min,A + B);
+		}
+		for (int i = rS + 1; i < rE; i++) {
+			int A = solve(rS,i,cS,cE,n,H,m,V);
+			int B = solve(i,rE,cS,cE,n,H,m,V);
+			int C = H[i - 1];
+			min = Integer.min(min,A + B);
+		}
+		dp.put(K,min);
+		return min;
+	}
+}

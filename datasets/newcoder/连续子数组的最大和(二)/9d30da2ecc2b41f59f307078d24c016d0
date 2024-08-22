@@ -1,0 +1,29 @@
+class Solution {
+	int[] FindGreatestSumOfSubArray(int[] array) {
+		if (array.length == 1) {
+			return array;
+		}
+		int[] dp = new int[array.length];
+		int left = 0, right = 0;
+		int maxLeft = 0, maxRight = 0;
+		dp[0] = array[0];
+		int max = dp[0];
+		for (int i = 1; i < array.length; i++) {
+			right++;
+			dp[i] = Math.max(dp[i - 1] + array[i],array[i]);
+			if (dp[i - 1] + array[i] < array[i]) {
+				left = right;
+			}
+			if (max < dp[i] || max == dp[i] && (maxRight - maxLeft + 1) < (right - left + 1)) {
+				max = dp[i];
+				maxLeft = left;
+				maxRight = right;
+			}
+		}
+		int[] ints = new int[maxRight - maxLeft + 1];
+		for (int j = maxLeft; j <= maxRight; j++) {
+			ints[j - maxLeft] = array[j];
+		}
+		return ints;
+	}
+}

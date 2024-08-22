@@ -1,0 +1,26 @@
+class Solution {
+	int getLength(ListNode head, HashMap<Integer, ListNode> hm) {
+		if (head == null) {
+			return 0;
+		}
+		int posFromBack = getLength(head.next,hm) + 1;
+		hm.put(posFromBack,head);
+		return posFromBack;
+	}
+	ListNode removeNthFromEnd(ListNode head, int n) {
+		HashMap<Integer, ListNode> hm = new HashMap<>();
+		int length = getLength(head,hm);
+		if (n == length) {
+			return head.next;
+		} 
+		else if (n == 1) {
+			hm.get(2).next = null;
+			return head;
+		} 
+		else {
+			hm.get(n + 1).next = hm.get(n).next;
+			hm.get(n).next = null;
+			return head;
+		}
+	}
+}

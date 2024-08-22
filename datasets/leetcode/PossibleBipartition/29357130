@@ -1,0 +1,66 @@
+class Solution {
+	boolean bfs(List<List<Integer>> list, Integer[] vis, int s) {
+		Queue<Integer> q = new ArrayDeque<>();
+		vis[s] = 0;
+		q.add(s);
+		while (q.size() > 0) {
+			int n = q.remove();
+			for (int i = 0; i < list.get(n).size(); i++) {
+				int c = list.get(n).get(i);
+				if (vis[c] == null) {
+					q.add(c);
+					if (vis[n] == 0) {
+						vis[c] = 1;
+					} 
+					else {
+						vis[c] = 0;
+					}
+				} 
+				else if (vis[c] != null && vis[c] == vis[n]) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	boolean dfs(List<List<Integer>> list, Integer[] vis, int s) {
+		for (int i = 0; i < list.get(s).size(); i++) {
+			int c = list.get(s).get(i);
+			if (vis[c] == null) {
+				if (vis[s] == 0) {
+					vis[c] = 1;
+				} 
+				else {
+					vis[c] = 0;
+				}
+				if (!dfs(list,vis,c)) {
+					return false;
+				}
+			} 
+			else if (vis[c] != null && vis[c] == vis[s]) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		List<List<Integer>> list = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			list.add(new ArrayList<>());
+		}
+		for (int i = 0; i < dislikes.length; i++) {
+			list.get(dislikes[i][0] - 1).add(dislikes[i][1] - 1);
+			list.get(dislikes[i][1] - 1).add(dislikes[i][0] - 1);
+		}
+		Integer[] vis = new Integer[n];
+		for (int i = 0; i < n; i++) {
+			if (vis[i] == null) {
+				vis[i] = 0;
+				if (!dfs(list,vis,i)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

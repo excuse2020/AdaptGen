@@ -1,0 +1,35 @@
+class Solution {
+	int helper(int n, int m, int k, int count, int max_val, int[][][] dp) {
+		if (n == 0 && count == k) {
+			return 1;
+		}
+		if (count > k || n < 0) {
+			return 0;
+		}
+		if (max_val != -1 && dp[max_val][n][count] != -1) {
+			return dp[max_val][n][count];
+		}
+		int ans = 0;
+		for (int i = 1; i <= m; i++) {
+			if (max_val < i) {
+				ans = (ans + helper(n - 1,m,k,count + 1,i,dp)) % 1000000007;
+			} 
+			else {
+				ans = (ans + helper(n - 1,m,k,count,max_val,dp)) % 1000000007;
+			}
+		}
+		if (max_val != -1) {
+			dp[max_val][n][count] = ans;
+		}
+		return ans;
+	}
+	int numOfArrays(int n, int m, int k) {
+		int[][][] dp = new int[101][51][51];
+		for (int i = 0; i < 101; i++) {
+			for (int j = 0; j < 51; j++) {
+				Arrays.fill(dp[i][j],-1);
+			}
+		}
+		return helper(n,m,k,0,-1,dp);
+	}
+}

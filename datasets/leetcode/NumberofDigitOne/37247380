@@ -1,0 +1,29 @@
+class Solution {
+	int countDigitOne(int n) {
+		int digits = ("" + n).length(), ans = 0;
+		int dp = new int[digits + 1], pow = new int[digits + 1];
+		pow[0] = 1;
+		for (int i = 1; i < digits; i++) {
+			pow[i] = pow[i - 1] * 10;
+		}
+		dp[1] = 1;
+		for (int i = 2; i < digits; i++) {
+			dp[i] = dp[i - 1] * 10 + pow[i - 1];
+		}
+		for (int i = 0; i < digits; i++) {
+			if (n / (pow[digits - 1 - i]) == 0) {
+				continue;
+			}
+			int MSD = n / (pow[digits - 1 - i]);
+			ans += MSD * dp[digits - 1 - i];
+			if (MSD > 1) {
+				ans += pow[digits - 1 - i];
+			}
+			if (MSD == 1) {
+				ans += n % (pow[digits - 1 - i]) + 1;
+			}
+			n = n % (pow[digits - 1 - i]);
+		}
+		return ans;
+	}
+}

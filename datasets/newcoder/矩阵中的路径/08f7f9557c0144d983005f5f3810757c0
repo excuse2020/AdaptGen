@@ -1,0 +1,36 @@
+class Solution {
+	boolean dfs(char[][] matrix, int x, int y, int step, String word, int vis) {
+		if (step == word.length()) {
+			return true;
+		}
+		if (x >= matrix.length || x < 0) {
+			return false;
+		}
+		if (y >= matrix[x].length || y < 0) {
+			return false;
+		}
+		if (vis[x][y] == 1) {
+			return false;
+		}
+		if (matrix[x][y] == word.charAt(step)) {
+			vis[x][y] = 1;
+			boolean result = dfs(matrix,x + 1,y,step + 1,word,vis) || dfs(matrix,x - 1,y,step + 1,word,vis);
+			vis[x][y] = 0;
+			return result;
+		}
+		return false;
+	}
+	boolean hasPath(char[][] matrix, String word) {
+		int row = matrix.length;
+		for (int i = 0; i < row; i++) {
+			int col = matrix[i].length;
+			for (int j = 0; j < col; j++) {
+				int vis = new int[100][100];
+				if (dfs(matrix,i,j,0,word,vis)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+}

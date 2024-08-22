@@ -1,0 +1,39 @@
+class Solution {
+	void dfs(int node, boolean[][] visited, List<Integer>[] anc) {
+		for (int next: anc[node]) {	
+			if (!visited[node][next]) {
+				dfs(next,visited,anc);
+			}
+			visited[node][next] = true;
+			for (int i = 0; i < visited.length; i++) {
+				if (visited[next][i]) {
+					visited[node][i] = true;
+				}
+			}
+		}
+	}
+	List<List<Integer>> getAncestors(int n, int[][] edges) {
+		boolean[][] visited = new boolean[n][n];
+		List<Integer>[] anc = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			anc[i] = new ArrayList<>();
+		}
+		for (int[] e: edges) {	
+			anc[e[1]].add(e[0]);
+		}
+		for (int i = 0; i < n; i++) {
+			dfs(i,visited,anc);
+		}
+		List<List<Integer>> res = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			List<Integer> l = new ArrayList<>();
+			for (int val = 0; val < n; val++) {
+				if (visited[i][val]) {
+					l.add(val);
+				}
+			}
+			res.add(l);
+		}
+		return res;
+	}
+}

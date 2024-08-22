@@ -1,0 +1,74 @@
+class Solution {
+	HashMap<String, Integer> hm = new HashMap<>();
+	HashMap<Integer, List<Integer>> buildGraph(int[][] edges, int n) {
+		HashMap<Integer, List<Integer>> graph = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			graph.put(i,new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			graph.get(edge[0]).add(edge[1]);
+			graph.get(edge[1]).add(edge[0]);
+		}
+		return graph;
+	}
+	boolean dfs(int a, int b, HashMap<Integer, Integer> visitCount, HashMap<Integer, List<Integer>> graph, boolean[] visited) {
+		if (a == b) {
+			visitCount.put(a,visitCount.get(a) + 1);
+			return true;
+		}
+		visited[a] = true;
+		boolean found = false;
+		for (int m: graph.get(a)) {	
+			if (!visited[m]) {
+				found |= dfs(m,b,visitCount,graph,visited);
+			}
+			if (found) {
+				break;
+			}
+		}
+		if (found) {
+			visitCount.put(a,visitCount.get(a) + 1);
+		}
+		visited[a] = false;
+		return found;
+	}
+	int minPrice(int start, boolean[] visited, HashMap<Integer, List<Integer>> graph, int canHalf, int[] cost) {
+		if (hm.containsKey(start + "-")) {
+			return hm.get(start + "-");
+		}
+		visited[start] = true;
+		int half = Integer.MAX_VALUE;
+		if (canHalf == 1) {
+			half = cost[start] / 2;
+			for (int m: graph.get(start)) {	
+				if (!visited[m]) {
+					half += minPrice(m,visited,graph,0,cost);
+				}
+			}
+		}
+		int noHalf = cost[start];
+		for (int m: graph.get(start)) {	
+			if (!visited[m]) {
+				noHalf += minPrice(m,visited,graph,1,cost);
+			}
+		}
+		visited[start] = false;
+		hm.put(start + "-",Math.min(half,noHalf));
+		return Math.min(half,noHalf);
+	}
+	int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
+		HashMap<Integer, List<Integer>> graph = buildGraph(edges,n);
+		HashMap<Integer, Integer> visitCount = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			visitCount.put(i,0);
+		}
+		for (int[] trip: trips) {	
+			dfs(trip[0],trip[1],visitCount,graph,new boolean[n]);
+		}
+		int[] cost = new int[n];
+		for (int i = 0; i < n; i++) {
+			cost[i] = price[i] * visitCount.get(i);
+		}
+		return minPrice(trips[0][0],new boolean[n],graph,1,cost,calculated);
+	}
+}

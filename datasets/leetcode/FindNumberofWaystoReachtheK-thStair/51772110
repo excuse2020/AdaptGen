@@ -1,0 +1,32 @@
+class Solution {
+	int calculateWays(int k, int i, int jump, int can, Map<Integer, List<List<Integer>>> dp) {
+		if (i > k + 5) {
+			return 0;
+		}
+		if (jump > 31) {
+			return 0;
+		}
+		if (dp.containsKey(i) && dp.get(i).get(jump).get(can) != -1) {
+			return dp.get(i).get(jump).get(can);
+		}
+		int ans = (i == k) ? 1 : 0;
+		if (can == 1) {
+			ans += calculateWays(k,i - 1,jump,0,dp);
+		}
+		if (i + (1 << jump) <= k + 1) {
+			ans += calculateWays(k,i + (1 << jump),jump + 1,1,dp);
+		}
+		if (!dp.containsKey(i)) {
+			dp.put(i,new ArrayList<>());
+			for (int j = 0; j < 32; j++) {
+				dp.get(i).add(new ArrayList<>(Arrays.asList(-1,-1)));
+			}
+		}
+		dp.get(i).get(jump).set(can,ans);
+		return ans;
+	}
+	int waysToReachStair(int k) {
+		Map<Integer, List<List<Integer>>> dp = new HashMap<>();
+		return calculateWays(k,1,0,1,dp);
+	}
+}

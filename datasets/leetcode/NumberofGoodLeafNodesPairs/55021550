@@ -1,0 +1,40 @@
+class Solution {
+	int count = 0;
+	int countPairs(TreeNode root, int distance) {
+		helper(root,distance);
+		return count;
+	}
+	List<Integer> helper(TreeNode node, int distance) {
+		if (node == null) {
+			return new ArrayList<>();
+		}
+		if (node.left == null && node.right == null) {
+			List<Integer> list = new ArrayList<>();
+			list.add(0);
+			return list;
+		}
+		List<Integer> left = helper(node.left,distance);
+		List<Integer> right = helper(node.right,distance);
+		for (int l: left) {	
+			for (int r: right) {	
+				if (l + r <= distance) {
+					count++;
+				}
+			}
+		}
+		List<Integer> current = new ArrayList<>();
+		for (int l: left) {	
+			if (l <= distance) {
+				current.add(l + 1);
+			}
+		}
+		for (int r: right) {	
+			if (r <= distance) {
+				current.add(r + 1);
+			}
+		}
+		left.clear();
+		right.clear();
+		return current;
+	}
+}

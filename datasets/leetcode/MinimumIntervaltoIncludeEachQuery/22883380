@@ -1,0 +1,38 @@
+class Solution {
+	int[] minInterval(int[][] intervals, int[] q) {
+		Arrays.sort(intervals,(a, b) -> {(a[0] != b[0] ? a[0] - b[0] : (a[1] - a[0]) - (b[1] - b[0]))});
+		int tmp = new int[q.length];
+		for (int pos = 0; pos < q.length; pos++) {
+			tmp[pos] = q[pos];
+		}
+		Arrays.sort(tmp);
+		HashMap<Integer, Integer> hm = new HashMap<>();
+		PriorityQueue<int[]> heap = new PriorityQueue<>((a, b) -> {(a[0] != b[0] ? a[0] - b[0] : (a[1] - a[0]) - (b[1] - b[0]))});
+		int i = 0, j = 0;
+		for (i = 0, j = 0; j < q.length; ) {
+			while (i < intervals.length && tmp[j] >= intervals[i][0]) {
+				heap.add(new int{intervals[i][1] - intervals[i][0] + 1, intervals[i][1]});
+				i++;
+			}
+			while (heap.size() > 0 && heap.peek()[1] < tmp[j]) {
+				heap.poll();
+			}
+			if (heap.size() > 0) {
+				hm.put(tmp[j],heap.peek()[0]);
+			} 
+			else {
+				hm.put(tmp[j],-1);
+			}
+			j++;
+		}
+		for (i = 0; i < q.length; i++) {
+			if (hm.containsKey(q[i])) {
+				q[i] = hm.get(q[i]);
+			} 
+			else {
+				q[i] = -1;
+			}
+		}
+		return q;
+	}
+}

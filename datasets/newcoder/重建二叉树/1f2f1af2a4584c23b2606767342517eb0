@@ -1,0 +1,29 @@
+class Solution {
+	TreeNode construct(int[] pre, int[] vin, int pl, int pr, int vl, int vr) {
+		TreeNode head = new TreeNode(pre[pl]);
+		int i = 0;
+		for (i = vl; vin[i] != pre[pl]; i++) {
+		}
+		int llen = i - vl;
+		int rlen = vr - i;
+		if (llen > 0) {
+			head.left = construct(pre,vin,pl + 1,pl + llen,vl,vl + llen - 1);
+		} 
+		else {
+			head.left = null;
+		}
+		if (rlen > 0) {
+			head.right = construct(pre,vin,pr - rlen + 1,pr,vr - rlen + 1,vr);
+		} 
+		else {
+			head.right = null;
+		}
+		return head;
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] vin) {
+		if (pre.length == 0) {
+			return null;
+		}
+		return construct(pre,vin,0,pre.length - 1,0,vin.length - 1);
+	}
+}

@@ -1,0 +1,64 @@
+class Solution {
+	int diameterOfComponent(int n, HashSet<Integer> members, ArrayList<Integer>[] adj) {
+		int max = 0;
+		for (int val: members) {	
+			int level = 0;
+			Queue<Integer> q = new LinkedList<>();
+			q.add(val);
+			boolean[] vis = new boolean[n];
+			vis[val] = true;
+			while (!q.isEmpty()) {
+				int size = q.size();
+				while (size-- > 0) {
+					int u = q.remove();
+					for (int v: adj[u]) {	
+						if (!vis[v]) {
+							vis[v] = true;
+							q.add(v);
+						}
+					}
+				}
+				level++;
+			}
+			max = Math.max(level,max);
+		}
+		return max;
+	}
+	int magnificentSets(int n, int[][] edges) {
+		ArrayList<Integer>[] adj = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			adj[i] = new ArrayList<>();
+		}
+		for (int[] edge: edges) {	
+			int u = edge[0] - 1, v = edge[1] - 1;
+			adj[u].add(v);
+			adj[v].add(u);
+		}
+		int ans = 0;
+		int[] cn = new int[n];
+		for (int i = 0; i < n; i++) {
+			if (cn[i] != 0) {
+				continue;
+			}
+			HashSet<Integer> members = new HashSet<>();
+			if (!markAndCheck(i,adj,cn,1,members)) {
+				return -1;
+			}
+			ans += diameterOfComponent(n,members,adj);
+		}
+		return ans;
+	}
+	boolean markAndCheck(int u, ArrayList<Integer>[] adj, int[] cn, int color, HashSet<Integer> members) {
+		if (cn[u] != 0) {
+			return cn[u] == color;
+		}
+		cn[u] = color;
+		members.add(u);
+		for (int v: adj[u]) {	
+			if (!markAndCheck(v,adj,cn,~color,members)) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

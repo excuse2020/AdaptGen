@@ -1,0 +1,28 @@
+class Solution {
+	int maxStarSum(int[] vals, int[][] edges, int k) {
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int i = 0; i < vals.length; i++) {
+			map.put(i,new ArrayList<Integer>());
+		}
+		for (int[] edge: edges) {	
+			int a = edge[0], b = edge[1];
+			map.get(a).add(b);
+			map.get(b).add(a);
+		}
+		int res = Integer.MIN_VALUE;
+		for (int key: map.keySet()) {	
+			Collections.sort(map.get(key),(a, b) -> {vals[b] - vals[a]});
+			int cur = vals[key];
+			int count = 0;
+			for (int v: map.get(key)) {	
+				if (count >= k || vals[v] <= 0) {
+					break;
+				}
+				cur += vals[v];
+				count++;
+			}
+			res = Math.max(res,cur);
+		}
+		return res;
+	}
+}

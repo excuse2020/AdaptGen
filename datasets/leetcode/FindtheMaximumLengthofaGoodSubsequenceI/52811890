@@ -1,0 +1,21 @@
+class Solution {
+	int maximumLength(int[] nums, int k) {
+		int n = nums.length;
+		int[][][] dp = new int[n + 1][n + 1][k + 1];
+		for (int i = n - 1; i >= 0; i--) {
+			for (int lastIndex = -1; lastIndex < n; lastIndex++) {
+				for (int changes = 0; changes <= k; changes++) {
+					int lastValueIndex = lastIndex == -1 ? 0 : lastIndex + 1;
+					dp[i][lastValueIndex][changes] = dp[i + 1][lastValueIndex][changes];
+					if (lastIndex == -1 || nums[i] == nums[lastIndex]) {
+						dp[i][lastValueIndex][changes] = Math.max(dp[i][lastValueIndex][changes],1 + dp[i + 1][i + 1][changes]);
+					} 
+					else if (changes > 0) {
+						dp[i][lastValueIndex][changes] = Math.max(dp[i][lastValueIndex][changes],1 + dp[i + 1][i + 1][changes - 1]);
+					}
+				}
+			}
+		}
+		return dp[0][0][k];
+	}
+}

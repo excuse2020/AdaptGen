@@ -1,0 +1,36 @@
+class Solution {
+	Map<Integer, Map<Integer, Integer>> g = new HashMap();
+	int res = 0;
+	int[] values;
+	void dfs(List<Integer> path, int cur, int maxTime, int time) {
+		path.add(cur);
+		if (cur == 0) {
+			int tmp = 0;
+			Set<Integer> hs = new HashSet();
+			for (int i: path) {	
+				if (hs.add(i)) {
+					tmp += values[i];
+				}
+			}
+			res = Math.max(res,tmp);
+		}
+		for (var en: g.getOrDefault(cur,new HashMap<>()).entrySet()) {	
+			int nei = en.getKey(), t = en.getValue();
+			if (t + time > maxTime) {
+				continue;
+			}
+			dfs(path,nei,maxTime,t + time);
+		}
+		path.remove(path.size() - 1);
+	}
+	int maximalPathQuality(int[] values, int[][] edges, int maxTime) {
+		this.values = values;
+		for (int[] e: edges) {	
+			int u = e[0], v = e[1], t = e[2];
+			g.computeIfAbsent(u,(x) -> {new HashMap()}).put(v,t);
+			g.computeIfAbsent(v,(x) -> {new HashMap()}).put(u,t);
+		}
+		dfs(new ArrayList(),0,maxTime,0);
+		return res;
+	}
+}

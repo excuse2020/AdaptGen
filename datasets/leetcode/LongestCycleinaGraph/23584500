@@ -1,0 +1,29 @@
+class Solution {
+	boolean[] visited;
+	int dfs(int[] e, int n, int count, HashMap<Integer, Integer> loopIdx) {
+		if (loopIdx.containsKey(n)) {
+			return count - loopIdx.get(n);
+		}
+		if (n == -1) {
+			return -1;
+		}
+		if (visited[n]) {
+			return -1;
+		}
+		visited[n] = true;
+		loopIdx.put(n,count);
+		return dfs(e,e[n],count + 1,loopIdx);
+	}
+	int longestCycle(int[] edges) {
+		int n = edges.length;
+		int res = -1;
+		visited = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			if (visited[i]) {
+				continue;
+			}
+			res = Math.max(res,dfs(edges,i,0,new HashMap<Integer, Integer>()));
+		}
+		return res;
+	}
+}

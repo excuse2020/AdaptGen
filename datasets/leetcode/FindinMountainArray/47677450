@@ -1,0 +1,49 @@
+class Solution {
+	int length;
+	int binarySearch(MountainArray mountainArr, int start, int end, int target, boolean naturalOrder) {
+		int l = start;
+		int r = end;
+		while (l < r) {
+			int pivot = ((r - l) / 2) + l;
+			int curr = mountainArr.get(pivot);
+			if (curr == target) {
+				return pivot;
+			} 
+			else if ((naturalOrder && curr < target) || (!naturalOrder && curr > target)) {
+				l = pivot + 1;
+			} 
+			else {
+				r = pivot;
+			}
+		}
+		return -1;
+	}
+	int findInMountainArray(int target, MountainArray mountainArr) {
+		length = mountainArr.length();
+		int peak = findPeak(mountainArr);
+		int index = binarySearch(mountainArr,0,peak + 1,target,true);
+		if (index == -1) {
+			index = binarySearch(mountainArr,peak + 1,length,target,false);
+		}
+		return index;
+	}
+	int findPeak(MountainArray mountainArr) {
+		int l = 0;
+		int r = length;
+		while (l < r) {
+			int pivot = ((r - l) / 2) + l;
+			int curr = mountainArr.get(pivot);
+			int prev = mountainArr.get(pivot - 1);
+			if (curr > prev && curr > mountainArr.get(pivot + 1)) {
+				return pivot;
+			} 
+			else if (curr > prev) {
+				l = pivot;
+			} 
+			else {
+				r = pivot;
+			}
+		}
+		return l;
+	}
+}

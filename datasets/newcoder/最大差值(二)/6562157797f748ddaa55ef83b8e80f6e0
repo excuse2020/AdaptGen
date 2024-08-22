@@ -1,0 +1,47 @@
+class Solution {
+	int maxGap(ArrayList<Integer> nums) {
+		nums.sort(new ComparaInteger());
+		int res = 0;
+		for (int i = 0; i < nums.size(); i++) {
+			int currentNum = nums.get(i);
+			int leftNum = i - 1 < 0 ? currentNum : nums.get(i - 1);
+			int rightNum = i + 1 > nums.size() - 1 ? currentNum : nums.get(i + 1);
+			res = Math.max(res,Math.max(Math.abs(currentNum - leftNum),Math.abs(currentNum - rightNum)));
+		}
+		return res;
+	}
+	void quickSort(ArrayList<Integer> nums, int start, int end) {
+		if (start >= end) {
+			return;
+		}
+		int l = start - 1;
+		int r = end + 1;
+		int p = start;
+		int val = nums.get(end);
+		while (p < r) {
+			if (nums.get(p) < val) {
+				int swap = nums.get(p);
+				nums.set(p,nums.get(l + 1));
+				nums.set(l + 1,swap);
+				p++;
+				l++;
+			} 
+			else if (nums.get(p) > val) {
+				int swap = nums.get(p);
+				nums.set(p,nums.get(r - 1));
+				nums.set(r - 1,swap);
+				r--;
+			} 
+			else {
+				p++;
+			}
+		}
+		quickSort(nums,start,l);
+		quickSort(nums,r,end);
+	}
+	class ComparaInteger {
+		int compare(Integer num1, Integer num2) {
+			return num1 - num2;
+		}
+	}
+}

@@ -1,0 +1,46 @@
+class Solution {
+	int binarySearchUpper(List<Integer> list, int target) {
+		int start = 0;
+		int end = list.size();
+		int mid;
+		while (start < end) {
+			mid = (start + end) / 2;
+			if (list.get(mid) >= target) {
+				end = mid;
+			} 
+			else {
+				start = mid + 1;
+			}
+		}
+		return end;
+	}
+	int sumImbalanceNumbers(int[] nums) {
+		int total = 0;
+		List<Integer> list = new ArrayList<Integer>();
+		for (int i = 0; i < nums.length; i++) {
+			int count = 0;
+			list = new ArrayList<Integer>();
+			for (int j = i; j >= 0; j--) {
+				int idx = binarySearchUpper(list,nums[j]);
+				if (idx < list.size()) {
+					if (list.get(idx) == nums[j]) {
+						total += count;
+						continue;
+					}
+				}
+				list.add(idx,nums[j]);
+				if (idx - 1 >= 0 && list.get(idx - 1) + 1 < list.get(idx)) {
+					count++;
+				}
+				if (idx + 1 < list.size() && list.get(idx) + 1 < list.get(idx + 1)) {
+					count++;
+				}
+				if (idx - 1 >= 0 && idx + 1 < list.size()) {
+					count--;
+				}
+				total += count;
+			}
+		}
+		return total;
+	}
+}

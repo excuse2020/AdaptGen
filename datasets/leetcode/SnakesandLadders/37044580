@@ -1,0 +1,36 @@
+class Solution {
+	int snakesAndLadders(int[][] board) {
+		int n = board.length, steps = 0;
+		boolean[] visited = new boolean[n * n + 1];
+		Queue<Integer> q = new LinkedList<>();
+		q.add(0);
+		while (!q.isEmpty()) {
+			int size = q.size();
+			while (size-- > 0) {
+				int node = q.poll();
+				if (node == n * n - 1) {
+					return steps;
+				}
+				for (int i = 1; i <= 6; i++) {
+					int nei = node + i;
+					if (nei >= n * n) {
+						continue;
+					}
+					int nei_i = nei / n;
+					int nei_j = nei_i % 2 == 0 ? (nei % n) : n - 1;
+					nei_i = n - 1;
+					if (board[nei_i][nei_j] != -1) {
+						nei = board[nei_i][nei_j] - 1;
+					}
+					if (visited[nei]) {
+						continue;
+					}
+					q.add(nei);
+					visited[nei] = true;
+				}
+			}
+			steps += 1;
+		}
+		return -1;
+	}
+}

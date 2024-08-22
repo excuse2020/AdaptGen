@@ -1,0 +1,37 @@
+class Solution {
+	int[][] rotateGrid(int[][] grid, int k) {
+		int m = grid.length;
+		int n = grid[0].length;
+		int rowfirst = 0;
+		int rowlast = m - 1;
+		int colfirst = 0;
+		int collast = n - 1;
+		int perimeter = 2 * (m + n) - 4;
+		int layers = (m > n) ? (n / 2) : (m / 2);
+		while (layers > 0) {
+			for (int i = 0; i < (k % perimeter); i++) {
+				int temp = grid[rowfirst][colfirst];
+				for (int s = colfirst; s < collast; s++) {
+					grid[rowfirst][s] = grid[rowfirst][s + 1];
+				}
+				for (int j = rowfirst; j < rowlast; j++) {
+					grid[j][collast] = grid[j + 1][collast];
+				}
+				for (int o = collast; o > rowfirst; o--) {
+					grid[rowlast][o] = grid[rowlast][o - 1];
+				}
+				for (int l = rowlast; l > rowfirst; l--) {
+					grid[l][colfirst] = grid[l - 1][colfirst];
+				}
+				grid[rowfirst + 1][colfirst] = temp;
+			}
+			rowfirst++;
+			rowlast--;
+			colfirst++;
+			collast--;
+			layers--;
+			perimeter = perimeter - 8;
+		}
+		return grid;
+	}
+}

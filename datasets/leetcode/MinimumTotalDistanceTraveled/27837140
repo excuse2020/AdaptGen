@@ -1,0 +1,40 @@
+class Solution {
+	long minimumTotalDistance(List<Integer> robot, int[][] factory) {
+		Collections.sort(robot);
+		Arrays.sort(factory,new Comparator<>());
+		int n = robot.size();
+		int m = factory.length;
+		long[][] dp = new long[n][m];
+		return solve(0,0,robot,factory,n,m,dp);
+	}
+	long solve(int i, int j, List<Integer> robot, int[][] factory, int n, int m, long[][] dp) {
+		if (i == n) {
+			return 0;
+		}
+		if (j == m) {
+			return Long.MAX_VALUE;
+		}
+		if (dp[i][j] != 0) {
+			return dp[i][j];
+		}
+		long ans = solve(i,j + 1,robot,factory,n,m,dp);
+		long sum = 0;
+		int count = 0;
+		for (int k = i; k < n; k++) {
+			int p = Math.abs(robot.get(k) - factory[j][0]);
+			if (count < factory[j][1]) {
+				long l = solve(k + 1,j + 1,robot,factory,n,m,dp);
+				if (l != Long.MAX_VALUE) {
+					l += sum + p;
+				}
+				ans = Math.min(ans,l);
+				count++;
+				sum += p;
+			} 
+			else {
+				break;
+			}
+		}
+		return dp[i][j] = ans;
+	}
+}

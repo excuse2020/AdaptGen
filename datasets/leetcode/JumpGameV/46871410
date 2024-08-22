@@ -1,0 +1,26 @@
+class Solution {
+	int helper(int[] arr, int d, int[] dp, int index) {
+		if (dp[index] != -1) {
+			return dp[index];
+		}
+		int ans = 1;
+		for (int i = index + 1; i <= Math.min(index + d,arr.length - 1) && arr[i] < arr[index]; i++) {
+			ans = Math.max(ans,1 + helper(arr,d,dp,i));
+		}
+		for (int i = index - 1; i >= Math.max(index - d,0) && arr[i] < arr[index]; i--) {
+			ans = Math.max(ans,1 + helper(arr,d,dp,i));
+		}
+		return dp[index] = ans;
+	}
+	int maxJumps(int[] arr, int d) {
+		int n = arr.length;
+		int[] dp = new int[n];
+		Arrays.fill(dp,-1);
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			int x = helper(arr,d,dp,i);
+			ans = Math.max(ans,x);
+		}
+		return ans;
+	}
+}

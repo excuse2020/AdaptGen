@@ -1,0 +1,48 @@
+class Solution {
+	int i = -1;
+	int[] ids;
+	int[] low;
+	boolean[] visited;
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		low = new int[n];
+		ids = new int[n];
+		visited = new boolean[n];
+		List<List<Integer>> bridges = new ArrayList<>();
+		List<Integer>[] graph = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (List<Integer> connection: connections) {	
+			int from = connection.get(0);
+			int to = connection.get(1);
+			graph[from].add(to);
+			graph[to].add(from);
+		}
+		for (int i = 0; i < n; i++) {
+			if (!visited[i]) {
+				dfs(graph,i,-1,bridges);
+			}
+		}
+		return bridges;
+	}
+	void dfs(List<Integer>[] graph, int at, int parent, List<List<Integer>> bridges) {
+		visited[at] = true;
+		low[at] = ids[at] = ++i;
+		for (Integer to: graph[at]) {	
+			if (to == parent) {
+				continue;
+			}
+			if (!visited[to]) {
+				dfs(graph,to,at,bridges);
+				low[at] = Math.min(low[at],low[to]);
+				if (ids[at] < low[to]) {
+					List<Integer> bridge = new ArrayList<>(List.of(at,to));
+					bridges.add(bridge);
+				}
+			} 
+			else {
+				low[at] = Math.min(low[at],ids[to]);
+			}
+		}
+	}
+}

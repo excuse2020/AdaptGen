@@ -1,0 +1,44 @@
+class Solution {
+	int largestRectangleArea(int[] heights) {
+		return solution1(heights);
+	}
+	int solution1(int[] heights) {
+		int N = heights.length;
+		Map<Integer, Integer> rightMap = new HashMap<Integer, Integer>();
+		Map<Integer, Integer> leftMap = new HashMap<Integer, Integer>();
+		Deque<Integer> rightStack = new ArrayDeque<Integer>();
+		Deque<Integer> leftStack = new ArrayDeque<Integer>();
+		int height;
+		for (int i = N - 1; i >= 0; i--) {
+			height = heights[i];
+			while (!rightStack.isEmpty() && height <= heights[rightStack.peek()]) {
+				rightStack.pop();
+			}
+			rightMap.put(i,rightStack.isEmpty() ? N : rightStack.peek());
+			rightStack.push(i);
+			height = heights[N - i - 1];
+			while (!leftStack.isEmpty() && height <= heights[leftStack.peek()]) {
+				leftStack.pop();
+			}
+			leftMap.put(N - i,leftStack.isEmpty() ? -1 : leftStack.peek());
+			leftStack.push(N - i);
+		}
+		int square = 0;
+		for (int i = 0; i < N; i++) {
+			square = Math.max(square,heights[i] * (rightMap.get(i) - leftMap.get(i)));
+		}
+		return square;
+	}
+	int solution2(int[] heights) {
+		int len = heights.length;
+		int square = 0;
+		for (int i = 0; i < len; i++) {
+			int height = Integer.MAX_VALUE;
+			for (int j = i; j >= 0; j--) {
+				height = Math.min(height,heights[j]);
+				square = Math.max(square,height * (i - j + 1));
+			}
+		}
+		return square;
+	}
+}

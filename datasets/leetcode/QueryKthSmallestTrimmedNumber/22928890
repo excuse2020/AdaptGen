@@ -1,0 +1,30 @@
+class Solution {
+	int[] smallestTrimmedNumbers(String[] nums, int[][] queries) {
+		Map<Integer, PriorityQueue<Integer>> map = new HashMap<>();
+		for (int i = 0; i < nums[0].length(); i++) {
+			int k = i + 1;
+			PriorityQueue<Integer> queue = new PriorityQueue<>((a, b) -> {(nums[a].substring(nums[a].length() - k).equals(nums[b].substring(nums[b].length() - k))) ? a - b : nums[a].substring(nums[a].length() - k).compareTo(nums[b].substring(nums[b].length() - k))});
+			for (int j = 0; j < nums.length; j++) {
+				queue.add(j);
+			}
+			map.put(i + 1,queue);
+		}
+		int[] result = new int[queries.length];
+		int l = 0;
+		for (int[] query: queries) {	
+			int trim = query[1];
+			PriorityQueue<Integer> queue = new PriorityQueue<>(map.get(trim));
+			if (queue == null || queue.size() < query[0]) {
+				result[l] = -1;
+			}
+			int k = query[0];
+			int cur = -1;
+			while (!queue.isEmpty() && k-- > 0) {
+				cur = queue.poll();
+			}
+			result[l] = cur;
+			l++;
+		}
+		return result;
+	}
+}

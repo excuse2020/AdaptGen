@@ -1,0 +1,57 @@
+class Solution {
+	int bfs(List<List<Integer>> adjList, int src, int n) {
+		int count = 1;
+		boolean[] visited = new boolean[n];
+		Queue<Integer> q = new LinkedList<>();
+		q.add(src);
+		visited[src] = true;
+		while (!q.isEmpty()) {
+			int cur = q.poll();
+			for (int nei: adjList.get(cur)) {	
+				if (visited[nei]) {
+					continue;
+				}
+				q.add(nei);
+				visited[nei] = true;
+				count++;
+			}
+		}
+		return count;
+	}
+	boolean checkManhattanDist(int x1, int y1, int x2, int y2, int r1) {
+		double dist = Math.sqrt(Math.pow((x1 - x2),2) + Math.pow((y1 - y2),2));
+		return r1 >= dist;
+	}
+	List<List<Integer>> getAdjLL(int[][] bombs) {
+		List<List<Integer>> adjList = new ArrayList<>();
+		int n = bombs.length;
+		for (int i = 0; i < n; i++) {
+			adjList.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			int[] bomb1 = bombs[i];
+			for (int j = 0; j < n; j++) {
+				if (i == j) {
+					continue;
+				}
+				int[] bomb2 = bombs[j];
+				if (checkManhattanDist(bomb1[0],bomb1[1],bomb2[0],bomb2[1],bomb1[2])) {
+					adjList.get(i).add(j);
+				}
+				if (checkManhattanDist(bomb2[0],bomb2[1],bomb1[0],bomb1[1],bomb2[2])) {
+					adjList.get(j).add(i);
+				}
+			}
+		}
+		return adjList;
+	}
+	int maximumDetonation(int[][] bombs) {
+		int res = 1;
+		int n = bombs.length;
+		List<List<Integer>> adjList = getAdjLL(bombs);
+		for (int i = 0; i < n; i++) {
+			res = Math.max(res,bfs(adjList,i,n));
+		}
+		return res;
+	}
+}

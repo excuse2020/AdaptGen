@@ -1,0 +1,50 @@
+class Solution {
+	long maximumTotalDamage(int[] power) {
+		Arrays.sort(power);
+		long[] dp = new long[100001];
+		Arrays.fill(dp,-1);
+		int idx = 0;
+		int prev = -1;
+		return solve(power,dp,idx,prev);
+	}
+	long solve(int[] power, long[] dp, int idx, int prev) {
+		if (idx == power.length) {
+			return 0;
+		}
+		if (dp[idx] != -1) {
+			return dp[idx];
+		}
+		long pick = Long.MIN_VALUE;
+		if (prev == -1 || power[prev] < power[idx]) {
+			int low = idx + 1;
+			int high = power.length - 1;
+			int newIdx = power.length;
+			while (low <= high) {
+				int mid = (low + (high - low) / 2);
+				if (power[mid] >= power[idx] + 3) {
+					high = mid - 1;
+					newIdx = mid;
+				} 
+				else {
+					low = mid + 1;
+				}
+			}
+			int low1 = idx;
+			int high1 = power.length - 1;
+			int ans = 0;
+			while (low1 <= high1) {
+				int mid1 = (low1 + (high1 - low1) / 2);
+				if (power[mid1] == power[idx]) {
+					ans = mid1;
+					low1 = mid1 + 1;
+				} 
+				else {
+					high1 = mid1 - 1;
+				}
+			}
+			pick = (ans - idx + 1) * (long) power[idx] + solve(power,dp,newIdx,idx);
+		}
+		long notpick = solve(power,dp,idx + 1,prev);
+		return dp[idx] = Math.max(pick,notpick);
+	}
+}

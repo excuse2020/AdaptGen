@@ -1,0 +1,35 @@
+class Solution {
+	int[] findOrder(int numCourses, int[][] prerequisites) {
+		int[] indegree = new int[numCourses];
+		for (int[] prerequisite: prerequisites) {	
+			int course = prerequisite[0];
+			int prereq = prerequisite[1];
+			indegree[course]++;
+		}
+		Queue<Integer> q = new LinkedList<>();
+		for (int i = 0; i < numCourses; i++) {
+			if (indegree[i] == 0) {
+				q.add(i);
+			}
+		}
+		int[] topo = new int[numCourses];
+		int index = 0;
+		while (!q.isEmpty()) {
+			int node = q.poll();
+			topo[index++] = node;
+			for (int[] prerequisite: prerequisites) {	
+				if (prerequisite[1] == node) {
+					int dependentCourse = prerequisite[0];
+					indegree[dependentCourse]--;
+					if (indegree[dependentCourse] == 0) {
+						q.add(dependentCourse);
+					}
+				}
+			}
+		}
+		if (index != numCourses) {
+			return new int[0];
+		}
+		return topo;
+	}
+}

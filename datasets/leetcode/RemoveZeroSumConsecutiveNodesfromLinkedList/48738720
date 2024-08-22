@@ -1,0 +1,33 @@
+class Solution {
+	ListNode removeZeroSumSublists(ListNode head) {
+		Map<Integer, ListNode> map = new HashMap<>();
+		int k = 0;
+		int cumSum = 0;
+		ListNode curr = head;
+		while (curr != null) {
+			cumSum += curr.val;
+			if (cumSum == 0) {
+				head = curr.next;
+				map.clear();
+			} 
+			else {
+				if (map.containsKey(cumSum - k)) {
+					ListNode prev = map.get(cumSum - k);
+					curr = prev.next;
+					int sum = cumSum + curr.val;
+					while (sum != cumSum) {
+						map.remove(sum);
+						curr = curr.next;
+						sum += curr.val;
+					}
+					prev.next = curr.next;
+				} 
+				else {
+					map.put(cumSum - k,curr);
+				}
+			}
+			curr = curr.next;
+		}
+		return head;
+	}
+}

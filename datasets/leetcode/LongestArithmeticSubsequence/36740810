@@ -1,0 +1,29 @@
+class Solution {
+	int help(int idx, int dif, int[] arr, int[][] dp) {
+		if (idx >= arr.length) {
+			return 0;
+		}
+		int ans = 0;
+		if (dp[idx][500 + dif] != 0) {
+			return dp[idx][500 + dif];
+		}
+		for (int i = idx + 1; i < arr.length; i++) {
+			if (arr[i] - arr[idx] == dif) {
+				ans = Math.max(ans,1 + help(i,dif,arr,dp));
+				break;
+			}
+		}
+		return dp[idx][500 + dif] = ans;
+	}
+	int longestArithSeqLength(int[] arr) {
+		int n = arr.length;
+		int[][] dp = new int[n + 1][1001];
+		int ans = 0;
+		for (int i = 0; i < n - 1; i++) {
+			for (int j = i + 1; j < n; j++) {
+				ans = Math.max(ans,2 + help(j,arr[j] - arr[i],arr,dp));
+			}
+		}
+		return ans;
+	}
+}

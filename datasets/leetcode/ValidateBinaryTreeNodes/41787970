@@ -1,0 +1,66 @@
+class Solution {
+	void removeNode(int root, int[] leftChild, int[] rightChild, Set<Integer> nodes) {
+		nodes.remove(root);
+		if (leftChild[root] == -1 && rightChild[root] == -1) {
+			return;
+		}
+		int left = leftChild[root];
+		if (left != -1) {
+			removeNode(left,leftChild,rightChild,nodes);
+		}
+		int right = rightChild[root];
+		if (right != -1) {
+			removeNode(right,leftChild,rightChild,nodes);
+		}
+	}
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		Set<Integer> setNoParent = new HashSet<>();
+		Set<Integer> values = new HashSet<>();
+		Set<Integer> nodes = new HashSet<>();
+		for (int i = 0; i < n; i++) {
+			if (leftChild[i] != -1 || rightChild[i] != -1) {
+				setNoParent.add(i);
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			if (leftChild[i] != -1) {
+				nodes.add(i);
+				nodes.add(leftChild[i]);
+				if (!values.add(leftChild[i])) {
+					return false;
+				}
+				if (leftChild[leftChild[i]] == i || rightChild[leftChild[i]] == i) {
+					return false;
+				}
+				setNoParent.remove(leftChild[i]);
+			}
+			if (rightChild[i] != -1) {
+				nodes.add(rightChild[i]);
+				if (!values.add(rightChild[i])) {
+					return false;
+				}
+				if (leftChild[rightChild[i]] == i || rightChild[rightChild[i]] == i) {
+					return false;
+				}
+				setNoParent.remove(rightChild[i]);
+			}
+			if (setNoParent.size() == 0 && n > 1) {
+				return false;
+			}
+		}
+		if (nodes.size() != n && n > 1) {
+			return false;
+		}
+		if (setNoParent.size() != 1 && n > 1) {
+			return false;
+		}
+		if (setNoParent.size() == 1) {
+			int root = setNoParent.stream().findFirst().get();
+			removeNode(root,leftChild,rightChild,nodes);
+			if (nodes.size() != 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

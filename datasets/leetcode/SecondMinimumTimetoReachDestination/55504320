@@ -1,0 +1,69 @@
+class Solution {
+	int secondMinimum(int n, int[][] edges, int time, int change) {
+		int INF = 1000000000;
+		List<List<Integer>> graph = new ArrayList<>(n);
+		for (int i = 0; i < n; ++i) {
+			graph.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			graph.get(edge[0] - 1).add(edge[1] - 1);
+			graph.get(edge[1] - 1).add(edge[0] - 1);
+		}
+		int[] odd = new int[n];
+		int[] even = new int[n];
+		for (int i = 0; i < n; ++i) {
+			odd[i] = INF;
+			even[i] = INF;
+		}
+		even[0] = 0;
+		Queue<Integer> queueOdd = new ArrayDeque<>();
+		Queue<Integer> queueEven = new ArrayDeque<>();
+		queueEven.add(0);
+		int v;
+		while (queueOdd.size() != 0 || queueEven.size() != 0) {
+			while (queueEven.size() != 0) {
+				v = queueEven.poll();
+				for (int u: graph.get(v)) {	
+					if (odd[u] == INF) {
+						odd[u] = even[v] + 1;
+						queueOdd.add(u);
+					}
+				}
+			}
+			while (queueOdd.size() != 0) {
+				v = queueOdd.poll();
+				for (int u: graph.get(v)) {	
+					if (even[u] == INF) {
+						even[u] = odd[v] + 1;
+						queueEven.add(u);
+					}
+				}
+			}
+		}
+		int count;
+		if (odd[n - 1] < even[n - 1]) {
+			count = Integer.min(even[n - 1],odd[n - 1] + 2);
+		} 
+		else {
+			count = Integer.min(odd[n - 1],even[n - 1] + 2);
+		}
+		int green = 1;
+		int currTime = 0;
+		int res = 0;
+		while (count > 0) {
+			if (green == 1) {
+				res += time;
+				currTime += time;
+				green = (green + currTime / change) % 2;
+				currTime = currTime % change;
+				count--;
+			} 
+			else {
+				res += change - currTime;
+				currTime = 0;
+				green = 1;
+			}
+		}
+		return res;
+	}
+}

@@ -1,0 +1,26 @@
+class Solution {
+	List<List<Integer>> ml;
+	void findPermutations(int[] nums, List<Integer> cl, boolean[] visited) {
+		if (cl.size() == nums.length) {
+			ml.add(new ArrayList<>(cl));
+			return;
+		}
+		for (int i = 0; i < nums.length; i++) {
+			if (visited[i] || (i > 0 && nums[i] == nums[i - 1]) && !visited[i - 1]) {
+				continue;
+			}
+			visited[i] = true;
+			cl.add(nums[i]);
+			findPermutations(nums,cl,visited);
+			cl.remove(cl.size() - 1);
+			visited[i] = false;
+		}
+	}
+	List<List<Integer>> permuteUnique(int[] nums) {
+		ml = new ArrayList<>();
+		boolean[] visited = new boolean[nums.length];
+		Arrays.sort(nums);
+		findPermutations(nums,new ArrayList<>(),visited);
+		return ml;
+	}
+}

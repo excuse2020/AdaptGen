@@ -1,0 +1,45 @@
+class Solution {
+	int[] fullBloomFlowers(int[][] flowers, int[] people) {
+		int[] startBloom = new int[flowers.length];
+		int[] endBloom = new int[flowers.length];
+		int[] ans = new int[people.length];
+		for (int i = 0; i < flowers.length; i++) {
+			startBloom[i] = flowers[i][0];
+			endBloom[i] = flowers[i][1];
+		}
+		Arrays.sort(startBloom);
+		Arrays.sort(endBloom);
+		for (int i = 0; i < people.length; i++) {
+			ans[i] = getUpperBound(startBloom,people[i]) - getLowerBound(endBloom,people[i]);
+		}
+		return ans;
+	}
+	int getLowerBound(int[] arr, int ele) {
+		int i = 0, j = arr.length - 1, ans = arr.length;
+		while (i <= j) {
+			int mid = j - (j - i) / 2;
+			if (arr[mid] >= ele) {
+				ans = mid;
+				j = mid - 1;
+			} 
+			else {
+				i = mid + 1;
+			}
+		}
+		return ans;
+	}
+	int getUpperBound(int[] arr, int ele) {
+		int i = 0, j = arr.length - 1, ans = arr.length;
+		while (i <= j) {
+			int mid = j - (j - i) / 2;
+			if (arr[mid] > ele) {
+				ans = mid;
+				j = mid - 1;
+			} 
+			else {
+				i = mid + 1;
+			}
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,41 @@
+class Solution {
+	ListNode quickSort(ListNode head, ListNode end, int len) {
+		if (null == head || null == head.next || len <= 1 || head == end || head.next == end) {
+			return head;
+		}
+		ListNode left = head;
+		ListNode right = head;
+		int leftLen = 0;
+		int rightLen = 0;
+		ListNode nextNode = null;
+		ListNode pIter = head.next;
+		while (leftLen + rightLen < len - 1) {
+			if (pIter.val < head.val) {
+				nextNode = pIter.next;
+				pIter.next = left;
+				left = pIter;
+				pIter = nextNode;
+				leftLen++;
+			} 
+			else {
+				right.next = pIter;
+				right = pIter;
+				pIter = pIter.next;
+				rightLen++;
+			}
+		}
+		right.next = end;
+		left = quickSort(left,head,leftLen);
+		head.next = quickSort(head.next,end,rightLen);
+		return left;
+	}
+	ListNode sortInList(ListNode head) {
+		int len = 0;
+		ListNode pIter = head;
+		while (null != pIter) {
+			pIter = pIter.next;
+			len++;
+		}
+		return quickSort(head,null,len);
+	}
+}

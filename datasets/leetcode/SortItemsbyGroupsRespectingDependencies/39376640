@@ -1,0 +1,71 @@
+class Solution {
+	int[] sortItems(int n, int m, int[] group, List<List<Integer>> beforeItems) {
+		int newGroupId = m;
+		for (int i = 0; i < n; i++) {
+			if (group[i] == -1) {
+				group[i] = newGroupId;
+				newGroupId++;
+			}
+		}
+		List<Integer>[] itemGraph = new ArrayList[n];
+		List<Integer>[] groupGraph = new ArrayList[newGroupId];
+		int[] itemInDegree = new int[n];
+		int[] groupInDegree = new int[newGroupId];
+		for (int i = 0; i < n; i++) {
+			itemGraph[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < newGroupId; i++) {
+			groupGraph[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < n; i++) {
+			for (int beforeItem: beforeItems.get(i)) {	
+				itemGraph[beforeItem].add(i);
+				itemInDegree[i]++;
+				if (group[i] != group[beforeItem]) {
+					groupGraph[group[beforeItem]].add(group[i]);
+					groupInDegree[group[i]]++;
+				}
+			}
+		}
+		List<Integer> itemOrder = topologicalSort(itemGraph,itemInDegree);
+		if (itemOrder.size() != n) {
+			return new int[0];
+		}
+		List<Integer> groupOrder = topologicalSort(groupGraph,groupInDegree);
+		if (groupOrder.size() != newGroupId) {
+			return new int[0];
+		}
+		List<Integer>[] sortedGroups = new ArrayList[newGroupId];
+		for (int i = 0; i < newGroupId; i++) {
+			sortedGroups[i] = new ArrayList<>();
+		}
+		for (int i: itemOrder) {	
+			sortedGroups[group[i]].add(i);
+		}
+		List<Integer> result = new ArrayList<>();
+		for (int groupId: groupOrder) {	
+			result.addAll(sortedGroups[groupId]);
+		}
+		return result.stream().mapToInt().toArray();
+	}
+	List<Integer> topologicalSort(List<Integer>[] graph, int[] inDegree) {
+		Queue<Integer> queue = new LinkedList<>();
+		for (int node = 0; node < inDegree.length; node++) {
+			if (inDegree[node] == 0) {
+				queue.offer(node);
+			}
+		}
+		List<Integer> order = new ArrayList<>();
+		while (!queue.isEmpty()) {
+			int node = queue.poll();
+			order.add(node);
+			for (int neighbor: graph[node]) {	
+				inDegree[neighbor]--;
+				if (inDegree[neighbor] == 0) {
+					queue.offer(neighbor);
+				}
+			}
+		}
+		return order;
+	}
+}

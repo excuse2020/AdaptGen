@@ -1,0 +1,30 @@
+class Solution {
+	int rob(int[] nums) {
+		if (nums.length == 1) {
+			return nums[0];
+		}
+		int[] skip_first = new int[nums.length - 1];
+		int[] skip_last = new int[nums.length - 1];
+		for (int i = 0; i < nums.length - 1; i++) {
+			skip_first[i] = nums[i + 1];
+			skip_last[i] = nums[i];
+		}
+		int skipfirst_ans = solver(skip_first);
+		int skiplast_ans = solver(skip_last);
+		return Math.max(skipfirst_ans,skiplast_ans);
+	}
+	int solver(int[] nums) {
+		int sum1 = 0, sum2 = 0;
+		for (int i = 0; i < nums.length; i++) {
+			if (i % 2 == 0) {
+				sum1 += nums[i];
+				sum1 = Math.max(sum1,sum2);
+			} 
+			else {
+				sum2 += nums[i];
+				sum2 = Math.max(sum1,sum2);
+			}
+		}
+		return Math.max(sum1,sum2);
+	}
+}

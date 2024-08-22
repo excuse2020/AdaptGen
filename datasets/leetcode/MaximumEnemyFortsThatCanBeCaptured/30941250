@@ -1,0 +1,38 @@
+class Solution {
+	int captureForts(int[] forts) {
+		int forwardConquered = getMaxFortsConquered(forts,true);
+		int backwardConquered = getMaxFortsConquered(forts,false);
+		return Math.max(forwardConquered,backwardConquered);
+	}
+	int getMaxFortsConquered(int[] forts, boolean isForward) {
+		boolean canConquer = false;
+		int conquered = 0;
+		int maxFortsConquered = 0;
+		int i = isForward ? 0 : forts.length - 1;
+		while (i >= 0 && i <= forts.length - 1) {
+			if (!canConquer && forts[i] == 1) {
+				canConquer = true;
+			}
+			if (canConquer) {
+				if (forts[i] == 1) {
+					conquered = 0;
+				} 
+				else if (forts[i] == 0) {
+					conquered++;
+				} 
+				else if (forts[i] == -1) {
+					maxFortsConquered = Math.max(maxFortsConquered,conquered);
+					conquered = 0;
+					canConquer = false;
+				}
+			}
+			if (isForward) {
+				++i;
+			} 
+			else {
+				--i;
+			}
+		}
+		return maxFortsConquered;
+	}
+}

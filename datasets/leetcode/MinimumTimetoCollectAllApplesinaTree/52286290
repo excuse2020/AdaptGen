@@ -1,0 +1,25 @@
+class Solution {
+	int dfs(int prev, int curr, List<List<Integer>> a, List<Boolean> hasApple) {
+		int ans = 0;
+		for (int x: a.get(curr)) {	
+			if (x != prev) {
+				int res = dfs(curr,x,a,hasApple);
+				if (res > 0 || hasApple.get(x)) {
+					ans += (res + 2);
+				}
+			}
+		}
+		return ans;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		List<List<Integer>> list = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			list.add(new ArrayList<>());
+		}
+		for (int[] e: edges) {	
+			list.get(e[0]).add(e[1]);
+			list.get(e[1]).add(e[0]);
+		}
+		return dfs(-1,0,list,hasApple);
+	}
+}

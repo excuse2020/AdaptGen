@@ -1,0 +1,47 @@
+class Solution {
+	TreeNode lca(TreeNode p, TreeNode q, TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		if (root.val == p.val || root.val == q.val) {
+			return root;
+		}
+		TreeNode left = lca(p,q,root.left);
+		TreeNode right = lca(p,q,root.right);
+		if (left != null && right != null) {
+			return root;
+		}
+		return left != null ? left : right;
+	}
+	TreeNode lcaDeepestLeaves(TreeNode root) {
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.offer(root);
+		queue.offer(null);
+		List<TreeNode> deepest = new ArrayList<>();
+		deepest.add(root);
+		while (!queue.isEmpty()) {
+			TreeNode curr = queue.poll();
+			if (curr != null) {
+				TreeNode left = curr.left;
+				TreeNode right = curr.right;
+				if (left != null) {
+					queue.offer(left);
+				}
+				if (right != null) {
+					queue.offer(right);
+				}
+			} 
+			else {
+				if (!queue.isEmpty()) {
+					deepest = new ArrayList<>();
+					deepest.addAll(queue);
+					queue.offer(null);
+				}
+			}
+		}
+		if (deepest.size() == 1) {
+			return lca(deepest.get(0),deepest.get(0),root);
+		}
+		return lca(deepest.get(0),deepest.get(deepest.size() - 1),root);
+	}
+}

@@ -1,0 +1,33 @@
+class Solution {
+	int maximumBags(int[] capacity, int[] rocks, int additionalRocks) {
+		int len = capacity.length;
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < len; i++) {
+			int remain = capacity[i] - rocks[i];
+			if (map.containsKey(remain)) {
+				map.put(remain,map.get(remain) + 1);
+			} 
+			else {
+				map.put(remain,1);
+			}
+		}
+		List<Integer> list = new ArrayList(map.keySet());
+		Collections.sort(list);
+		int ans = 0;
+		for (int i = 0; i < list.size(); i++) {
+			int x = list.get(i);
+			if (additionalRocks <= 0) {
+				break;
+			}
+			if (x * map.get(x) <= additionalRocks) {
+				ans += map.get(x);
+				additionalRocks -= x * map.get(x);
+			} 
+			else {
+				ans += additionalRocks / x;
+				additionalRocks = 0;
+			}
+		}
+		return ans;
+	}
+}

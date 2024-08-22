@@ -1,0 +1,55 @@
+class Solution {
+	int[] closestRoom(int[][] rooms, int[][] queries) {
+		for (int i = 0; i < queries.length; ++i) {
+			int[] temp = new int[3];
+			temp[0] = queries[i][0];
+			temp[1] = queries[i][1];
+			temp[2] = i;
+			queries[i] = temp;
+		}
+		Arrays.sort(rooms,new fun());
+		Arrays.sort(queries,new fun());
+		TreeSet<Integer> ptr = new TreeSet<Integer>();
+		int[] ret = new int[queries.length];
+		int j = rooms.length - 1;
+		for (int i = queries.length - 1; i >= 0; --i) {
+			while (j >= 0 && rooms[j][1] >= queries[i][1]) {
+				ptr.add(rooms[j--][0]);
+			}
+			if (ptr.contains(queries[i][0])) {
+				ret[queries[i][2]] = queries[i][0];
+			} 
+			else {
+				Integer next = ptr.higher(queries[i][0]), prev = ptr.lower(queries[i][0]);
+				if (next == null && prev == null) {
+					ret[queries[i][2]] = -1;
+				} 
+				else if (next == null) {
+					ret[queries[i][2]] = prev;
+				} 
+				else if (prev == null) {
+					ret[queries[i][2]] = next;
+				} 
+				else {
+					if (queries[i][0] - prev <= next - queries[i][0]) {
+						ret[queries[i][2]] = prev;
+					} 
+					else {
+						ret[queries[i][2]] = next;
+					}
+				}
+			}
+		}
+		return ret;
+	}
+	class fun {
+		int compare(int[] v1, int[] v2) {
+			if (v1[1] == v2[1]) {
+				return v1[0] - v2[0];
+			} 
+			else {
+				return v1[1] - v2[1];
+			}
+		}
+	}
+}

@@ -1,0 +1,28 @@
+class Solution {
+	int INF = Integer.MAX_VALUE;
+	int minSumOfLengths(int[] nums, int target) {
+		int len = nums.length;
+		int[] dp = new int[nums.length];
+		Arrays.fill(dp,INF);
+		int i = 0, j = 0;
+		int curr = 0;
+		int result = INF;
+		while (i < nums.length) {
+			curr += nums[i];
+			while (curr > target) {
+				curr -= nums[j++];
+			}
+			if (curr == target) {
+				dp[i] = i - j + 1;
+				if (j > 0 && dp[j - 1] != INF) {
+					result = Math.min(dp[i] + dp[j - 1],result);
+				}
+			}
+			if (i > 0) {
+				dp[i] = Math.min(dp[i],dp[i - 1]);
+			}
+			i++;
+		}
+		return result == INF ? -1 : result;
+	}
+}

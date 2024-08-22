@@ -1,0 +1,29 @@
+class Solution {
+	Map<Pair<Integer, Integer>, Integer> cache = new HashMap<>();
+	int dp(int[] arr, int minIndex, int maxIndex) {
+		if (minIndex >= maxIndex) {
+			return 0;
+		}
+		int N = arr.length;
+		int moves = minIndex + (N - 1);
+		if (moves > 3) {
+			return Integer.MAX_VALUE;
+		} 
+		else if (moves == 3) {
+			return arr[maxIndex] - arr[minIndex];
+		}
+		Pair<Integer, Integer> key = new Pair<>(minIndex, maxIndex);
+		if (cache.containsKey(key)) {
+			return cache.get(key);
+		}
+		int ans = Integer.MAX_VALUE;
+		ans = Math.min(ans,dp(arr,minIndex + 1,maxIndex));
+		ans = Math.min(ans,dp(arr,minIndex,maxIndex - 1));
+		cache.put(key,ans);
+		return cache.get(key);
+	}
+	int minDifference(int[] nums) {
+		Arrays.sort(nums);
+		return dp(nums,0,nums.length - 1);
+	}
+}

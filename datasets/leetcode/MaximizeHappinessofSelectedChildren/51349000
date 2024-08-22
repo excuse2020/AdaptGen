@@ -1,0 +1,87 @@
+class Solution {
+	int[] countingSort(int[] values, int max) {
+		int[] histogram = new int[max + 1];
+		for (int i: values) {	
+			histogram[i]++;
+		}
+		return histogram;
+	}
+	long maximumHappinessSum(int[] happiness, int k) {
+		int max = happiness[0];
+		for (int i = 1; i < happiness.length; i++) {
+			if (happiness[i] > max) {
+				max = happiness[i];
+			}
+		}
+		long total = 0;
+		if (max > 20000) {
+			radixSort(happiness);
+			for (int i = 0; i < k; i++) {
+				int tmp = happiness[happiness.length - 1 - i] - i;
+				if (tmp > 0) {
+					total += tmp;
+				}
+			}
+		} 
+		else {
+			int[] histogram = countingSort(happiness,max);
+			int passes = 0;
+			int i = max;
+			while (i >= 0 && passes != k) {
+				while (histogram[i] == 0) {
+					i--;
+				}
+				histogram[i]--;
+				int tmp = i - passes++;
+				if (tmp > 0) {
+					total += tmp;
+				}
+			}
+		}
+		return total;
+	}
+	void radixSort(int[] a) {
+		int count = a.length;
+		int[] b = new int[count];
+		int[][] mIndex = new int[4][256];
+		int i, j, m, n, u;
+		for (i = 0; i < count; i++) {
+			u = a[i];
+			mIndex[0][u & 0xff]++;
+			u >>= 8;
+			mIndex[1][u & 0xff]++;
+			u >>= 8;
+			mIndex[2][u & 0xff]++;
+			u >>= 8;
+			mIndex[3][u + 128]++;
+		}
+		for (j = 0; j < 4; j++) {
+			m = 0;
+			for (i = 0; i < 256; i++) {
+				n = mIndex[j][i];
+				mIndex[j][i] = m;
+				m += n;
+			}
+		}
+		for (i = 0; i < count; i++) {
+			u = a[i];
+			m = u & 0xff;
+			b[mIndex[0][m]++] = u;
+		}
+		for (i = 0; i < count; i++) {
+			u = b[i];
+			m = (u >> 8) & 0xff;
+			a[mIndex[1][m]++] = u;
+		}
+		for (i = 0; i < count; i++) {
+			u = a[i];
+			m = (u >> 16) & 0xff;
+			b[mIndex[2][m]++] = u;
+		}
+		for (i = 0; i < count; i++) {
+			u = b[i];
+			m = (u >> 24) + 128;
+			a[mIndex[3][m]++] = u;
+		}
+	}
+}

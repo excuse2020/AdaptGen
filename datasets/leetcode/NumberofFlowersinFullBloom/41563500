@@ -1,0 +1,36 @@
+class Solution {
+	int[] fullBloomFlowers(int[][] flowers, int[] people) {
+		int n = people.length;
+		int[] result = new int[n];
+		Map<Integer, Integer> events = new HashMap<>();
+		for (int[] flower: flowers) {	
+			events.put(flower[0],events.getOrDefault(flower[0],0) + 1);
+			events.put(flower[1] + 1,events.getOrDefault(flower[1] + 1,0) - 1);
+		}
+		List<Integer> keys = new ArrayList<>(events.keySet());
+		int sum = 0;
+		keys.sort(null);
+		for (int key: keys) {	
+			events.put(key,events.get(key) + sum);
+			sum = events.get(key);
+		}
+		for (int i = 0; i < n; ++i) {
+			int person = people[i];
+			int left = 0;
+			int right = keys.size() - 1;
+			int recent = -1;
+			while (left <= right) {
+				int temp = left + (right - left) / 2;
+				if (keys.get(temp) <= person) {
+					recent = keys.get(temp);
+					left = temp + 1;
+				} 
+				else {
+					right = temp - 1;
+				}
+			}
+			result[i] = recent == -1 ? 0 : events.get(recent);
+		}
+		return result;
+	}
+}

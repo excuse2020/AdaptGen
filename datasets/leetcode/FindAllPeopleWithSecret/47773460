@@ -1,0 +1,51 @@
+class Solution {
+	List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+		int len = meetings.length;
+		boolean[] people = new boolean[n];
+		people[firstPerson] = people[0] = true;
+		Arrays.sort(meetings,(m1, m2) -> {m1[2] - m2[2]});
+		int now = 0, nowInd = 0;
+		int disclosures = 0;
+		boolean disclosedNow = false;
+		for (int i = 0; i < len; ++i) {
+			int[] m = meetings[i];
+			if (m[2] != now) {
+				if (disclosedNow) {
+					disclosedNow = false;
+					i = nowInd - 1;
+					continue;
+				} 
+				else {
+					now = m[2];
+					nowInd = i;
+				}
+			}
+			if (people[m[0]]) {
+				if (!people[m[1]]) {
+					disclosedNow = people[m[1]] = true;
+					++disclosures;
+				}
+			} 
+			else {
+				if (people[m[1]]) {
+					disclosedNow = people[m[0]] = true;
+					++disclosures;
+				}
+			}
+			if (i == len - 1) {
+				if (disclosedNow) {
+					disclosedNow = false;
+					i = nowInd - 1;
+					continue;
+				}
+			}
+		}
+		List<Integer> result = new ArrayList(disclosures);
+		for (int i = 0; i < n; ++i) {
+			if (people[i]) {
+				result.add(i);
+			}
+		}
+		return result;
+	}
+}

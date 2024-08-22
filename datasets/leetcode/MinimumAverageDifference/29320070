@@ -1,0 +1,37 @@
+class Solution {
+	long avgdiff(int i, long[] lps) {
+		long lowersum = lps[i];
+		long highsum = lps[lps.length - 1] - lowersum;
+		int n1 = i + 1;
+		int n2 = lps.length - n1;
+		long avg = Math.abs((long) Math.floor(divideWithZero(lowersum,n1)) - (long) Math.floor(divideWithZero(highsum,n2)));
+		return avg;
+	}
+	double divideWithZero(double a, double b) {
+		if (b == 0) {
+			return 0;
+		} 
+		else {
+			return a / b;
+		}
+	}
+	int minimumAverageDifference(int[] nums) {
+		long[] lps = new long[nums.length];
+		long sum = 0;
+		for (int i = 0; i < nums.length; i++) {
+			sum += nums[i];
+			lps[i] = sum;
+		}
+		int maxsum = nums[nums.length - 1];
+		long mdiff = Integer.MAX_VALUE;
+		int mindx = -1;
+		for (int i = 0; i < nums.length; i++) {
+			long avg = avgdiff(i,lps);
+			if (avg < mdiff) {
+				mdiff = avg;
+				mindx = i;
+			}
+		}
+		return mindx;
+	}
+}

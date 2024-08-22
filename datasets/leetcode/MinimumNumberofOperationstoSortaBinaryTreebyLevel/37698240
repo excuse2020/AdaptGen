@@ -1,0 +1,46 @@
+class Solution {
+	int minimumOperations(TreeNode root) {
+		int swaps = 0;
+		if (root == null) {
+			return swaps;
+		}
+		Queue<TreeNode> al = new LinkedList<>();
+		al.add(root);
+		while (!al.isEmpty()) {
+			int sze = al.size();
+			ArrayList<Integer> sol = new ArrayList<>();
+			while (sze > 0) {
+				sze--;
+				TreeNode cur = al.poll();
+				sol.add(cur.val);
+				if (cur.left != null) {
+					al.offer(cur.left);
+				}
+				if (cur.right != null) {
+					al.offer(cur.right);
+				}
+			}
+			ArrayList<Integer> sorted = (ArrayList<Integer>) sol.clone();
+			Collections.sort(sorted);
+			System.out.println(sol + "....");
+			for (int i = 0; i < sorted.size(); i++) {
+				int cur = sorted.get(i);
+				if (sol.get(i) == cur) {
+					continue;
+				}
+				int ind = i;
+				for (int j = i + 1; j < sorted.size(); j++) {
+					if (sol.get(j) == cur) {
+						ind = j;
+						break;
+					}
+				}
+				System.out.print(cur + "__");
+				sol.set(ind,sol.get(i));
+				sol.set(i,cur);
+				swaps++;
+			}
+		}
+		return swaps;
+	}
+}

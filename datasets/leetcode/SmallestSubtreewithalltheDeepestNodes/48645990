@@ -1,0 +1,66 @@
+class Solution {
+	HashMap<TreeNode, TreeNode> map1 = new HashMap<>();
+	HashMap<TreeNode, Integer> map2 = new HashMap<>();
+	int depth(TreeNode root) {
+		if (root == null) {
+			return -1;
+		}
+		int l = depth(root.left);
+		int r = depth(root.right);
+		return Math.max(l,r) + 1;
+	}
+	void helper(TreeNode root, int count) {
+		if (root == null) {
+			return;
+		}
+		map2.put(root,count);
+		if (root.right != null) {
+			map1.put(root.right,root);
+			helper(root.right,count + 1);
+		}
+		if (root.left != null) {
+			map1.put(root.left,root);
+			helper(root.left,count + 1);
+		}
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		helper(root,0);
+		List<TreeNode> l = new ArrayList<>();
+		int c = depth(root);
+		for (TreeNode t: map2.keySet()) {	
+			if (map2.get(t) == c) {
+				l.add(t);
+			}
+		}
+		while (l.size() > 1) {
+			Set<TreeNode> parents = new HashSet<>();
+			for (TreeNode node: l) {	
+				parents.add(map1.get(node));
+			}
+			l = new ArrayList<>(parents);
+		}
+		return l.get(0);
+	}
+}
+class Solution {
+	TreeNode ans = null;
+	int max = 0;
+	int helper(TreeNode root, int count) {
+		if (root == null) {
+			return count;
+		}
+		int l = helper(root.left,count + 1);
+		int r = helper(root.right,count + 1);
+		if (l == r) {
+			max = Math.max(l,max);
+			if (max == l) {
+				ans = root;
+			}
+		}
+		return Math.max(l,r);
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		helper(root,0);
+		return ans;
+	}
+}

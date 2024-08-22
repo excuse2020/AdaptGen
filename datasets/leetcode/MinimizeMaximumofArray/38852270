@@ -1,0 +1,27 @@
+class Solution {
+	int minimizeArrayValue(int[] nums) {
+		int minVal = Integer.MAX_VALUE, maxVal = Integer.MIN_VALUE;
+		for (int i = 0; i < nums.length; i++) {
+			minVal = Math.min(minVal,nums[i]);
+			maxVal = Math.max(maxVal,nums[i]);
+		}
+		int left = minVal, right = maxVal;
+		int minMaxVal = maxVal;
+		while (left <= right) {
+			int mid = left + (right - left) / 2;
+			long addend = 0;
+			for (int i = nums.length - 1; i > 0; i--) {
+				addend = nums[i] + addend - mid;
+				addend = addend <= 0 ? 0 : addend;
+			}
+			addend = nums[0] + addend - mid;
+			if (addend <= 0) {
+				minMaxVal = mid;
+				right = mid - 1;
+				continue;
+			}
+			left = mid + 1;
+		}
+		return minMaxVal;
+	}
+}

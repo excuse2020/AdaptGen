@@ -1,0 +1,51 @@
+class Solution {
+	TreeNode replaceValueInTree(TreeNode root) {
+		if (root == null) {
+			return root;
+		}
+		Queue<TreeNode> queue = new LinkedList<>();
+		Queue<Pair<TreeNode, TreeNode>> queueReplace = new LinkedList<>();
+		queue.offer(root);
+		root.val = 0;
+		boolean rootFlag = true;
+		while (!queue.isEmpty()) {
+			int length = queue.size();
+			int sum = 0;
+			int lengthR = queueReplace.size();
+			for (int i = 0; i < length; i++) {
+				TreeNode node = queue.poll();
+				sum += node.val;
+				if (node.left != null) {
+					queue.offer(node.left);
+					queueReplace.offer(new Pair<TreeNode, TreeNode>(node.left, node));
+				}
+				if (node.right != null) {
+					queue.offer(node.right);
+					queueReplace.offer(new Pair<TreeNode, TreeNode>(node.right, node));
+				}
+			}
+			if (!rootFlag) {
+				boolean neighbourFlag = false;
+				int prevSum = 0;
+				for (int i = 0; i < lengthR; i++) {
+					int currSum = sum;
+					Pair<TreeNode, TreeNode> pair = queueReplace.poll();
+					TreeNode node = pair.getKey();
+					currSum -= node.val;
+					if (neighbourFlag) {
+						currSum = prevSum;
+						neighbourFlag = false;
+					} 
+					else if (!queueReplace.isEmpty() && queueReplace.peek().getValue() == pair.getValue()) {
+						currSum -= queueReplace.peek().getKey().val;
+						prevSum = currSum;
+						neighbourFlag = true;
+					}
+					node.val = currSum;
+				}
+			}
+			rootFlag = false;
+		}
+		return root;
+	}
+}

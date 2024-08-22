@@ -1,0 +1,49 @@
+class Solution {
+	int numBusesToDestination(int[][] routes, int source, int target) {
+		HashMap<Integer, ArrayList<Integer>> adjList = new HashMap<>();
+		for (int busNo = 0; busNo < routes.length; busNo++) {
+			for (int busStopIndex = 0; busStopIndex < routes[busNo].length; busStopIndex++) {
+				int busStop = routes[busNo][busStopIndex];
+				ArrayList<Integer> listOfBusAtBusStop = adjList.getOrDefault(busStop,new ArrayList<Integer>());
+				listOfBusAtBusStop.add(busNo);
+				adjList.put(busStop,listOfBusAtBusStop);
+			}
+		}
+		HashSet<Integer> visitedBusStop = new HashSet<>();
+		HashSet<Integer> visitedBus = new HashSet<>();
+		LinkedList<Integer> queue = new LinkedList<>();
+		queue.add(source);
+		int level = 0;
+		visitedBusStop.add(source);
+		while (queue.size() > 0) {
+			int sizeAtEachLevel = queue.size();
+			while (sizeAtEachLevel-- > 0) {
+				int currStop = queue.removeFirst();
+				if (currStop == target) {
+					return level;
+				}
+				ArrayList<Integer> busesThroughStop = adjList.get(currStop);
+				for (int bus: busesThroughStop) {	
+					if (visitedBus.contains(bus)) {
+						continue;
+					} 
+					else {
+						int[] busStopsOfBus = routes[bus];
+						for (int currBusStop: busStopsOfBus) {	
+							if (visitedBusStop.contains(currBusStop)) {
+								continue;
+							} 
+							else {
+								queue.addLast(currBusStop);
+								visitedBusStop.add(currBusStop);
+							}
+						}
+						visitedBus.add(bus);
+					}
+				}
+			}
+			level++;
+		}
+		return -1;
+	}
+}

@@ -1,0 +1,35 @@
+class Solution {
+	int count = 0;
+	void DFS(int n, ArrayList<ArrayList<Integer>> adj, ArrayList<ArrayList<Integer>> adj2, int num, boolean[] visited) {
+		if (visited[num]) {
+			return;
+		}
+		visited[num] = true;
+		for (int i: adj.get(num)) {	
+			if (!visited[i]) {
+				count++;
+				DFS(n,adj,adj2,i,visited);
+			}
+		}
+		for (int i: adj2.get(num)) {	
+			if (!visited[i]) {
+				DFS(n,adj,adj2,i,visited);
+			}
+		}
+	}
+	int minReorder(int n, int[][] connections) {
+		boolean[] visited = new boolean[n];
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<ArrayList<Integer>>();
+		ArrayList<ArrayList<Integer>> adj2 = new ArrayList<ArrayList<Integer>>();
+		for (int i = 0; i < n; ++i) {
+			adj.add(new ArrayList<>());
+			adj2.add(new ArrayList<>());
+		}
+		for (var c: connections) {	
+			adj.get(c[0]).add(c[1]);
+			adj2.get(c[1]).add(c[0]);
+		}
+		DFS(n,adj,adj2,0,visited);
+		return count;
+	}
+}

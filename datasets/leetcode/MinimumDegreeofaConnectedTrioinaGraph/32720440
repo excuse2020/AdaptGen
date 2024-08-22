@@ -1,0 +1,50 @@
+class Solution {
+	int minTrioDegree(int n, int[][] edges) {
+		int resp = Integer.MAX_VALUE;
+		boolean[][] conn = new boolean[n][n];
+		int[] cnt = new int[n];
+		Integer[] ord = new Integer[n];
+		for (int i = 0; i < n; i++) {
+			ord[i] = i;
+		}
+		for (int[] e: edges) {	
+			conn[e[0] - 1][e[1] - 1] = true;
+			conn[e[1] - 1][e[0] - 1] = true;
+			cnt[e[0] - 1]++;
+			cnt[e[1] - 1]++;
+		}
+		Arrays.sort(ord,(o1, o2) -> {Integer.compare(cnt[o1],cnt[o2])});
+		for (int i = 0; i < n - 2; i++) {
+			int ii = ord[i];
+			if (3 * cnt[ii] >= resp) {
+				break;
+			}
+			if (cnt[ii] < 2) {
+				continue;
+			}
+			for (int j = i + 1; j < n - 1; j++) {
+				int jj = ord[j];
+				if (!conn[ii][jj]) {
+					continue;
+				}
+				int pair = cnt[ii] + cnt[jj];
+				if (pair + cnt[jj] >= resp) {
+					break;
+				}
+				for (int k = j + 1; k < n; k++) {
+					int kk = ord[k];
+					if (pair + cnt[kk] >= resp) {
+						break;
+					}
+					if (conn[ii][kk] && conn[jj][kk]) {
+						resp = pair + cnt[kk];
+					}
+				}
+			}
+		}
+		if (resp == Integer.MAX_VALUE) {
+			return -1;
+		}
+		return resp - 6;
+	}
+}

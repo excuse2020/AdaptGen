@@ -1,0 +1,32 @@
+class Solution {
+	int[][] memory;
+	int dp(String str1, String str2, int i, int j, int ic, int dc, int rc) {
+		if (memory[i][j] != -1) {
+			return memory[i][j];
+		}
+		if (i == 0) {
+			return memory[i][j] = j * ic;
+		}
+		if (j == 0) {
+			return memory[i][j] = i * dc;
+		}
+		if (str1.charAt(i - 1) == str2.charAt(j - 1)) {
+			memory[i][j] = dp(str1,str2,i - 1,j - 1,ic,dc,rc);
+		} 
+		else {
+			memory[i][j] = Math.min(Math.min(dp(str1,str2,i,j - 1,ic,dc,rc) + ic,dp(str1,str2,i - 1,j,ic,dc,rc) + dc),dp(str1,str2,i - 1,j - 1,ic,dc,rc) + rc);
+		}
+		return memory[i][j];
+	}
+	int minEditCost(String str1, String str2, int ic, int dc, int rc) {
+		int len1 = str1.length();
+		int len2 = str2.length();
+		memory = new int[len1 + 1][len2 + 1];
+		for (int i = 0; i <= str1.length(); i++) {
+			for (int j = 0; j <= str2.length(); j++) {
+				memory[i][j] = -1;
+			}
+		}
+		return dp(str1,str2,len1,len2,ic,dc,rc);
+	}
+}

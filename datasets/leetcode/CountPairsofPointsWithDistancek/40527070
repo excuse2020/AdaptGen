@@ -1,0 +1,28 @@
+class Solution {
+	int countPairs(List<List<Integer>> coordinates, int k) {
+		Map<Pair<Integer, Integer>, Integer> map = new HashMap<>();
+		for (int i = 0; i < coordinates.size(); i++) {
+			List<Integer> coordinate = coordinates.get(i);
+			int x = coordinate.get(0);
+			int y = coordinate.get(1);
+			Pair<Integer, Integer> pair = new Pair<>(x, y);
+			map.put(pair,map.getOrDefault(pair,0) + 1);
+		}
+		long result = 0;
+		for (int i = 0; i < coordinates.size(); i++) {
+			for (int j = 0; j <= k; j++) {
+				List<Integer> coordinate = coordinates.get(i);
+				int x = j ^ coordinate.get(0);
+				int y = (k - j) ^ coordinate.get(1);
+				Pair pair = new Pair<>(x, y);
+				if (map.containsKey(pair)) {
+					result = result + map.get(pair);
+				}
+			}
+		}
+		if (k == 0) {
+			result = result - coordinates.size();
+		}
+		return (int) (result / 2);
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	int[] res;
+	int[] count(List<List<Integer>> adjList, String labels, int index, int parentIndex) {
+		int[] count = new int[26];
+		for (int i: adjList.get(index)) {	
+			if (i == parentIndex) {
+				continue;
+			}
+			int[] temp = count(adjList,labels,i,index);
+			for (int j = 0; j < 26; ++j) {
+				count[j] += temp[j];
+			}
+		}
+	}
+	int[] countSubTrees(int n, int[][] edges, String labels) {
+		List<List<Integer>> adjList = createAdjList(edges,n);
+		res = new int[n];
+		this.count(adjList,labels,0,0);
+		return res;
+	}
+	List<List<Integer>> createAdjList(int[][] edges, int n) {
+		List<List<Integer>> adjList = new ArrayList<List<Integer>>();
+		for (int i = 0; i < n; ++i) {
+			adjList.add(new ArrayList<>());
+		}
+		for (int j = 0; j < edges.length; ++j) {
+			adjList.get(edges[j][0]).add(edges[j][1]);
+			adjList.get(edges[j][1]).add(edges[j][0]);
+		}
+		return adjList;
+	}
+}

@@ -1,0 +1,31 @@
+class Solution {
+	int dp;
+	int m;
+	int n;
+	int minPathCost(int[][] grid, int[][] moveCost) {
+		m = grid.length;
+		n = grid[0].length;
+		dp = new int[m + 1][n + 1];
+		for (int d: dp) {	
+			Arrays.fill(d,-1);
+		}
+		int result = Integer.MAX_VALUE;
+		for (int i = 0; i < n; i++) {
+			result = Math.min(result,solve(grid,moveCost,0,i));
+		}
+		return result;
+	}
+	int solve(int[][] g, int[][] mc, int i, int j) {
+		if (i >= m - 1) {
+			return g[i][j];
+		}
+		if (dp[i][j] != -1) {
+			return dp[i][j];
+		}
+		int ans = Integer.MAX_VALUE;
+		for (int move = 0; move < n; move++) {
+			ans = Math.min(ans,g[i][j] + mc[g[i][j]][move]);
+		}
+		return dp[i][j] = ans;
+	}
+}

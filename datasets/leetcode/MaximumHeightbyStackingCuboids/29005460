@@ -1,0 +1,63 @@
+class Solution {
+	Integer[] dp;
+	boolean canStack(int[] a, int[] b) {
+		int a1 = a[0];
+		int a2 = a[1];
+		int a3 = a[2];
+		int b1 = b[0];
+		int b2 = b[1];
+		int b3 = b[2];
+		if (a1 >= b1 && a2 >= b2 && a3 >= b3) {
+			return true;
+		}
+		if (a1 >= b1 && a3 >= b2 && a2 >= b3) {
+			return true;
+		}
+		if (a2 >= b1 && a1 >= b2 && a3 >= b3) {
+			return true;
+		}
+		if (a2 >= b1 && a3 >= b2 && a1 >= b3) {
+			return true;
+		}
+		if (a3 >= b1 && a1 >= b2 && a2 >= b3) {
+			return true;
+		}
+		if (a3 >= b1 && a2 >= b2 && a1 >= b3) {
+			return true;
+		}
+		return false;
+	}
+	int maxHeight(int[][] cuboids) {
+		Arrays.sort(cuboids,(a, b) -> {b[0] * b[1] - a[0] * a[1]});
+		int[] maxHeights = new int[cuboids.length];
+		dp = new Integer[cuboids.length];
+		for (int i = 0; i < cuboids.length; i++) {
+			maxHeights[i] = maxHeight(cuboids[i]);
+		}
+		int returnValue = 0;
+		for (int i = 0; i < cuboids.length; i++) {
+			returnValue = Math.max(returnValue,maxStack(cuboids,i));
+		}
+		return returnValue;
+	}
+	int maxHeight(int[] input) {
+		int comp = input[0] > input[1] ? input[0] : input[1];
+		return input[2] > comp ? input[2] : comp;
+	}
+	int maxStack(int[][] cuboids, int index) {
+		if (index > cuboids.length) {
+			return 0;
+		}
+		if (dp[index] != null) {
+			return dp[index];
+		}
+		int maxHeight = maxHeight(cuboids[index]);
+		for (int i = index + 1; i < cuboids.length; i++) {
+			if (canStack(cuboids[index],cuboids[i])) {
+				maxHeight = Math.max(maxHeight,maxHeight(cuboids[index]) + maxStack(cuboids,i));
+			}
+		}
+		dp[index] = maxHeight;
+		return maxHeight;
+	}
+}

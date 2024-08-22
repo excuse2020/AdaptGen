@@ -1,0 +1,40 @@
+class Solution {
+	TreeNode getResult(int[] preOrder, int[] vinOrder) {
+		if (preOrder.length == 0) {
+			return null;
+		}
+		TreeNode root = new TreeNode(preOrder[0]);
+		int middle = root.val;
+		int length_left = 0;
+		int length_right = 0;
+		boolean mid = false;
+		for (int i = 0; i < vinOrder.length; length_left++, i++) {
+			if (vinOrder[i] == root.val) {
+				mid = true;
+				break;
+			}
+		}
+		length_right = vinOrder.length - 1;
+		int preleft = new int[length_left];
+		int vinleft = new int[length_left];
+		int preright = new int[length_right];
+		int vinright = new int[length_right];
+		for (int i = 0; i < length_left; i++) {
+			preleft[i] = preOrder[i + 1];
+			vinleft[i] = vinOrder[i];
+		}
+		for (int i = 0; i < length_right; i++) {
+			preright[i] = preOrder[length_left + i + 1];
+			vinright[i] = vinOrder[length_left + i + 1];
+		}
+		root.left = getResult(preleft,vinleft);
+		root.right = getResult(preright,vinright);
+		return root;
+	}
+	TreeNode reConstructBinaryTree(int[] preOrder, int[] vinOrder) {
+		if (preOrder.length == 0) {
+			return null;
+		}
+		return getResult(preOrder,vinOrder);
+	}
+}

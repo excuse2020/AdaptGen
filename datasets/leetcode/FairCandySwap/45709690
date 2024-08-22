@@ -1,0 +1,42 @@
+class Solution {
+	int BobBinaryOptimisation(int bob, int candy) {
+		int left = 0, right = bob.length;
+		while (left < right) {
+			int middle = (left + right) / 2;
+			if (bob[middle] == candy) {
+				return bob[middle];
+			} 
+			else if (bob[middle] > candy) {
+				right = middle;
+			} 
+			else {
+				left = middle + 1;
+			}
+		}
+		return -1;
+	}
+	int[] TwoPointerSwap(int alice, int bob, int aliceSum, int bobSum) {
+		int result = new int[2];
+		for (int i = 0; i < alice.length; i++) {
+			int targetCandy = alice[i] + (bobSum - aliceSum) / 2;
+			int bobValue = BobBinaryOptimisation(bob,targetCandy);
+			if (bobValue != -1) {
+				result[0] = alice[i];
+				result[1] = bobValue;
+				break;
+			}
+		}
+		return result;
+	}
+	int[] fairCandySwap(int[] aliceSizes, int[] bobSizes) {
+		Arrays.sort(bobSizes);
+		int alice = 0, bob = 0;
+		for (int i = 0; i < aliceSizes.length; i++) {
+			alice += aliceSizes[i];
+		}
+		for (int j = 0; j < bobSizes.length; j++) {
+			bob += bobSizes[j];
+		}
+		return TwoPointerSwap(aliceSizes,bobSizes,alice,bob);
+	}
+}

@@ -1,0 +1,29 @@
+class Solution {
+	int[][] dp;
+	int mod = 1000000007;
+	int numRollsToTarget(int n, int k, int target) {
+		this.dp = new int[n][target + 1];
+		for (int[] i: this.dp) {	
+			Arrays.fill(i,-1);
+		}
+		return ways(0,n,k,target);
+	}
+	int ways(int cur, int n, int k, int target) {
+		if (cur == n) {
+			if (target == 0) {
+				return 1;
+			}
+			return 0;
+		}
+		if (this.dp[cur][target] != -1) {
+			return this.dp[cur][target];
+		}
+		int count = 0;
+		for (int i = 1; i <= k; i++) {
+			if (target - i >= 0) {
+				count = (count % this.mod + ways(cur + 1,n,k,target - i) % this.mod) % this.mod;
+			}
+		}
+		return this.dp[cur][target] = count;
+	}
+}

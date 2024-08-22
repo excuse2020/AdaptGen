@@ -1,0 +1,39 @@
+class Solution {
+	int Kth_smallest(TreeMap<Integer, Integer> mp, int K) {
+		int freq = 0;
+		for (Map.Entry it: mp.entrySet()) {	
+			freq += (int) it.getValue();
+			if (freq >= K) {
+				return Math.min((int) it.getKey(),0);
+			}
+		}
+		return 0;
+	}
+	int[] getSubarrayBeauty(int[] nums, int k, int x) {
+		int start = 0;
+		int n = nums.length;
+		int[] ans = new int[n - k + 1];
+		int idx = 0;
+		TreeMap<Integer, Integer> tmap = new TreeMap<>();
+		for (int end = 0; end < n; end++) {
+			if (end - start + 1 <= k) {
+				tmap.put(nums[end],tmap.getOrDefault(nums[end],0) + 1);
+			} 
+			else {
+				ans[idx++] = Kth_smallest(tmap,x);
+				int val = nums[start];
+				int tf = tmap.getOrDefault(nums[start],0);
+				if (tf <= 1) {
+					tmap.remove(nums[start]);
+				} 
+				else {
+					tmap.put(nums[start],tf - 1);
+				}
+				start++;
+				tmap.put(nums[end],tmap.getOrDefault(nums[end],0) + 1);
+			}
+		}
+		ans[idx++] = Kth_smallest(tmap,x);
+		return ans;
+	}
+}

@@ -1,0 +1,36 @@
+class Solution {
+	int reachableNodes(int n, int[][] edges, int[] restricted) {
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		for (int[] edge: edges) {	
+			int u = edge[0];
+			int v = edge[1];
+			graph.putIfAbsent(u,new ArrayList<>());
+			graph.get(u).add(v);
+			graph.putIfAbsent(v,new ArrayList<>());
+			graph.get(v).add(u);
+		}
+		int root = 0;
+		Set<Integer> blocked = new HashSet<>(IntStream.of(restricted).boxed().collect(Collectors.toSet()));
+		Set<Integer> visited = new HashSet<>();
+		Queue<Integer> queue = new LinkedList<>();
+		queue.add(root);
+		int count = 0;
+		while (!queue.isEmpty()) {
+			root = queue.poll();
+			if (visited.contains(root)) {
+				continue;
+			}
+			visited.add(root);
+			if (!blocked.contains(root)) {
+				count++;
+			}
+			for (int childVertex: graph.getOrDefault(root,new ArrayList<>())) {	
+				if (blocked.contains(childVertex)) {
+					continue;
+				}
+				queue.add(childVertex);
+			}
+		}
+		return count;
+	}
+}

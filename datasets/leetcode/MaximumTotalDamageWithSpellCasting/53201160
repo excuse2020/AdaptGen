@@ -1,0 +1,26 @@
+class Solution {
+	long maximumTotalDamage(int[] power) {
+		Arrays.sort(power);
+		TreeMap<Integer, Integer> map = new TreeMap<>();
+		long dp = new long[power.length];
+		dp[0] = power[0];
+		int lastVal = power[0];
+		int sameCount = 1;
+		map.put(power[0],0);
+		for (int i = 1; i < power.length; i++) {
+			map.put(power[i],i);
+			Integer lowerKey = map.lowerKey(power[i] - 2);
+			if (power[i] == lastVal) {
+				sameCount++;
+			} 
+			else {
+				sameCount = 1;
+			}
+			long lastDp = i - sameCount >= 0 ? dp[i - sameCount] : 0;
+			long continuousSamePower = 1L * sameCount;
+			dp[i] = Math.max(lastDp,lowerKey != null ? dp[map.get(lowerKey)] + continuousSamePower : continuousSamePower);
+			lastVal = power[i];
+		}
+		return dp[power.length - 1];
+	}
+}

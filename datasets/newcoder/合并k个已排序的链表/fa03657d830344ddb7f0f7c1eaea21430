@@ -1,0 +1,43 @@
+class Solution {
+	ListNode mergeKLists(ArrayList<ListNode> lists) {
+		if (lists.size() == 0 || lists == null) {
+			return null;
+		}
+		for (int i = 0; i < lists.size(); i++) {
+			if (lists.get(i) == null) {
+				lists.remove(i);
+				i--;
+			}
+		}
+		ListNode ret = null;
+		ListNode retEnd = null;
+		ListNode tmp = null;
+		int delete = 0;
+		while (lists.size() != 0) {
+			tmp = lists.get(0);
+			delete = 0;
+			for (int i = 1; i < lists.size(); i++) {
+				if (tmp.val > lists.get(i).val) {
+					tmp = lists.get(i);
+					delete = i;
+				}
+			}
+			if (ret == null) {
+				ret = tmp;
+				retEnd = tmp;
+			} 
+			else {
+				retEnd.next = tmp;
+				retEnd = tmp;
+			}
+			lists.set(delete,lists.get(delete).next);
+			if (lists.get(delete) == null) {
+				lists.remove(delete);
+			}
+		}
+		if (retEnd != null) {
+			retEnd.next = null;
+		}
+		return ret;
+	}
+}

@@ -1,0 +1,24 @@
+class Solution {
+	int MOD = 1000000007;
+	int minAbsoluteSumDiff(int[] nums1, int[] nums2) {
+		int n = nums1.length;
+		int[] sortedNums1 = nums1.clone();
+		Arrays.sort(sortedNums1);
+		int maxDiff = 0, sumDiff = 0;
+		for (int i = 0; i < n; i++) {
+			int diff = Math.abs(nums1[i] - nums2[i]);
+			sumDiff = (sumDiff + diff) % MOD;
+			int j = Arrays.binarySearch(sortedNums1,nums2[i]);
+			if (j < 0) {
+				j = -j - 1;
+			}
+			if (j < n) {
+				maxDiff = Math.max(maxDiff,diff - Math.abs(sortedNums1[j] - nums2[i]));
+			}
+			if (j > 0) {
+				maxDiff = Math.max(maxDiff,diff - Math.abs(sortedNums1[j - 1] - nums2[i]));
+			}
+		}
+		return (sumDiff - maxDiff + MOD) % MOD;
+	}
+}

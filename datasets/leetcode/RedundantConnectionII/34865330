@@ -1,0 +1,44 @@
+class Solution {
+	int[] findRedundantDirectedConnection(int[][] edges) {
+		int n = edges.length, twoParents = -1;
+		int[] parantEdgePointer = new int[n + 1];
+		Arrays.fill(parantEdgePointer,-1);
+		for (int i = 0; i < n; i++) {
+			if (parantEdgePointer[edges[i][1]] != -1) {
+				twoParents = i;
+			} 
+			else {
+				parantEdgePointer[edges[i][1]] = i;
+			}
+		}
+		if (twoParents != -1) {
+			int[] parent1 = edges[twoParents], parent2 = edges[parantEdgePointer[edges[twoParents][1]]];
+			boolean parent2IsMostRight = parantEdgePointer[edges[twoParents][1]] > twoParents;
+			if (!parent2IsMostRight) {
+				int[] tmp = parent1;
+				parent1 = parent2;
+				parent2 = tmp;
+			}
+			int curEdge = parent1[0];
+			for (int i = 0; i < n; i++) {
+				if (parantEdgePointer[curEdge] == -1 || curEdge == parent2[0]) {
+					return parent2;
+				}
+				if (curEdge == parent1[1]) {
+					return parent1;
+				}
+				curEdge = edges[parantEdgePointer[curEdge]][0];
+			}
+			return null;
+		}
+		int curEdge = 1, mostRight = 0;
+		for (int i = 0; i < n; i++) {
+			curEdge = edges[parantEdgePointer[curEdge]][0];
+		}
+		for (int i = 0; i < n; i++) {
+			curEdge = edges[parantEdgePointer[curEdge]][0];
+			mostRight = Math.max(mostRight,parantEdgePointer[curEdge]);
+		}
+		return edges[mostRight];
+	}
+}

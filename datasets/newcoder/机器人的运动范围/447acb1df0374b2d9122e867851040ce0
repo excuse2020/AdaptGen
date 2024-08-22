@@ -1,0 +1,46 @@
+class Solution {
+	boolean dfs(int threshold, boolean[][] booleanMatrix, int rows, int cols, Set<String> resultSet) {
+		if (validCheckMove(threshold,booleanMatrix,rows,cols,resultSet)) {
+			booleanMatrix[rows][cols] = true;
+			resultSet.add(getKey(rows,cols));
+			boolean flag = dfs(threshold,booleanMatrix,rows + 1,cols,resultSet) || dfs(threshold,booleanMatrix,rows - 1,cols,resultSet);
+			booleanMatrix[rows][cols] = false;
+			return flag;
+		}
+		return false;
+	}
+	String getKey(int rows, int cols) {
+		return rows + ";";
+	}
+	int movingCount(int threshold, int rows, int cols) {
+		Set<String> resultSet = new HashSet<String>();
+		boolean[][] booleanMatrix = new boolean[rows][cols];
+		dfs(threshold,booleanMatrix,0,0,resultSet);
+		return resultSet.size();
+	}
+	int sumMod(int target) {
+		int mod1 = target / 10;
+		if (mod1 == 10) {
+			return 1;
+		}
+		return mod1 + target - 10 * mod1;
+	}
+	boolean validCheckMove(int threshold, boolean[][] martix, int rows, int cols, Set<String> resultSet) {
+		if (cols < 0 || rows < 0 || rows >= martix.length || cols >= martix[0].length) {
+			return false;
+		}
+		if (martix[rows][cols]) {
+			return false;
+		}
+		if (resultSet.contains(getKey(rows,cols))) {
+			return false;
+		}
+		return validCheckThreshold(threshold,rows,cols);
+	}
+	boolean validCheckThreshold(int threshold, int rows, int cols) {
+		if (sumMod(rows) + sumMod(cols) > threshold) {
+			return false;
+		}
+		return true;
+	}
+}

@@ -1,0 +1,23 @@
+class Solution {
+	int minTurns(int start, int end, String s, int[][] dp) {
+		if (start > end) {
+			return 0;
+		}
+		if (dp[start][end] != 0) {
+			return dp[start][end];
+		}
+		int res = minTurns(start,end - 1,s,dp) + 1;
+		for (int i = start; i < end; i++) {
+			if (s.charAt(i) == s.charAt(end)) {
+				res = Math.min(res,minTurns(start,i,s,dp) + minTurns(i + 1,end - 1,s,dp));
+			}
+		}
+		dp[start][end] = res;
+		return res;
+	}
+	int strangePrinter(String s) {
+		int n = s.length();
+		int[][] dp = new int[n][n];
+		return minTurns(0,n - 1,s,dp);
+	}
+}

@@ -1,0 +1,35 @@
+class Solution {
+	List<Integer> topStudents(String[] positive_feedback, String[] negative_feedback, String[] report, int[] student_id, int k) {
+		HashMap<String, Integer> map1 = new HashMap<>();
+		HashMap<String, Integer> map2 = new HashMap<>();
+		for (String ele1: positive_feedback) {	
+			map1.put(ele1,map1.getOrDefault(ele1,0) + 1);
+		}
+		for (String ele1: negative_feedback) {	
+			map2.put(ele1,map2.getOrDefault(ele1,0) + 1);
+		}
+		HashMap<Integer, Integer> map3 = new HashMap<>();
+		List<Integer> lst = new ArrayList<>();
+		int i = 0;
+		for (String sentence: report) {	
+			String words = sentence.split(" ");
+			int n = 0;
+			for (String word: words) {	
+				if (map1.containsKey(word)) {
+					n += 3;
+				} 
+				else if (map2.containsKey(word)) {
+					n -= 1;
+				}
+			}
+			map3.put(student_id[i++],n);
+		}
+		PriorityQueue<Integer> pq = new PriorityQueue<>(new Comparator<Integer>());
+		System.out.println(map3);
+		pq.addAll(map3.keySet());
+		while (k-- > 0) {
+			lst.add(pq.remove());
+		}
+		return lst;
+	}
+}

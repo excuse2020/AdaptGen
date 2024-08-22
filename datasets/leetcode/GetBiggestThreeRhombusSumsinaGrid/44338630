@@ -1,0 +1,54 @@
+class Solution {
+	int calculateSum(int row, int col, int[][] grid, int sideLength) {
+		int sum = 0;
+		for (int side = 0; side < sideLength; side++) {
+			sum += grid[row++][col++];
+		}
+		for (int side = 0; side < sideLength; side++) {
+			sum += grid[row++][col--];
+		}
+		for (int side = 0; side < sideLength; side++) {
+			sum += grid[row--][col--];
+		}
+		for (int side = 0; side < sideLength; side++) {
+			sum += grid[row--][col++];
+		}
+		return sum;
+	}
+	int[] getBiggestThree(int[][] grid) {
+		int m = grid.length;
+		int n = grid[0].length;
+		TreeSet<Integer> set = new TreeSet<>(Collections.reverseOrder());
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				if (!set.contains(grid[i][j])) {
+					set.add(grid[i][j]);
+				}
+			}
+		}
+		int minSize = Math.min(m,n);
+		for (int side = 1; side <= minSize / 2; side++) {
+			for (int row = 0; row < m - (side * 2); row++) {
+				for (int col = side; col < n - side; col++) {
+					int sum = calculateSum(row,col,grid,side);
+					if (!set.contains(sum)) {
+						set.add(sum);
+					}
+				}
+			}
+		}
+		return sortedResult(set);
+	}
+	int[] sortedResult(Set<Integer> set) {
+		int size = Math.min(set.size(),3);
+		int[] res = new int[size];
+		int index = 0;
+		for (int item: set) {	
+			if (index == size) {
+				break;
+			}
+			res[index++] = item;
+		}
+		return res;
+	}
+}

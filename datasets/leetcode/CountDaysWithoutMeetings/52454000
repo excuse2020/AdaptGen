@@ -1,0 +1,31 @@
+class Solution {
+	int countDays(int days, int[][] meetings) {
+		Arrays.sort(meetings,new Comparator<int[]>());
+		List<int[]> lst = new ArrayList<>();
+		for (var v: meetings) {	
+			if (lst.isEmpty() || v[0] > lst.get(lst.size() - 1)[1]) {
+				lst.add(new int{v[0], v[1]});
+			} 
+			else {
+				var elem = lst.remove(lst.size() - 1);
+				elem[1] = Math.max(elem[1],v[1]);
+				lst.add(new int{elem[0], elem[1]});
+			}
+		}
+		int ans = 0;
+		int[] first = lst.get(0);
+		int[] last = lst.get(lst.size() - 1);
+		if (first[0] > 1) {
+			ans += first[0] - 1;
+		}
+		if (last[1] < days) {
+			ans += days - last[1];
+		}
+		for (int i = 1; i < lst.size(); i++) {
+			if (lst.get(i)[0] > lst.get(i - 1)[1]) {
+				ans += (lst.get(i)[0] - lst.get(i - 1)[1]) - 1;
+			}
+		}
+		return ans;
+	}
+}

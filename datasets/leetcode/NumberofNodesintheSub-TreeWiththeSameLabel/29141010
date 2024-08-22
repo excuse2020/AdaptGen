@@ -1,0 +1,53 @@
+class Solution {
+	HashMap<Integer, Integer> mp = new HashMap<>();
+	HashMap<Character, Integer> count(int node, Set<Integer> st, HashMap<Integer, ArrayList<Integer>> adj, String labels) {
+		st.add(node);
+		HashMap<Character, Integer> ret = new HashMap<Character, Integer>();
+		for (int child: adj.get(node)) {	
+			if (!st.contains(child)) {
+				HashMap<Character, Integer> temp = count(child,st,adj,labels);
+				for (char m: temp.keySet()) {	
+					if (!ret.containsKey(m)) {
+						ret.put(m,temp.get(m));
+					} 
+					else {
+						ret.put(m,ret.get(m) + temp.get(m));
+					}
+				}
+			}
+		}
+		if (!ret.containsKey(labels.charAt(node))) {
+			ret.put(labels.charAt(node),1);
+		} 
+		else {
+			ret.put(labels.charAt(node),ret.get(labels.charAt(node)) + 1);
+		}
+		mp.put(node,ret.get(labels.charAt(node)));
+		return ret;
+	}
+	int[] countSubTrees(int N, int[][] edges, String labels) {
+		Set<Integer> st = new HashSet<>();
+		HashMap<Character, Integer> mp2 = new HashMap<>();
+		HashMap<Integer, ArrayList<Integer>> adj = new HashMap<>();
+		for (int i = 0; i < edges.length; i++) {
+			int m = edges[i][0];
+			int n = edges[i][1];
+			if (!adj.containsKey(m)) {
+				adj.put(m,new ArrayList<Integer>());
+			}
+			if (!adj.containsKey(n)) {
+				adj.put(n,new ArrayList<Integer>());
+			}
+			adj.get(m).add(n);
+			adj.get(n).add(m);
+		}
+		count(0,st,adj,labels);
+		int[] ans = new int[N];
+		for (int i = 0; i < N; i++) {
+			if (mp.get(i) != null) {
+				ans[i] = mp.get(i);
+			}
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,60 @@
+class Solution {
+	int minSumOfLengths(int[] arr, int target) {
+		int min = Integer.MAX_VALUE;
+		int sum = 0;
+		int s = -1;
+		int e = -1;
+		int j = 0;
+		for (int i = 0; i < arr.length; i++) {
+			sum = sum + arr[i];
+			while (sum > target) {
+				sum -= arr[j++];
+			}
+			if (sum == target) {
+				if (i - j + 1 <= min) {
+					min = i - j + 1;
+					s = j;
+					e = i;
+				}
+			}
+		}
+		int ans = min;
+		if (s == -1 || e == -1) {
+			return -1;
+		}
+		boolean visited = new boolean[arr.length];
+		for (int i = s; i <= e; i++) {
+			visited[i] = true;
+		}
+		min = Integer.MAX_VALUE;
+		sum = 0;
+		j = 0;
+		int i = 0;
+		while (i < arr.length) {
+			while (visited[i]) {
+				i++;
+				j = i;
+				sum = 0;
+				if (i >= arr.length) {
+					break;
+				}
+			}
+			if (i >= arr.length) {
+				break;
+			}
+			sum = sum + arr[i];
+			while (sum > target) {
+				sum -= arr[j++];
+			}
+			if (sum == target) {
+				min = Math.min(min,i - j + 1);
+			}
+			i++;
+		}
+		if (min == Integer.MAX_VALUE) {
+			return -1;
+		}
+		ans += min;
+		return ans;
+	}
+}

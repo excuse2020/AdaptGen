@@ -1,0 +1,67 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		if (node1 == node2) {
+			return node1;
+		}
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < edges.length; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			if (edges[i] != -1) {
+				graph.get(i).add(edges[i]);
+			}
+		}
+		boolean visited = new boolean[edges.length];
+		Queue<int[]> queue = new LinkedList<int[]>();
+		queue.offer(new int{node1, 0});
+		visited[node1] = true;
+		HashMap<Integer, Integer> distanceFromNodeOne = new HashMap<Integer, Integer>();
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				int cur = queue.poll();
+				int currentNode = cur[0];
+				int currentDistance = cur[1];
+				distanceFromNodeOne.put(currentNode,currentDistance);
+				for (int dest: graph.get(currentNode)) {	
+					if (!visited[dest]) {
+						visited[dest] = true;
+						queue.offer(new int{dest, currentDistance + 1});
+					}
+				}
+			}
+		}
+		Arrays.fill(visited,false);
+		queue.offer(new int{node2, 0});
+		visited[node2] = true;
+		int ans = -1, dist = Integer.MAX_VALUE;
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				int cur = queue.poll();
+				int currentNode = cur[0];
+				int currentDistance = cur[1];
+				if (distanceFromNodeOne.get(currentNode) != null) {
+					int distanceBetweenNodes = Math.max(distanceFromNodeOne.get(currentNode),currentDistance);
+					if (distanceBetweenNodes < dist) {
+						ans = currentNode;
+						dist = distanceBetweenNodes;
+					}
+					if (distanceBetweenNodes == dist) {
+						if (currentNode < ans) {
+							ans = currentNode;
+						}
+					}
+				}
+				for (int dest: graph.get(currentNode)) {	
+					if (!visited[dest]) {
+						visited[dest] = true;
+						queue.offer(new int{dest, currentDistance + 1});
+					}
+				}
+			}
+		}
+		return ans;
+	}
+}

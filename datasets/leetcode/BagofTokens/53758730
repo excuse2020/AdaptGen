@@ -1,0 +1,27 @@
+class Solution {
+	int bagOfTokensScore(int[] tokens, int power) {
+		PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+		PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+		for (int token: tokens) {	
+			minHeap.offer(token);
+			maxHeap.offer(token);
+		}
+		int score = 0;
+		int maxScore = 0;
+		while (!minHeap.isEmpty()) {
+			if (power >= minHeap.peek()) {
+				power -= minHeap.poll();
+				score++;
+				maxScore = Math.max(maxScore,score);
+			} 
+			else if (score > 0 && !maxHeap.isEmpty() && minHeap.peek() != maxHeap.peek()) {
+				power += maxHeap.poll();
+				score--;
+			} 
+			else {
+				break;
+			}
+		}
+		return maxScore;
+	}
+}

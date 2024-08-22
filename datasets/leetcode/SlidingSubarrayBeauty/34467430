@@ -1,0 +1,28 @@
+class Solution {
+	int[] getSubarrayBeauty(int[] nums, int k, int x) {
+		int ans = new int[nums.length - k + 1];
+		TreeMap<Integer, Integer> map = new TreeMap<>();
+		for (int i = 0; i < nums.length; i++) {
+			map.put(nums[i],map.getOrDefault(nums[i],0) + 1);
+			if (i >= k - 1) {
+				if (i >= k) {
+					map.put(nums[i - k],map.getOrDefault(nums[i - k],0) - 1);
+				}
+				int sum = 0;
+				int t = 0;
+				for (Map.Entry<Integer, Integer> it: map.entrySet()) {	
+					sum += it.getValue();
+					if (sum >= x) {
+						t = it.getKey();
+						if (t > 0) {
+							t = 0;
+						}
+						break;
+					}
+				}
+				ans[i - k + 1] = t;
+			}
+		}
+		return ans;
+	}
+}

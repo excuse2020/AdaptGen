@@ -1,0 +1,37 @@
+class Solution {
+	long maximumSumOfHeights(List<Integer> maxHeights) {
+		long[] h = new long[maxHeights.size()];
+		Stack<Integer> left = new Stack<>();
+		long sum = 0;
+		for (int i = 0; i < maxHeights.size(); i++) {
+			while (!left.isEmpty() && maxHeights.get(i) < maxHeights.get(left.peek())) {
+				left.pop();
+			}
+			if (left.isEmpty()) {
+				sum = (long) maxHeights.get(i) * (i + 1);
+			} 
+			else {
+				sum = h[left.peek()] + (long) maxHeights.get(i) * (i - left.peek());
+			}
+			h[i] = sum;
+			left.push(i);
+		}
+		Stack<Integer> right = new Stack<>();
+		long maxRes = 0;
+		for (int i = maxHeights.size() - 1; i > -1; i--) {
+			while (!right.isEmpty() && maxHeights.get(i) < maxHeights.get(right.peek())) {
+				right.pop();
+			}
+			if (right.isEmpty()) {
+				sum = (long) maxHeights.get(i) * (maxHeights.size() - i);
+			} 
+			else {
+				sum = h[right.peek()] + (long) maxHeights.get(i) * (right.peek() - i);
+			}
+			maxRes = Math.max(h[i] + sum - maxHeights.get(i),maxRes);
+			h[i] = sum;
+			right.push(i);
+		}
+		return maxRes;
+	}
+}

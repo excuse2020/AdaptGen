@@ -1,0 +1,70 @@
+class Solution {
+	List<Integer> alicePath = new ArrayList<>();
+	HashMap<Integer, Integer> bobPath = new HashMap<>();
+	boolean[] visited;
+	boolean dfs(List<List<Integer>> adjList, int node, int lastNode, HashMap<Integer, Integer> pPath, int time) {
+		if (lastNode == node) {
+			return true;
+		}
+		visited[node] = true;
+		for (int i = 0; i < adjList.get(node).size(); i++) {
+			if (adjList.get(node).get(i) != node && !visited[adjList.get(node).get(i)]) {
+				int nd = adjList.get(node).get(i);
+				boolean lNode = dfs(adjList,nd,lastNode,pPath,time + 1);
+				if (lNode) {
+					pPath.put(nd,time);
+					return true;
+				}
+			}
+		}
+		visited[node] = false;
+		return false;
+	}
+	int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+		List<List<Integer>> adjList = new ArrayList<>();
+		visited = new boolean[amount.length];
+		int[] inDegree = new int[amount.length];
+		for (int i = 0; i < amount.length; i++) {
+			adjList.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			adjList.get(edge[0]).add(edge[1]);
+			adjList.get(edge[1]).add(edge[0]);
+			inDegree[edge[0]]++;
+			inDegree[edge[1]]++;
+		}
+		dfs(adjList,bob,0,bobPath,1);
+		bobPath.put(bob,0);
+		Arrays.fill(visited,false);
+		int maxAmt = Integer.MIN_VALUE;
+		Queue<int[]> nodeList = new LinkedList<>();
+		nodeList.add(new int{0, amount[0]});
+		visited[0] = true;
+		int level = 0;
+		while (!nodeList.isEmpty()) {
+			int size = nodeList.size();
+			level++;
+			for (int i = 0; i < size; i++) {
+				int[] nodeWithAmt = nodeList.remove();
+				for (int curNode: adjList.get(nodeWithAmt[0])) {	
+					if (visited[curNode]) {
+						continue;
+					}
+					int amt = nodeWithAmt[1];
+					if (!bobPath.containsKey(curNode) || level < bobPath.get(curNode)) {
+						amt += amount[curNode];
+					} 
+					else if (level == bobPath.get(curNode)) {
+						amt += amount[curNode] / 2;
+					}
+					if (inDegree[curNode] == 1) {
+						maxAmt = Math.max(maxAmt,amt);
+					}
+					visited[curNode] = true;
+					nodeList.add(new int{curNode, amt});
+				}
+			}
+		}
+		return maxAmt;
+	}
+}

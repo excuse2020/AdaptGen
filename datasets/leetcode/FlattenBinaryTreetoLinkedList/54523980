@@ -1,0 +1,41 @@
+class Solution {
+	TreeNode createBST(List<TreeNode> l, int[] i, TreeNode root) {
+		if (i[0] >= l.size()) {
+			return null;
+		}
+		TreeNode node = l.get(i[0]);
+		i[0] += 1;
+		node.left = null;
+		node.right = createBST(l,i,root);
+		return node;
+	}
+	void flatten(TreeNode root) {
+		if (root == null) {
+			return;
+		}
+		TreeNode curr = root;
+		while (curr != null) {
+			if (curr.left != null) {
+				TreeNode temp = curr.left;
+				while (temp.right != null) {
+					temp = temp.right;
+				}
+				temp.right = curr.right;
+				curr.right = curr.left;
+				curr.left = null;
+			}
+			curr = curr.right;
+		}
+	}
+	void preorder(TreeNode root, TreeNode prev) {
+		if (root == null) {
+			return;
+		}
+		TreeNode store = root.right;
+		prev.left = null;
+		prev.right = root;
+		prev = root;
+		preorder(root.left,prev);
+		preorder(root.right,prev);
+	}
+}

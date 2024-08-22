@@ -1,0 +1,24 @@
+class Solution {
+	int MOD = 1_000_000_007;
+	int[] productQueries(int n, int[][] queries) {
+		List<Integer> powerOf2s = new ArrayList<>();
+		while (n > 0) {
+			int nearestPower = (int) (Math.log(n * 1.0) / Math.log(2.0));
+			powerOf2s.add((1 << nearestPower));
+			n = n - (1 << nearestPower);
+		}
+		Collections.reverse(powerOf2s);
+		System.out.println(powerOf2s);
+		int[] result = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			long res = 1;
+			int start = queries[i][0];
+			int end = queries[i][1];
+			for (int j = start; j <= end; j++) {
+				res = (res % MOD * powerOf2s.get(j)) % MOD;
+			}
+			result[i] = (int) res % MOD;
+		}
+		return result;
+	}
+}

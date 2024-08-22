@@ -1,0 +1,49 @@
+class Solution {
+	Map<Integer, List<Integer>> buildGraph(int[][] bombs) {
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		for (int i = 0; i < bombs.length; i++) {
+			long x1 = bombs[i][0];
+			long y1 = bombs[i][1];
+			long r = bombs[i][2];
+			List<Integer> nbr = new ArrayList<>();
+			for (int j = 0; j < bombs.length; j++) {
+				if (i != j) {
+					long x2 = bombs[j][0];
+					long y2 = bombs[j][1];
+					long dist = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
+					if (dist <= r * r) {
+						nbr.add(j);
+					}
+				}
+			}
+			graph.put(i,nbr);
+		}
+		return graph;
+	}
+	int detonate(int si, Map<Integer, List<Integer>> graph) {
+		ArrayDeque<Integer> q = new ArrayDeque<>();
+		q.add(si);
+		Set<Integer> visited = new HashSet<>();
+		visited.add(si);
+		while (!q.isEmpty()) {
+			int rem = q.remove();
+			List<Integer> nbrs = graph.get(rem);
+			for (int nbr: nbrs) {	
+				if (visited.contains(nbr) == false) {
+					visited.add(nbr);
+					q.add(nbr);
+				}
+			}
+		}
+		return visited.size();
+	}
+	int maximumDetonation(int[][] bombs) {
+		Map<Integer, List<Integer>> graph = buildGraph(bombs);
+		int max = 0;
+		for (int i = 0; i < bombs.length; i++) {
+			int count = detonate(i,graph);
+			max = Math.max(max,count);
+		}
+		return max;
+	}
+}

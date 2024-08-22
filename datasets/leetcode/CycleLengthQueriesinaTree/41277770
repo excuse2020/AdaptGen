@@ -1,0 +1,71 @@
+class Solution {
+	int[] cycleLengthQueries(int n, int[][] queries) {
+		int[] answer = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			int a = queries[i][0];
+			int b = queries[i][1];
+			int level_a = getLevel(a);
+			int level_b = getLevel(b);
+			int edgesb = 0;
+			int edgesa = 0;
+			boolean aisParent = false;
+			boolean bisParent = false;
+			if (level_a < level_b) {
+				while (level_b != level_a) {
+					level_b -= 1;
+					int parent_b = b % 2 == 0 ? b / 2 : (b - 1) / 2;
+					edgesb += 1;
+					b = parent_b;
+					if (parent_b == a) {
+						aisParent = true;
+						break;
+					}
+				}
+				System.out.println("edgesb  " + edgesb);
+			}
+			if (level_b < level_a) {
+				while (level_b != level_a) {
+					level_a = level_a - 1;
+					int parent_a = a % 2 == 0 ? a / 2 : (a - 1) / 2;
+					edgesa += 1;
+					a = parent_a;
+					if (parent_a == b) {
+						bisParent = true;
+						break;
+					}
+				}
+			}
+			if (aisParent) {
+				answer[i] = edgesb + 1;
+				continue;
+			}
+			if (bisParent) {
+				answer[i] = edgesa + 1;
+				continue;
+			}
+			int parent_a = a % 2 == 0 ? a / 2 : (a - 1) / 2;
+			int parent_b = b % 2 == 0 ? b / 2 : (b - 1) / 2;
+			edgesa += 1;
+			edgesb += 1;
+			while (parent_a != parent_b) {
+				edgesa += 1;
+				edgesb += 1;
+				a = parent_a;
+				b = parent_b;
+				parent_a = a % 2 == 0 ? a / 2 : (a - 1) / 2;
+				parent_b = b % 2 == 0 ? b / 2 : (b - 1) / 2;
+			}
+			answer[i] = edgesa + edgesb;
+		}
+		return answer;
+	}
+	int getLevel(int a) {
+		if (a == 1) {
+			return 0;
+		}
+		if (a % 2 == 0) {
+			return 1 + getLevel(a / 2);
+		}
+		return 1 + getLevel((a - 1) / 2);
+	}
+}

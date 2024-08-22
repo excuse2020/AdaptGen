@@ -1,0 +1,38 @@
+class Solution {
+	TreeNode find(TreeNode root) {
+		TreeNode curr = root.left;
+		while (curr.right != null && curr.right != root) {
+			curr = curr.right;
+		}
+		return curr;
+	}
+	int kthSmallest(TreeNode root, int k) {
+		int i = 0;
+		TreeNode curr = root;
+		while (curr != null) {
+			if (curr.left == null) {
+				i++;
+				if (i == k) {
+					return curr.val;
+				}
+				curr = curr.right;
+			} 
+			else {
+				TreeNode pre = find(curr);
+				if (pre.right == null) {
+					pre.right = curr;
+					curr = curr.left;
+				} 
+				else {
+					pre.right = null;
+					i++;
+					if (i == k) {
+						return curr.val;
+					}
+					curr = curr.right;
+				}
+			}
+		}
+		return -1;
+	}
+}

@@ -1,0 +1,25 @@
+class Solution {
+	int latestTimeCatchTheBus(int[] buses, int[] passengers, int capacity) {
+		Arrays.sort(buses);
+		Arrays.sort(passengers);
+		int cap = capacity;
+		int myTime = passengers[0] - 1;
+		int p = 0;
+		Set<Integer> travelled = new HashSet<>();
+		for (int b = 0; b < buses.length; b++) {
+			cap = capacity;
+			while (p < passengers.length && p < p + Math.min(cap,passengers.length - p) && buses[b] >= passengers[p]) {
+				if (buses[b] - passengers[p] >= 0 && !travelled.contains(passengers[p] - 1)) {
+					myTime = passengers[p] - 1;
+				}
+				travelled.add(passengers[p]);
+				p++;
+				cap = cap - 1;
+			}
+			if (cap > 0 && !travelled.contains(buses[b])) {
+				myTime = buses[b];
+			}
+		}
+		return myTime;
+	}
+}

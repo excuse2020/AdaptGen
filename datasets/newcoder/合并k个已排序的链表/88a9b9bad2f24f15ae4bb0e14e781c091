@@ -1,0 +1,34 @@
+class Solution {
+	ListNode merge(ListNode l1, ListNode l2) {
+		ListNode sentinal = new ListNode(-1);
+		ListNode last = sentinal;
+		ListNode n1 = l1, n2 = l2;
+		while (n1 != null || n2 != null) {
+			if (n2 == null || (n1 != null && n1.val < n2.val)) {
+				last.next = n1;
+				n1 = n1.next;
+			} 
+			else {
+				last.next = n2;
+				n2 = n2.next;
+			}
+			last = last.next;
+		}
+		return sentinal.next;
+	}
+	ListNode mergeKLists(ArrayList<ListNode> lists) {
+		if (lists.size() == 0) {
+			return null;
+		}
+		return mergeSort(0,lists.size() - 1,lists);
+	}
+	ListNode mergeSort(int l, int r, ArrayList<ListNode> lists) {
+		if (l == r) {
+			return lists.get(l);
+		}
+		int mid = l + ((r - l) >> 1);
+		ListNode lList = mergeSort(l,mid,lists);
+		ListNode rList = mergeSort(mid + 1,r,lists);
+		return merge(lList,rList);
+	}
+}

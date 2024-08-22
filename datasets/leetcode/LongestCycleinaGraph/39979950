@@ -1,0 +1,46 @@
+class Solution {
+	void dfs(int node, int[] edges, boolean[] visited, Stack<Integer> stack) {
+		visited[node] = true;
+		if (edges[node] != -1) {
+			if (!visited[edges[node]]) {
+				dfs(edges[node],edges,visited,stack);
+			}
+			stack.push(node);
+		}
+	}
+	int dfsRev(int node, Map<Integer, List<Integer>> adjRev, boolean[] visited) {
+		visited[node] = true;
+		int count = 1;
+		if (adjRev.containsKey(node)) {
+			for (int nbr: adjRev.get(node)) {	
+				if (!visited[nbr]) {
+					count += dfsRev(nbr,adjRev,visited);
+				}
+			}
+		}
+		return count;
+	}
+	int longestCycle(int[] edges) {
+		int n = edges.length;
+		boolean[] visited = new boolean[n];
+		Stack<Integer> stack = new Stack<>();
+		for (int i = 0; i < n; i++) {
+			if (!visited[i]) {
+				dfs(i,edges,visited,stack);
+			}
+		}
+		Map<Integer, List<Integer>> adjRev = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			adjRev.computeIfAbsent(edges[i],(k) -> {new ArrayList<>()}).add(i);
+		}
+		Arrays.fill(visited,false);
+		int ans = 0;
+		while (!stack.isEmpty()) {
+			int node = stack.pop();
+			if (!visited[node]) {
+				ans = Math.max(ans,dfsRev(node,adjRev,visited));
+			}
+		}
+		return ans == 1 ? -1 : ans;
+	}
+}

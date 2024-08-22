@@ -1,0 +1,44 @@
+class Solution {
+	long dividePlayers(int[] skill) {
+		Arrays.sort(skill);
+		long res = 0;
+		int n = skill.length;
+		int sum = skill[0] + skill[n - 1];
+		for (int i = 0; i < n / 2; i++) {
+			int a = skill[i], b = skill[n - i - 1];
+			if (a + b != sum) {
+				return -1;
+			}
+			res += a * b;
+		}
+		return res;
+	}
+}
+class Solution {
+	long dividePlayers(int[] skill) {
+		Map<Integer, Integer> map = new HashMap<>();
+		long res = 0;
+		int n = skill.length;
+		int sum = 0;
+		for (int s: skill) {	
+			sum += s;
+		}
+		if (sum % (n / 2) != 0) {
+			return -1;
+		}
+		int teamSum = sum / (n / 2);
+		for (int s: skill) {	
+			if (map.getOrDefault(teamSum - s,0) > 0) {
+				map.put(teamSum - s,map.get(teamSum - s) - 1);
+				if (map.get(teamSum - s) <= 0) {
+					map.remove(teamSum - s);
+				}
+				res += s * (teamSum - s);
+			} 
+			else {
+				map.put(s,map.getOrDefault(s,0) + 1);
+			}
+		}
+		return map.size() > 0 ? -1 : res;
+	}
+}

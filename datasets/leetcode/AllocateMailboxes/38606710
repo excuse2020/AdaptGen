@@ -1,0 +1,37 @@
+class Solution {
+	int cost(int[] houses, int left, int right) {
+		int cost = 0;
+		while (left < right) {
+			cost += houses[right] - houses[left];
+			left++;
+			right--;
+		}
+		return cost;
+	}
+	int min(int[] houses, int idx, int k, Integer[][] memo) {
+		if (k == 0) {
+			return idx == houses.length ? 0 : Integer.MAX_VALUE;
+		}
+		if (idx == houses.length) {
+			return Integer.MAX_VALUE;
+		}
+		if (memo[idx][k] != null) {
+			return memo[idx][k];
+		}
+		int cost = Integer.MAX_VALUE;
+		for (int i = idx; i < houses.length; i++) {
+			int val = min(houses,i + 1,k - 1,memo);
+			if (val == Integer.MAX_VALUE) {
+				continue;
+			}
+			cost = Math.min(cost,cost(houses,idx,i) + val);
+		}
+		memo[idx][k] = cost;
+		return cost;
+	}
+	int minDistance(int[] houses, int k) {
+		Arrays.sort(houses);
+		Integer[][] memo = new Integer[houses.length][k + 1];
+		return min(houses,0,k,memo);
+	}
+}

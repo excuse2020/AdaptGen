@@ -1,0 +1,30 @@
+class Solution {
+	Map<Integer, List<Integer>> adjList;
+	int[] ans;
+	int[] countSubTrees(int n, int[][] edges, String labels) {
+		adjList = new HashMap<>();
+		ans = new int[n];
+		for (int[] edge: edges) {	
+			adjList.computeIfAbsent(edge[0],(value) -> {new ArrayList<Integer>()}).add(edge[1]);
+			adjList.computeIfAbsent(edge[1],(value) -> {new ArrayList<Integer>()}).add(edge[0]);
+		}
+		char[] label = labels.toCharArray();
+		dfs(0,-1,label);
+		return ans;
+	}
+	Map<Character, Integer> dfs(int node, int parent, char[] label) {
+		Map<Character, Integer> count = new HashMap<>();
+		Map<Character, Integer> childCount;
+		for (int child: adjList.get(node)) {	
+			if (child != parent) {
+				childCount = dfs(child,node,label);
+				for (char key: childCount.keySet()) {	
+					count.put(key,count.getOrDefault(key,0) + childCount.get(key));
+				}
+			}
+		}
+		count.put(label[node],count.getOrDefault(label[node],0) + 1);
+		ans[node] += count.get(label[node]);
+		return count;
+	}
+}

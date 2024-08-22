@@ -1,0 +1,39 @@
+class Solution {
+	ArrayList<Interval> merge(ArrayList<Interval> intervals) {
+		if (intervals.size() <= 1) {
+			return intervals;
+		}
+		intervals.sort(new Comparator<Interval>());
+		ArrayList<Interval> list = new ArrayList<>();
+		int k = 0;
+		int max = -1;
+		int min = Integer.MAX_VALUE;
+		for (int i = 0; i < intervals.size() - 1; i++) {
+			if ((intervals.get(i).end >= intervals.get(i + 1).start && intervals.get(i).start <= intervals.get(i + 1).end) || (intervals.get(i + 1).start >= min && intervals.get(i + 1).end <= max)) {
+				k++;
+				min = Math.min(min,intervals.get(i).start);
+				min = Math.min(min,intervals.get(i + 1).start);
+				max = Math.max(max,intervals.get(i).end);
+				max = Math.max(max,intervals.get(i + 1).end);
+				if (i == intervals.size() - 2) {
+					list.add(new Interval(min, max));
+				}
+			} 
+			else {
+				if (k == 0) {
+					list.add(intervals.get(i));
+					if (i == intervals.size() - 2) {
+						list.add(intervals.get(i + 1));
+					}
+				} 
+				else {
+					list.add(new Interval(min, max));
+					k = 0;
+					max = -1;
+					min = Integer.MAX_VALUE;
+				}
+			}
+		}
+		return list;
+	}
+}

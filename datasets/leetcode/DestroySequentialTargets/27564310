@@ -1,0 +1,23 @@
+class Solution {
+	int destroyTargets(int[] nums, int space) {
+		Arrays.sort(nums);
+		Map<Integer, Integer> map = new HashMap<>(), ans = new HashMap<>();
+		for (int i: nums) {	
+			int key = i % space;
+			if (!map.containsKey(key)) {
+				ans.put(key,i);
+			}
+			map.put(key,map.getOrDefault(key,0) + 1);
+		}
+		int ret = -1;
+		for (int i: map.keySet()) {	
+			if (ret == -1) {
+				ret = i;
+			}
+			if (map.get(ret) < map.get(i) || (map.get(ret) == map.get(i) && ans.get(ret) > ans.get(i))) {
+				ret = i;
+			}
+		}
+		return ans.get(ret);
+	}
+}

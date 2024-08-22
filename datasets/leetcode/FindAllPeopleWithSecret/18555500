@@ -1,0 +1,39 @@
+class Solution {
+	List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+		Map<Integer, List<int[]>> timeToMeetings = new TreeMap<>();
+		for (int[] m: meetings) {	
+			timeToMeetings.computeIfAbsent(m[2],(x) -> {new ArrayList<>()});
+			timeToMeetings.get(m[2]).add(new int{m[0], m[1]});
+		}
+		Set<Integer> known = new HashSet<>();
+		known.add(0);
+		known.add(firstPerson);
+		for (int time: timeToMeetings.keySet()) {	
+			List<int[]> ms = timeToMeetings.get(time);
+			Map<Integer, Set<Integer>> graph = new HashMap<>();
+			Queue<Integer> q = new LinkedList<>();
+			for (int[] m: ms) {	
+				graph.computeIfAbsent(m[0],(x) -> {new HashSet<>()});
+				graph.computeIfAbsent(m[1],(x) -> {new HashSet<>()});
+				graph.get(m[0]).add(m[1]);
+				graph.get(m[1]).add(m[0]);
+				if (known.contains(m[1])) {
+					q.add(m[1]);
+				}
+				if (known.contains(m[0])) {
+					q.add(m[0]);
+				}
+			}
+			while (!q.isEmpty()) {
+				int curr = q.poll();
+				for (int k: graph.get(curr)) {	
+					if (!known.contains(k)) {
+						q.add(k);
+						known.add(k);
+					}
+				}
+			}
+		}
+		return new ArrayList<>(known);
+	}
+}

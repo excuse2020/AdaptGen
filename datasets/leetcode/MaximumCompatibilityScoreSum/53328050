@@ -1,0 +1,47 @@
+class Solution {
+	HashMap<String, Integer> map = new HashMap();
+	HashSet<Integer> set = new HashSet();
+	String getKey(int[] visited, int i) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(i);
+		for (int x: visited) {	
+			sb.append("-" + x);
+		}
+		return sb.toString();
+	}
+	int getScore(int[] s, int[] m) {
+		int ans = 0;
+		for (int i = 0; i < s.length; i++) {
+			if (s[i] == m[i]) {
+				ans++;
+			}
+		}
+		return ans;
+	}
+	boolean isFree(int[] visited, int j) {
+		return !Arrays.stream(visited).anyMatch(e -> e == j);
+	}
+	int max(int[][] students, int[][] mentor, int[] match, int i) {
+		int ans = 0;
+		String key = getKey(match,i);
+		if (map.get(key) != null) {
+			return map.get(key);
+		}
+		for (int j = 0; j < students.length; j++) {
+			if (!set.contains(j)) {
+				match[i] = j;
+				set.add(j);
+				ans = Math.max(ans,getScore(mentor[i],students[j]) + max(students,mentor,match,i + 1));
+				set.remove(j);
+				match[i] = -1;
+			}
+		}
+		map.put(key,ans);
+		return ans;
+	}
+	int maxCompatibilitySum(int[][] students, int[][] mentors) {
+		int[] visited = new int[students.length];
+		Arrays.fill(visited,-1);
+		return max(students,mentors,visited,0);
+	}
+}

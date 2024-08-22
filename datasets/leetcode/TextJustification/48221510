@@ -1,0 +1,82 @@
+class Solution {
+	List<String> fullJustify(String[] words, int maxWidth) {
+		List<List<Integer>> list = new ArrayList<>();
+		int st = -1;
+		int end = -1;
+		int curr = 0;
+		int len = 0;
+		for (int i = 0; i < words.length; i++) {
+			if (st == -1) {
+				st = i;
+				end = i;
+				curr += words[i].length();
+				len += words[i].length();
+			} 
+			else {
+				int temp = curr + words[i].length();
+				if (temp > maxWidth) {
+					List<Integer> l = new ArrayList<>();
+					l.add(st);
+					l.add(end);
+					l.add(len);
+					list.add(l);
+					curr = 0;
+					st = -1;
+					end = -1;
+					len = 0;
+					i--;
+				} 
+				else {
+					end = i;
+					curr += words[i].length() + 1;
+					len += words[i].length();
+				}
+			}
+		}
+		if (st != -1) {
+			List<Integer> l = new ArrayList<>();
+			l.add(st);
+			l.add(end);
+			l.add(len);
+			list.add(l);
+		}
+		List<String> ans = new ArrayList<>();
+		for (int j = 0; j < list.size(); j++) {
+			List<Integer> l = list.get(j);
+			int space = l.get(1) - l.get(0);
+			if (j != list.size() - 1 && space > 0) {
+				int spaceBtWord = (maxWidth - l.get(2)) / space;
+				int adjust = (maxWidth - l.get(2)) % space;
+				StringBuilder sb = new StringBuilder();
+				for (int i = l.get(0); i < l.get(1); i++) {
+					sb.append(words[i]);
+					int temp = spaceBtWord;
+					while (temp-- > 0) {
+						sb.append(" ");
+					}
+					if (adjust > 0) {
+						sb.append(" ");
+						adjust--;
+					}
+				}
+				sb.append(words[l.get(1)]);
+				ans.add(sb.toString());
+			} 
+			else {
+				int extra = maxWidth - l.get(2);
+				StringBuilder sb = new StringBuilder();
+				for (int i = l.get(0); i < l.get(1); i++) {
+					sb.append(words[i]);
+					sb.append(" ");
+					extra--;
+				}
+				sb.append(words[l.get(1)]);
+				for (int i = 0; i < extra; i++) {
+					sb.append(" ");
+				}
+				ans.add(sb.toString());
+			}
+		}
+		return ans;
+	}
+}

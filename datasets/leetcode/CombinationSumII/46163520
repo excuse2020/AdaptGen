@@ -1,0 +1,29 @@
+class Solution {
+	List<List<Integer>> combinationSum2(int[] candidates, int target) {
+		Arrays.sort(candidates);
+		List<List<Integer>> lists = new ArrayList<>();
+		List<Integer> combo = new ArrayList<>();
+		int index = 0;
+		combinationSumHelper(candidates,target,index,combo,lists);
+		return lists;
+	}
+	void combinationSumHelper(int[] candidates, int target, int index, List<Integer> combo, List<List<Integer>> lists) {
+		if (target == 0) {
+			List<Integer> newCombo = new ArrayList<>();
+			newCombo.addAll(combo);
+			lists.add(newCombo);
+			return;
+		}
+		if (index >= candidates.length || target < 0) {
+			return;
+		}
+		combo.add(candidates[index]);
+		combinationSumHelper(candidates,target - candidates[index],index + 1,combo,lists);
+		combo.remove(combo.size() - 1);
+		int j = index + 1;
+		while (j < candidates.length && candidates[j] == candidates[j - 1]) {
+			j++;
+		}
+		combinationSumHelper(candidates,target,j,combo,lists);
+	}
+}

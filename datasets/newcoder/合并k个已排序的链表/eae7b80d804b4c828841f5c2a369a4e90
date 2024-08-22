@@ -1,0 +1,65 @@
+class Solution {
+	ListNode Merge(ListNode pHead1, ListNode pHead2) {
+		if (pHead1 == null) {
+			return pHead2;
+		}
+		if (pHead2 == null) {
+			return pHead1;
+		}
+		ListNode loop1, loop2 = null;
+		if (pHead2.val >= pHead1.val) {
+			loop1 = pHead1;
+			loop2 = pHead2;
+		} 
+		else {
+			loop1 = pHead2;
+			loop2 = pHead1;
+		}
+		while (true) {
+			System.out.println("outside loop1:" + loop1.val);
+			while (loop2 != null) {
+				if (loop2.val >= loop1.val && (loop1.next == null || loop2.val <= loop1.next.val)) {
+					ListNode swapTemp1 = loop1.next;
+					ListNode loop2Head = loop2;
+					loop2 = loop2.next;
+					loop1.next = loop2Head;
+					loop2Head.next = swapTemp1;
+					loop1 = loop1.next;
+				} 
+				else {
+					break;
+				}
+			}
+			loop1 = loop1.next;
+			if (loop1 == null) {
+				break;
+			}
+		}
+		if (pHead2.val >= pHead1.val) {
+			return pHead1;
+		} 
+		else {
+			return pHead2;
+		}
+	}
+	ListNode mergeKLists(ArrayList<ListNode> lists) {
+		if (lists == null) {
+			return null;
+		}
+		int size = lists.size();
+		if (size == 0) {
+			return null;
+		}
+		ListNode end = lists.get(size - 1);
+		for (int i = size - 2; i >= 0; i--) {
+			if (lists.get(i) == null) {
+				continue;
+			}
+			System.out.println("i: " + i);
+			end = Merge(lists.get(i),end);
+			System.out.println("i: " + i);
+		}
+		System.out.println("end");
+		return end;
+	}
+}

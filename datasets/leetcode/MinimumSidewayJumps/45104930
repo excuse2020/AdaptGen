@@ -1,0 +1,57 @@
+class Solution {
+	int findJumps(int[] obs, int index, int lane, int[][] dp) {
+		if (index == (obs.length - 1)) {
+			return 0;
+		}
+		if (dp[index][lane] != -1) {
+			return dp[index][lane];
+		}
+		if (obs[index + 1] != lane) {
+			return dp[index][lane] = findJumps(obs,index + 1,lane,dp);
+		} 
+		else {
+			int one = Integer.MAX_VALUE;
+			int two = Integer.MAX_VALUE;
+			int three = Integer.MAX_VALUE;
+			if (lane != 1 && obs[index] != 1) {
+				System.out.println(1);
+				one = findJumps(obs,index,1,dp);
+			}
+			if (lane != 2 && obs[index] != 2) {
+				System.out.println(2);
+				two = findJumps(obs,index,2,dp);
+			}
+			if (lane != 3 && obs[index] != 3) {
+				System.out.println(3);
+				three = findJumps(obs,index,3,dp);
+			}
+			return dp[index][lane] = Math.min(Math.min(one,two),three) + 1;
+		}
+	}
+	int findTab(int[] obs, int n) {
+		int[][] dp = new int[n][4];
+		for (int i = n - 1; i >= 0; i--) {
+			for (int j = 3; j >= 1; j--) {
+				if (obs[i] == j) {
+					dp[i][j] = Integer.MAX_VALUE;
+				} 
+				else if ((i < n - 1) && obs[i + 1] != j) {
+					dp[i][j] = dp[i + 1][j];
+				} 
+				else if (i < n - 1) {
+					int ans = Integer.MAX_VALUE;
+					for (int k = 1; k < 4; k++) {
+						if (j != k && obs[i] != k && obs[i + 1] != k) {
+							ans = Math.min(ans,dp[i + 1][k]);
+						}
+					}
+					dp[i][j] = ans + 1;
+				}
+			}
+		}
+		return dp[0][2];
+	}
+	int minSideJumps(int[] obstacles) {
+		return findTab(obstacles,obstacles.length);
+	}
+}

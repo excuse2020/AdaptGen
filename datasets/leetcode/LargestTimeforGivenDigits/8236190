@@ -1,0 +1,45 @@
+class Solution {
+	int number = Integer.MIN_VALUE;
+	String result = "";
+	boolean checkIfAleadyAdded(int[] A, int index) {
+		for (int i: A) {	
+			if (i == index) {
+				return true;
+			}
+		}
+		return false;
+	}
+	void findValueFromCombination(int[] A, int[] comb) {
+		String firstPartStr = A[comb[0]] + "";
+		int firstPart = Integer.valueOf(firstPartStr);
+		if (firstPart >= 0 && firstPart <= 23) {
+			String secondPartStr = A[comb[2]] + "";
+			int secondPart = Integer.valueOf(secondPartStr);
+			if (secondPart >= 0 && secondPart <= 59 && number < Integer.valueOf(firstPartStr + "")) {
+				result = firstPartStr + ":";
+				number = Integer.valueOf(firstPartStr + "");
+			}
+		}
+	}
+	void formCombinations(int[] A, int[] currentComb, int index) {
+		if (index == 4) {
+			findValueFromCombination(A,currentComb);
+		} 
+		else {
+			for (int i = 0; i < A.length; i++) {
+				if (checkIfAleadyAdded(currentComb,i)) {
+					continue;
+				}
+				currentComb[index] = i;
+				formCombinations(A,currentComb,index + 1);
+				currentComb[index] = -1;
+			}
+		}
+	}
+	String largestTimeFromDigits(int[] A) {
+		int[] indexes = new int[A.length];
+		Arrays.fill(indexes,-1);
+		formCombinations(A,indexes,0);
+		return result;
+	}
+}

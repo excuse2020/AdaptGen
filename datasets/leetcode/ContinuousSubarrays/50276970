@@ -1,0 +1,23 @@
+class Solution {
+	long continuousSubarrays(int[] nums) {
+		int left = 0, right = 0;
+		int n = nums.length;
+		long count = 0;
+		HashMap<Integer, Integer> map = new HashMap<>();
+		TreeSet<Integer> set = new TreeSet<>();
+		while (right < n) {
+			set.add(nums[right]);
+			map.put(nums[right],map.getOrDefault(nums[right],0) + 1);
+			while (left <= right && Math.abs(set.first() - set.last()) > 2) {
+				map.put(nums[left],map.get(nums[left]) - 1);
+				if (map.get(nums[left]) == 0) {
+					set.remove(nums[left]);
+				}
+				left++;
+			}
+			count += (right - left + 1);
+			right++;
+		}
+		return count;
+	}
+}

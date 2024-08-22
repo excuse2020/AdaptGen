@@ -1,0 +1,44 @@
+class Solution {
+	int gcd(int a, int b) {
+		if (b > a) {
+			return gcd(b,a);
+		}
+		if (b == 0) {
+			return a;
+		}
+		return gcd(b,a % b);
+	}
+	boolean hasGroupsSizeX(int[] deck) {
+		Arrays.sort(deck);
+		Set<Integer> partitionSet = new HashSet();
+		int partitionSize = 1, i = 1;
+		while (i < deck.length) {
+			if (deck[i - 1] == deck[i]) {
+				partitionSize++;
+			} 
+			else if (partitionSize == 1) {
+				return false;
+			} 
+			else {
+				partitionSet.add(partitionSize);
+				partitionSize = 1;
+			}
+			i++;
+		}
+		if (partitionSize > 1) {
+			partitionSet.add(partitionSize);
+		} 
+		else {
+			return false;
+		}
+		Integer[] nums = partitionSet.toArray(new Integer[0]);
+		int curGCD = nums[0];
+		for (i = 1; i < nums.length; i++) {
+			curGCD = gcd(nums[i],curGCD);
+			if (curGCD == 1) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

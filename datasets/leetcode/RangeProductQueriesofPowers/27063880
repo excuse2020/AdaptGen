@@ -1,0 +1,35 @@
+class Solution {
+	int[] productQueries(int n, int[][] queries) {
+		long mod = 1000000007;
+		int count = 0;
+		int temp = n;
+		while (temp > 0) {
+			temp /= 2;
+			count++;
+		}
+		ArrayList<Integer> powers = new ArrayList<>();
+		while (n > 0) {
+			int power = (int) Math.pow(2,count);
+			if (power > n) {
+				count--;
+			} 
+			else {
+				n = n - power;
+				powers.add(0,power);
+			}
+		}
+		int[] ans = new int[queries.length];
+		int idx = 0;
+		for (int[] arr: queries) {	
+			long pro = 1;
+			int st = arr[0];
+			int end = arr[1];
+			for (int i = st; i <= end; i++) {
+				pro *= (powers.get(i) % mod);
+				pro = (pro % mod);
+			}
+			ans[idx++] = (int) (pro % mod);
+		}
+		return ans;
+	}
+}

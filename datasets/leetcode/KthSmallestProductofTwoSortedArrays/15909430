@@ -1,0 +1,48 @@
+class Solution {
+	long binary_search(long mid, int i, int[] nums2, boolean positive) {
+		int l = 0;
+		int r = nums2.length - 1;
+		int res = 0;
+		while (l <= r) {
+			int c = l + ((r - l) >> 1);
+			long mul = i * (long) nums2[c];
+			if (mul <= mid) {
+				if (positive) {
+					l = c + 1;
+					res = c + 1;
+				} 
+				else {
+					r = c - 1;
+					res = nums2.length - c;
+				}
+			} 
+			else {
+				if (positive) {
+					r = c - 1;
+				} 
+				else {
+					l = c + 1;
+				}
+			}
+		}
+		return res;
+	}
+	long kthSmallestProduct(int[] nums1, int[] nums2, long k) {
+		long lo = (long) -1e10;
+		long hi = (long) 1e10;
+		while (lo < hi) {
+			long mid = lo + ((hi - lo) >> 1);
+			long cnt = 0;
+			for (int val: nums1) {	
+				cnt += (val >= 0) ? binary_search(mid,val,nums2,true) : binary_search(mid,val,nums2,false);
+			}
+			if (cnt >= k) {
+				hi = mid;
+			} 
+			else {
+				lo = mid + 1;
+			}
+		}
+		return lo;
+	}
+}

@@ -1,0 +1,25 @@
+class Solution {
+	Integer[][] dp;
+	int[][] grid;
+	int helper(int i, int j, int prev) {
+		if (i == grid.length || i < 0 || j == grid[i].length || grid[i][j] <= prev) {
+			return 0;
+		}
+		if (dp[i][j] != null) {
+			return dp[i][j];
+		}
+		int left = 1 + helper(i,j + 1,grid[i][j]);
+		int Ddown = 1 + helper(i + 1,j + 1,grid[i][j]);
+		int Dup = 1 + helper(i - 1,j + 1,grid[i][j]);
+		return dp[i][j] = Math.max(left,Math.max(Ddown,Dup));
+	}
+	int maxMoves(int[][] grid) {
+		this.grid = grid;
+		this.dp = new Integer[grid.length + 1][grid[0].length + 1];
+		int max = 0;
+		for (int i = 0; i < grid.length; i++) {
+			max = Math.max(max,helper(i,0,-1) - 1);
+		}
+		return max;
+	}
+}

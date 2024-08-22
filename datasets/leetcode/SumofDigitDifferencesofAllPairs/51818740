@@ -1,0 +1,38 @@
+class Solution {
+	int countDigits(int num) {
+		int count = 0;
+		while (num > 0) {
+			count++;
+			num /= 10;
+		}
+		return count;
+	}
+	long sumDigitDifferences(int[] nums) {
+		int n = nums.length;
+		int digitsCount = countDigits(nums[0]);
+		int dp = new int[digitsCount][10];
+		for (int i = 0; i < nums.length; i++) {
+			int val = nums[i];
+			int pos = digitsCount - 1;
+			while (val > 0) {
+				int rem = val % 10;
+				dp[pos][rem]++;
+				val /= 10;
+				pos--;
+			}
+		}
+		long ans = 0;
+		for (int i = 0; i < digitsCount; i++) {
+			int suffixSum = new int[10];
+			int sum = 0;
+			for (int j = 9; j >= 0; j--) {
+				sum += dp[i][j];
+				suffixSum[j] = sum;
+			}
+			for (int j = 0; j < 10; j++) {
+				ans += dp[i][j] * (suffixSum[j] - dp[i][j]);
+			}
+		}
+		return ans;
+	}
+}

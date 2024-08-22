@@ -1,0 +1,36 @@
+class olution {
+	int maxProfit(int[] arr) {
+		int sell1 = 0;
+		int sell2 = 0;
+		int buy1 = Integer.MIN_VALUE;
+		int buy2 = Integer.MIN_VALUE;
+		for (int i = 0; i < arr.length; i++) {
+			buy1 = Math.max(buy1,-arr[i]);
+			sell1 = Math.max(sell1,buy1 + arr[i]);
+			buy2 = Math.max(buy2,sell1 - arr[i]);
+			sell2 = Math.max(sell2,buy2 + arr[i]);
+		}
+		return sell2;
+	}
+}
+class Solution {
+	int maxProfit(int[] prices) {
+		int[] left = new int[prices.length];
+		int min = prices[0];
+		for (int i = 1; i < prices.length; i++) {
+			left[i] = Math.max(left[i - 1],prices[i] - min);
+			min = Math.min(min,prices[i]);
+		}
+		int[] right = new int[prices.length];
+		int max = prices[prices.length - 1];
+		for (int i = prices.length - 2; i >= 0; i--) {
+			right[i] = Math.max(right[i + 1],max - prices[i]);
+			max = Math.max(max,prices[i]);
+		}
+		int result = 0;
+		for (int i = 0; i < prices.length - 1; i++) {
+			result = Math.max(result,left[i] + right[i]);
+		}
+		return result;
+	}
+}

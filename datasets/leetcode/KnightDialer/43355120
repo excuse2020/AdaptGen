@@ -1,0 +1,27 @@
+class Solution {
+	int mod = (int) 1e9 + 7;
+	int knightDialer(int n) {
+		int[][] memo = new int[10];
+		for (int i = 0; i < 10; i++) {
+			memo[i] = new int[n + 1];
+			Arrays.fill(memo[i],0);
+			memo[i][1] = 1;
+		}
+		for (int i = 2; i <= n; i++) {
+			memo[0][i] = (memo[4][i - 1] + memo[6][i - 1]) % mod;
+			memo[1][i] = (memo[8][i - 1] + memo[6][i - 1]) % mod;
+			memo[2][i] = (memo[7][i - 1] + memo[9][i - 1]) % mod;
+			memo[3][i] = (memo[4][i - 1] + memo[8][i - 1]) % mod;
+			memo[4][i] = ((memo[0][i - 1] + memo[9][i - 1]) % mod + memo[3][i - 1]) % mod;
+			memo[6][i] = ((memo[0][i - 1] + memo[1][i - 1]) % mod + memo[7][i - 1]) % mod;
+			memo[7][i] = (memo[2][i - 1] + memo[6][i - 1]) % mod;
+			memo[8][i] = (memo[1][i - 1] + memo[3][i - 1]) % mod;
+			memo[9][i] = (memo[2][i - 1] + memo[4][i - 1]) % mod;
+		}
+		int ans = 0;
+		for (int i = 0; i < 10; i++) {
+			ans = (ans + memo[i][n]) % mod;
+		}
+		return ans;
+	}
+}

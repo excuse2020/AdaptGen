@@ -1,0 +1,37 @@
+class Solution {
+	List<String> fullJustify(String[] words, int maxWidth) {
+		List<String> justifiedText = new ArrayList<>();
+		int index = 0;
+		int numOfWords = words.length;
+		while (index < numOfWords) {
+			List<String> currLineWords = new ArrayList<>();
+			currLineWords.add(words[index]);
+			int currLineWidth = words[index].length();
+			index++;
+			while (index < numOfWords && currLineWidth + 1 <= maxWidth) {
+				currLineWidth += 1 + words[index].length();
+				currLineWords.add(words[index++]);
+			}
+			if (index == numOfWords || currLineWords.size() == 1) {
+				String leftText = String.join(" ",currLineWords);
+				String rightPadding = " ".repeat(maxWidth - leftText.length());
+				justifiedText.add(leftText + rightPadding);
+				continue;
+			}
+			int totalSpaces = maxWidth - (currLineWidth - currLineWords.size() + 1);
+			int spaceWidth = totalSpaces / (currLineWords.size() - 1);
+			int extraSpacesCount = totalSpaces % (currLineWords.size() - 1);
+			StringBuilder justifiedLine = new StringBuilder();
+			for (int wordIndex = 0; wordIndex < currLineWords.size() - 1; wordIndex++) {
+				justifiedLine.append(currLineWords.get(wordIndex));
+				justifiedLine.append(" ".repeat(spaceWidth));
+				if (wordIndex < extraSpacesCount) {
+					justifiedLine.append(" ");
+				}
+			}
+			justifiedLine.append(currLineWords.get(currLineWords.size() - 1));
+			justifiedText.add(justifiedLine.toString());
+		}
+		return justifiedText;
+	}
+}

@@ -1,0 +1,35 @@
+class Solution {
+	int maxCount = Integer.MIN_VALUE;
+	boolean checker(StringBuilder str) {
+		HashSet<Character> hs = new HashSet<>();
+		for (int i = 0; i < str.length(); i++) {
+			if (hs.contains(str.charAt(i))) {
+				return false;
+			}
+			hs.add(str.charAt(i));
+		}
+		return true;
+	}
+	void helper(List<String> arr, int index, StringBuilder str) {
+		if (index == arr.size()) {
+			return;
+		}
+		int oriLen = str.length();
+		str.append(arr.get(index));
+		if (checker(str)) {
+			maxCount = Math.max(maxCount,str.length());
+		}
+		helper(arr,index + 1,str);
+		str.delete(oriLen,str.length());
+		if (checker(str)) {
+			maxCount = Math.max(maxCount,str.length());
+		}
+		helper(arr,index + 1,str);
+	}
+	int maxLength(List<String> arr) {
+		for (int i = 0; i < arr.size(); i++) {
+			helper(arr,i,new StringBuilder());
+		}
+		return maxCount;
+	}
+}

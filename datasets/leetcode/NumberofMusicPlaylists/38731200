@@ -1,0 +1,32 @@
+class Solution {
+	int MOD = 1_000_000_000 + 7;
+	long[][] memo;
+	int n, goal, k;
+	int numMusicPlaylists(int n, int goal, int k) {
+		this.n = n;
+		this.goal = goal;
+		this.k = k;
+		memo = new long[goal + 1][n + 1];
+		for (int i = 0; i < goal + 1; i++) {
+			Arrays.fill(memo[i],-1);
+		}
+		return (int) recurse(goal,0);
+	}
+	long recurse(int curGoal, int oldSongs) {
+		if (curGoal == 0 && oldSongs == n) {
+			return 1;
+		}
+		if (curGoal == 0 || oldSongs > n) {
+			return 0;
+		}
+		if (memo[curGoal][oldSongs] != -1) {
+			return memo[curGoal][oldSongs];
+		}
+		long newSong = (n - oldSongs) * recurse(curGoal - 1,oldSongs + 1);
+		long onRepeat = 0;
+		if (oldSongs > k) {
+			onRepeat = (oldSongs - k) * recurse(curGoal - 1,oldSongs);
+		}
+		return memo[curGoal][oldSongs] = ((newSong) % MOD + (onRepeat) % MOD) % MOD;
+	}
+}

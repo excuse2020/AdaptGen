@@ -1,0 +1,35 @@
+class Solution {
+	int getMaximumGold(int[][] grid) {
+		int rows = grid.length;
+		int cols = grid[0].length;
+		boolean[][] maze = new boolean[rows][cols];
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				maze[i][j] = true;
+			}
+		}
+		int maxGold = 0;
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				if (grid[i][j] > 0) {
+					maxGold = Math.max(maxGold,path(grid,maze,i,j));
+				}
+			}
+		}
+		return maxGold;
+	}
+	int path(int[][] grid, boolean[][] maze, int r, int c) {
+		if (r < 0 || r >= grid.length || c < 0 || c >= grid[0].length || !maze[r][c] || grid[r][c] == 0) {
+			return 0;
+		}
+		maze[r][c] = false;
+		int currGold = grid[r][c];
+		int left = path(grid,maze,r,c - 1);
+		int down = path(grid,maze,r + 1,c);
+		int right = path(grid,maze,r,c + 1);
+		int up = path(grid,maze,r - 1,c);
+		int maxGoldFromCurrent = currGold + Math.max(Math.max(left,down),Math.max(right,up));
+		maze[r][c] = true;
+		return maxGoldFromCurrent;
+	}
+}

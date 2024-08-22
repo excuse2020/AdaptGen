@@ -1,0 +1,28 @@
+class Solution {
+	int ans = -1;
+	Map<Integer, int[]> map = new HashMap<>();
+	void dfs(int curr, int dist, int[] edges) {
+		if (edges[curr] == -1) {
+			return;
+		}
+		if (map.containsKey(curr) && map.get(curr)[1] == 1) {
+			ans = Math.max(ans,dist - map.get(curr)[0]);
+			return;
+		}
+		if (map.containsKey(edges[curr]) && map.get(edges[curr])[1] == 0) {
+			return;
+		}
+		map.put(curr,new int{dist, 1});
+		dfs(edges[curr],dist + 1,edges);
+		map.put(curr,new int{dist, 0});
+	}
+	int longestCycle(int[] edges) {
+		int n = edges.length;
+		for (int i = 0; i < n; i++) {
+			if (!map.containsKey(i)) {
+				dfs(i,0,edges);
+			}
+		}
+		return ans <= 1 ? -1 : ans;
+	}
+}

@@ -1,0 +1,27 @@
+class Solution {
+	ArrayList<Integer> path = new ArrayList<>();
+	ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+	void bt(int[] num, boolean[] used, Set<Integer> set) {
+		if (path.size() == num.length) {
+			res.add(new ArrayList<>(path));
+			return;
+		}
+		for (int i = 0; i < used.length; i++) {
+			if (used[i] || set.contains(num[i])) {
+				continue;
+			}
+			set.add(num[i]);
+			path.add(num[i]);
+			used[i] = true;
+			bt(num,used,new HashSet<>());
+			used[i] = false;
+			path.remove(path.size() - 1);
+		}
+	}
+	ArrayList<ArrayList<Integer>> permuteUnique(int[] num) {
+		boolean[] used = new boolean[num.length];
+		Arrays.sort(num);
+		bt(num,used,new HashSet<>());
+		return res;
+	}
+}

@@ -1,0 +1,28 @@
+class Solution {
+	int maxSumSubmatrix(int[][] m, int k) {
+		int[][] pre = new int[m.length + 1][m[0].length + 1];
+		pre[1][1] = m[0][0];
+		for (int i = 1; i < m.length + 1; i++) {
+			for (int j = 1; j < m[0].length + 1; j++) {
+				pre[i][j] = pre[i - 1][j] + pre[i][j - 1] - pre[i - 1][j - 1] + m[i - 1][j - 1];
+			}
+		}
+		int max = Integer.MIN_VALUE;
+		for (int rs = 0; rs < m.length; rs++) {
+			for (int re = rs + 1; re < m.length + 1; re++) {
+				for (int cs = 0; cs < m[0].length; cs++) {
+					for (int ce = cs + 1; ce < m[0].length + 1; ce++) {
+						int cur = pre[re][ce] + pre[rs][cs] - pre[re][cs] - pre[rs][ce];
+						if (cur == k) {
+							return k;
+						}
+						if (cur < k) {
+							max = Math.max(max,cur);
+						}
+					}
+				}
+			}
+		}
+		return max;
+	}
+}

@@ -1,0 +1,54 @@
+class Solution {
+	long minimumCost(int m, int n, int[] hC, int[] vC) {
+		int hcut = 1, vcut = 1;
+		long count = 0;
+		int h = new int[1001];
+		int v = new int[1001];
+		for (int i: vC) {	
+			v[i]++;
+		}
+		for (int i: hC) {	
+			h[i]++;
+		}
+		int ho = 1000, ve = 1000;
+		while (ho >= 0 || ve >= 0) {
+			while (ho >= 0 && h[ho] == 0) {
+				ho--;
+			}
+			while (ve >= 0 && v[ve] == 0) {
+				ve--;
+			}
+			if (ve >= 0 && ho >= 0) {
+				if (ve > ho) {
+					while (v[ve] != 0) {
+						count += (ve * hcut);
+						vcut++;
+						v[ve]--;
+					}
+				} 
+				else if (ve <= ho) {
+					while (h[ho] != 0) {
+						count += (ho * vcut);
+						hcut++;
+						h[ho]--;
+					}
+				}
+			} 
+			else if (ho < 0 && ve >= 0) {
+				while (v[ve] != 0) {
+					count += (ve * hcut);
+					vcut++;
+					v[ve]--;
+				}
+			} 
+			else if (ve < 0 && ho >= 0) {
+				while (h[ho] != 0) {
+					count += (ho * vcut);
+					hcut++;
+					h[ho]--;
+				}
+			}
+		}
+		return count;
+	}
+}

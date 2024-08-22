@@ -1,0 +1,26 @@
+class Solution {
+	int fn(String s1, String s2, int index1, int index2, Map<Pair<Integer, Integer>, Integer> cache) {
+		Pair<Integer, Integer> key = new Pair<>(index1, index2);
+		if (cache.containsKey(key)) {
+			return cache.get(key);
+		} 
+		else if (index2 == s2.length()) {
+			return 1;
+		} 
+		else if (index1 == s1.length()) {
+			return 0;
+		} 
+		else if (s1.charAt(index1) != s2.charAt(index2)) {
+			return fn(s1,s2,index1 + 1,index2,cache);
+		} 
+		else {
+			int take = fn(s1,s2,index1 + 1,index2 + 1,cache);
+			int skip = fn(s1,s2,index1 + 1,index2,cache);
+			cache.put(key,take + skip);
+			return cache.get(key);
+		}
+	}
+	int numDistinct(String s, String t) {
+		return fn(s,t,0,0,new HashMap<>());
+	}
+}

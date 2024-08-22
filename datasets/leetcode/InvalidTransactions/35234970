@@ -1,0 +1,30 @@
+class Solution {
+	List<String> invalidTransactions(String[] transactions) {
+		List<String> sol = new ArrayList();
+		Map<String, List<Integer>> byName = new HashMap();
+		for (int i = 0; i < transactions.length; i++) {
+			String[] details = transactions[i].split(",");
+			byName.putIfAbsent(details[0],new ArrayList());
+			byName.get(details[0]).add(i);
+		}
+		for (int i = 0; i < transactions.length; i++) {
+			String[] details = transactions[i].split(",");
+			if (Integer.parseInt(details[2]) > 1000) {
+				sol.add(transactions[i]);
+			} 
+			else {
+				for (int otherIndex: byName.get(details[0])) {	
+					if (otherIndex == i) {
+						continue;
+					}
+					String[] otherDetails = transactions[otherIndex].split(",");
+					if (!details[3].equals(otherDetails[3]) && 60 >= Math.abs(Integer.parseInt(details[1]) - Integer.parseInt(otherDetails[1]))) {
+						sol.add(transactions[i]);
+						break;
+					}
+				}
+			}
+		}
+		return sol;
+	}
+}

@@ -1,0 +1,31 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		Deque<ListNode> stack1 = new ArrayDeque<ListNode>();
+		Deque<ListNode> stack2 = new ArrayDeque<ListNode>();
+		while (head1 != null) {
+			stack1.push(head1);
+			head1 = head1.next;
+		}
+		while (head2 != null) {
+			stack2.push(head2);
+			head2 = head2.next;
+		}
+		ListNode sentinal = new ListNode(-1);
+		int rem = 0;
+		while (!stack1.isEmpty() || !stack2.isEmpty()) {
+			int a = stack1.isEmpty() ? 0 : stack1.pop().val;
+			int b = stack2.isEmpty() ? 0 : stack2.pop().val;
+			int sum = a + b;
+			rem = sum > 9 ? 1 : 0;
+			ListNode n = new ListNode(sum % 10);
+			n.next = sentinal.next;
+			sentinal.next = n;
+		}
+		if (rem > 0) {
+			ListNode n = new ListNode(rem);
+			n.next = sentinal.next;
+			sentinal.next = n;
+		}
+		return sentinal.next;
+	}
+}

@@ -1,0 +1,18 @@
+class Solution {
+	int[] sortByBits(int[] arr) {
+		PriorityQueue<int[]> minHeap = new PriorityQueue<>((a, b) -> {(a[0] == b[0]) ? arr[a[1]] - arr[b[1]] : a[0] - b[0]});
+		for (int i = 0; i < arr.length; i++) {
+			int num = arr[i], count = 0;
+			while (num != 0) {
+				count += (num & 1) == 1 ? 1 : 0;
+				num = num >> 1;
+			}
+			minHeap.offer(new int{count, i});
+		}
+		int[] ans = new int[arr.length];
+		for (int i = 0; i < ans.length && !minHeap.isEmpty(); i++) {
+			ans[i] = arr[minHeap.poll()[1]];
+		}
+		return ans;
+	}
+}

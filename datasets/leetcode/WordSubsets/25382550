@@ -1,0 +1,43 @@
+class Solution {
+	List<String> wordSubsets(String[] words1, String[] words2) {
+		int arr = new int[26];
+		String str = "abcdefghijklmnopqrstuvwxyz";
+		for (int i = 0; i < words2.length; i++) {
+			String word = words2[i];
+			int temp = new int[26];
+			for (int j = 0; j < word.length(); j++) {
+				int index = str.indexOf(Character.toString(word.charAt(j)));
+				temp[index]++;
+				arr[index] = Math.max(arr[index],temp[index]);
+			}
+		}
+		ArrayList<String> list = new ArrayList<>();
+		for (int i = 0; i < words1.length; i++) {
+			String word = words1[i];
+			HashMap<Character, Integer> map = new HashMap<>();
+			for (int j = 0; j < word.length(); j++) {
+				map.put(word.charAt(j),map.getOrDefault(word.charAt(j),0) + 1);
+			}
+			int flag = 1;
+			for (int k = 0; k < 26; k++) {
+				if (arr[k] != 0) {
+					char cc = str.charAt(k);
+					if (!map.containsKey(cc)) {
+						flag = 0;
+						break;
+					} 
+					else {
+						if (map.get(cc) < arr[k]) {
+							flag = 0;
+							break;
+						}
+					}
+				}
+			}
+			if (flag == 1) {
+				list.add(word);
+			}
+		}
+		return list;
+	}
+}

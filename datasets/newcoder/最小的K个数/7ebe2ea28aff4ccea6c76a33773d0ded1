@@ -1,0 +1,51 @@
+class Solution {
+	ArrayList<Integer> GetLeastNumbers_Solution(int[] input, int k) {
+		if (input == null || k <= 0 || k > input.length) {
+			return new ArrayList<Integer>();
+		}
+		createBigHeap(input,k);
+		for (int i = k; i < input.length; i++) {
+			if (input[0] > input[i]) {
+				swap(input,0,i);
+				ajustDown(input,0,k);
+			}
+		}
+		ArrayList<Integer> ans = new ArrayList<>(k);
+		for (int i = 0; i < k && i < input.length; i++) {
+			ans.add(input[i]);
+		}
+		return ans;
+	}
+	void ajustDown(int[] input, int i, int k) {
+		if (2 * i + 1 >= k) {
+			return;
+		}
+		int left = 2 * i + 1, right = 2 * i + 2;
+		if (input[i] < input[left]) {
+			if (right < k && input[left] < input[right]) {
+				swap(input,i,right);
+				ajustDown(input,right,k);
+			} 
+			else {
+				swap(input,i,left);
+				ajustDown(input,left,k);
+			}
+		} 
+		else if (right < k && input[i] < input[right]) {
+			swap(input,i,right);
+			ajustDown(input,right,k);
+		}
+		return;
+	}
+	void createBigHeap(int[] input, int k) {
+		for (int i = k / 2; i >= 0; i--) {
+			ajustDown(input,i,k);
+		}
+		return;
+	}
+	void swap(int[] input, int i, int j) {
+		int t = input[i];
+		input[i] = input[j];
+		input[j] = t;
+	}
+}

@@ -1,0 +1,50 @@
+class Solution {
+	int bSearch(int num, int low) {
+		int mid = low + (num - low) / 2;
+		int high = num;
+		while (low <= high) {
+			mid = low + (high - low) / 2;
+			int pow = (int) Math.pow(2,mid);
+			if (pow > num && Math.pow(2,mid - 1) < num) {
+				return mid - 1;
+			}
+			if (pow == num) {
+				return mid;
+			} 
+			else if (pow < num) {
+				low = mid + 1;
+			} 
+			else {
+				high = mid - 1;
+			}
+		}
+		return mid;
+	}
+	int[] productQueries(int n, int[][] queries) {
+		int num = n;
+		ArrayList<Long> powers = new ArrayList<>();
+		int mid = 0;
+		while (num > 0) {
+			int temp = bSearch(num,mid);
+			long sqr = (int) Math.pow(2,temp);
+			if (num - sqr < 0) {
+				mid++;
+				continue;
+			}
+			num -= Math.pow(2,temp);
+			powers.add(0,sqr);
+		}
+		long mod = (long) 1e9 + 7;
+		int[] res = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			int start = queries[i][0];
+			int end = queries[i][1];
+			long mul = 1;
+			for (int j = start; j <= end; j++) {
+				mul = mul * powers.get(j) % mod;
+			}
+			res[i] = (int) mul;
+		}
+		return res;
+	}
+}

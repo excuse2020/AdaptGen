@@ -1,0 +1,50 @@
+class Solution {
+	int findParent(int n, int[] leftChild, int[] rightChild) {
+		Set<Integer> set = new HashSet<>();
+		for (int i = 0; i < n; i++) {
+			set.add(leftChild[i]);
+			set.add(rightChild[i]);
+		}
+		for (int i = 0; i < n; i++) {
+			if (!set.contains(i)) {
+				return i;
+			}
+		}
+		return 0;
+	}
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			if (leftChild[i] != -1) {
+				adj.get(i).add(leftChild[i]);
+			}
+			if (rightChild[i] != -1) {
+				adj.get(i).add(rightChild[i]);
+			}
+		}
+		boolean[] vis = new boolean[n];
+		int root = findParent(n,leftChild,rightChild);
+		Queue<Integer> q = new LinkedList<>();
+		q.add(root);
+		vis[root] = true;
+		while (!q.isEmpty()) {
+			int node = q.poll();
+			for (int itr: adj.get(node)) {	
+				if (vis[itr]) {
+					return false;
+				}
+				q.add(itr);
+				vis[itr] = true;
+			}
+		}
+		for (boolean flag: vis) {	
+			if (!flag) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

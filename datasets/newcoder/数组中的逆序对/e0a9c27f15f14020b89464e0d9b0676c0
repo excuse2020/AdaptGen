@@ -1,0 +1,40 @@
+class Solution {
+	int cnt = 0;
+	int InversePairs(int[] array) {
+		if (array.length != 0) {
+			divide(array,0,array.length - 1);
+		}
+		return cnt;
+	}
+	void divide(int[] array, int start, int end) {
+		if (start >= end) {
+			return;
+		}
+		int mid = start + (end - start) / 2;
+		divide(array,start,mid);
+		divide(array,mid + 1,end);
+		merge(array,start,mid,end);
+	}
+	void merge(int[] array, int start, int mid, int end) {
+		int[] tmp = new int[end - start + 1];
+		int i = start, j = mid + 1, k = 0;
+		while (i <= mid && j <= end) {
+			if (array[i] <= array[j]) {
+				tmp[k++] = array[i++];
+			} 
+			else {
+				tmp[k++] = array[j++];
+				cnt = (cnt + mid - i + 1) % 1000000007;
+			}
+		}
+		while (i <= mid) {
+			tmp[k++] = array[i++];
+		}
+		while (j <= end) {
+			tmp[k++] = array[j++];
+		}
+		for (k = 0; k < tmp.length; k++) {
+			array[start + k] = tmp[k];
+		}
+	}
+}

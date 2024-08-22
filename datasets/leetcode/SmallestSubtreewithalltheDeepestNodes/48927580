@@ -1,0 +1,60 @@
+class Solution {
+	List<TreeNode> list;
+	void collectMaxHeightNodes(TreeNode root, int h) {
+		if (root == null) {
+			return;
+		}
+		if (h == 1) {
+			list.add(root);
+			return;
+		}
+		collectMaxHeightNodes(root.left,h - 1);
+		collectMaxHeightNodes(root.right,h - 1);
+	}
+	int height(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		int lh = height(root.left);
+		int rh = height(root.right);
+		return Math.max(lh,rh) + 1;
+	}
+	TreeNode lca(TreeNode root, TreeNode a, TreeNode b) {
+		if (root == null) {
+			return null;
+		}
+		if (root == a || root == b) {
+			return root;
+		}
+		TreeNode leftlca = lca(root.left,a,b);
+		TreeNode rightlca = lca(root.right,a,b);
+		if (leftlca != null && rightlca != null) {
+			return root;
+		} 
+		else if (leftlca != null) {
+			return leftlca;
+		} 
+		else {
+			return rightlca;
+		}
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		list = new LinkedList<TreeNode>();
+		List<TreeNode> debug = list;
+		int h = height(root);
+		collectMaxHeightNodes(root,h);
+		TreeNode temp = null;
+		if (list.size() == 1) {
+			return list.get(0);
+		}
+		for (int i = 1; i < list.size(); i++) {
+			if (temp == null) {
+				temp = lca(root,list.get(i),list.get(i - 1));
+			} 
+			else {
+				temp = lca(root,list.get(i),temp);
+			}
+		}
+		return temp;
+	}
+}

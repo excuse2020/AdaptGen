@@ -1,0 +1,47 @@
+class Solution {
+	int MODULO = (int) (1e9 + 7);
+	boolean debug = false;
+	int beautifulPartitions(String s, int k, int minLength) {
+		if (s.length() < minLength || !isPrime(s.charAt(0)) || isPrime(s.charAt(s.length() - 1))) {
+			return 0;
+		}
+		if (k == 1) {
+			return 1;
+		}
+		int[] kMinusOneWays = new int[s.length()];
+		int[] splitIndices = new int[s.length()];
+		int splitLength = 0;
+		for (int index = 1; index < s.length(); index++) {
+			if (isPrime(s.charAt(index)) && !isPrime(s.charAt(index - 1))) {
+				splitIndices[splitLength++] = index - 1;
+				if (index >= minLength) {
+					kMinusOneWays[index - 1] = 1;
+				}
+			}
+		}
+		splitIndices[splitLength++] = s.length() - 1;
+		kMinusOneWays[kMinusOneWays.length - 1] = 1;
+		for (int numberOfPartitions = 2; numberOfPartitions <= k; numberOfPartitions++) {
+			prefixSum(kMinusOneWays,minLength);
+			int[] kWays = new int[kMinusOneWays.length];
+			for (int endIndex: splitIndices) {	
+				int endOfPreviousSplit = endIndex - minLength;
+				if (endOfPreviousSplit < 0) {
+					continue;
+				}
+				kWays[endIndex] = kMinusOneWays[endOfPreviousSplit];
+			}
+			kMinusOneWays = kWays;
+		}
+		return kMinusOneWays[kMinusOneWays.length - 1];
+	}
+	boolean isPrime(char letter) {
+	}
+	void prefixSum(int[] arr, int minLength) {
+		int sum = 0;
+		for (int index = 0; index < arr.length; index++) {
+			sum = (sum + arr[index]) % MODULO;
+			arr[index] = sum;
+		}
+	}
+}

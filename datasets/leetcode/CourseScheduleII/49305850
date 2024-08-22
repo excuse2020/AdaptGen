@@ -1,0 +1,56 @@
+class Solution {
+	int index = 0;
+	boolean checkCycle(ArrayList<Integer> Graph, int idx, boolean Track, boolean currTrack) {
+		Track[idx] = true;
+		currTrack[idx] = true;
+		for (int i = 0; i < Graph[idx].size(); i++) {
+			int newIdx = Graph[idx].get(i);
+			if (currTrack[newIdx] == true) {
+				return true;
+			}
+			if (!Track[newIdx]) {
+				if (checkCycle(Graph,newIdx,Track,currTrack)) {
+					return true;
+				}
+			}
+		}
+		currTrack[idx] = false;
+		return false;
+	}
+	int[] findOrder(int n, int[][] prerequisites) {
+		ArrayList<Integer> Graph = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			Graph[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < prerequisites.length; i++) {
+			Graph[prerequisites[i][0]].add(prerequisites[i][1]);
+		}
+		boolean Track = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			if (checkCycle(Graph,i,Track,new boolean[n])) {
+				return new int[0];
+			}
+		}
+		int freq = new int[n];
+		for (int i = 0; i < n; i++) {
+			Track[i] = false;
+		}
+		int ans = new int[n];
+		for (int i = 0; i < Graph.length; i++) {
+			if (!Track[i]) {
+				getCourseOrder(Graph,i,Track,ans);
+			}
+		}
+		return ans;
+	}
+	void getCourseOrder(ArrayList<Integer> Graph, int idx, boolean Track, int ans) {
+		Track[idx] = true;
+		for (int i = 0; i < Graph[idx].size(); i++) {
+			int newIdx = Graph[idx].get(i);
+			if (!Track[newIdx]) {
+				getCourseOrder(Graph,newIdx,Track,ans);
+			}
+		}
+		ans[index++] = idx;
+	}
+}

@@ -1,0 +1,36 @@
+class Solution {
+	List<List<Integer>> findPrimePairs(int n) {
+		List<Integer> l = new ArrayList<>();
+		HashSet<Integer> set = new HashSet<>();
+		HashSet<Integer> set2 = new HashSet<>();
+		boolean prime = new boolean[n + 1];
+		Arrays.fill(prime,true);
+		prime[0] = false;
+		prime[1] = false;
+		for (int i = 2; i * i <= n; i++) {
+			if (prime[i]) {
+				for (int j = i * i; j <= n; j += i) {
+					prime[j] = false;
+				}
+			}
+		}
+		for (int i = 2; i <= n; i++) {
+			if (prime[i]) {
+				l.add(i);
+				set.add(i);
+			}
+		}
+		List<List<Integer>> A = new ArrayList<List<Integer>>();
+		for (int i = 0; i < l.size(); i++) {
+			int diff = n - l.get(i);
+			if (set.contains(diff) && !set2.contains(Math.abs(diff - l.get(i)))) {
+				List<Integer> pair = new ArrayList<>();
+				pair.add(l.get(i));
+				pair.add(diff);
+				A.add(pair);
+				set2.add(Math.abs(diff - l.get(i)));
+			}
+		}
+		return A;
+	}
+}

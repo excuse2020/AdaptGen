@@ -1,0 +1,32 @@
+class Solution {
+	int[][][][] dp;
+	int helper(int ml, int m, int nl, int n, int[] h, int[] v) {
+		if (m == ml && n == nl) {
+			return 0;
+		}
+		if (dp[ml][m][nl][n] != -1) {
+			return dp[ml][m][nl][n];
+		}
+		int min = Integer.MAX_VALUE;
+		for (int mini = ml; mini < m; mini++) {
+			min = Math.min(min,h[mini] + helper(ml,mini,nl,n,h,v));
+		}
+		for (int minj = nl; minj < n; minj++) {
+			min = Math.min(min,v[minj] + helper(ml,m,nl,minj,h,v));
+		}
+		return dp[ml][m][nl][n] = min;
+	}
+	int minimumCost(int m, int n, int[] h, int[] v) {
+		dp = new int[m][m][n][n];
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < m; j++) {
+				for (int k = 0; k < n; k++) {
+					Arrays.fill(dp[i][j][k],-1);
+				}
+			}
+		}
+		m--;
+		n--;
+		return helper(0,m,0,n,h,v);
+	}
+}

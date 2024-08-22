@@ -1,0 +1,54 @@
+class Solution {
+	HashMap<Character, Integer[]> log;
+	int max;
+	void logVal(Character ch, int count, int lastIndex, int firstIndex) {
+		Integer[] info = log.get(ch);
+		Integer additionalVals = 0, flag = 1, incompleteValue = 0;
+		if (info != null) {
+			if (info[2] == 2) {
+				max = Math.max((info[3] + 1),max);
+				flag = 3;
+			}
+			if (info[1] == firstIndex - 2) {
+				if (info[2] == 1) {
+					additionalVals = info[0];
+					flag = 2;
+					incompleteValue = info[0] + count;
+				} 
+				else {
+					additionalVals = info[0] + 1;
+					flag = 3;
+				}
+			} 
+			else {
+				max = Math.max(info[0] + 1,max);
+				additionalVals = 1;
+				flag = 3;
+			}
+		}
+		log.put(ch,new Integer{count, lastIndex, flag, incompleteValue});
+		max = Math.max(max,count + additionalVals);
+	}
+	int maxRepOpt1(String text) {
+		int len = text.length();
+		log = new HashMap<Character, Integer[]>();
+		max = 1;
+		int count = 1, i = 0, firstIndex = 0;
+		char x = text.charAt(i), prev;
+		while (i < len - 1) {
+			i += 1;
+			prev = x;
+			x = text.charAt(i);
+			if (x == prev) {
+				count++;
+			} 
+			else {
+				logVal(prev,count,i - 1,firstIndex);
+				firstIndex = i;
+				count = 1;
+			}
+		}
+		logVal(x,count,i,firstIndex);
+		return max;
+	}
+}

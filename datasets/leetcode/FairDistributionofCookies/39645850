@@ -1,0 +1,26 @@
+class Solution {
+	int distributeCookies(int[] cookies, int k) {
+		int[] dp = new int[cookies.length + 1];
+		Arrays.fill(dp,Integer.MAX_VALUE);
+		return distributeCookiesHelper(cookies,0,new int[k],dp);
+	}
+	int distributeCookiesHelper(int[] cookies, int currCookieIndex, int[] distribution, int[] dp) {
+		if (currCookieIndex == cookies.length) {
+			int currMax = 0;
+			for (int c: distribution) {	
+				currMax = Math.max(currMax,c);
+			}
+			return dp[currCookieIndex] = currMax;
+		}
+		if (dp[currCookieIndex] != Integer.MAX_VALUE) {
+			return dp[currCookieIndex];
+		}
+		int minUnfairness = Integer.MAX_VALUE;
+		for (int i = 0; i < distribution.length; i++) {
+			distribution[i] += cookies[currCookieIndex];
+			minUnfairness = Math.min(minUnfairness,distributeCookiesHelper(cookies,currCookieIndex + 1,distribution,dp));
+			distribution[i] -= cookies[currCookieIndex];
+		}
+		return minUnfairness;
+	}
+}

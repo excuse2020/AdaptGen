@@ -1,0 +1,43 @@
+class Solution {
+	int[][] memo;
+	int[] nums;
+	int longestArithSeqLength(int[] nums) {
+		this.nums = nums;
+		this.memo = new int[nums.length][1002];
+		for (int[] arr: memo) {	
+			Arrays.fill(arr,-1);
+		}
+		int answer = 0;
+		for (int i = 0; i < nums.length; i++) {
+			answer = Math.max(answer,1 + memo(i,-501));
+		}
+		return answer;
+	}
+	int memo(int prevIndex, int difference) {
+		if (prevIndex >= nums.length) {
+			return 0;
+		}
+		if (memo[prevIndex][difference + 501] != -1) {
+			return memo[prevIndex][difference + 501];
+		}
+		int answer = 0;
+		if (difference == -501) {
+			for (int i = prevIndex + 1; i < nums.length; i++) {
+				int take = 1 + memo(i,nums[i] - nums[prevIndex]);
+				answer = Math.max(answer,take);
+			}
+		} 
+		else {
+			int prevValue = nums[prevIndex];
+			for (int i = prevIndex + 1; i < nums.length; i++) {
+				if (nums[i] - prevValue == difference) {
+					int take = 1 + memo(i,difference);
+					answer = Math.max(answer,take);
+					break;
+				}
+			}
+		}
+		memo[prevIndex][difference + 501] = answer;
+		return answer;
+	}
+}

@@ -1,0 +1,26 @@
+class Solution {
+	Map<String, Integer> memo = new HashMap<>();
+	int helper(int cur, int canBack, int k, int jump) {
+		if (cur - canBack > k) {
+			return 0;
+		}
+		String key = cur + ",";
+		if (memo.containsKey(key)) {
+			return memo.get(key);
+		}
+		int ans = 0;
+		if (cur == k) {
+			ans++;
+		}
+		if (canBack == 1) {
+			ans += helper(cur - 1,0,k,jump);
+		}
+		ans += helper(cur + (1 << jump),1,k,jump + 1);
+		memo.put(key,ans);
+		return ans;
+	}
+	int waysToReachStair(int k) {
+		memo.clear();
+		return helper(1,1,k,0);
+	}
+}

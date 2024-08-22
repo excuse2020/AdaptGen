@@ -1,0 +1,40 @@
+class Solution {
+	int longestPalindrome(String[] words) {
+		if (words == null || words.length == 0) {
+			return 0;
+		}
+		HashMap<String, Integer> map = new HashMap<>();
+		for (String word: words) {	
+			map.put(word,map.getOrDefault(word,0) + 1);
+		}
+		System.out.println(map);
+		int pairs = 0;
+		boolean canPlaceInMiddle = false;
+		for (String word: words) {	
+			if (!map.containsKey(word)) {
+				continue;
+			}
+			String reversedWord = "" + word.charAt(1);
+			if (word.equals(reversedWord)) {
+				int count = map.get(word);
+				if (count % 2 != 0) {
+					canPlaceInMiddle = true;
+				}
+				pairs += (count / 2);
+			} 
+			else {
+				if (map.get(reversedWord) != null) {
+					int possibleInclusionPairs = Math.min(map.get(word),map.get(reversedWord));
+					pairs += possibleInclusionPairs;
+					map.remove(reversedWord);
+				}
+			}
+			map.remove(word);
+		}
+		int length = 4 * pairs;
+		if (canPlaceInMiddle) {
+			length += 2;
+		}
+		return length;
+	}
+}

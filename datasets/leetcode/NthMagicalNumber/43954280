@@ -1,0 +1,41 @@
+class Solution {
+	long lcm, M;
+	int binarySearch(int multiple, int other, int targetId) {
+		long jL = 1;
+		long jR = targetId;
+		while (jL <= jR) {
+			long jMid = jL + (jR - jL) / 2;
+			long j = jMid * multiple;
+			long numDups = j / lcm;
+			long numIs = j / other;
+			long trueId = jMid + (numIs - numDups);
+			if (trueId < targetId) {
+				jL = jMid + 1;
+			} 
+			else if (trueId > targetId) {
+				jR = jMid - 1;
+			} 
+			else {
+				return (int) (j % M);
+			}
+		}
+		return -1;
+	}
+	int gcd(int a, int b) {
+		if (b == 0) {
+			return a;
+		}
+		return gcd(b,a % b);
+	}
+	long lcm(int a, int b) {
+		return (long) a * b / gcd(a,b);
+	}
+	int nthMagicalNumber(int n, int a, int b) {
+		this.lcm = lcm(a,b);
+		int resA = binarySearch(a,b,n);
+		if (resA == -1) {
+			return binarySearch(b,a,n);
+		}
+		return resA;
+	}
+}

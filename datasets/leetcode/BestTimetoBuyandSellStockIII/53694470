@@ -1,0 +1,36 @@
+class Solution {
+	int maxProfit(int[] prices) {
+		int n = prices.length;
+		int[] profitFromLeft = new int[n];
+		int[] profitFromRight = new int[n];
+		int min = prices[0];
+		int max = prices[0];
+		for (int i = 1; i < n; i++) {
+			var price = prices[i];
+			if (price < min) {
+				min = price;
+			} 
+			else if (price > max) {
+				max = price;
+			}
+			profitFromLeft[i] = Math.max(price - min,profitFromLeft[i - 1]);
+		}
+		min = prices[n - 1];
+		max = prices[n - 1];
+		for (int i = n - 2; i >= 0; i--) {
+			var price = prices[i];
+			if (price > max) {
+				max = price;
+			} 
+			else if (price < min) {
+				min = price;
+			}
+			profitFromRight[i] = Math.max(max - price,profitFromRight[i + 1]);
+		}
+		int maxProfit = 0;
+		for (int i = 0; i < n; i++) {
+			maxProfit = Math.max(maxProfit,profitFromLeft[i] + profitFromRight[i]);
+		}
+		return maxProfit;
+	}
+}

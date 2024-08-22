@@ -1,0 +1,40 @@
+class Solution {
+	long countPairs(int n, int[][] edges) {
+		long ans = 0;
+		int[] parent = new int[n];
+		for (int i = 0; i < n; i++) {
+			parent[i] = i;
+		}
+		for (int[] e: edges) {	
+			union(e[0],e[1],parent);
+		}
+		HashMap<Integer, Long> map = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			int f = find(i,parent);
+			map.putIfAbsent(f,(long) 0);
+			map.put(f,map.get(f) + 1);
+		}
+		System.out.println(map);
+		for (int i = 0; i < n; i++) {
+			int f = find(i,parent);
+			ans += n - map.get(f);
+		}
+		return ans / 2;
+	}
+	int find(int x, int[] parent) {
+		if (parent[x] == x) {
+			return x;
+		}
+		int y = find(parent[x],parent);
+		parent[x] = y;
+		return y;
+	}
+	void union(int x, int y, int[] parent) {
+		int a = find(x,parent);
+		int b = find(y,parent);
+		if (a == b) {
+			return;
+		}
+		parent[b] = a;
+	}
+}

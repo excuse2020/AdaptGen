@@ -1,0 +1,88 @@
+class Solution {
+	int binarySearchUpper(List<int[]> list, int target) {
+		int start = 0;
+		int end = list.size();
+		int mid;
+		while (start < end) {
+			mid = (start + end) / 2;
+			if (list.get(mid)[0] >= target) {
+				end = mid;
+			} 
+			else {
+				start = mid + 1;
+			}
+		}
+		return end;
+	}
+	int[] closestRoom(int[][] rooms, int[][] queries) {
+		int queriesWithIdx = new int[queries.length][3];
+		for (int i = 0; i < queries.length; i++) {
+			queriesWithIdx[i][0] = queries[i][0];
+			queriesWithIdx[i][1] = queries[i][1];
+			queriesWithIdx[i][2] = i;
+		}
+		Arrays.sort(queriesWithIdx,new Comparator<int[]>());
+		Arrays.sort(rooms,new Comparator<int[]>());
+		int result = new int[queries.length];
+		List<int[]> roomList = new ArrayList<int[]>();
+		int roomIdx = 0;
+		for (int i = 0; i < queriesWithIdx.length; i++) {
+			int preferred = queriesWithIdx[i][0];
+			int minSize = queriesWithIdx[i][1];
+			while (roomIdx < rooms.length && rooms[roomIdx][1] >= minSize) {
+				int idx = binarySearchUpper(roomList,rooms[roomIdx][0]);
+				roomList.add(idx,new int{rooms[roomIdx][0], rooms[roomIdx][1]});
+				roomIdx++;
+			}
+			if (roomList.size() == 0) {
+				result[queriesWithIdx[i][2]] = -1;
+				continue;
+			}
+			int idx = binarySearchUpper(roomList,preferred);
+			if (idx == roomList.size()) {
+				idx--;
+			}
+			if (roomList.get(idx)[0] == preferred) {
+				if (roomList.get(idx)[1] >= minSize) {
+					result[queriesWithIdx[i][2]] = preferred;
+					continue;
+				}
+			}
+			int left = idx - 1;
+			int right = idx + 1;
+			int leftDist = Integer.MAX_VALUE;
+			int leftRoomId = -1;
+			int rightDist = Integer.MAX_VALUE;
+			int rightRoomId = -1;
+			if (left >= 0) {
+				if (roomList.get(left)[1] >= minSize) {
+					leftRoomId = roomList.get(left)[0];
+					leftDist = preferred - leftRoomId;
+				}
+			}
+			if (right < roomList.size()) {
+				if (roomList.get(right)[1] >= minSize) {
+					rightRoomId = roomList.get(right)[0];
+					rightDist = rightRoomId - preferred;
+				}
+			}
+			if (leftDist <= rightDist) {
+				if (leftDist > Math.abs(roomList.get(idx)[0] - preferred) && roomList.get(idx)[1] >= minSize) {
+					result[queriesWithIdx[i][2]] = roomList.get(idx)[0];
+				} 
+				else {
+					result[queriesWithIdx[i][2]] = leftRoomId;
+				}
+			} 
+			else {
+				if (rightDist >= Math.abs(roomList.get(idx)[0] - preferred) && roomList.get(idx)[1] >= minSize) {
+					result[queriesWithIdx[i][2]] = roomList.get(idx)[0];
+				} 
+				else {
+					result[queriesWithIdx[i][2]] = rightRoomId;
+				}
+			}
+		}
+		return result;
+	}
+}

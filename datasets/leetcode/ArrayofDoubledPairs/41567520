@@ -1,0 +1,33 @@
+class Solution {
+	boolean canReorderDoubled(int[] arr) {
+		HashMap<Integer, Integer> hmap = new HashMap<>();
+		for (int i = 0; i < arr.length; i++) {
+			hmap.put(arr[i],hmap.getOrDefault(arr[i],0) + 1);
+		}
+		Arrays.sort(arr);
+		for (int i = 0; i < arr.length; i++) {
+			if (hmap.containsKey(arr[i]) && hmap.containsKey(arr[i] * 2)) {
+				int freq = hmap.getOrDefault(arr[i],-1);
+				if (freq == 1) {
+					hmap.remove(arr[i]);
+				} 
+				else {
+					hmap.put(arr[i],freq - 1);
+				}
+				freq = hmap.getOrDefault(arr[i] * 2,-1);
+				if (freq == 1) {
+					hmap.remove(arr[i] * 2);
+				} 
+				else {
+					hmap.put(arr[i] * 2,freq - 1);
+				}
+			}
+		}
+		if (hmap.size() == 0) {
+			return true;
+		} 
+		else {
+			return false;
+		}
+	}
+}

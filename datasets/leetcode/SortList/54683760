@@ -1,0 +1,48 @@
+class Solution {
+	ListNode getMid(ListNode node) {
+		ListNode fast = node;
+		ListNode slow = node;
+		ListNode prev = node;
+		while (fast != null && fast.next != null) {
+			prev = slow;
+			fast = fast.next.next;
+			slow = slow.next;
+		}
+		if (prev.next != null) {
+			prev.next = null;
+		}
+		return slow;
+	}
+	ListNode mergeTwoLL(ListNode Lone, ListNode Ltwo) {
+		ListNode ans = new ListNode();
+		ListNode temp = ans;
+		while (Lone != null && Ltwo != null) {
+			if (Lone.val < Ltwo.val) {
+				temp.next = Lone;
+				Lone = Lone.next;
+				temp = temp.next;
+			} 
+			else {
+				temp.next = Ltwo;
+				Ltwo = Ltwo.next;
+				temp = temp.next;
+			}
+		}
+		if (Lone != null) {
+			temp.next = Lone;
+		} 
+		else {
+			temp.next = Ltwo;
+		}
+		return ans.next;
+	}
+	ListNode sortList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode mid = getMid(head);
+		ListNode left = sortList(head);
+		ListNode right = sortList(mid);
+		return mergeTwoLL(left,right);
+	}
+}

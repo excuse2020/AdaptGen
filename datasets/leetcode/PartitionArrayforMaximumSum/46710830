@@ -1,0 +1,25 @@
+class Solution {
+	Integer[] dp;
+	int helper(int currIndex, int k, int[] arr) {
+		if (currIndex == arr.length) {
+			return 0;
+		}
+		if (dp[currIndex] != null) {
+			return dp[currIndex];
+		}
+		int currMax = 0;
+		int numOfIterations = 1;
+		int maxSubArraySum = Integer.MIN_VALUE;
+		for (int i = currIndex; i < Math.min(currIndex + k,arr.length); i++) {
+			currMax = Math.max(currMax,arr[i]);
+			int max = (currMax * numOfIterations++) + helper(i + 1,k,arr);
+			maxSubArraySum = Math.max(maxSubArraySum,max);
+		}
+		dp[currIndex] = maxSubArraySum;
+		return maxSubArraySum;
+	}
+	int maxSumAfterPartitioning(int[] arr, int k) {
+		dp = new Integer[arr.length];
+		return helper(0,k,arr);
+	}
+}

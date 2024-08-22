@@ -1,0 +1,38 @@
+class Solution {
+	long countPairs(int n, int[][] edges) {
+		if (n == 0) {
+			return 0L;
+		}
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int[] edge: edges) {	
+			List<Integer> connectionsUp = map.getOrDefault(edge[0],new ArrayList<Integer>());
+			List<Integer> connectionsDown = map.getOrDefault(edge[1],new ArrayList<Integer>());
+			connectionsUp.add(edge[1]);
+			connectionsDown.add(edge[0]);
+			map.put(edge[0],connectionsUp);
+			map.put(edge[1],connectionsDown);
+		}
+		int[] visit = new int[n];
+		long totalPairs = (long) n * (n - 1) / 2;
+		for (int i = 0; i < n; i++) {
+			if (visit[i] != 1) {
+				long pairs = dfs(i,map,visit) - 1;
+				totalPairs -= pairs;
+				totalPairs -= (long) pairs * (pairs - 1) / 2;
+			}
+		}
+		return totalPairs;
+	}
+	long dfs(int i, Map<Integer, List<Integer>> map, int[] visit) {
+		long count = 1L;
+		visit[i] = 1;
+		if (map.containsKey(i)) {
+			for (Integer next: map.get(i)) {	
+				if (visit[next] == 0) {
+					count += dfs(next,map,visit);
+				}
+			}
+		}
+		return count;
+	}
+}

@@ -1,0 +1,31 @@
+class Solution {
+	LinkedList<LinkedList<Integer>> res = new LinkedList<>();
+	LinkedList<Integer> select = new LinkedList<>();
+	int sum = 0;
+	void backTrack(int k, int n, int pre) {
+		if (sum > n) {
+			return;
+		}
+		if (sum == n && k == 0) {
+			res.add(new LinkedList<>(select));
+			return;
+		}
+		for (int i = pre; i <= 9; i++) {
+			select.add(i);
+			sum += i;
+			k--;
+			backTrack(k,n,i + 1);
+			select.removeLast();
+			sum -= i;
+			k++;
+		}
+	}
+	int[][] combination(int k, int n) {
+		backTrack(k,n,1);
+		int[][] arr = new int[res.size()];
+		for (int i = 0; i < res.size(); i++) {
+			arr[i] = res.get(i).stream().mapToInt().toArray();
+		}
+		return arr;
+	}
+}

@@ -1,0 +1,27 @@
+class Solution {
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		int n = inorder.length;
+		ArrayList<Integer> list = new ArrayList<>();
+		list.add(n - 1);
+		return find(inorder,postorder,0,n - 1,list);
+	}
+	TreeNode find(int[] in, int[] post, int left, int right, ArrayList<Integer> list) {
+		if (left > right || list.get(0) == -1) {
+			return null;
+		}
+		int t = list.get(0);
+		int mid = 0;
+		for (int i = left; i <= right; i++) {
+			if (post[list.get(0)] == in[i]) {
+				mid = i;
+				break;
+			}
+		}
+		list.remove(0);
+		list.add(t - 1);
+		TreeNode root = new TreeNode(in[mid]);
+		root.right = find(in,post,mid + 1,right,list);
+		root.left = find(in,post,left,mid - 1,list);
+		return root;
+	}
+}

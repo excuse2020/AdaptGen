@@ -1,0 +1,49 @@
+class Solution {
+	int k;
+	int[][] buildMatrix(int k, int[][] rowConditions, int[][] colConditions) {
+		this.k = k;
+		List<Integer> rowOrder = topoSort(rowConditions);
+		List<Integer> colOrder = topoSort(colConditions);
+		if (rowOrder == null || colOrder == null) {
+			return new int[0][0];
+		}
+		int[][] matrix = new int[k][k];
+		int[] colPos = new int[k + 1];
+		int[] rowPos = new int[k + 1];
+		for (int i = 0; i < k; ++i) {
+			colPos[colOrder.get(i)] = i;
+			rowPos[rowOrder.get(i)] = i;
+		}
+		for (int iter = 0; iter < k; iter++) {
+			matrix[rowPos[iter + 1]][colPos[iter + 1]] = iter + 1;
+		}
+		return matrix;
+	}
+	List<Integer> topoSort(int[][] conditions) {
+		List<Integer>[] graph = new ArrayList[k + 1];
+		Arrays.setAll(graph,(key) -> {new ArrayList<>()});
+		int[] inDegree = new int[k + 1];
+		for (int[] condition: conditions) {	
+			int a = condition[0], b = condition[1];
+			graph[a].add(b);
+			++inDegree[b];
+		}
+		Deque<Integer> queue = new ArrayDeque<>();
+		for (int i = 1; i <= k; ++i) {
+			if (inDegree[i] == 0) {
+				queue.offer(i);
+			}
+		}
+		List<Integer> order = new ArrayList<>();
+		while (!queue.isEmpty()) {
+			int current = queue.poll();
+			order.add(current);
+			for (int next: graph[current]) {	
+				if (--inDegree[next] == 0) {
+					queue.offer(next);
+				}
+			}
+		}
+		return order.size() == k ? order : null;
+	}
+}

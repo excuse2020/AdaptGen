@@ -1,0 +1,73 @@
+class Solution {
+	long max(int arr) {
+		int nextSmaller = new int[arr.length];
+		int prevSmaller = new int[arr.length];
+		Stack<Integer> st = new Stack<>();
+		Arrays.fill(prevSmaller,-1);
+		Arrays.fill(nextSmaller,arr.length);
+		for (int i = arr.length - 1; i >= 0; i--) {
+			while (!st.isEmpty() && arr[st.peek()] <= arr[i]) {
+				st.pop();
+			}
+			if (!st.isEmpty()) {
+				nextSmaller[i] = st.peek();
+			}
+			st.push(i);
+		}
+		st.clear();
+		for (int i = 0; i < arr.length; i++) {
+			while (!st.isEmpty() && arr[st.peek()] < arr[i]) {
+				st.pop();
+			}
+			if (!st.isEmpty()) {
+				prevSmaller[i] = st.peek();
+			}
+			st.push(i);
+		}
+		long sum = 0;
+		for (int i = 0; i < arr.length; i++) {
+			int leftDiff = i - prevSmaller[i];
+			int rightDiff = nextSmaller[i] - i;
+			System.out.println(arr[i] * leftDiff);
+			sum = (sum + (long) arr[i] * leftDiff);
+		}
+		return sum;
+	}
+	long min(int arr) {
+		int nextSmaller = new int[arr.length];
+		int prevSmaller = new int[arr.length];
+		Stack<Integer> st = new Stack<>();
+		Arrays.fill(prevSmaller,-1);
+		Arrays.fill(nextSmaller,arr.length);
+		for (int i = arr.length - 1; i >= 0; i--) {
+			while (!st.isEmpty() && arr[st.peek()] >= arr[i]) {
+				st.pop();
+			}
+			if (!st.isEmpty()) {
+				nextSmaller[i] = st.peek();
+			}
+			st.push(i);
+		}
+		st.clear();
+		for (int i = 0; i < arr.length; i++) {
+			while (!st.isEmpty() && arr[st.peek()] > arr[i]) {
+				st.pop();
+			}
+			if (!st.isEmpty()) {
+				prevSmaller[i] = st.peek();
+			}
+			st.push(i);
+		}
+		long sum = 0;
+		for (int i = 0; i < arr.length; i++) {
+			int leftDiff = i - prevSmaller[i];
+			int rightDiff = nextSmaller[i] - i;
+			System.out.println(arr[i] * leftDiff);
+			sum = (sum + (long) arr[i] * leftDiff);
+		}
+		return sum;
+	}
+	long subArrayRanges(int[] nums) {
+		return Math.abs(max(nums) - min(nums));
+	}
+}

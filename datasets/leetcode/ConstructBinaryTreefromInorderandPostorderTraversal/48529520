@@ -1,0 +1,23 @@
+class Solution {
+	int rootIndex;
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		rootIndex = postorder.length - 1;
+		return buildTree(inorder,postorder,0,inorder.length);
+	}
+	TreeNode buildTree(int[] inorder, int[] postorder, int start, int end) {
+		var root = postorder[rootIndex--];
+		var node = new TreeNode(root);
+		for (int i = start; i < end; i++) {
+			if (inorder[i] == root) {
+				if (i + 1 < end) {
+					node.right = buildTree(inorder,postorder,i + 1,end);
+				}
+				if (i > start) {
+					node.left = buildTree(inorder,postorder,start,i);
+				}
+				break;
+			}
+		}
+		return node;
+	}
+}

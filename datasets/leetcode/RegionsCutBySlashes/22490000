@@ -1,0 +1,50 @@
+class Solution {
+	int regions = 0;
+	int find(int x, int[] par) {
+		if (x == par[x]) {
+			return x;
+		}
+		int ans = find(par[x],par);
+		par[x] = ans;
+		return ans;
+	}
+	int regionsBySlashes(String[] grid) {
+		int n = grid.length + 1;
+		int[] rank = new int[n * n];
+		int[] par = new int[n * n];
+		for (int i = 0; i < n * n; i++) {
+			par[i] = i;
+			rank[i] = 1;
+		}
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (i == 0 || j == 0 || i == n - 1 || j == n - 1) {
+					int v = i * n + j;
+					union(0,v,par,rank);
+				}
+			}
+		}
+		int i = 0;
+		char[] ch = grid[i].toCharArray();
+		int j = 0;
+	}
+	void union(int x, int y, int[] par, int[] rank) {
+		int leader_x = find(x,par);
+		int leader_y = find(y,par);
+		if (leader_x != leader_y) {
+			if (rank[leader_x] > rank[leader_y]) {
+				par[leader_y] = leader_x;
+			} 
+			else if (rank[leader_x] < rank[leader_y]) {
+				par[leader_x] = leader_y;
+			} 
+			else {
+				par[leader_y] = leader_x;
+				rank[leader_x]++;
+			}
+		} 
+		else {
+			regions++;
+		}
+	}
+}

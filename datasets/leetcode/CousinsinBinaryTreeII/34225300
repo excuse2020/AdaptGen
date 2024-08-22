@@ -1,0 +1,35 @@
+class Solution {
+	Map<Integer, Integer> lvlSum;
+	TreeNode modify(TreeNode root, int level) {
+		if (root == null || (root.left == null && root.right == null)) {
+			return root;
+		}
+		if (root.left == null) {
+			root.right.val = lvlSum.get(level + 1) - root.right.val;
+		} 
+		else if (root.right == null) {
+			root.left.val = lvlSum.get(level + 1) - root.left.val;
+		} 
+		else {
+			int temp = lvlSum.get(level + 1) - root.right.val;
+			root.right.val = root.left.val = temp;
+		}
+		modify(root.left,level + 1);
+		modify(root.right,level + 1);
+		return root;
+	}
+	void parse(TreeNode root, int level) {
+		if (root == null) {
+			return;
+		}
+		lvlSum.put(level,lvlSum.getOrDefault(level,0) + root.val);
+		parse(root.left,level + 1);
+		parse(root.right,level + 1);
+	}
+	TreeNode replaceValueInTree(TreeNode root) {
+		lvlSum = new HashMap<>();
+		parse(root,0);
+		root.val = 0;
+		return modify(root,0);
+	}
+}

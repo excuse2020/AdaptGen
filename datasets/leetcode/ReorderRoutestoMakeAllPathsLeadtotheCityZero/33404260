@@ -1,0 +1,30 @@
+class Solution {
+	int ans = 0;
+	void dfs(int i, ArrayList<ArrayList<Integer>> directed, ArrayList<ArrayList<Integer>> unDirected, int[] visit) {
+		visit[i] = 1;
+		for (int j = 0; j < unDirected.get(i).size(); j++) {
+			if (visit[unDirected.get(i).get(j)] != 1) {
+				dfs(unDirected.get(i).get(j),directed,unDirected,visit);
+				if (directed.get(i).contains(unDirected.get(i).get(j))) {
+					ans++;
+				}
+			}
+		}
+	}
+	int minReorder(int n, int[][] c) {
+		ArrayList<ArrayList<Integer>> unDirected = new ArrayList<>();
+		ArrayList<ArrayList<Integer>> directed = new ArrayList<>();
+		int[] visit = new int[n];
+		for (int i = 0; i < n; i++) {
+			unDirected.add(new ArrayList<>());
+			directed.add(new ArrayList<>());
+		}
+		for (int i = 0; i < c.length; i++) {
+			directed.get(c[i][0]).add(c[i][1]);
+			unDirected.get(c[i][0]).add(c[i][1]);
+			unDirected.get(c[i][1]).add(c[i][0]);
+		}
+		dfs(0,directed,unDirected,visit);
+		return ans;
+	}
+}

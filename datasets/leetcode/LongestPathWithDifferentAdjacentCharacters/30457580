@@ -1,0 +1,44 @@
+class Solution {
+	int ans;
+	int DFS(ArrayList<ArrayList<Integer>> adj, int curr, int parent, String s) {
+		int longest = 0;
+		int second_longest = 0;
+		for (int child: adj.get(curr)) {	
+			if (child == parent) {
+				continue;
+			}
+			int child_longest_length = DFS(adj,child,curr,s);
+			if (s.charAt(child) == s.charAt(curr)) {
+				continue;
+			}
+			if (child_longest_length > second_longest) {
+				second_longest = child_longest_length;
+			}
+			if (second_longest > longest) {
+				int a = second_longest;
+				second_longest = longest;
+				longest = a;
+			}
+		}
+		int no_adj_node = 1;
+		int one_adj_node = (Math.max(longest,second_longest) + 1);
+		int more_than_one_adj_node = 1 + longest;
+		ans = Math.max(Math.max(ans,no_adj_node),Math.max(more_than_one_adj_node,one_adj_node));
+		return Math.max(one_adj_node,no_adj_node);
+	}
+	int longestPath(int[] parent, String s) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < parent.length; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 1; i < parent.length; i++) {
+			int v = i;
+			int u = parent[i];
+			adj.get(u).add(v);
+			adj.get(v).add(u);
+		}
+		ans = 0;
+		DFS(adj,0,-1,s);
+		return ans;
+	}
+}

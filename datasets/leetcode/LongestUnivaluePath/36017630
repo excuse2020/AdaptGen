@@ -1,0 +1,30 @@
+class Solution {
+	int max = 0;
+	TreeNode pre = null;
+	int longestUnivaluePath(TreeNode root) {
+		postorder(root);
+		return max;
+	}
+	int postorder(TreeNode root) {
+		if (root == null) {
+			pre = null;
+			return 0;
+		}
+		if (root.left == null && root.right == null) {
+			pre = root;
+			return 1;
+		}
+		int left = postorder(root.left);
+		if (pre != null && pre.val != root.val) {
+			left = 0;
+		}
+		pre = null;
+		int right = postorder(root.right);
+		if (pre != null && pre.val != root.val) {
+			right = 0;
+		}
+		max = Math.max(max,left + right);
+		pre = root;
+		return 1 + Math.max(left,right);
+	}
+}

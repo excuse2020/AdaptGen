@@ -1,0 +1,28 @@
+class Solution {
+	int mod = 1000000007;
+	int checkRecord(int n) {
+		int dp = new int[n + 1][2][3];
+		for (int a: dp) {	
+			for (int b: a) {	
+				Arrays.fill(b,-1);
+			}
+		}
+		return solve(n,dp,0,0);
+	}
+	int solve(int n, int dp, int ab, int late) {
+		if (ab >= 2 || late >= 3) {
+			return 0;
+		}
+		if (n == 0) {
+			return 1;
+		}
+		if (dp[n][ab][late] != -1) {
+			return dp[n][ab][late];
+		}
+		int count = 0;
+		count = solve(n - 1,dp,ab,0) % mod;
+		count = (count + solve(n - 1,dp,ab + 1,0)) % mod;
+		count = (count + solve(n - 1,dp,ab,late + 1)) % mod;
+		return dp[n][ab][late] = count % mod;
+	}
+}

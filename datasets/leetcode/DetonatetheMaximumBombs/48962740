@@ -1,0 +1,23 @@
+class Solution {
+	boolean explodes(int[] a, int[] b) {
+		return (long) a[2] * a[2] >= (long) (a[0] - b[0]) * (a[0] - b[0]) + (long) (a[1] - b[1]) * (a[1] - b[1]);
+	}
+	int maximumDetonation(int[][] bombs) {
+		int count = 0;
+		for (int i = 0; i < bombs.length; i++) {
+			boolean[] visited = new boolean[bombs.length];
+			count = Math.max(solve(i,bombs,visited),count);
+		}
+		return count;
+	}
+	int solve(int node, int[][] bombs, boolean[] visited) {
+		int count = 1;
+		visited[node] = true;
+		for (int i = 0; i < bombs.length; i++) {
+			if (!visited[i] && explodes(bombs[node],bombs[i])) {
+				count += solve(i,bombs,visited);
+			}
+		}
+		return count;
+	}
+}

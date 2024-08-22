@@ -1,0 +1,36 @@
+class Solution {
+	void dfs(int[][] land, int i, int j, int n, int m, List<int[]> result) {
+		if (i < 0 || j < 0 || i >= n || j >= m || land[i][j] != 1) {
+			return;
+		}
+		land[i][j] = 2;
+		result.add(new int{i, j});
+		dfs(land,i + 1,j,n,m,result);
+		dfs(land,i,j + 1,n,m,result);
+	}
+	int[][] findFarmland(int[][] land) {
+		List<List<Integer>> rt = new ArrayList<>();
+		List<int[]> result = new ArrayList<>();
+		int n = land.length;
+		int m = land[0].length;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				result = new ArrayList<>();
+				if (land[i][j] == 1) {
+					dfs(land,i,j,n,m,result);
+					Collections.sort(result,(a, b) -> {a[0] - b[0]});
+					int[] smallest = result.get(0);
+					int[] largest = result.get(result.size() - 1);
+					rt.add(Arrays.asList(smallest[0],smallest[1],largest[0],largest[1]));
+				}
+			}
+		}
+		int[][] r = new int[rt.size()][4];
+		for (int i = 0; i < rt.size(); i++) {
+			for (int j = 0; j < 4; j++) {
+				r[i][j] = rt.get(i).get(j);
+			}
+		}
+		return r;
+	}
+}

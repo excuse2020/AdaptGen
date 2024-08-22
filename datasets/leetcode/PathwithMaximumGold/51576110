@@ -1,0 +1,24 @@
+class Solution {
+	int getMaximumGold(int[][] grid) {
+		int sum = -1;
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[i].length; j++) {
+				sum = Math.max(sum,movingForward(grid,i,j,0));
+			}
+		}
+		return sum;
+	}
+	int movingForward(int[][] grid, int r, int c, int ksm) {
+		if (r < 0 || r >= grid.length || c < 0 || c >= grid[r].length || grid[r][c] == 0) {
+			return ksm;
+		}
+		int cellValue = grid[r][c];
+		grid[r][c] = 0;
+		int left = movingForward(grid,r,c + 1,ksm + cellValue);
+		int right = movingForward(grid,r,c - 1,ksm + cellValue);
+		int top = movingForward(grid,r - 1,c,ksm + cellValue);
+		int bottom = movingForward(grid,r + 1,c,ksm + cellValue);
+		grid[r][c] = cellValue;
+		return Math.max(Math.max(left,right),Math.max(top,bottom));
+	}
+}

@@ -1,0 +1,43 @@
+class Solution {
+	int maxPalindromes(String s, int k) {
+		boolean isPalindrome = new boolean[s.length()][s.length()];
+		for (int i = 0; i < isPalindrome.length; i++) {
+			isPalindrome[i][i] = true;
+		}
+		for (int i = 1; i < s.length(); i++) {
+			for (int j = 0; j < s.length(); j++) {
+				if (j + i == s.length()) {
+					break;
+				}
+				if (s.charAt(j) == s.charAt(j + i) && (isPalindrome[j + 1][j + i - 1] || i == 1)) {
+					isPalindrome[j][j + i] = true;
+				}
+			}
+		}
+		int dp = new int[s.length()];
+		if (isPalindrome[0][k - 1]) {
+			dp[k - 1] = 1;
+		}
+		for (int i = 0; i < dp.length; i++) {
+			for (int j = i - k + 1; j >= 0; j--) {
+				if (isPalindrome[j][i]) {
+					if (j - 1 >= 0) {
+						dp[i] = Math.max(dp[i],1 + dp[j - 1]);
+					} 
+					else {
+						dp[i] = Math.max(dp[i],1);
+					}
+				} 
+				else {
+					if (j - 1 >= 0) {
+						dp[i] = Math.max(dp[i],0 + dp[j - 1]);
+					}
+				}
+			}
+			if (i - 1 >= 0) {
+				dp[i] = Math.max(dp[i],dp[i - 1]);
+			}
+		}
+		return dp[dp.length - 1];
+	}
+}

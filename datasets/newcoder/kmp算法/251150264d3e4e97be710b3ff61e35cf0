@@ -1,0 +1,55 @@
+class Solution {
+	int[] getNext(String T) {
+		T = T + 'z';
+		char[] tArr = T.toCharArray();
+		int[] next = new int[tArr.length];
+		int i = 1;
+		int k = 0;
+		next[0] = -1;
+		while (i < tArr.length - 1) {
+			if (tArr[k] == tArr[i]) {
+				++i;
+				++k;
+				if (tArr[i] != tArr[k]) {
+					next[i] = k;
+				} 
+				else {
+					next[i] = next[k];
+				}
+			} 
+			else if (k == 0) {
+				next[++i] = 0;
+			} 
+			else {
+				k = next[k];
+			}
+		}
+		return next;
+	}
+	int kmp(String T, String S) {
+		char[] sArr = S.toCharArray();
+		char[] tArr = T.toCharArray();
+		int s = 0;
+		int t = 0;
+		int count = 0;
+		int[] next = getNext(T);
+		System.out.println(Arrays.toString(next));
+		while (s < sArr.length) {
+			if (sArr[s] == tArr[t]) {
+				s++;
+				t++;
+			} 
+			else if (t == 0) {
+				s++;
+			} 
+			else {
+				t = next[t];
+			}
+			if (t == tArr.length) {
+				count++;
+				t = next[t];
+			}
+		}
+		return count;
+	}
+}

@@ -1,0 +1,48 @@
+class Solution {
+	int base = 31;
+	long hash(String s) {
+		long hash = 0;
+		long mul = 1;
+		for (int i = s.length() - 1; i >= 0; i--) {
+			hash = s.charAt(i) * mul + hash;
+			mul *= base;
+		}
+		return hash;
+	}
+	String longestDupSubstring(String s) {
+		int l = 1, r = s.length();
+		String result = "";
+		while (l <= r) {
+			int mid = l + (r - l) / 2;
+			String str = search(s,mid);
+			if (str.isEmpty()) {
+				r = mid - 1;
+			} 
+			else {
+				result = str;
+				l = mid + 1;
+			}
+		}
+		return result;
+	}
+	long nextHash(long pow, long hash, char l, char r) {
+		return (hash - l * pow) * base + r;
+	}
+	String search(String s, int len) {
+		Set<Long> set = new HashSet<>();
+		long hash = hash(s.substring(0,len));
+		set.add(hash);
+		long pow = 1;
+		for (int i = 1; i < len; i++) {
+			pow *= base;
+		}
+		for (int i = 1; i <= s.length() - len; i++) {
+			hash = nextHash(pow,hash,s.charAt(i - 1),s.charAt(i + len - 1));
+			if (set.contains(hash)) {
+				return s.substring(i,i + len);
+			}
+			set.add(hash);
+		}
+		return "";
+	}
+}

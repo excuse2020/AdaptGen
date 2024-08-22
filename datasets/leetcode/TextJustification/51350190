@@ -1,0 +1,72 @@
+class Solution {
+	void appendSpace(StringBuilder sb, int numSpace) {
+		for (int i = 0; i < numSpace; i++) {
+			sb.append(" ");
+		}
+	}
+	String convertLastLineListToString(String[] words, int start, int maxWidth) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = start; ; i++) {
+			sb.append(words[i]);
+			if (i == words.length - 1) {
+				break;
+			}
+			sb.append(" ");
+		}
+		appendSpace(sb,maxWidth - sb.length());
+		return sb.toString();
+	}
+	String convertListToString(String[] words, int start, int end, int maxWidth) {
+		StringBuilder sb = new StringBuilder();
+		int numWords = end - start + 1;
+		int lengthWords = 0;
+		for (int w = start; w <= end; w++) {
+			lengthWords += words[w].length();
+		}
+		int lengthSpace = maxWidth - lengthWords;
+		if (numWords == 1) {
+			sb.append(words[end]);
+			appendSpace(sb,lengthSpace);
+		} 
+		else {
+			numWords--;
+			int lengthAvgSpace = lengthSpace / numWords;
+			int lengthExtraSpace = lengthSpace % numWords;
+			for (int w = start; w <= end; w++) {
+				sb.append(words[w]);
+				if (w == end) {
+					break;
+				}
+				if (lengthExtraSpace > 0) {
+					appendSpace(sb,1 + lengthAvgSpace);
+					lengthExtraSpace--;
+				} 
+				else {
+					appendSpace(sb,lengthAvgSpace);
+				}
+			}
+		}
+		return sb.toString();
+	}
+	List<String> fullJustify(String[] words, int maxWidth) {
+		List<String> list = new ArrayList<String>();
+		for (int i = 0; i < words.length; i++) {
+			int j = i, curLength = 0;
+			while (j < words.length) {
+				if (j == words.length - 1 && curLength + words[j].length() <= maxWidth) {
+					list.add(convertLastLineListToString(words,i,maxWidth));
+					break;
+				}
+				if (words[j].length() + curLength > maxWidth) {
+					j--;
+					list.add(convertListToString(words,i,j,maxWidth));
+					break;
+				}
+				curLength += words[j].length() + 1;
+				j++;
+			}
+			i = j;
+		}
+		return list;
+	}
+}

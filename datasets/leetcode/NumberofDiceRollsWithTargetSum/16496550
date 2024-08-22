@@ -1,0 +1,31 @@
+class Solution {
+	int MODULO = 1000000007;
+	int k;
+	Integer[][] memo;
+	int n;
+	int target;
+	int dp(int i, int remain) {
+		if (i == n && remain == 0) {
+			return 1;
+		}
+		if (i > n || remain < 0) {
+			return 0;
+		}
+		if (memo[i][remain] != null) {
+			return memo[i][remain];
+		}
+		int ans = 0;
+		for (int num = 1; num <= k; ++num) {
+			ans += dp(i + 1,remain - num);
+			ans %= MODULO;
+		}
+		return memo[i][remain] = ans;
+	}
+	int numRollsToTarget(int n, int k, int target) {
+		this.n = n;
+		this.k = k;
+		this.target = target;
+		this.memo = new Integer[n + 1][target + 1];
+		return dp(0,target);
+	}
+}

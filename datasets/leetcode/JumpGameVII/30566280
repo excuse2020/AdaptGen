@@ -1,0 +1,20 @@
+class Solution {
+	boolean canReach(String s, int minJump, int maxJump) {
+		int n = s.length();
+		if (s.charAt(n - 1) == 49) {
+			return false;
+		}
+		byte[] dp = s.getBytes();
+		dp[0] = 69;
+		int i = minJump, count = 0;
+		for (; i <= maxJump; ++i) {
+			count += dp[i - minJump] >> 6;
+			dp[i] |= -count >>> 24 & (~dp[i] & 1) << 6;
+		}
+		for (; i < n; ++i) {
+			count += (dp[i - minJump] >> 6) - (dp[i - maxJump - 1] >> 6);
+			dp[i] |= -count >>> 24 & (~dp[i] & 1) << 6;
+		}
+		return dp[n - 1] > 63;
+	}
+}

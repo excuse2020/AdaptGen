@@ -1,0 +1,40 @@
+class Solution {
+	HashMap<Integer, Integer> visited = new HashMap<>();
+	int[] findOriginalArray(int[] changed) {
+		Arrays.sort(changed);
+		int empty = new int[0];
+		int n = changed.length;
+		if (n % 2 != 0) {
+			return empty;
+		}
+		int ans = new int[n / 2];
+		int ind = 0;
+		int i;
+		for (i = 0; i < n; i++) {
+			if (visited.containsKey(changed[i]) == false) {
+				visited.put(changed[i],1);
+			} 
+			else {
+				visited.put(changed[i],visited.get(changed[i]) + 1);
+			}
+		}
+		for (i = 0; i < changed.length; i++) {
+			if (visited.containsKey(changed[i])) {
+				if (visited.get(changed[i]) > 0) {
+					visited.put(changed[i],visited.get(changed[i]) - 1);
+					if (visited.containsKey(2 * changed[i]) && visited.get(2 * changed[i]) > 0) {
+						ans[ind++] = changed[i];
+						visited.put(2 * changed[i],visited.get(2 * changed[i]) - 1);
+					} 
+					else {
+						return empty;
+					}
+				}
+			} 
+			else {
+				return empty;
+			}
+		}
+		return ans;
+	}
+}

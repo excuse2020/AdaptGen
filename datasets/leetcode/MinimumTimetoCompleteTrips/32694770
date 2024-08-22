@@ -1,0 +1,27 @@
+class Solution {
+	boolean isValid(int[] time, long totalTime, long totalTrips) {
+		for (long i: time) {	
+			if ((totalTrips = totalTrips - totalTime / i) <= 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+	long minimumTime(int[] time, int totalTrips) {
+		long high = totalTrips, low = time[0];
+		for (long i: time) {	
+			high = Math.max(high,totalTrips * i);
+			low = Math.min(low,i);
+		}
+		while (low < high) {
+			long mid = (low + high) / 2l;
+			if (isValid(time,mid,totalTrips)) {
+				high = mid;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		return high;
+	}
+}

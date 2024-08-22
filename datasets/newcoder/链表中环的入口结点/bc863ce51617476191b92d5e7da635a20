@@ -1,0 +1,52 @@
+class Solution {
+	ListNode EntryNodeOfLoop(ListNode pHead) {
+		if (pHead == null) {
+			return null;
+		}
+		ListNode slow = pHead;
+		ListNode fast = pHead;
+		boolean flag = false;
+		while (fast != null && fast.next != null) {
+			slow = slow.next;
+			fast = fast.next.next;
+			if (slow == fast) {
+				flag = true;
+				break;
+			}
+		}
+		if (!flag) {
+			return null;
+		}
+		ListNode pHead2 = slow.next;
+		slow.next = null;
+		ListNode p1 = pHead;
+		ListNode p2 = pHead2;
+		int length1 = 1;
+		int length2 = 1;
+		while (p1.next != null) {
+			p1 = p1.next;
+			length1++;
+		}
+		p1 = pHead;
+		while (p2.next != null) {
+			p2 = p2.next;
+			length2++;
+		}
+		p2 = pHead2;
+		if (length1 > length2) {
+			for (int i = 0; i < length1 - length2; i++) {
+				p1 = p1.next;
+			}
+		} 
+		else if (length1 < length2) {
+			for (int i = 0; i < length2 - length1; i++) {
+				p2 = p2.next;
+			}
+		}
+		while (p1 != p2) {
+			p1 = p1.next;
+			p2 = p2.next;
+		}
+		return p1;
+	}
+}

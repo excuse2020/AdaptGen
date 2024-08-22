@@ -1,0 +1,50 @@
+class Solution {
+	boolean allNodesReachable(Map<Integer, List<Integer>> m, int[] edgeToRemove, int n) {
+		boolean[] visited = new boolean[n + 1];
+		Queue<Integer> q = new LinkedList<>();
+		q.add(1);
+		while (!q.isEmpty()) {
+			int element = q.remove();
+			visited[element] = true;
+			if (m.containsKey(element)) {
+				List<Integer> neighbors = m.get(element);
+				for (int neighbor: neighbors) {	
+					if (element == edgeToRemove[0] && neighbor == edgeToRemove[1] || element == edgeToRemove[1] && neighbor == edgeToRemove[0]) {
+						continue;
+					} 
+					else {
+						if (!visited[neighbor]) {
+							q.add(neighbor);
+						}
+					}
+				}
+			}
+		}
+		for (int i = 1; i < visited.length; i++) {
+			if (!visited[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int[] findRedundantConnection(int[][] edges) {
+		int n = edges.length;
+		Map<Integer, List<Integer>> m = new HashMap<>();
+		for (int i = 0; i < edges.length; i++) {
+			m.putIfAbsent(edges[i][0],new ArrayList<>());
+			m.get(edges[i][0]).add(edges[i][1]);
+			m.putIfAbsent(edges[i][1],new ArrayList<>());
+			m.get(edges[i][1]).add(edges[i][0]);
+		}
+		int[] edgeToRemove = new int[2];
+		for (int i = edges.length - 1; i >= 0; i--) {
+			edgeToRemove[0] = edges[i][0];
+			edgeToRemove[1] = edges[i][1];
+			int indexToRemove = i;
+			if (allNodesReachable(m,edgeToRemove,n)) {
+				return edgeToRemove;
+			}
+		}
+		return edgeToRemove;
+	}
+}

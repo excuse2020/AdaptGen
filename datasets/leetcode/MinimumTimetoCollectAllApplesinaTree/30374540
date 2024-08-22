@@ -1,0 +1,40 @@
+class Solution {
+	int totalTime;
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		totalTime = 0;
+		List<Set<Integer>> ed = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			ed.add(new HashSet<Integer>());
+		}
+		for (int[] edge: edges) {	
+			ed.get(edge[0]).add(edge[1]);
+			ed.get(edge[1]).add(edge[0]);
+		}
+		int[] visited = new int[n];
+		traverse(ed,0,hasApple,visited);
+		return totalTime > 0 ? totalTime - 2 : 0;
+	}
+	boolean traverse(List<Set<Integer>> edges, int node, List<Boolean> hasApple, int[] visited) {
+		visited[node] = 1;
+		if (edges.get(node).size() == 0) {
+			if (hasApple.get(node)) {
+				totalTime += 2;
+				return true;
+			}
+			return false;
+		}
+		boolean visit = hasApple.get(node);
+		for (int i: edges.get(node)) {	
+			if (visited[i] == 1) {
+				continue;
+			}
+			if (traverse(edges,i,hasApple,visited)) {
+				visit = true;
+			}
+		}
+		if (visit) {
+			totalTime += 2;
+		}
+		return visit;
+	}
+}

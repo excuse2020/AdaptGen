@@ -1,0 +1,41 @@
+class Solution {
+	boolean construct(int index, int[] result, boolean[] visited) {
+		if (index == result.length) {
+			return true;
+		}
+		if (result[index] == 0) {
+			for (int n = visited.length - 1; n >= 1; n--) {
+				if (!visited[n]) {
+					if (n == 1) {
+						visited[n] = true;
+						result[index] = n;
+						if (construct(index + 1,result,visited)) {
+							return true;
+						}
+					} 
+					else if (index + n < result.length && result[index + n] == 0) {
+						visited[n] = true;
+						result[index] = n;
+						result[index + n] = n;
+						if (construct(index + 1,result,visited)) {
+							return true;
+						}
+						result[index + n] = 0;
+					}
+					visited[n] = false;
+					result[index] = 0;
+				}
+			}
+		} 
+		else if (result[index] != 0) {
+			return construct(index + 1,result,visited);
+		}
+		return false;
+	}
+	int[] constructDistancedSequence(int n) {
+		int[] result = new int[(n - 1) * 2 + 1];
+		boolean[] visited = new boolean[n + 1];
+		construct(0,result,visited);
+		return result;
+	}
+}

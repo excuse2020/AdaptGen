@@ -1,0 +1,54 @@
+class Solution {
+	int index = Integer.MAX_VALUE;
+	int minDistance = Integer.MAX_VALUE;
+	Map<Integer, List<Integer>> nodeToChildren = new HashMap<>();
+	int bfs(Queue<Integer> queue, Set<Integer> v1, Set<Integer> v2, int d1, int d2) {
+		if (queue.isEmpty()) {
+			return d1;
+		}
+		int size = queue.size();
+		for (int i = 0; i < size; i++) {
+			int child = queue.remove();
+			if (v1.contains(child)) {
+				continue;
+			}
+			v1.add(child);
+			if (v2.contains(child)) {
+				int d = Math.max(d1 + 1,d2);
+				if (d <= minDistance) {
+					index = d == minDistance ? Math.min(index,child) : child;
+					minDistance = d;
+				}
+			}
+			for (int c: nodeToChildren.getOrDefault(child,new ArrayList<>())) {	
+				if (!v1.contains(c)) {
+					queue.add(c);
+				}
+			}
+		}
+		return d1 + 1;
+	}
+	void buildGraph(int[] edges) {
+		for (int i = 0; i < edges.length; i++) {
+			if (edges[i] != -1) {
+				nodeToChildren.computeIfAbsent(i,(e) -> {new ArrayList<>()}).add(edges[i]);
+			}
+		}
+	}
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		buildGraph(edges);
+		Queue<Integer> q1 = new ArrayDeque<>(), q2 = new ArrayDeque<>();
+		Set<Integer> v1 = new HashSet<>(), v2 = new HashSet<>();
+		int d1 = 0, d2 = 0;
+		q1.add(node1);
+		q2.add(node2);
+		while (!q1.isEmpty() || !q2.isEmpty()) {
+			d1 = bfs(q1,v1,v2,d1,d2);
+			d2 = bfs(q2,v2,v1,d2,d1);
+			if (index != Integer.MAX_VALUE) {
+				return index;
+			}
+		}
+		return -1;
+	}
+}

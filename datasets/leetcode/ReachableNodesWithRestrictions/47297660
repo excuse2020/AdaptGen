@@ -1,0 +1,51 @@
+class Solution {
+	Map<Integer, List<Integer>> buildGraph(int[][] edges) {
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		for (int[] edge: edges) {	
+			int a = edge[0];
+			int b = edge[1];
+			if (!graph.containsKey(a)) {
+				graph.put(a,new ArrayList<Integer>());
+			}
+			graph.get(a).add(b);
+			if (!graph.containsKey(b)) {
+				graph.put(b,new ArrayList<Integer>());
+			}
+			graph.get(b).add(a);
+		}
+		return graph;
+	}
+	Set<Integer> buildHashSet(int[] nodes) {
+		Set<Integer> restrNodes = new HashSet<Integer>();
+		for (int node: nodes) {	
+			restrNodes.add(node);
+		}
+		return restrNodes;
+	}
+	int reachableNodes(int n, int[][] edges, int[] restricted) {
+		Set<Integer> restrictedNodes = buildHashSet(restricted);
+		Map<Integer, List<Integer>> graph = buildGraph(edges);
+		Deque<Integer> stack = new ArrayDeque<>();
+		Set<Integer> seen = new HashSet<>();
+		int reachable = 0;
+		stack.add(0);
+		seen.add(0);
+		while (!stack.isEmpty()) {
+			int node = stack.pop();
+			if (restrictedNodes.contains(node)) {
+				continue;
+			}
+			reachable++;
+			List<Integer> nbrs = graph.get(node);
+			if (nbrs != null) {
+				for (int nbr: nbrs) {	
+					if (!seen.contains(nbr)) {
+						seen.add(nbr);
+						stack.add(nbr);
+					}
+				}
+			}
+		}
+		return reachable;
+	}
+}

@@ -1,0 +1,42 @@
+class Solution {
+	boolean canArrange(int[] arr, int k) {
+		Map<Integer, Integer> map = new HashMap<>();
+		int len = arr.length;
+		for (int i = 0; i < len; i++) {
+			int r = arr[i] % k;
+			if (r != 0) {
+				int count1 = map.getOrDefault(k - r,0);
+				int count2 = map.getOrDefault(-k - r,0);
+				int count3 = map.getOrDefault(-r,0);
+				if (count1 >= 1) {
+					if (count1 == 1) {
+						map.remove(k - r);
+					} 
+					else {
+						map.put(k - r,--count1);
+					}
+				} 
+				else if (count2 >= 1) {
+					if (count2 == 1) {
+						map.remove(-k - r);
+					} 
+					else {
+						map.put(-k - r,--count2);
+					}
+				} 
+				else if (count3 >= 1) {
+					if (count3 == 1) {
+						map.remove(-r);
+					} 
+					else {
+						map.put(-r,--count3);
+					}
+				} 
+				else {
+					map.put(r,map.getOrDefault(r,0) + 1);
+				}
+			}
+		}
+		return map.size() == 0;
+	}
+}

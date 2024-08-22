@@ -1,0 +1,54 @@
+class Solution {
+	int minReorder(int n, int[][] connections) {
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		Queue<Integer> q = new LinkedList();
+		int count = 0;
+		ArrayList<Integer> graph = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new ArrayList<>();
+			map.put(i,new ArrayList<>());
+		}
+		boolean visited = new boolean[n];
+		Arrays.fill(visited,false);
+		for (int i = 0; i < connections.length; i++) {
+			int a = connections[i][0];
+			int b = connections[i][1];
+			List<Integer> al = map.get(a);
+			al.add(b);
+			map.put(a,al);
+			if (a == 0) {
+				q.add(b);
+				visited[b] = true;
+				count++;
+			}
+			if (b == 0) {
+				q.add(a);
+				visited[a] = true;
+			}
+			graph[a].add(b);
+			graph[b].add(a);
+		}
+		while (!q.isEmpty()) {
+			int x = q.poll();
+			for (Integer a: graph[x]) {	
+				if (!visited[a] && a != 0) {
+					q.add(a);
+					visited[a] = true;
+					if (map.containsKey(a)) {
+						boolean flag = false;
+						for (Integer z: map.get(a)) {	
+							if (z == x) {
+								flag = true;
+								break;
+							}
+						}
+						if (!flag) {
+							count++;
+						}
+					}
+				}
+			}
+		}
+		return count;
+	}
+}

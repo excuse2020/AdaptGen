@@ -1,0 +1,43 @@
+class Solution {
+	List<List<String>> mostPopularCreator(String[] ups, String[] vids, int[] views) {
+		List<List<String>> ret = new ArrayList<>();
+		Map<String, Integer> upScore = new HashMap<>();
+		Map<String, List<Integer>> upToVIndices = new HashMap<>();
+		for (int i = 0; i < ups.length; i++) {
+			upScore.put(ups[i],upScore.getOrDefault(ups[i],0) + views[i]);
+			upToVIndices.putIfAbsent(ups[i],new ArrayList<>());
+			upToVIndices.get(ups[i]).add(i);
+		}
+		int maxScore = 0;
+		List<String> bestUps = new ArrayList<>();
+		for (String up: upScore.keySet()) {	
+			if (upScore.get(up) > maxScore) {
+				bestUps.clear();
+				maxScore = upScore.get(up);
+				bestUps.add(up);
+			} 
+			else if (upScore.get(up) == maxScore) {
+				bestUps.add(up);
+			}
+		}
+		for (String bestUp: bestUps) {	
+			List<Integer> vIndices = upToVIndices.get(bestUp);
+			maxScore = -1;
+			String maxVid = "";
+			for (int idx: vIndices) {	
+				if (views[idx] > maxScore) {
+					maxScore = views[idx];
+					maxVid = vids[idx];
+				} 
+				else if (views[idx] == maxScore && vids[idx].compareTo(maxVid) < 0) {
+					maxVid = vids[idx];
+				}
+			}
+			List<String> curr = new ArrayList<>();
+			curr.add(bestUp);
+			curr.add(maxVid);
+			ret.add(curr);
+		}
+		return ret;
+	}
+}

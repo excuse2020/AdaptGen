@@ -1,0 +1,25 @@
+class Solution {
+	int[][] differenceOfDistinctValues(int[][] grid) {
+		int m = grid.length, n = grid[0].length;
+		int[][] answer = new int[m][n];
+		Map<Integer, Integer> count;
+		Set<Integer> set;
+		for (int line = 2; line < m + n - 1; line++) {
+			int startR = Math.max(0,m - line), startC = Math.max(0,line - m);
+			count = new HashMap<>();
+			for (int i = startR, j = startC; i < m && j < n; i++, j++) {
+				count.put(grid[i][j],count.getOrDefault(grid[i][j],0) + 1);
+			}
+			set = new HashSet<>();
+			for (int i = startR, j = startC; i < m && j < n; i++, j++) {
+				count.put(grid[i][j],count.get(grid[i][j]) - 1);
+				if (count.get(grid[i][j]) == 0) {
+					count.remove(grid[i][j]);
+				}
+				answer[i][j] = Math.abs(count.size() - set.size());
+				set.add(grid[i][j]);
+			}
+		}
+		return answer;
+	}
+}

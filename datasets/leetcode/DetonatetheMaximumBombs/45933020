@@ -1,0 +1,51 @@
+class Solution {
+	void dfs(int s, boolean[] visited, List<List<Integer>> adj) {
+		visited[s] = true;
+		for (int it: adj.get(s)) {	
+			if (visited[it] == false) {
+				dfs(it,visited,adj);
+			}
+		}
+	}
+	int maximumDetonation(int[][] bombs) {
+		List<List<Integer>> adj = new ArrayList<>();
+		int ans = Integer.MIN_VALUE;
+		int n = bombs.length;
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n - 1; i++) {
+			int[] temp1 = bombs[i];
+			long x1 = temp1[0];
+			long y1 = temp1[1];
+			long r1 = temp1[2];
+			for (int j = i + 1; j < n; j++) {
+				int[] temp2 = bombs[j];
+				long x2 = temp2[0];
+				long y2 = temp2[1];
+				long r2 = temp2[2];
+				long d = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
+				if ((r1 * r1) >= d) {
+					adj.get(i).add(j);
+				}
+				if ((r2 * r2) >= d) {
+					adj.get(j).add(i);
+				}
+			}
+		}
+		System.out.println(Arrays.asList(adj));
+		boolean[] visited = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			int temp = 0;
+			dfs(i,visited,adj);
+			for (int j = 0; j < n; j++) {
+				if (visited[j] == true) {
+					temp++;
+				}
+			}
+			ans = Math.max(ans,temp);
+			Arrays.fill(visited,Boolean.FALSE);
+		}
+		return ans;
+	}
+}

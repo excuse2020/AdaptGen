@@ -1,0 +1,41 @@
+class Solution {
+	int[] findOrder(int n, int[][] prerequisites) {
+		int[] indegree = new int[n];
+		List<Integer> ans = new LinkedList<>();
+		List<List<Integer>> graph = new ArrayList<>(n);
+		for (int i = 0; i < n; i++) {
+			graph.add(new LinkedList<>());
+		}
+		for (int[] prereqs: prerequisites) {	
+			graph.get(prereqs[1]).add(prereqs[0]);
+			indegree[prereqs[0]]++;
+		}
+		Queue<Integer> q = new LinkedList<>();
+		for (int i = 0; i < n; i++) {
+			if (indegree[i] == 0) {
+				q.add(i);
+				ans.add(i);
+			}
+		}
+		while (!q.isEmpty()) {
+			int tp = q.peek();
+			q.remove();
+			for (int child: graph.get(tp)) {	
+				indegree[child]--;
+				if (indegree[child] < 0) {
+					return new int[0];
+				}
+				if (indegree[child] == 0) {
+					ans.add(child);
+					q.add(child);
+				}
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			if (indegree[i] != 0) {
+				return new int[0];
+			}
+		}
+		return ans.stream().mapToInt((i) -> {i}).toArray();
+	}
+}

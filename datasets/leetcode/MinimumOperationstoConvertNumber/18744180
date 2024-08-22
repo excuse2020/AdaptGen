@@ -1,0 +1,42 @@
+class Solution {
+	void check(long val, Queue<Long> q, Set<Long> set) {
+		if (val >= 0 && val <= 1000 && !set.contains(val)) {
+			set.add(val);
+			q.add(val);
+		}
+	}
+	int minimumOperations(int[] arr, int start, int goal) {
+		Queue<Long> q = new LinkedList<>();
+		Set<Long> set = new HashSet<>();
+		q.add((long) start);
+		int count = 0;
+		long nums = new long[arr.length];
+		for (int i = 0; i < arr.length; i++) {
+			nums[i] = (long) arr[i];
+		}
+		while (!q.isEmpty()) {
+			for (int size = q.size(); size != 0; size--) {
+				long mid = q.remove();
+				for (long num: nums) {	
+					long res = num + mid;
+					if (res == goal) {
+						return count + 1;
+					}
+					check(res,q,set);
+					res = mid - num;
+					if (res == goal) {
+						return count + 1;
+					}
+					check(res,q,set);
+					res = (num ^ mid);
+					if (res == goal) {
+						return count + 1;
+					}
+					check(res,q,set);
+				}
+			}
+			count++;
+		}
+		return -1;
+	}
+}

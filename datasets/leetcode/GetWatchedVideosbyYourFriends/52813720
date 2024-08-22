@@ -1,0 +1,38 @@
+class Solution {
+	List<String> watchedVideosByFriends(List<List<String>> watchedVideos, int[][] friends, int id, int level) {
+		Queue<Integer> queue = new LinkedList<>();
+		Map<String, Integer> map = new HashMap<>();
+		List<String> res = new ArrayList<>();
+		boolean[] visited = new boolean[watchedVideos.size()];
+		queue.offer(id);
+		while (!queue.isEmpty() && level-- != 0) {
+			int size = queue.size();
+			while (size-- > 0) {
+				int cur = queue.poll();
+				if (visited[cur]) {
+					continue;
+				}
+				visited[cur] = true;
+				for (int f: friends[cur]) {	
+					if (!visited[f]) {
+						queue.offer(f);
+					}
+				}
+			}
+			System.out.println(queue);
+		}
+		while (!queue.isEmpty()) {
+			int f = queue.poll();
+			if (visited[f]) {
+				continue;
+			}
+			visited[f] = true;
+			for (String s: watchedVideos.get(f)) {	
+				map.merge(s,1,);
+			}
+		}
+		res.addAll(map.keySet());
+		Collections.sort(res,(a, b) -> {map.getOrDefault(a,0) == map.getOrDefault(b,0) ? a.compareTo(b) : map.getOrDefault(a,0) - map.getOrDefault(b,0)});
+		return res;
+	}
+}

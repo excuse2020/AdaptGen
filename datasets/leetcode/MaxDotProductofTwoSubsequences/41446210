@@ -1,0 +1,34 @@
+class Solution {
+	int maxDotProduct(int[] nums1, int[] nums2) {
+		int max1 = Integer.MIN_VALUE;
+		int max2 = Integer.MIN_VALUE;
+		int min1 = Integer.MAX_VALUE;
+		int min2 = Integer.MAX_VALUE;
+		for (int num: nums1) {	
+			max1 = Math.max(max1,num);
+			min1 = Math.min(min1,num);
+		}
+		for (int num: nums2) {	
+			max2 = Math.max(max2,num);
+			min2 = Math.min(min2,num);
+		}
+		if (max1 < 0 && min2 > 0) {
+			return max1 * min2;
+		}
+		if (min1 > 0 && max2 < 0) {
+			return min1 * max2;
+		}
+		int m = nums2.length + 1;
+		int[] dp = new int[m];
+		int[] prevDp = new int[m];
+		for (int i = nums1.length - 1; i >= 0; i--) {
+			dp = new int[m];
+			for (int j = nums2.length - 1; j >= 0; j--) {
+				int use = nums1[i] * nums2[j] + prevDp[j + 1];
+				dp[j] = Math.max(use,Math.max(prevDp[j],dp[j + 1]));
+			}
+			prevDp = dp;
+		}
+		return dp[0];
+	}
+}

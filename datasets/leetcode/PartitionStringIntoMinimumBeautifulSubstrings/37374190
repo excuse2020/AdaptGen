@@ -1,0 +1,38 @@
+class Solution {
+	HashSet set = new HashSet<>();
+	boolean checkPowerOfFive(String s, int i, int j) {
+		if (set.contains(s.substring(i,j + 1))) {
+			return true;
+		}
+		return false;
+	}
+	int minimumBeautifulSubstrings(String s) {
+		set.add("1");
+		set.add("101");
+		set.add("11001");
+		set.add("1111101");
+		set.add("1001110001");
+		set.add("110000110101");
+		set.add("11110100001001");
+		int dp = new int[s.length()];
+		Arrays.fill(dp,-1);
+		int ans = solve(0,s.length(),s,dp);
+		return ans == 20 ? -1 : ans;
+	}
+	int solve(int i, int n, String s, int[] dp) {
+		if (i == n) {
+			return 0;
+		}
+		if (dp[i] != -1) {
+			return dp[i];
+		}
+		int minCost = 20;
+		for (int j = i; j < n; j++) {
+			if (checkPowerOfFive(s,i,j)) {
+				int cost = 1 + solve(j + 1,n,s,dp);
+				minCost = Math.min(cost,minCost);
+			}
+		}
+		return dp[i] = minCost;
+	}
+}

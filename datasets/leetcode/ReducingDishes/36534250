@@ -1,0 +1,22 @@
+class Solution {
+	int helper(int[] arr, int[][] dp, int index, int time, int n) {
+		if (index == n) {
+			return 0;
+		}
+		if (dp[index][time] != -1) {
+			return dp[index][time];
+		}
+		int pick = (arr[index] * (time + 1)) + helper(arr,dp,index + 1,time + 1,n);
+		int not_pick = helper(arr,dp,index + 1,time,n);
+		return dp[index][time] = Math.max(pick,not_pick);
+	}
+	int maxSatisfaction(int[] arr) {
+		Arrays.sort(arr);
+		int n = arr.length;
+		int[][] dp = new int[n + 1][n + 1];
+		for (int[] rows: dp) {	
+			Arrays.fill(rows,-1);
+		}
+		return helper(arr,dp,0,0,n);
+	}
+}

@@ -1,0 +1,26 @@
+class Solution {
+	int[] assignTasks(int[] servers, int[] tasks) {
+		PriorityQueue<int[]> free = new PriorityQueue<int[]>((a, b) -> {a[1] == b[1] ? a[0] - b[0] : a[1] - b[1]});
+		PriorityQueue<int[]> used = new PriorityQueue<int[]>((a, b) -> {a[2] - b[2]});
+		for (int i = 0; i < servers.length; i++) {
+			free.offer(new int{i, servers[i], 0});
+		}
+		int[] ans = new int[tasks.length];
+		for (int i = 0; i < tasks.length; i++) {
+			while (!used.isEmpty() && used.peek()[2] <= i) {
+				free.offer(used.poll());
+			}
+			if (free.isEmpty()) {
+				int nextTime = used.peek()[2];
+				while (!used.isEmpty() && used.peek()[2] == nextTime) {
+					free.offer(used.poll());
+				}
+			}
+			int[] currentServer = free.poll();
+			ans[i] = currentServer[0];
+			currentServer[2] = Math.max(currentServer[2],i) + tasks[i];
+			used.offer(currentServer);
+		}
+		return ans;
+	}
+}

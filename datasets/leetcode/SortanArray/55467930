@@ -1,0 +1,37 @@
+class Solution {
+	void merge(int[] nums, int[] b, int l, int mid, int r) {
+		int i = l;
+		int j = mid + 1;
+		int k = l;
+		while (i <= mid && j <= r) {
+			if (nums[i] <= nums[j]) {
+				b[k++] = nums[i++];
+			} 
+			else {
+				b[k++] = nums[j++];
+			}
+		}
+		while (i <= mid) {
+			b[k++] = nums[i++];
+		}
+		while (j <= r) {
+			b[k++] = nums[j++];
+		}
+		for (int x = l; x <= r; x++) {
+			nums[x] = b[x];
+		}
+	}
+	void mergesort(int[] nums, int[] b, int l, int r) {
+		if (l < r) {
+			int mid = (l + r) / 2;
+			mergesort(nums,b,l,mid);
+			mergesort(nums,b,mid + 1,r);
+			merge(nums,b,l,mid,r);
+		}
+	}
+	int[] sortArray(int[] nums) {
+		int[] b = new int[nums.length];
+		mergesort(nums,b,0,nums.length - 1);
+		return nums;
+	}
+}

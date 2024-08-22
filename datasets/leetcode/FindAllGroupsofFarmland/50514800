@@ -1,0 +1,48 @@
+class Solution {
+	List<int[]> result = new ArrayList();
+	void dfs(int[][] land, int row, int col, int prevRow, int prevCol, int startRow, int startCol, int[] farm, boolean down) {
+		if (row == land.length || col == land[0].length || land[row][col] != 1) {
+			if (down) {
+				farm[2] = prevRow;
+				farm[3] = prevCol;
+				return;
+			}
+			for (int c = startCol; c <= prevCol; c++) {
+				land[prevRow][c] = 2;
+			}
+			dfs(land,prevRow + 1,prevCol,prevRow,prevCol,startRow,startCol,farm,true);
+			return;
+		}
+		land[row][col] = 2;
+		dfs(land,row,col + 1,row,col,startRow,startCol,farm,false);
+	}
+	int[][] findFarmland(int[][] land) {
+		for (int i = 0; i < land.length; i++) {
+			for (int j = 0; j < land[0].length; j++) {
+				if (land[i][j] == 1) {
+					int[] farm = new int[4];
+					farm[0] = i;
+					farm[1] = j;
+					dfs(land,i,j,i,j,i,j,farm,true);
+					result.add(farm);
+				}
+			}
+		}
+		int[][] returnVal = new int[result.size()];
+		for (int i = 0; i < result.size(); i++) {
+			returnVal[i] = result.get(i);
+		}
+		return returnVal;
+	}
+	void markFarm(int[][] land, int[] farm) {
+		int startX = farm[0];
+		int startY = farm[1];
+		int endX = farm[2];
+		int endY = farm[3];
+		for (int i = startX; i <= endX; i++) {
+			for (int j = startY; j <= endY; j++) {
+				land[i][j] = 2;
+			}
+		}
+	}
+}

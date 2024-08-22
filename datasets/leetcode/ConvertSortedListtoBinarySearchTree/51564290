@@ -1,0 +1,57 @@
+class Solution {
+	TreeNode avltree(TreeNode node, int data) {
+		if (node == null) {
+			return new TreeNode(data);
+		} 
+		else if (node.val > data) {
+			node.left = avltree(node.left,data);
+		} 
+		else {
+			node.right = avltree(node.right,data);
+		}
+		int bf = height(node.left) - height(node.right);
+		if (bf > 1 && node.left.val > data) {
+			return rightRotate(node);
+		} 
+		else if (bf > 1 && node.left.val < data) {
+			node.left = leftRotate(node.left);
+			return rightRotate(node);
+		} 
+		else if (bf < -1 && node.right.val < data) {
+			return leftRotate(node);
+		} 
+		else if (bf < -1 && node.right.val > data) {
+			node.right = rightRotate(node.right);
+			return leftRotate(node);
+		}
+		return node;
+	}
+	int height(TreeNode node) {
+		if (node == null) {
+			return 0;
+		}
+		return 1 + Math.max(height(node.left),height(node.right));
+	}
+	TreeNode leftRotate(TreeNode node) {
+		TreeNode b = node.right;
+		TreeNode c = b.left;
+		node.right = c;
+		b.left = node;
+		return b;
+	}
+	TreeNode rightRotate(TreeNode node) {
+		TreeNode b = node.left;
+		TreeNode c = b.right;
+		node.left = c;
+		b.right = node;
+		return b;
+	}
+	TreeNode sortedListToBST(ListNode head) {
+		TreeNode node = null;
+		while (head != null) {
+			node = avltree(node,head.val);
+			head = head.next;
+		}
+		return node;
+	}
+}

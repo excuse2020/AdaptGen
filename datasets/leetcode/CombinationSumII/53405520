@@ -1,0 +1,38 @@
+class Solution {
+	List<List<Integer>> combinationSum2(int[] candidates, int target) {
+		Arrays.sort(candidates);
+		List<List<Integer>> li2 = new ArrayList<>();
+		Set<Integer> st = new HashSet<>();
+		for (int i = 0; i < candidates.length; i++) {
+			List<Integer> li = new ArrayList<>();
+			if (target >= candidates[i] && !st.contains(candidates[i])) {
+				st.add(candidates[i]);
+				li.add(candidates[i]);
+				cs(i,target - candidates[i],candidates,li,li2);
+				li.clear();
+			}
+		}
+		return li2;
+	}
+	void cs(int index, int total, int arr, List<Integer> li, List<List<Integer>> li2) {
+		if (total == 0) {
+			li2.add(new ArrayList<>(li));
+			return;
+		}
+		if (total < 0) {
+			return;
+		}
+		if (index >= arr.length) {
+			return;
+		}
+		Set<Integer> st = new HashSet<>();
+		for (int i = index + 1; i < arr.length; i++) {
+			if (total >= arr[i] && !st.contains(arr[i])) {
+				st.add(arr[i]);
+				li.add(arr[i]);
+				cs(i,total - arr[i],arr,li,li2);
+				li.remove(li.size() - 1);
+			}
+		}
+	}
+}

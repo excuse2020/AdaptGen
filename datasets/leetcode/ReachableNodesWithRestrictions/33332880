@@ -1,0 +1,33 @@
+class Solution {
+	int reachableNodes(int n, int[][] edges, int[] restricted) {
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int[] arr: edges) {	
+			int from = arr[0];
+			int to = arr[1];
+			graph.get(from).add(to);
+			graph.get(to).add(from);
+		}
+		boolean[] visited = new boolean[n];
+		for (int i = 0; i < restricted.length; i++) {
+			visited[restricted[i]] = true;
+		}
+		visited[0] = true;
+		Queue<Integer> q = new LinkedList<>();
+		q.add(0);
+		int ans = 0;
+		while (!q.isEmpty()) {
+			int node = q.poll();
+			ans++;
+			for (int ele: graph.get(node)) {	
+				if (visited[ele] == false) {
+					q.add(ele);
+					visited[ele] = true;
+				}
+			}
+		}
+		return ans;
+	}
+}

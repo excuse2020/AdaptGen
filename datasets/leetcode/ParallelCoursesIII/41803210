@@ -1,0 +1,31 @@
+class Solution {
+	int calculateMinTime(int course, List<List<Integer>> graph, int[] dp, int[] time) {
+		if (dp[course] != 0) {
+			return dp[course];
+		}
+		int maxPrerequisiteTime = 0;
+		for (int prereq: graph.get(course)) {	
+			maxPrerequisiteTime = Math.max(maxPrerequisiteTime,calculateMinTime(prereq,graph,dp,time));
+		}
+		dp[course] = maxPrerequisiteTime + time[course];
+		return dp[course];
+	}
+	int minimumTime(int n, int[][] relations, int[] time) {
+		int[] dp = new int[n];
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int[] relation: relations) {	
+			int prevCourse = relation[0] - 1;
+			int nextCourse = relation[1] - 1;
+			graph.get(nextCourse).add(prevCourse);
+		}
+		int overallMinTime = 0;
+		for (int i = 0; i < n; i++) {
+			int courseMinTime = calculateMinTime(i,graph,dp,time);
+			overallMinTime = Math.max(overallMinTime,courseMinTime);
+		}
+		return overallMinTime;
+	}
+}

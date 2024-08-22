@@ -1,0 +1,37 @@
+class Solution {
+	int count = 0, local = 0;
+	void dfs(List<List<Integer>> edges, boolean[] vis, List<Boolean> hasApple, int node) {
+		vis[node] = true;
+		if (hasApple.get(node)) {
+			count += local * 2;
+			local = 0;
+		}
+		for (Integer it: edges.get(node)) {	
+			if (vis[it] == false) {
+				local++;
+				int temp = count;
+				dfs(edges,vis,hasApple,it);
+				if (count == temp) {
+					local--;
+				}
+			}
+		}
+	}
+	List<List<Integer>> edgeArrToList(int[][] edges, int vertices) {
+		List<List<Integer>> ret = new ArrayList<>();
+		for (int i = 0; i < vertices; i++) {
+			ret.add(new ArrayList<>());
+		}
+		for (int[] e: edges) {	
+			ret.get(e[0]).add(e[1]);
+			ret.get(e[1]).add(e[0]);
+		}
+		return ret;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		List<List<Integer>> ret = edgeArrToList(edges,n);
+		boolean[] vis = new boolean[n];
+		dfs(ret,vis,hasApple,0);
+		return count;
+	}
+}

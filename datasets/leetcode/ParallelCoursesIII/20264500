@@ -1,0 +1,33 @@
+class Solution {
+	int dfs(int course, Map<Integer, List<Integer>> adjList, Integer[] routeLens, int[] time) {
+		if (routeLens[course] != null) {
+			return routeLens[course];
+		}
+		int max = time[course - 1];
+		List<Integer> nextCourses = adjList.getOrDefault(course,new ArrayList<>());
+		for (int nextCourse: nextCourses) {	
+			max = Math.max(max,time[course - 1] + dfs(nextCourse,adjList,routeLens,time));
+		}
+		routeLens[course] = max;
+		return max;
+	}
+	Map<Integer, List<Integer>> makeAdjList(int[][] relations) {
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int[] relation: relations) {	
+			int prereq = relation[0];
+			int course = relation[1];
+			map.putIfAbsent(prereq,new ArrayList<>());
+			map.get(prereq).add(course);
+		}
+		return map;
+	}
+	int minimumTime(int n, int[][] relations, int[] time) {
+		Map<Integer, List<Integer>> adjList = makeAdjList(relations);
+		Integer[] routeLens = new Integer[n + 1];
+		int max = 0;
+		for (int i = 1; i <= n; i++) {
+			max = Math.max(max,dfs(i,adjList,routeLens,time));
+		}
+		return max;
+	}
+}

@@ -1,0 +1,42 @@
+class Solution {
+	List<List<Integer>> getAncestors(int n, int[][] edges) {
+		int[] inDegree = new int[n];
+		List<List<Integer>> adjList = new ArrayList<>();
+		List<List<Integer>> ancestors = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adjList.add(new ArrayList<>());
+			ancestors.add(new ArrayList<>());
+		}
+		Queue<Integer> nodeList = new LinkedList<>();
+		for (int[] edge: edges) {	
+			adjList.get(edge[0]).add(edge[1]);
+			inDegree[edge[1]]++;
+		}
+		boolean[] visited = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			if (inDegree[i] == 0) {
+				nodeList.add(i);
+				visited[i] = true;
+			}
+		}
+		while (!nodeList.isEmpty()) {
+			int node = nodeList.remove();
+			for (int curNode: adjList.get(node)) {	
+				List<Integer> arrList = ancestors.get(curNode);
+				arrList.add(node);
+				for (int val: ancestors.get(node)) {	
+					if (!arrList.contains(val)) {
+						arrList.add(val);
+					}
+				}
+				if (visited[curNode] == false && --inDegree[curNode] == 0) {
+					nodeList.add(curNode);
+				}
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			Collections.sort(ancestors.get(i));
+		}
+		return ancestors;
+	}
+}

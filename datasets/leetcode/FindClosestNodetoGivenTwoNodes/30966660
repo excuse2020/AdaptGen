@@ -1,0 +1,48 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		if (node1 == node2) {
+			return node1;
+		}
+		int n = edges.length;
+		int[] d1 = new int[n];
+		int[] d2 = new int[n];
+		boolean[] isVisited1 = new boolean[n];
+		boolean[] isVisited2 = new boolean[n];
+		Arrays.fill(d1,Integer.MAX_VALUE);
+		Arrays.fill(d2,Integer.MAX_VALUE);
+		d1[node1] = 0;
+		isVisited1[node1] = true;
+		int next = node1;
+		while (edges[next] != -1 && !isVisited1[edges[next]]) {
+			isVisited1[edges[next]] = true;
+			d1[edges[next]] = d1[next] + 1;
+			next = edges[next];
+			if (next == node1) {
+				break;
+			}
+		}
+		d2[node2] = 0;
+		isVisited2[node2] = true;
+		next = node2;
+		while (edges[next] != -1 && !isVisited2[edges[next]]) {
+			isVisited2[edges[next]] = true;
+			d2[edges[next]] = d2[next] + 1;
+			next = edges[next];
+			if (next == node1) {
+				break;
+			}
+		}
+		int max = Integer.MAX_VALUE;
+		int node = -1;
+		for (int i = 0; i < n; i++) {
+			if (d1[i] == Integer.MAX_VALUE || d2[i] == Integer.MAX_VALUE) {
+				continue;
+			}
+			if (max > Math.max(d1[i],d2[i])) {
+				node = i;
+				max = Math.max(d1[i],d2[i]);
+			}
+		}
+		return node;
+	}
+}

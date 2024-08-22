@@ -1,0 +1,68 @@
+class Solution {
+	int componentValue(int[] nums, int[][] edges) {
+		int n = nums.length, total = 0, root = -1;
+		for (int num: nums) {	
+			total += num;
+		}
+		List[] egdesFrom = new List[n];
+		for (int i = 0; i < n; i++) {
+			egdesFrom[i] = new ArrayList();
+		}
+		for (int[] e: edges) {	
+			egdesFrom[e[0]].add(e[1]);
+			egdesFrom[e[1]].add(e[0]);
+		}
+		List<Integer> leaves = new ArrayList();
+		for (int i = 0; i < n; i++) {
+			if (egdesFrom[i].size() == 1) {
+				leaves.add(i);
+			}
+		}
+		for (int ans = n - 1; ans > 0; ans--) {
+			if (total % (ans + 1) != 0) {
+				continue;
+			}
+			int sum = total / (ans + 1);
+			if (leavesUpSum(sum,egdesFrom,Arrays.copyOf(nums,n),leaves)) {
+				return ans;
+			}
+		}
+		return 0;
+	}
+	boolean leavesUpSum(int sum, List[] graph, int[] nums, List<Integer> leaves) {
+		boolean seen = new boolean[nums.length];
+		Queue<Integer> q = new LinkedList();
+		for (int leaf: leaves) {	
+			q.add(leaf);
+		}
+		while (!q.isEmpty()) {
+			int size = q.size();
+			for (int j = 0; j < size; j++) {
+				int cur = q.poll(), i = 0, neighbor = -1;
+				if (seen[cur]) {
+					continue;
+				}
+				if (nums[cur] > sum) {
+					return false;
+				}
+				while (i < graph[cur].size() && seen[(int)graph[cur].get(i)]) {
+					i++;
+				}
+				if (i < graph[cur].size()) {
+					neighbor = (int) graph[cur].get(i);
+				}
+				seen[cur] = true;
+				if (nums[cur] < sum) {
+					if (neighbor == -1) {
+						return false;
+					}
+					nums[neighbor] += nums[cur];
+				}
+				if (neighbor != -1) {
+					q.offer(neighbor);
+				}
+			}
+		}
+		return true;
+	}
+}

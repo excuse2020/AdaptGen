@@ -1,0 +1,66 @@
+class Solution {
+	int helperMem(int[] nums1, int[] nums2, int m, int n, int[][] dp) {
+		if (m == nums1.length || n == nums2.length) {
+			return 0;
+		}
+		if (dp[m][n] != -1) {
+			return dp[m][n];
+		}
+		int ans = 0;
+		if (nums1[m] == nums2[n]) {
+			ans = 1 + helperMem(nums1,nums2,m + 1,n + 1,dp);
+		} 
+		else {
+			ans = Math.max(helperMem(nums1,nums2,m + 1,n,dp),helperMem(nums1,nums2,m,n + 1,dp));
+		}
+		return dp[m][n] = ans;
+	}
+	int helperRec(int[] nums1, int[] nums2, int m, int n) {
+		if (m == nums1.length || n == nums2.length) {
+			return 0;
+		}
+		if (nums1[m] == nums2[n]) {
+			return 1 + helperRec(nums1,nums2,m + 1,n + 1);
+		} 
+		else {
+			return Math.max(helperRec(nums1,nums2,m + 1,n),helperRec(nums1,nums2,m,n + 1));
+		}
+	}
+	int helperSO(int[] nums1, int[] nums2) {
+		int[] curr = new int[nums2.length + 1];
+		int[] next = new int[nums2.length + 1];
+		for (int m = nums1.length - 1; m >= 0; m--) {
+			for (int n = nums2.length - 1; n >= 0; n--) {
+				int ans = 0;
+				if (nums1[m] == nums2[n]) {
+					ans = 1 + next[n + 1];
+				} 
+				else {
+					ans = Math.max(next[n],curr[n + 1]);
+				}
+				curr[n] = ans;
+			}
+			next = curr;
+		}
+		return next[0];
+	}
+	int helperTab(int[] nums1, int[] nums2) {
+		int[][] dp = new int[nums1.length + 1][nums2.length + 1];
+		for (int m = nums1.length - 1; m >= 0; m--) {
+			for (int n = nums2.length - 1; n >= 0; n--) {
+				int ans = 0;
+				if (nums1[m] == nums2[n]) {
+					ans = 1 + dp[m + 1][n + 1];
+				} 
+				else {
+					ans = Math.max(dp[m + 1][n],dp[m][n + 1]);
+				}
+				dp[m][n] = ans;
+			}
+		}
+		return dp[0][0];
+	}
+	int maxUncrossedLines(int[] nums1, int[] nums2) {
+		return helperTab(nums1,nums2);
+	}
+}

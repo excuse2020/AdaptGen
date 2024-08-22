@@ -1,0 +1,47 @@
+class Solution {
+	TreeNode curr;
+	boolean containDeepest(TreeNode root, int height, int rh) {
+		if (root.left == null && root.right == null) {
+			if (height == rh) {
+				return true;
+			} 
+			else {
+				return false;
+			}
+		}
+		boolean lc = false;
+		boolean rc = false;
+		if (root.left != null) {
+			lc = containDeepest(root.left,height + 1,rh);
+		}
+		if (root.right != null) {
+			rc = containDeepest(root.right,height + 1,rh);
+		}
+		if (lc && rc) {
+			curr = root;
+		}
+		if (curr == null && lc && !rc) {
+			curr = root.left;
+		}
+		if (curr == null && !lc && rc) {
+			curr = root.right;
+		}
+		return lc || rc;
+	}
+	TreeNode lcaDeepestLeaves(TreeNode root) {
+		int maxDepth = maxDepth(root,0);
+		if (maxDepth == 0) {
+			return root;
+		}
+		containDeepest(root,0,maxDepth);
+		return curr;
+	}
+	int maxDepth(TreeNode root, int height) {
+		if (root.left == null && root.right == null) {
+			return height;
+		}
+		int lh = root.right != null ? maxDepth(root.right,height + 1) : height;
+		int rh = root.left != null ? maxDepth(root.left,height + 1) : height;
+		return Math.max(lh,rh);
+	}
+}

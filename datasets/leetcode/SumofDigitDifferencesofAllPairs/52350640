@@ -1,0 +1,28 @@
+class Solution {
+	HashMap<Integer, HashMap<Character, Integer>> map = new HashMap<>();
+	void pushMap(int index, int nums) {
+		HashMap<Character, Integer> mp = new HashMap<>();
+		for (int i = 0; i < nums.length; i++) {
+			String s = String.valueOf(nums[i]);
+			mp.put(s.charAt(index),mp.getOrDefault(s.charAt(index),0) + 1);
+		}
+		map.put(index,mp);
+	}
+	long sumDigitDifferences(int[] nums) {
+		int n = String.valueOf(nums[0]).length();
+		for (int i = 0; i < n; i++) {
+			pushMap(i,nums);
+		}
+		long ans = 0;
+		for (int i = 0; i < nums.length; i++) {
+			String s = String.valueOf(nums[i]);
+			int count = 0;
+			while (count < n) {
+				int get = map.get(count).get(s.charAt(count));
+				ans = ans + (nums.length - get);
+				count++;
+			}
+		}
+		return ans / 2;
+	}
+}

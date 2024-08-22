@@ -1,0 +1,22 @@
+class Solution {
+	long MODN = 1000000007;
+	int distinctSubseqII(String s) {
+		int n = s.length();
+		Long[] dp = new Long[n + 1];
+		dp[0] = 1L;
+		Map<Character, Integer> mp = new HashMap<>();
+		for (int i = 1; i <= n; i++) {
+			Character c = s.charAt(i - 1);
+			if (!mp.containsKey(c)) {
+				dp[i] = (2L * dp[i - 1]) % MODN;
+			} 
+			else {
+				int prev = mp.get(c) - 1;
+				dp[i] = ((2L * dp[i - 1]) % MODN - (dp[prev] % MODN)) % MODN;
+			}
+			mp.put(c,i);
+		}
+		dp[n] -= 1;
+		return (int) ((MODN + dp[n]) % MODN);
+	}
+}

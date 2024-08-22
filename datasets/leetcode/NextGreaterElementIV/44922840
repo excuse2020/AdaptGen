@@ -1,0 +1,40 @@
+class Solution {
+	int[] secondGreaterElement(int[] nums) {
+		int[] nge = new int[nums.length];
+		Arrays.fill(nge,-1);
+		Stack<Integer> s = new Stack();
+		for (int i = 0; i < nums.length; i++) {
+			while (!s.isEmpty() && nums[s.peek()] < nums[i]) {
+				nge[s.pop()] = i;
+			}
+			s.push(i);
+		}
+		int[] res = new int[nums.length];
+		Arrays.fill(res,-1);
+		for (int i = 0; i < nge.length; i++) {
+			int num = nums[i];
+			int greater = nge[i];
+			if (i > 0 && greater == nge[i - 1] && nums[i] >= nums[i - 1]) {
+				res[i] = res[i - 1];
+				continue;
+			}
+			int start = -1;
+			int boundaryIndex = -1;
+			if (greater != -1) {
+				start = greater + 1;
+				boundaryIndex = nge[greater] == -1 ? nums.length - 1 : nge[greater];
+			} 
+			else {
+				start = nums.length;
+			}
+			while (start <= boundaryIndex) {
+				if (nums[start] > nums[i]) {
+					res[i] = nums[start];
+					break;
+				}
+				start++;
+			}
+		}
+		return res;
+	}
+}

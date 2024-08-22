@@ -1,0 +1,36 @@
+class Solution {
+	int getMoves(int[][] grid, int i, int j, int[][] moves, int row, int col, int rows, int cols) {
+		if (row < 0 || row >= rows || col < 0 || col >= cols) {
+			return -1;
+		}
+		if (grid[i][j] >= grid[row][col]) {
+			return -1;
+		}
+		return moves[row][col];
+	}
+	int maxMoves(int[][] grid) {
+		int n = grid.length;
+		int m = grid[0].length;
+		int[][] moves = new int[n][m];
+		for (int[] row: moves) {	
+			Arrays.fill(row,-1);
+		}
+		for (int col = m - 1; col >= 0; col--) {
+			for (int row = 0; row < n; row++) {
+				if (col == m - 1) {
+					moves[row][col] = 0;
+				} 
+				else {
+					moves[row][col] = Math.max(moves[row][col],getMoves(grid,row,col,moves,row - 1,col + 1,n,m) + 1);
+					moves[row][col] = Math.max(moves[row][col],getMoves(grid,row,col,moves,row,col + 1,n,m) + 1);
+					moves[row][col] = Math.max(moves[row][col],getMoves(grid,row,col,moves,row + 1,col + 1,n,m) + 1);
+				}
+			}
+		}
+		int max = 0;
+		for (int row = 0; row < n; row++) {
+			max = Math.max(max,moves[row][0]);
+		}
+		return max;
+	}
+}

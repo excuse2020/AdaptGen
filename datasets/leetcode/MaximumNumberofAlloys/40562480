@@ -1,0 +1,31 @@
+class Solution {
+	int maxNumberOfAlloys(int n, int k, int budget, List<List<Integer>> composition, List<Integer> stock, List<Integer> cost) {
+		int ans = 0, stockTotal = 0;
+		for (int s: stock) {	
+			stockTotal += s;
+		}
+		for (int machine = 0; machine < k; machine++) {
+			int l = 0, r = budget + stockTotal;
+			while (l <= r) {
+				int q = l + (r - l) / 2;
+				long totalCost = 0;
+				for (int metal = 0; metal < n; metal++) {
+					long required = (long) composition.get(machine).get(metal) * q;
+					totalCost += (long) Math.max(0,required - stock.get(metal)) * cost.get(metal);
+					if (totalCost > budget) {
+						totalCost = -1;
+						break;
+					}
+				}
+				if (totalCost != -1 && totalCost <= budget) {
+					l = q + 1;
+				} 
+				else {
+					r = q - 1;
+				}
+			}
+			ans = Math.max(ans,r);
+		}
+		return ans;
+	}
+}

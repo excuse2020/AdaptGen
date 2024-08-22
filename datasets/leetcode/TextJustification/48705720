@@ -1,0 +1,47 @@
+class Solution {
+	String finalWoard(int i, int j, int eachWordSpace, int extraSpace, String[] words, int maxWidth) {
+		StringBuilder s = new StringBuilder();
+		for (int k = i; k < j; k++) {
+			s.append(words[k]);
+			if (k == j - 1) {
+				continue;
+			}
+			for (int space = 0; space < eachWordSpace; space++) {
+				s.append(" ");
+			}
+			if (extraSpace > 0) {
+				s.append(" ");
+				extraSpace--;
+			}
+		}
+		while (s.length() < maxWidth) {
+			s.append(" ");
+		}
+		return s.toString();
+	}
+	List<String> fullJustify(String[] words, int maxWidth) {
+		List<String> list = new ArrayList<>();
+		int n = words.length;
+		int i = 0;
+		while (i < n) {
+			int j = i + 1;
+			int lengthCount = words[i].length();
+			int spaces = 0;
+			while (j < n && lengthCount + words[j].length() <= maxWidth) {
+				lengthCount += words[j].length();
+				spaces += 1;
+				j++;
+			}
+			int remainingSlots = maxWidth - lengthCount;
+			int eachWordSpace = spaces == 0 ? 0 : remainingSlots / spaces;
+			int extraSpace = spaces == 0 ? 0 : remainingSlots % spaces;
+			if (j == n) {
+				eachWordSpace = 1;
+				extraSpace = 0;
+			}
+			list.add(finalWoard(i,j,eachWordSpace,extraSpace,words,maxWidth));
+			i = j;
+		}
+		return list;
+	}
+}

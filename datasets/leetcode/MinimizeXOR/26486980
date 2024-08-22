@@ -1,0 +1,41 @@
+class Solution {
+	int minimizeXor(int num1, int num2) {
+		int setBits2 = 0, setBits1 = 0;
+		int curr = num2;
+		while (curr != 0) {
+			if ((curr & 1) == 1) {
+				setBits2++;
+			}
+			curr >>= 1;
+		}
+		curr = num1;
+		while (curr != 0) {
+			if ((curr & 1) == 1) {
+				setBits1++;
+			}
+			curr >>= 1;
+		}
+		int result = 0;
+		curr = 1;
+		while (setBits2 > 0 || setBits1 > 0) {
+			if ((curr & num1) != 0) {
+				if (setBits1 > setBits2) {
+					setBits1--;
+				} 
+				else {
+					setBits1--;
+					setBits2--;
+					result |= curr;
+				}
+			} 
+			else {
+				if (setBits1 < setBits2) {
+					result |= curr;
+					setBits2--;
+				}
+			}
+			curr <<= 1;
+		}
+		return result;
+	}
+}

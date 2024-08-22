@@ -1,0 +1,42 @@
+class Solution {
+	List<List<Integer>> li = new ArrayList<>();
+	List<List<Integer>> level(TreeNode root, List<Integer> arr) {
+		if (root == null) {
+			return li;
+		}
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(root);
+		q.add(null);
+		while (!q.isEmpty()) {
+			TreeNode curr = q.remove();
+			if (curr == null) {
+				li.add(new ArrayList<>(arr));
+				arr.clear();
+				if (q.isEmpty()) {
+					break;
+				} 
+				else {
+					q.add(null);
+				}
+			} 
+			else {
+				arr.add(curr.val);
+				if (curr.left != null) {
+					q.add(curr.left);
+				}
+				if (curr.right != null) {
+					q.add(curr.right);
+				}
+			}
+		}
+		return li;
+	}
+	List<List<Integer>> levelOrderBottom(TreeNode root) {
+		level(root,new ArrayList<>());
+		List<List<Integer>> l = new ArrayList<>();
+		for (int i = li.size() - 1; i >= 0; i--) {
+			l.add(li.get(i));
+		}
+		return l;
+	}
+}

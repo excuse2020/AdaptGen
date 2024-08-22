@@ -1,0 +1,42 @@
+class Solution {
+	int minimumLengthEncoding(String[] words) {
+		Set<String> set = new HashSet<>();
+		List<String> list = new ArrayList<>();
+		for (String word: words) {	
+			if (set.add(word)) {
+				list.add(word);
+			}
+		}
+		Collections.sort(list,new Comparator<String>());
+		int result = 0;
+		int size = list.size();
+		int[] visited = new int[size];
+		for (int i = 0; i < size; i++) {
+			String current = list.get(i);
+			if (visited[i] == 1) {
+				continue;
+			}
+			for (int j = i + 1; j < size; j++) {
+				String next = list.get(j);
+				int pos = current.indexOf(next);
+				if (pos == -1) {
+					continue;
+				}
+				if (pos != -1 && current.length() == next.length() + pos) {
+					visited[j] = 1;
+				} 
+				else {
+					while ((pos = current.indexOf(next,pos)) != -1) {
+						if (current.length() == next.length() + pos) {
+							visited[j] = 1;
+							break;
+						}
+						pos++;
+					}
+				}
+			}
+			result += current.length() + 1;
+		}
+		return result;
+	}
+}

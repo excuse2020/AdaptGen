@@ -1,0 +1,45 @@
+class Solution {
+	HashSet<Integer> set = new HashSet<>();
+	boolean findValidPath(int source, int destination, HashMap<Integer, ArrayList<Integer>> map) {
+		if (map.containsKey(source)) {
+			ArrayList<Integer> valueList = map.get(source);
+			if (valueList.indexOf(destination) != -1) {
+				return true;
+			} 
+			else {
+				for (int nextValue: valueList) {	
+					if (!set.contains(nextValue)) {
+						set.add(nextValue);
+						if (findValidPath(nextValue,destination,map)) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+	boolean validPath(int n, int[][] edges, int source, int destination) {
+		if (source == destination) {
+			return true;
+		}
+		HashMap<Integer, ArrayList<Integer>> hm = new HashMap<>();
+		for (int[] edge: edges) {	
+			if (!hm.containsKey(edge[0])) {
+				hm.put(edge[0],new ArrayList());
+				hm.get(edge[0]).add(edge[1]);
+			} 
+			else {
+				hm.get(edge[0]).add(edge[1]);
+			}
+			if (!hm.containsKey(edge[1])) {
+				hm.put(edge[1],new ArrayList());
+				hm.get(edge[1]).add(edge[0]);
+			} 
+			else {
+				hm.get(edge[1]).add(edge[0]);
+			}
+		}
+		return findValidPath(source,destination,hm);
+	}
+}

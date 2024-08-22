@@ -1,0 +1,48 @@
+class Solution {
+	int[] dist, reversedEdgeCount;
+	Map<Integer, Set<Integer>> undirectedGraph = new HashMap<>(), directedGraph = new HashMap<>();
+	int bfs(int src) {
+		Queue<Integer> q = new LinkedList<>();
+		Set<Integer> vis = new HashSet<>();
+		dist[src] = 0;
+		q.offer(src);
+		int numReversedEdges = 0;
+		while (!q.isEmpty()) {
+			int node = q.poll();
+			if (!vis.add(node)) {
+				continue;
+			}
+			for (int neighbor: undirectedGraph.getOrDefault(node,Collections.emptySet())) {	
+				if (!vis.contains(neighbor)) {
+					dist[neighbor] = 1 + dist[node];
+					q.offer(neighbor);
+					if (!directedGraph.getOrDefault(node,Collections.emptySet()).contains(neighbor)) {
+						++numReversedEdges;
+						reversedEdgeCount[neighbor] = 1 + reversedEdgeCount[node];
+					} 
+					else {
+						reversedEdgeCount[neighbor] = reversedEdgeCount[node];
+					}
+				}
+			}
+		}
+		return numReversedEdges;
+	}
+	int[] minEdgeReversals(int n, int[][] edges) {
+		int[] res = new int[n];
+		dist = new int[n];
+		reversedEdgeCount = new int[n];
+		for (int[] edge: edges) {	
+			int u = edge[0], v = edge[1];
+			undirectedGraph.computeIfAbsent(u,(k) -> {new HashSet<>()}).add(v);
+			undirectedGraph.computeIfAbsent(v,(k) -> {new HashSet<>()}).add(u);
+			directedGraph.computeIfAbsent(u,(k) -> {new HashSet<>()}).add(v);
+		}
+		int numReversedEdges = bfs(0);
+		for (int i = 0; i < n; i++) {
+			int val1 = dist[i] - reversedEdgeCount[i], val2 = numReversedEdges - reversedEdgeCount[i];
+			res[i] = val1 + val2;
+		}
+		return res;
+	}
+}

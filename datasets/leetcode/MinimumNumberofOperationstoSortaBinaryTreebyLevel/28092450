@@ -1,0 +1,44 @@
+class Solution {
+	int helper(List<Integer> result) {
+		List<Integer> sortedList = new ArrayList<Integer>(result);
+		Collections.sort(sortedList);
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < result.size(); i++) {
+			map.put(result.get(i),i);
+		}
+		int swap = 0;
+		for (int i = 0; i < result.size(); i++) {
+			if (result.get(i) != sortedList.get(i)) {
+				swap++;
+				map.put(result.get(i),map.get(sortedList.get(i)));
+				result.set(map.get(sortedList.get(i)),result.get(i));
+			}
+		}
+		return swap;
+	}
+	int minimumOperations(TreeNode root) {
+		List<Integer> result = new ArrayList<Integer>();
+		if (root == null) {
+			return 0;
+		}
+		Queue<TreeNode> queue = new LinkedList<TreeNode>();
+		queue.add(root);
+		int answer = 0;
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			result = new ArrayList<Integer>();
+			for (int i = 0; i < size; i++) {
+				TreeNode currentNode = queue.poll();
+				result.add(currentNode.val);
+				if (currentNode.left != null) {
+					queue.add(currentNode.left);
+				}
+				if (currentNode.right != null) {
+					queue.add(currentNode.right);
+				}
+			}
+			answer += helper(result);
+		}
+		return answer;
+	}
+}

@@ -1,0 +1,53 @@
+class Solution {
+	double equals = 0, ne = 0;
+	void choose(int[] balls, int size1, int size2, int k, int i, int[] b1, int[] b2, double factor) {
+		if (size1 > k || size2 > k) {
+			return;
+		}
+		if (size1 == k) {
+			count(b1,balls,factor);
+			return;
+		}
+		if (size2 == k) {
+			count(b2,balls,factor);
+			return;
+		}
+		for (int j = 0; j <= balls[i]; j++) {
+			b1[i] += j;
+			b2[i] += balls[i] - j;
+			choose(balls,size1 + j,size2 + balls[i] - j,k,i + 1,b1,b2,factor * combination(j,balls[i]));
+			b1[i] -= j;
+			b2[i] -= balls[i] - j;
+		}
+	}
+	double combination(int i, int total) {
+		return IntStream.rangeClosed(i + 1,total).reduce(1,(a, b) -> {a * b}) / factorial(total - i);
+	}
+	void count(int[] b1, int[] balls, double factor) {
+		int c1 = 0, c2 = 0;
+		for (int j = 0; j < balls.length; j++) {
+			c1 += (b1[j] > 0) ? 1 : 0;
+			c2 += (balls[j] - b1[j] > 0) ? 1 : 0;
+		}
+		if (c1 == c2) {
+			equals += factor;
+		} 
+		else {
+			ne += factor;
+		}
+		return;
+	}
+	double factorial(int i) {
+		return IntStream.rangeClosed(1,i).reduce(1,(a, b) -> {a * b});
+	}
+	double getProbability(int[] balls) {
+		equals = 0;
+		ne = 0;
+		int size = 0;
+		for (int i = 0; i < balls.length; i++) {
+			size += balls[i];
+		}
+		choose(balls,0,0,size / 2,0,new int[balls.length],new int[balls.length],1);
+		return equals / (equals + ne);
+	}
+}

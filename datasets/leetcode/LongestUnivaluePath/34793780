@@ -1,0 +1,35 @@
+class Solution {
+	int dfs(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		int rightRootPath = 0, leftRootPath = 0;
+		if (root.left != null && root.val == root.left.val) {
+			leftRootPath = dfs(root.left);
+		}
+		if (root.right != null && root.val == root.right.val) {
+			rightRootPath = dfs(root.right);
+		}
+		return Math.max(leftRootPath,rightRootPath) + 1;
+	}
+	int longestUnivalueNodes(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		int WORoot = Math.max(longestUnivalueNodes(root.left),longestUnivalueNodes(root.right));
+		int WRoot = 1;
+		if (root.left != null && root.val == root.left.val) {
+			WRoot += dfs(root.left);
+		}
+		if (root.right != null && root.val == root.right.val) {
+			WRoot += dfs(root.right);
+		}
+		return Math.max(WORoot,WRoot);
+	}
+	int longestUnivaluePath(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		return longestUnivalueNodes(root) - 1;
+	}
+}

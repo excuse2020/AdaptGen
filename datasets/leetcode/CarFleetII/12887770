@@ -1,0 +1,30 @@
+class Solution {
+	double[] getCollisionTimes(int[][] cars) {
+		int n = cars.length;
+		double ret = new double[n];
+		Stack<Integer> stack = new Stack<>();
+		for (int i = 0; i < n; i++) {
+			ret[i] = -1;
+		}
+		for (int i = n - 1; i >= 0; i--) {
+			int myPos = cars[i][0];
+			int mySpeed = cars[i][1];
+			while (!stack.isEmpty()) {
+				int topPos = cars[stack.peek()][0];
+				int topSpeed = cars[stack.peek()][1];
+				if (mySpeed <= topSpeed) {
+					stack.pop();
+					continue;
+				}
+				double collisionTime = (double) (topPos - myPos) / (mySpeed - topSpeed);
+				if (collisionTime < ret[stack.peek()] || ret[stack.peek()] == -1) {
+					ret[i] = collisionTime;
+					break;
+				}
+				stack.pop();
+			}
+			stack.add(i);
+		}
+		return ret;
+	}
+}

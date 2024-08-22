@@ -1,0 +1,69 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		Stack<Integer> s1 = new Stack<Integer>();
+		Stack<Integer> s2 = new Stack<Integer>();
+		Stack<Integer> res = new Stack<Integer>();
+		while (head1 != null) {
+			s1.push(head1.val);
+			head1 = head1.next;
+		}
+		while (head2 != null) {
+			s2.push(head2.val);
+			head2 = head2.next;
+		}
+		int add = 0;
+		while (!s1.isEmpty() && !s2.isEmpty()) {
+			int temp = add + s1.pop();
+			if (temp > 9) {
+				add = 1;
+				res.push(temp - 10);
+			} 
+			else {
+				add = 0;
+				res.push(temp);
+			}
+		}
+		if (!s2.isEmpty()) {
+			while (!s2.isEmpty() && add == 1) {
+				int temp = s2.pop() + add;
+				if (temp > 9) {
+					add = 1;
+					res.push(0);
+				} 
+				else {
+					add = 0;
+					res.push(temp);
+				}
+			}
+			while (!s2.isEmpty()) {
+				res.push(s2.pop());
+			}
+		}
+		if (!s1.isEmpty()) {
+			while (!s1.isEmpty() && add == 1) {
+				int temp = s1.pop() + add;
+				if (temp > 9) {
+					add = 1;
+					res.push(0);
+				} 
+				else {
+					add = 0;
+					res.push(temp);
+				}
+			}
+			while (!s1.isEmpty()) {
+				res.push(s1.pop());
+			}
+		}
+		if (add == 1) {
+			res.push(1);
+		}
+		ListNode head = new LostNode(res.pop());
+		ListNode node = head;
+		while (!res.isEmpty()) {
+			node.next = new ListNode(res.pop());
+			node = node.next;
+		}
+		return head;
+	}
+}

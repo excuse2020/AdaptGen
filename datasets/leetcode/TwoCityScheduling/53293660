@@ -1,0 +1,33 @@
+class Solution {
+	int twoCitySchedCost(int[][] costs) {
+		PriorityQueue<Integer> pqa = new PriorityQueue<>();
+		PriorityQueue<Integer> pqb = new PriorityQueue<>();
+		int op = 0;
+		int a = 0;
+		int b = 0;
+		for (int i = 0; i < costs.length; i++) {
+			op = op + Math.min(costs[i][0],costs[i][1]);
+			if (costs[i][0] > costs[i][1]) {
+				b++;
+				pqa.add(Math.abs(costs[i][0] - costs[i][1]));
+			} 
+			else {
+				a++;
+				pqb.add(Math.abs(costs[i][0] - costs[i][1]));
+			}
+			if (a > (costs.length / 2)) {
+				if (!pqb.isEmpty()) {
+					op = op + pqb.poll();
+					a--;
+				}
+			}
+			if (b > (costs.length / 2)) {
+				if (!pqa.isEmpty()) {
+					op = op + pqa.poll();
+					b--;
+				}
+			}
+		}
+		return op;
+	}
+}

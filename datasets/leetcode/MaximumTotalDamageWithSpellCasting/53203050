@@ -1,0 +1,41 @@
+class Solution {
+	long[] dp;
+	long find(long[][] a, int idx) {
+		if (idx == a.length) {
+			return 0;
+		}
+		if (dp[idx] != -1) {
+			return dp[idx];
+		}
+		long ans = a[idx][1];
+		int n = a.length;
+		if (idx + 1 < n && a[idx + 1][0] > a[idx][0] + 2) {
+			ans = Math.max(ans,a[idx][1] + find(a,idx + 1));
+		}
+		if (idx + 2 < n && a[idx + 2][0] > a[idx][0] + 2) {
+			ans = Math.max(ans,a[idx][1] + find(a,idx + 2));
+		}
+		if (idx + 3 < n) {
+			ans = Math.max(ans,a[idx][1] + find(a,idx + 3));
+		}
+		ans = Math.max(ans,find(a,idx + 1));
+		dp[idx] = ans;
+		return ans;
+	}
+	long maximumTotalDamage(int[] nums) {
+		HashMap<Integer, Integer> map = new HashMap<>();
+		dp = new long[nums.length];
+		Arrays.fill(dp,-1);
+		for (int i: nums) {	
+			map.put(i,map.getOrDefault(i,0) + 1);
+		}
+		long[][] a = new long[map.size()][2];
+		int x = 0;
+		for (int i: map.keySet()) {	
+			a[x][0] = i;
+			a[x++][1] = map.get(i) * 1L;
+		}
+		Arrays.sort(a,(x1, y) -> {Long.compare(x1[0],y[0])});
+		return find(a,0);
+	}
+}

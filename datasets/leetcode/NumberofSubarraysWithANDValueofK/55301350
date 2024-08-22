@@ -1,0 +1,54 @@
+class Solution {
+	long countSubarrays(int[] nums, int k) {
+		Queue<Integer> stops = new ArrayDeque<>();
+		for (int i = 0; i < nums.length; i++) {
+			if ((nums[i] & k) != k) {
+				stops.add(i);
+			}
+		}
+		stops.add(nums.length);
+		Stack<Integer> vals = new Stack<>();
+		int comm = (1 << 31) - 1;
+		long total = 0;
+		for (int i = 0; i < nums.length; i++) {
+			if (stops.peek() == i) {
+				comm = (1 << 31) - 1;
+				vals.clear();
+				stops.poll();
+			} 
+			else {
+				if ((comm & nums[i]) == k) {
+					int vsize = vals.size();
+					Stack<Integer> left = new Stack<>();
+					if (nums[i] != k) {
+						int comm2 = nums[i];
+						int pcomm = 0;
+						left.add(nums[i]);
+						while (comm2 != k) {
+							left.add(vals.peek());
+							pcomm = comm2;
+							comm2 = comm2 & vals.pop();
+						}
+						vsize = vals.size();
+						left.pop();
+						vals.clear();
+						while (!left.isEmpty()) {
+							vals.add(left.pop());
+						}
+						comm = pcomm;
+					} 
+					else {
+						comm = (1 << 31) - 1;
+						vals.clear();
+					}
+					total += (vsize + 1) * (stops.peek() - i);
+				} 
+				else {
+					comm = comm & nums[i];
+					vals.add(nums[i]);
+				}
+			}
+		}
+		return total;
+	}
+}

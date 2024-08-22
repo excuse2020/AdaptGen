@@ -1,0 +1,27 @@
+class Solution {
+	int memo;
+	int rec(int arr, int x, int y) {
+		if (x + y >= arr.length) {
+			return 0;
+		}
+		if (memo[x][y] != Integer.MAX_VALUE) {
+			return memo[x][y];
+		}
+		int take = Integer.MAX_VALUE;
+		if (x < arr.length / 2) {
+			take = arr[x + y][0] + rec(arr,x + 1,y);
+		}
+		int not = Integer.MAX_VALUE;
+		if (y < arr.length / 2) {
+			not = arr[x + y][1] + rec(arr,x,y + 1);
+		}
+		return memo[x][y] = Math.min(not,take);
+	}
+	int twoCitySchedCost(int[][] arr) {
+		memo = new int[arr.length][arr.length];
+		for (int j: memo) {	
+			Arrays.fill(j,Integer.MAX_VALUE);
+		}
+		return rec(arr,0,0);
+	}
+}

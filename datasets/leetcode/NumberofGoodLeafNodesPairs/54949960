@@ -1,0 +1,43 @@
+class Solution {
+	int countPairs(TreeNode root, int distance) {
+		List<String> list = new ArrayList<>();
+		int res = 0;
+		traverse(root,new StringBuilder(),list);
+		System.out.println(list);
+		for (int i = 0; i < list.size(); i++) {
+			for (int j = 0; j < i; j++) {
+				if (i != j) {
+					String a = list.get(i);
+					String b = list.get(j);
+					int iter = 0;
+					while (iter < a.length() && iter < b.length() && a.charAt(iter) == b.charAt(iter)) {
+						iter++;
+					}
+					int curdistance = 0;
+					curdistance += a.length() - iter >= 0 ? a.length() - iter : 0;
+					curdistance += b.length() - iter >= 0 ? b.length() - iter : 0;
+					if (curdistance <= distance) {
+						res++;
+					}
+				}
+			}
+		}
+		return res;
+	}
+	void traverse(TreeNode root, StringBuilder temp, List<String> list) {
+		if (root.left == null && root.right == null) {
+			list.add(temp.toString());
+			return;
+		}
+		if (root.left != null) {
+			temp.append("L");
+			traverse(root.left,temp,list);
+			temp.deleteCharAt(temp.length() - 1);
+		}
+		if (root.right != null) {
+			temp.append("R");
+			traverse(root.right,temp,list);
+			temp.deleteCharAt(temp.length() - 1);
+		}
+	}
+}

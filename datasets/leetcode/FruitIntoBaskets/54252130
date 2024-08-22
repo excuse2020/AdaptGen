@@ -1,0 +1,35 @@
+class Solution {
+	void addFriut(Map<Integer, Integer> kindToCountMap, int kind) {
+		int existingCount = kindToCountMap.getOrDefault(kind,0);
+		kindToCountMap.put(kind,existingCount + 1);
+	}
+	boolean isValidPick(Map<Integer, Integer> kindToCountMap) {
+		return kindToCountMap.size() <= 2;
+	}
+	void removeOneFruit(Map<Integer, Integer> kindToCountMap, int kind) {
+		int existingCount = kindToCountMap.getOrDefault(kind,0);
+		if (existingCount <= 1) {
+			kindToCountMap.remove(kind);
+		} 
+		else {
+			kindToCountMap.put(kind,existingCount - 1);
+		}
+	}
+	int totalFruit(int[] fruits) {
+		if (fruits.length <= 2) {
+			return fruits.length;
+		}
+		int left = 0, maxPick = 0;
+		Map<Integer, Integer> kindToCountMap = new HashMap<>(3);
+		for (int right = 0; right < fruits.length; right++) {
+			addFriut(kindToCountMap,fruits[right]);
+			if (isValidPick(kindToCountMap)) {
+				maxPick = Math.max(maxPick,right - left + 1);
+			} 
+			else {
+				removeOneFruit(kindToCountMap,fruits[left++]);
+			}
+		}
+		return maxPick;
+	}
+}

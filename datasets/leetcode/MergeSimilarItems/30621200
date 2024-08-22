@@ -1,0 +1,62 @@
+class Solution {
+	List<List<Integer>> mergeSimilarItems(int[][] items1, int[][] items2) {
+		List<List<Integer>> ret = new ArrayList<>();
+		quickSort(items1,0,items1.length - 1);
+		quickSort(items2,0,items2.length - 1);
+		int counter1 = 0;
+		int counter2 = 0;
+		while (counter1 < items1.length && counter2 < items2.length) {
+			if (items1[counter1][0] > items2[counter2][0]) {
+				ret.add(List.of(items2[counter2][0],items2[counter2][1]));
+				counter2++;
+			} 
+			else if (items1[counter1][0] < items2[counter2][0]) {
+				ret.add(List.of(items1[counter1][0],items1[counter1][1]));
+				counter1++;
+			} 
+			else {
+				ret.add(List.of(items1[counter1][0],items1[counter1][1] + items2[counter2][1]));
+				counter1++;
+				counter2++;
+			}
+		}
+		while (counter1 < items1.length) {
+			ret.add(List.of(items1[counter1][0],items1[counter1][1]));
+			counter1++;
+		}
+		while (counter2 < items2.length) {
+			ret.add(List.of(items2[counter2][0],items2[counter2][1]));
+			counter2++;
+		}
+		return ret;
+	}
+	int partition(int[][] nums, int lowIndex, int highIndex, int pivot) {
+		int pivotIndex = highIndex;
+		while (lowIndex < highIndex) {
+			while (nums[lowIndex][0] <= pivot && lowIndex < highIndex) {
+				lowIndex++;
+			}
+			while (nums[highIndex][0] >= pivot && lowIndex < highIndex) {
+				highIndex--;
+			}
+			swap(nums,lowIndex,highIndex);
+		}
+		swap(nums,pivotIndex,highIndex);
+		return lowIndex;
+	}
+	void quickSort(int[][] nums, int lowIndex, int highIndex) {
+		if (lowIndex < highIndex) {
+			int pivotIndex = new Random().nextInt(highIndex - lowIndex) + lowIndex;
+			int pivot = nums[pivotIndex][0];
+			swap(nums,pivotIndex,highIndex);
+			int leftPointer = partition(nums,lowIndex,highIndex,pivot);
+			quickSort(nums,lowIndex,leftPointer - 1);
+			quickSort(nums,leftPointer + 1,highIndex);
+		}
+	}
+	void swap(int[][] nums, int index1, int index2) {
+		int[] temp = nums[index1];
+		nums[index1] = nums[index2];
+		nums[index2] = temp;
+	}
+}

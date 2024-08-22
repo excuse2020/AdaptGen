@@ -1,0 +1,74 @@
+class Solution {
+	ListNode oddEvenList(ListNode head) {
+		if (null == head) {
+			return null;
+		}
+		Map<String, List<Integer>> map = new HashMap<String, List<Integer>>();
+		ListNode cur = head;
+		int index = 0;
+		while (cur != null) {
+			index++;
+			if (index % 2 == 0) {
+				if (map.containsKey("even")) {
+					List<Integer> evenList = map.get("even");
+					evenList.add(cur.val);
+					map.put("even",evenList);
+				} 
+				else {
+					List<Integer> evenList = new ArrayList<>();
+					evenList.add(cur.val);
+					map.put("even",evenList);
+				}
+			} 
+			else {
+				if (map.containsKey("odd")) {
+					List<Integer> oddList = map.get("odd");
+					oddList.add(cur.val);
+					map.put("odd",oddList);
+				} 
+				else {
+					List<Integer> oddList = new ArrayList<>();
+					oddList.add(cur.val);
+					map.put("odd",oddList);
+				}
+			}
+			cur = cur.next;
+		}
+		ListNode oddHead = null;
+		ListNode odd = null;
+		ListNode evenHead = null;
+		ListNode even = null;
+		for (Map.Entry<String, List<Integer>> entry: map.entrySet()) {	
+			String key = entry.getKey();
+			List<Integer> value = entry.getValue();
+			if ("odd".equals(key)) {
+				for (int i = 0; i < value.size(); i++) {
+					ListNode node = new ListNode(value.get(i));
+					if (0 == i) {
+						oddHead = node;
+						odd = node;
+					} 
+					else {
+						odd.next = node;
+						odd = node;
+					}
+				}
+			} 
+			else {
+				for (int i = 0; i < value.size(); i++) {
+					ListNode node = new ListNode(value.get(i));
+					if (0 == i) {
+						evenHead = node;
+						even = node;
+					} 
+					else {
+						even.next = node;
+						even = node;
+					}
+				}
+			}
+		}
+		odd.next = evenHead;
+		return oddHead;
+	}
+}

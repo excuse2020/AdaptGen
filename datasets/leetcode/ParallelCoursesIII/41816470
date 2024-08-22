@@ -1,0 +1,33 @@
+class Solution {
+	int minimumTime(int n, int[][] relations, int[] time) {
+		List<Integer>[] graph = new List[n];
+		int[] inDegree = new int[n];
+		int[] startMonth = new int[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < relations.length; i++) {
+			inDegree[relations[i][1] - 1]++;
+			graph[relations[i][0] - 1].add(relations[i][1] - 1);
+		}
+		int res = 0;
+		Queue<Integer> queue = new LinkedList<>();
+		for (int i = 0; i < n; i++) {
+			if (inDegree[i] == 0) {
+				queue.offer(i);
+			}
+		}
+		while (!queue.isEmpty()) {
+			int course = queue.poll();
+			res = Math.max(res,startMonth[course] + time[course]);
+			for (int nextCourse: graph[course]) {	
+				inDegree[nextCourse]--;
+				startMonth[nextCourse] = Math.max(startMonth[nextCourse],startMonth[course] + time[course]);
+				if (inDegree[nextCourse] == 0) {
+					queue.offer(nextCourse);
+				}
+			}
+		}
+		return res;
+	}
+}

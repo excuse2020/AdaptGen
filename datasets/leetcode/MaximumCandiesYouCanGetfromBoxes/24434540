@@ -1,0 +1,48 @@
+class Solution {
+	int maxCandies(int[] status, int[] candies, int[][] keys, int[][] containedBoxes, int[] initialBoxes) {
+		Set<Integer> keySet = new HashSet<>();
+		Set<Integer> boxesToOpenNoKey = new HashSet<>();
+		Queue<Integer> queue = new LinkedList<>();
+		for (int box: initialBoxes) {	
+			queue.offer(box);
+		}
+		Set<Integer> visitedBoxes = new HashSet<>();
+		int totalCandies = 0;
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				int curBox = queue.poll();
+				if (visitedBoxes.contains(curBox)) {
+					continue;
+				}
+				int curStatus = status[curBox];
+				int curCandies = candies[curBox];
+				int[] curKeys = keys[curBox];
+				for (int key: curKeys) {	
+					keySet.add(key);
+					if (boxesToOpenNoKey.contains(key)) {
+						totalCandies += candies[key];
+						boxesToOpenNoKey.remove(key);
+					}
+				}
+				if (curStatus == 1) {
+					totalCandies += curCandies;
+				} 
+				else {
+					if (keySet.contains(curBox)) {
+						totalCandies += curCandies;
+					} 
+					else {
+						boxesToOpenNoKey.add(curBox);
+					}
+				}
+				visitedBoxes.add(curBox);
+				int[] curContainedBoxes = containedBoxes[curBox];
+				for (int box: curContainedBoxes) {	
+					queue.offer(box);
+				}
+			}
+		}
+		return totalCandies;
+	}
+}

@@ -1,0 +1,34 @@
+class Solution {
+	int globalMax = 0;
+	Map<Integer, List<int[]>> graph = new HashMap<>();
+	int dfs(int root, int parent) {
+		int maxCost = 0;
+		int maxCost2 = 0;
+		for (int[] neiCost: graph.get(root)) {	
+			if (neiCost[0] == parent) {
+				continue;
+			}
+			int cost = dfs(neiCost[0],root) + neiCost[1];
+			if (cost >= maxCost) {
+				maxCost2 = maxCost;
+				maxCost = cost;
+			} 
+			else if (cost >= maxCost2) {
+				maxCost2 = cost;
+			}
+		}
+		globalMax = Math.max(globalMax,maxCost + maxCost2);
+		return maxCost;
+	}
+	int solve(int n, Interval[] Tree_edge, int[] Edge_value) {
+		for (int i = 0; i < n; i++) {
+			graph.put(i,new ArrayList<int[]>());
+		}
+		for (int i = 0; i < n - 1; i++) {
+			graph.get(Tree_edge[i].start).add(new int{Tree_edge[i].end, Edge_value[i]});
+			graph.get(Tree_edge[i].end).add(new int{Tree_edge[i].start, Edge_value[i]});
+		}
+		dfs(0,-1);
+		return globalMax;
+	}
+}

@@ -1,0 +1,23 @@
+class Solution {
+	boolean matchReplacement(String s, String sub, char[][] mappings) {
+		HashMap<Character, Set<Character>> map = new HashMap<>();
+		for (char[] m: mappings) {	
+			map.computeIfAbsent(m[0],(set) -> {new HashSet<>()}).add(m[1]);
+		}
+		int rightBoundary = sub.length();
+		for (int l = 0; rightBoundary <= s.length(); l++, rightBoundary++) {
+			int k = 0;
+			for (int j = l; j < rightBoundary; j++, k++) {
+				char c1 = s.charAt(j);
+				char c2 = sub.charAt(k);
+				if (c1 != c2 && !map.getOrDefault(c2,Collections.emptySet()).contains(c1)) {
+					break;
+				}
+			}
+			if (k == sub.length()) {
+				return true;
+			}
+		}
+		return false;
+	}
+}

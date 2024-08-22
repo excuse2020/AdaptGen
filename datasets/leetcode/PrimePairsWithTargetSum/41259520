@@ -1,0 +1,43 @@
+class Solution {
+	List<List<Integer>> findPrimePairs(int n) {
+		boolean[] primes = new boolean[n + 1];
+		int count = 0;
+		for (int i = 2; i * i <= n; i++) {
+			if (!primes[i]) {
+				for (int j = i * 2; j <= n; j += i) {
+					primes[j] = true;
+				}
+			}
+		}
+		List<Integer> list = new ArrayList<>();
+		for (int i = 2; i <= n; i++) {
+			if (!primes[i]) {
+				list.add(i);
+			}
+		}
+		int[] arr = list.stream().mapToInt((i) -> {i}).toArray();
+		int l = 0;
+		int r = arr.length - 1;
+		List<List<Integer>> nm = new ArrayList<>();
+		while (l <= r) {
+			if (arr[l] + arr[r] == n) {
+				nm.add(new ArrayList<>(Arrays.asList(arr[l],arr[r])));
+			}
+			if (arr[l] * 2 == n) {
+				nm.add(new ArrayList<>(Arrays.asList(arr[l],arr[l])));
+				break;
+			}
+			if (arr[r] * 2 == n) {
+				nm.add(new ArrayList<>(Arrays.asList(arr[r],arr[r])));
+				break;
+			} 
+			else if (arr[l] + arr[r] > n) {
+				r--;
+			} 
+			else {
+				l++;
+			}
+		}
+		return nm;
+	}
+}

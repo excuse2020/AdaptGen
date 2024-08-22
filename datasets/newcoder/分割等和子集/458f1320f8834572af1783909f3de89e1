@@ -1,0 +1,24 @@
+class Solution {
+	boolean partition(int[] nums) {
+		int sum = 0, max = 0;
+		for (int num: nums) {	
+			sum += num;
+			max = Math.max(max,num);
+		}
+		if (sum % 2 == 1) {
+			return false;
+		}
+		if (max > sum / 2) {
+			return false;
+		}
+		boolean[] dp = new boolean[sum / 2 + 1];
+		int n = nums.length;
+		dp[0] = true;
+		for (int i = 0; i < n; i++) {
+			for (int j = sum / 2; j >= nums[i]; j--) {
+				dp[j] |= dp[j - nums[i]];
+			}
+		}
+		return dp[sum / 2];
+	}
+}

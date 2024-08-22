@@ -1,0 +1,39 @@
+class Solution {
+	int[] countVisitedNodes(List<Integer> edges) {
+		int N = edges.size();
+		int[] res = new int[N];
+		for (int i = 0; i < N; i++) {
+			if (res[i] > 0) {
+				continue;
+			}
+			int cnt = 0;
+			HashSet<Integer> set = new HashSet();
+			int j = i;
+			List<Integer> visitedNodes = new ArrayList();
+			while (!set.contains(j)) {
+				set.add(j);
+				visitedNodes.add(j);
+				j = edges.get(j);
+				cnt++;
+				if (res[j] > 0) {
+					cnt += res[j];
+					break;
+				}
+			}
+			boolean seen = false;
+			int first = 0;
+			for (int a = 0; a < visitedNodes.size(); a++) {
+				int temp = visitedNodes.get(a);
+				if (temp == j) {
+					seen = true;
+					first = a;
+				}
+				if (seen && res[temp] == 0) {
+					res[temp] = cnt - first;
+				}
+			}
+			res[i] = cnt;
+		}
+		return res;
+	}
+}

@@ -1,0 +1,23 @@
+class Solution {
+	HashMap<Integer, Integer> inorderIdx;
+	int postIdx;
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		inorderIdx = new HashMap<>();
+		for (int i = 0; i < inorder.length; i++) {
+			inorderIdx.put(inorder[i],i);
+		}
+		postIdx = postorder.length - 1;
+		return traversal(postorder,0,inorder.length - 1);
+	}
+	TreeNode traversal(int[] postorder, int start, int end) {
+		if (start > end || postIdx < 0) {
+			return null;
+		}
+		int rootVal = postorder[postIdx--];
+		TreeNode root = new TreeNode(rootVal);
+		int inIdx = inorderIdx.get(rootVal);
+		root.right = traversal(postorder,inIdx + 1,end);
+		root.left = traversal(postorder,start,inIdx - 1);
+		return root;
+	}
+}

@@ -1,0 +1,29 @@
+class Solution {
+	int longestCycle(int[] edges) {
+		int n = edges.length;
+		int[] visited = new int[n];
+		int[] entry = new int[n];
+		int longest = -1;
+		int time = 0;
+		for (int i = 0; i < n; i++) {
+			if (visited[i] == 0) {
+				int current = i;
+				while (current != -1 && visited[current] == 0) {
+					visited[current] = 1;
+					entry[current] = time++;
+					current = edges[current];
+				}
+				if (current != -1 && visited[current] == 1) {
+					int cycleLength = time - entry[current];
+					longest = Math.max(longest,cycleLength);
+				}
+				current = i;
+				while (current != -1 && visited[current] != 2) {
+					visited[current] = 2;
+					current = edges[current];
+				}
+			}
+		}
+		return longest;
+	}
+}

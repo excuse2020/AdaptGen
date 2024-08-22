@@ -1,0 +1,49 @@
+class Solution {
+	long countOnes(long max) {
+	}
+	int[] findProductsOfElements(long[][] queries) {
+		int[] res = new int[queries.length];
+		for (int i = 0; i < res.length; i++) {
+			res[i] = fulfil(queries[i]);
+		}
+		return res;
+	}
+	int fulfil(long[] query) {
+		long from = query[0];
+		long to = query[1];
+		long mod = query[2];
+		long[] upTo = upTo(to);
+		long[] littler = upTo(from - 1);
+		long res = 1;
+		long pow = 1;
+		for (int i = 0; i < 63; i++) {
+			long amt = upTo[i] - littler[i];
+			if (amt == 0) {
+				pow = (pow * 2) % mod;
+				continue;
+			}
+			long mult = modPow(1l << i,amt,mod);
+			res = (res * mult) % mod;
+			pow = (pow * 2) % mod;
+			if (res == 0) {
+				return 0;
+			}
+		}
+		return (int) res;
+	}
+	long[] grab(long n) {
+	}
+	long modPow(long base, long pow, long mod) {
+		if (pow == 0) {
+			return 1;
+		}
+		long lesser = modPow(base,pow / 2,mod);
+		lesser = (lesser * lesser) % mod;
+		if (pow % 2 == 1) {
+			lesser = (lesser * base) % mod;
+		}
+		return lesser;
+	}
+	long[] upTo(long maxIndex) {
+	}
+}

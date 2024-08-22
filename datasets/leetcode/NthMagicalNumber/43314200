@@ -1,0 +1,46 @@
+class Solution {
+	int mod = 1000000007;
+	long counter(long A, long B, long N) {
+		long gc = gcd(A,B);
+		long lcm = (A * B) / gc;
+		long n = N / A + N / B - N / lcm;
+		return n;
+	}
+	long gcd(long a, long b) {
+		if (a > b) {
+			a = a + b;
+			b = a - b;
+			a = a - b;
+		}
+		while (a > 0) {
+			long temp = a;
+			a = b % a;
+			b = temp;
+		}
+		return b;
+	}
+	int nthMagicalNumber(int n, int a, int b) {
+		long i = 0, j = 0;
+		if (a < b) {
+			i = (long) a;
+			j = ((long) n * a);
+		} 
+		else {
+			i = (long) b;
+			j = ((long) n * b);
+		}
+		int ans = 0;
+		while (i <= j) {
+			long mid = (i + (j - i) / 2);
+			long k = counter((long) a,(long) b,mid);
+			if (k >= (long) n) {
+				ans = ((int) (mid % mod));
+				j = mid - 1;
+			} 
+			else {
+				i = mid + 1;
+			}
+		}
+		return (int) (ans % mod);
+	}
+}

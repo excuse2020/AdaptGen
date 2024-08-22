@@ -1,0 +1,44 @@
+class Solution {
+	int count = 0;
+	int mod = (int) 1e9 + 7;
+	int InversePairs(int[] array) {
+		if (array == null || array.length == 0) {
+			return 0;
+		}
+		sort(array,0,array.length - 1);
+		return count;
+	}
+	void merge(int[] a, int low, int mid, int high) {
+		int[] temp = new int[high - low + 1];
+		int i = low;
+		int j = mid + 1;
+		int k = 0;
+		while (i <= mid && j <= high) {
+			if (a[i] < a[j]) {
+				temp[k++] = a[i++];
+			} 
+			else {
+				count = (count + mid - i + 1) % mod;
+				temp[k++] = a[j++];
+			}
+		}
+		while (i <= mid) {
+			temp[k++] = a[i++];
+		}
+		while (j <= high) {
+			temp[k++] = a[j++];
+		}
+		for (int x = 0; x < temp.length; x++) {
+			a[x + low] = temp[x];
+		}
+	}
+	int[] sort(int[] a, int low, int high) {
+		int mid = (low + high) / 2;
+		if (low < high) {
+			sort(a,low,mid);
+			sort(a,mid + 1,high);
+			merge(a,low,mid,high);
+		}
+		return a;
+	}
+}

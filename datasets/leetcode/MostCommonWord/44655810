@@ -1,0 +1,50 @@
+class Solution {
+	String mostCommonWord(String paragraph, String[] banned) {
+		String mostWord = "";
+		String[] listWord = paragraph.toLowerCase().split("[, .?\';!]+");
+		HashMap<String, Integer> listCount = new HashMap<String, Integer>();
+		ArrayList<Integer> list = new ArrayList<>();
+		for (String a: listWord) {	
+			if (!listCount.containsKey(a)) {
+				listCount.put(a,wordCount(listWord,a));
+			}
+		}
+		for (Map.Entry<String, Integer> entry: listCount.entrySet()) {	
+			list.add(entry.getValue());
+		}
+		list.sort(Collections.reverseOrder());
+		LinkedHashMap<String, Integer> sortedMap = new LinkedHashMap<>();
+		for (int a: list) {	
+			for (Map.Entry<String, Integer> entry: listCount.entrySet()) {	
+				if (entry.getValue().equals(a)) {
+					sortedMap.put(entry.getKey(),a);
+				}
+			}
+		}
+		System.out.println(sortedMap.toString());
+		Set<Map.Entry<String, Integer>> set = sortedMap.entrySet();
+		Iterator iterator = set.iterator();
+		while (iterator.hasNext()) {
+			Map.Entry me2 = (Map.Entry) iterator.next();
+			int check = 0;
+			for (String b: banned) {	
+				if (me2.getKey().equals(b)) {
+					check = 1;
+				}
+			}
+			if (check == 0) {
+				return me2.getKey().toString();
+			}
+		}
+		return mostWord;
+	}
+	int wordCount(String[] lstData, String data) {
+		int count = 0;
+		for (String a: lstData) {	
+			if (a.equals(data)) {
+				count += 1;
+			}
+		}
+		return count;
+	}
+}

@@ -1,0 +1,42 @@
+class Solution {
+	boolean canMerge(boolean isCharPresentW1, boolean isCharPresentW2) {
+		for (int i = 0; i < 26; i++) {
+			if (isCharPresentW1[i] && isCharPresentW2[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int get_ans(List<String> vaildStrings, int i, List<boolean[]> isCharPresent, boolean isSelected) {
+		if (i == -1) {
+			return 0;
+		}
+		int maxPossibleLen = get_ans(vaildStrings,i - 1,isCharPresent,isSelected);
+		if (canMerge(isCharPresent.get(i),isSelected)) {
+			maxPossibleLen = Math.max(maxPossibleLen,get_ans(vaildStrings,i - 1,isCharPresent,merge(isCharPresent.get(i),isSelected)) + vaildStrings.get(i).length());
+		}
+		return maxPossibleLen;
+	}
+	boolean isAllUnique(boolean[] isCharPresent, String s) {
+		int i = 0;
+	}
+	int maxLength(List<String> arr) {
+		List<boolean[]> isCharPresent = new ArrayList<>();
+		List<String> vaildStrings = new ArrayList<>();
+		for (int i = 0; i < arr.size(); i++) {
+			boolean uniqueChars = new boolean[26];
+			if (isAllUnique(uniqueChars,arr.get(i))) {
+				isCharPresent.add(uniqueChars);
+				vaildStrings.add(arr.get(i));
+			}
+		}
+		return get_ans(vaildStrings,vaildStrings.size() - 1,isCharPresent,new boolean[26]);
+	}
+	boolean[] merge(boolean isCharPresentSrc, boolean isCharPresentTarget) {
+		boolean mergedIsCharPresent = new boolean[26];
+		for (int i = 0; i < 26; i++) {
+			mergedIsCharPresent[i] = isCharPresentSrc[i] | isCharPresentTarget[i];
+		}
+		return mergedIsCharPresent;
+	}
+}

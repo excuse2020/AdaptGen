@@ -1,0 +1,38 @@
+class Solution {
+	boolean isContains(TreeNode root1, TreeNode root2) {
+		boolean rs = true;
+		Queue<TreeNode> queue = new LinkedList<>();
+		TreeNode tmpNode = root1;
+		queue.add(tmpNode);
+		while (!queue.isEmpty()) {
+			tmpNode = queue.poll();
+			if (tmpNode.val == root2.val) {
+				break;
+			}
+			if (null != tmpNode.left) {
+				queue.add(tmpNode.left);
+			}
+			if (null != tmpNode.right) {
+				queue.add(tmpNode.right);
+			}
+		}
+		if (tmpNode.val != root2.val) {
+			return false;
+		}
+		return process(tmpNode,root2);
+	}
+	boolean process(TreeNode node1, TreeNode node2) {
+		if (null == node1 && null == node2) {
+			return true;
+		}
+		if ((null == node1 && null != node2) || (null != node1 && null == node2)) {
+			return false;
+		}
+		if (node1.val != node2.val) {
+			return false;
+		}
+		boolean left = process(node1.left,node2.left);
+		boolean right = process(node1.right,node2.right);
+		return node1.val == node2.val && left && right;
+	}
+}

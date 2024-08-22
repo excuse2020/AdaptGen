@@ -1,0 +1,84 @@
+class Solution {
+	int f(String s1, String s2, int i, int j, int[][] dp) {
+		if (j <= 0) {
+			return 1;
+		}
+		if (i <= 0) {
+			return 0;
+		}
+		if (dp[i][j] != -1) {
+			return dp[i][j];
+		}
+		int ans = 0;
+		if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
+			ans += (f(s1,s2,i - 1,j,dp) + f(s1,s2,i - 1,j - 1,dp));
+		} 
+		else {
+			ans += f(s1,s2,i - 1,j,dp);
+		}
+		return dp[i][j] = ans;
+	}
+	int numDistinct(String s1, String s2) {
+		int s1Len = s1.length();
+		int s2Len = s2.length();
+		int[] dp = new int[s2Len + 1];
+		dp[0] = 1;
+		for (int i = 1; i <= s1Len; i++) {
+			for (int j = s2Len; j >= 1; j--) {
+				if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
+					dp[j] = dp[j] + dp[j - 1];
+				} 
+				else {
+					dp[j] = dp[j];
+				}
+			}
+		}
+		return dp[s2Len];
+	}
+	int numDistinct2(String s1, String s2) {
+		int s1Len = s1.length();
+		int s2Len = s2.length();
+		int[] prev = new int[s2Len + 1];
+		prev[0] = 1;
+		for (int i = 1; i <= s1Len; i++) {
+			int[] curr = new int[s2Len + 1];
+			curr[0] = 1;
+			for (int j = 1; j <= s2Len; j++) {
+				if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
+					curr[j] = prev[j] + prev[j - 1];
+				} 
+				else {
+					curr[j] = prev[j];
+				}
+			}
+			prev = curr;
+		}
+		return prev[s2Len];
+	}
+	int numDistinct3(String s1, String s2) {
+		int s1Len = s1.length();
+		int s2Len = s2.length();
+		int[][] dp = new int[s1Len + 1][s2Len + 1];
+		for (int i = 0; i <= s1Len; i++) {
+			dp[i][0] = 1;
+		}
+		for (int i = 1; i <= s1Len; i++) {
+			for (int j = 1; j <= s2Len; j++) {
+				if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
+					dp[i][j] = dp[i - 1][j] + dp[i - 1][j - 1];
+				} 
+				else {
+					dp[i][j] = dp[i - 1][j];
+				}
+			}
+		}
+		return dp[s1Len][s2Len];
+	}
+	int numDistinct4(String s1, String s2) {
+		int[][] dp = new int[s1.length() + 1][s2.length() + 1];
+		for (int[] d: dp) {	
+			Arrays.fill(d,-1);
+		}
+		return f(s1,s2,s1.length(),s2.length(),dp);
+	}
+}

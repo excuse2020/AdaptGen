@@ -1,0 +1,62 @@
+class Solution {
+	void buildMap(Map<Integer, List<Integer>> map, int[][] edges) {
+		for (int[] edge: edges) {	
+			int current = edge[0];
+			int next = edge[1];
+			if (map.containsKey(current)) {
+				map.get(current).add(next);
+			} 
+			else {
+				map.put(current,new ArrayList<>());
+				map.get(current).add(next);
+			}
+			if (map.containsKey(next)) {
+				map.get(next).add(current);
+			} 
+			else {
+				map.put(next,new ArrayList<>());
+				map.get(next).add(current);
+			}
+		}
+	}
+	int[] countSubTrees(int n, int[][] edges, String labels) {
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		buildMap(map,edges);
+		int[] result = new int[n];
+		Set<Integer> visited = new HashSet<>();
+		helper(0,map,visited,labels,result);
+		return result;
+	}
+	Map<Character, Integer> helper(int current, Map<Integer, List<Integer>> map, Set<Integer> visited, String labels, int[] result) {
+		visited.add(current);
+		Map<Character, Integer> currentCountMap = new HashMap<>();
+		if (map.containsKey(current)) {
+			List<Integer> children = map.get(current);
+			for (Integer child: children) {	
+				if (visited.contains(child)) {
+					continue;
+				}
+				Map<Character, Integer> childCountMap = helper(child,map,visited,labels,result);
+				for (Map.Entry<Character, Integer> childEntry: childCountMap.entrySet()) {	
+					char ch = childEntry.getKey();
+					int occurrence = childEntry.getValue();
+					if (currentCountMap.containsKey(ch)) {
+						currentCountMap.put(ch,currentCountMap.get(ch) + occurrence);
+					} 
+					else {
+						currentCountMap.put(ch,occurrence);
+					}
+				}
+			}
+		}
+		char currentCharacter = labels.charAt(current);
+		if (currentCountMap.containsKey(currentCharacter)) {
+			currentCountMap.put(currentCharacter,currentCountMap.get(currentCharacter) + 1);
+		} 
+		else {
+			currentCountMap.put(currentCharacter,1);
+		}
+		result[current] = currentCountMap.get(currentCharacter);
+		return currentCountMap;
+	}
+}

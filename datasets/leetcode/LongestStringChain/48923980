@@ -1,0 +1,34 @@
+class Solution {
+	int max = 1;
+	Map<String, Integer> wordMap;
+	int dfs(String word) {
+		if (!wordMap.containsKey(word)) {
+			return 0;
+		}
+		if (wordMap.containsKey(word) && wordMap.get(word) > 1) {
+			return wordMap.get(word);
+		}
+		int maxChain = 1;
+		for (int i = 0; i < word.length(); i++) {
+			StringBuilder sb = new StringBuilder(word);
+			sb.deleteCharAt(i);
+			String nextWord = sb.toString();
+			maxChain = Math.max(maxChain,1 + dfs(nextWord));
+		}
+		wordMap.put(word,maxChain);
+		return maxChain;
+	}
+	int longestStrChain(String[] words) {
+		wordMap = new HashMap<>();
+		for (String w: words) {	
+			wordMap.put(w,1);
+		}
+		for (String w: words) {	
+			dfs(w);
+		}
+		for (Map.Entry<String, Integer> m: wordMap.entrySet()) {	
+			max = Math.max(m.getValue(),max);
+		}
+		return max;
+	}
+}

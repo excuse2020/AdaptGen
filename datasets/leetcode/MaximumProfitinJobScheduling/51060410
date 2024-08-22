@@ -1,0 +1,54 @@
+class Solution {
+	int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
+		int n = startTime.length;
+		int[][] pair = new int[n][2];
+		for (int i = 0; i < n; i++) {
+			pair[i][0] = startTime[i];
+			pair[i][1] = i;
+		}
+		quicksort(pair,0,pair.length - 1);
+		int max = 0;
+		PriorityQueue<int[]> myQueue = new PriorityQueue<int[]>((a, b) -> {Integer.compare(a[0],b[0])});
+		for (int i = 0; i < n; i++) {
+			int start = pair[i][0];
+			int index = pair[i][1];
+			int end = endTime[index];
+			int profitI = profit[index];
+			while (!myQueue.isEmpty() && myQueue.peek()[0] <= start) {
+				max = Math.max(max,myQueue.peek()[1]);
+				myQueue.poll();
+			}
+			myQueue.offer(new int{end, profitI + max});
+		}
+		while (!myQueue.isEmpty()) {
+			max = Math.max(max,myQueue.poll()[1]);
+		}
+		return max;
+	}
+	void quicksort(int[][] points, int low, int high) {
+		if (low < high) {
+			int i = low;
+			int j = high;
+			int mid = (low + high) / 2;
+			int pivot = points[mid][0];
+			while (true) {
+				while (points[i][0] < pivot) {
+					i++;
+				}
+				while (points[j][0] > pivot) {
+					j--;
+				}
+				if (i >= j) {
+					break;
+				}
+				int[] temp = points[i];
+				points[i] = points[j];
+				points[j] = temp;
+				i++;
+				j--;
+			}
+			quicksort(points,low,j);
+			quicksort(points,j + 1,high);
+		}
+	}
+}

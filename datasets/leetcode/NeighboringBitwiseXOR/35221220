@@ -1,0 +1,72 @@
+class Solution {
+	boolean doesValidArrayExist(int[] derived) {
+		int n = derived.length;
+		if (n == 1) {
+			if (derived[0] == 1) {
+				return false;
+			}
+			return true;
+		}
+		int[] arr = new int[n];
+		boolean result = false;
+		if (derived[0] == 1) {
+			arr[0] = 0;
+			arr[1] = 1;
+			if (find(derived,n,1,arr)) {
+				return true;
+			} 
+			else {
+				Arrays.fill(arr,0);
+				arr[0] = 1;
+				arr[1] = 0;
+				if (find(derived,n,1,arr)) {
+					return true;
+				}
+			}
+		} 
+		else {
+			arr[0] = 0;
+			arr[1] = 0;
+			if (find(derived,n,1,arr)) {
+				return true;
+			} 
+			else {
+				Arrays.fill(arr,0);
+				arr[0] = 1;
+				arr[1] = 1;
+				if (find(derived,n,1,arr)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	boolean find(int[] derived, int n, int i, int[] arr) {
+		if (i == n - 1) {
+			if (derived[i] == 0) {
+				if ((arr[i] == 1 && arr[0] == 1) || (arr[i] == 0 && arr[0] == 0)) {
+					return true;
+				}
+			} 
+			else {
+				if ((arr[i] == 1 && arr[0] == 0) || (arr[i] == 0 && arr[0] == 1)) {
+					return true;
+				}
+			}
+			return false;
+		}
+		if (derived[i] == 1) {
+			arr[i + 1] = 1 - arr[i];
+			if (find(derived,n,i + 1,arr)) {
+				return true;
+			}
+		} 
+		else {
+			arr[i + 1] = arr[i];
+			if (find(derived,n,i + 1,arr)) {
+				return true;
+			}
+		}
+		return false;
+	}
+}

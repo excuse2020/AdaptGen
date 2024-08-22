@@ -1,0 +1,44 @@
+class Solution {
+	Map<TreeNode, Integer> depthMap = new HashMap<>();
+	int bfs(TreeNode node) {
+		int depth = 0;
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(node);
+		while (!q.isEmpty()) {
+			int size = q.size();
+			while (size-- > 0) {
+				TreeNode current = q.poll();
+				depthMap.put(current,depth);
+				if (current.left != null) {
+					q.add(current.left);
+				}
+				if (current.right != null) {
+					q.add(current.right);
+				}
+			}
+			depth++;
+		}
+		return depth - 1;
+	}
+	TreeNode findDeepestNode(int maxDepth, TreeNode node) {
+		if (node == null || maxDepth == depthMap.get(node)) {
+			return node;
+		}
+		TreeNode leftNode = findDeepestNode(maxDepth,node.left);
+		TreeNode rightNode = findDeepestNode(maxDepth,node.right);
+		if (leftNode != null && rightNode != null) {
+			return node;
+		}
+		if (leftNode != null) {
+			return leftNode;
+		}
+		if (rightNode != null) {
+			return rightNode;
+		}
+		return null;
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		int maxDepth = bfs(root);
+		return findDeepestNode(maxDepth,root);
+	}
+}

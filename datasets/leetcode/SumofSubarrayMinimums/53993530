@@ -1,0 +1,46 @@
+class Solution {
+	int[] getLSE(int[] arr, int n) {
+		Stack<Integer> stack = new Stack<>();
+		int ans = new int[n];
+		for (int i = 0; i < n; i++) {
+			while (!stack.isEmpty() && arr[stack.peek()] > arr[i]) {
+				stack.pop();
+			}
+			if (stack.isEmpty()) {
+				ans[i] = -1;
+			} 
+			else {
+				ans[i] = stack.peek();
+			}
+			stack.push(i);
+		}
+		return ans;
+	}
+	int[] getRSE(int[] arr, int n) {
+		Stack<Integer> stack = new Stack<>();
+		int ans = new int[n];
+		for (int i = n - 1; i >= 0; i--) {
+			while (!stack.isEmpty() && arr[stack.peek()] >= arr[i]) {
+				stack.pop();
+			}
+			ans[i] = stack.isEmpty() ? n : stack.peek();
+			stack.push(i);
+		}
+		return ans;
+	}
+	int sumSubarrayMins(int[] arr) {
+		int n = arr.length;
+		int[] LSE = getLSE(arr,n);
+		int[] RSE = getRSE(arr,n);
+		long sum = 0;
+		int m = 1000000007;
+		for (int i = 0; i < n; i++) {
+			long a = i - LSE[i];
+			long b = RSE[i] - i;
+			long finalMin = a * b;
+			long finalSum = arr[i] * finalMin;
+			sum = (sum + finalSum) % m;
+		}
+		return (int) sum;
+	}
+}

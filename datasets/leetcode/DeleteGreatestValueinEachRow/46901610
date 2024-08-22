@@ -1,0 +1,40 @@
+class Solution {
+	int deleteGreatestValue(int[][] grid) {
+		List<List<Integer>> in = new ArrayList<>();
+		int len = grid.length;
+		for (int i = 0; i < len; i++) {
+			int[] arr = grid[i];
+			List<Integer> sub = new ArrayList<>();
+			for (int j = 0; j < arr.length; j++) {
+				sub.add(arr[j]);
+			}
+			in.add(sub);
+		}
+		int sum = 0;
+		int max1;
+		for (int i = 0; i < in.get(0).size(); i++) {
+			List<Integer> sub = in.get(i);
+			if (sub.isEmpty()) {
+				break;
+			} 
+			else {
+				max1 = Collections.max(sub);
+				int index = sub.indexOf(max1);
+				sub.remove(index);
+			}
+			int max2 = Integer.MIN_VALUE;
+			for (int j = 0; j < len; j++) {
+				if (i != j) {
+					List<Integer> sub1 = in.get(j);
+					int temp = Collections.max(sub1);
+					int index = sub1.indexOf(temp);
+					sub1.remove(index);
+					max2 = Math.max(max2,temp);
+				}
+			}
+			sum = sum + Math.max(max1,max2);
+			i = -1;
+		}
+		return sum;
+	}
+}

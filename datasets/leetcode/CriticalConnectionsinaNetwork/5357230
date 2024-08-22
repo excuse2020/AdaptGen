@@ -1,0 +1,41 @@
+class Solution {
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		List<List<Integer>> criticalConnections = new ArrayList<>();
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		boolean[] visited = new boolean[n];
+		int[] lowLinkValues = new int[n];
+		int time = 0;
+		for (List<Integer> connection: connections) {	
+			int a = connection.get(0);
+			int b = connection.get(1);
+			map.putIfAbsent(a,new ArrayList<>());
+			map.putIfAbsent(b,new ArrayList<>());
+			map.get(a).add(b);
+			map.get(b).add(a);
+		}
+		for (int i = 0; i < map.size(); i++) {
+			if (!visited[i]) {
+				dfs(i,i,visited,lowLinkValues,map,time,criticalConnections);
+			}
+		}
+		return criticalConnections;
+	}
+	void dfs(int currentVertice, int parentVertice, boolean[] visited, int[] lowLinkValues, Map<Integer, List<Integer>> map, int time, List<List<Integer>> criticalConnections) {
+		time++;
+		lowLinkValues[currentVertice] = time;
+		int discoverdValue = time;
+		visited[currentVertice] = true;
+		for (int vertice: map.get(currentVertice)) {	
+			if (vertice == parentVertice) {
+				continue;
+			}
+			if (!visited[vertice]) {
+				dfs(vertice,currentVertice,visited,lowLinkValues,map,time,criticalConnections);
+				if (discoverdValue < lowLinkValues[vertice]) {
+					criticalConnections.add(Arrays.asList(currentVertice,vertice));
+				}
+			}
+			lowLinkValues[currentVertice] = Math.min(lowLinkValues[currentVertice],lowLinkValues[vertice]);
+		}
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	int[] findOriginalArray(int[] changed) {
+		if (changed.length % 2 != 0) {
+			return new int[0];
+		}
+		Arrays.sort(changed);
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int change: changed) {	
+			map.put(change,map.getOrDefault(change,0) + 1);
+		}
+		int[] arr = new int[changed.length / 2];
+		int index = 0;
+		for (int change: changed) {	
+			if (map.get(change) <= 0) {
+				continue;
+			}
+			map.put(change,map.get(change) - 1);
+			int find1 = change * 2;
+			if (index == arr.length) {
+				break;
+			}
+			if (map.containsKey(find1) && map.get(find1) > 0) {
+				arr[index++] = change;
+				map.put(find1,map.get(find1) - 1);
+			} 
+			else {
+				return new int[0];
+			}
+		}
+		return arr;
+	}
+}

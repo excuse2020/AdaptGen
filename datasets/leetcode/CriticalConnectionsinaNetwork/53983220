@@ -1,0 +1,41 @@
+class Solution {
+	int timeDisc = 0;
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		List<Integer>[] graph = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (List<Integer> edge: connections) {	
+			graph[edge.get(0)].add(edge.get(1));
+			graph[edge.get(1)].add(edge.get(0));
+		}
+		int[] tDisc = new int[n];
+		int[] tMin = new int[n];
+		boolean[] visited = new boolean[n];
+		List<List<Integer>> ans = new ArrayList<>();
+		timeDisc = 1;
+		findCriticalConnections(graph,0,visited,tDisc,tMin,ans);
+		return ans;
+	}
+	void findCriticalConnections(List<Integer>[] graph, int u, boolean[] visited, int[] tDisc, int[] tMin, List<List<Integer>> ans) {
+		visited[u] = true;
+		tDisc[u] = timeDisc;
+		tMin[u] = timeDisc++;
+		for (int v: graph[u]) {	
+			if (!visited[v]) {
+				findCriticalConnections(graph,v,visited,tDisc,tMin,ans);
+				for (int vn: graph[v]) {	
+					if (vn != u) {
+						tMin[v] = Math.min(tMin[v],Math.min(tMin[vn],tDisc[vn]));
+					}
+				}
+				if (tMin[v] > tDisc[u]) {
+					List<Integer> edge = new ArrayList<>();
+					edge.add(u);
+					edge.add(v);
+					ans.add(edge);
+				}
+			}
+		}
+	}
+}

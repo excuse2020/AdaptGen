@@ -1,0 +1,31 @@
+class Solution {
+	ArrayList<Integer>[] adj;
+	long[] arr;
+	int dfs(int node, int par, int[] values, int k) {
+		int ans = 0;
+		for (int ele: adj[node]) {	
+			if (ele != par) {
+				ans += dfs(ele,node,values,k);
+				arr[node] += arr[ele];
+			}
+		}
+		arr[node] += values[node];
+		if (arr[node] % k == 0) {
+			arr[node] = 0;
+			return ans + 1;
+		}
+		return ans;
+	}
+	int maxKDivisibleComponents(int n, int[][] edges, int[] values, int k) {
+		adj = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			adj[i] = new ArrayList<>();
+		}
+		for (int[] ele: edges) {	
+			adj[ele[0]].add(ele[1]);
+			adj[ele[1]].add(ele[0]);
+		}
+		arr = new long[n];
+		return dfs(0,-1,values,k);
+	}
+}

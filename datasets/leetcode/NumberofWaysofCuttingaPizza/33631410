@@ -1,0 +1,47 @@
+class Solution {
+	int MOD = 1_000_000_007;
+	int rows, cols;
+	int ways(String[] pizza, int k) {
+		this.rows = pizza.length;
+		this.cols = pizza[0].length();
+		long[][][] memo = new long[rows][cols][k + 1];
+		for (int i = 0; i < rows; ++i) {
+			for (int j = 0; j < cols; ++j) {
+				Arrays.fill(memo[i][j],-1l);
+			}
+		}
+		byte[][] isApple = new byte[rows + 1][cols + 1];
+		int i = rows - 1;
+		int j = cols - 1;
+	}
+	long ways(String[] pizza, int row, int col, int k, byte[][] isApple, long[][][] memo) {
+		if (memo[row][col][k] != -1) {
+			return memo[row][col][k];
+		}
+		if (k == 1) {
+			int ub = Math.min(rows - row,cols - col) - 1;
+			for (int i = 0; i <= ub; ++i) {
+				if (isApple[row + i][col + i] > 0) {
+					return 1;
+				}
+			}
+			return 0;
+		}
+		long ans = 0l;
+		boolean colExist = false;
+		for (int i = 1; row + i < rows; ++i) {
+			if (colExist || isApple[row + i - 1][col] % 2 == 1) {
+				colExist = true;
+				ans = ans + ways(pizza,row + i,col,k - 1,isApple,memo);
+			}
+		}
+		boolean rowExist = false;
+		for (int i = 1; col + i < cols; ++i) {
+			if (rowExist || isApple[row][col + i - 1] >= 2) {
+				rowExist = true;
+				ans = ans + ways(pizza,row,col + i,k - 1,isApple,memo);
+			}
+		}
+		return memo[row][col][k] = ans % MOD;
+	}
+}

@@ -1,0 +1,82 @@
+class Solution {
+	Queue<TreeNode> nodes = new LinkedList<>();
+	void BFS(TreeNode root) {
+		if (nodes.isEmpty()) {
+			return;
+		}
+		if (nodes.peek().val == -1) {
+			root.left = null;
+			nodes.poll();
+		} 
+		else {
+			root.left = nodes.poll();
+			BFS(root.left);
+		}
+		if (nodes.peek().val == -1) {
+			root.right = null;
+			nodes.poll();
+		} 
+		else {
+			root.right = nodes.poll();
+			BFS(root.right);
+		}
+	}
+	TreeNode Deserialize(String str) {
+		char[] c = str.toCharArray();
+		int front = -1;
+		for (int i = 0; i < c.length; i++) {
+			if (front != -1) {
+				if (c[i] == '-') {
+					int val = 0;
+					for (int j = front; j < i; j++) {
+						val = val * 10 + (c[j] - '0');
+					}
+					nodes.add(new TreeNode(val));
+					front = -1;
+				}
+				continue;
+			}
+			if (c[i] == '#') {
+				nodes.add(new TreeNode(-1));
+				continue;
+			}
+			if (front == -1) {
+				if (c[i] >= '0' && c[i] <= '9') {
+					front = i;
+				}
+			}
+		}
+		TreeNode root = nodes.poll();
+		BFS(root);
+		return root;
+	}
+	String Serialize(TreeNode root) {
+		StringBuilder s = new StringBuilder();
+		Queue<TreeNode> seri = new LinkedList<>();
+		nodes.add(root);
+		while (!seri.isEmpty()) {
+			TreeNode node = seri.poll();
+			if (node.val == -1) {
+				s.append("#");
+				continue;
+			}
+			s.append(Integer.toString(node.val));
+			s.append("-");
+			if (node.left == null) {
+				TreeNode dummy = new TreeNode(-1);
+				seri.add(dummy);
+			} 
+			else {
+				seri.add(node.right);
+			}
+			if (node.right == null) {
+				TreeNode dummy = new TreeNode(-1);
+				seri.add(dummy);
+			} 
+			else {
+				seri.add(node.right);
+			}
+		}
+		return s.toString();
+	}
+}

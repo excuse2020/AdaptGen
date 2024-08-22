@@ -1,0 +1,60 @@
+class Solution {
+	int longestSubsequence(int[] arr, int difference) {
+		return solve(0,arr,difference,Integer.MIN_VALUE);
+	}
+	int solve(int idx, int[] arr, int diff, int prev) {
+		if (idx >= arr.length) {
+			return 0;
+		}
+		int not_taken = solve(idx + 1,arr,diff,prev);
+		int taken = 0;
+		if (prev == Integer.MIN_VALUE || arr[idx] - prev == diff) {
+			taken = 1 + solve(idx + 1,arr,diff,arr[idx]);
+		}
+		return Math.max(taken,not_taken);
+	}
+}
+class Solution {
+	int[][] dp;
+	int longestSubsequence(int[] arr, int difference) {
+		dp = new int[arr.length + 1][arr.length + 1];
+		for (int[] i: dp) {	
+			Arrays.fill(i,-1);
+		}
+		return solve(0,arr,difference,-1);
+	}
+	int solve(int idx, int[] arr, int diff, int prev) {
+		if (idx >= arr.length) {
+			return 0;
+		}
+		if (prev != -1 && dp[idx][prev] != -1) {
+			return dp[idx][prev];
+		}
+		int not_taken = solve(idx + 1,arr,diff,prev);
+		int taken = 0;
+		if (prev == -1 || arr[idx] - arr[prev] == diff) {
+			taken = 1 + solve(idx + 1,arr,diff,idx);
+		}
+		if (prev != -1) {
+			return dp[idx][prev] = Math.max(taken,not_taken);
+		}
+		return Math.max(taken,not_taken);
+	}
+}
+class Solution {
+	int longestSubsequence(int[] arr, int difference) {
+		int res = 1;
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < arr.length; i++) {
+			int num = arr[i];
+			if (map.containsKey(num - difference)) {
+				map.put(num,map.get(num - difference) + 1);
+			} 
+			else {
+				map.put(num,1);
+			}
+			res = Math.max(res,map.get(num));
+		}
+		return res;
+	}
+}

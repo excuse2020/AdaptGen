@@ -1,0 +1,29 @@
+class Solution {
+	long matrixSumQueries(int n, int[][] queries) {
+		int[][] row = new int[n][2];
+		int[][] col = new int[n][2];
+		long ansSum = 0;
+		int prior = queries.length;
+		int rowset = 0;
+		int colset = 0;
+		for (int i = queries.length - 1; i >= 0; i--) {
+			int[] a = queries[i];
+			int type = a[0];
+			int index = a[1];
+			int value = a[2];
+			if (row[index][1] == 0 && type == 0) {
+				row[index][0] = value;
+				ansSum = ansSum + (value * (n - colset));
+				rowset++;
+				row[index][1] = prior--;
+			} 
+			else if (type == 1 && col[index][1] == 0) {
+				col[index][0] = value;
+				ansSum = ansSum + (value * (n - rowset));
+				colset++;
+				col[index][1] = prior--;
+			}
+		}
+		return ansSum;
+	}
+}

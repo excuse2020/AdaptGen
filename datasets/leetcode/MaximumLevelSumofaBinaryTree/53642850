@@ -1,0 +1,28 @@
+class Solution {
+	List<Integer> levelSums = new ArrayList<>();
+	void dfs(TreeNode root, int depth) {
+		if (root == null) {
+			return;
+		}
+		if (levelSums.size() > depth) {
+			levelSums.set(depth,root.val + levelSums.get(depth));
+		} 
+		else {
+			levelSums.add(root.val);
+		}
+		dfs(root.left,depth + 1);
+		dfs(root.right,depth + 1);
+	}
+	int maxLevelSum(TreeNode root) {
+		dfs(root,0);
+		int max = Integer.MIN_VALUE;
+		int maxLevel = Integer.MIN_VALUE;
+		for (int level = 0; level < levelSums.size(); level++) {
+			if (levelSums.get(level) > max) {
+				max = levelSums.get(level);
+				maxLevel = level + 1;
+			}
+		}
+		return maxLevel;
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	int[] queryResults(int limit, int[][] queries) {
+		int n = queries.length;
+		int[] result = new int[n];
+		HashMap<Integer, Integer> colors = new HashMap<>();
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			int b = queries[i][0];
+			int c = queries[i][1];
+			if (!map.containsKey(b)) {
+				map.put(b,c);
+				colors.put(c,colors.getOrDefault(c,0) + 1);
+			} 
+			else {
+				if (colors.containsKey(map.get(b))) {
+					int temp = colors.get(map.get(b));
+					if (temp > 1) {
+						colors.put(map.get(b),temp - 1);
+					} 
+					else {
+						colors.remove(map.get(b));
+					}
+				}
+				colors.put(c,colors.getOrDefault(c,0) + 1);
+				map.remove(b);
+				map.put(b,c);
+			}
+			result[i] = colors.size();
+		}
+		return result;
+	}
+}

@@ -1,0 +1,43 @@
+class Solution {
+	List<String> fullJustify(String[] words, int maxWidth) {
+		List<String> ans = new ArrayList<>();
+		int i = 0;
+		while (i < words.length) {
+			int j = i + 1;
+			int wcLen = words[i].length();
+			int size = 0;
+			while (j < words.length && wcLen + words[j].length() <= maxWidth) {
+				wcLen += words[j].length();
+				size++;
+				j++;
+			}
+			int space = maxWidth - wcLen;
+			int atLeast = size == 0 ? 0 : space / size;
+			int extra = size == 0 ? 0 : space % size;
+			StringBuilder sb = new StringBuilder();
+			if (j == words.length) {
+				atLeast = 1;
+				extra = 0;
+			}
+			for (int k = i; k < j; k++) {
+				sb.append(words[k]);
+				if (k == j - 1) {
+					break;
+				}
+				for (int s = 0; s < atLeast; s++) {
+					sb.append(" ");
+				}
+				if (extra > 0) {
+					sb.append(" ");
+					extra--;
+				}
+			}
+			while (sb.length() < maxWidth) {
+				sb.append(" ");
+			}
+			i = j;
+			ans.add(sb.toString());
+		}
+		return ans;
+	}
+}

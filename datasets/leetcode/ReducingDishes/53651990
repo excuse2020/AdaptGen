@@ -1,0 +1,30 @@
+class Solution {
+	int calMaxSatisfaction(int[] satisfaction, int start, int unit, Map<String, Integer> memo) {
+		if (start >= satisfaction.length) {
+			return 0;
+		}
+		String key = start + ",";
+		if (memo.containsKey(key)) {
+			return memo.get(key);
+		}
+		int include = calMaxSatisfaction(satisfaction,start + 1,unit + 1,memo) + satisfaction[start] * unit;
+		int exclude = calMaxSatisfaction(satisfaction,start + 1,unit,memo);
+		memo.put(key,Math.max(include,exclude));
+		return memo.get(key);
+	}
+	int calMaxSatisfaction(int[] satisfaction) {
+		int sum = 0;
+		int unit = 1;
+		for (int i = 0; i < satisfaction.length; i++) {
+			sum += satisfaction[i] * unit++;
+		}
+		return sum;
+	}
+	int maxSatisfaction(int[] satisfaction) {
+		Arrays.sort(satisfaction);
+		if (satisfaction[0] >= 0) {
+			return calMaxSatisfaction(satisfaction);
+		}
+		return calMaxSatisfaction(satisfaction,0,1,new HashMap<>());
+	}
+}

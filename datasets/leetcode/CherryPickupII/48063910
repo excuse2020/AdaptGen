@@ -1,0 +1,42 @@
+class Solution {
+	Integer memo;
+	int cherryPickup(int[][] grid) {
+		int r = grid.length;
+		int c = grid[0].length;
+		memo = new Integer[r][c][c];
+		return pick_cherry(0,0,c - 1,r,c,grid);
+	}
+	int pick_cherry(int row, int robo1_col, int robo2_col, int r, int c, int[][] grid) {
+		if (row >= r || robo1_col < 0 || robo2_col < 0 || robo1_col >= c || robo2_col >= c) {
+			return (int) -1e8;
+		}
+		if (row == r - 1) {
+			if (robo1_col == robo2_col) {
+				return grid[row][robo1_col];
+			} 
+			else {
+				return (grid[row][robo1_col] + grid[row][robo2_col]);
+			}
+		}
+		if (memo[row][robo1_col][robo2_col] != null) {
+			return memo[row][robo1_col][robo2_col];
+		}
+		int max = Integer.MIN_VALUE;
+		for (int col1: new int{-1, 0, 1}) {	
+			for (int col2: new int{-1, 0, 1}) {	
+				int curr_max = 0;
+				int next_col1 = robo1_col + col1;
+				int next_col2 = robo2_col + col2;
+				if (robo1_col == robo2_col) {
+					curr_max += grid[row][robo1_col];
+				} 
+				else {
+					curr_max += (grid[row][robo1_col] + grid[row][robo2_col]);
+				}
+				curr_max += pick_cherry(row + 1,next_col1,next_col2,r,c,grid);
+				max = Math.max(max,curr_max);
+			}
+		}
+		return memo[row][robo1_col][robo2_col] = max;
+	}
+}

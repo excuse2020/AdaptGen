@@ -1,0 +1,33 @@
+class Solution {
+	int nonSpecialCount(int l, int r) {
+		int maxLimit = 31622;
+		List<Integer> specialNumbers = new ArrayList<>();
+		boolean[] isPrime = new boolean[maxLimit + 1];
+		for (int i = 2; i <= maxLimit; i++) {
+			isPrime[i] = true;
+		}
+		for (int i = 2; i * i <= maxLimit; i++) {
+			if (isPrime[i]) {
+				for (int j = i * i; j <= maxLimit; j += i) {
+					isPrime[j] = false;
+				}
+			}
+		}
+		for (int i = 2; i <= maxLimit; i++) {
+			if (isPrime[i]) {
+				long specialNumber = (long) i * i;
+				if (specialNumber <= 1_000_000_000) {
+					specialNumbers.add((int) specialNumber);
+				}
+			}
+		}
+		int specialCount = 0;
+		for (int special: specialNumbers) {	
+			if (special >= l && special <= r) {
+				specialCount++;
+			}
+		}
+		int totalNumbers = r - l + 1;
+		return totalNumbers - specialCount;
+	}
+}

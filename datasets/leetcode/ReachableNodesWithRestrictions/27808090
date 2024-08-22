@@ -1,0 +1,32 @@
+class Solution {
+	List<List<Integer>> adj;
+	Set<Integer> rest;
+	boolean visit;
+	int dfs(int n) {
+		if (visit[n] || rest.contains(n)) {
+			return 0;
+		}
+		visit[n] = true;
+		int cnt = 1;
+		for (var c: adj.get(n)) {	
+			cnt += dfs(c);
+		}
+		return cnt;
+	}
+	int reachableNodes(int n, int[][] edges, int[] restricted) {
+		adj = new ArrayList<>();
+		rest = new HashSet<>();
+		visit = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (var e: edges) {	
+			adj.get(e[0]).add(e[1]);
+			adj.get(e[1]).add(e[0]);
+		}
+		for (var r: restricted) {	
+			rest.add(r);
+		}
+		return dfs(0);
+	}
+}

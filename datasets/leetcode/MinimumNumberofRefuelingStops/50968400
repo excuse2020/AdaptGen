@@ -1,0 +1,26 @@
+class Solution {
+	int minRefuelStops(int target, int startFuel, int[][] stations) {
+		int dist = 0;
+		int noOfStn = 0;
+		PriorityQueue<int[]> minHeap = new PriorityQueue<>(Comparator.comparingInt((a) -> {a[0]}));
+		PriorityQueue<int[]> maxHeap = new PriorityQueue<>((a, b) -> {b[1] - a[1]});
+		for (int[] station: stations) {	
+			minHeap.add(station);
+		}
+		while (dist < target && startFuel > 0) {
+			dist += startFuel;
+			startFuel = 0;
+			if (dist >= target) {
+				break;
+			}
+			while (!minHeap.isEmpty() && minHeap.peek()[0] <= dist) {
+				maxHeap.add(minHeap.poll());
+			}
+			if (!maxHeap.isEmpty()) {
+				startFuel = maxHeap.poll()[1];
+				noOfStn++;
+			}
+		}
+		return dist >= target ? noOfStn : -1;
+	}
+}

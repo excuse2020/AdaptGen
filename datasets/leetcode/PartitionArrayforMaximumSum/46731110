@@ -1,0 +1,22 @@
+class Solution {
+	int[] memo;
+	int maxSum(int j, int[] arr, int k) {
+		int max = 0;
+		int maxnum = 0;
+		for (int i = j; i < Math.min(arr.length,k + j); i++) {
+			maxnum = Math.max(arr[i],maxnum);
+			if (memo[i + 1] == 0) {
+				memo[i + 1] = maxSum(i + 1,arr,k);
+				max = Math.max((i + 1 - j) * (maxnum) + memo[i + 1],max);
+			} 
+			else {
+				max = Math.max((i + 1 - j) * (maxnum) + memo[i + 1],max);
+			}
+		}
+		return max;
+	}
+	int maxSumAfterPartitioning(int[] arr, int k) {
+		memo = new int[arr.length + 1];
+		return maxSum(0,arr,k);
+	}
+}

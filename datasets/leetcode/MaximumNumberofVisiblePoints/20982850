@@ -1,0 +1,30 @@
+class Solution {
+	int visiblePoints(List<List<Integer>> points, int angle, List<Integer> location) {
+		List<Double> angles = new ArrayList<>();
+		int answer = 0;
+		for (var point: points) {	
+			int dx = point.get(0) - location.get(0);
+			int dy = point.get(1) - location.get(1);
+			if (dx == 0 && dy == 0) {
+				answer++;
+				continue;
+			}
+			angles.add(Math.toDegrees(Math.atan2(dy,dx)));
+		}
+		Collections.sort(angles);
+		int n = angles.size();
+		for (int i = 0; i < n; ++i) {
+			angles.add(angles.get(i) + 360);
+		}
+		int start = 0;
+		int count = 0;
+		for (int end = 0; end < angles.size(); ++end) {
+			while (angles.get(end) - angles.get(start) > angle) {
+				start++;
+			}
+			count = Math.max(count,end - start + 1);
+		}
+		answer += count;
+		return answer;
+	}
+}

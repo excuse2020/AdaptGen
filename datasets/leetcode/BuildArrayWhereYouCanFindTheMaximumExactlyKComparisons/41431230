@@ -1,0 +1,26 @@
+class Solution {
+	int numOfArrays(int n, int m, int k) {
+		long mod = 1000_000_000 + 7;
+		long[][] dp = new long[m + 1][k + 1], pdp = new long[m + 1][k + 1];
+		for (int max = 1; max <= m; ++max) {
+			pdp[max][1] = 1;
+		}
+		for (int l = 2; l <= n; ++l) {
+			long[] cs = new long[k + 1];
+			for (int max = 1; max <= m; ++max) {
+				for (int cost = 1; cost <= k; ++cost) {
+					dp[max][cost] = (pdp[max][cost] * max + cs[cost - 1]) % mod;
+					cs[cost - 1] += pdp[max][cost - 1];
+				}
+			}
+			long[][] buf = pdp;
+			pdp = dp;
+			dp = buf;
+		}
+		long ans = 0;
+		for (int max = 1; max <= m; ++max) {
+			ans += pdp[max][k];
+		}
+		return (int) (ans % mod);
+	}
+}

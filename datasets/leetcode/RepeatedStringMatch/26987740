@@ -1,0 +1,56 @@
+class Solution {
+	int repeatedStringMatch(String a, String b) {
+		int i, k = b.indexOf(a);
+		if (k >= a.length()) {
+			return -1;
+		}
+		if (k == -1) {
+			if (b.length() < a.length() && a.indexOf(b) != -1) {
+				return 1;
+			}
+			Queue<Integer> queue = new LinkedList<>();
+			for (int p = 0; p < b.length() && p < a.length(); p++) {
+				if (b.charAt(p) == a.charAt(0)) {
+					queue.add(p);
+				}
+			}
+			while (!queue.isEmpty()) {
+				int p = queue.peek();
+				int q = 0;
+				while (p < b.length()) {
+					if (b.charAt(p) == a.charAt(q)) {
+						p++;
+						q++;
+					} 
+					else {
+						break;
+					}
+				}
+				if (p == b.length()) {
+					k = queue.poll();
+					break;
+				}
+				queue.poll();
+			}
+		}
+		if (k == -1) {
+			return -1;
+		}
+		if (k == 0) {
+			k = a.length();
+		}
+		i = a.length() - k;
+		int j = 0, count = 0;
+		while (j < b.length()) {
+			for (; i < a.length() && j < b.length(); i++) {
+				if (a.charAt(i) != b.charAt(j)) {
+					return -1;
+				}
+				j++;
+			}
+			count++;
+			i = 0;
+		}
+		return count;
+	}
+}

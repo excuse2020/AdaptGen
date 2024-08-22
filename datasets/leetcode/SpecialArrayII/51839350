@@ -1,0 +1,53 @@
+class Solution {
+	boolean[] isArraySpecial(int[] nums, int[][] queries) {
+		List<List<Integer>> arr = new ArrayList<>();
+		int st = 0, n = nums.length, max = -1, l = queries.length, end = 0;
+		for (int i = 1; i < n; i++) {
+			if (nums[i] % 2 == nums[i - 1] % 2) {
+				if (i - 1 != st) {
+					List<Integer> li = new ArrayList<>();
+					li.add(st);
+					li.add(i - 1);
+					arr.add(li);
+					if (max < i - 1) {
+						max = i - 1;
+					}
+				}
+				st = i;
+			}
+		}
+		if (st != n - 1) {
+			List<Integer> li = new ArrayList<>();
+			li.add(st);
+			li.add(n - 1);
+			arr.add(li);
+			if (max < n - 1) {
+				max = n - 1;
+			}
+		}
+		boolean res = new boolean[l];
+		for (int i = 0; i < l; i++) {
+			st = queries[i][0];
+			end = queries[i][1];
+			if (end - st == 0) {
+				res[i] = true;
+			} 
+			else if (max < end - st) {
+				res[i] = false;
+			} 
+			else {
+				res[i] = false;
+				for (List<Integer> li: arr) {	
+					if (li.get(0) <= st && li.get(1) >= end) {
+						res[i] = true;
+						break;
+					}
+					if (li.get(0) > st) {
+						break;
+					}
+				}
+			}
+		}
+		return res;
+	}
+}

@@ -1,0 +1,40 @@
+class Solution {
+	ListNode Merge(ListNode list1, ListNode list2) {
+		ListNode dummy = new ListNode(-1);
+		ListNode res = dummy;
+		while (list1 != null && list2 != null) {
+			if (list1.val < list2.val) {
+				res.next = list1;
+				res = list1;
+				list1 = list1.next;
+			} 
+			else {
+				res.next = list2;
+				res = list2;
+				list2 = list2.next;
+			}
+		}
+		if (list1 != null) {
+			res.next = list1;
+		} 
+		else if (list2 != null) {
+			res.next = list2;
+		}
+		return dummy.next;
+	}
+	ListNode sortInList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode left = head;
+		ListNode mid = head.next;
+		ListNode right = head.next.next;
+		while (right != null && right.next != null) {
+			left = left.next;
+			right = right.next.next;
+			mid = mid.next;
+		}
+		left.next = null;
+		return Merge(sortInList(head),sortInList(mid));
+	}
+}

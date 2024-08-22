@@ -1,0 +1,33 @@
+class Solution {
+	int deep = 0, maxNum = 0;
+	boolean flag = true;
+	int dfs(TreeNode node, int level, int num) {
+		if (!flag || node == null) {
+			return 0;
+		}
+		if (level > deep) {
+			if (num != 1 << level) {
+				flag = false;
+				return 0;
+			}
+			maxNum = num;
+			deep = level;
+		} 
+		else if (num > maxNum + 1) {
+			flag = false;
+			return 0;
+		} 
+		else {
+			maxNum = Math.max(maxNum,num);
+		}
+		if (node.left == null && node.right != null) {
+			flag = false;
+			return 0;
+		}
+		return dfs(node.left,level + 1,num << 1) + dfs(node.right,level + 1,(num << 1) + 1);
+	}
+	boolean isCompleteTree(TreeNode root) {
+		int sum = dfs(root,0,1);
+		return flag && sum <= ((int) Math.pow(2,deep + 1) - 1) && sum >= ((int) Math.pow(2,deep));
+	}
+}

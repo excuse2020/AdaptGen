@@ -1,0 +1,42 @@
+class Solution {
+	int time = 0;
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		ArrayList<Integer>[] graph = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (List<Integer> con: connections) {	
+			graph[con.get(0)].add(con.get(1));
+			graph[con.get(1)].add(con.get(0));
+		}
+		int[] vis = new int[n];
+		int[] timeArr = new int[n];
+		int[] low = new int[n];
+		List<List<Integer>> res = new ArrayList<>();
+		runDfs(0,graph,res,-1,timeArr,low,vis);
+		return res;
+	}
+	void runDfs(int src, ArrayList<Integer>[] graph, List<List<Integer>> res, int parent, int[] timeArr, int[] low, int[] vis) {
+		vis[src] = 1;
+		timeArr[src] = low[src] = time;
+		time++;
+		for (int nbr: graph[src]) {	
+			if (nbr == parent) {
+				continue;
+			}
+			if (vis[nbr] == 1) {
+				low[src] = Math.min(low[src],low[nbr]);
+			} 
+			else {
+				runDfs(nbr,graph,res,src,timeArr,low,vis);
+				low[src] = Math.min(low[src],low[nbr]);
+				if (low[nbr] > timeArr[src]) {
+					ArrayList<Integer> r = new ArrayList<>();
+					r.add(src);
+					r.add(nbr);
+					res.add(r);
+				}
+			}
+		}
+	}
+}

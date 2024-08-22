@@ -1,0 +1,33 @@
+class Solution {
+	int getUpperBound(Integer idx, int endTime, int endIdx, int target) {
+		int lo = 0, hi = endIdx, mid = 0;
+		while (lo < hi) {
+			mid = (hi + lo) / 2;
+			if (endTime[idx[mid]] <= target) {
+				lo = mid + 1;
+			} 
+			else {
+				hi = mid;
+			}
+		}
+		return lo;
+	}
+	int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
+		int n = profit.length;
+		Integer idx = new Integer[n];
+		for (int i = 0; i < n; i++) {
+			idx[i] = i;
+		}
+		Arrays.sort(idx,(a, b) -> {endTime[a] - endTime[b]});
+		int dp = new int[n + 1];
+		for (int i = 0; i < n; ++i) {
+			int index = idx[i];
+			int start = startTime[index];
+			int end = endTime[index];
+			int prft = profit[index];
+			int latestNonConflictJob = getUpperBound(idx,endTime,i,start);
+			dp[i + 1] = Math.max(dp[i],dp[latestNonConflictJob] + prft);
+		}
+		return dp[n];
+	}
+}

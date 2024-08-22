@@ -1,0 +1,63 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		Result res1 = reverse(head1);
+		Result res2 = reverse(head2);
+		ListNode p1, p2;
+		if (res1.size >= res2.size) {
+			p1 = res1.p;
+			p2 = res2.p;
+		} 
+		else {
+			p1 = res2.p;
+			p2 = res1.p;
+		}
+		ListNode p = p1;
+		while (p1 != null && p2 != null) {
+			p1.val += p2.val;
+			p1 = p1.next;
+			p2 = p2.next;
+		}
+		int r = 0;
+		int x = 0;
+		p1 = p;
+		while (p1 != null) {
+			p1.val += x;
+			r = p1.val % 10;
+			x = p1.val / 10;
+			p1.val = r;
+			p1 = p1.next;
+		}
+		Result result = reverse(p);
+		if (x != 0) {
+			ListNode t = new ListNode(x);
+			t.next = result.p;
+			result.p = t;
+		}
+		return result.p;
+	}
+	Result reverse(ListNode head) {
+		ListNode p = null;
+		ListNode lastNode = null;
+		Result result = new Result();
+		while (head != null) {
+			lastNode = head;
+			ListNode next = head.next;
+			if (p == null) {
+				p = head;
+				p.next = null;
+			} 
+			else {
+				head.next = p;
+				p = head;
+			}
+			result.size++;
+			head = next;
+		}
+		result.p = lastNode;
+		return result;
+	}
+	class Result {
+		ListNode p;
+		int size;
+	}
+}

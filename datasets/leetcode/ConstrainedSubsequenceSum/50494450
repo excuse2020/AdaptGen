@@ -1,0 +1,17 @@
+class Solution {
+	int constrainedSubsetSum(int[] nums, int k) {
+		int res = helper(nums,k,0,-1);
+		return res == 0 ? Arrays.stream(nums).max().getAsInt() : res;
+	}
+	int helper(int[] nums, int k, int idx, int prevIdx) {
+		if (idx >= nums.length) {
+			return 0;
+		}
+		int take = 0, notTake = 0;
+		if (prevIdx == -1 || (idx - prevIdx) <= k) {
+			take = nums[idx] + helper(nums,k,idx + 1,idx);
+			notTake = helper(nums,k,idx + 1,prevIdx);
+		}
+		return Math.max(take,notTake);
+	}
+}

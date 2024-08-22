@@ -1,0 +1,78 @@
+class Solution {
+	int shortestBridge(int[][] grid) {
+		int n = grid.length;
+		HashSet<String> visited = new HashSet<>();
+		Queue<String> q = new LinkedList<>();
+		List<List<List<Integer>>> res = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (grid[i][j] == 0) {
+					continue;
+				}
+				String key = i + "-";
+				if (visited.contains(key)) {
+					continue;
+				}
+				List<List<Integer>> l = new ArrayList<>();
+				q.add(key);
+				while (!q.isEmpty()) {
+					String v = q.poll();
+					if (visited.contains(v)) {
+						continue;
+					}
+					visited.add(v);
+					String ar = v.split("-");
+					int r = Integer.valueOf(ar[0]);
+					int c = Integer.valueOf(ar[1]);
+					List<Integer> lst = new ArrayList<>();
+					lst.add(r);
+					lst.add(c);
+					l.add(lst);
+					if (r + 1 < n && grid[r + 1][c] == 1) {
+						int t = r + 1;
+						String p = t + "-";
+						if (!visited.contains(p)) {
+							q.add(p);
+						}
+					}
+					if (r - 1 >= 0 && grid[r - 1][c] == 1) {
+						int t = r - 1;
+						String p = t + "-";
+						if (!visited.contains(p)) {
+							q.add(p);
+						}
+					}
+					if (c + 1 < n && grid[r][c + 1] == 1) {
+						int t = c + 1;
+						String p = r + "-";
+						if (!visited.contains(p)) {
+							q.add(p);
+						}
+					}
+					if (c - 1 >= 0 && grid[r][c - 1] == 1) {
+						int t = c - 1;
+						String p = r + "-";
+						if (!visited.contains(p)) {
+							q.add(p);
+						}
+					}
+				}
+				res.add(l);
+			}
+		}
+		int min = Integer.MAX_VALUE;
+		List<List<Integer>> l1 = res.get(0);
+		List<List<Integer>> l2 = res.get(1);
+		for (List<Integer> a: l1) {	
+			int x1 = a.get(0);
+			int y1 = a.get(1);
+			for (List<Integer> b: l2) {	
+				int x2 = b.get(0);
+				int y2 = b.get(1);
+				int d = Math.abs(x1 - x2) + Math.abs(y1 - y2) - 1;
+				min = Math.min(min,d);
+			}
+		}
+		return min;
+	}
+}

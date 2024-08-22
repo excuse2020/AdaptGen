@@ -1,0 +1,29 @@
+class Solution {
+	int[] countServers(int n, int[][] logs, int x, int[] queries) {
+		Arrays.sort(logs,(int[] arr1, int[] arr2) -> {Integer.compare(arr1[1],arr2[1])});
+		List<int[]> qList = new ArrayList();
+		for (int i = 0; i < queries.length; i++) {
+			qList.add(new int{queries[i], i});
+		}
+		Collections.sort(qList,(int[] arr1, int[] arr2) -> {Integer.compare(arr1[0],arr2[0])});
+		int left = 0, right = left;
+		int[] result = new int[queries.length];
+		Map<Integer, Integer> freq = new HashMap();
+		for (int i = 0; i < qList.size(); i++) {
+			int lower = qList.get(i)[0] - x, upper = qList.get(i)[0];
+			while (right < logs.length && logs[right][1] <= upper) {
+				freq.put(logs[right][0],freq.getOrDefault(logs[right][0],0) + 1);
+				right++;
+			}
+			while (left < right && logs[left][1] < lower) {
+				freq.put(logs[left][0],freq.get(logs[left][0]) - 1);
+				if (freq.get(logs[left][0]) == 0) {
+					freq.remove(logs[left][0]);
+				}
+				left++;
+			}
+			result[qList.get(i)[1]] = n - freq.size();
+		}
+		return result;
+	}
+}

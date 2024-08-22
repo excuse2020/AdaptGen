@@ -1,0 +1,27 @@
+class Solution {
+	int[][] minimumCosts;
+	int calculateMinimumCost(int startStick, int endStick, int[] cutPoints, int left, int right) {
+		if (left > right) {
+			return 0;
+		}
+		if (minimumCosts[left][right] != -1) {
+			return minimumCosts[left][right];
+		}
+		int cost = Integer.MAX_VALUE;
+		for (int i = left; i <= right; i++) {
+			int leftCost = calculateMinimumCost(startStick,cutPoints[i],cutPoints,left,i - 1);
+			int rightCost = calculateMinimumCost(cutPoints[i],endStick,cutPoints,i + 1,right);
+			int currentCost = (endStick - startStick) + leftCost;
+			cost = Math.min(cost,currentCost);
+		}
+		return minimumCosts[left][right] = cost;
+	}
+	int minCost(int n, int[] cuts) {
+		minimumCosts = new int[cuts.length][cuts.length];
+		for (int[] row: minimumCosts) {	
+			Arrays.fill(row,-1);
+		}
+		Arrays.sort(cuts);
+		return calculateMinimumCost(0,n,cuts,0,cuts.length - 1);
+	}
+}

@@ -1,0 +1,28 @@
+class Solution {
+	int max = Integer.MAX_VALUE;
+	int memo(int[][] costs, int[][] dp, int aidx, int bidx, int n) {
+		if (aidx + bidx >= n) {
+			return 0;
+		}
+		if (dp[aidx][bidx] != max) {
+			return dp[aidx][bidx];
+		}
+		int take = max;
+		int ntake = max;
+		if (aidx < n / 2) {
+			take = costs[aidx + bidx][0] + memo(costs,dp,aidx + 1,bidx,n);
+		}
+		if (bidx < n / 2) {
+			ntake = costs[aidx + bidx][1] + memo(costs,dp,aidx,bidx + 1,n);
+		}
+		return dp[aidx][bidx] = Math.min(take,ntake);
+	}
+	int twoCitySchedCost(int[][] costs) {
+		int n = costs.length;
+		int dp = new int[n + 1][n + 1];
+		for (int[] rows: dp) {	
+			Arrays.fill(rows,max);
+		}
+		return memo(costs,dp,0,0,n);
+	}
+}

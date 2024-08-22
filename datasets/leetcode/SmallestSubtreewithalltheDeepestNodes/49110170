@@ -1,0 +1,25 @@
+class Solution {
+	Pair<Integer, TreeNode> findDeepest(TreeNode node, int depth) {
+		if (node == null) {
+			return new Pair(-1, null);
+		}
+		if (node.left == null && node.right == null) {
+			return new Pair(depth, node);
+		}
+		Pair<Integer, TreeNode> left = findDeepest(node.left,depth + 1);
+		Pair<Integer, TreeNode> right = findDeepest(node.right,depth + 1);
+		if (left.getKey() == right.getKey()) {
+			return new Pair(left.getKey(), node);
+		}
+		if (left.getKey() > right.getKey()) {
+			return left;
+		}
+		return right;
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		return findDeepest(root,1).getValue();
+	}
+}

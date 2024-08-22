@@ -1,0 +1,26 @@
+class Solution {
+	int DFS(int node, HashMap<Integer, ArrayList<Integer>> graph, int[] informTime) {
+		if (graph.get(node) == null) {
+			return 0;
+		}
+		int ans = 0;
+		for (int neb: graph.get(node)) {	
+			ans = Math.max(ans,DFS(neb,graph,informTime));
+		}
+		return ans + informTime[node];
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		HashMap<Integer, ArrayList<Integer>> graph = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			int parent = manager[i];
+			if (parent == -1) {
+				continue;
+			}
+			if (!graph.containsKey(parent)) {
+				graph.put(parent,new ArrayList<Integer>());
+			}
+			graph.get(parent).add(i);
+		}
+		return DFS(headID,graph,informTime);
+	}
+}

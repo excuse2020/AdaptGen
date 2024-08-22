@@ -1,0 +1,33 @@
+class Solution {
+	List<Integer> getOrDefault(List<Integer>[] nodes, int index) {
+		var list = nodes[index] == null ? new ArrayList<Integer>(2) : nodes[index];
+		return nodes[index] = list;
+	}
+	int minReorder(int n, int[][] connections) {
+		var visited = new boolean[n];
+		var nodes = new List[n];
+		for (int[] conn: connections) {	
+			var list1 = getOrDefault(nodes,conn[0]);
+			var list2 = getOrDefault(nodes,conn[1]);
+			list1.add(conn[1]);
+			list2.add(-1 * conn[0]);
+		}
+		int result = 0;
+		Queue<Integer> q = new LinkedList<>();
+		q.add(0);
+		while (!q.isEmpty()) {
+			var node = q.poll();
+			if (node <= 0) {
+				node *= -1;
+			} 
+			else if (!visited[node]) {
+				result++;
+			}
+			if (!visited[node]) {
+				visited[node] = true;
+				q.addAll(nodes[node]);
+			}
+		}
+		return result;
+	}
+}

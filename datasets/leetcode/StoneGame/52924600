@@ -1,0 +1,26 @@
+class Solution {
+	boolean dfs(int[] piles, int b, int e, int sum, boolean turn, int total, Boolean[][] mem) {
+		if (sum * 2 > total) {
+			return true;
+		}
+		if (b > e) {
+			return false;
+		}
+		if (mem[b][e] != null) {
+			return mem[b][e];
+		}
+		if (!turn) {
+			return mem[b][e] = (dfs(piles,b + 1,e,sum,!turn,total,mem) || dfs(piles,b,e - 1,sum,!turn,total,mem));
+		}
+		return mem[b][e] = (dfs(piles,b + 1,e,sum + piles[b],!turn,total,mem) || dfs(piles,b,e - 1,sum + piles[e],!turn,total,mem));
+	}
+	boolean stoneGame(int[] piles) {
+		int sum = 0;
+		for (int i: piles) {	
+			sum += i;
+		}
+		int len = piles.length;
+		Boolean[][] mem = new Boolean[len][len];
+		return dfs(piles,0,piles.length - 1,0,true,sum,mem);
+	}
+}

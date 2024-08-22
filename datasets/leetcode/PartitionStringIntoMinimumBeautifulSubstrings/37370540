@@ -1,0 +1,41 @@
+class Solution {
+	Integer[] memo;
+	int dfs(int pos, String s, Set<String> set) {
+		if (pos >= s.length()) {
+			return 0;
+		}
+		if (s.charAt(pos) == 0) {
+			return Integer.MAX_VALUE;
+		}
+		if (memo[pos] != null && memo[pos] != Integer.MAX_VALUE) {
+			return memo[pos];
+		}
+		int curr = Integer.MAX_VALUE;
+		for (int r = pos + 1; r <= s.length(); r++) {
+			String sub = s.substring(pos,r);
+			if (set.contains(sub)) {
+				int next = dfs(r,s,set);
+				if (next == Integer.MAX_VALUE) {
+					continue;
+				}
+				curr = Math.min(curr,next + 1);
+			}
+		}
+		return memo[pos] = curr;
+	}
+	int minimumBeautifulSubstrings(String s) {
+		Set<String> set = new HashSet<>();
+		int n = s.length();
+		int b = 1;
+		while (true) {
+			if (Integer.toBinaryString(b).length() > s.length()) {
+				break;
+			}
+			set.add(Integer.toBinaryString(b));
+			b *= 5;
+		}
+		this.memo = new Integer[n];
+		dfs(0,s,set);
+		return memo[0] == Integer.MAX_VALUE ? -1 : memo[0];
+	}
+}

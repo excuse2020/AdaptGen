@@ -1,0 +1,29 @@
+class Solution {
+	TreeNode ans;
+	int maxDepth;
+	int recursion(TreeNode root, int depth) {
+		if (root == null) {
+			return -1;
+		}
+		int left = recursion(root.left,depth + 1);
+		int right = recursion(root.right,depth + 1);
+		if (left != -1 && left == right && left >= maxDepth && right >= maxDepth) {
+			ans = root;
+			maxDepth = left;
+		} 
+		else if (left > right && left > maxDepth) {
+			ans = root.left;
+			maxDepth = left;
+		} 
+		else if (right > left && right > maxDepth) {
+			ans = root.right;
+			maxDepth = right;
+		}
+		return Math.max(left,Math.max(right,depth));
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		maxDepth = 0;
+		recursion(root,0);
+		return ans == null ? root : ans;
+	}
+}

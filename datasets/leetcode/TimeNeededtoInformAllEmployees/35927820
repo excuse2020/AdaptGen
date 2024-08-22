@@ -1,0 +1,31 @@
+class Solution {
+	List<List<Integer>> employees;
+	int[] informTime;
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		this.employees = new ArrayList<>(n);
+		this.informTime = informTime;
+		for (int i = 0; i < n; i++) {
+			this.employees.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			int managerID = manager[i];
+			if (managerID == -1) {
+				continue;
+			}
+			this.employees.get(managerID).add(i);
+		}
+		return numOfMinutes(headID);
+	}
+	int numOfMinutes(int headID) {
+		List<Integer> employeeList = employees.get(headID);
+		if (employeeList.size() == 0) {
+			return 0;
+		}
+		int maximum = Integer.MIN_VALUE;
+		for (int i = 0; i < employeeList.size(); i++) {
+			int employeeID = employeeList.get(i);
+			maximum = Math.max(maximum,numOfMinutes(employeeID));
+		}
+		return maximum + this.informTime[headID];
+	}
+}

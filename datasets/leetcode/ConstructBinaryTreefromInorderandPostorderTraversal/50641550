@@ -1,0 +1,22 @@
+class Solution {
+	HashMap<Integer, Integer> hm = new HashMap<>();
+	int postindex;
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		int n = inorder.length, start = 0, end = n - 1;
+		postindex = n - 1;
+		for (int i = 0; i < n; i++) {
+			hm.put(inorder[i],i);
+		}
+		return builtTree(inorder,postorder,start,end);
+	}
+	TreeNode builtTree(int[] inorder, int[] postorder, int start, int end) {
+		if (start > end) {
+			return null;
+		}
+		int index = hm.get(postorder[postindex]);
+		TreeNode node = new TreeNode(postorder[postindex--]);
+		node.right = builtTree(inorder,postorder,index + 1,end);
+		node.left = builtTree(inorder,postorder,start,index - 1);
+		return node;
+	}
+}

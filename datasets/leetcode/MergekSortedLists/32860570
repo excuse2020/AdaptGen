@@ -1,0 +1,24 @@
+class Solution {
+	ListNode mergeKLists(ListNode[] lists) {
+		var head = new ListNode();
+		var ptr = head;
+		var queue = new PriorityQueue<int[]>((a, b) -> {Integer.compare(a[0],b[0])});
+		for (var i = 0; i < lists.length; i++) {
+			if (lists[i] != null) {
+				queue.offer(new int{lists[i].val, i});
+			}
+		}
+		while (!queue.isEmpty()) {
+			var a = queue.poll();
+			var val = a[0];
+			var idx = a[1];
+			ptr.next = new ListNode(val);
+			ptr = ptr.next;
+			lists[idx] = lists[idx].next;
+			if (lists[idx] != null) {
+				queue.offer(new int{lists[idx].val, idx});
+			}
+		}
+		return head.next;
+	}
+}

@@ -1,0 +1,46 @@
+class Solution {
+	int afterOrder(TreeNode root, int[] arr, int index) {
+		if (root == null) {
+			return index;
+		}
+		int temp = afterOrder(root.left,arr,index);
+		temp = afterOrder(root.right,arr,temp);
+		arr[temp] = root.val;
+		temp++;
+		return temp;
+	}
+	int midOrder(TreeNode root, int[] arr, int index) {
+		if (root == null) {
+			return index;
+		}
+		int temp = midOrder(root.left,arr,index);
+		arr[temp] = root.val;
+		temp++;
+		temp = midOrder(root.right,arr,temp);
+		return temp;
+	}
+	void preOrder(TreeNode root, ArrayList<Integer> list) {
+		if (root == null) {
+			return;
+		}
+		list.add(root.val);
+		preOrder(root.left,list);
+		preOrder(root.right,list);
+	}
+	int[][] threeOrders(TreeNode root) {
+		if (root == null) {
+			return new int[3][0];
+		}
+		ArrayList<Integer> list = new ArrayList<>();
+		preOrder(root,list);
+		int len = list.size();
+		int[][] array = new int[3][len];
+		Object[] obj = list.toArray();
+		for (int i = 0; i < len; i++) {
+			array[0][i] = (int) obj[i];
+		}
+		midOrder(root,array[1],0);
+		afterOrder(root,array[2],0);
+		return array;
+	}
+}

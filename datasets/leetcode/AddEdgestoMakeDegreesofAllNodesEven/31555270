@@ -1,0 +1,81 @@
+class Solution {
+	Map<Integer, Set<Integer>> buildGraph(int n, List<List<Integer>> edges) {
+		Map<Integer, Set<Integer>> graph = new HashMap<>();
+		for (int i = 1; i <= n; i++) {
+			graph.put(i,new HashSet<Integer>());
+		}
+		for (List<Integer> edge: edges) {	
+			Set<Integer> nodeOneEdges = graph.get(edge.get(0));
+			Set<Integer> nodeTwoEdges = graph.get(edge.get(1));
+			nodeOneEdges.add(edge.get(1));
+			nodeTwoEdges.add(edge.get(0));
+		}
+		return graph;
+	}
+	boolean checkCasesIfPossible(List<Integer> oddNodes, List<Integer> evenNodes, Map<Integer, Set<Integer>> graph) {
+		boolean canMakeEven = false;
+		int oddNodesSize = oddNodes.size();
+		if (oddNodesSize == 0) {
+			canMakeEven = true;
+		}
+		if (oddNodesSize == 2) {
+			int nodeOne = oddNodes.get(0);
+			int nodeTwo = oddNodes.get(1);
+			Set<Integer> nodeOneConnections = graph.get(nodeOne);
+			if (!nodeOneConnections.contains(nodeTwo)) {
+				canMakeEven = true;
+			}
+			for (int evenNode: evenNodes) {	
+				Set<Integer> evenNodeEdges = graph.get(evenNode);
+				if (!evenNodeEdges.contains(nodeOne) && !evenNodeEdges.contains(nodeTwo)) {
+					canMakeEven = true;
+				}
+			}
+		}
+		if (oddNodesSize == 4) {
+			int nodeOne = oddNodes.get(0);
+			int nodeTwo = oddNodes.get(1);
+			int nodeThree = oddNodes.get(2);
+			int nodeFour = oddNodes.get(3);
+			Set<Integer> nodeOneEdges = graph.get(nodeOne);
+			Set<Integer> nodeTwoEdges = graph.get(nodeTwo);
+			Set<Integer> nodeThreeEdges = graph.get(nodeThree);
+			Set<Integer> nodeFourEdges = graph.get(nodeFour);
+			if (!nodeOneEdges.contains(nodeTwo) && !nodeThreeEdges.contains(nodeFour)) {
+				canMakeEven = true;
+			}
+			if (!nodeOneEdges.contains(nodeThree) && !nodeTwoEdges.contains(nodeFour)) {
+				canMakeEven = true;
+			}
+			if (!nodeOneEdges.contains(nodeFour) && !nodeTwoEdges.contains(nodeThree)) {
+				canMakeEven = true;
+			}
+		}
+		return canMakeEven;
+	}
+	List<Integer> getEvenNodes(int n, List<Integer> oddNodes) {
+		List<Integer> evenNodes = new ArrayList<>();
+		for (int node = 1; node <= n; node++) {
+			if (!oddNodes.contains(node)) {
+				evenNodes.add(node);
+			}
+		}
+		return evenNodes;
+	}
+	List<Integer> getOddNodes(int n, Map<Integer, Set<Integer>> graph) {
+		List<Integer> oddNodes = new ArrayList<>();
+		for (int node = 1; node <= n; node++) {
+			Set<Integer> edgesToNode = graph.get(node);
+			if (edgesToNode.size() % 2 == 1) {
+				oddNodes.add(node);
+			}
+		}
+		return oddNodes;
+	}
+	boolean isPossible(int n, List<List<Integer>> edges) {
+		Map<Integer, Set<Integer>> graph = buildGraph(n,edges);
+		List<Integer> oddNodes = getOddNodes(n,graph);
+		List<Integer> evenNodes = getEvenNodes(n,oddNodes);
+		return checkCasesIfPossible(oddNodes,evenNodes,graph);
+	}
+}

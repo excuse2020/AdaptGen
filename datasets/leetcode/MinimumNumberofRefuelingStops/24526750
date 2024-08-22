@@ -1,0 +1,26 @@
+class Solution {
+	int minRefuelStops(int target, int startFuel, int[][] stations) {
+		PriorityQueue<int[]> availableStations = new PriorityQueue<>((s1, s2) -> {s2[1] - s1[1]});
+		int stationIdx = 0;
+		int refuelingStops = 0;
+		int possibleDrivenMiles = startFuel;
+		while (possibleDrivenMiles < target) {
+			for (int i = stationIdx; i < stations.length; i++) {
+				int[] station = stations[i];
+				if (station[0] <= possibleDrivenMiles) {
+					availableStations.offer(station);
+					stationIdx = i + 1;
+				} 
+				else {
+					break;
+				}
+			}
+			if (availableStations.isEmpty()) {
+				return -1;
+			}
+			possibleDrivenMiles += availableStations.poll()[1];
+			refuelingStops++;
+		}
+		return refuelingStops;
+	}
+}

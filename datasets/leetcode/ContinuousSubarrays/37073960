@@ -1,0 +1,65 @@
+class Solution {
+	long continuousSubarrays(int[] nums) {
+		int start = 0;
+		int end = 0;
+		long sum = nums.length;
+		while (start <= end && start < nums.length) {
+			end = start + 1;
+			int min = nums[start];
+			int max = nums[start];
+			int minCount = 1;
+			int maxCount = 1;
+			boolean minViolated = false;
+			boolean boundaryViolated = false;
+			while (end < nums.length) {
+				if (Math.abs(nums[end] - min) >= 0 && Math.abs(nums[end] - min) <= 2 && Math.abs(nums[end] - max) >= 0 && Math.abs(nums[end] - max) <= 2) {
+					sum = sum + 1;
+					if (nums[end] == min) {
+						minCount = minCount + 1;
+					}
+					if (nums[end] == max) {
+						maxCount = maxCount + 1;
+					}
+					if (min > nums[end]) {
+						min = nums[end];
+						minCount = 1;
+					}
+					if (max < nums[end]) {
+						max = nums[end];
+						maxCount = 1;
+					}
+				} 
+				else {
+					boundaryViolated = true;
+					if (Math.abs(nums[end] - min) >= 0 && Math.abs(nums[end] - min) <= 2) {
+						minViolated = true;
+					}
+					break;
+				}
+				end++;
+			}
+			if (boundaryViolated) {
+				int toReduceCount = minViolated ? maxCount : minCount;
+				if ((minViolated && nums[start] == max) || (!minViolated && nums[start] == min)) {
+					toReduceCount--;
+				}
+				start++;
+				while (start < end && toReduceCount > 0) {
+					sum = sum + end - start - 1;
+					if ((minViolated && nums[start] == max) || (!minViolated && nums[start] == min)) {
+						toReduceCount--;
+					}
+					start++;
+				}
+			} 
+			else {
+				start++;
+				while (start < end) {
+					sum = sum + end - start - 1;
+					start++;
+				}
+			}
+		}
+		return sum;
+	}
+}

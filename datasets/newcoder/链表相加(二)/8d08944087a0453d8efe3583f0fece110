@@ -1,0 +1,91 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		ListNode node1 = reserver(head1);
+		ListNode node2 = reserver(head2);
+		ListNode sumNode = addSum(node1,node2);
+		return reserver(sumNode);
+	}
+	ListNode addSum(ListNode head1, ListNode head2) {
+		ListNode cur = new ListNode(-1);
+		cur.next = null;
+		ListNode p = cur;
+		int ge = 0, shi = 0, sum = 0;
+		while (head1 != null && head2 != null) {
+			sum = head1.val + head2.val;
+			shi = 0;
+			if (sum < 10) {
+				ListNode tc = new ListNode(sum);
+				p.next = tc;
+			} 
+			else {
+				ge = sum % 10;
+				shi = sum / 10;
+				ListNode tc = new ListNode(ge);
+				p.next = tc;
+			}
+			p = p.next;
+			if (head1.next == null || head2.next == null) {
+				break;
+			}
+			head1 = head1.next;
+			head2 = head2.next;
+		}
+		while (head1.next != null) {
+			head1 = head1.next;
+			sum = head1.val + shi;
+			System.out.println(sum);
+			shi = 0;
+			if (sum < 10) {
+				ListNode tc = new ListNode(sum);
+				p.next = tc;
+			} 
+			else {
+				ge = sum % 10;
+				shi = sum / 10;
+				ListNode tc = new ListNode(ge);
+				p.next = tc;
+			}
+			p = p.next;
+		}
+		while (head2.next != null) {
+			head2 = head2.next;
+			sum = head2.val + shi;
+			shi = 0;
+			if (sum < 10) {
+				ListNode tc = new ListNode(sum);
+				p.next = tc;
+			} 
+			else {
+				ge = sum % 10;
+				shi = sum / 10;
+				ListNode tc = new ListNode(ge);
+				p.next = tc;
+			}
+			p = p.next;
+		}
+		if (shi != 0) {
+			ListNode tc = new ListNode(shi);
+			p.next = tc;
+			p = p.next;
+		}
+		return cur.next;
+	}
+	ListNode reserver(ListNode list) {
+		if (list == null) {
+			return null;
+		}
+		ListNode cur = new ListNode(-1);
+		cur.next = null;
+		ListNode tc = null;
+		while (list.next != null) {
+			tc = list.next;
+			list.next = cur.next;
+			cur.next = list;
+			list = tc;
+		}
+		list.next = cur.next;
+		cur.next = list;
+		list = tc;
+		return cur.next;
+	}
+}

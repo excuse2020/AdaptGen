@@ -1,0 +1,33 @@
+class Solution {
+	long maxPoints(int[][] points) {
+		int m = points[0].length;
+		long res = 0;
+		long[] prev = new long[m];
+		for (int i = 0; i < points.length; i++) {
+			long[] curr = new long[m];
+			long max = 0;
+			long maxIdx = 0;
+			for (int j = 0; j < m; j++) {
+				if (max - (j - maxIdx) <= prev[j]) {
+					max = prev[j];
+					maxIdx = j;
+				}
+				curr[j] = max + points[i][j] - (j - maxIdx);
+			}
+			max = 0;
+			maxIdx = m - 1;
+			for (int j = m - 1; j >= 0; j--) {
+				if (max - (maxIdx - j) <= prev[j]) {
+					max = prev[j];
+					maxIdx = j;
+				}
+				curr[j] = Math.max(curr[j],points[i][j] + max - (maxIdx - j));
+				if (i == points.length - 1) {
+					res = Math.max(res,curr[j]);
+				}
+			}
+			prev = curr;
+		}
+		return res;
+	}
+}

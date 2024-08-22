@@ -1,0 +1,44 @@
+class Solution {
+	int gcd(int p, int q) {
+		if (q == 0) {
+			return p;
+		}
+		int r = p % q;
+		return gcd(q,r);
+	}
+	int maxPoints(int[][] points) {
+		int N = points.length;
+		if (N < 2) {
+			return N;
+		}
+		int maxPoints = 0;
+		for (int i = 0; i < N; i++) {
+			int curMax = 0;
+			int overlapPoints = 0;
+			int verticalPoints = 0;
+			HashMap<String, Integer> slopeMap = new HashMap<>();
+			for (int j = i + 1; j < N; j++) {
+				if (points[i][0] == points[j][0] && points[i][1] == points[j][1]) {
+					overlapPoints++;
+				} 
+				else if (points[i][0] == points[j][0]) {
+					verticalPoints++;
+				} 
+				else {
+					int yDif = points[j][1] - points[i][1];
+					int xDif = points[j][0] - points[i][0];
+					int g = gcd(xDif,yDif);
+					yDif /= g;
+					xDif /= g;
+					String slope = yDif + " ";
+					slopeMap.put(slope,slopeMap.getOrDefault(slope,0) + 1);
+					curMax = Math.max(curMax,slopeMap.get(slope));
+				}
+				curMax = Math.max(curMax,verticalPoints);
+			}
+			maxPoints = Math.max(maxPoints,curMax + overlapPoints);
+			slopeMap.clear();
+		}
+		return maxPoints;
+	}
+}

@@ -1,0 +1,57 @@
+class Solution {
+	int countDays(int days, int[][] intervals) {
+		Arrays.sort(intervals,(a, b) -> {Integer.compare(a[0],b[0])});
+		int pointer = 0;
+		TreeMap<Integer, int[]> map = new TreeMap<>();
+		for (int i = 0; i < intervals.length; i++) {
+			int key = intervals[i][0];
+			if (map.containsKey(key)) {
+				map.put(key,new int{key, Math.max(map.get(key)[1],intervals[i][1])});
+			} 
+			else {
+				map.put(key,new int{key, intervals[i][1]});
+			}
+		}
+		Set<Integer> s = map.keySet();
+		int prevKey = 0;
+		HashMap<Integer, int[]> map1 = new HashMap<>();
+		for (int key: s) {	
+			int[] arr = map.get(key);
+			if (map1.isEmpty()) {
+				prevKey = key;
+				map1.put(key,arr);
+			} 
+			else {
+				int lastKeyLastIndex = map1.get(prevKey)[1];
+				if (key <= lastKeyLastIndex) {
+					map1.put(prevKey,new int{prevKey, Math.max(arr[1],lastKeyLastIndex)});
+				} 
+				else {
+					map1.put(key,arr);
+					prevKey = key;
+				}
+			}
+		}
+		Set<Integer> s2 = map1.keySet();
+		int index = 0;
+		int[][] returnArr = new int[s2.size()][2];
+		for (int key: s2) {	
+			int[] arr = map1.get(key);
+			returnArr[index][0] = arr[0];
+			returnArr[index][1] = arr[1];
+			index++;
+		}
+		Arrays.sort(returnArr,(a, b) -> {Integer.compare(a[0],b[0])});
+		int count = 0;
+		int curr = 0, ind = 0;
+		while (ind < returnArr.length) {
+			if (returnArr[ind][0] > curr) {
+				count += returnArr[ind][0] - curr;
+			}
+			curr = returnArr[ind][1];
+			ind++;
+		}
+		count += days - returnArr[ind - 1][1];
+		return count;
+	}
+}

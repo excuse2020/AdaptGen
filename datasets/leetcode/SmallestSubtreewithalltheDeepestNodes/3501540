@@ -1,0 +1,45 @@
+class Solution {
+	TreeNode getSharedParent(Queue<TreeNode> q, HashMap<TreeNode, TreeNode> mapOfNodes) {
+		while (!q.isEmpty()) {
+			if (q.size() == 1) {
+				return q.poll();
+			}
+			Queue<TreeNode> tempQ = new LinkedList<TreeNode>();
+			for (TreeNode t: q) {	
+				if (!tempQ.contains(mapOfNodes.get(t))) {
+					tempQ.add(mapOfNodes.get(t));
+				}
+			}
+			q = tempQ;
+		}
+		return null;
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		Queue<TreeNode> q = new LinkedList<TreeNode>();
+		if (root == null) {
+			return root;
+		}
+		q.add(root);
+		HashMap<TreeNode, TreeNode> mapOfNodes = new HashMap<>();
+		while (!q.isEmpty()) {
+			Queue<TreeNode> tempQ = new LinkedList<TreeNode>();
+			for (TreeNode t: q) {	
+				if (t.left != null) {
+					tempQ.add(t.left);
+					mapOfNodes.put(t.left,t);
+				}
+				if (t.right != null) {
+					tempQ.add(t.right);
+					mapOfNodes.put(t.right,t);
+				}
+			}
+			if (tempQ.size() == 0) {
+				break;
+			} 
+			else {
+				q = tempQ;
+			}
+		}
+		return getSharedParent(q,mapOfNodes);
+	}
+}

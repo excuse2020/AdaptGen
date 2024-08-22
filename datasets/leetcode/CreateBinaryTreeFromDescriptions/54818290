@@ -1,0 +1,40 @@
+class Solution {
+	TreeNode createBinaryTree(int[][] descriptions) {
+		HashMap<Integer, Boolean> isChild = new HashMap<>();
+		HashMap<Integer, TreeNode> map = new HashMap<>();
+		TreeNode parent = null;
+		for (int i = 0; i < descriptions.length; i++) {
+			int key = descriptions[i][0];
+			TreeNode node;
+			if (map.containsKey(key)) {
+				node = map.get(key);
+			} 
+			else {
+				node = new TreeNode(key);
+			}
+			if (descriptions[i][2] == 1) {
+				node.left = (map.containsKey(descriptions[i][1])) ? map.get(descriptions[i][1]) : new TreeNode(descriptions[i][1]);
+				map.put(descriptions[i][1],node.left);
+			} 
+			else {
+				node.right = (map.containsKey(descriptions[i][1])) ? map.get(descriptions[i][1]) : new TreeNode(descriptions[i][1]);
+				map.put(descriptions[i][1],node.right);
+			}
+			map.put(key,node);
+			maintainIsChild(descriptions,i,isChild);
+		}
+		for (Map.Entry<Integer, Boolean> e: isChild.entrySet()) {	
+			if (!e.getValue()) {
+				parent = map.get(e.getKey());
+				break;
+			}
+		}
+		return parent;
+	}
+	void maintainIsChild(int[][] descriptions, int i, HashMap<Integer, Boolean> isChild) {
+		isChild.put(descriptions[i][1],true);
+		if (!isChild.containsKey(descriptions[i][0])) {
+			isChild.put(descriptions[i][0],false);
+		}
+	}
+}

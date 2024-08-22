@@ -1,0 +1,35 @@
+class Solution {
+	HashMap<Integer, ArrayList<Integer>> adjList(int[][] edges, int n) {
+		HashMap<Integer, ArrayList<Integer>> adjlist = new HashMap<>();
+		for (int i = 0; i < edges.length; i++) {
+			adjlist.putIfAbsent(edges[i][0],new ArrayList<Integer>());
+			adjlist.putIfAbsent(edges[i][1],new ArrayList<Integer>());
+			adjlist.get(edges[i][0]).add(edges[i][1]);
+			adjlist.get(edges[i][1]).add(edges[i][0]);
+		}
+		return adjlist;
+	}
+	int[] countSubTrees(int n, int[][] edges, String labels) {
+		HashMap<Integer, ArrayList<Integer>> adjlist = adjList(edges,n);
+		int res = new int[n];
+		dfs(0,adjlist,new HashSet<>(),labels,res);
+		return res;
+	}
+	HashMap<Character, Integer> dfs(int curNode, HashMap<Integer, ArrayList<Integer>> graph, HashSet<Integer> visited, String label, int[] res) {
+		HashMap<Character, Integer> lables = new HashMap<>();
+		if (visited.contains(curNode)) {
+			return lables;
+		}
+		visited.add(curNode);
+		for (int i: graph.get(curNode)) {	
+			HashMap<Character, Integer> temp = dfs(i,graph,visited,label,res);
+			for (char key: temp.keySet()) {	
+				lables.put(key,lables.getOrDefault(key,0) + temp.get(key));
+			}
+		}
+		char l = label.charAt(curNode);
+		lables.put(l,lables.getOrDefault(l,0) + 1);
+		res[curNode] = lables.get(l);
+		return lables;
+	}
+}

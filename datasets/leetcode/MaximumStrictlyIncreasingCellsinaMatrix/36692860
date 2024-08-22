@@ -1,0 +1,59 @@
+class Solution {
+	int dp;
+	TreeMap<Integer, List<Integer>> mpCol;
+	TreeMap<Integer, List<Integer>> mpRow;
+	int helper(int mat, int x, int y) {
+		if (dp[x][y] != -1) {
+			return dp[x][y];
+		}
+		var ent = mpRow[x].higherEntry(mat[x][y]);
+		int ans = 1;
+		if (ent != null) {
+			for (var c: ent.getValue()) {	
+				ans = Math.max(ans,1 + helper(mat,x,c));
+			}
+		}
+		ent = mpCol[y].higherEntry(mat[x][y]);
+		if (ent != null) {
+			for (var r: ent.getValue()) {	
+				ans = Math.max(ans,1 + helper(mat,r,y));
+			}
+		}
+		return dp[x][y] = ans;
+	}
+	int maxIncreasingCells(int[][] mat) {
+		int m = mat.length;
+		int n = mat[0].length;
+		mpRow = new TreeMap[m];
+		mpCol = new TreeMap[n];
+		dp = new int[m][n];
+		for (var a: dp) {	
+			Arrays.fill(a,-1);
+		}
+		for (int i = 0; i < m; i++) {
+			mpRow[i] = new TreeMap<>();
+			for (int j = 0; j < n; j++) {
+				if (!mpRow[i].containsKey(mat[i][j])) {
+					mpRow[i].put(mat[i][j],new ArrayList<>());
+				}
+				mpRow[i].get(mat[i][j]).add(j);
+			}
+		}
+		for (int j = 0; j < n; j++) {
+			mpCol[j] = new TreeMap<>();
+			for (int i = 0; i < m; i++) {
+				if (!mpCol[j].containsKey(mat[i][j])) {
+					mpCol[j].put(mat[i][j],new ArrayList<>());
+				}
+				mpCol[j].get(mat[i][j]).add(i);
+			}
+		}
+		int ans = 1;
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				ans = Math.max(ans,helper(mat,i,j));
+			}
+		}
+		return ans;
+	}
+}

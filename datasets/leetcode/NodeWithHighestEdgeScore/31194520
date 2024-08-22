@@ -1,0 +1,38 @@
+class Solution {
+	long cal(List<Integer> list) {
+		long sum = 0;
+		for (int i = 0; i < list.size(); i++) {
+			sum += list.get(i);
+		}
+		return sum;
+	}
+	int edgeScore(int[] edges) {
+		int n = edges.length;
+		HashMap<Integer, List<Integer>> hm = new HashMap<>();
+		for (int i = 0; i < edges.length; i++) {
+			if (!hm.containsKey(edges[i])) {
+				List<Integer> list = new ArrayList<>();
+				list.add(i);
+				hm.put(edges[i],list);
+			} 
+			else {
+				List<Integer> list = hm.get(edges[i]);
+				list.add(i);
+			}
+		}
+		long max = Integer.MIN_VALUE;
+		int node = -1;
+		for (int key: hm.keySet()) {	
+			List<Integer> list = hm.get(key);
+			long sum = cal(list);
+			if (sum > max) {
+				max = sum;
+				node = key;
+			} 
+			else if (sum == max) {
+				node = Math.min(node,key);
+			}
+		}
+		return node;
+	}
+}

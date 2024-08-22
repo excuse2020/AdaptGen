@@ -1,0 +1,26 @@
+class Solution {
+	long[][][] ans;
+	long rec(int[][] costs, int i, int a, int b) {
+		if (i == costs.length) {
+			if (a == b) {
+				return 0;
+			} 
+			else {
+				return Integer.MAX_VALUE;
+			}
+		}
+		if (a > costs.length / 2 || b > costs.length / 2) {
+			return Integer.MAX_VALUE;
+		}
+		if (ans[i][a][b] != 0) {
+			return ans[i][a][b];
+		}
+		ans[i][a][b] = Math.min(rec(costs,i + 1,a + 1,b) + (long) costs[i][0],rec(costs,i + 1,a,b + 1) + (long) costs[i][1]);
+		return ans[i][a][b];
+	}
+	int twoCitySchedCost(int[][] costs) {
+		int n = costs.length;
+		ans = new long[n + 1][n / 2 + 1][n / 2 + 1];
+		return (int) rec(costs,0,0,0);
+	}
+}

@@ -1,0 +1,33 @@
+class Solution {
+	void buildGraph(int[] vals, int[][] edges, List<Integer>[] adjList) {
+		int n = vals.length;
+		for (int i = 0; i < n; i++) {
+			adjList[i] = new ArrayList<>();
+		}
+		for (int[] edge: edges) {	
+			int u = edge[0], v = edge[1];
+			adjList[u].add(vals[v]);
+			adjList[v].add(vals[u]);
+		}
+		for (int i = 0; i < n; i++) {
+			Collections.sort(adjList[i],(a, b) -> {b - a});
+		}
+	}
+	int maxStarSum(int[] vals, int[][] edges, int k) {
+		int n = vals.length;
+		List<Integer>[] adjList = new ArrayList[n];
+		buildGraph(vals,edges,adjList);
+		int maxStarSum = Integer.MIN_VALUE;
+		for (int i = 0; i < vals.length; i++) {
+			int csum = vals[i];
+			for (int j = 0; j < adjList[i].size() && j < k; j++) {
+				if (adjList[i].get(j) <= 0) {
+					continue;
+				}
+				csum += adjList[i].get(j);
+			}
+			maxStarSum = Math.max(maxStarSum,csum);
+		}
+		return maxStarSum;
+	}
+}

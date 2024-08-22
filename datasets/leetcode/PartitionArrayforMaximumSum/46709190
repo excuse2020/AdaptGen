@@ -1,0 +1,29 @@
+class Solution {
+	int best_Answer(int[] arr, int[] DP, int index, int k) {
+		if (k == 1) {
+			return DP[index - 1] + arr[index];
+		}
+		int max_element = arr[index];
+		int max_answer = DP[index - 1] + arr[index];
+		for (int i = 2; i <= k; i++) {
+			if (index - i + 1 < 0) {
+				break;
+			}
+			max_element = Math.max(max_element,arr[index - i + 1]);
+			if (index - i + 1 == 0) {
+				return (index + 1) * max_element;
+			}
+			max_answer = Math.max(max_answer,DP[index - i] + i * max_element);
+		}
+		return max_answer;
+	}
+	int maxSumAfterPartitioning(int[] arr, int k) {
+		int n = arr.length;
+		int[] DP = new int[n];
+		DP[0] = arr[0];
+		for (int i = 1; i < n; i++) {
+			DP[i] = best_Answer(arr,DP,i,k);
+		}
+		return DP[n - 1];
+	}
+}

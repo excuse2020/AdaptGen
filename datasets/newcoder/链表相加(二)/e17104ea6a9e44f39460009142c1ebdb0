@@ -1,0 +1,59 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		ArrayList<ListNode> list1 = new ArrayList<>();
+		ArrayList<ListNode> list2 = new ArrayList<>();
+		ListNode res = new ListNode(0);
+		while (head1 != null) {
+			ListNode node = new ListNode(head1.val);
+			list1.add(node);
+			head1 = head1.next;
+		}
+		while (head2 != null) {
+			ListNode node = new ListNode(head2.val);
+			list2.add(node);
+			head2 = head2.next;
+		}
+		int k = Math.max(list1.size(),list2.size());
+		int carry = 0;
+		int size1 = list1.size() - 1;
+		int size2 = list2.size() - 1;
+		int a = 0, b = 0;
+		while (k >= 0) {
+			if (size1 < 0) {
+				a = 0;
+			} 
+			else {
+				a = list1.get(size1).val;
+			}
+			if (size2 < 0) {
+				b = 0;
+			} 
+			else {
+				b = list2.get(size2).val;
+			}
+			ListNode node = new ListNode(0);
+			node.val = (a + b) % 10;
+			carry = (a + b) / 10;
+			ListNode next = res.next;
+			res.next = node;
+			node.next = next;
+			size1--;
+			size2--;
+			k--;
+		}
+		if (carry > 0) {
+			ListNode node = new ListNode(carry);
+			ListNode next = res.next;
+			res.next = node;
+			node.next = next;
+			if (res.next.val == 0) {
+				res = res.next;
+			}
+			return res.next;
+		}
+		if (res.next.val == 0) {
+			res = res.next;
+		}
+		return res.next;
+	}
+}

@@ -1,0 +1,30 @@
+class Solution {
+	int reachableNodes(int n, int[][] edges, int[] restricted) {
+		HashMap<Integer, List<Integer>> graph = new HashMap<>();
+		for (int i = 0; i < n; ++i) {
+			graph.put(i,new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			graph.get(edge[0]).add(edge[1]);
+			graph.get(edge[1]).add(edge[0]);
+		}
+		HashSet<Integer> visited = new HashSet<>();
+		for (int restrictedNode: restricted) {	
+			visited.add(restrictedNode);
+		}
+		int reachableNodes = 0;
+		Queue<Integer> bfsQueue = new LinkedList<>();
+		bfsQueue.add(0);
+		while (!bfsQueue.isEmpty()) {
+			int currentNode = bfsQueue.poll();
+			visited.add(currentNode);
+			for (int nextNode: graph.get(currentNode)) {	
+				if (!visited.contains(nextNode)) {
+					bfsQueue.add(nextNode);
+				}
+			}
+			++reachableNodes;
+		}
+		return reachableNodes;
+	}
+}

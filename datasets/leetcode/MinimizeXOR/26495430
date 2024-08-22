@@ -1,0 +1,35 @@
+class Solution {
+	int minimizeXor(int num1, int num2) {
+		int b = 0;
+		for (; num2 != 0; num2 >>= 1) {
+			if ((num2 & 1) != 0) {
+				b++;
+			}
+		}
+		int bits = new int[32];
+		for (int id = 0; num1 != 0; id++, num1 >>= 1) {
+			if ((num1 & 1) != 0) {
+				bits[id] = 1;
+			}
+		}
+		for (int id = 31; id >= 0 && b != 0; id--) {
+			if (bits[id] != 0) {
+				bits[id] = 2;
+				b--;
+			}
+		}
+		for (int id = 0; id != 32 && b != 0; id++) {
+			if (bits[id] == 0) {
+				bits[id] = 2;
+				b--;
+			}
+		}
+		int ans = 0;
+		for (int mask = 1, id = 0; id != 32; mask <<= 1, id++) {
+			if (bits[id] == 2) {
+				ans |= mask;
+			}
+		}
+		return ans;
+	}
+}

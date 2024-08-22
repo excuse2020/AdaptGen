@@ -1,0 +1,56 @@
+class Solution {
+	int[][] dp;
+	Map<Integer, List<Integer>> map;
+	int mod = (int) Math.pow(10,9) + 7;
+	int countVowelPermutation(int n) {
+		dp = new int[n + 1][6];
+		for (int i = 0; i <= n; i++) {
+			int[] temp = new int[6];
+			Arrays.fill(temp,-1);
+			dp[i] = temp;
+		}
+		map = new HashMap<>();
+		for (int i = 1; i <= 5; i++) {
+			List<Integer> list = new ArrayList<>();
+			if (i == 1) {
+				list.add(2);
+			} 
+			else if (i == 2) {
+				list.add(1);
+				list.add(3);
+			} 
+			else if (i == 3) {
+				list.add(1);
+				list.add(2);
+				list.add(4);
+				list.add(5);
+			} 
+			else if (i == 4) {
+				list.add(3);
+				list.add(5);
+			} 
+			else if (i == 5) {
+				list.add(1);
+			}
+			map.put(i,list);
+		}
+		int ways = 0;
+		for (int i = 1; i <= 5; i++) {
+			ways = (ways % mod + helper(1,i,n) % mod) % mod;
+		}
+		return ways;
+	}
+	int helper(int i, int lastCharKey, int n) {
+		if (i >= n) {
+			return 1;
+		}
+		if (dp[i][lastCharKey] != -1) {
+			return dp[i][lastCharKey];
+		}
+		int ways = 0;
+		for (int k: map.get(lastCharKey)) {	
+			ways = (ways % mod + helper(i + 1,k,n) % mod) % mod;
+		}
+		return dp[i][lastCharKey] = ways;
+	}
+}

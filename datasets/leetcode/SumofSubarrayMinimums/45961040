@@ -1,0 +1,33 @@
+class Solution {
+	int sumSubarrayMins(int[] arr) {
+		long[] baya = new long[arr.length];
+		long[] daya = new long[arr.length];
+		Stack<Integer> l = new Stack<>();
+		Stack<Integer> r = new Stack<>();
+		for (int i = 0; i < arr.length; i++) {
+			while (!l.isEmpty() && arr[i] < arr[l.peek()]) {
+				l.pop();
+			}
+			baya[i] = i + 1;
+			if (!l.isEmpty()) {
+				baya[i] = i - l.peek();
+			}
+			l.push(i);
+		}
+		for (int i = arr.length - 1; i >= 0; i--) {
+			while (!r.isEmpty() && arr[i] <= arr[r.peek()]) {
+				r.pop();
+			}
+			daya[i] = arr.length - i;
+			if (!r.isEmpty()) {
+				daya[i] = r.peek() - i;
+			}
+			r.push(i);
+		}
+		long minSum = 0;
+		for (int i = 0; i < arr.length; i++) {
+			minSum = (minSum + (baya[i] * arr[i]) % 1_000_000_007) % 1_000_000_007;
+		}
+		return (int) minSum;
+	}
+}

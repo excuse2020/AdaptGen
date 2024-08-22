@@ -1,0 +1,43 @@
+class Solution {
+	ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+	boolean f = false;
+	int max = 0;
+	void dfs(int vis, int dfsvis, int node, int c, int cnt) {
+		vis[node] = 1;
+		dfsvis[node] = 1;
+		for (int x: adj.get(node)) {	
+			c++;
+			if (vis[x] == 0) {
+				cnt[x] = c;
+				dfs(vis,dfsvis,x,c,cnt);
+			} 
+			else if (dfsvis[x] == 1) {
+				cnt[x] = c - cnt[x];
+				max = Math.max(max,cnt[x]);
+				f = true;
+				break;
+			}
+		}
+		dfsvis[node] = 0;
+	}
+	int longestCycle(int[] edges) {
+		int n = edges.length;
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			if (edges[i] != -1) {
+				adj.get(i).add(edges[i]);
+			}
+		}
+		int vis = new int[n];
+		int dfsvis = new int[n];
+		int cnt = new int[n];
+		for (int i = 0; i < n; i++) {
+			if (vis[i] == 0) {
+				dfs(vis,dfsvis,i,0,cnt);
+			}
+		}
+		return f == false ? -1 : max;
+	}
+}

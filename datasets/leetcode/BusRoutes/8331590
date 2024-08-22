@@ -1,0 +1,40 @@
+class Solution {
+	int numBusesToDestination(int[][] routes, int S, int T) {
+		Map<Integer, Set<Integer>> stopToBus = new HashMap<>();
+		for (int i = 0; i < routes.length; ++i) {
+			for (int j = 0; j < routes[i].length; ++j) {
+				stopToBus.putIfAbsent(routes[i][j],new HashSet<>());
+				stopToBus.get(routes[i][j]).add(i);
+			}
+		}
+		Set<Integer> visitedBus = new HashSet<>();
+		Set<Integer> visitedStop = new HashSet<>();
+		Queue<Integer> queue = new ArrayDeque<>();
+		queue.offer(S);
+		int cnt = 0;
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; ++i) {
+				int curStop = queue.poll();
+				if (curStop == T) {
+					return cnt;
+				}
+				visitedStop.add(curStop);
+				for (int bus: stopToBus.get(curStop)) {	
+					if (visitedBus.contains(bus)) {
+						continue;
+					}
+					visitedBus.add(bus);
+					for (int nextStop: routes[bus]) {	
+						if (visitedStop.contains(nextStop)) {
+							continue;
+						}
+						queue.offer(nextStop);
+					}
+				}
+			}
+			cnt++;
+		}
+		return -1;
+	}
+}

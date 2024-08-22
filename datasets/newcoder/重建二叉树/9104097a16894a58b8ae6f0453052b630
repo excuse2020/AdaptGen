@@ -1,0 +1,27 @@
+class Solution {
+	TreeNode reConstructBinaryTree(int[] pre, int[] in) {
+		return reConstructBinaryTree(pre,0,pre.length - 1,in,0,in.length - 1);
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int pl, int pr, int[] in, int inl, int inr) {
+		if (pl >= pre.length) {
+			return null;
+		}
+		TreeNode root = new TreeNode(pre[pl]);
+		int inRootIndex = 0;
+		for (int i = inl; i <= inr; i++) {
+			if (in[i] == root.val) {
+				inRootIndex = i;
+				break;
+			}
+		}
+		int leftLen = inRootIndex - inl;
+		int rightLen = inr - inRootIndex;
+		if (leftLen > 0) {
+			root.left = reConstructBinaryTree(pre,pl + 1,pl + leftLen,in,inl,inRootIndex - 1);
+		}
+		if (rightLen > 0) {
+			root.right = reConstructBinaryTree(pre,pr - rightLen + 1,pr,in,inRootIndex + 1,inr);
+		}
+		return root;
+	}
+}

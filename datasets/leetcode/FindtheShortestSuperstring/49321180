@@ -1,0 +1,64 @@
+class Solution {
+	int calculateCost(String a, String b) {
+		for (int i = 1; i < a.length(); i++) {
+			if (b.startsWith(a.substring(i))) {
+				return b.length() - a.length() + i;
+			}
+		}
+		return b.length();
+	}
+	String shortestSuperstring(String[] A) {
+		int[][] cost = new int[A.length][A.length];
+		for (int i = 0; i < A.length; i++) {
+			for (int j = i + 1; j < A.length; j++) {
+				cost[i][j] = calculateCost(A[i],A[j]);
+				cost[j][i] = calculateCost(A[j],A[i]);
+			}
+		}
+		int totalCities = A.length;
+		int dp = new int[1 << totalCities][totalCities];
+		int pathTaken = new int[1 << totalCities][totalCities];
+		int minCost = Integer.MAX_VALUE;
+		int last = -1;
+		for (int setOfCities = 1; setOfCities < (1 << totalCities); setOfCities++) {
+			Arrays.fill(dp[setOfCities],Integer.MAX_VALUE);
+			for (int lastCity = 0; lastCity < totalCities; lastCity++) {
+				if ((setOfCities & (1 << lastCity)) > 0) {
+					int remainingCitiesSet = setOfCities - (1 << lastCity);
+					if (remainingCitiesSet == 0) {
+						dp[setOfCities][lastCity] = A[lastCity].length();
+					} 
+					else {
+						for (int city = 0; city < totalCities; city++) {
+							if ((remainingCitiesSet & (1 << city)) > 0 && (dp[remainingCitiesSet][city] < Integer.MAX_VALUE) && dp[remainingCitiesSet][city] + cost[city][lastCity] < dp[setOfCities][lastCity]) {
+								dp[setOfCities][lastCity] = dp[remainingCitiesSet][city] + cost[city][lastCity];
+								pathTaken[setOfCities][lastCity] = city;
+							}
+						}
+					}
+				}
+				if (setOfCities == (1 << totalCities) - 1 && dp[setOfCities][lastCity] < minCost) {
+					minCost = dp[setOfCities][lastCity];
+					last = lastCity;
+				}
+			}
+		}
+		int allCities = (1 << totalCities) - 1;
+		Deque<Integer> stack = new LinkedList<>();
+		while (allCities > 0) {
+			stack.push(last);
+			int temp = allCities;
+			allCities -= (1 << last);
+			last = pathTaken[temp][last];
+		}
+		int previousCity = stack.pop();
+		StringBuilder builder = new StringBuilder();
+		builder.append(A[previousCity]);
+		while (!stack.isEmpty()) {
+			int city = stack.pop();
+			builder.append(A[city].substring(A[city].length() - cost[previousCity][city]));
+			previousCity = city;
+		}
+		return builder.toString();
+	}
+}

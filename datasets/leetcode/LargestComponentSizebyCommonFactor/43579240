@@ -1,0 +1,64 @@
+class Solution {
+	int MAXN = 100001;
+	int max = 1;
+	int[] par;
+	int[] rnk;
+	int[] spf = new int[MAXN];
+	int find(int x) {
+		if (par[x] != x) {
+			return par[x] = find(par[x]);
+		}
+		return par[x];
+	}
+	int largestComponentSize(int[] nums) {
+		par = new int[nums.length];
+		rnk = new int[nums.length];
+		sieve();
+		for (int i = 0; i < par.length; i++) {
+			par[i] = i;
+			rnk[i] = 1;
+		}
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < nums.length; i++) {
+			int x = nums[i];
+			while (x != 1) {
+				int fac = spf[x];
+				if (!map.containsKey(fac)) {
+					map.put(fac,i);
+				} 
+				else {
+					union(map.get(fac),i);
+				}
+				x = x / spf[x];
+			}
+		}
+		return max;
+	}
+	void sieve() {
+		spf[1] = 1;
+		for (int i = 2; i < MAXN; i++) {
+			spf[i] = i;
+		}
+		for (int i = 4; i < MAXN; i += 2) {
+			spf[i] = 2;
+		}
+		for (int i = 3; i * i < MAXN; i++) {
+			if (spf[i] == i) {
+				for (int j = i * i; j < MAXN; j += i) {
+					if (spf[j] == j) {
+						spf[j] = i;
+					}
+				}
+			}
+		}
+	}
+	void union(int a, int b) {
+		int pa = find(a);
+		int pb = find(b);
+		if (pa != pb) {
+			par[pb] = pa;
+			rnk[pa] += rnk[pb];
+			max = Math.max(max,rnk[pa]);
+		}
+	}
+}

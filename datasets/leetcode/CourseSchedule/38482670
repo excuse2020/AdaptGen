@@ -1,0 +1,36 @@
+class Solution {
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		ArrayList<ArrayList<Integer>> adjacencyList = new ArrayList<>();
+		for (int i = 0; i < numCourses; i++) {
+			adjacencyList.add(new ArrayList<>());
+		}
+		int numOfPrerequisites = prerequisites.length;
+		for (int i = 0; i < numOfPrerequisites; i++) {
+			adjacencyList.get(prerequisites[i][0]).add(prerequisites[i][1]);
+		}
+		int[] indegree = new int[numCourses];
+		for (int i = 0; i < numCourses; i++) {
+			for (int neighbor: adjacencyList.get(i)) {	
+				indegree[neighbor]++;
+			}
+		}
+		Queue<Integer> queue = new LinkedList<>();
+		for (int i = 0; i < numCourses; i++) {
+			if (indegree[i] == 0) {
+				queue.add(i);
+			}
+		}
+		List<Integer> topologicalOrder = new ArrayList<>();
+		while (!queue.isEmpty()) {
+			int node = queue.poll();
+			topologicalOrder.add(node);
+			for (int neighbor: adjacencyList.get(node)) {	
+				indegree[neighbor]--;
+				if (indegree[neighbor] == 0) {
+					queue.add(neighbor);
+				}
+			}
+		}
+		return topologicalOrder.size() == numCourses;
+	}
+}

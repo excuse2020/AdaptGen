@@ -1,0 +1,33 @@
+class Solution {
+	long distinctNames(String[] ideas) {
+		Map<Character, Set<String>> map = new HashMap<>();
+		for (String s: ideas) {	
+			if (map.containsKey(s.charAt(0))) {
+				map.get(s.charAt(0)).add(s.substring(1));
+			} 
+			else {
+				Set<String> set = new HashSet<>();
+				set.add(s.substring(1));
+				map.put(s.charAt(0),set);
+			}
+		}
+		long ans = 0;
+		for (char c1: map.keySet()) {	
+			for (char c2: map.keySet()) {	
+				if (c1 == c2) {
+					continue;
+				}
+				int intersect = 0;
+				for (String s: map.get(c1)) {	
+					if (map.get(c2).contains(s)) {
+						intersect++;
+					}
+				}
+				long d1 = map.get(c1).size() - intersect;
+				long d2 = map.get(c2).size() - intersect;
+				ans += d1 * d2;
+			}
+		}
+		return ans;
+	}
+}

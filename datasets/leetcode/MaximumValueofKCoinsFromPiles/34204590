@@ -1,0 +1,33 @@
+class Solution {
+	int maxValue(int ind, int coins, int pileIndex, List<List<Integer>> piles, int[][][] dp) {
+		if (ind == piles.size() || coins == 0 || piles.get(ind).size() == pileIndex) {
+			return 0;
+		}
+		if (dp[ind][coins][pileIndex] != -1) {
+			return dp[ind][coins][pileIndex];
+		}
+		int notTake = 0 + maxValue(ind + 1,coins,0,piles,dp);
+		int take1 = 0;
+		int take2 = 0;
+		if (piles.get(ind).size() > pileIndex) {
+			take1 = piles.get(ind).get(pileIndex) + maxValue(ind,coins - 1,pileIndex + 1,piles,dp);
+		}
+		if (piles.get(ind).size() > pileIndex) {
+			take2 = piles.get(ind).get(pileIndex) + maxValue(ind + 1,coins - 1,0,piles,dp);
+		}
+		return dp[ind][coins][pileIndex] = Integer.max(notTake,Integer.max(take1,take2));
+	}
+	int maxValueOfCoins(List<List<Integer>> piles, int k) {
+		int maxPile = 0;
+		for (int i = 0; i < piles.size(); i++) {
+			maxPile = Integer.max(maxPile,piles.get(i).size());
+		}
+		int[][][] dp = new int[piles.size()][k + 1][maxPile];
+		for (int i = 0; i < dp.length; i++) {
+			for (int j = 0; j < dp[i].length; j++) {
+				Arrays.fill(dp[i][j],-1);
+			}
+		}
+		return maxValue(0,k,0,piles,dp);
+	}
+}

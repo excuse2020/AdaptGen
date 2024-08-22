@@ -1,0 +1,37 @@
+class Solution {
+	long digits(int n) {
+		int i = Integer.toString(n).length() - 1;
+		long extra = 0;
+		while (i >= 1) {
+			int num = (int) Math.pow(10,i) - 1;
+			extra += n - num;
+			i--;
+		}
+		return extra + n;
+	}
+	int findNthDigit(int n) {
+		int lo = 1;
+		int hi = n;
+		long ans = 0;
+		while (lo <= hi) {
+			int mid = (lo + hi) / 2;
+			if (digits(mid) <= (long) n) {
+				ans = mid;
+				lo = mid + 1;
+			} 
+			else {
+				hi = mid - 1;
+			}
+		}
+		if (digits((int) ans) == (long) n) {
+			return (int) ans % 10;
+		} 
+		else {
+			long diff = n - digits((int) ans);
+			long length = Long.toString(ans + 1).length() - diff;
+			long x = (long) Math.pow(10,length);
+			ans = (ans + 1) / x;
+			return (int) ans % 10;
+		}
+	}
+}

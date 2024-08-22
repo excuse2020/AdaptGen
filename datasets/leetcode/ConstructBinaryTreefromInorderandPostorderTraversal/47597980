@@ -1,0 +1,24 @@
+class Solution {
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		return helper(inorder,postorder,0,inorder.length - 1,0,postorder.length - 1);
+	}
+	TreeNode helper(int[] inorder, int[] postorder, int inlo, int inhi, int polo, int pohi) {
+		if (inlo < 0 || polo < 0 || inhi >= inorder.length || pohi >= postorder.length || inlo > inhi || polo > pohi) {
+			return null;
+		}
+		if (inlo == inhi) {
+			return new TreeNode(inorder[inlo]);
+		}
+		TreeNode root = new TreeNode(postorder[pohi]);
+		int rootidx = 0;
+		for (int i = inlo; i <= inhi; i++) {
+			if (inorder[i] == postorder[pohi]) {
+				rootidx = i;
+				break;
+			}
+		}
+		root.right = helper(inorder,postorder,rootidx + 1,inhi,pohi - (inhi - rootidx),pohi - 1);
+		root.left = helper(inorder,postorder,inlo,rootidx - 1,polo,pohi - (inhi - rootidx));
+		return root;
+	}
+}

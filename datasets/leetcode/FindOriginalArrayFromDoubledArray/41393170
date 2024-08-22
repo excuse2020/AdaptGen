@@ -1,0 +1,33 @@
+class Solution {
+	int[] findOriginalArray(int[] changed) {
+		int n = changed.length;
+		if (n % 2 == 1) {
+			return new int[0];
+		}
+		int maxVal = changed[0];
+		for (int i = 1; i < n; i++) {
+			maxVal = Math.max(maxVal,changed[i]);
+		}
+		int[] freq = new int[maxVal + 1];
+		for (int i = 0; i < n; i++) {
+			freq[changed[i]]++;
+		}
+		int[] ans = new int[n / 2];
+		int index = 0;
+		for (int i = 0; i <= maxVal; i++) {
+			if (freq[i] > 0) {
+				freq[i]--;
+				int twiceNum = i * 2;
+				if (twiceNum < freq.length && freq[twiceNum] > 0) {
+					freq[twiceNum]--;
+					ans[index++] = i;
+					i--;
+				} 
+				else {
+					return new int[0];
+				}
+			}
+		}
+		return ans;
+	}
+}

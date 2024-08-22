@@ -1,0 +1,51 @@
+class Solution {
+	int MOD = 1_000_000_007;
+	long fun(int index, int isInNums1, int[] nums1, int[] nums2, Map<Integer, Integer> map1, Map<Integer, Integer> map2, long[][] dp) {
+		if (index < 0) {
+			return 0;
+		}
+		if (dp[index][isInNums1] != -1) {
+			return dp[index][isInNums1];
+		}
+		if (isInNums1 == 1) {
+			if (map2.containsKey(nums1[index])) {
+				long notChange = ((long) nums1[index] + fun(index - 1,isInNums1,nums1,nums2,map1,map2,dp));
+				int indexInNums2 = map2.get(nums1[index]);
+				long change = ((long) nums2[indexInNums2] + fun(indexInNums2 - 1,1 - isInNums1,nums1,nums2,map1,map2,dp));
+				return dp[index][isInNums1] = Math.max(notChange,change);
+			} 
+			else {
+				return dp[index][isInNums1] = (long) nums1[index] + fun(index - 1,isInNums1,nums1,nums2,map1,map2,dp);
+			}
+		} 
+		else {
+			if (map1.containsKey(nums2[index])) {
+				long notChange = ((long) nums2[index] + fun(index - 1,isInNums1,nums1,nums2,map1,map2,dp));
+				int indexInNums1 = map1.get(nums2[index]);
+				long change = ((long) nums1[indexInNums1] + fun(indexInNums1 - 1,1 - isInNums1,nums1,nums2,map1,map2,dp));
+				return dp[index][isInNums1] = Math.max(notChange,change);
+			} 
+			else {
+				return dp[index][isInNums1] = (long) nums2[index] + fun(index - 1,isInNums1,nums1,nums2,map1,map2,dp);
+			}
+		}
+	}
+	int maxSum(int[] nums1, int[] nums2) {
+		int len1 = nums1.length, len2 = nums2.length;
+		Map<Integer, Integer> map1 = new HashMap<>();
+		Map<Integer, Integer> map2 = new HashMap<>();
+		for (int index = 0; index < len1; index++) {
+			map1.put(nums1[index],index);
+		}
+		for (int index = 0; index < len2; index++) {
+			map2.put(nums2[index],index);
+		}
+		long[][] dp1 = new long[Math.max(len1,len2)][2];
+		Arrays.stream(dp1).forEach((arr) -> {Arrays.fill(arr,-1)});
+		long fromNums1 = fun(len1 - 1,1,nums1,nums2,map1,map2,dp1);
+		long[][] dp2 = new long[Math.max(len1,len2)][2];
+		Arrays.stream(dp2).forEach((arr) -> {Arrays.fill(arr,-1)});
+		long fromNums2 = fun(len2 - 1,0,nums1,nums2,map1,map2,dp2);
+		return (int) (Math.max(fromNums1,fromNums2) % MOD);
+	}
+}

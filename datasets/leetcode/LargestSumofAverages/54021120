@@ -1,0 +1,40 @@
+class Solution {
+	double helper(int[] nums, int ind, int prev, int k, double[][][] dp) {
+		if (k == 1 || ind == nums.length - 1) {
+			int len = nums.length - prev;
+			double sum = nums[nums.length - 1];
+			if (prev != -1) {
+				sum -= nums[prev];
+			}
+			return sum / len;
+		}
+		if (dp[ind][prev + 1][k] != -1.0) {
+			return dp[ind][prev + 1][k];
+		}
+		int len = 0;
+		double part = 0.0;
+		if (k > 1) {
+			len = ind - prev;
+			double sum = nums[ind];
+			if (prev != -1) {
+				sum -= nums[prev];
+			}
+			part = sum / len + helper(nums,ind + 1,ind,k - 1,dp);
+		}
+		double notpart = helper(nums,ind + 1,prev,k,dp);
+		return dp[ind][prev + 1][k] = Math.max(part,notpart);
+	}
+	double largestSumOfAverages(int[] nums, int k) {
+		int n = nums.length;
+		for (int i = 1; i < n; i++) {
+			nums[i] += nums[i - 1];
+		}
+		double[][][] dp = new double[n][n + 1][k + 1];
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n + 1; j++) {
+				Arrays.fill(dp[i][j],-1.0);
+			}
+		}
+		return helper(nums,0,-1,k,dp);
+	}
+}

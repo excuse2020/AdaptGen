@@ -1,0 +1,46 @@
+class Solution {
+	int[] parent;
+	int[] rank;
+	int findParent(int node) {
+		if (parent[node] == node) {
+			return node;
+		}
+		return parent[node] = findParent(parent[node]);
+	}
+	void makeUnion(int i, int j) {
+		i = findParent(i);
+		j = findParent(j);
+		if (i == j) {
+			return;
+		}
+		if (rank[i] < rank[j]) {
+			parent[i] = j;
+			rank[j] = rank[i] + 1;
+		} 
+		else {
+			parent[j] = i;
+			rank[i] = rank[j] + 1;
+		}
+	}
+	int removeStones(int[][] stones) {
+		int m = stones.length;
+		parent = new int[m];
+		rank = new int[m];
+		for (int i = 0; i < m; i++) {
+			parent[i] = i;
+		}
+		for (int i = 0; i < m; i++) {
+			for (int j = i + 1; j < m; j++) {
+				if (stones[i][0] == stones[j][0] || stones[i][1] == stones[j][1]) {
+					makeUnion(i,j);
+				}
+			}
+		}
+		Set<Integer> unique = new HashSet<>();
+		for (int i = 0; i < m; i++) {
+			findParent(i);
+			unique.add(parent[i]);
+		}
+		return m - unique.size();
+	}
+}

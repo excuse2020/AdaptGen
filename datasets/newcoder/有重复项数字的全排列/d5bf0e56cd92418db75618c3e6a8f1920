@@ -1,0 +1,28 @@
+class Solution {
+	void backTrack(int[] num, ArrayList<Integer> temp, ArrayList<ArrayList<Integer>> res, boolean[] visited) {
+		if (temp.size() == num.length) {
+			res.add(new ArrayList<>(temp));
+			return;
+		}
+		for (int i = 0; i < num.length; i++) {
+			if ((visited[i] == true) || (i > 0 && num[i] == num[i - 1] && !visited[i - 1])) {
+				continue;
+			} 
+			else {
+				temp.add(num[i]);
+				visited[i] = true;
+				backTrack(num,temp,res,visited);
+				temp.remove(temp.size() - 1);
+				visited[i] = false;
+			}
+		}
+	}
+	ArrayList<ArrayList<Integer>> permuteUnique(int[] num) {
+		ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+		Arrays.sort(num);
+		boolean[] visited = new boolean[num.length];
+		ArrayList<Integer> temp = new ArrayList<>();
+		backTrack(num,temp,res,visited);
+		return res;
+	}
+}

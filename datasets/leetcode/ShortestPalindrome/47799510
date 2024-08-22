@@ -1,0 +1,39 @@
+class Solution {
+	int[] find_LPS(String s) {
+		int[] lps = new int[s.length()];
+		int pre = 0, suf = 1;
+		while (suf < s.length()) {
+			if (s.charAt(pre) == s.charAt(suf)) {
+				lps[suf] = pre + 1;
+				pre++;
+				suf++;
+			} 
+			else {
+				if (pre != 0) {
+					pre = lps[pre - 1];
+				} 
+				else {
+					lps[suf] = 0;
+					suf++;
+				}
+			}
+		}
+		return lps;
+	}
+	String shortestPalindrome(String s) {
+		String s1 = s;
+		int n1 = s.length();
+		StringBuffer s2 = new StringBuffer(s);
+		s2.reverse();
+		s += "$";
+		s += s2;
+		int n2 = s.length();
+		int[] lps = find_LPS(s);
+		String palim = "";
+		for (int i = s1.length() - 1; i >= lps[n2 - 1]; i--) {
+			palim += s1.charAt(i);
+		}
+		palim += s1;
+		return palim;
+	}
+}

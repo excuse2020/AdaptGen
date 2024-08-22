@@ -1,0 +1,46 @@
+class Solution {
+	boolean getValue(int i, boolean[] dp) {
+		if (i < 0 || i >= dp.length) {
+			return true;
+		}
+		return dp[i];
+	}
+	boolean isEqual(int start, int checks, int[] nums) {
+		if (start < 0) {
+			return false;
+		}
+		for (int i = start; i < start + checks; i++) {
+			if (nums[i] != nums[i + 1]) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean isIncreasing(int start, int[] nums) {
+		if (start < 0) {
+			return false;
+		}
+		for (int i = start; i < start + 2; i++) {
+			if (nums[i + 1] - nums[i] != 1) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean validPartition(int[] nums) {
+		int n = nums.length;
+		boolean[] dp = new boolean[n];
+		for (int i = 1; i < n; i++) {
+			if (getValue(i - 2,dp) && isEqual(i - 1,1,nums)) {
+				dp[i] = true;
+			} 
+			else if (getValue(i - 3,dp) && (isEqual(i - 2,2,nums) || isIncreasing(i - 2,nums))) {
+				dp[i] = true;
+			}
+			if (i >= 3 && !dp[i] && !dp[i - 1] && !dp[i - 2]) {
+				return false;
+			}
+		}
+		return dp[n - 1];
+	}
+}

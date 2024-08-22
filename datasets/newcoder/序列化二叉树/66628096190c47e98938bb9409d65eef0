@@ -1,0 +1,38 @@
+class Solution {
+	TreeNode Deserialize(String str) {
+		String[] arr = str.split(",");
+		LinkedList<String> queue = new LinkedList<>();
+		for (String st: arr) {	
+			queue.offer(st);
+		}
+		TreeNode node = dfs2(queue);
+		return node;
+	}
+	String Serialize(TreeNode root) {
+		StringBuilder sb = new StringBuilder();
+		dfs1(root,sb);
+		return sb.toString();
+	}
+	void dfs1(TreeNode node, StringBuilder sb) {
+		if (node == null) {
+			sb.append("null").append(",");
+			return;
+		}
+		sb.append(node.val).append(",");
+		dfs1(node.left,sb);
+		dfs1(node.right,sb);
+	}
+	TreeNode dfs2(LinkedList<String> queue) {
+		if (queue.isEmpty()) {
+			return null;
+		}
+		String s = queue.poll();
+		if (s.equals("null")) {
+			return null;
+		}
+		TreeNode node = new TreeNode(Integer.parseInt(s));
+		node.left = dfs2(queue);
+		node.right = dfs2(queue);
+		return node;
+	}
+}

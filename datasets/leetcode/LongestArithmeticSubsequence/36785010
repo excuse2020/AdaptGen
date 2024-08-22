@@ -1,0 +1,20 @@
+class Solution {
+	int longestArithSeqLength(int[] nums) {
+		if (nums == null || nums.length <= 2) {
+			return nums == null ? 0 : nums.length;
+		}
+		int max = Arrays.stream(nums).max().getAsInt();
+		int min = Arrays.stream(nums).min().getAsInt();
+		int diff = max - min;
+		int result = 0;
+		int[][] dp = new int[nums.length][diff * 2 + 1];
+		for (int i = 1; i < nums.length; i++) {
+			for (int j = 0; j < i; j++) {
+				int tmp = nums[i] - nums[j] + diff;
+				dp[i][tmp] = dp[j][tmp] == 0 ? 2 : dp[j][tmp] + 1;
+				result = Math.max(result,dp[i][tmp]);
+			}
+		}
+		return result;
+	}
+}

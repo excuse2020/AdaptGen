@@ -1,0 +1,39 @@
+class Solution {
+	int changes = 0;
+	void DFS(int city, int n, HashMap<Integer, Set<Integer>> adj, HashMap<Integer, Set<Integer>> revAdj, Boolean[] visited) {
+		visited[city] = true;
+		Boolean hasMoved = false;
+		for (int nextCity: adj.get(city)) {	
+			if (!visited[nextCity]) {
+				hasMoved = true;
+				DFS(nextCity,n,adj,revAdj,visited);
+				changes++;
+			}
+		}
+		if (!hasMoved) {
+			for (int nextCity: revAdj.get(city)) {	
+				if (!visited[nextCity]) {
+					DFS(nextCity,n,adj,revAdj,visited);
+				}
+			}
+		}
+	}
+	int minReorder(int n, int[][] connections) {
+		HashMap<Integer, Set<Integer>> adj = new HashMap<>();
+		HashMap<Integer, Set<Integer>> revAdj = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			adj.put(i,new HashSet<>());
+			revAdj.put(i,new HashSet<>());
+		}
+		for (int[] road: connections) {	
+			adj.get(road[0]).add(road[1]);
+			revAdj.get(road[1]).add(road[0]);
+		}
+		Boolean[] visited = new Boolean[n];
+		Arrays.fill(visited,false);
+		for (int i = 0; i < n; i++) {
+			DFS(i,n,adj,revAdj,visited);
+		}
+		return changes;
+	}
+}

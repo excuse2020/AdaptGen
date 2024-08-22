@@ -1,0 +1,39 @@
+class Solution {
+	boolean isCompleteTree(TreeNode root) {
+		Queue<Pair<TreeNode, Integer>> q = new LinkedList<>();
+		q.add(new Pair<TreeNode, Integer>(root, 1));
+		int lv = 0;
+		while (!q.isEmpty()) {
+			int size = q.size();
+			int firstInd = (int) Math.pow(2,lv);
+			int prevInd = 0;
+			for (int i = 0; i < size; i++) {
+				Pair<TreeNode, Integer> node = q.poll();
+				TreeNode n = node.getKey();
+				int index = node.getValue();
+				if (prevInd != 0) {
+					if (index - prevInd != 1) {
+						return false;
+					}
+				} 
+				else {
+					if (index - firstInd != 0) {
+						return false;
+					}
+				}
+				prevInd = index;
+				if (n.left != null) {
+					q.add(new Pair<TreeNode, Integer>(n.left, 2 * index));
+				}
+				if (n.right != null) {
+					q.add(new Pair<TreeNode, Integer>(n.right, 2 * index + 1));
+				}
+			}
+			if (!q.isEmpty() && size != Math.pow(2,lv)) {
+				return false;
+			}
+			lv++;
+		}
+		return true;
+	}
+}

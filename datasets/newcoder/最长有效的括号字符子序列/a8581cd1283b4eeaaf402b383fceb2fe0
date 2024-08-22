@@ -1,0 +1,61 @@
+class Solution {
+	List<String> res = new ArrayList<String>();
+	void helper(String s, int start, int lremove, int rremove) {
+		if (lremove == 0 && rremove == 0) {
+			if (isvalid(s)) {
+				res.add(s);
+			}
+			return;
+		}
+		for (int i = start; i < s.length(); i++) {
+			if (i != start && s.charAt(i) == s.charAt(i - 1)) {
+				continue;
+			}
+			if (lremove + rremove > s.length() - i) {
+				return;
+			}
+			if (lremove > 0 && s.charAt(i) == '(') {
+				helper(s.substring(0,i) + s.substring(i + 1),i,lremove - 1,rremove);
+			}
+			if (rremove > 0 && s.charAt(i) == ')') {
+				helper(s.substring(0,i) + s.substring(i + 1),i,lremove,rremove - 1);
+			}
+		}
+	}
+	boolean isvalid(String s) {
+		int cnt = 0;
+		for (int i = 0; i < s.length(); i++) {
+			if (s.charAt(i) == '(') {
+				cnt++;
+			} 
+			else if (s.charAt(i) == ')') {
+				cnt--;
+			}
+			if (cnt < 0) {
+				return false;
+			}
+		}
+		return cnt == 0;
+	}
+	String[] maxValidParenthesesStr(String s) {
+		int lremove = 0;
+		int rremove = 0;
+		int n = s.length();
+		for (int i = 0; i < n; i++) {
+			if (s.charAt(i) == '(') {
+				lremove++;
+			} 
+			else if (s.charAt(i) == ')') {
+				if (lremove == 0) {
+					rremove++;
+				} 
+				else {
+					lremove--;
+				}
+			}
+		}
+		helper(s,0,lremove,rremove);
+		String[] ans = new String[res.size()];
+		return res.toArray(ans);
+	}
+}

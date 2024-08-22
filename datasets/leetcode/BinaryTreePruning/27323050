@@ -1,0 +1,44 @@
+class Solution {
+	TreeNode dfs_pruner(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		if (!find(root)) {
+			return null;
+		}
+		Stack<TreeNode> stack = new Stack<>();
+		stack.push(root);
+		while (!stack.isEmpty()) {
+			TreeNode temp = stack.pop();
+			if (temp.left != null) {
+				if (!find(temp.left)) {
+					temp.left = null;
+				} 
+				else {
+					stack.push(temp.left);
+				}
+			}
+			if (temp.right != null) {
+				if (!find(temp.right)) {
+					temp.right = null;
+				} 
+				else {
+					stack.push(temp.right);
+				}
+			}
+		}
+		return root;
+	}
+	boolean find(TreeNode root) {
+		if (root == null) {
+			return false;
+		}
+		if (root.val == 1) {
+			return true;
+		}
+		return find(root.left) || find(root.right);
+	}
+	TreeNode pruneTree(TreeNode root) {
+		return dfs_pruner(root);
+	}
+}

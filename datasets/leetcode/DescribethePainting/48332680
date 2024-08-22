@@ -1,0 +1,46 @@
+class Solution {
+	List<List<Long>> splitPainting(int[][] segments) {
+		int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+		for (int[] segment: segments) {	
+			if (min > segment[0]) {
+				min = segment[0];
+			}
+			if (max < segment[1]) {
+				max = segment[1];
+			}
+		}
+		long[] line = new long[max - min + 1];
+		int[] coordinates = new int[max - min + 1];
+		for (int[] segment: segments) {	
+			coordinates[segment[0] - min] = 1;
+			coordinates[segment[1] - min] = 1;
+			line[segment[0] - min] += segment[2];
+			line[segment[1] - min] -= segment[2];
+		}
+		int prev = 0;
+		long color = line[prev];
+		ArrayList<List<Long>> painting = new ArrayList<>();
+		for (int i = 1; i < coordinates.length; i++) {
+			if (coordinates[i] == 0) {
+				continue;
+			}
+			if (color != 0) {
+				ArrayList<Long> newSegment = new ArrayList<>();
+				newSegment.add((long) prev + min);
+				newSegment.add((long) i + min);
+				newSegment.add(color);
+				painting.add(newSegment);
+			}
+			color += line[i];
+			prev = i;
+		}
+		if (prev != line.length - 1) {
+			ArrayList<Long> newSegment = new ArrayList<>();
+			newSegment.add((long) prev + min);
+			newSegment.add((long) line.length + min);
+			newSegment.add(color);
+			painting.add(newSegment);
+		}
+		return painting;
+	}
+}

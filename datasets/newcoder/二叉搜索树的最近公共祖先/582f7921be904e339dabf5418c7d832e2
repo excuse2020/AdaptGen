@@ -1,0 +1,45 @@
+class Solution {
+	List getPath(TreeNode root, int p) {
+		List list = new LinkedList();
+		if (root.val == p) {
+			list.add(p);
+			return list;
+		}
+		if (root.val < p) {
+			list = getPath(root.right,p);
+		} 
+		else {
+			list = getPath(root.left,p);
+		}
+		if (!list.isEmpty()) {
+			list.add(root.val);
+		}
+		return list;
+	}
+	int lowestCommonAncestor(TreeNode root, int p, int q) {
+		List path1 = getPath(root,p);
+		List path2 = getPath(root,q);
+		int i = 0, j = 0;
+		int diff = Math.abs(path2.size() - path1.size());
+		if (path2.size() > path1.size()) {
+			while (diff > 0) {
+				j++;
+				diff--;
+			}
+		}
+		if (path2.size() < path1.size()) {
+			while (diff > 0) {
+				i++;
+				diff--;
+			}
+		}
+		while (i < path1.size() && j < path2.size()) {
+			if ((path1.get(i)).equals(path2.get(j))) {
+				return path1.get(i);
+			}
+			i++;
+			j++;
+		}
+		return -1;
+	}
+}

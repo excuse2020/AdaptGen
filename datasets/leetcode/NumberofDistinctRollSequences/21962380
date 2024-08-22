@@ -1,0 +1,61 @@
+class Solution {
+	long mod = 1000000007;
+	int distinctSequences(int n) {
+		if (n == 1) {
+			return 6;
+		}
+		return find(n);
+	}
+	long[][] f(int n) {
+		if (n == 2) {
+			long[][] ba = new long[7][7];
+			for (int i = 1; i < 7; i++) {
+				for (int j = 1; j < 7; j++) {
+					if (i == j) {
+						continue;
+					}
+					if (gcd(i,j) == 1) {
+						ba[i][j]++;
+					}
+				}
+			}
+			return ba;
+		}
+		long[][] a1 = f(n - 1);
+		long[][] ans = new long[7][7];
+		for (int i = 1; i < 7; i++) {
+			for (int j = 1; j < 7; j++) {
+				if (i == j) {
+					continue;
+				}
+				if (gcd(i,j) == 1) {
+					long sum = 0;
+					for (int k = 1; k < 7; k++) {
+						if (i == k) {
+							continue;
+						}
+						sum = ((sum % mod) + (a1[j][k] % mod)) % mod;
+					}
+					ans[i][j] = sum;
+				}
+			}
+		}
+		return ans;
+	}
+	int find(int n) {
+		long sum = 0;
+		long[][] a = f(n);
+		for (long[] b: a) {	
+			for (long c: b) {	
+				sum = ((sum % mod) + (c % mod)) % mod;
+			}
+		}
+		return (int) sum;
+	}
+	int gcd(int a, int b) {
+		if (a == 0) {
+			return b;
+		}
+		return gcd(b % a,a);
+	}
+}

@@ -1,0 +1,30 @@
+class Solution {
+	long numberOfPairs(int[] nums1, int[] nums2, int k) {
+		Map<Integer, Integer> products = new HashMap<>();
+		for (int num: nums2) {	
+			int product = num * k;
+			products.put(product,products.getOrDefault(product,0) + 1);
+		}
+		long count = 0;
+		Map<Integer, Integer> memoization = new HashMap<>();
+		for (int num: nums1) {	
+			if (memoization.containsKey(num)) {
+				count += memoization.get(num);
+			} 
+			else {
+				int loopLimit = (int) Math.sqrt(num);
+				int sum = 0;
+				for (int divisor = 1; divisor <= loopLimit; divisor++) {
+					if (num % divisor == 0) {
+						int dividend = num / divisor;
+						sum += products.getOrDefault(divisor,0);
+						sum += (divisor == dividend) ? 0 : products.getOrDefault(dividend,0);
+					}
+				}
+				memoization.put(num,sum);
+				count += sum;
+			}
+		}
+		return count;
+	}
+}

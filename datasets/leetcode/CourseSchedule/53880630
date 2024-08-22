@@ -1,0 +1,45 @@
+class Solution {
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		ArrayList<ArrayList<Integer>> adj = getAdj(prerequisites,numCourses);
+		int V = numCourses;
+		int inDegree = new int[V];
+		for (int i = 0; i < V; i++) {
+			for (int j: adj.get(i)) {	
+				inDegree[j]++;
+			}
+		}
+		Queue<Integer> queue = new LinkedList<>();
+		for (int i = 0; i < V; i++) {
+			if (inDegree[i] == 0) {
+				queue.add(i);
+			}
+		}
+		while (!queue.isEmpty()) {
+			Integer i = queue.remove();
+			for (int j: adj.get(i)) {	
+				inDegree[j]--;
+				if (inDegree[j] == 0) {
+					queue.add(j);
+				}
+			}
+		}
+		for (int i = 0; i < V; i++) {
+			if (inDegree[i] != 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+	ArrayList<ArrayList<Integer>> getAdj(int pre, int V) {
+		ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+		for (int i = 0; i < V; i++) {
+			res.add(new ArrayList<>());
+		}
+		for (int i = 0; i < pre.length; i++) {
+			int key = pre[i][0];
+			int val = pre[i][1];
+			res.get(val).add(key);
+		}
+		return res;
+	}
+}

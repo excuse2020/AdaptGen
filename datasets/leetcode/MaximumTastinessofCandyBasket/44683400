@@ -1,0 +1,43 @@
+class Solution {
+	int getMaxTastiness(int[] price, int k, int low, int high) {
+		if (low + 1 == high) {
+			if (isValid(price,k,high)) {
+				return high;
+			} 
+			else if (isValid(price,k,low)) {
+				return low;
+			} 
+			else {
+				return 0;
+			}
+		}
+		int mid = (low + high) / 2;
+		if (isValid(price,k,mid)) {
+			return getMaxTastiness(price,k,mid,high);
+		} 
+		else {
+			return getMaxTastiness(price,k,low,mid);
+		}
+	}
+	boolean isValid(int[] price, int k, int mid) {
+		int sum = 1;
+		int prev = price[0];
+		for (int i = 1; i < price.length; i++) {
+			if (Math.abs(price[i] - prev) >= mid) {
+				sum++;
+				prev = price[i];
+			}
+		}
+		return sum >= k;
+	}
+	int maximumTastiness(int[] price, int k) {
+		int max = Arrays.stream(price).max().orElse(0);
+		int min = Arrays.stream(price).min().orElse(0);
+		int diff = Math.abs(min - max);
+		if (diff == 0) {
+			return 0;
+		}
+		Arrays.sort(price);
+		return getMaxTastiness(price,k,0,diff);
+	}
+}

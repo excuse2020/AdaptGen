@@ -1,0 +1,55 @@
+class Solution {
+	int MOD = (int) (1e9 + 7);
+	int waysToSplit(int[] nums) {
+		if (nums == null || nums.length < 3) {
+			return 0;
+		}
+		int n = nums.length;
+		int[] prefixSum = new int[n];
+		int curSum = 0;
+		for (int i = 0; i < n; i++) {
+			curSum += nums[i];
+			prefixSum[i] = curSum;
+		}
+		long res = 0;
+		for (int i = 0; i < n; i++) {
+			int part1 = prefixSum[i];
+			int left = i + 1;
+			int right = n - 2;
+			int cut1 = -1;
+			int cut2 = -1;
+			while (left <= right) {
+				int mid = left + (right - left) / 2;
+				int part2 = prefixSum[mid] - part1;
+				if (part2 >= part1) {
+					cut1 = mid;
+					right = mid - 1;
+				} 
+				else {
+					left = mid + 1;
+				}
+			}
+			left = i + 1;
+			right = n - 2;
+			while (left <= right) {
+				int mid = left + (right - left) / 2;
+				int part2 = prefixSum[mid] - part1;
+				int part3 = prefixSum[n - 1] - prefixSum[mid];
+				if (part3 >= part2) {
+					cut2 = mid;
+					left = mid + 1;
+				} 
+				else {
+					right = mid - 1;
+				}
+			}
+			if (cut1 == -1 || cut2 == -1 || cut1 > cut2) {
+				continue;
+			}
+			int curcnt = cut2 - cut1 + 1;
+			res += curcnt;
+			res %= MOD;
+		}
+		return (int) res;
+	}
+}

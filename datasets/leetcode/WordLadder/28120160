@@ -1,0 +1,69 @@
+class Solution {
+	Map<String, List<String>> e1 = new HashMap<>();
+	Map<String, List<String>> e2 = new HashMap<>();
+	Map<String, Integer> memo = new HashMap<>();
+	Map<String, Integer> memo2 = new HashMap<>();
+	void fillMaps(String w) {
+		for (int i = 0; i < w.length(); i++) {
+			String s = w.substring(0,i) + "*";
+			if (e1.get(w) == null) {
+				e1.put(w,new ArrayList<>());
+			}
+			if (e2.get(s) == null) {
+				e2.put(s,new ArrayList<>());
+			}
+			e1.get(w).add(s);
+			e2.get(s).add(w);
+		}
+	}
+	int ladderLength(String beginWord, String endWord, List<String> wordList) {
+		fillMaps(beginWord);
+		for (String g: wordList) {	
+			fillMaps(g);
+		}
+		if (!e1.containsKey(endWord)) {
+			return 0;
+		}
+		ArrayDeque<String> q = new ArrayDeque<>();
+		ArrayDeque<String> q2 = new ArrayDeque<>();
+		q.add(beginWord);
+		q2.add(endWord);
+		int l = 0;
+		while (!q.isEmpty() && !q2.isEmpty()) {
+			l++;
+			int s = q.size();
+			for (int i = 0; i < s; i++) {
+				String next = q.remove();
+				if (memo.containsKey(next)) {
+					continue;
+				}
+				if (memo2.containsKey(next)) {
+					return l + memo2.get(next) - 1;
+				}
+				memo.put(next,l);
+				for (String g: e1.get(next)) {	
+					for (String h: e2.get(g)) {	
+						q.add(h);
+					}
+				}
+			}
+			s = q2.size();
+			for (int i = 0; i < s; i++) {
+				String next = q2.remove();
+				if (memo2.containsKey(next)) {
+					continue;
+				}
+				if (memo.containsKey(next)) {
+					return l + memo.get(next) - 1;
+				}
+				memo2.put(next,l);
+				for (String g: e1.get(next)) {	
+					for (String h: e2.get(g)) {	
+						q2.add(h);
+					}
+				}
+			}
+		}
+		return 0;
+	}
+}

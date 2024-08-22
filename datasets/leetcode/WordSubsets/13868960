@@ -1,0 +1,38 @@
+class Solution {
+	List<String> wordSubsets(String[] words1, String[] words2) {
+		HashMap<Character, Integer> universal = new HashMap<>();
+		List<String> ret = new LinkedList<>();
+		for (String str: words2) {	
+			HashMap<Character, Integer> temp = new HashMap<>();
+			for (char c: str.toCharArray()) {	
+				temp.merge(c,1,);
+			}
+			for (char c: temp.keySet()) {	
+				int time = temp.get(c);
+				if (universal.containsKey(c)) {
+					universal.put(c,Math.max(universal.get(c),time));
+				} 
+				else {
+					universal.put(c,time);
+				}
+			}
+		}
+		for (String str: words1) {	
+			HashMap<Character, Integer> temp = new HashMap<>();
+			for (char c: str.toCharArray()) {	
+				temp.merge(c,1,);
+			}
+			boolean flag = true;
+			for (char c: universal.keySet()) {	
+				if (!temp.containsKey(c) || temp.get(c) < universal.get(c)) {
+					flag = false;
+					break;
+				}
+			}
+			if (flag) {
+				ret.add(str);
+			}
+		}
+		return ret;
+	}
+}

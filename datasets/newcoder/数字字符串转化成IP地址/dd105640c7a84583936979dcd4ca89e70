@@ -1,0 +1,39 @@
+class Solution {
+	ArrayList<String> res = new ArrayList<>();
+	void backTrack(String s, int start, int cnt) {
+		if (cnt == 0) {
+			String[] splits = s.split("\\.");
+			if (splits.length < 4) {
+				return;
+			}
+			for (String str: splits) {	
+				if (str.length() > 1 && str.charAt(0) == '0') {
+					return;
+				}
+				if (Integer.valueOf(str) > 255) {
+					return;
+				}
+			}
+			res.add(s);
+			return;
+		}
+		if (start >= s.length()) {
+			return;
+		}
+		int len = s.length();
+		backTrack(s.substring(0,start + 1) + '.',start + 2,cnt - 1);
+		if (start < len - 2) {
+			backTrack(s.substring(0,start + 2) + '.',start + 3,cnt - 1);
+		}
+		if (start < len - 3) {
+			backTrack(s.substring(0,start + 3) + '.',start + 4,cnt - 1);
+		}
+	}
+	ArrayList<String> restoreIpAddresses(String s) {
+		if (s.length() == 0) {
+			return res;
+		}
+		backTrack(s,0,3);
+		return res;
+	}
+}

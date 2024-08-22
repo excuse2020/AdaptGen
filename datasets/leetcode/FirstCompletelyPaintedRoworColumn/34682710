@@ -1,0 +1,38 @@
+class Solution {
+	int firstCompleteIndex(int[] arr, int[][] mat) {
+		Map<Integer, int[]> map = new HashMap<>();
+		boolean[][] painted = new boolean[mat.length][mat[0].length];
+		for (int i = 0; i < mat.length; i++) {
+			for (int j = 0; j < mat[i].length; j++) {
+				map.put(mat[i][j],new int{i, j});
+			}
+		}
+		for (int i = 0; i < arr.length; i++) {
+			int[] c = map.get(arr[i]);
+			painted[c[0]][c[1]] = true;
+			if (isRowOrColumnComplete(painted,c)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	boolean isColumnComplete(boolean[][] painted, int[] c) {
+		for (int j = 0; j < painted[0].length; j++) {
+			if (!painted[c[0]][j]) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean isRowComplete(boolean[][] painted, int[] c) {
+		for (int i = 0; i < painted.length; i++) {
+			if (!painted[i][c[1]]) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean isRowOrColumnComplete(boolean[][] painted, int[] c) {
+		return isRowComplete(painted,c) || isColumnComplete(painted,c);
+	}
+}

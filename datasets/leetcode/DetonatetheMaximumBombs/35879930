@@ -1,0 +1,36 @@
+class Solution {
+	int maximumDetonation(int[][] bombs) {
+		if (bombs.length == 1) {
+			return 1;
+		}
+		int answer = 0;
+		int len = bombs.length;
+		boolean[] detonate = new boolean[len];
+		Queue<int[]> queue = new LinkedList<>();
+		for (int i = 0; i < len; i++) {
+			if (!detonate[i]) {
+				queue.offer(bombs[i]);
+				detonate[i] = true;
+			}
+			int bomb = 1;
+			boolean visited = new boolean[len];
+			visited[i] = true;
+			while (!queue.isEmpty()) {
+				int[] cur = queue.poll();
+				for (int j = 0; j < len; j++) {
+					if (!visited[j]) {
+						long distance = ((long) (cur[0] - bombs[j][0]) * (long) (cur[0] - bombs[j][0])) + ((long) (cur[1] - bombs[j][1]) * (long) (cur[1] - bombs[j][1]));
+						if (distance <= (long) cur[2] * (long) cur[2]) {
+							bomb++;
+							queue.offer(bombs[j]);
+							detonate[j] = true;
+							visited[j] = true;
+						}
+					}
+				}
+			}
+			answer = Math.max(answer,bomb);
+		}
+		return answer;
+	}
+}

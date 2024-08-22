@@ -1,0 +1,52 @@
+class Pair {
+	int hori;
+	int verti;
+}
+class Solution {
+	int largest1BorderedSquare(int[][] grid) {
+		Pair[][] T = new Pair[grid.length][grid[0].length];
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				T[i][j] = new Pair();
+			}
+		}
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				if (grid[i][j] == 1) {
+					if (i == 0 && j == 0) {
+						T[i][j].hori = 1;
+						T[i][j].verti = 1;
+					} 
+					else if (i == 0) {
+						T[i][j].hori = 1;
+						T[i][j].verti = T[i][j - 1].verti + 1;
+					} 
+					else if (j == 0) {
+						T[i][j].hori = T[i - 1][j].hori + 1;
+						T[i][j].verti = 1;
+					} 
+					else {
+						T[i][j].hori = T[i - 1][j].hori + 1;
+						T[i][j].verti = T[i][j - 1].verti + 1;
+					}
+				}
+			}
+		}
+		int max = 0;
+		for (int i = T.length - 1; i >= 0; i--) {
+			for (int j = T[0].length - 1; j >= 0; j--) {
+				int min = Math.min(T[i][j].verti,T[i][j].hori);
+				int k = min;
+				for (k = min; k >= 1; k--) {
+					if (T[i][j - k + 1].hori >= k && T[i - k + 1][j].verti >= k) {
+						break;
+					}
+				}
+				if (max < k) {
+					max = k;
+				}
+			}
+		}
+		return max * max;
+	}
+}

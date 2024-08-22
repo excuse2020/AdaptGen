@@ -1,0 +1,38 @@
+class Solution {
+	boolean carPooling(int[][] trips, int capacity) {
+		if (capacity == 0) {
+			return false;
+		}
+		int length = findLocationEndPoint(trips);
+		int[] diff = new int[length];
+		for (int[] trip: trips) {	
+			int from = trip[1];
+			int to = trip[2] - 1;
+			int passenger = trip[0];
+			diff[from] += passenger;
+			if (to + 1 < length) {
+				diff[to + 1] -= passenger;
+			}
+		}
+		int[] allTimeStatus = new int[length];
+		allTimeStatus[0] = diff[0];
+		for (int i = 1; i < length; i++) {
+			allTimeStatus[i] = allTimeStatus[i - 1] + diff[i];
+		}
+		for (int status: allTimeStatus) {	
+			if (status > capacity) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int findLocationEndPoint(int[][] trips) {
+		int end = 0;
+		for (int[] trip: trips) {	
+			if (trip[2] > end) {
+				end = trip[2];
+			}
+		}
+		return end + 1;
+	}
+}

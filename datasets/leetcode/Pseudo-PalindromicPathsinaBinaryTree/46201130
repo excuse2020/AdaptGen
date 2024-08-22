@@ -1,0 +1,32 @@
+class Solution {
+	int pseudoPalindromicPaths(TreeNode root) {
+		return solve(root,0);
+	}
+	int solve(TreeNode root, int temp) {
+		if (root.left == null && root.right == null) {
+			temp = toggleIthBit(temp,root.val);
+			if (temp == 0 || (temp & (temp - 1)) == 0) {
+				return 1;
+			} 
+			else {
+				return 0;
+			}
+		}
+		int left = root.left == null ? 0 : solve(root.left,toggleIthBit(temp,root.val));
+		int right = root.right == null ? 0 : solve(root.right,toggleIthBit(temp,root.val));
+		return left + right;
+	}
+	int toggleIthBit(int temp, int i) {
+		int ithBit = (temp >> i) & 1;
+		if (ithBit == 1) {
+			int max = Integer.MAX_VALUE;
+			int leftShiftOne = 1 << i;
+			int xor = max ^ leftShiftOne;
+			return xor & temp;
+		} 
+		else {
+			int leftShiftOne = 1 << i;
+			return leftShiftOne | temp;
+		}
+	}
+}

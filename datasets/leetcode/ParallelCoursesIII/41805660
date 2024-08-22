@@ -1,0 +1,30 @@
+class Solution {
+	int calculateTime(int course, List<List<Integer>> graph, int[] time, int[] memo) {
+		if (memo[course] != 0) {
+			return memo[course];
+		}
+		int temp = 0;
+		for (int prereq: graph.get(course)) {	
+			temp = Math.max(temp,calculateTime(prereq,graph,time,memo));
+		}
+		memo[course] = temp + time[course];
+		return memo[course];
+	}
+	int minimumTime(int n, int[][] relations, int[] time) {
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (var relation: relations) {	
+			int prev = relation[0] - 1;
+			int next = relation[1] - 1;
+			graph.get(next).add(prev);
+		}
+		int[] memo = new int[n];
+		int min = 0;
+		for (int i = 0; i < n; i++) {
+			min = Math.max(min,calculateTime(i,graph,time,memo));
+		}
+		return min;
+	}
+}

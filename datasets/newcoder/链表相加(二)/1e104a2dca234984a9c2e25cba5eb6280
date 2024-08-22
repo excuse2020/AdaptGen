@@ -1,0 +1,51 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		ListNode head;
+		ArrayList<Integer> list1 = new ArrayList<>();
+		ArrayList<Integer> list2 = new ArrayList<>();
+		ArrayList<Integer> list3 = new ArrayList<>();
+		while (head1 != null) {
+			list1.add(head1.val);
+			head1 = head1.next;
+		}
+		while (head2 != null) {
+			list2.add(head2.val);
+			head2 = head2.next;
+		}
+		if (list1.size() > list2.size()) {
+			list3 = list2;
+			list2 = list1;
+			list1 = list3;
+		}
+		list3 = new ArrayList<>();
+		for (int j = 0; j < list2.size() + 1; j++) {
+			list3.add(0);
+		}
+		Collections.reverse(list1);
+		Collections.reverse(list2);
+		for (int x = list1.size(); x < list2.size(); x++) {
+			list1.add(0);
+		}
+		for (int i = 0; i < list2.size(); i++) {
+			int t = list3.get(i) + list1.get(i);
+			if (t > 9) {
+				list3.set(i,t - 10);
+				list3.set(i + 1,1);
+			} 
+			else {
+				list3.set(i,t);
+			}
+		}
+		if (list3.get(list3.size() - 1) == 0) {
+			list3.remove(list3.size() - 1);
+		}
+		Collections.reverse(list3);
+		head = new ListNode(list3.get(0));
+		ListNode cur = head;
+		for (int j = 1; j < list3.size(); j++) {
+			cur.next = new ListNode(list3.get(j));
+			cur = cur.next;
+		}
+		return head;
+	}
+}

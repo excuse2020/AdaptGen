@@ -1,0 +1,64 @@
+class Solution {
+	void calculate(Stack<Character> operator, Stack<Integer> numbers) {
+		char operate = operator.pop();
+		int num2 = numbers.pop();
+		int num1 = numbers.pop();
+		int ans = 0;
+		if (operate == '+') {
+			ans = num1 + num2;
+		}
+		if (operate == '-') {
+			ans = num1 - num2;
+		}
+		if (operate == '*') {
+			ans = num1 * num2;
+		}
+		numbers.push(ans);
+	}
+	int solve(String s) {
+		Map<Character, Integer> priority = new HashMap<>();
+		priority.put('*',3);
+		priority.put('+',2);
+		priority.put('-',2);
+		Stack<Character> operator = new Stack<>();
+		Stack<Integer> numbers = new Stack<>();
+		numbers.push(0);
+		int index = 0;
+		while (index < s.length()) {
+			char currrent = s.charAt(index);
+			if (Character.isDigit(currrent)) {
+				int j = index;
+				while (j < s.length() && Character.isDigit(s.charAt(j))) {
+					j++;
+				}
+				int number = Integer.parseInt(s.substring(index,j));
+				index = j;
+				numbers.push(number);
+				continue;
+			}
+			if (currrent == ')') {
+				while (operator.peek() != '(') {
+					calculate(operator,numbers);
+				}
+				operator.pop();
+			}
+			if (currrent == '(') {
+				operator.add('(');
+				if (priority.containsKey(s.charAt(index + 1))) {
+					numbers.push(0);
+				}
+			}
+			if (priority.containsKey(currrent)) {
+				while (!operator.isEmpty() && operator.peek() != '(' && priority.get(currrent) <= priority.get(operator.peek())) {
+					calculate(operator,numbers);
+				}
+				operator.push(currrent);
+			}
+			index++;
+		}
+		while (!operator.isEmpty()) {
+			calculate(operator,numbers);
+		}
+		return numbers.pop();
+	}
+}

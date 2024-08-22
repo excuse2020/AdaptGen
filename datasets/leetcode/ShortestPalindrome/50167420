@@ -1,0 +1,36 @@
+class Solution {
+	int[] KMPlps(String p) {
+		int[] lps = new int[p.length()];
+		int i = 1;
+		int len = 0;
+		int n = p.length();
+		while (i < n) {
+			if (p.charAt(i) == p.charAt(len)) {
+				lps[i] = 1 + len;
+				len++;
+				i++;
+			} 
+			else {
+				if (len > 0) {
+					len = lps[len - 1];
+				} 
+				else {
+					i++;
+				}
+			}
+		}
+		return lps;
+	}
+	String shortestPalindrome(String s) {
+		if (s.length() == 0) {
+			return "";
+		}
+		String t = s;
+		t += "#";
+		t += new StringBuilder(s).reverse().toString();
+		int[] lps = KMPlps(t);
+		int position = lps[t.length() - 1];
+		String remaining = s.substring(position);
+		return new StringBuilder(remaining).reverse().toString() + s;
+	}
+}

@@ -1,0 +1,41 @@
+class Solution {
+	int E = 0;
+	int M = 1000_000_000 + 7;
+	long dfs(int n, LinkedList<Integer> stack, int m, int up, int preMax, HashMap<Integer, Long> memo) {
+		if (stack.size() == n && up == 0) {
+			return 1;
+		}
+		if (up == -1) {
+			return E;
+		}
+		if (stack.size() == n) {
+			return E;
+		}
+		int key = (preMax << 8) + up;
+		Long count = memo.get(key);
+		if (count != null) {
+			return count;
+		}
+		count = 0L;
+		for (int i = 1; i <= m; i++) {
+			stack.push(i);
+			if (i > preMax) {
+				count += up > 0 ? dfs(n,stack,m,up - 1,i,memo) : 0;
+			} 
+			else {
+				count += dfs(n,stack,m,up,preMax,memo);
+			}
+			if (count >= M) {
+				count -= M;
+			}
+			stack.pop();
+		}
+		memo.put(key,count);
+		return count;
+	}
+	int numOfArrays(int n, int m, int k) {
+		HashMap map = new HashMap();
+		long count = dfs(n,new LinkedList(),m,k,0,map);
+		return (int) (count % M);
+	}
+}

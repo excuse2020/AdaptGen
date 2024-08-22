@@ -1,0 +1,42 @@
+class Solution {
+	List<String> dirList = new ArrayList<>();
+	StringBuilder sb = new StringBuilder();
+	String getDirections(TreeNode root, int startValue, int destValue) {
+		TreeNode lca = getLCA(root,startValue,destValue);
+		recur(lca.left,startValue,destValue,"L");
+		recur(lca.right,startValue,destValue,"R");
+		return sb.toString();
+	}
+	TreeNode getLCA(TreeNode root, int startValue, int destValue) {
+		if (root == null || root.val == startValue || root.val == destValue) {
+			return root;
+		}
+		TreeNode left = getLCA(root.left,startValue,destValue);
+		TreeNode right = getLCA(root.right,startValue,destValue);
+		if (left == null) {
+			return right;
+		}
+		if (right == null) {
+			return left;
+		}
+		return root;
+	}
+	void recur(TreeNode root, int startValue, int destValue, String dir) {
+		if (root == null) {
+			return;
+		}
+		dirList.add(dir);
+		if (root.val == startValue || root.val == destValue) {
+			if (root.val == startValue) {
+				Collections.fill(dirList,"U");
+				sb.insert(0,String.join("",dirList));
+			} 
+			else {
+				sb.append(String.join("",dirList));
+			}
+		}
+		recur(root.left,startValue,destValue,"L");
+		recur(root.right,startValue,destValue,"R");
+		dirList.remove(dirList.size() - 1);
+	}
+}

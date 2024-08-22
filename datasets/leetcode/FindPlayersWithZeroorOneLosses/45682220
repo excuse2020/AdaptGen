@@ -1,0 +1,36 @@
+class Solution {
+	List<List<Integer>> findWinners(int[][] matches) {
+		Set<Integer> zeroL = new HashSet<>();
+		Set<Integer> oneL = new HashSet<>();
+		Set<Integer> moreL = new HashSet<>();
+		for (int[] mch: matches) {	
+			int winner = mch[0];
+			int loser = mch[1];
+			if (!oneL.contains(winner) && !moreL.contains(winner)) {
+				zeroL.add(winner);
+			}
+			if (zeroL.contains(loser)) {
+				zeroL.remove(loser);
+				oneL.add(loser);
+			} 
+			else if (oneL.contains(loser)) {
+				oneL.remove(loser);
+				moreL.add(loser);
+			} 
+			else if (moreL.contains(loser)) {
+				continue;
+			} 
+			else {
+				oneL.add(loser);
+			}
+		}
+		List<Integer> zeroList = new ArrayList<>(zeroL);
+		List<Integer> oneList = new ArrayList<>(oneL);
+		Collections.sort(zeroList);
+		Collections.sort(oneList);
+		List<List<Integer>> ansList = new ArrayList<>();
+		ansList.add(zeroList);
+		ansList.add(oneList);
+		return ansList;
+	}
+}

@@ -1,0 +1,100 @@
+class Solution {
+	int[] buildLCPArray(String s, int[] suffixArray) {
+		int n = s.length();
+		int[] rank = new int[n];
+		for (int i = 0; i < n; i++) {
+			rank[suffixArray[i]] = i;
+		}
+		int[] lcp = new int[n];
+		int h = 0;
+		for (int i = 0; i < n; i++) {
+			if (rank[i] > 0) {
+				int j = suffixArray[rank[i] - 1];
+				while (i + h < n && j + h < n && s.charAt(i + h) == s.charAt(j + h)) {
+					h++;
+				}
+				lcp[rank[i]] = h;
+				if (h > 0) {
+					h--;
+				}
+			}
+		}
+		return lcp;
+	}
+	int[] buildSuffixArray(String s) {
+		int n = s.length();
+		Integer[] order = new Integer[n];
+		for (int i = 0; i < n; i++) {
+			order[i] = i;
+		}
+		Arrays.sort(order,(a, b) -> {Character.compare(s.charAt(a),s.charAt(b))});
+		int[] suffixArray = new int[n];
+		int[] rank = new int[n];
+		int[] temp = new int[n];
+		for (int i = 0; i < n; i++) {
+			suffixArray[i] = order[i];
+			rank[i] = s.charAt(i);
+		}
+		for (int length = 1; length < n; length *= 2) {
+			int r = 0;
+			for (int i = n - length; i < n; i++) {
+				temp[r++] = i;
+			}
+			for (int i = 0; i < n; i++) {
+				if (suffixArray[i] >= length) {
+					temp[r++] = suffixArray[i] - length;
+				}
+			}
+			int[] count = new int[Math.max(n,256)];
+			for (int i = 0; i < n; i++) {
+				count[rank[i]]++;
+			}
+			for (int i = 1; i < count.length; i++) {
+				count[i] += count[i - 1];
+			}
+			for (int i = n - 1; i >= 0; i--) {
+				suffixArray[--count[rank[temp[i]]]] = temp[i];
+			}
+			temp[suffixArray[0]] = 0;
+			r = 0;
+			for (int i = 1; i < n; i++) {
+				if (rank[suffixArray[i]] != rank[suffixArray[i - 1]] || (suffixArray[i] + length < n ? rank[suffixArray[i] + length] : -1) != (suffixArray[i - 1] + length < n ? rank[suffixArray[i - 1] + length] : -1)) {
+					r++;
+				}
+				temp[suffixArray[i]] = r;
+			}
+			int[] swap = rank;
+			rank = temp;
+			temp = swap;
+			if (r == n - 1) {
+				break;
+			}
+		}
+		return suffixArray;
+	}
+	String longestDupSubstring(String s) {
+		int n = s.length();
+		int[] suffixArray = buildSuffixArray(s);
+		int[] lcpArray = buildLCPArray(s,suffixArray);
+		int maxLen = 0;
+		int index = 0;
+		for (int i = 1; i < n; i++) {
+			if (lcpArray[i] > maxLen) {
+				maxLen = lcpArray[i];
+				index = suffixArray[i];
+			}
+		}
+		return s.substring(index,index + maxLen);
+	}
+	void main(String[] args) {
+		Solution solver = new Solution();
+		String s1 = "banana";
+		System.out.println(solver.longestDupSubstring(s1));
+		String s2 = "abcd";
+		System.out.println(solver.longestDupSubstring(s2));
+		String s3 = "eaveyublbugnksxijkjetadlgdtvkfzvbmoimjqkfcmiamabcwnfmnpgbemjfrnbfjhigiqgszheybahschfgbgwytyfcropnttgdqciqgdaksudghesuugioxgylusvkcgerquggfgxvgxsgsozcefgpkjayzkwepdnnkmewltmhzejtkflgkfjbwnwxsdghzxbpgfuovmtmwqbzksatrljmgsowiicrsgwcldfedqdmhgtepyvqtjangcggjiiuqpeccsyqlqtpbbxvaukfzbdfgdogkfmzswrsucelnmestutwgulwiklbykufekxlrbnjtoyxbibdmczfsiylegsxxxmupeawbbyliznezjesapabmzjkoazdtlsaomdkumtwhrukzgwqolqocjkyueciyrigguhjjtqchyafqrwyrbdegyvbgcolccyyrmjibyxxsaxczyhjgavcbpequvvfodwdigczfigxxhovtdyfwyyeurpzfejptbuwqzbrqdzzaqtjvenaryvggfehjkmglzewwyojsasmwptmynhnldwxwkopyipbaadbbcrapevuyxchduozanctcefkxzesfohrwqbqvkmygtfvyuuxctfoiklhaubumrogkeghohehtaiqinqtwlipwelabggxykkwizcdtylipfmhaka";
+		System.out.println(solver.longestDupSubstring(s3));
+		String s4 = "abcdabcdabcd";
+		System.out.println(solver.longestDupSubstring(s4));
+	}
+}

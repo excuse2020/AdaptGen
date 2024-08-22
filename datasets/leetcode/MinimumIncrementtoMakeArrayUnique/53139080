@@ -1,0 +1,23 @@
+class Solution {
+	int minIncrementForUnique(int[] nums) {
+		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {a[0] - b[0]});
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int i: nums) {	
+			map.put(i,map.getOrDefault(i,0) + 1);
+		}
+		for (var entry: map.entrySet()) {	
+			pq.offer(new int{entry.getKey(), entry.getValue()});
+		}
+		int prev = -1, ans = 0;
+		while (!pq.isEmpty()) {
+			int[] curr = pq.poll();
+			int num = curr[0], freq = curr[1];
+			if (num <= prev) {
+				ans += freq * (prev - num + 1);
+			}
+			ans += (freq * (freq - 1)) / 2;
+			prev = Math.max(prev + 1,num) + freq - 1;
+		}
+		return ans;
+	}
+}

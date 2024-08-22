@@ -1,0 +1,35 @@
+class Solution {
+	TreeNode[] deque = new TreeNode[1000010];
+	int[] ends = new int[110];
+	TreeNode cyclicShiftTree(TreeNode root, int k) {
+		int l = 0, r = 0;
+		deque[r++] = root;
+		int h = 0;
+		while (l != r) {
+			ends[h] = r;
+			while (l < ends[h]) {
+				TreeNode tmp = deque[l++];
+				if (tmp != null) {
+					deque[r++] = tmp.left;
+					deque[r++] = tmp.right;
+				}
+			}
+			h++;
+		}
+		for (int i = h - 1; i > 0; i--) {
+			int sonLeft = ends[i - 1], sonRight = ends[i] - 1;
+			int sonLength = k % (sonRight - sonLeft + 1);
+			int idx = sonLength == 0 ? sonLeft : (sonRight - sonLength + 1);
+			int fLeft = i - 2 >= 0 ? ends[i - 2] : 0, fRight = ends[i - 1] - 1;
+			for (int j = fLeft; j <= fRight; j++) {
+				if (deque[j] != null) {
+					deque[j].left = deque[idx];
+					idx = idx == sonRight ? sonLeft : idx + 1;
+					deque[j].right = deque[idx];
+					idx = idx == sonRight ? sonLeft : idx + 1;
+				}
+			}
+		}
+		return root;
+	}
+}

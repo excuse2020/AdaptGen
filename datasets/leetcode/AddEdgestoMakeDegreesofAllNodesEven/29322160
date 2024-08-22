@@ -1,0 +1,54 @@
+class Solution {
+	boolean isPossible(int n, List<List<Integer>> edges) {
+		List<Set<Integer>> l = new ArrayList<>();
+		int degree = new int[n + 1];
+		for (int i = 0; i < n + 1; i++) {
+			l.add(new HashSet<>());
+		}
+		for (List<Integer> x: edges) {	
+			l.get(x.get(0)).add(x.get(1));
+			l.get(x.get(1)).add(x.get(0));
+			degree[x.get(0)]++;
+			degree[x.get(1)]++;
+		}
+		List<Integer> odd = new ArrayList<>();
+		for (int i = 1; i < n + 1; i++) {
+			if (degree[i] % 2 == 1) {
+				odd.add(i);
+			}
+		}
+		if (odd.size() == 0) {
+			return true;
+		}
+		if (odd.size() == 2) {
+			Set<Integer> s1 = l.get(odd.get(0));
+			Set<Integer> s2 = l.get(odd.get(1));
+			if (!s1.contains(odd.get(1))) {
+				return true;
+			} 
+			else {
+				for (int i = 1; i < n + 1; i++) {
+					if (!s1.contains(i) && !s2.contains(i)) {
+						return true;
+					}
+				}
+			}
+		}
+		if (odd.size() == 4) {
+			Set<Integer> s1 = l.get(odd.get(0));
+			Set<Integer> s2 = l.get(odd.get(1));
+			Set<Integer> s3 = l.get(odd.get(2));
+			Set<Integer> s4 = l.get(odd.get(3));
+			if (!s1.contains(odd.get(1)) && !s2.contains(odd.get(0))) {
+				return true;
+			} 
+			else if (!s1.contains(odd.get(2)) && !s3.contains(odd.get(0))) {
+				return true;
+			} 
+			else if (!s1.contains(odd.get(3)) && !s4.contains(odd.get(0))) {
+				return true;
+			}
+		}
+		return false;
+	}
+}

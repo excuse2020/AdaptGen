@@ -1,0 +1,36 @@
+class Solution {
+	TreeNode replaceValueInTree(TreeNode root) {
+		LinkedList<TreeNode> nodeInSameLevel = new LinkedList<>();
+		Map<TreeNode, Integer> sumOfChildren = new HashMap<>();
+		Map<TreeNode, TreeNode> parentMap = new HashMap<>();
+		nodeInSameLevel.add(root);
+		while (!nodeInSameLevel.isEmpty()) {
+			int total = 0;
+			for (TreeNode treeNode: nodeInSameLevel) {	
+				total += treeNode.val;
+			}
+			int size = nodeInSameLevel.size();
+			for (int i = 0; i < size; i++) {
+				TreeNode node = nodeInSameLevel.poll();
+				if (node != root) {
+					TreeNode parent = parentMap.get(node);
+					node.val = total - sumOfChildren.get(parent);
+				}
+				int leftAndRight = 0;
+				if (node.left != null) {
+					nodeInSameLevel.add(node.left);
+					parentMap.put(node.left,node);
+					leftAndRight += node.left.val;
+				}
+				if (node.right != null) {
+					nodeInSameLevel.add(node.right);
+					parentMap.put(node.right,node);
+					leftAndRight += node.right.val;
+				}
+				sumOfChildren.put(node,leftAndRight);
+			}
+		}
+		root.val = 0;
+		return root;
+	}
+}

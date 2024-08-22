@@ -1,0 +1,38 @@
+class Solution {
+	int DFS(int[][] bombs, boolean[] visit, boolean[] detonated, int idx) {
+		visit[idx] = true;
+		detonated[idx] = true;
+		int n_detonated = 1;
+		var curBomb = bombs[idx];
+		for (int i = 0; i < bombs.length; i++) {
+			var nextBomb = bombs[i];
+			if (!detonated[i] && bombInRange(curBomb,nextBomb)) {
+				n_detonated += DFS(bombs,visit,detonated,i);
+			}
+		}
+		return n_detonated;
+	}
+	boolean bombInRange(int[] curBomb, int[] nextBomb) {
+		int curBombX = curBomb[0];
+		int curBombY = curBomb[1];
+		long curBombR = curBomb[2];
+		int nextBombX = nextBomb[0];
+		int nextBombY = nextBomb[1];
+		long y_diff = (curBombY - nextBombY);
+		long x_diff = (curBombX - nextBombX);
+		long d = y_diff * y_diff + x_diff * x_diff;
+		return d <= curBombR * curBombR;
+	}
+	int maximumDetonation(int[][] bombs) {
+		int n_bombs = bombs.length;
+		int ans = 0;
+		var visit = new boolean[n_bombs];
+		for (int i = 0; i < n_bombs; i++) {
+			if (!visit[i]) {
+				var detonated = new boolean[n_bombs];
+				ans = Math.max(ans,DFS(bombs,visit,detonated,i));
+			}
+		}
+		return ans;
+	}
+}

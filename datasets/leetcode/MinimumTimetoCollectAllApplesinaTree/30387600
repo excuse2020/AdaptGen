@@ -1,0 +1,30 @@
+class Solution {
+	int dfs(List<List<Integer>> graph, boolean[] visited, List<Boolean> hasApple, int idx) {
+		int time = 0;
+		visited[idx] = true;
+		for (int nbr: graph.get(idx)) {	
+			if (visited[nbr] == false) {
+				time += dfs(graph,visited,hasApple,nbr);
+			}
+		}
+		if (idx == 0) {
+			return time;
+		}
+		if (hasApple.get(idx) == true || time > 0) {
+			time += 2;
+		}
+		return time;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>(0));
+		}
+		boolean[] visited = new boolean[n];
+		for (int[] e: edges) {	
+			graph.get(e[0]).add(e[1]);
+			graph.get(e[1]).add(e[0]);
+		}
+		return dfs(graph,visited,hasApple,0);
+	}
+}

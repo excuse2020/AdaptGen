@@ -1,0 +1,25 @@
+class Solution {
+	int attendmeetings(ArrayList<ArrayList<Integer>> meetings) {
+		Collections.sort(meetings,new Comparator<ArrayList<Integer>>());
+		int res = 0;
+		int curIndex = 0;
+		int curDay = meetings.get(0).get(0);
+		PriorityQueue<Integer> pq = new PriorityQueue<>();
+		while (curIndex < meetings.size() || !pq.isEmpty()) {
+			while (curIndex < meetings.size() && meetings.get(curIndex).get(0) == curDay) {
+				pq.offer(meetings.get(curIndex).get(1));
+				curIndex++;
+			}
+			while (!pq.isEmpty() && pq.peek() < curDay) {
+				pq.poll();
+			}
+			while (!pq.isEmpty()) {
+				pq.poll();
+				res++;
+				break;
+			}
+			curDay++;
+		}
+		return res;
+	}
+}

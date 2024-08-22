@@ -1,0 +1,32 @@
+class Solution {
+	int ans = 1;
+	int dfs(Map<Integer, List<Integer>> adj, String s, int curr) {
+		int longest = 0, sec_longest = 0;
+		for (int edge: adj.get(curr)) {	
+			int path = dfs(adj,s,edge);
+			if (s.charAt(edge) != s.charAt(curr)) {
+				if (path > longest) {
+					sec_longest = longest;
+					longest = path;
+				} 
+				else if (path > sec_longest) {
+					sec_longest = path;
+				}
+			}
+		}
+		ans = Math.max(ans,longest + sec_longest);
+		return longest + 1;
+	}
+	int longestPath(int[] parent, String s) {
+		int n = parent.length;
+		Map<Integer, List<Integer>> adjList = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			adjList.put(i,new ArrayList<>());
+		}
+		for (int i = 1; i < n; i++) {
+			adjList.get(parent[i]).add(i);
+		}
+		dfs(adjList,s,0);
+		return ans;
+	}
+}

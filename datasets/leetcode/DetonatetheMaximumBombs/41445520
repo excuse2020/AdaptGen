@@ -1,0 +1,49 @@
+class Solution {
+	int maximumDetonation(int[][] bombs) {
+		List<Set<Integer>> map = new ArrayList<>();
+		int m = bombs.length;
+		for (int i = 0; i < m; i++) {
+			map.add(new HashSet<>());
+		}
+		for (int i = 0; i < m - 1; i++) {
+			int[] bomb = bombs[i];
+			int currentX = bomb[0];
+			int currentY = bomb[1];
+			long currentR = bomb[2];
+			for (int j = i + 1; j < m; j++) {
+				int[] next = bombs[j];
+				int nextX = next[0];
+				int nextY = next[1];
+				long nextR = next[2];
+				long dx = currentX - nextX;
+				long dy = currentY - nextY;
+				if (currentR * currentR >= (dx * dx + dy * dy)) {
+					map.get(i).add(j);
+				}
+				if (nextR * nextR >= (dx * dx + dy * dy)) {
+					map.get(j).add(i);
+				}
+			}
+		}
+		int result = Integer.MIN_VALUE;
+		for (int i = 0; i < m; i++) {
+			Set<Integer> visited = new HashSet<>();
+			visited.add(i);
+			Queue<Integer> queue = new ArrayDeque<>();
+			queue.offer(i);
+			int count = 1;
+			while (!queue.isEmpty()) {
+				int current = queue.poll();
+				Set<Integer> neighbors = map.get(current);
+				for (Integer nei: neighbors) {	
+					if (visited.add(nei)) {
+						queue.offer(nei);
+						count++;
+					}
+				}
+			}
+			result = Math.max(result,count);
+		}
+		return result;
+	}
+}

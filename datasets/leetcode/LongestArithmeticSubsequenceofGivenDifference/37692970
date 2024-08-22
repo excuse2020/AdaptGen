@@ -1,0 +1,29 @@
+class Solution {
+	int longestSubsequence(int[] arr, int difference) {
+		int n = arr.length;
+		int[] d = new int[n];
+		int maxL = 0;
+		HashMap<Integer, Integer> pos = new HashMap<>();
+		pos.put(arr[0],0);
+		for (int i = 0; i < n; i++) {
+			d[i] = 1;
+		}
+		for (int i = 1; i < n; i++) {
+			int curr = arr[i];
+			int prevTermDec = curr - difference;
+			Integer prevTermPos = pos.get(prevTermDec);
+			if (prevTermPos != null) {
+				d[i] = d[prevTermPos] + 1;
+			}
+			Integer lastPos = pos.get(curr);
+			if (lastPos == null) {
+				pos.put(curr,i);
+			} 
+			else {
+				pos.replace(curr,i);
+			}
+			maxL = Math.max(maxL,d[i]);
+		}
+		return maxL;
+	}
+}

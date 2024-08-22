@@ -1,0 +1,31 @@
+class Solution {
+	int ans;
+	int findMax(int cost, int root) {
+		int n = cost.length;
+		if (root >= n) {
+			return 0;
+		}
+		return cost[root] + Math.max(findMax(cost,2 * root + 1),findMax(cost,2 * root + 2));
+	}
+	int helper(int max, int cost, int root, int sum) {
+		int n = cost.length, diff = 0, min = 0;
+		if (2 * root + 1 >= n) {
+			return max - sum;
+		} 
+		else {
+			sum += cost[root];
+			int left = helper(max,cost,2 * root + 1,sum);
+			int right = helper(max,cost,2 * root + 2,sum);
+			min = Math.min(left,right);
+			diff = Math.abs(left - right);
+		}
+		ans += diff;
+		return min;
+	}
+	int minIncrements(int n, int[] cost) {
+		ans = 0;
+		int max = findMax(cost,0);
+		helper(max,cost,0,0);
+		return ans;
+	}
+}

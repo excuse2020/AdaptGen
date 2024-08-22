@@ -1,0 +1,36 @@
+class Solution {
+	String arrangeWords(String text) {
+		String[] arr = text.split(" ");
+		ArrayList<Integer> lens = new ArrayList<>();
+		HashMap<Integer, List<String>> m = new HashMap<>();
+		for (int i = 0; i < arr.length; i++) {
+			int x = arr[i].length();
+			List<String> temp = new ArrayList<>();
+			temp.add(arr[i]);
+			if (m.containsKey(x)) {
+				temp = m.get(x);
+				temp.add(arr[i]);
+			}
+			m.put(x,temp);
+		}
+		for (Map.Entry<Integer, List<String>> e: m.entrySet()) {	
+			lens.add(e.getKey());
+		}
+		Collections.sort(lens);
+		StringBuilder res = new StringBuilder();
+		for (int i = 0; i < lens.size(); i++) {
+			List<String> temp = m.get(lens.get(i));
+			for (int j = 0; j < temp.size(); j++) {
+				String t = temp.get(j).substring(0,1).toLowerCase() + temp.get(j).substring(1);
+				if (i == lens.size() - 1 && j == temp.size() - 1) {
+					res.append(t);
+				} 
+				else {
+					res.append(t + " ");
+				}
+			}
+		}
+		String ans = res.substring(0,1).toUpperCase() + res.substring(1);
+		return ans;
+	}
+}

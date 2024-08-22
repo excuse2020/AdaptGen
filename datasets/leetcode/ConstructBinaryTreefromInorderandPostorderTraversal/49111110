@@ -1,0 +1,26 @@
+class Solution {
+	TreeNode Build(int[] in, int inlow, int inhigh, int[] post, int plow, int phigh) {
+		if (plow > phigh || inlow > inhigh) {
+			return null;
+		}
+		int rootval = post[phigh];
+		TreeNode node = new TreeNode(rootval);
+		int idx = search(in,post[phigh]);
+		int ryt = inhigh - idx;
+		int lft = idx - inlow;
+		node.left = Build(in,inlow,idx - 1,post,plow,plow + lft - 1);
+		node.right = Build(in,idx + 1,inhigh,post,phigh - ryt,phigh - 1);
+		return node;
+	}
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		return Build(inorder,0,inorder.length - 1,postorder,0,postorder.length - 1);
+	}
+	int search(int[] in, int num) {
+		for (int i = 0; i < in.length; i++) {
+			if (in[i] == num) {
+				return i;
+			}
+		}
+		return 0;
+	}
+}

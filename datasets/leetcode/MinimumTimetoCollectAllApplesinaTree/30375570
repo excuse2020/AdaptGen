@@ -1,0 +1,38 @@
+class Solution {
+	int sum = 0;
+	boolean[] visited;
+	boolean dfs(HashMap<Integer, List<Integer>> edges, List<Boolean> hasApple, int i) {
+		if (visited[i]) {
+			return false;
+		}
+		visited[i] = true;
+		var subtreeContainsApples = hasApple.get(i);
+		for (var edge: edges.get(i)) {	
+			if (dfs(edges,hasApple,edge)) {
+				subtreeContainsApples = true;
+			}
+		}
+		if (subtreeContainsApples && i != 0) {
+			sum += 2;
+		}
+		return subtreeContainsApples;
+	}
+	HashMap<Integer, List<Integer>> getEdgeMap(int n, int[][] edges) {
+		var edgeMap = new HashMap<Integer, List<Integer>>();
+		for (var i = 0; i < n; i++) {
+			edgeMap.put(i,new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			edgeMap.get(edge[0]).add(edge[1]);
+			edgeMap.get(edge[1]).add(edge[0]);
+		}
+		return edgeMap;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		var edgeMap = getEdgeMap(n,edges);
+		sum = 0;
+		visited = new boolean[n];
+		dfs(edgeMap,hasApple,0);
+		return sum;
+	}
+}

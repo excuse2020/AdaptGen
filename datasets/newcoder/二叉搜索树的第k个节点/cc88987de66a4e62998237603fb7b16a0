@@ -1,0 +1,44 @@
+class Solution {
+	int KthNode(TreeNode proot, int k) {
+		if (proot == null) {
+			return -1;
+		}
+		if (k >= 1) {
+			for (int i = 1; i < k; i++) {
+				int val = getMinNodeVal(proot);
+				if (val == 1001) {
+					return -1;
+				}
+				excludeNodeByVal(proot,val);
+			}
+			if (getMinNodeVal(proot) == 1001) {
+				return -1;
+			}
+			return getMinNodeVal(proot);
+		}
+		return -1;
+	}
+	TreeNode excludeNodeByVal(TreeNode node, int val) {
+		if (node == null) {
+			return null;
+		}
+		TreeNode res = node;
+		if (node.val == val) {
+			res.val = 1001;
+			return res;
+		}
+		excludeNodeByVal(node.left,val);
+		excludeNodeByVal(node.right,val);
+		return res;
+	}
+	int getMinNodeVal(TreeNode node) {
+		if (node == null) {
+			return 1001;
+		}
+		int minNode = Math.min(getMinNodeVal(node.left),getMinNodeVal(node.right));
+		if (node.val < minNode) {
+			return node.val;
+		}
+		return minNode;
+	}
+}

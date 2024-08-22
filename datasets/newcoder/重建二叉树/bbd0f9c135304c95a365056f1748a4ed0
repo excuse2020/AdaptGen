@@ -1,0 +1,23 @@
+class Solution {
+	TreeNode DFS(int[] pre, int preStart, int preEnd, int[] vin, int inStart, int inEnd) {
+		if (preStart > preEnd || inStart > inEnd) {
+			return null;
+		}
+		TreeNode node = new TreeNode(pre[preStart]);
+		int i = inStart;
+		for (i = inStart; i <= inEnd; i++) {
+			if (vin[i] == pre[preStart]) {
+				node.left = DFS(pre,preStart + 1,preStart + i - inStart,vin,inStart,i - 1);
+				node.right = DFS(pre,preEnd - inEnd + i + 1,preEnd,vin,i + 1,inEnd);
+				break;
+			}
+		}
+		return node;
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] vin) {
+		if (pre.length == 0 || vin.length == 0) {
+			return null;
+		}
+		return DFS(pre,0,pre.length - 1,vin,0,vin.length - 1);
+	}
+}

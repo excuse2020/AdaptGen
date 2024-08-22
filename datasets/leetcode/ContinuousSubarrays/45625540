@@ -1,0 +1,33 @@
+class Solution {
+	int THRESHOLD = 2;
+	long continuousSubarrays(int[] arr) {
+		int n = arr.length;
+		long count = 0;
+		int l = 0, r = 0;
+		LinkedList<Integer> ascending = new LinkedList<>();
+		LinkedList<Integer> descending = new LinkedList<>();
+		while (r < n) {
+			while (!ascending.isEmpty() && ascending.getLast() > arr[r]) {
+				ascending.removeLast();
+			}
+			while (!descending.isEmpty() && descending.getLast() < arr[r]) {
+				descending.removeLast();
+			}
+			ascending.addLast(arr[r]);
+			descending.addLast(arr[r]);
+			while (descending.getFirst() - ascending.getFirst() > THRESHOLD) {
+				if (arr[l] == descending.getFirst()) {
+					descending.removeFirst();
+				}
+				if (arr[l] == ascending.getFirst()) {
+					ascending.removeFirst();
+				}
+				l++;
+			}
+			int windowLength = r - l + 1;
+			count += windowLength;
+			r++;
+		}
+		return count;
+	}
+}

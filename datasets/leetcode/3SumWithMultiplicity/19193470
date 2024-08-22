@@ -1,0 +1,44 @@
+class Solution {
+	long sum2count(int[] arr, int t, int st) {
+		int l = st;
+		int r = arr.length - 1;
+		long ans = 0;
+		while (l < r) {
+			if (arr[l] + arr[r] == t) {
+				int fl = l;
+				int f = 0;
+				while (arr[l] == arr[fl] && l < r) {
+					f++;
+					l++;
+				}
+				int s = 0;
+				int fr = r;
+				while (arr[r] == arr[fr] && l <= r) {
+					s++;
+					r--;
+				}
+				if (arr[l - 1] == arr[r + 1]) {
+					ans += (f + s) * (f + s - 1) / 2;
+				} 
+				else {
+					ans += f * s;
+				}
+			} 
+			else if (arr[l] + arr[r] < t) {
+				l++;
+			} 
+			else {
+				r--;
+			}
+		}
+		return ans;
+	}
+	int threeSumMulti(int[] arr, int t) {
+		Arrays.sort(arr);
+		long ans = 0;
+		for (int i = 0; i < arr.length - 2; i++) {
+			ans += sum2count(arr,t - arr[i],i + 1);
+		}
+		return (int) (ans % 1000000007);
+	}
+}

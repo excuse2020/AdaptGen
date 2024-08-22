@@ -1,0 +1,41 @@
+class Solution {
+	int maxi = 0;
+	int sum = 0;
+	void dfs(int[][] visited, int i, int j, int[][] grid) {
+		visited[i][j] = 1;
+		sum += grid[i][j];
+		int m = i;
+		int n = j;
+		if (isvalid(grid,m,n - 1,visited)) {
+			dfs(visited,m,n - 1,grid);
+		}
+		if (isvalid(grid,m,n + 1,visited)) {
+			dfs(visited,m,n + 1,grid);
+		}
+		if (isvalid(grid,m - 1,n,visited)) {
+			dfs(visited,m - 1,n,grid);
+		}
+		if (isvalid(grid,m + 1,n,visited)) {
+			dfs(visited,m + 1,n,grid);
+		}
+	}
+	int findMaxFish(int[][] grid) {
+		int[][] visited = new int[grid.length][grid[0].length];
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				if (visited[i][j] == 0 && grid[i][j] > 0) {
+					sum = 0;
+					dfs(visited,i,j,grid);
+					maxi = Math.max(sum,maxi);
+				}
+			}
+		}
+		return maxi;
+	}
+	boolean isvalid(int[][] grid, int i, int j, int[][] visited) {
+		if ((i >= 0 && i < grid.length) && (j >= 0 && j < grid[0].length) && grid[i][j] > 0) {
+			return true;
+		}
+		return false;
+	}
+}

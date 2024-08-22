@@ -1,0 +1,24 @@
+class Solution {
+	int[] dp;
+	int helper(int[] arr, int k, int start) {
+		int len = arr.length;
+		if (start >= len) {
+			return 0;
+		}
+		if (dp[start] != -1) {
+			return dp[start];
+		}
+		int curMax = 0, ans = 0;
+		int end = Math.min(len,start + k);
+		for (int i = start; i < end; i++) {
+			curMax = Math.max(curMax,arr[i]);
+			ans = Math.max(ans,curMax * (i - start + 1) + helper(arr,k,i + 1));
+		}
+		return dp[start] = ans;
+	}
+	int maxSumAfterPartitioning(int[] arr, int k) {
+		dp = new int[arr.length];
+		Arrays.fill(dp,-1);
+		return helper(arr,k,0);
+	}
+}

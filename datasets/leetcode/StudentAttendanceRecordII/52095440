@@ -1,0 +1,29 @@
+class Solution {
+	int mod = 1000000007;
+	int checkRecord(int n) {
+		int dp = new int[n + 1][2][3];
+		for (int[][] a: dp) {	
+			for (int[] b: a) {	
+				Arrays.fill(b,-1);
+			}
+		}
+		return recurse(0,0,0,n,dp);
+	}
+	int recurse(int counter, int cA, int cL, int n, int dp) {
+		if (counter == n) {
+			return 1;
+		}
+		if (dp[counter][cA][cL] != -1) {
+			return dp[counter][cA][cL];
+		}
+		int sum = 0;
+		sum = ((sum % mod) + (recurse(counter + 1,cA,0,n,dp) % mod)) % mod;
+		if (cA < 1) {
+			sum = ((sum % mod) + (recurse(counter + 1,cA + 1,0,n,dp) % mod)) % mod;
+		}
+		if (cL < 2) {
+			sum = ((sum % mod) + (recurse(counter + 1,cA,cL + 1,n,dp)) % mod) % mod;
+		}
+		return dp[counter][cA][cL] = sum;
+	}
+}

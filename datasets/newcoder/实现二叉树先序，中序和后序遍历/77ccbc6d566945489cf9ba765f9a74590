@@ -1,0 +1,41 @@
+class Solution {
+	int i = 0, p = 0;
+	List<Integer> list;
+	void bfs(TreeNode root, int[] res) {
+		if (root == null) {
+			return;
+		}
+		bfs(root.left,res);
+		res[i++] = root.val;
+		bfs(root.right,res);
+	}
+	void cfs(TreeNode root, int[] res) {
+		if (root == null) {
+			return;
+		}
+		cfs(root.left,res);
+		cfs(root.right,res);
+		res[p++] = root.val;
+	}
+	int dfs(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		list.add(root.val);
+		return dfs(root.left) + dfs(root.right);
+	}
+	int[][] threeOrders(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		list = new ArrayList<>();
+		int n = dfs(root);
+		int[][] res = new int[3][n];
+		for (int j = 0; j < n; j++) {
+			res[0][j] = list.get(j);
+		}
+		bfs(root,res[1]);
+		cfs(root,res[2]);
+		return res;
+	}
+}

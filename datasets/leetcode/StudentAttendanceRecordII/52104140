@@ -1,0 +1,23 @@
+class Solution {
+	int mod = (int) 1e9 + 7;
+	int checkRecord(int n, int absentDays, int consecutiveLateDays, Integer[][][] dp) {
+		if (n == 0) {
+			return 1;
+		}
+		if (dp[n][absentDays][consecutiveLateDays] != null) {
+			return dp[n][absentDays][consecutiveLateDays];
+		}
+		int count = checkRecord(n - 1,absentDays,0,dp) % mod;
+		if (consecutiveLateDays < 2) {
+			count = (count + checkRecord(n - 1,absentDays,consecutiveLateDays + 1,dp)) % mod;
+		}
+		if (absentDays < 1) {
+			count = (count + checkRecord(n - 1,absentDays + 1,0,dp)) % mod;
+		}
+		return dp[n][absentDays][consecutiveLateDays] = count;
+	}
+	int checkRecord(int n) {
+		Integer[][][] dp = new Integer[n + 1][2][3];
+		return checkRecord(n,0,0,dp);
+	}
+}

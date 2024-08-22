@@ -1,0 +1,62 @@
+class Solution {
+	Map<String, Integer> cacheDfs = new HashMap<>();
+	Map<Integer, Set<String>> wordsByLength;
+	int dfs(String word) {
+		int longestChainFromPredecessors = 0;
+		Set<String> potentialPredecessors = wordsByLength.get(word.length() - 1);
+		if (potentialPredecessors != null) {
+			for (String singlePredecessor: potentialPredecessors) {	
+				if (isPredecessor(word,singlePredecessor)) {
+					longestChainFromPredecessors = Math.max(longestChainFromPredecessors,dfsWithCache(singlePredecessor));
+				}
+			}
+		}
+		return longestChainFromPredecessors + 1;
+	}
+	int dfsWithCache(String word) {
+		Integer longestChain = cacheDfs.get(word);
+		if (longestChain == null) {
+			longestChain = dfs(word);
+			cacheDfs.put(word,longestChain);
+		}
+		return longestChain;
+	}
+	Map<Integer, Set<String>> groupByLength(String[] words) {
+		Map<Integer, Set<String>> wordsByLength = new HashMap<>();
+		for (String word: words) {	
+			Set<String> wordsBucket = wordsByLength.get(word.length());
+			if (wordsBucket == null) {
+				wordsBucket = new HashSet<>();
+				wordsByLength.put(word.length(),wordsBucket);
+			}
+			wordsBucket.add(word);
+		}
+		return wordsByLength;
+	}
+	boolean isPredecessor(String word, String potentialPredecessor) {
+		int wi1 = 0;
+		int wi2 = 0;
+		boolean wasRemovedChar = false;
+		while (wi1 < word.length()) {
+			if (wi2 < potentialPredecessor.length() && word.charAt(wi1) == potentialPredecessor.charAt(wi2)) {
+				wi2++;
+			} 
+			else {
+				if (wasRemovedChar) {
+					return false;
+				}
+				wasRemovedChar = true;
+			}
+			wi1++;
+		}
+		return true;
+	}
+	int longestStrChain(String[] words) {
+		this.wordsByLength = groupByLength(words);
+		Integer max = 0;
+		for (String word: words) {	
+			max = Math.max(max,dfsWithCache(word));
+		}
+		return max;
+	}
+}

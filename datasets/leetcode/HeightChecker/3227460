@@ -1,0 +1,28 @@
+class Solution {
+	int[] createBuckets(int[] arr) {
+		int[] buckets = new int[101];
+		for (int number: arr) {	
+			buckets[number]++;
+		}
+		return buckets;
+	}
+	int heightChecker(int[] heights) {
+		int[] buckets = createBuckets(heights);
+		int outOfOrder = 0;
+		int nextInBucket = 0;
+		for (int i = 0; i < heights.length; i++) {
+			nextInBucket = nextValidNumber(buckets,nextInBucket);
+			if (heights[i] != nextInBucket) {
+				outOfOrder++;
+			}
+			buckets[nextInBucket]--;
+		}
+		return outOfOrder;
+	}
+	int nextValidNumber(int[] buckets, int currentNumber) {
+		while (buckets[currentNumber] == 0) {
+			currentNumber++;
+		}
+		return currentNumber;
+	}
+}

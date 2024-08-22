@@ -1,0 +1,83 @@
+class Solution {
+	int[] sortItems(int n, int m, int[] group, List<List<Integer>> beforeItems) {
+		HashMap<Integer, List<Integer>> gGraph = new HashMap<>();
+		HashMap<Integer, List<Integer>> iGraph = new HashMap<>();
+		for (int i = 0; i < group.length; i++) {
+			if (group[i] == -1) {
+				group[i] = m++;
+			}
+		}
+		int[] itemInDegree = new int[n];
+		int[] groupInDegree = new int[m];
+		for (int to = 0; to < beforeItems.size(); to++) {
+			for (int from: beforeItems.get(to)) {	
+				itemInDegree[to]++;
+				if (!iGraph.containsKey(from)) {
+					iGraph.put(from,new ArrayList<Integer>());
+				}
+				iGraph.get(from).add(to);
+			}
+		}
+		for (int to = 0; to < group.length; to++) {
+			int toGroup = group[to];
+			for (int from: beforeItems.get(to)) {	
+				int fromGroup = group[from];
+				if (!gGraph.containsKey(fromGroup)) {
+					gGraph.put(fromGroup,new ArrayList<Integer>());
+				}
+				if (fromGroup != toGroup) {
+					groupInDegree[toGroup]++;
+					gGraph.get(fromGroup).add(toGroup);
+				}
+			}
+		}
+		List<Integer> iList = tpSort(iGraph,itemInDegree,n);
+		List<Integer> gList = tpSort(gGraph,groupInDegree,m);
+		if (iList.size() == 0 || gList.size() == 0) {
+			return new int[0];
+		}
+		HashMap<Integer, List<Integer>> groupMap = new HashMap<>();
+		for (int item: iList) {	
+			int grp = group[item];
+			if (!groupMap.containsKey(grp)) {
+				groupMap.put(grp,new ArrayList<Integer>());
+			}
+			groupMap.get(grp).add(item);
+		}
+		int i = 0;
+		int[] ans = new int[n];
+		for (int grp: gList) {	
+			if (!groupMap.containsKey(grp)) {
+				continue;
+			}
+			for (int item: groupMap.get(grp)) {	
+				ans[i] = item;
+				i++;
+			}
+		}
+		return ans;
+	}
+	List<Integer> tpSort(HashMap<Integer, List<Integer>> iGraph, int[] itemInDegree, int n) {
+		List<Integer> ans = new ArrayList<>();
+		Queue<Integer> q = new LinkedList<>();
+		for (int i = 0; i < itemInDegree.length; i++) {
+			if (itemInDegree[i] == 0) {
+				q.offer(i);
+			}
+		}
+		while (!q.isEmpty()) {
+			int cur = q.poll();
+			ans.add(cur);
+			if (!iGraph.containsKey(cur)) {
+				continue;
+			}
+			for (int next: iGraph.get(cur)) {	
+				itemInDegree[next]--;
+				if (itemInDegree[next] == 0) {
+					q.offer(next);
+				}
+			}
+		}
+		return ans.size() == n ? ans : new ArrayList<>();
+	}
+}

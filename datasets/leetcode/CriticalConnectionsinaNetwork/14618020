@@ -1,0 +1,54 @@
+class Solution {
+	int disct;
+	int id;
+	int low;
+	int parent;
+	List<List<Integer>> res = new ArrayList<>();
+	boolean visited;
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<Integer>());
+		}
+		for (List<Integer> edge: connections) {	
+			int u = edge.get(0);
+			int v = edge.get(1);
+			graph.get(u).add(v);
+			graph.get(v).add(u);
+		}
+		parent = new int[n];
+		disct = new int[n];
+		low = new int[n];
+		visited = new boolean[n];
+		id = 1;
+		parent[0] = -1;
+		dfs(graph,0);
+		return res;
+	}
+	void dfs(ArrayList<ArrayList<Integer>> graph, int u) {
+		disct[u] = low[u] = id;
+		id += 1;
+		visited[u] = true;
+		int count = 0;
+		for (int v: graph.get(u)) {	
+			if (parent[u] == v) {
+				continue;
+			} 
+			else if (visited[v] == true) {
+				low[u] = Math.min(low[u],disct[v]);
+			} 
+			else {
+				parent[v] = u;
+				dfs(graph,v);
+				low[u] = Math.min(low[u],low[v]);
+				if (low[v] > disct[u]) {
+					ArrayList<Integer> adds = new ArrayList<>();
+					adds.add(u);
+					adds.add(v);
+					res.add(adds);
+				}
+			}
+		}
+		return;
+	}
+}

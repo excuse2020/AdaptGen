@@ -1,0 +1,32 @@
+class Solution {
+	long numberOfPairs(int[] nums1, int[] nums2, int k) {
+		Map<Integer, Integer> map1 = new HashMap<>();
+		Map<Integer, Integer> map2 = new HashMap<>();
+		for (int n: nums1) {	
+			if (n % k != 0 || n < k) {
+				continue;
+			}
+			n /= k;
+			map1.put(n,map1.getOrDefault(n,0) + 1);
+		}
+		for (int n: nums2) {	
+			map2.put(n,map2.getOrDefault(n,0) + 1);
+		}
+		long res = 0;
+		for (int k1: map1.keySet()) {	
+			for (int j = 1; j * j <= k1; j++) {
+				if (map2.containsKey(j)) {
+					if (k1 % j == 0) {
+						res += 1L * map1.get(k1);
+					}
+				}
+				if (j * j != k1 && map2.containsKey(k1 / j)) {
+					if (k1 % (k1 / j) == 0) {
+						res += 1L * map1.get(k1);
+					}
+				}
+			}
+		}
+		return res;
+	}
+}

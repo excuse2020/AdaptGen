@@ -1,0 +1,29 @@
+class Solution {
+	int[] sortByBits(int[] arr) {
+		List<Integer> list = Arrays.stream(arr).boxed().collect(Collectors.toList());
+		Collections.sort(list,new NumComp());
+		return list.stream().mapToInt().toArray();
+	}
+}
+class NumComp {
+	int compare(Object num1, Object num2) {
+		int countNum1 = getNumberOf1s(num1);
+		int countNum2 = getNumberOf1s(num2);
+		if (countNum1 == countNum2) {
+			return Integer.compare((Integer) num1,(Integer) num2);
+		}
+		return Integer.compare(countNum1,countNum2);
+	}
+	int getNumberOf1s(Object num) {
+		int n = ((Integer) num).intValue();
+		int mask = 1;
+		int count = 0;
+		for (int i = 1; i < 33; i++) {
+			if ((n & mask) != 0) {
+				count++;
+			}
+			mask <<= 1;
+		}
+		return count;
+	}
+}

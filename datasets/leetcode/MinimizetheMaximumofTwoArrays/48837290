@@ -1,0 +1,29 @@
+class Solution {
+	long gcd(int a, int b) {
+		return b == 0 ? a : gcd(b,a % b);
+	}
+	boolean isPossible(long m, long divisorLcm, int divisor1, int divisor2, int uniqueCnt1, int uniqueCnt2) {
+		long cnt1 = m - m / divisor1;
+		long cnt2 = m - m / divisor2;
+		long totalcnt = m - m / divisorLcm;
+		return cnt1 >= uniqueCnt1 && cnt2 >= uniqueCnt2 && totalcnt >= uniqueCnt1 + uniqueCnt2;
+	}
+	long lcm(int a, int b) {
+		return a * (b / gcd(a,b));
+	}
+	int minimizeSet(int divisor1, int divisor2, int uniqueCnt1, int uniqueCnt2) {
+		long divisorLcm = lcm(divisor1,divisor2);
+		long l = 0;
+		long r = Integer.MAX_VALUE;
+		while (l < r) {
+			long m = (l + r) / 2;
+			if (isPossible(m,divisorLcm,divisor1,divisor2,uniqueCnt1,uniqueCnt2)) {
+				r = m;
+			} 
+			else {
+				l = m + 1;
+			}
+		}
+		return (int) l;
+	}
+}

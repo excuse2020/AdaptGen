@@ -1,0 +1,38 @@
+class Solution {
+	int[] findOrder(int numCourses, int[][] prerequisites) {
+		int inDegree = new int[numCourses];
+		Set<Integer>[] nodeToNeighbours = new HashSet[numCourses];
+		Queue<Integer> leaves = new LinkedList<>();
+		for (int i = 0; i < numCourses; i++) {
+			nodeToNeighbours[i] = new HashSet<>();
+		}
+		for (int pre: prerequisites) {	
+			inDegree[pre[0]]++;
+			nodeToNeighbours[pre[1]].add(pre[0]);
+		}
+		for (int i = 0; i < numCourses; i++) {
+			if (inDegree[i] == 0) {
+				leaves.add(i);
+			}
+		}
+		int[] ans = new int[numCourses];
+		int k = 0;
+		while (!leaves.isEmpty()) {
+			int l = leaves.size();
+			while (l-- > 0) {
+				Integer node = leaves.poll();
+				ans[k++] = node;
+				for (int ng: nodeToNeighbours[node]) {	
+					inDegree[ng]--;
+					if (inDegree[ng] == 0) {
+						leaves.add(ng);
+					}
+				}
+			}
+		}
+		if (k != numCourses) {
+			return new int[0];
+		}
+		return ans;
+	}
+}

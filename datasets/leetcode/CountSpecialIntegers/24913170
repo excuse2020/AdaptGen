@@ -1,0 +1,77 @@
+class Solution {
+	Integer[][][] dp;
+	ArrayList<Integer> position = new ArrayList<>();
+	int size;
+	int countSpecialNumbers(int n) {
+		while (n != 0) {
+			position.add(0,n % 10);
+			n = n / 10;
+		}
+		size = position.size();
+		dp = new Integer[size][2][(1 << 10) - 1];
+		return fillDp(0,1,0,false) - 1;
+	}
+	int fillDp(int pos, int tight, int mask, boolean flag) {
+		if (pos == size) {
+			return 1;
+		}
+		if (dp[pos][tight][mask] != null) {
+			return dp[pos][tight][mask];
+		}
+		dp[pos][tight][mask] = 0;
+		if (tight == 1) {
+			for (int i = 0; i <= position.get(pos); i++) {
+				if ((mask & (1 << i)) > 0) {
+					continue;
+				}
+				int newmask = (mask | (1 << i));
+				if (i == position.get(pos)) {
+					if (i != 0) {
+						dp[pos][tight][mask] += fillDp(pos + 1,1,newmask,true);
+					} 
+					else {
+						if (flag) {
+							dp[pos][tight][mask] += fillDp(pos + 1,1,newmask,true);
+						} 
+						else {
+							dp[pos][tight][mask] += fillDp(pos + 1,1,mask,false);
+						}
+					}
+				} 
+				else {
+					if (i != 0) {
+						dp[pos][tight][mask] += fillDp(pos + 1,0,newmask,true);
+					} 
+					else {
+						if (flag) {
+							dp[pos][tight][mask] += fillDp(pos + 1,0,newmask,true);
+						} 
+						else {
+							dp[pos][tight][mask] += fillDp(pos + 1,0,mask,false);
+						}
+					}
+				}
+			}
+		} 
+		else if (tight == 0) {
+			for (int i = 0; i <= 9; i++) {
+				if ((mask & (1 << i)) > 0) {
+					continue;
+				}
+				int newmask = (mask | (1 << i));
+				if (i != 0) {
+					dp[pos][tight][mask] += fillDp(pos + 1,0,newmask,true);
+				} 
+				else {
+					if (flag) {
+						dp[pos][tight][mask] += fillDp(pos + 1,0,newmask,true);
+					} 
+					else {
+						dp[pos][tight][mask] += fillDp(pos + 1,0,mask,false);
+					}
+				}
+			}
+		}
+		return dp[pos][tight][mask];
+	}
+}

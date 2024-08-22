@@ -1,0 +1,41 @@
+class Solution {
+	long maximumTotalDamage(int[] power) {
+		Map<Integer, Integer> map = new TreeMap<>();
+		for (int index = 0; index < power.length; index++) {
+			Integer val = map.get(power[index]);
+			map.put(power[index],val == null ? 1 : ++val);
+		}
+		int[] powerUpdated = new int[map.size()];
+		long[] totalPowerSum = new long[map.size()];
+		long[] maxValueAtPower = new long[map.size()];
+		int index = 0;
+		long finalResult = 0;
+		for (Map.Entry<Integer, Integer> entry: map.entrySet()) {	
+			powerUpdated[index] = entry.getKey();
+			totalPowerSum[index] = 1l * entry.getKey();
+			maxValueAtPower[index] = 1l * entry.getKey();
+			if (maxValueAtPower[index] > finalResult) {
+				finalResult = maxValueAtPower[index];
+			}
+			index++;
+		}
+		for (int currentIndex = 0; currentIndex < powerUpdated.length; currentIndex++) {
+			int breakVal = 4;
+			for (int prevIndex = currentIndex - 1; prevIndex >= 0; prevIndex--) {
+				if (powerUpdated[currentIndex] - 2 > powerUpdated[prevIndex]) {
+					if (maxValueAtPower[currentIndex] < maxValueAtPower[prevIndex] + totalPowerSum[currentIndex]) {
+						maxValueAtPower[currentIndex] = maxValueAtPower[prevIndex] + totalPowerSum[currentIndex];
+						if (maxValueAtPower[currentIndex] > finalResult) {
+							finalResult = maxValueAtPower[currentIndex];
+						}
+					}
+				}
+				breakVal--;
+				if (breakVal < 0) {
+					break;
+				}
+			}
+		}
+		return finalResult;
+	}
+}

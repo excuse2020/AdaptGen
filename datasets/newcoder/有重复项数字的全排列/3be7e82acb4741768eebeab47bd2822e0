@@ -1,0 +1,29 @@
+class Solution {
+	LinkedList<Integer> path = new LinkedList<Integer>();
+	ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
+	boolean[] used;
+	void getPermutation(int[] nums) {
+		if (path.size() == nums.length) {
+			res.add(new ArrayList(path));
+		}
+		for (int i = 0; i < nums.length; ++i) {
+			if (used[i]) {
+				continue;
+			}
+			if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]) {
+				continue;
+			}
+			path.add(nums[i]);
+			used[i] = true;
+			getPermutation(nums);
+			path.removeLast();
+			used[i] = false;
+		}
+	}
+	ArrayList<ArrayList<Integer>> permuteUnique(int[] num) {
+		Arrays.sort(num);
+		used = new boolean[num.length];
+		getPermutation(num);
+		return res;
+	}
+}

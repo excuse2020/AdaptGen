@@ -1,0 +1,35 @@
+class Solution {
+	long calc(int n) {
+		if (n <= 0) {
+			return 0;
+		}
+		long res = (long) n * (n + 1) / 2;
+		return res;
+	}
+	int maxProfit(int[] inventory, int orders) {
+		PriorityQueue<Integer> heap = new PriorityQueue<>((x, y) -> {Integer.compare(y,x)});
+		long sum = 0;
+		for (int i: inventory) {	
+			heap.add(i);
+		}
+		int constant = 1000000007;
+		int res = 0;
+		while (orders > 0) {
+			int mr = heap.poll();
+			if (mr <= 0) {
+				break;
+			}
+			int diff = mr + 1;
+			int next = (heap.size() > 0) ? heap.peek() : 0;
+			diff -= (next != 0) ? next : 1;
+			if (diff >= orders) {
+				diff = orders;
+			}
+			long ans = (calc(mr) - calc(mr - diff));
+			res = (int) ((res + ans) % constant);
+			orders -= diff;
+			heap.add(mr - diff);
+		}
+		return res;
+	}
+}

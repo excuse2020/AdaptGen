@@ -1,0 +1,50 @@
+class Solution {
+	long pre = Long.MIN_VALUE;
+	boolean isAllTreeBST(TreeNode root) {
+		if (root == null) {
+			return true;
+		}
+		Deque<TreeNode> queue = new LinkedList<>();
+		queue.offer(root);
+		TreeNode left = null;
+		TreeNode right = null;
+		boolean flag = false;
+		while (!queue.isEmpty()) {
+			root = queue.poll();
+			left = root.left;
+			right = root.right;
+			if ((flag && !(left == null && right == null)) || (left == null && right != null)) {
+				return false;
+			}
+			if (left != null) {
+				queue.offer(left);
+			}
+			if (right != null) {
+				queue.offer(right);
+			}
+			if (left == null || right == null) {
+				flag = true;
+			}
+		}
+		return true;
+	}
+	boolean isSerachTreeBST(TreeNode root) {
+		if (root == null) {
+			return true;
+		}
+		if (!isSerachTreeBST(root.left)) {
+			return false;
+		}
+		if (root.val <= pre) {
+			return false;
+		}
+		pre = root.val;
+		return isSerachTreeBST(root.right);
+	}
+	boolean[] judgeIt(TreeNode root) {
+		boolean[] res = new boolean[2];
+		res[0] = isSerachTreeBST(root);
+		res[1] = isAllTreeBST(root);
+		return res;
+	}
+}

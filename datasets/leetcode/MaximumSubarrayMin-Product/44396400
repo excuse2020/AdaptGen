@@ -1,0 +1,37 @@
+class Solution {
+	int MOD = 1000000007;
+	int maxSumMinProduct(int[] n) {
+		long[] prefixSum = new long[n.length + 1];
+		for (int i = 1; i <= n.length; i++) {
+			prefixSum[i] = prefixSum[i - 1] + n[i - 1];
+		}
+		long result = 0;
+		Deque<Integer> stack = new ArrayDeque<>();
+		for (int i = 0; i < n.length; i++) {
+			while (!stack.isEmpty() && (n[i] < n[stack.peek()])) {
+				int j = stack.pop();
+				int k;
+				if (stack.isEmpty()) {
+					k = 0;
+				} 
+				else {
+					k = stack.peek() + 1;
+				}
+				result = Math.max(result,(prefixSum[i] - prefixSum[k]) * n[j]);
+			}
+			stack.push(i);
+		}
+		while (!stack.isEmpty()) {
+			int j = stack.pop();
+			int k;
+			if (stack.isEmpty()) {
+				k = 0;
+			} 
+			else {
+				k = stack.peek() + 1;
+			}
+			result = Math.max(result,(prefixSum[n.length] - prefixSum[k]) * n[j]);
+		}
+		return (int) (result % MOD);
+	}
+}

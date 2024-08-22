@@ -1,0 +1,19 @@
+class Solution {
+	boolean canReorderDoubled(int[] arr) {
+		var count = new HashMap<Integer, Integer>();
+		var nums = Arrays.stream(arr).boxed().toArray();
+		Arrays.sort(nums,Comparator.comparing());
+		Arrays.stream(nums).forEach((x) -> {count.compute(x,(k, v) -> {v == null ? 1 : ++v})});
+		for (var n: nums) {	
+			if (count.get(n) == 0) {
+				continue;
+			}
+			if (count.getOrDefault(2 * n,0) == 0 || (n == 0 && count.getOrDefault(0,0) < 2)) {
+				return false;
+			}
+			count.compute(n,(k, v) -> {--v});
+			count.compute(2 * n,(k, v) -> {--v});
+		}
+		return true;
+	}
+}

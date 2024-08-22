@@ -1,0 +1,26 @@
+class Solution {
+	long maximumTotalDamage(int[] power) {
+		TreeMap<Long, Long> freq = new TreeMap<>();
+		for (int num: power) {	
+			long numLong = (long) num;
+			freq.put(numLong,freq.getOrDefault(numLong,0L) + 1);
+		}
+		HashMap<Long, Long> dp = new HashMap<>();
+		long ans = 0, prevele = 0, backele = 0;
+		for (Map.Entry<Long, Long> entry: freq.entrySet()) {	
+			long el = entry.getKey();
+			long fr = entry.getValue();
+			Long backeleobj = freq.lowerKey(el - 2);
+			if (backeleobj != null) {
+				backele = backeleobj;
+			} 
+			else {
+				backele = 0L;
+			}
+			dp.put(el,Math.max(dp.getOrDefault(prevele,0L),el * fr + dp.getOrDefault(backele,0L)));
+			prevele = el;
+			ans = Math.max(dp.get(el),ans);
+		}
+		return ans;
+	}
+}

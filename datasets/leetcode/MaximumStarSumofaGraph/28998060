@@ -1,0 +1,32 @@
+class Solution {
+	int findSum(PriorityQueue<Integer> heap, int k) {
+		int sum = 0;
+		int k_ = k;
+		while (!heap.isEmpty() && k > 0) {
+			int val = heap.remove();
+			if (val < 0) {
+				break;
+			}
+			sum += val;
+			k--;
+		}
+		return k == k_ ? Integer.MIN_VALUE : sum;
+	}
+	int maxStarSum(int[] vals, int[][] edges, int k) {
+		Map<Integer, PriorityQueue<Integer>> graph = new HashMap<>();
+		for (int i = 0; i < vals.length; i++) {
+			graph.put(i,new PriorityQueue<>((a, b) -> {b - a}));
+		}
+		for (int[] edge: edges) {	
+			graph.get(edge[0]).add(vals[edge[1]]);
+			graph.get(edge[1]).add(vals[edge[0]]);
+		}
+		int maxSum = Integer.MIN_VALUE;
+		for (int i = 0; i < vals.length; i++) {
+			int sum = vals[i];
+			sum += Math.max(0,findSum(graph.get(i),k));
+			maxSum = Math.max(maxSum,sum);
+		}
+		return maxSum;
+	}
+}

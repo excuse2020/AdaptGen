@@ -1,0 +1,39 @@
+class Solution {
+	int bfs(int i, Map<Integer, List<Integer>> graph) {
+		Queue<Integer> que = new LinkedList<>();
+		Set<Integer> visited = new HashSet<>();
+		que.offer(i);
+		visited.add(i);
+		while (!que.isEmpty()) {
+			int curNode = que.poll();
+			for (int neigh: graph.getOrDefault(curNode,new ArrayList<>())) {	
+				if (!visited.contains(neigh)) {
+					visited.add(neigh);
+					que.offer(neigh);
+				}
+			}
+		}
+		return visited.size();
+	}
+	int maximumDetonation(int[][] bombs) {
+		HashMap<Integer, List<Integer>> graph = new HashMap<>();
+		int n = bombs.length;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				int xi = bombs[i][0], yi = bombs[i][1], ri = bombs[i][2];
+				int xj = bombs[j][0], yj = bombs[j][1];
+				if ((long) ri * ri >= (long) (xi - xj) * (xi - xj) + (long) (yi - yj) * (yi - yj)) {
+					if (!graph.containsKey(i)) {
+						graph.put(i,new ArrayList<>());
+					}
+					graph.get(i).add(j);
+				}
+			}
+		}
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			ans = Math.max(ans,bfs(i,graph));
+		}
+		return ans;
+	}
+}

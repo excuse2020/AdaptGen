@@ -1,0 +1,41 @@
+class Solution {
+	int[] dij(ArrayList<ArrayList<Integer>> list, int n) {
+		int dist = new int[n];
+		Arrays.fill(dist,-1);
+		dist[0] = 0;
+		Queue<Integer> q = new LinkedList<>();
+		q.add(0);
+		while (!q.isEmpty()) {
+			int u = q.poll();
+			for (int v: list.get(u)) {	
+				if (dist[v] == -1) {
+					dist[v] = dist[u] + 1;
+					q.add(v);
+				}
+			}
+		}
+		return dist;
+	}
+	int networkBecomesIdle(int[][] edges, int[] patience) {
+		ArrayList<ArrayList<Integer>> list = new ArrayList<>();
+		int n = patience.length;
+		for (int i = 0; i < n; i++) {
+			list.add(new ArrayList<>());
+		}
+		for (int e: edges) {	
+			list.get(e[0]).add(e[1]);
+			list.get(e[1]).add(e[0]);
+		}
+		int[] dist = dij(list,n);
+		int max = 0;
+		for (int i = 1; i < n; i++) {
+			int time = 2 * dist[i];
+			int msg = time / patience[i];
+			if (time % patience[i] == 0) {
+				msg--;
+			}
+			max = Math.max((msg * patience[i]) + (time),max);
+		}
+		return max + 1;
+	}
+}

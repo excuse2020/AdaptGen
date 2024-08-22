@@ -1,0 +1,33 @@
+class Solution {
+	int[] boxes;
+	int removeBoxes(int[] boxes) {
+		this.boxes = boxes;
+		return removeBoxes(0,boxes.length,0,new HashMap());
+	}
+	int removeBoxes(int start, int end, int firstColorCarry, Map<Integer, Integer> mamo) {
+		if (start == end) {
+			return 0;
+		}
+		int firstColor = boxes[start], i = 1, key = start + (end << 10);
+		if (mamo.containsKey(key)) {
+			return mamo.get(key);
+		}
+		while (start + i < end && boxes[start + i] == firstColor) {
+			i++;
+		}
+		int firstChainLength = i + firstColorCarry, secondColorIndex = start + i;
+		int score = firstChainLength * firstChainLength + removeBoxes(secondColorIndex,end,0,mamo);
+		while (start + i < end) {
+			while (start + i < end && boxes[start + i] != firstColor) {
+				i++;
+			}
+			int firstColorNextAppearnces = start + i;
+			score = Math.max(score,removeBoxes(secondColorIndex,firstColorNextAppearnces,0,mamo) + removeBoxes(firstColorNextAppearnces,end,firstChainLength,mamo));
+			while (start + i < end && boxes[start + i] == firstColor) {
+				i++;
+			}
+		}
+		mamo.put(key,score);
+		return score;
+	}
+}

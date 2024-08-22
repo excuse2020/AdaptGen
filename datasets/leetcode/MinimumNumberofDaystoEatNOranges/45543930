@@ -1,0 +1,28 @@
+class Solution {
+	int function(int n, HashMap<Integer, Integer> dp) {
+		if (n <= 0) {
+			return 0;
+		}
+		if (dp.containsKey(n)) {
+			return dp.get(n);
+		}
+		int eat_one = 1000;
+		int cond1 = 1000;
+		int cond2 = 1000;
+		if (n % 2 != 0 || n % 3 != 0) {
+			eat_one = 1 + function(n - 1,dp);
+		}
+		if (n % 2 == 0) {
+			cond1 = 1 + function(n - (n / 2),dp);
+		}
+		if (n % 3 == 0) {
+			cond2 = 1 + function(n - 2 * (n / 3),dp);
+		}
+		dp.put(n,Math.min(eat_one,Math.min(cond1,cond2)));
+		return Math.min(eat_one,Math.min(cond1,cond2));
+	}
+	int minDays(int n) {
+		HashMap<Integer, Integer> dp = new HashMap<>();
+		return function(n,dp);
+	}
+}

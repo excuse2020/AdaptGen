@@ -1,0 +1,41 @@
+class Solution {
+	int BinarySearch(int[] arr, int n, int k) {
+		int l = 0, h = n - 1;
+		int ans = h;
+		while (l <= h) {
+			int mid = l + (h - l) / 2;
+			if (arr[mid] >= k) {
+				ans = mid;
+				h = mid - 1;
+			} 
+			else {
+				l = mid + 1;
+			}
+		}
+		return ans;
+	}
+	int minAbsoluteSumDiff(int[] nums1, int[] nums2) {
+		int[] temp = nums1.clone();
+		Arrays.sort(temp);
+		int n = nums1.length;
+		long sum = 0;
+		for (int i = 0; i < n; i++) {
+			sum += Math.abs(nums1[i] - nums2[i]);
+		}
+		int mod = (int) 1e9 + 7;
+		long ans = sum;
+		for (int i = 0; i < n; i++) {
+			int ind = BinarySearch(temp,n,nums2[i]);
+			long d = Math.abs(nums1[i] - nums2[i]);
+			long sum1 = sum - d;
+			sum1 += Math.abs(temp[ind] - nums2[i]);
+			ans = Math.min(ans,sum1);
+			if (ind != 0) {
+				long s2 = sum - d;
+				s2 += Math.abs(temp[ind - 1] - nums2[i]);
+				ans = Math.min(ans,s2);
+			}
+		}
+		return (int) (ans % mod);
+	}
+}

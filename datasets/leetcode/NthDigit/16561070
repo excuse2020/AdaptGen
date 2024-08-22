@@ -1,0 +1,22 @@
+class Solution {
+	int findNthDigit(int n) {
+		if (n < 10) {
+			return n;
+		}
+		double lastBaseDCountTotal = 9;
+		double lastBase = 10;
+		double prevBaseDCountTotal = 0;
+		double digitCount = 1;
+		while (n > lastBaseDCountTotal) {
+			digitCount++;
+			prevBaseDCountTotal = lastBaseDCountTotal;
+			lastBaseDCountTotal += 9 * digitCount;
+			lastBase *= 10;
+		}
+		double remainingCount = n - prevBaseDCountTotal;
+		int whereItsAt = (int) ((lastBase / 10 - 1d) + Math.ceil(remainingCount / digitCount));
+		double mod = remainingCount % digitCount;
+		int whichChar = (int) ((mod == 0 ? digitCount : mod) - 1d);
+		return Character.getNumericValue(String.valueOf(whereItsAt).charAt(whichChar));
+	}
+}

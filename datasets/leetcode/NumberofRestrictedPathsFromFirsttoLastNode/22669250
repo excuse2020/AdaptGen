@@ -1,0 +1,56 @@
+class Solution {
+	int MOD = (int) (1e9 + 7);
+	int countRestrictedPaths(int n, int[][] edges) {
+		Map<Integer, ArrayList<int[]>> graph = new HashMap<>();
+		for (int[] e: edges) {	
+			graph.putIfAbsent(e[0],new ArrayList<>());
+			graph.putIfAbsent(e[1],new ArrayList<>());
+			graph.get(e[0]).add(new int{e[1], e[2]});
+			graph.get(e[1]).add(new int{e[0], e[2]});
+		}
+		int[] shortestDist = dijkstra(n,graph);
+		int[] memo = new int[n + 1];
+		Arrays.fill(memo,-1);
+		return dfs(1,n,graph,new HashSet<>(),shortestDist,memo);
+	}
+	int dfs(int src, int dst, Map<Integer, ArrayList<int[]>> graph, Set<Integer> visited, int[] dist, int[] memo) {
+		if (memo[src] != -1) {
+			return memo[src];
+		}
+		if (src == dst) {
+			return 1;
+		}
+		if (!visited.add(src)) {
+			return 0;
+		}
+		long res = 0l;
+		for (int[] neigh: graph.get(src)) {	
+			if (visited.contains(neigh[0]) || neigh[0] == src) {
+				continue;
+			}
+			if (dist[neigh[0]] < dist[src]) {
+				res = (res + dfs(neigh[0],dst,graph,visited,dist,memo) % MOD) % MOD;
+			}
+		}
+		visited.remove(src);
+		return memo[src] = (int) (res % MOD);
+	}
+	int[] dijkstra(int src, Map<Integer, ArrayList<int[]>> graph) {
+		Queue<int[]> q = new PriorityQueue<>((a, b) -> {a[1] - b[1]});
+		int[] dist = new int[graph.size() + 1];
+		Arrays.fill(dist,Integer.MAX_VALUE);
+		dist[src] = 0;
+		q.add(new int{src, 0});
+		while (!q.isEmpty()) {
+			int node = q.peek()[0];
+			int distance = q.poll()[1];
+			for (int[] neigh: graph.getOrDefault(node,new ArrayList<>())) {	
+				if (neigh[1] + distance < dist[neigh[0]]) {
+					dist[neigh[0]] = neigh[1] + distance;
+					q.offer(new int{neigh[0], dist[neigh[0]]});
+				}
+			}
+		}
+		return dist;
+	}
+}

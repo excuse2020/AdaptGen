@@ -1,0 +1,51 @@
+class Solution {
+	TrieNode root = new TrieNode();
+	void add(String str) {
+		TrieNode node = root;
+		for (char ch: str.toCharArray()) {	
+			node.children.putIfAbsent(ch,new TrieNode());
+			node = node.children.get(ch);
+		}
+		node.isWord = true;
+	}
+	boolean find(TrieNode root, String q, int cnt, int index) {
+		if (index >= q.length()) {
+			return root.isWord;
+		}
+		char target = q.charAt(index);
+		if (root.children.containsKey(target)) {
+			if (find(root.children.get(target),q,cnt,index + 1)) {
+				return true;
+			}
+		}
+		if (cnt == 0) {
+			return false;
+		}
+		for (char x: root.children.keySet()) {	
+			if (x == target) {
+				continue;
+			}
+			if (find(root.children.get(x),q,cnt - 1,index + 1)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	List<String> twoEditWords(String[] queries, String[] dictionary) {
+		for (String str: dictionary) {	
+			add(str);
+		}
+		List<String> res = new ArrayList<>();
+		for (String q: queries) {	
+			TrieNode node = root;
+			if (find(node,q,2,0)) {
+				res.add(q);
+			}
+		}
+		return res;
+	}
+}
+class TrieNode {
+	Map<Character, TrieNode> children = new HashMap<>();
+	boolean isWord;
+}

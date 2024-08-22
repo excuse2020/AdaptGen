@@ -1,0 +1,54 @@
+class Solution {
+	boolean isPalin(int s, int e, int last, String str) {
+		if (s < 0 || e >= str.length() || s <= last) {
+			return false;
+		}
+		while (s < e) {
+			if (str.charAt(s) != str.charAt(e)) {
+				return false;
+			}
+			s++;
+			e--;
+		}
+		return true;
+	}
+	int maxPalindromes(String s, int k) {
+		int cnt = 0;
+		int lastPos = -1;
+		for (int i = 0; i < s.length(); ) {
+			int l = k / 2;
+			if (k % 2 == 0) {
+				if (isPalin(i - l + 1,i + l,lastPos,s)) {
+					cnt++;
+					lastPos = i + l;
+					i += 2 * l;
+					continue;
+				}
+				l = (k + 1) / 2;
+				if (isPalin(i - l,i + l,lastPos,s)) {
+					cnt++;
+					lastPos = i + l;
+					i += 2 * l;
+					continue;
+				}
+			} 
+			else {
+				if (isPalin(i - l,i + l,lastPos,s)) {
+					cnt++;
+					lastPos = i + l;
+					i += 2 * l + 1;
+					continue;
+				}
+				l = (k + 1) / 2;
+				if (isPalin(i - l + 1,i + l,lastPos,s)) {
+					cnt++;
+					lastPos = i + l;
+					i += 2 * l;
+					continue;
+				}
+			}
+			++i;
+		}
+		return cnt;
+	}
+}

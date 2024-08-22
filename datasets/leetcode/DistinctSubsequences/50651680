@@ -1,0 +1,34 @@
+class Solution {
+	int dp;
+	int len;
+	char[] str;
+	int tLen;
+	char[] target;
+	int combinations(int index, int sb) {
+		int sLen = sb;
+		if (sLen >= tLen) {
+			return 1;
+		}
+		if (index + (tLen - sb) >= len) {
+			return 0;
+		}
+		int value = dp[index][sLen] - 1;
+		if (value >= 0) {
+			return value;
+		}
+		int count = combinations(index + 1,sb);
+		if (str[index] == target[sLen]) {
+			count += combinations(index + 1,sb + 1);
+		}
+		dp[index][sLen] = count + 1;
+		return count;
+	}
+	int numDistinct(String s, String t) {
+		len = s.length();
+		target = t.toCharArray();
+		str = s.toCharArray();
+		tLen = t.length();
+		dp = new int[len][t.length()];
+		return combinations(0,0);
+	}
+}

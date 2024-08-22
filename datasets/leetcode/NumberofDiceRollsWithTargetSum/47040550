@@ -1,0 +1,28 @@
+class Solution {
+	int dp;
+	int mod = 1000 * 1000 + 7;
+	int helper(int n, int k, int target) {
+		if (target == 0 && n == 0) {
+			return 1;
+		}
+		if (n == 0 || target <= 0) {
+			return 0;
+		}
+		if (dp[n][target] != -1) {
+			return dp[n][target];
+		}
+		int tempAns = 0;
+		for (int i = 1; i <= k; i++) {
+			tempAns = (tempAns % mod + helper(n - 1,k,target - i) % mod) % mod;
+		}
+		return dp[n][target] = tempAns % mod;
+	}
+	int numRollsToTarget(int n, int k, int target) {
+		dp = new int[n + 1][target + 1];
+		for (int[] arr: dp) {	
+			Arrays.fill(arr,-1);
+		}
+		helper(n,k,target);
+		return dp[n][target];
+	}
+}

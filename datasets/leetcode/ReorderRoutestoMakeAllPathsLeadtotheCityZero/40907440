@@ -1,0 +1,33 @@
+class Solution {
+	Map<Integer, List<Integer>> graph = new HashMap<>();
+	Set<String> roads = new HashSet<>();
+	Set<Integer> seen = new HashSet<>();
+	String convertToHash(int c1, int c2) {
+		return String.valueOf(c1) + ",";
+	}
+	int dfs(int node) {
+		int ans = 0;
+		for (int neighbor: graph.get(node)) {	
+			if (!seen.contains(neighbor)) {
+				if (roads.contains(convertToHash(node,neighbor))) {
+					ans++;
+				}
+				seen.add(neighbor);
+				ans += dfs(neighbor);
+			}
+		}
+		return ans;
+	}
+	int minReorder(int n, int[][] connections) {
+		for (int i = 0; i < n; i++) {
+			graph.put(i,new ArrayList<>());
+		}
+		for (int[] connection: connections) {	
+			graph.get(connection[0]).add(connection[1]);
+			graph.get(connection[1]).add(connection[0]);
+			roads.add(convertToHash(connection[0],connection[1]));
+		}
+		seen.add(0);
+		return dfs(0);
+	}
+}

@@ -1,0 +1,46 @@
+class Solution {
+	int longestPath(int[] arr, String s) {
+		int n = arr.length;
+		ArrayList<Integer> graph = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int i = 1; i < n; i++) {
+			graph[arr[i]].add(i);
+		}
+		int dp = new int[n];
+		recur(graph,s,dp,0);
+		int max = 0;
+		for (int i = 0; i < n; i++) {
+			int a = 0, b = 0;
+			for (int x: graph[i]) {	
+				if (s.charAt(i) != s.charAt(x)) {
+					if (dp[x] > a) {
+						b = a;
+						a = dp[x];
+					} 
+					else if (dp[x] > b) {
+						b = dp[x];
+					}
+				}
+			}
+			max = Math.max(a + b,max);
+		}
+		return max;
+	}
+	void recur(ArrayList<Integer> graph, String s, int dp, int i) {
+		int max = 0;
+		for (int x: graph[i]) {	
+			if (s.charAt(i) != s.charAt(x)) {
+				recur(graph,s,dp,x);
+				if (max < dp[x]) {
+					max = dp[x];
+				}
+			} 
+			else {
+				recur(graph,s,dp,x);
+			}
+		}
+		dp[i] = max + 1;
+	}
+}

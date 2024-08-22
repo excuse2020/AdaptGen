@@ -1,0 +1,37 @@
+class Solution {
+	List<List<Integer>> findWinners(int[][] matches) {
+		HashSet<Integer> hs = new HashSet<>();
+		TreeMap<Integer, Integer> tmap = new TreeMap<>();
+		ArrayList<Integer> wins = new ArrayList<>();
+		ArrayList<Integer> loss = new ArrayList<>();
+		List<List<Integer>> ans = new ArrayList<>();
+		for (int i = 0; i < matches.length; i++) {
+			int w = matches[i][0];
+			hs.add(w);
+		}
+		for (int i = 0; i < matches.length; i++) {
+			int l = matches[i][1];
+			tmap.put(l,tmap.getOrDefault(l,0) + 1);
+		}
+		for (int i = 0; i < matches.length; i++) {
+			if (hs.contains(matches[i][0])) {
+				if (!tmap.containsKey(matches[i][0])) {
+					wins.add(matches[i][0]);
+				}
+			}
+			hs.remove(matches[i][0]);
+		}
+		for (Map.Entry<Integer, Integer> entry: tmap.entrySet()) {	
+			int key = entry.getKey();
+			int value = entry.getValue();
+			if (value > 1) {
+				continue;
+			}
+			loss.add(key);
+		}
+		Collections.sort(wins);
+		ans.add(wins);
+		ans.add(loss);
+		return ans;
+	}
+}

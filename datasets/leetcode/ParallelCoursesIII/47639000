@@ -1,0 +1,36 @@
+class Solution {
+	int minimumTime(int n, int[][] relations, int[] time) {
+		List<Integer>[] graph = new List[n + 1];
+		int[] prerequites = new int[n];
+		int[] startTime = new int[n];
+		int totalTime = 0;
+		for (int[] relation: relations) {	
+			if (graph[relation[0]] == null) {
+				graph[relation[0]] = new ArrayList<>();
+			}
+			graph[relation[0]].add(relation[1]);
+			prerequites[relation[1] - 1]++;
+		}
+		Queue<Pair<Integer, Integer>> bfs = new LinkedList<>();
+		for (int i = 0; i < n; ++i) {
+			if (prerequites[i] == 0) {
+				startTime[i] = 0;
+				bfs.add(new Pair<>(i + 1, time[i]));
+			}
+		}
+		while (!bfs.isEmpty()) {
+			Pair<Integer, Integer> pair = bfs.poll();
+			totalTime = Math.max(totalTime,pair.getValue());
+			if (graph[pair.getKey()] != null) {
+				for (int child: graph[pair.getKey()]) {	
+					prerequites[child - 1]--;
+					startTime[child - 1] = Math.max(startTime[child - 1],pair.getValue());
+					if (prerequites[child - 1] == 0) {
+						bfs.add(new Pair<>(child, startTime[child - 1] + time[child - 1]));
+					}
+				}
+			}
+		}
+		return totalTime;
+	}
+}

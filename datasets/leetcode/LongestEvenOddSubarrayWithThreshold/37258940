@@ -1,0 +1,73 @@
+class Solution {
+	boolean check1(int i, int j, int nums, int thershold) {
+		for (int l = i; l <= j; l++) {
+			if (nums[l] <= thershold) {
+			} 
+			else {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean check2(int i, int j, int nums, int thershold) {
+		int res = new int[j - i + 1];
+		int d = i;
+		for (int k = 0; k < (j - i + 1); k++) {
+			res[k] = nums[d++] % 2;
+		}
+		int result = res[0];
+		if (result == 0) {
+			for (int p = 1; p < res.length; p++) {
+				if (p % 2 != 0) {
+					if (res[p] == 0) {
+						return false;
+					}
+				} 
+				else {
+					if (res[p] == 1) {
+						return false;
+					}
+				}
+			}
+		}
+		if (result == 1) {
+			for (int p = 1; p < res.length; p++) {
+				if (p % 2 != 0) {
+					if (res[p] == 1) {
+						return false;
+					}
+				} 
+				else {
+					if (res[p] == 0) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+	int longestAlternatingSubarray(int[] nums, int threshold) {
+		int max = 0;
+		int count = 0;
+		for (int i = 0; i < nums.length; i++) {
+			if (nums[i] % 2 != 0) {
+				count++;
+			}
+		}
+		if (count == nums.length) {
+			return 0;
+		}
+		for (int i = 0; i < nums.length; i++) {
+			for (int j = i; j < nums.length; j++) {
+				if (nums[i] % 2 == 0) {
+					boolean result1 = check1(i,j,nums,threshold);
+					boolean result2 = check2(i,j,nums,threshold);
+					if (result1 == true && result2 == true) {
+						max = Math.max(max,j - i + 1);
+					}
+				}
+			}
+		}
+		return max;
+	}
+}

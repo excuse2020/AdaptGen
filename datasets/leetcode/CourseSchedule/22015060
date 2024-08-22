@@ -1,0 +1,36 @@
+class Solution {
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		int[] indegree = new int[numCourses];
+		Set<Integer> set = new HashSet();
+		for (int[] pre: prerequisites) {	
+			indegree[pre[0]]++;
+		}
+		for (int i = 0; i < numCourses; i++) {
+			if (indegree[i] == 0) {
+				set.add(i);
+			}
+		}
+		if (set.isEmpty()) {
+			return false;
+		}
+		while (!set.isEmpty()) {
+			Iterator<Integer> it = set.iterator();
+			int course = it.next();
+			set.remove(course);
+			for (int[] pre: prerequisites) {	
+				if (course == pre[1]) {
+					indegree[pre[0]]--;
+					if (indegree[pre[0]] == 0) {
+						set.add(pre[0]);
+					}
+				}
+			}
+		}
+		for (int num: indegree) {	
+			if (num != 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

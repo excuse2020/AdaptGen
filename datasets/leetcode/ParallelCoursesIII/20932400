@@ -1,0 +1,58 @@
+class Solution {
+	int minimumTime(int n, int[][] relations, int[] time) {
+		ArrayList<ArrayList<Integer>> llist = new ArrayList<>();
+		int nn = relations.length;
+		for (int i = 0; i < n; i++) {
+			llist.add(new ArrayList<Integer>());
+		}
+		for (int i = 0; i < nn; i++) {
+			llist.get(relations[i][0] - 1).add(relations[i][1] - 1);
+		}
+		Stack<Integer> stk = new Stack<>();
+		boolean visi = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			if (visi[i] == false) {
+				topo(visi,i,llist,stk);
+			}
+		}
+		ArrayList<Integer> list = new ArrayList<>();
+		while (stk.size() != 0) {
+			list.add(stk.pop());
+		}
+		int[] indegree = new int[n];
+		for (int i = 0; i < nn; i++) {
+			indegree[relations[i][1] - 1]++;
+		}
+		int mindis = new int[n];
+		ArrayList<ArrayList<Integer>> parent = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			parent.add(new ArrayList<Integer>());
+		}
+		for (int i = 0; i < nn; i++) {
+			parent.get(relations[i][1] - 1).add(relations[i][0] - 1);
+		}
+		for (int ele: list) {	
+			if (parent.get(ele).size() == 0) {
+				mindis[ele] = time[ele];
+			} 
+			else {
+				int max = 0;
+				for (int k: parent.get(ele)) {	
+					max = Math.max(max,mindis[k]);
+				}
+				mindis[ele] = max + time[ele];
+			}
+		}
+		Arrays.sort(mindis);
+		return mindis[n - 1];
+	}
+	void topo(boolean[] visi, int s, ArrayList<ArrayList<Integer>> llist, Stack<Integer> stk) {
+		visi[s] = true;
+		for (int ele: llist.get(s)) {	
+			if (!visi[ele]) {
+				topo(visi,ele,llist,stk);
+			}
+		}
+		stk.add(s);
+	}
+}

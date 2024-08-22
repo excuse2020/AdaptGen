@@ -1,0 +1,45 @@
+class Solution {
+	Integer dp;
+	int maxUncrossedLines(int[] nums1, int[] nums2) {
+		if (nums1.length > nums2.length) {
+			int temp = nums1;
+			nums1 = nums2;
+			nums2 = temp;
+		}
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int i = 0; i < nums2.length; i++) {
+			List<Integer> l = map.getOrDefault(nums2[i],new ArrayList<>());
+			l.add(i);
+			map.put(nums2[i],l);
+		}
+		dp = new Integer[nums1.length][nums2.length + 1];
+		return util(nums1,0,-1,map);
+	}
+	int util(int nums1, int i, int j, Map<Integer, List<Integer>> map) {
+		if (i == nums1.length) {
+			return 0;
+		}
+		if (dp[i][j + 1] != null) {
+			return dp[i][j + 1];
+		}
+		if (!map.containsKey(nums1[i])) {
+			return dp[i][j + 1] = util(nums1,i + 1,j,map);
+		}
+		List<Integer> l = map.get(nums1[i]);
+		int index = -1;
+		for (int idx: l) {	
+			if (idx > j) {
+				index = idx;
+				break;
+			}
+		}
+		if (index == -1) {
+			return dp[i][j + 1] = util(nums1,i + 1,j,map);
+		} 
+		else {
+			int x = util(nums1,i + 1,j,map);
+			int y = 1 + util(nums1,i + 1,index,map);
+			return dp[i][j + 1] = Math.max(x,y);
+		}
+	}
+}

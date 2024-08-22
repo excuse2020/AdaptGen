@@ -1,0 +1,36 @@
+class Solution {
+	int memoization(String s, String t, int[][] memo) {
+		if (t.length() <= 0) {
+			return 1;
+		}
+		if (s.length() == 0) {
+			return 0;
+		}
+		if (memo[s.length() - 1][t.length() - 1] != -1) {
+			return memo[s.length() - 1][t.length() - 1];
+		}
+		if (s.charAt(0) == t.charAt(0)) {
+			return memo[s.length() - 1][t.length() - 1] = memoization(s.substring(1),t.substring(1),memo) + memoization(s.substring(1),t,memo);
+		}
+		return memo[s.length() - 1][t.length() - 1] = memoization(s.substring(1),t,memo);
+	}
+	int numDistinct(String s, String t) {
+		int[][] memo = new int[s.length() + 1][t.length() + 1];
+		for (int i = 0; i < s.length() + 1; i++) {
+			Arrays.fill(memo[i],-1);
+		}
+		return memoization(s,t,memo);
+	}
+	int recursion(String s, String t) {
+		if (t.length() <= 0) {
+			return 1;
+		}
+		if (s.length() == 0) {
+			return 0;
+		}
+		if (s.charAt(0) == t.charAt(0)) {
+			return recursion(s.substring(1),t.substring(1)) + recursion(s.substring(1),t);
+		}
+		return recursion(s.substring(1),t);
+	}
+}

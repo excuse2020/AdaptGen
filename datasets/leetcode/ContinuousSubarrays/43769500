@@ -1,0 +1,30 @@
+class Solution {
+	long continuousSubarrays(int[] nums) {
+		int n = nums.length;
+		Deque<Integer> maxi_q = new ArrayDeque<>();
+		Deque<Integer> mini_q = new ArrayDeque<>();
+		int st = 0;
+		long ans = 0;
+		for (int end = 0; end < n; end++) {
+			while (!maxi_q.isEmpty() && nums[maxi_q.peekLast()] <= nums[end]) {
+				maxi_q.pollLast();
+			}
+			maxi_q.addLast(end);
+			while (!mini_q.isEmpty() && nums[mini_q.peekLast()] >= nums[end]) {
+				mini_q.pollLast();
+			}
+			mini_q.addLast(end);
+			while (nums[maxi_q.peekFirst()] - nums[mini_q.peekFirst()] > 2) {
+				st++;
+				while (mini_q.peekFirst() < st) {
+					mini_q.pollFirst();
+				}
+				while (maxi_q.peekFirst() < st) {
+					maxi_q.pollFirst();
+				}
+			}
+			ans = ans + (end - st + 1);
+		}
+		return ans;
+	}
+}

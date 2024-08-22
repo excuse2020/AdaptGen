@@ -1,0 +1,46 @@
+class Solution {
+	List<String> fullJustify(String[] words, int maxWidth) {
+		List<String> ans = new ArrayList<String>();
+		List<String> cur = new ArrayList<>();
+		StringBuilder sb = new StringBuilder();
+		int pac = 0;
+		for (String word: words) {	
+			if (pac + word.length() > maxWidth) {
+				int gapNum = cur.size() - 1, gap = 0, remain = 0;
+				if (gapNum > 0) {
+					gap = (maxWidth - (pac - 1)) / gapNum;
+					remain = (maxWidth - (pac - 1)) % gapNum;
+					for (int i = 0; i < cur.size() - 1; i++) {
+						sb.append(cur.get(i));
+						if (i < remain) {
+							sb.append(" ".repeat(gap + 2));
+						} 
+						else {
+							sb.append(" ".repeat(gap + 1));
+						}
+					}
+					sb.append(cur.get(cur.size() - 1));
+				} 
+				else {
+					sb.append(cur.get(0));
+					sb.append(" ".repeat(maxWidth - sb.length()));
+				}
+				ans.add(sb.toString());
+				sb.setLength(0);
+				cur.clear();
+				pac = 0;
+			}
+			pac += word.length() + 1;
+			cur.add(word);
+		}
+		for (int i = 0; i < cur.size(); i++) {
+			sb.append(cur.get(i));
+			if (i != cur.size() - 1) {
+				sb.append(" ");
+			}
+		}
+		sb.append(" ".repeat(maxWidth - sb.length()));
+		ans.add(sb.toString());
+		return ans;
+	}
+}

@@ -1,0 +1,25 @@
+class Solution {
+	int[] queryResults(int limit, int[][] queries) {
+		Map<Integer, Integer> ballMap = new HashMap<>();
+		Map<Integer, Integer> colorMap = new HashMap<>();
+		int length = queries.length;
+		int[] distinctBalls = new int[length];
+		for (int index = 0; index < length; index++) {
+			int[] query = queries[index];
+			int color = ballMap.getOrDefault(query[0],-1);
+			if (color > -1 && colorMap.containsKey(color)) {
+				int value = colorMap.get(color);
+				if (value == 1) {
+					colorMap.remove(color);
+				} 
+				else {
+					colorMap.put(color,value - 1);
+				}
+			}
+			ballMap.put(query[0],query[1]);
+			colorMap.put(query[1],colorMap.getOrDefault(query[1],0) + 1);
+			distinctBalls[index] = colorMap.size();
+		}
+		return distinctBalls;
+	}
+}

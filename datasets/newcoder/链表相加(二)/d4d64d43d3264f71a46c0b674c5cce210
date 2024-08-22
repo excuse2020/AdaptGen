@@ -1,0 +1,61 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		if (head1 == null && head2 == null) {
+			return null;
+		}
+		if (head1 == null) {
+			return head2;
+		}
+		if (head2 == null) {
+			return head1;
+		}
+		ListNode firstNode = head1;
+		ListNode secondNode = head2;
+		firstNode = reverse(firstNode);
+		secondNode = reverse(secondNode);
+		ListNode result = new ListNode(-1);
+		ListNode headRet = result;
+		boolean flag = false;
+		while (firstNode != null || secondNode != null) {
+			int firstNodeVal = 0;
+			int secondNodeVal = 0;
+			if (firstNode != null) {
+				firstNodeVal = firstNode.val;
+				firstNode = firstNode.next;
+			}
+			if (secondNode != null) {
+				secondNodeVal = secondNode.val;
+				secondNode = secondNode.next;
+			}
+			int val = firstNodeVal + secondNodeVal;
+			if (flag) {
+				val = val + 1;
+			}
+			if (val >= 10) {
+				val = val % 10;
+				flag = true;
+			} 
+			else {
+				flag = false;
+			}
+			System.out.println(val);
+			result.next = new ListNode(val);
+			result = result.next;
+		}
+		if (flag) {
+			result.next = new ListNode(1);
+		}
+		return reverse(headRet.next);
+	}
+	ListNode reverse(ListNode head) {
+		ListNode pre = null;
+		ListNode next = null;
+		while (head != null) {
+			next = head.next;
+			head.next = pre;
+			pre = head;
+			head = next;
+		}
+		return pre;
+	}
+}

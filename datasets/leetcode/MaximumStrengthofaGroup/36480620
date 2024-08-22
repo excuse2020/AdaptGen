@@ -1,0 +1,66 @@
+class Solution {
+	long maxStrength(int[] nums) {
+		int n = 0, z = 0, p = 0;
+		long mul = 1;
+		for (int ele: nums) {	
+			if (ele > 0) {
+				mul *= ele;
+				p++;
+			} 
+			else if (ele < 0) {
+				n++;
+			} 
+			else {
+				z++;
+			}
+		}
+		if (p == 0) {
+			mul = 0;
+		}
+		int[] neg = new int[n];
+		int i = 0;
+		long nmul = 1;
+		int lar = Integer.MIN_VALUE;
+		for (int ele: nums) {	
+			if (ele < 0) {
+				neg[i] = ele;
+				i++;
+				nmul *= Math.abs(ele);
+				lar = lar > ele ? lar : ele;
+			}
+		}
+		if (n == 0) {
+			nmul = 0;
+		}
+		if (mul != 0 && nmul != 0) {
+			if (neg.length % 2 == 0) {
+				return (long) mul * (long) nmul;
+			} 
+			else {
+				return ((long) mul * (long) nmul) / (long) Math.abs(lar);
+			}
+		} 
+		else if (mul == 0 && nmul != 0) {
+			if (z != 0 && n == 1) {
+				return 0;
+			} 
+			else {
+				if (neg.length % 2 == 0) {
+					return (long) nmul;
+				} 
+				else {
+					if (neg.length == 1) {
+						return lar;
+					}
+					return (long) nmul / Math.abs(lar);
+				}
+			}
+		} 
+		else if (mul != 0 && nmul == 0) {
+			return (long) mul;
+		} 
+		else {
+			return 0;
+		}
+	}
+}

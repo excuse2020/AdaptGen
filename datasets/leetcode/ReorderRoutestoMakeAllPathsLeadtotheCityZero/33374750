@@ -1,0 +1,45 @@
+class Solution {
+	int bfs(List<List<Integer>> graph, List<List<Integer>> udGraph, int[] visited) {
+		int count = 0;
+		Queue<Integer> queue = new LinkedList<>();
+		queue.add(0);
+		visited[0] = 1;
+		while (!queue.isEmpty()) {
+			int parent = queue.poll();
+			for (int i = 0; i < udGraph.get(parent).size(); i++) {
+				if (visited[udGraph.get(parent).get(i)] != 1) {
+					int s = udGraph.get(parent).get(i);
+					queue.add(s);
+					visited[s] = 1;
+					int flag = 0;
+					for (int j = 0; j < graph.get(s).size(); j++) {
+						if (graph.get(s).get(j) == parent) {
+							flag = 1;
+							break;
+						}
+					}
+					if (flag == 0) {
+						count++;
+					}
+				}
+			}
+		}
+		System.out.println(count);
+		return count;
+	}
+	int minReorder(int n, int[][] connections) {
+		List<List<Integer>> graph = new ArrayList<>();
+		List<List<Integer>> udGraph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+			udGraph.add(new ArrayList<>());
+		}
+		for (int i = 0; i < connections.length; i++) {
+			graph.get(connections[i][0]).add(connections[i][1]);
+			udGraph.get(connections[i][0]).add(connections[i][1]);
+			udGraph.get(connections[i][1]).add(connections[i][0]);
+		}
+		int[] visited = new int[n];
+		return bfs(graph,udGraph,visited);
+	}
+}

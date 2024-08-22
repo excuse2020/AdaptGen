@@ -1,0 +1,31 @@
+class Solution {
+	int repeatedStringMatch(String a, String b) {
+		if (a.length() > b.length()) {
+			if (a.contains(b)) {
+				return 1;
+			}
+			return (a + a).contains(b) ? 2 : -1;
+		}
+		int count = 1;
+		char[] a_array = a.toCharArray();
+		int start_index = 0;
+		for (int i = 0; i < a.length(); i++) {
+			if (a.substring(i).equals(b.substring(0,a.length() - i))) {
+				start_index = i;
+				break;
+			}
+		}
+		int i = 0;
+		while (i < b.length()) {
+			int a_i = (i + start_index) % a.length();
+			if (a.charAt(a_i) != b.charAt(i)) {
+				break;
+			}
+			if (a_i == a.length() - 1 && i != b.length() - 1) {
+				count++;
+			}
+			i++;
+		}
+		return i == b.length() ? count : -1;
+	}
+}

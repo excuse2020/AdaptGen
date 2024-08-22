@@ -1,0 +1,37 @@
+class Solution {
+	boolean isPossible(int distance, int[] buckets, int balls, int n) {
+		int ballPos = 0;
+		balls--;
+		int i = 1;
+		while (i < n) {
+			int currDist = buckets[i] - buckets[ballPos];
+			if (currDist >= distance) {
+				balls--;
+				ballPos = i;
+			}
+			if (balls == 0) {
+				return true;
+			}
+			i++;
+		}
+		return false;
+	}
+	int maxDistance(int[] position, int m) {
+		Arrays.sort(position);
+		int n = position.length;
+		int start = 1;
+		int end = position[n - 1];
+		int minForce = -1;
+		while (start <= end) {
+			int mid = (start + end) / 2;
+			if (isPossible(mid,position,m,n)) {
+				minForce = mid;
+				start = mid + 1;
+			} 
+			else {
+				end = mid - 1;
+			}
+		}
+		return minForce;
+	}
+}

@@ -1,0 +1,30 @@
+class Solution {
+	int[] sortJumbled(int[] mapping, int[] nums) {
+		int[] ans = new int[nums.length];
+		for (int i = 0; i < nums.length; i++) {
+			int num = nums[i];
+			int val = 1;
+			int newVal = 0;
+			if (num == 0) {
+				newVal = mapping[num] + newVal;
+			} 
+			else {
+				while (num > 0) {
+					int v = num % 10;
+					num = num / 10;
+					newVal = mapping[v] * val + newVal;
+					val *= 10;
+				}
+			}
+			ans[i] = newVal;
+		}
+		Queue<Pair<Integer, Integer>> pq = new PriorityQueue<>((a, b) -> {a.getValue().equals(b.getValue()) ? a.getKey() - b.getKey() : a.getValue() - b.getValue()});
+		for (int i = 0; i < ans.length; i++) {
+			pq.offer(new Pair(i, ans[i]));
+		}
+		for (int i = 0; i < ans.length; i++) {
+			ans[i] = nums[pq.poll().getKey()];
+		}
+		return ans;
+	}
+}

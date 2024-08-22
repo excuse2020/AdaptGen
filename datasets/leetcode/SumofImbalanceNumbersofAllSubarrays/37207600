@@ -1,0 +1,34 @@
+class Solution {
+	int sumImbalanceNumbers(int[] nums) {
+		int n = nums.length;
+		int size = n + 1;
+		int res = 0;
+		for (int i = 0; i < n - 1; i++) {
+			int[] sArr = new int[size];
+			sArr[nums[i]] = nums[i];
+			int imbalance = 0;
+			for (int j = i + 1; j < n; j++) {
+				int num = nums[j];
+				if (sArr[num] == 0) {
+					if (num == 1) {
+						imbalance += sArr[2] == 2 ? 0 : 1;
+					} 
+					else if (num == n) {
+						imbalance += sArr[n - 1] == n - 1 ? 0 : 1;
+					} 
+					else {
+						if ((sArr[num - 1] == num - 1) && (sArr[num + 1] == num + 1)) {
+							imbalance--;
+						}
+						if ((sArr[num - 1] != num - 1) && (sArr[num + 1] != num + 1)) {
+							imbalance++;
+						}
+					}
+					sArr[num] = num;
+				}
+				res += imbalance;
+			}
+		}
+		return res;
+	}
+}

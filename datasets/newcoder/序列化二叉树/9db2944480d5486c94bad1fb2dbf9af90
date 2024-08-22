@@ -1,0 +1,77 @@
+class Solution {
+	TreeNode Deserialize(String str) {
+		if (str.isEmpty()) {
+			return null;
+		}
+		int i = 0;
+		int cache = 0;
+		Queue<TreeNode> q = new LinkedList<>();
+		while (str.charAt(i) != ' ') {
+			cache = cache * 10 + str.charAt(i++) - '0';
+		}
+		i++;
+		TreeNode root = new TreeNode(cache);
+		q.add(root);
+		while (!q.isEmpty()) {
+			TreeNode cur = q.poll();
+			if (i >= str.length()) {
+				break;
+			}
+			if (str.charAt(i) == 'n') {
+				cur.left = null;
+				i++;
+			} 
+			else {
+				cache = 0;
+				while (str.charAt(i) != ' ') {
+					cache = cache * 10 + str.charAt(i++) - '0';
+				}
+				cur.left = new TreeNode(cache);
+				q.add(cur.left);
+			}
+			i++;
+			if (str.charAt(i) == 'n') {
+				cur.right = null;
+				i++;
+			} 
+			else {
+				cache = 0;
+				while (str.charAt(i) != ' ') {
+					cache = cache * 10 + str.charAt(i++) - '0';
+				}
+				cur.right = new TreeNode(cache);
+				q.add(cur.right);
+			}
+			i++;
+		}
+		return root;
+	}
+	String Serialize(TreeNode root) {
+		String s = new String();
+		if (root == null) {
+			return s;
+		}
+		Queue<TreeNode> q = new ArrayDeque<>();
+		q.add(root);
+		s = s + String.valueOf(root.val);
+		while (!q.isEmpty()) {
+			TreeNode cur = q.poll();
+			if (cur.left != null) {
+				s = s + String.valueOf(cur.left.val);
+				q.add(cur.left);
+			} 
+			else {
+				s = s + 'n';
+			}
+			if (cur.right != null) {
+				s = s + String.valueOf(cur.right.val);
+				q.add(cur.right);
+			} 
+			else {
+				s = s + 'n';
+			}
+		}
+		System.out.println(s);
+		return s;
+	}
+}

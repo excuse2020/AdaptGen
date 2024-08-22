@@ -1,0 +1,51 @@
+class Solution {
+	double caldist(int x1, int y1, int x2, int y2) {
+		return Math.sqrt(Math.pow(x1 - x2,2) + Math.pow(y1 - y2,2));
+	}
+	void call(int[][] bombs, int[][] dist) {
+		int n = bombs.length;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (i == j) {
+					continue;
+				}
+				if (check(bombs,i,j)) {
+					dist[i][j] = 1;
+				} 
+				else {
+					dist[i][j] = 0;
+				}
+			}
+		}
+	}
+	boolean check(int[][] bombs, int i, int j) {
+		if (bombs[i][2] >= caldist(bombs[i][0],bombs[i][1],bombs[j][0],bombs[j][1])) {
+			return true;
+		}
+		return false;
+	}
+	int dfs(int[][] dist, int k, int[] blasted) {
+		int sum = 1;
+		blasted[k] = 1;
+		for (int i = 0; i < dist[k].length; i++) {
+			if (dist[k][i] == 1 && blasted[i] == 0) {
+				if (i != k) {
+					sum += dfs(dist,i,blasted);
+				}
+			}
+		}
+		return sum;
+	}
+	int maximumDetonation(int[][] bombs) {
+		int n = bombs.length;
+		int[][] dist = new int[n][n];
+		IntStream.range(0,n).forEach((i) -> {dist[i][i] = 1});
+		call(bombs,dist);
+		int maxi = 1;
+		Arrays.stream(dist).map().forEach();
+		for (int i = 0; i < n; i++) {
+			maxi = Math.max(maxi,dfs(dist,i,new int[n]));
+		}
+		return maxi;
+	}
+}

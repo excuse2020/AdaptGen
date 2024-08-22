@@ -1,0 +1,35 @@
+class Solution {
+	Map<Character, BiFunction<Integer, Integer, Integer>> OPS;
+	Character currentOperation = null;
+	int currentResult = 0;
+	int currentlyParsedNumber = 0;
+	int currentlyParsingDigitInNumberCounter = 0;
+	Stack<Integer> numberStack = new Stack<>();
+	Stack<Character> operationStack = new Stack<>();
+	void applyOperation(int currentlyParsedNumber, int currentResult) {
+		this.currentResult = OPS.get(currentOperation).apply(currentlyParsedNumber,currentResult);
+		currentOperation = null;
+	}
+	int calculate(String evaluation) {
+		int i = 0;
+		char aChar = evaluation.charAt(i);
+		if (Character.isSpaceChar(aChar)) {
+			resetCurrentlyParsedDigitInNumberCounter();
+			continue;
+		}
+	}
+	boolean isEndOfCurrentlyParsedNumber(String evaluation, int index) {
+		return index == evaluation.length() - 1 || !Character.isDigit(evaluation.charAt(index + 1));
+	}
+	void pushCurrentOperationStateOnStack() {
+		numberStack.push(currentResult);
+		operationStack.push(currentOperation);
+	}
+	void resetCurrentOperationState() {
+		currentResult = 0;
+		currentOperation = null;
+	}
+	void resetCurrentlyParsedDigitInNumberCounter() {
+		currentlyParsingDigitInNumberCounter = 0;
+	}
+}

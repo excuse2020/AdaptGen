@@ -1,0 +1,40 @@
+class Solution {
+	boolean isSame(String s) {
+		return s.charAt(0) == s.charAt(1);
+	}
+	int longestPalindrome(String[] words) {
+		int n = words.length;
+		int len = 0;
+		Map<String, Integer> map = new HashMap<>();
+		Map<String, Integer> db = new HashMap<>();
+		for (String w: words) {	
+			if (isSame(w)) {
+				db.put(w,db.getOrDefault(w,0) + 1);
+			} 
+			else {
+				map.put(w,map.getOrDefault(w,0) + 1);
+			}
+		}
+		for (String x: map.keySet()) {	
+			String rev = reverse(x);
+			if (map.containsKey(rev)) {
+				len += Math.min(map.get(x),map.get(rev)) * 4;
+			}
+		}
+		len = len / 2;
+		boolean odd = false;
+		for (String x: db.keySet()) {	
+			len += (db.get(x) / 2) * 4;
+			if (db.get(x) % 2 != 0) {
+				odd = true;
+			}
+		}
+		if (odd) {
+			len += 2;
+		}
+		return len;
+	}
+	String reverse(String s) {
+		return new StringBuilder(s).reverse().toString();
+	}
+}

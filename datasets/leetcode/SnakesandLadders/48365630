@@ -1,0 +1,46 @@
+class Solution {
+	int[] flatTwoD(int[][] board, int n) {
+		int[] grid = new int[n * n + 1];
+		int index = 1;
+		boolean leftToRight = true;
+		for (int i = n - 1; i >= 0; i--) {
+			for (int j = 0; j < n; j++) {
+				if (leftToRight) {
+					grid[index++] = board[i][j];
+				} 
+				else {
+					grid[index++] = board[i][n - 1 - j];
+				}
+			}
+			leftToRight = !leftToRight;
+		}
+		return grid;
+	}
+	int oneDimensionBFS(int[] grid) {
+		int n = grid.length - 1;
+		int[] dp = new int[grid.length];
+		Arrays.fill(dp,-1);
+		dp[1] = 0;
+		Queue<Integer> q = new LinkedList<>();
+		q.add(1);
+		while (!q.isEmpty()) {
+			int i = q.poll();
+			for (int j = i + 1; j <= Math.min(i + 6,n); j++) {
+				int destination = grid[j] != -1 ? grid[j] : j;
+				if (dp[destination] == -1) {
+					dp[destination] = dp[i] + 1;
+					q.add(destination);
+				}
+			}
+		}
+		return dp[n];
+	}
+	int snakesAndLadders(int[][] board) {
+		int n = board.length;
+		if (n <= 1) {
+			return 0;
+		}
+		int[] grid = flatTwoD(board,n);
+		return oneDimensionBFS(grid);
+	}
+}

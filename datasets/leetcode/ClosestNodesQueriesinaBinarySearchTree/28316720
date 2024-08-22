@@ -1,0 +1,24 @@
+class Solution {
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		TreeSet<Integer> treeSet = new TreeSet<>();
+		convertTreeToSet(root,treeSet);
+		List<List<Integer>> result = new ArrayList<>();
+		for (int query: queries) {	
+			List<Integer> queryResult = new ArrayList<>();
+			Integer floorValue = treeSet.floor(query);
+			Integer ceilingValue = treeSet.ceiling(query);
+			queryResult.add(floorValue != null ? floorValue : -1);
+			queryResult.add(ceilingValue != null ? ceilingValue : -1);
+			result.add(queryResult);
+		}
+		return result;
+	}
+	void convertTreeToSet(TreeNode root, TreeSet<Integer> treeSet) {
+		if (root == null) {
+			return;
+		}
+		treeSet.add(root.val);
+		convertTreeToSet(root.left,treeSet);
+		convertTreeToSet(root.right,treeSet);
+	}
+}

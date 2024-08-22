@@ -1,0 +1,40 @@
+class Solution {
+	int[] computeLPSArray(String str) {
+		int n = str.length();
+		int[] lps = new int[n];
+		int len = 0;
+		int i = 1;
+		while (i < n) {
+			if (str.charAt(i) == str.charAt(len)) {
+				len++;
+				lps[i] = len;
+				i++;
+			} 
+			else {
+				if (len != 0) {
+					len = lps[len - 1];
+				} 
+				else {
+					lps[i] = 0;
+					i++;
+				}
+			}
+		}
+		return lps;
+	}
+	void main(String[] args) {
+		Solution sol = new Solution();
+		String s1 = "aacecaaa";
+		System.out.println("Output: " + sol.shortestPalindrome(s1));
+		String s2 = "abcd";
+		System.out.println("Output: " + sol.shortestPalindrome(s2));
+	}
+	String shortestPalindrome(String s) {
+		String rev = new StringBuilder(s).reverse().toString();
+		String concat = s + "#";
+		int[] lps = computeLPSArray(concat);
+		int longestPrefixSuffix = lps[lps.length - 1];
+		String toAdd = rev.substring(0,s.length() - longestPrefixSuffix);
+		return toAdd + s;
+	}
+}

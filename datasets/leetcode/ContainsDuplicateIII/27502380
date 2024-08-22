@@ -1,0 +1,30 @@
+class Solution {
+	boolean containsNearbyAlmostDuplicate(int[] nums, int indexDiff, int valueDiff) {
+		int n = nums.length;
+		if (n == 1) {
+			return false;
+		}
+		TreeSet<Integer> ts = new TreeSet<>();
+		int l = 0, r = 0, minLimit = Integer.MIN_VALUE, maxLimit = Integer.MAX_VALUE;
+		while (r < n) {
+			if (r - l <= indexDiff) {
+				int mi = ts.floor(nums[r]) == null ? Integer.MAX_VALUE : Math.abs(ts.floor(nums[r]) - nums[r]), ma = ts.ceiling(nums[r]) == null ? Integer.MAX_VALUE : Math.abs(ts.ceiling(nums[r]) - nums[r]);
+				if (mi <= valueDiff) {
+					return true;
+				} 
+				else if (ma <= valueDiff) {
+					return true;
+				} 
+				else {
+					ts.add(nums[r]);
+					r++;
+				}
+			} 
+			else {
+				ts.remove(nums[l]);
+				l++;
+			}
+		}
+		return false;
+	}
+}

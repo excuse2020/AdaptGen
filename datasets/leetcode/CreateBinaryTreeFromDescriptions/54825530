@@ -1,0 +1,46 @@
+class Solution {
+	TreeNode buildTree(HashMap<Integer, List<Integer>> mapleft, HashMap<Integer, List<Integer>> mapright, int root) {
+		List<Integer> listleft = mapleft.get(root);
+		List<Integer> listright = mapright.get(root);
+		TreeNode node = new TreeNode(root);
+		if (listleft != null && listleft.size() != 0) {
+			node.left = buildTree(mapleft,mapright,listleft.get(0));
+		}
+		if (listright != null && listright.size() != 0) {
+			node.right = buildTree(mapleft,mapright,listright.get(0));
+		}
+		return node;
+	}
+	void buildmaps(HashMap<Integer, List<Integer>> mapleft, int[][] array, HashMap<Integer, List<Integer>> mapright) {
+		for (int[] elements: array) {	
+			int parent = elements[0];
+			int child = elements[1];
+			int isLeft = elements[2];
+			if (isLeft == 0) {
+				mapright.computeIfAbsent(parent,(k) -> {new ArrayList<>()}).add(child);
+			} 
+			else {
+				mapleft.computeIfAbsent(parent,(k) -> {new ArrayList<>()}).add(child);
+			}
+		}
+	}
+	TreeNode createBinaryTree(int[][] descriptions) {
+		HashSet<Integer> children = new HashSet<>();
+		int root = 0;
+		for (int[] x: descriptions) {	
+			children.add(x[1]);
+		}
+		for (int i = 0; i < descriptions.length; i++) {
+			int parent = descriptions[i][0];
+			if (!children.contains(parent)) {
+				root = parent;
+				break;
+			}
+		}
+		HashMap<Integer, List<Integer>> mapleft = new HashMap<>();
+		HashMap<Integer, List<Integer>> mapright = new HashMap<>();
+		buildmaps(mapleft,descriptions,mapright);
+		TreeNode head = buildTree(mapleft,mapright,root);
+		return head;
+	}
+}

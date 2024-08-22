@@ -1,0 +1,53 @@
+class Solution {
+	int[] fullBloomFlowers(int[][] flowers, int[] people) {
+		int[][] t = new int[flowers.length][2];
+		init(flowers,t);
+		Arrays.sort(flowers,new Comparator<int[]>());
+		Arrays.sort(t,new Comparator<int[]>());
+		int[] vv = new int[people.length];
+		for (int i = 0; i < people.length; i++) {
+			vv[i] = (ub(flowers,people[i]) - lb(t,people[i]));
+		}
+		return vv;
+	}
+	void init(int[][] t, int[][] tt) {
+		for (int i = 0; i < t.length; i++) {
+			tt[i][0] = t[i][0];
+			tt[i][1] = t[i][1];
+		}
+	}
+	int lb(int[][] t, int v) {
+		int l = 0;
+		int h = t.length - 1;
+		while (l <= h) {
+			int mid = l + (h - l) / 2;
+			if (t[mid][1] >= v && (mid == 0 || t[mid - 1][1] < v)) {
+				return mid;
+			} 
+			else if (t[mid][1] >= v) {
+				h = mid - 1;
+			} 
+			else {
+				l = mid + 1;
+			}
+		}
+		return t.length;
+	}
+	int ub(int[][] t, int v) {
+		int l = 0;
+		int h = t.length - 1;
+		while (l <= h) {
+			int mid = l + (h - l) / 2;
+			if (t[mid][0] > v && (mid == 0 || t[mid - 1][0] <= v)) {
+				return mid;
+			} 
+			else if (t[mid][0] > v) {
+				h = mid - 1;
+			} 
+			else {
+				l = mid + 1;
+			}
+		}
+		return t.length;
+	}
+}

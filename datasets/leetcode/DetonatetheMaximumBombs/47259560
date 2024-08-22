@@ -1,0 +1,48 @@
+class Solution {
+	int dfs(Map<Integer, List<Integer>> map, int bomb, Set<Integer> vis) {
+		vis.add(bomb);
+		if (!map.containsKey(bomb)) {
+			return 1;
+		}
+		int ans = 1;
+		for (int next: map.get(bomb)) {	
+			if (!vis.contains(next)) {
+				ans += dfs(map,next,vis);
+			}
+		}
+		return ans;
+	}
+	long distance(int x1, int y1, int x2, int y2) {
+		long x = (long) (x1 - x2) * (x1 - x2);
+		long y = (long) (y1 - y2) * (y1 - y2);
+		return x + y;
+	}
+	int maximumDetonation(int[][] bombs) {
+		int n = bombs.length;
+		HashMap<Integer, List<Integer>> map = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			int x1 = bombs[i][0];
+			int y1 = bombs[i][1];
+			int r1 = bombs[i][2];
+			for (int j = 0; j < n; j++) {
+				if (i == j) {
+					continue;
+				}
+				int x2 = bombs[j][0];
+				int y2 = bombs[j][1];
+				long d = distance(x1,y1,x2,y2);
+				long rsq = (long) r1 * r1;
+				if (d <= rsq) {
+					map.putIfAbsent(i,new ArrayList<>());
+					map.get(i).add(j);
+				}
+			}
+		}
+		int max = 1;
+		for (int bomb: map.keySet()) {	
+			int numOfdetBombs = dfs(map,bomb,new HashSet<>());
+			max = Math.max(max,numOfdetBombs);
+		}
+		return max;
+	}
+}

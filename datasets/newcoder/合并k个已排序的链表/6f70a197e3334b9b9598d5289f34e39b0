@@ -1,0 +1,38 @@
+class Solution {
+	ListNode divMerge(ArrayList<ListNode> lists, int left, int right) {
+		if (left > right) {
+			return null;
+		}
+		if (left == right) {
+			return lists.get(left);
+		}
+		int mid = left + (right - left) / 2;
+		ListNode mergedLeft = divMerge(lists,left,mid);
+		ListNode mergedRight = divMerge(lists,mid + 1,right);
+		ListNode hair = new ListNode(0);
+		ListNode pointer = hair;
+		while (mergedLeft != null || mergedRight != null) {
+			if (mergedLeft == null) {
+				pointer.next = mergedRight;
+				return hair.next;
+			} 
+			else if (mergedRight == null) {
+				pointer.next = mergedLeft;
+				return hair.next;
+			} 
+			else if (mergedLeft.val < mergedRight.val) {
+				pointer.next = mergedLeft;
+				mergedLeft = mergedLeft.next;
+			} 
+			else {
+				pointer.next = mergedRight;
+				mergedRight = mergedRight.next;
+			}
+			pointer = pointer.next;
+		}
+		return hair.next;
+	}
+	ListNode mergeKLists(ArrayList<ListNode> lists) {
+		return divMerge(lists,0,lists.size() - 1);
+	}
+}

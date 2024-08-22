@@ -1,0 +1,42 @@
+class Solution {
+	ArrayList<String> rst = new ArrayList<>();
+	LinkedList<Integer> tempList = new LinkedList<>();
+	void buildIp(String s, int index) {
+		if (index == s.length() && tempList.size() == 4) {
+			rst.add(convert(tempList));
+		}
+		if (tempList.size() >= 4 || index >= s.length()) {
+			return;
+		}
+		tempList.add(s.charAt(index) - '0');
+		buildIp(s,index + 1);
+		tempList.removeLast();
+		if (index + 1 < s.length() && s.charAt(index) != '0') {
+			tempList.add(10 * (s.charAt(index) - '0') + s.charAt(index + 1) - '0');
+			buildIp(s,index + 2);
+			tempList.removeLast();
+		}
+		if (index + 2 < s.length() && s.charAt(index) != '0') {
+			int value = 100 * (s.charAt(index) - '0') + 10 * (s.charAt(index + 1) - '0') + (s.charAt(index + 2) - '0');
+			if (value >= 100 && value <= 255) {
+				tempList.add(value);
+				buildIp(s,index + 3);
+				tempList.removeLast();
+			}
+		}
+	}
+	String convert(LinkedList<Integer> tempList) {
+		StringBuilder sb = new StringBuilder();
+		for (Integer value: tempList) {	
+			sb.append(value + ".");
+		}
+		return sb.substring(0,sb.length() - 1);
+	}
+	ArrayList<String> restoreIpAddresses(String s) {
+		if (s == null || s.length() == 0) {
+			return rst;
+		}
+		buildIp(s,0);
+		return rst;
+	}
+}

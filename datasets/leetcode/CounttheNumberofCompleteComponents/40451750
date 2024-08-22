@@ -1,0 +1,39 @@
+class Solution {
+	int countCompleteComponents(int n, int[][] edges) {
+		ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<Integer>());
+		}
+		for (int edge: edges) {	
+			int u = edge[0];
+			int v = edge[1];
+			graph.get(u).add(v);
+			graph.get(v).add(u);
+		}
+		boolean visited = new boolean[n];
+		int components = 0;
+		int em = new int[2];
+		em[0] = 1;
+		for (int i = 0; i < n; i++) {
+			if (!visited[i]) {
+				dfs(graph,visited,i,em);
+				if (em[0] * (em[0] - 1) / 2 == em[1] / 2) {
+					components++;
+				}
+				em[0] = 1;
+				em[1] = 0;
+			}
+		}
+		return components;
+	}
+	void dfs(ArrayList<ArrayList<Integer>> graph, boolean visited, int curr, int em) {
+		visited[curr] = true;
+		for (int nbr: graph.get(curr)) {	
+			if (!visited[nbr]) {
+				dfs(graph,visited,nbr,em);
+				em[0]++;
+			}
+			em[1]++;
+		}
+	}
+}

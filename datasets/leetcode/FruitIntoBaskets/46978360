@@ -1,0 +1,54 @@
+class Solution {
+	int totalFruit(int[] arr) {
+		int n = arr.length;
+		if (n <= 2) {
+			return n;
+		}
+		int l = 0;
+		int b1 = arr[l];
+		int r = -1;
+		int b2 = -1;
+		for (int i = l + 1; i < arr.length; i++) {
+			if (arr[i] != b1) {
+				r = i;
+				b2 = arr[i];
+				break;
+			}
+		}
+		if (r == -1) {
+			return arr.length;
+		}
+		int res = 2;
+		while (r < n) {
+			if (r == n - 1) {
+				if (arr[r] == b1 || arr[r] == b2) {
+					res = Math.max(res,r - l + 1);
+				}
+				break;
+			}
+			if (arr[r + 1] == b1 || arr[r + 1] == b2) {
+				++r;
+			} 
+			else if (arr[r + 1] != b1 && arr[r + 1] != b2) {
+				res = Math.max(res,r - l + 1);
+				l = l + 1;
+				b1 = arr[l];
+				if (arr[l] == arr[r]) {
+					r = -1;
+					for (int i = l + 1; i < arr.length; i++) {
+						if (arr[i] != b1) {
+							r = i;
+							b2 = arr[i];
+							break;
+						}
+					}
+					if (r == -1) {
+						res = Math.max(res,arr.length - l);
+						break;
+					}
+				}
+			}
+		}
+		return res;
+	}
+}

@@ -1,0 +1,36 @@
+class Solution {
+	int MAX_HOURS = 11, MAX_MINUTES = 59, MINUTE_BITS = 6, HOUR_BITS = 4;
+	Set<String> backTrack(int lastBit, int minutes, int hours, int turnedOn, Set<String> times) {
+		if (turnedOn < 0 || isInvalidHours(hours) || isInvalidMinutes(minutes)) {
+			return times;
+		}
+		if (turnedOn == 0) {
+			times.add(generateTime(hours,minutes));
+			return times;
+		}
+		for (int i = lastBit; i < MINUTE_BITS + HOUR_BITS; i++) {
+			int newTime = i < MINUTE_BITS ? minutes + (int) Math.pow(2,i) : hours + (int) Math.pow(2,i - MINUTE_BITS);
+			if (isInvalidTime(i,minutes,hours)) {
+				break;
+			}
+			times = backTrack(i + 1,i < MINUTE_BITS ? newTime : minutes,i < MINUTE_BITS ? hours : newTime,turnedOn - 1,times);
+		}
+		return times;
+	}
+	String generateTime(int hours, int minutes) {
+		return hours + ":";
+	}
+	boolean isInvalidHours(int hours) {
+		return hours > MAX_HOURS;
+	}
+	boolean isInvalidMinutes(int minutes) {
+		return minutes > MAX_MINUTES;
+	}
+	boolean isInvalidTime(int i, int minutes, int hours) {
+		return i < MINUTE_BITS ? isInvalidMinutes(minutes) : isInvalidHours(hours);
+	}
+	List<String> readBinaryWatch(int turnedOn) {
+		boolean[] state = new boolean[MINUTE_BITS + HOUR_BITS];
+		return new ArrayList<>(backTrack(0,0,0,turnedOn,new HashSet<>()));
+	}
+}

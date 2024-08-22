@@ -1,0 +1,27 @@
+class Solution {
+	int dfs(int ind, boolean[] vis, int[][] bombs) {
+		int count = 1;
+		vis[ind] = true;
+		for (int next = 0; next < bombs.length; next++) {
+			if (!vis[next] && inRange(bombs[ind],bombs[next])) {
+				count += dfs(next,vis,bombs);
+			}
+		}
+		return count;
+	}
+	boolean inRange(int[] src, int[] dest) {
+		long dx = dest[0] - src[0], dy = dest[1] - src[1], r = src[2];
+		if (dx * dx + dy * dy <= r * r) {
+			return true;
+		}
+		return false;
+	}
+	int maximumDetonation(int[][] bombs) {
+		int n = bombs.length;
+		int res = 0;
+		for (int i = 0; i < n; i++) {
+			res = Math.max(res,dfs(i,new boolean[n],bombs));
+		}
+		return res;
+	}
+}

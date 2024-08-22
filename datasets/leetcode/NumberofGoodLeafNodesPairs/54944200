@@ -1,0 +1,44 @@
+class Solution {
+	int ans = 0;
+	int distance = 0;
+	int[] cal(TreeNode root) {
+		if (root.left == null && root.right == null) {
+			int arr = new int[distance + 1];
+			arr[1] = 1;
+			return arr;
+		}
+		int lef, rig;
+		if (root.left != null) {
+			lef = cal(root.left);
+			if (root.right != null) {
+				rig = cal(root.right);
+				for (int i = 1; i < distance; i++) {
+					for (int j = 1; j <= distance - i; j++) {
+						ans += lef[i] * rig[j];
+					}
+				}
+				for (int i = distance; i > 0; i--) {
+					lef[i] = lef[i - 1] + rig[i - 1];
+				}
+			} 
+			else {
+				for (int i = distance; i > 0; i--) {
+					lef[i] = lef[i - 1];
+				}
+			}
+			return lef;
+		} 
+		else {
+			rig = cal(root.right);
+			for (int i = distance; i > 0; i--) {
+				rig[i] = rig[i - 1];
+			}
+			return rig;
+		}
+	}
+	int countPairs(TreeNode root, int distance) {
+		this.distance = distance;
+		cal(root);
+		return ans;
+	}
+}

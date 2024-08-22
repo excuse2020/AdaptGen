@@ -1,0 +1,50 @@
+class Solution {
+	record Edge(int src, int nbr) {
+	}
+	int[] findOrder(int numCourses, int[][] prerequisites) {
+		ArrayList<Edge>[] graph = new ArrayList[numCourses];
+		for (int i = 0; i < numCourses; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int[] p: prerequisites) {	
+			int src = p[0];
+			int nbr = p[1];
+			graph[src].add(new Edge(src, nbr));
+		}
+		int[] indegree = new int[numCourses];
+		int[] ans = new int[numCourses];
+		for (int i = 0; i < numCourses; i++) {
+			for (Edge e: graph[i]) {	
+				indegree[e.nbr]++;
+			}
+		}
+		Queue<Integer> q = new LinkedList<>();
+		for (int i = 0; i < numCourses; i++) {
+			if (indegree[i] == 0) {
+				q.add(i);
+			}
+		}
+		int idx = 0;
+		while (!q.isEmpty()) {
+			int num = q.remove();
+			ans[idx] = num;
+			idx++;
+			for (Edge e: graph[num]) {	
+				indegree[e.nbr]--;
+				if (indegree[e.nbr] == 0) {
+					q.add(e.nbr);
+				}
+			}
+		}
+		int[] result = new int[numCourses];
+		int resIdx = numCourses - 1;
+		if (idx == numCourses) {
+			for (int i: ans) {	
+				result[resIdx] = i;
+				resIdx--;
+			}
+			return result;
+		}
+		return new int[0];
+	}
+}

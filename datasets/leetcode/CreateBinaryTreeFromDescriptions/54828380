@@ -1,0 +1,31 @@
+class Solution {
+	TreeNode createBinaryTree(int[][] descriptions) {
+		Map<Integer, TreeNode> cache = new HashMap<>();
+		Map<Integer, Integer> parentMap = new HashMap<>();
+		for (int[] desc: descriptions) {	
+			int parent = desc[0], child = desc[1];
+			TreeNode parentNode = cache.get(parent), childNode = cache.get(child);
+			if (parentNode == null) {
+				parentNode = new TreeNode(parent);
+				cache.put(parent,parentNode);
+			}
+			if (childNode == null) {
+				childNode = new TreeNode(child);
+				cache.put(child,childNode);
+			}
+			if (desc[2] == 1) {
+				parentNode.left = childNode;
+			} 
+			else {
+				parentNode.right = childNode;
+			}
+			parentMap.put(child,parent);
+		}
+		for (int num: cache.keySet()) {	
+			if (!parentMap.containsKey(num)) {
+				return cache.get(num);
+			}
+		}
+		return null;
+	}
+}

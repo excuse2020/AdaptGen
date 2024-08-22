@@ -1,0 +1,43 @@
+class Solution {
+	int N = 101;
+	int ans = 0;
+	int[][] g = new int[N][N];
+	boolean[][] vis = new boolean[N][N];
+	void computeG() {
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				if (g[j][i] != 0) {
+					g[i][j] = g[j][i];
+				} 
+				else {
+					g[i][j] = getDigitSum(i) + getDigitSum(j);
+				}
+			}
+		}
+	}
+	void dfs(int x, int y, int rows, int cols, int threshold) {
+		if (x < 0 || x >= rows || y < 0 || y >= cols || vis[x][y] || g[x][y] > threshold) {
+			return;
+		}
+		ans++;
+		vis[x][y] = true;
+		dfs(x + 1,y,rows,cols,threshold);
+		dfs(x - 1,y,rows,cols,threshold);
+		dfs(x,y + 1,rows,cols,threshold);
+		dfs(x,y - 1,rows,cols,threshold);
+	}
+	int getDigitSum(int x) {
+		int sum = 0;
+		while (x != 0) {
+			int digit = x % 10;
+			sum += digit;
+			x /= 10;
+		}
+		return sum;
+	}
+	int movingCount(int threshold, int rows, int cols) {
+		computeG();
+		dfs(0,0,rows,cols,threshold);
+		return ans;
+	}
+}

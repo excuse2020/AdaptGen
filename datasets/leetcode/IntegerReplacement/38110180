@@ -1,0 +1,40 @@
+class Solution {
+	Map<Integer, Integer> dp = new HashMap<>();
+	int helper(int n) {
+		if (n >= Integer.MAX_VALUE) {
+			return 32;
+		}
+		if (n == 1) {
+			return 0;
+		}
+		if (n < 3) {
+			return 1;
+		}
+		if (n < 5) {
+			return 2;
+		}
+		if (n % 2 == 0) {
+			return 1 + helper(n / 2);
+		} 
+		else {
+			return Math.min(1 + helper(n + 1),1 + helper(n - 1));
+		}
+	}
+	int helperMem(int n) {
+		dp.put(Integer.MAX_VALUE,32);
+		dp.put(1,0);
+		if (dp.containsKey(n)) {
+			return dp.get(n);
+		}
+		if (n % 2 == 0) {
+			dp.put(n,helperMem(n / 2) + 1);
+		} 
+		else {
+			dp.put(n,Math.min(1 + helperMem(n + 1),1 + helperMem(n - 1)));
+		}
+		return dp.get(n);
+	}
+	int integerReplacement(int n) {
+		return helper(n);
+	}
+}

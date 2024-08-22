@@ -1,0 +1,53 @@
+class Solution {
+	String getDirections(TreeNode root, int startValue, int destValue) {
+		TreeNode lca = lca(root,startValue,destValue);
+		StringBuilder leftStringBuilder = new StringBuilder();
+		StringBuilder rightStringBuilder = new StringBuilder();
+		path(lca,startValue,leftStringBuilder);
+		path(lca,destValue,rightStringBuilder);
+		StringBuilder ans = new StringBuilder();
+		for (int i = 0; i < leftStringBuilder.toString().length(); ++i) {
+			ans.append("U");
+		}
+		ans.append(rightStringBuilder.toString());
+		return ans.toString();
+	}
+	TreeNode lca(TreeNode root, int node1, int node2) {
+		if (root == null) {
+			return null;
+		}
+		if (root.val == node1 || root.val == node2) {
+			return root;
+		}
+		TreeNode left = lca(root.left,node1,node2);
+		TreeNode right = lca(root.right,node1,node2);
+		if (left == null) {
+			return right;
+		} 
+		else if (right == null) {
+			return left;
+		} 
+		else {
+			return root;
+		}
+	}
+	boolean path(TreeNode root, int val, StringBuilder sb) {
+		if (root == null) {
+			return false;
+		}
+		if (root.val == val) {
+			return true;
+		}
+		sb.append("L");
+		if (path(root.left,val,sb)) {
+			return true;
+		}
+		sb.deleteCharAt(sb.length() - 1);
+		sb.append("R");
+		if (path(root.right,val,sb)) {
+			return true;
+		}
+		sb.deleteCharAt(sb.length() - 1);
+		return false;
+	}
+}

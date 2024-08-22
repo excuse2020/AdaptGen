@@ -1,0 +1,32 @@
+class Solution {
+	int[] answer;
+	List<List<Integer>> l;
+	Set<Integer> s;
+	int[] countSubTrees(int n, int[][] edges, String labels) {
+		l = new ArrayList<>(n);
+		answer = new int[n];
+		for (int i = 0; i < n; i++) {
+			l.add(new ArrayList<>());
+		}
+		for (int[] e: edges) {	
+			l.get(e[0]).add(e[1]);
+			l.get(e[1]).add(e[0]);
+		}
+		s = new HashSet<Integer>(n);
+		dfs(0,labels);
+		return answer;
+	}
+	int[] dfs(int start_node, String labels) {
+		s.add(start_node);
+		int[] count = new int[26];
+		for (int view: l.get(start_node)) {	
+			if (!s.contains(view)) {
+				int[] viewCount = dfs(view,labels);
+				for (int i = 0; i < count.length; i++) {
+					count[i] += viewCount[i];
+				}
+			}
+		}
+		char ch = labels.charAt(start_node);
+	}
+}

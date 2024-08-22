@@ -1,0 +1,56 @@
+class Solution {
+	boolean check(int index, String A, String B) {
+		for (int i = 0; i < B.length(); i++) {
+			if (A.charAt((i + index) % A.length()) != B.charAt(i)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	long getVal(char c) {
+	}
+	boolean rabinKarp(String text, String pattern) {
+		long p = 31;
+		long pow = 1;
+		long dsv = 0;
+		long mod = 1000000007;
+		int patLen = pattern.length();
+		int textLen = text.length();
+		long patternHash = 0;
+		long textHash = 0;
+		for (int i = 0; i < patLen; i++) {
+			patternHash = (p * patternHash + getVal(pattern.charAt(i))) % mod;
+			textHash = (p * textHash + getVal(text.charAt(i))) % mod;
+			if (i != patLen - 1) {
+				pow = (pow * p) % mod;
+			}
+		}
+		for (int i = 0; i <= textLen - patLen; i++) {
+			if (patternHash == textHash && check(i,text,pattern)) {
+				return true;
+			}
+			if (i < textLen - patLen) {
+				textHash = (p * (textHash - (getVal(text.charAt(i))) * pow) + (getVal(text.charAt(i + patLen)))) % mod;
+				if (textHash < 0) {
+					textHash += mod;
+				}
+			}
+		}
+		return false;
+	}
+	int repeatedStringMatch(String a, String b) {
+		int q = 1;
+		String s = new String(a);
+		for (; s.length() < b.length(); q++) {
+			s += a;
+		}
+		if (s.contains(b)) {
+			return q;
+		}
+		s += a;
+		if (s.contains(b)) {
+			return q + 1;
+		}
+		return -1;
+	}
+}

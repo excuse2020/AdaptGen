@@ -1,0 +1,35 @@
+class Solution {
+	int maximumSum(int[] nums) {
+		int n = nums.length;
+		HashMap<Integer, PriorityQueue<Integer>> map = new HashMap<>();
+		int[] s = new int[n];
+		for (int i = 0; i < n; i++) {
+			s[i] = sum(nums[i]);
+		}
+		for (int i = 0; i < n; i++) {
+			if (map.containsKey(s[i])) {
+				map.get(s[i]).add(nums[i]);
+			} 
+			else {
+				map.put(s[i],new PriorityQueue<>(Collections.reverseOrder()));
+				map.get(s[i]).add(nums[i]);
+			}
+		}
+		int ans = -1;
+		for (PriorityQueue<Integer> pq: map.values()) {	
+			if (pq.size() >= 2) {
+				int t = pq.poll() + pq.poll();
+				ans = Math.max(ans,t);
+			}
+		}
+		return ans;
+	}
+	int sum(int n) {
+		int s = 0;
+		while (n > 0) {
+			s += n % 10;
+			n /= 10;
+		}
+		return s;
+	}
+}

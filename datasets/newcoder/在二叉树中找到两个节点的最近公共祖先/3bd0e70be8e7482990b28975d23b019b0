@@ -1,0 +1,59 @@
+class Solution {
+	TreeNode findAnotherNode(Map<Integer, TreeNode> map, TreeNode root, int o2) {
+		Stack<TreeNode> stack = new Stack<>();
+		stack.push(root);
+		TreeNode n = null;
+		TreeNode node = null;
+		while (!stack.isEmpty()) {
+			n = stack.pop();
+			if (n.val == o2) {
+				node = n;
+				break;
+			}
+			if (n.left != null) {
+				stack.push(n.left);
+				map.put(n.left.val,n);
+			}
+			if (n.right != null) {
+				stack.push(n.right);
+				map.put(n.right.val,n);
+			}
+		}
+		return node;
+	}
+	int findCommonAncestor(Map<Integer, TreeNode> map, TreeNode node, int o2) {
+		while (map.get(node.val) != node) {
+			TreeNode res = findAnotherNode(map,node,o2);
+			if (res != null) {
+				return node.val;
+			}
+			node = map.get(node.val);
+		}
+		return node.val;
+	}
+	int lowestCommonAncestor(TreeNode root, int o1, int o2) {
+		if (root.val == o1 || root.val == o2) {
+			return root.val;
+		}
+		Map<Integer, TreeNode> map = new HashMap<>();
+		Stack<TreeNode> stack = new Stack<>();
+		stack.push(root);
+		map.put(root.val,root);
+		TreeNode node = null;
+		while (!stack.isEmpty()) {
+			node = stack.pop();
+			if (node.val == o1) {
+				break;
+			}
+			if (node.left != null) {
+				stack.push(node.left);
+				map.put(node.left.val,node);
+			}
+			if (node.right != null) {
+				stack.push(node.right);
+				map.put(node.right.val,node);
+			}
+		}
+		return findCommonAncestor(map,node,o2);
+	}
+}

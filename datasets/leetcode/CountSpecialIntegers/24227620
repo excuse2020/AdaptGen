@@ -1,0 +1,51 @@
+class Solution {
+	int[][][] cache;
+	int[] digits;
+	int countSpecialNumbers(int n) {
+		int len = findLen(n);
+		cache = new int[len + 1][2][(1 << 10) - 1];
+		for (int i = 0; i <= len; i++) {
+			Arrays.fill(cache[i][0],-1);
+			Arrays.fill(cache[i][1],-1);
+		}
+		digits = new int[len + 1];
+		int place = 1;
+		while (n > 0) {
+			digits[place++] = n % 10;
+			n /= 10;
+		}
+		return solve(len,1,0) - 1;
+	}
+	int findLen(int n) {
+		int len = 0;
+		while (n > 0) {
+			len++;
+			n /= 10;
+		}
+		return len;
+	}
+	boolean isSet(int mask, int i) {
+		return (mask & (1 << i)) != 0;
+	}
+	int setBit(int mask, int i) {
+		return (mask | (1 << i));
+	}
+	int solve(int place, int tight, int mask) {
+		if (place == 0) {
+			return 1;
+		}
+		if (cache[place][tight][mask] != -1) {
+			return cache[place][tight][mask];
+		}
+		int count = 0;
+		int limit = tight == 1 ? digits[place] : 9;
+		for (int i = 0; i <= limit; i++) {
+			if (isSet(mask,i)) {
+				continue;
+			}
+			count += solve(place - 1,i == limit && tight == 1 ? 1 : 0,mask == 0 && i == 0 ? mask : setBit(mask,i));
+		}
+		cache[place][tight][mask] = count;
+		return count;
+	}
+}

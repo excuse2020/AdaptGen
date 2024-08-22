@@ -1,0 +1,44 @@
+class Solution {
+	int[][] matrixBlockSum(int[][] mat, int k) {
+		int n = mat.length;
+		int m = mat[0].length;
+		int[][] arr1 = new int[n][m];
+		for (int i = 0; i < n; i++) {
+			int sum = 0;
+			for (int j = 0; j <= k; j++) {
+				if (j < m) {
+					sum += mat[i][j];
+				}
+			}
+			arr1[i][0] = sum;
+			for (int j = 1; j < m; j++) {
+				if (j - k > 0) {
+					sum -= mat[i][j - k - 1];
+				}
+				if (j + k < m) {
+					sum += mat[i][j + k];
+				}
+				arr1[i][j] = sum;
+			}
+		}
+		for (int i = 0; i < m; i++) {
+			int sum = 0;
+			for (int j = 0; j <= k; j++) {
+				if (j < n) {
+					sum += arr1[j][i];
+				}
+			}
+			mat[0][i] = sum;
+			for (int j = 1; j < n; j++) {
+				if (j - k > 0) {
+					sum -= arr1[j - k - 1][i];
+				}
+				if (j + k < n) {
+					sum += arr1[j + k][i];
+				}
+				mat[j][i] = sum;
+			}
+		}
+		return mat;
+	}
+}

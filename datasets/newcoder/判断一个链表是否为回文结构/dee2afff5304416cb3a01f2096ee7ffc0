@@ -1,0 +1,31 @@
+class Solution {
+	boolean isPail(ListNode head) {
+		if (head == null || head.next == null) {
+			return true;
+		}
+		ListNode slowNode = head;
+		ListNode fastNode = head;
+		while (fastNode != null && fastNode.next != null) {
+			fastNode = fastNode.next.next;
+			slowNode = slowNode.next;
+		}
+		ListNode curNode = slowNode.next;
+		ListNode preNode = slowNode;
+		ListNode tempNode = null;
+		while (curNode != null) {
+			tempNode = curNode.next;
+			curNode.next = preNode;
+			preNode = curNode;
+			curNode = tempNode;
+		}
+		slowNode.next = null;
+		while (preNode != null && head != null) {
+			if (preNode.val != head.val) {
+				return false;
+			}
+			preNode = preNode.next;
+			head = head.next;
+		}
+		return true;
+	}
+}

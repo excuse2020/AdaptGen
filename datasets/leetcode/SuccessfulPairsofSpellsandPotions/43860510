@@ -1,0 +1,42 @@
+class Solution {
+	int getNearestEqualOrGreaterIndex(int[] arr, int target) {
+		int left = 0, right = arr.length - 1, result = -1;
+		while (left <= right) {
+			int mid = left + (right - left) / 2;
+			if (arr[mid] >= target) {
+				result = mid;
+				right = mid - 1;
+			} 
+			else {
+				left = mid + 1;
+			}
+		}
+		return result;
+	}
+	int[] successfulPairs(int[] spells, int[] potions, long success) {
+		int n = spells.length;
+		int m = potions.length;
+		int[] pairs = new int[n];
+		Arrays.sort(potions);
+		for (int i = 0; i < n; i++) {
+			long spellStrength = spells[i];
+			if (spellStrength == 0) {
+				pairs[i] = 0;
+				continue;
+			}
+			long nextEqualOrGreaterValue = (long) (success + spellStrength - 1) / spellStrength;
+			if (nextEqualOrGreaterValue > 100000) {
+				pairs[i] = 0;
+				continue;
+			}
+			int index = getNearestEqualOrGreaterIndex(potions,(int) nextEqualOrGreaterValue);
+			if (index == -1) {
+				pairs[i] = 0;
+			} 
+			else {
+				pairs[i] = m - index;
+			}
+		}
+		return pairs;
+	}
+}

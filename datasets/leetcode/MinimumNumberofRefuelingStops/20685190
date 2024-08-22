@@ -1,0 +1,39 @@
+class Solution {
+	int find(int t, int fuel, int[][] arr, int i, Map<String, Integer> hm) {
+		if (fuel >= t) {
+			return 0;
+		}
+		if (i >= arr.length) {
+			return 9999;
+		}
+		if (hm.containsKey(i + ",")) {
+			return hm.get(i + ",");
+		}
+		if (fuel >= arr[i][0]) {
+			int val = Math.min(1 + find(t,fuel + arr[i][1],arr,i + 1,hm),find(t,fuel,arr,i + 1,hm));
+			hm.put(i + ",",val);
+			return hm.get(i + ",");
+		} 
+		else {
+			int val = find(t,fuel,arr,i + 1,hm);
+			hm.put(i + ",",val);
+			return hm.get(i + ",");
+		}
+	}
+	int minRefuelStops(int target, int startFuel, int[][] stations) {
+		Map<String, Integer> hm = new HashMap<>();
+		if (target <= startFuel) {
+			return 0;
+		}
+		if (stations.length == 1) {
+			if (startFuel >= stations[0][0] && startFuel + stations[0][1] >= target) {
+				return 1;
+			} 
+			else {
+				return -1;
+			}
+		}
+		int val = find(target,startFuel,stations,0,hm);
+		return val == 9999 ? -1 : val;
+	}
+}

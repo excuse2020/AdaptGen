@@ -1,0 +1,25 @@
+class Solution {
+	long mostPoints(int[][] questions) {
+		int m = questions.length;
+		int n = questions[0].length;
+		long dp = new long[m];
+		dp[m - 1] = questions[m - 1][0];
+		if (m == 1) {
+			return dp[0];
+		}
+		dp[m - 2] = Math.max(dp[m - 1],questions[m - 2][0]);
+		if (m == 2) {
+			return Math.max(dp[0],dp[1]);
+		}
+		for (int i = m - 3; i >= 0; i--) {
+			dp[i] = questions[i][0];
+			if (i + questions[i][1] < m) {
+				dp[i] = Math.max(dp[i + 1],dp[i] + dp[i + questions[i][1] + 1]);
+			} 
+			else {
+				dp[i] = Math.max(dp[i],dp[i + 1]);
+			}
+		}
+		return Math.max(dp[0],dp[1]);
+	}
+}

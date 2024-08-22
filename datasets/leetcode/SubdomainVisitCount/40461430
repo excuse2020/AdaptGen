@@ -1,0 +1,44 @@
+class Solution {
+	String[] seg(String input) {
+		String yo = input;
+		int count = 0;
+		String[] arr = new String[3];
+		arr[0] = yo;
+		int index = yo.indexOf(".") + 1;
+		arr[1] = yo.substring(index);
+		index = yo.indexOf(".",index) + 1;
+		if (index > 0) {
+			arr[2] = yo.substring(index);
+		}
+		return arr;
+	}
+	List<String> subdomainVisits(String[] cpdomains) {
+		Map<String, Integer> map = new HashMap<>();
+		for (int i = 0; i < cpdomains.length; i++) {
+			String[] arr1 = cpdomains[i].split(" ");
+			int count = Integer.parseInt(arr1[0]);
+			String[] arr = seg(arr1[1]);
+			for (String j: arr) {	
+				if (j != null) {
+					if (map.containsKey(j)) {
+						int sum = map.get(j);
+						map.put(j,sum + count);
+					} 
+					else {
+						map.put(j,count);
+					}
+				}
+			}
+		}
+		List<String> ans = new ArrayList<>();
+		StringBuilder sb = new StringBuilder();
+		for (Map.Entry<String, Integer> entry: map.entrySet()) {	
+			sb.append(entry.getValue());
+			sb.append(" ");
+			sb.append(entry.getKey());
+			ans.add(sb.toString());
+			sb.setLength(0);
+		}
+		return ans;
+	}
+}

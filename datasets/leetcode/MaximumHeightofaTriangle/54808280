@@ -1,0 +1,18 @@
+class Solution {
+	int getMaxHeight(String currentRowColor, int currentRowNum, int noOfRedBlocks, int noOfBlueBlocks) {
+		if ((currentRowColor == "blue" && noOfBlueBlocks < currentRowNum) || (currentRowColor == "red" && noOfRedBlocks < currentRowNum)) {
+			return 0;
+		}
+		int blueCnt = 0, redCnt = 0;
+		if (currentRowColor == "blue" && noOfBlueBlocks >= currentRowNum) {
+			redCnt = 1 + getMaxHeight("red",currentRowNum + 1,noOfRedBlocks,noOfBlueBlocks - currentRowNum);
+		}
+		if (currentRowColor == "red" && noOfRedBlocks >= currentRowNum) {
+			blueCnt = 1 + getMaxHeight("blue",currentRowNum + 1,noOfRedBlocks - currentRowNum,noOfBlueBlocks);
+		}
+		return Math.max(blueCnt,redCnt);
+	}
+	int maxHeightOfTriangle(int red, int blue) {
+		return Math.max(getMaxHeight("blue",1,red,blue),getMaxHeight("red",1,red,blue));
+	}
+}

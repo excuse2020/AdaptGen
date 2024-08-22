@@ -1,0 +1,38 @@
+class Solution {
+	int solveViaDP_Memoization(int n, int k, int[][] dp) {
+		if (n == 0 || n == 1) {
+			return n;
+		}
+		if (k == 1) {
+			return n;
+		}
+		if (dp[n][k] != 0) {
+			return dp[n][k];
+		}
+		int moves = Integer.MAX_VALUE;
+		for (int i = 1; i <= n; i++) {
+			int result = 1 + Math.max(solveViaDP_Memoization(i - 1,k - 1,dp),solveViaDP_Memoization(n - i,k,dp));
+			moves = Math.min(moves,result);
+		}
+		return dp[n][k] = moves;
+	}
+	int solveViaRecursion(int n, int k) {
+		if (n == 0 || n == 1) {
+			return n;
+		}
+		if (k == 1) {
+			return n;
+		}
+		int moves = Integer.MAX_VALUE;
+		for (int i = 1; i <= n; i++) {
+			int result = 1 + Math.max(solveViaRecursion(i - 1,k - 1),solveViaRecursion(n - i,k));
+			moves = Math.min(moves,result);
+		}
+		return moves;
+	}
+	int twoEggDrop(int n) {
+		int k = 2;
+		int[][] dp = new int[n + 1][k + 1];
+		return solveViaDP_Memoization(n,2,dp);
+	}
+}

@@ -1,0 +1,35 @@
+class Solution {
+	int[][] dp;
+	int wiggleMaxLength(int[] nums) {
+		dp = new int[nums.length][2];
+		for (int[] a: dp) {	
+			Arrays.fill(a,-1);
+		}
+		return Integer.max(wiggleMaxLength(nums,0,true),wiggleMaxLength(nums,0,false)) + 1;
+	}
+	int wiggleMaxLength(int[] nums, int start, boolean dir) {
+		if (start == nums.length - 1) {
+			return 0;
+		}
+		if (dp[start][dir ? 1 : 0] != -1) {
+			return dp[start][dir ? 1 : 0];
+		}
+		int maxSeq = 0;
+		if (dir) {
+			for (int j = start + 1; j <= nums.length - 1; ++j) {
+				if (nums[j] > nums[start]) {
+					maxSeq = Integer.max(maxSeq,1 + wiggleMaxLength(nums,j,false));
+				}
+			}
+		} 
+		else {
+			for (int j = start + 1; j <= nums.length - 1; ++j) {
+				if (nums[j] < nums[start]) {
+					maxSeq = Integer.max(maxSeq,1 + wiggleMaxLength(nums,j,true));
+				}
+			}
+		}
+		dp[start][dir ? 1 : 0] = maxSeq;
+		return maxSeq;
+	}
+}

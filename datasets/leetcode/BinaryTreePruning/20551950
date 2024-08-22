@@ -1,0 +1,36 @@
+class Solution {
+	TreeNode pruneTree(TreeNode root) {
+		Deque<TreeNode> stack = new ArrayDeque<>();
+		TreeNode curr = root;
+		TreeNode prev = null;
+		while (!stack.isEmpty() || curr != null) {
+			if (curr != null) {
+				stack.push(curr);
+				curr = curr.left;
+			} 
+			else {
+				TreeNode x = stack.peek();
+				if (x.right == null || x.right == prev) {
+					stack.pop();
+					prev = x;
+					if (x.val == 0 && x.right == null && x.left == null) {
+						TreeNode parent = stack.peek();
+						if (stack.isEmpty()) {
+							return null;
+						}
+						if (parent.left == x) {
+							parent.left = null;
+						}
+						if (parent.right == x) {
+							parent.right = null;
+						}
+					}
+				} 
+				else {
+					curr = x.right;
+				}
+			}
+		}
+		return root;
+	}
+}

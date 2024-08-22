@@ -1,0 +1,26 @@
+class Solution {
+	int helper(int egg, int floor, int[][] memo) {
+		if (floor == 0 || floor == 1) {
+			return floor;
+		}
+		if (egg == 1) {
+			return floor;
+		}
+		if (memo[egg][floor] != -1) {
+			return memo[egg][floor];
+		}
+		int ans = Integer.MAX_VALUE;
+		for (int i = 1; i <= floor; i++) {
+			int min = Math.max(helper(egg - 1,i - 1,memo),helper(egg,floor - i,memo));
+			ans = Math.min(ans,min);
+		}
+		return memo[egg][floor] = ans + 1;
+	}
+	int twoEggDrop(int n) {
+		int[][] memo = new int[3][n + 1];
+		for (int[] mem: memo) {	
+			Arrays.fill(mem,-1);
+		}
+		return helper(2,n,memo);
+	}
+}

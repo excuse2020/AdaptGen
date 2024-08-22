@@ -1,0 +1,32 @@
+class Solution {
+	int dp;
+	boolean helper(int n, int flag) {
+		if (n == 1) {
+			return flag == 0 ? true : false;
+		}
+		if (n == 0) {
+			return flag == 0 ? false : true;
+		}
+		if (dp[n][flag] != -1) {
+			return dp[n][flag] == 1 ? true : false;
+		}
+		boolean sts = (flag == 0 ? false : true);
+		for (int i = 1; i * i <= n; i++) {
+			if (flag == 0) {
+				sts |= helper(n - i * i,flag ^ 1);
+			} 
+			else {
+				sts &= helper(n - i * i,flag ^ 1);
+			}
+		}
+		dp[n][flag] = sts ? 1 : 0;
+		return sts;
+	}
+	boolean winnerSquareGame(int n) {
+		dp = new int[n + 1][2];
+		for (var a: dp) {	
+			Arrays.fill(a,-1);
+		}
+		return helper(n,0);
+	}
+}

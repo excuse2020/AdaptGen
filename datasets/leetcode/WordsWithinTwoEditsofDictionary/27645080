@@ -1,0 +1,36 @@
+class Solution {
+	boolean canBeEdited(char[] query, char[][] dictionaryLetters) {
+		for (char[] word: dictionaryLetters) {	
+			if (canBeEdited(query,word)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	boolean canBeEdited(char[] query, char[] word) {
+		int edits = 0;
+		for (int i = 0; i < query.length && edits < 3; i++) {
+			if (query[i] != word[i]) {
+				edits++;
+			}
+		}
+		return edits < 3;
+	}
+	char[][] getDictionaryLetters(String[] dictionary) {
+		char[][] letters = new char[dictionary.length][dictionary[0].length()];
+		for (int i = 0; i < dictionary.length; i++) {
+			System.arraycopy(dictionary[i].toCharArray(),0,letters[i],0,dictionary[i].length());
+		}
+		return letters;
+	}
+	List<String> twoEditWords(String[] queries, String[] dictionary) {
+		List<String> edits = new LinkedList<>();
+		char[][] dictionaryLetters = getDictionaryLetters(dictionary);
+		for (String query: queries) {	
+			if (canBeEdited(query.toCharArray(),dictionaryLetters)) {
+				edits.add(query);
+			}
+		}
+		return edits;
+	}
+}

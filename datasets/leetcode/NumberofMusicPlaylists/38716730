@@ -1,0 +1,24 @@
+class Solution {
+	Long[][] dp = null;
+	int mod = 1000000007;
+	long countPlayList(int goal, int oldSong, int n, int k) {
+		if (goal == 0 && oldSong == n) {
+			return 1;
+		}
+		if (goal == 0 || oldSong > n) {
+			return 0;
+		}
+		if (dp[oldSong][goal] != null) {
+			return dp[oldSong][goal];
+		}
+		long res = (((n - oldSong) % mod) * countPlayList(goal - 1,oldSong + 1,n,k) % mod) % mod;
+		if (oldSong > k) {
+			res += (((oldSong - k) % mod) * countPlayList(goal - 1,oldSong,n,k) % mod) % mod;
+		}
+		return dp[oldSong][goal] = res % mod;
+	}
+	int numMusicPlaylists(int n, int goal, int k) {
+		dp = new Long[n + 1][goal + 1];
+		return (int) countPlayList(goal,0,n,k);
+	}
+}

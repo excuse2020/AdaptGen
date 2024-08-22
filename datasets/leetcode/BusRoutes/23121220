@@ -1,0 +1,50 @@
+class Solution {
+	Map<Integer, List<Integer>> busMap = new HashMap<>();
+	void buildRoutesMap(int[][] routes) {
+		for (int i = 0; i < routes.length; i++) {
+			for (int j = 0; j < routes[i].length; j++) {
+				int busNo = routes[i][j];
+				List buses = busMap.getOrDefault(busNo,new ArrayList<>());
+				buses.add(i);
+				busMap.put(busNo,buses);
+			}
+		}
+	}
+	int getShortestDistance(int[][] routes, int source, int target) {
+		int bestRoute = 0;
+		Queue<Integer> q = new LinkedList<>();
+		q.add(source);
+		Set<Integer> busSeen = new HashSet<>();
+		Set<Integer> busStopSeen = new HashSet<>();
+		busStopSeen.add(source);
+		while (!q.isEmpty()) {
+			int n = q.size();
+			for (int i = 0; i < n; i++) {
+				int bus = q.remove();
+				if (bus == target) {
+					return bestRoute;
+				}
+				for (int index: busMap.get(bus)) {	
+					if (busSeen.contains(index)) {
+						continue;
+					}
+					busSeen.add(index);
+					int[] busStops = routes[index];
+					for (int stop: busStops) {	
+						if (busStopSeen.contains(stop)) {
+							continue;
+						}
+						busStopSeen.add(stop);
+						q.add(stop);
+					}
+				}
+			}
+			bestRoute++;
+		}
+		return -1;
+	}
+	int numBusesToDestination(int[][] routes, int source, int target) {
+		buildRoutesMap(routes);
+		return getShortestDistance(routes,source,target);
+	}
+}

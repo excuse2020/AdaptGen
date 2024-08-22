@@ -1,0 +1,51 @@
+class Solution {
+	List<List<Integer>> getSkyline(int[][] buildings) {
+		TreeMap<Integer, ArrayList<Integer>> ta = new TreeMap<>();
+		TreeSet<Integer> ts = new TreeSet<Integer>();
+		TreeMap<Integer, Integer> tm = new TreeMap<>();
+		for (int i = 0; i < buildings.length; i++) {
+			int ed = buildings[i];
+			ta.put(ed[0],new ArrayList<>());
+			ta.put(ed[1],new ArrayList<>());
+			ts.add(ed[0]);
+			ts.add(ed[1]);
+		}
+		for (int i = 0; i < buildings.length; i++) {
+			int ed = buildings[i];
+			ta.get(ed[0]).add((i + 1));
+			ta.get(ed[1]).add(-(i + 1));
+		}
+		List<List<Integer>> ans = new ArrayList<>();
+		for (int point: ts) {	
+			for (int i: ta.get(point)) {	
+				if (i < 0) {
+					i = -i;
+					i--;
+					tm.merge(buildings[i][2],-1,);
+					if (tm.get(buildings[i][2]) == 0) {
+						tm.remove(buildings[i][2]);
+					}
+				} 
+				else {
+					i--;
+					tm.merge(buildings[i][2],1,);
+				}
+			}
+			Map.Entry<Integer, Integer> max = tm.lastEntry();
+			int val = -1;
+			if (max == null) {
+				val = 0;
+			} 
+			else {
+				val = max.getKey();
+			}
+			ArrayList<Integer> te = new ArrayList<>();
+			te.add(point);
+			te.add(val);
+			if (ans.isEmpty() || ans.get(ans.size() - 1).get(1) != val) {
+				ans.add(te);
+			}
+		}
+		return ans;
+	}
+}

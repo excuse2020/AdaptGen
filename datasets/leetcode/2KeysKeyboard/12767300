@@ -1,0 +1,29 @@
+class Solution {
+	int helper(int cn, int prev, int n, int dp) {
+		if (dp[n][prev] != -1) {
+			return dp[n][prev];
+		}
+		if (cn == n) {
+			return 0;
+		}
+		if (cn > n) {
+			return 1000000000;
+		}
+		if (prev == 0) {
+			return dp[n][prev] = 1 + helper(cn,cn,n,dp);
+		}
+		if (prev == cn) {
+			return dp[n][prev] = 1 + helper(cn + prev,prev,n,dp);
+		}
+		int copy = helper(cn,cn,n,dp);
+		int paste = helper(cn + prev,prev,n,dp);
+		return dp[n][prev] = 1 + Math.min(copy,paste);
+	}
+	int minSteps(int n) {
+		int dp = new int[n + 1][n + 1];
+		for (int i = 0; i < dp.length; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		return helper(1,0,n,dp);
+	}
+}

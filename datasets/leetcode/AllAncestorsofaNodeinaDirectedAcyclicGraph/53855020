@@ -1,0 +1,35 @@
+class Solution {
+	void dfs(int ancestor, int src, List<List<Integer>> adjList, List<List<Integer>> answer) {
+		List<Integer> ancestorList = answer.get(src);
+		if (ancestorList.isEmpty() || ancestorList.get(ancestorList.size() - 1) != ancestor) {
+			if (ancestor != src) {
+				ancestorList.add(ancestor);
+			}
+			for (int dest: adjList.get(src)) {	
+				dfs(ancestor,dest,adjList,answer);
+			}
+		}
+	}
+	void fillAdjList(List<List<Integer>> adjList, int[][] edges, int n) {
+		for (int[] edge: edges) {	
+			adjList.get(edge[0]).add(edge[1]);
+		}
+	}
+	List<List<Integer>> getAncestors(int n, int[][] edges) {
+		List<List<Integer>> adjList = new ArrayList<>();
+		List<List<Integer>> answer = new ArrayList<>();
+		initialize(answer,adjList,n);
+		fillAdjList(adjList,edges,n);
+		for (int i = 0; i < n; i++) {
+			int ancestor = i;
+			dfs(ancestor,i,adjList,answer);
+		}
+		return answer;
+	}
+	void initialize(List<List<Integer>> answer, List<List<Integer>> adjList, int n) {
+		for (int i = 0; i < n; i++) {
+			answer.add(new ArrayList<>());
+			adjList.add(new ArrayList<>());
+		}
+	}
+}

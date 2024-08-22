@@ -1,0 +1,49 @@
+class Solution {
+	int timer = 0;
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		List<List<Integer>> adj = getAdjacent(n,connections);
+		int disc = new int[n];
+		int low = new int[n];
+		int parent = new int[n];
+		Arrays.fill(disc,-1);
+		Arrays.fill(low,-1);
+		Arrays.fill(parent,-1);
+		List<List<Integer>> ans = new ArrayList<List<Integer>>();
+		dfs(0,disc,low,parent,timer,adj,ans);
+		return ans;
+	}
+	void dfs(int node, int[] disc, int[] low, int[] parent, int timer, List<List<Integer>> adj, List<List<Integer>> ans) {
+		disc[node] = low[node] = timer;
+		System.out.println(timer + " : ");
+		timer++;
+		for (Integer it: adj.get(node)) {	
+			if (disc[it] == -1) {
+				parent[it] = node;
+				dfs(it,disc,low,parent,timer,adj,ans);
+				low[node] = Math.min(low[node],low[it]);
+				if (low[it] > disc[node]) {
+					List<Integer> res = new ArrayList<Integer>();
+					res.add(it);
+					res.add(node);
+					ans.add(res);
+				}
+			} 
+			else if (it != parent[node]) {
+				low[node] = Math.min(low[node],disc[it]);
+			}
+		}
+	}
+	List<List<Integer>> getAdjacent(int n, List<List<Integer>> connections) {
+		List<List<Integer>> ans = new ArrayList<List<Integer>>();
+		for (int i = 0; i < n; i++) {
+			ans.add(new ArrayList<Integer>());
+		}
+		for (List<Integer> list: connections) {	
+			int u = list.get(0);
+			int v = list.get(1);
+			ans.get(u).add(v);
+			ans.get(v).add(u);
+		}
+		return ans;
+	}
+}

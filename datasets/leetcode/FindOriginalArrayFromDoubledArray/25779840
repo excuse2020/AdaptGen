@@ -1,0 +1,38 @@
+class Solution {
+	int[] findOriginalArray(int[] changed) {
+		if (changed.length % 2 != 0) {
+			return new int[0];
+		}
+		int length = changed.length;
+		int max = Integer.MIN_VALUE;
+		for (int x: changed) {	
+			max = Math.max(max,x);
+		}
+		if (max % 2 != 0) {
+			return new int[0];
+		}
+		int temp = new int[max + 1];
+		for (int x: changed) {	
+			temp[x]++;
+		}
+		if (temp[0] % 2 != 0) {
+			return new int[0];
+		}
+		int[] ans = new int[changed.length / 2];
+		int idx = temp[0] / 2;
+		for (int x = 1; x <= max; x++) {
+			if (temp[x] == 0) {
+				continue;
+			}
+			int curr = temp[x];
+			if (2 * x > max + 1 || temp[x] > temp[x + x]) {
+				return new int[0];
+			}
+			temp[x + x] -= temp[x];
+			while (curr-- > 0) {
+				ans[idx++] = x;
+			}
+		}
+		return ans;
+	}
+}

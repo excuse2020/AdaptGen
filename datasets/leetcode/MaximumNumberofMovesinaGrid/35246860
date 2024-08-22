@@ -1,0 +1,45 @@
+class Solution {
+	boolean check(int[][] grid, int i, int j, int k, int l) {
+		if (i < 0 || i >= grid.length || j >= grid[0].length || k < 0 || k >= grid.length || l >= grid[0].length) {
+			return false;
+		}
+		if (grid[i][j] < grid[k][l]) {
+			return true;
+		}
+		return false;
+	}
+	int fun(int i, int j, int[][] grid, int[][] dp, int n, int m) {
+		if (i < 0 || i >= n || j >= m) {
+			return 0;
+		}
+		if (dp[i][j] != -1) {
+			return dp[i][j];
+		}
+		int topright = 0;
+		int right = 0;
+		int bottomright = 0;
+		if (check(grid,i,j,i - 1,j + 1)) {
+			topright = 1 + fun(i - 1,j + 1,grid,dp,n,m);
+		}
+		if (check(grid,i,j,i,j + 1)) {
+			right = 1 + fun(i,j + 1,grid,dp,n,m);
+		}
+		if (check(grid,i,j,i + 1,j + 1)) {
+			bottomright = 1 + fun(i + 1,j + 1,grid,dp,n,m);
+		}
+		return dp[i][j] = Math.max(bottomright,Math.max(topright,right));
+	}
+	int maxMoves(int[][] grid) {
+		int n = grid.length;
+		int m = grid[0].length;
+		int[][] dp = new int[n][m];
+		for (int[] row: dp) {	
+			Arrays.fill(row,-1);
+		}
+		int ans = 0;
+		for (int i = 0; i < grid.length; i++) {
+			ans = Math.max(ans,fun(i,0,grid,dp,n,m));
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,19 @@
+class Solution {
+	int mctFromLeafValues(int[] arr) {
+		int output = new int[arr.length][arr.length][2];
+		for (int i = 0; i < arr.length; i++) {
+			output[i][i][0] = 0;
+			output[i][i][1] = arr[i];
+		}
+		for (int i = 1; i < arr.length; i++) {
+			for (int j = 0; j + i < arr.length; j++) {
+				output[j][j + i][1] = Math.max(output[j][j][1],output[j + 1][j + i][1]);
+				output[j][j + i][0] = output[j][j][1] * output[j + 1][j + i][1] + output[j][j][0] + output[j + 1][j + i][0];
+				for (int k = j; k < j + i; k++) {
+					output[j][j + i][0] = Math.min(output[j][j + i][0],output[j][k][1] * output[k + 1][j + i][1] + output[j][k][0] + output[k + 1][j + i][0]);
+				}
+			}
+		}
+		return output[0][arr.length - 1][0];
+	}
+}

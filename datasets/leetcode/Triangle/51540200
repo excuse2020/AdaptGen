@@ -1,0 +1,20 @@
+class Solution {
+	int minimumTotal(List<List<Integer>> triangle) {
+		int[][] dp = new int[201][220];
+		for (int[] rows: dp) {	
+			Arrays.fill(rows,-1);
+		}
+		return minimumTotalHelper(triangle,0,0,dp);
+	}
+	int minimumTotalHelper(List<List<Integer>> triangle, int row, int col, int[][] dp) {
+		if (row == triangle.size() || col == triangle.size()) {
+			return 0;
+		}
+		if (dp[row][col] != -1) {
+			return dp[row][col];
+		}
+		int downPath = triangle.get(row).get(col) + minimumTotalHelper(triangle,row + 1,col,dp);
+		int diagonalPath = triangle.get(row).get(col) + minimumTotalHelper(triangle,row + 1,col + 1,dp);
+		return dp[row][col] = Math.min(downPath,diagonalPath);
+	}
+}

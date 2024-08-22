@@ -1,0 +1,43 @@
+class Solution {
+	long cost(long units, List<Integer> compos, List<Integer> stock, List<Integer> cost) {
+		long sum = 0;
+		for (int i = 0; i < compos.size(); i++) {
+			long req = compos.get(i) * units;
+			int instock = stock.get(i);
+			sum += req > instock ? (req - instock) * cost.get(i) : 0;
+		}
+		return sum;
+	}
+	int estimateMaxUnits(int budget, List<Integer> compos, List<Integer> stock, List<Integer> cost) {
+		int max = 0;
+		for (int i = 0; i < compos.size(); i++) {
+			int req = compos.get(i);
+			int instock = stock.get(i);
+			int canBuy = budget / cost.get(i);
+			max = Math.max(max,(instock + canBuy) / req);
+		}
+		return max;
+	}
+	int maxNumberOfAlloys(int n, int k, int budget, List<List<Integer>> composition, List<Integer> stock, List<Integer> cost) {
+		int types = n;
+		int machines = k;
+		int max = 0;
+		for (int m = 0; m < machines; m++) {
+			var compos = composition.get(m);
+			int lo = max + 1;
+			int hi = estimateMaxUnits(budget,compos,stock,cost);
+			while (lo <= hi) {
+				int units = (lo + hi) >>> 1;
+				long curr = cost(units,compos,stock,cost);
+				if (curr <= budget) {
+					max = Math.max(max,units);
+					lo = units + 1;
+				} 
+				else {
+					hi = units - 1;
+				}
+			}
+		}
+		return max;
+	}
+}

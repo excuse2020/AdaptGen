@@ -1,0 +1,35 @@
+class Solution {
+	int matrixSum(int[][] nums) {
+		int row = nums.length;
+		int col = nums[0].length;
+		List<List<Integer>> l = new ArrayList<>();
+		int count = 0;
+		int max = Integer.MIN_VALUE;
+		int maxIndexX = -1;
+		int maxIndexY = -1;
+		int iteration = 0;
+		while (iteration < col) {
+			List<Integer> l1 = new ArrayList<>();
+			for (int i = 0; i < row; i++) {
+				for (int j = 0; j < col; j++) {
+					if (nums[i][j] > max) {
+						maxIndexX = i;
+						maxIndexY = j;
+						max = nums[i][j];
+					}
+				}
+				l1.add(max);
+				nums[maxIndexX][maxIndexY] = Integer.MIN_VALUE;
+				max = Integer.MIN_VALUE;
+				maxIndexX = -1;
+				maxIndexY = -1;
+			}
+			l.add(l1);
+			iteration++;
+		}
+		for (List<Integer> l1: l) {	
+			count += l1.stream().sorted(Collections.reverseOrder()).findFirst().get();
+		}
+		return count;
+	}
+}

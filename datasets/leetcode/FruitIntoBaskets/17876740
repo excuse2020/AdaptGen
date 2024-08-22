@@ -1,0 +1,33 @@
+class Solution {
+	int calcSize(HashMap<Integer, Integer> map) {
+		int sz = 0;
+		for (int val: map.keySet()) {	
+			sz += map.get(val);
+		}
+		return sz;
+	}
+	int totalFruit(int[] fruits) {
+		HashMap<Integer, Integer> map = new HashMap<>();
+		int BasketCapacity = 2;
+		int Max = 0;
+		int start = 0;
+		int end = 0;
+		while (end < fruits.length) {
+			map.put(fruits[end],map.getOrDefault(fruits[end],0) + 1);
+			if (map.size() <= BasketCapacity) {
+				int currentSize = calcSize(map);
+				Max = Math.max(Max,currentSize);
+			}
+			if (map.size() > BasketCapacity) {
+				while (map.get(fruits[start]) != 1) {
+					map.put(fruits[start],map.get(fruits[start]) - 1);
+					start++;
+				}
+				map.remove(fruits[start]);
+				start++;
+			}
+			end++;
+		}
+		return Max;
+	}
+}

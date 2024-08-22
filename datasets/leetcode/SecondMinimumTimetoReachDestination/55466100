@@ -1,0 +1,62 @@
+class Solution {
+	int secondMinimum(int n, int[][] edges, int time, int change) {
+		List<Integer>[] gp = new ArrayList[n + 1];
+		for (int i = 0; i < n + 1; i++) {
+			gp[i] = new ArrayList<>();
+		}
+		for (int[] e: edges) {	
+			int s = e[0];
+			int d = e[1];
+			gp[s].add(d);
+			gp[d].add(s);
+		}
+		long[] dis1 = new long[n + 1];
+		Arrays.fill(dis1,Integer.MAX_VALUE);
+		long[] dis2 = new long[n + 1];
+		Arrays.fill(dis2,Integer.MAX_VALUE);
+		LinkedList<Integer> q = new LinkedList<>();
+		q.add(1);
+		dis1[1] = 0;
+		while (!q.isEmpty()) {
+			int src = q.poll();
+			for (int x: gp[src]) {	
+				long dis = dis1[src];
+				int qo = (int) (dis / change);
+				long val = 0;
+				if (qo % 2 == 0) {
+					val = dis;
+				} 
+				else {
+					val = dis + (change - dis % change);
+				}
+				long di2 = dis2[src];
+				int qo2 = (int) (di2 / change);
+				long val2 = 0;
+				if (qo2 % 2 == 0) {
+					val2 = di2;
+				} 
+				else {
+					val2 = di2 + (change - di2 % change);
+				}
+				if (val + time < dis1[x]) {
+					long temp = dis1[x];
+					dis1[x] = val + time;
+					dis2[x] = temp;
+					q.add(x);
+				} 
+				else if (dis2[x] > val + time && val + time > dis1[x]) {
+					dis2[x] = val + time;
+					q.add(x);
+				} 
+				else if (dis2[x] > val2 + time && val2 + time > dis1[x]) {
+					dis2[x] = val2 + time;
+					q.add(x);
+				}
+			}
+		}
+		if (dis2[n] == Integer.MAX_VALUE) {
+			return (int) dis1[n];
+		}
+		return (int) dis2[n];
+	}
+}

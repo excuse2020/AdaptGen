@@ -1,0 +1,26 @@
+class Solution {
+	List<TreeNode>[] dp = new List[21];
+	List<TreeNode> allPossibleFBT(int n) {
+		construct(n);
+		return dp[n] != null ? dp[n] : List.of();
+	}
+	void construct(int n) {
+		if (dp[1] == null) {
+			dp[1] = List.of(new TreeNode(0));
+		}
+		for (int goal = 3; goal <= n; goal += 2) {
+			if (dp[goal] != null) {
+				continue;
+			}
+			var list = new ArrayList<TreeNode>();
+			for (int i = 1; i <= goal - 2; i += 2) {
+				for (var t1: dp[i]) {	
+					for (var t2: dp[goal - 1 - i]) {	
+						list.add(new TreeNode(0, t1, t2));
+					}
+				}
+			}
+			dp[goal] = list;
+		}
+	}
+}

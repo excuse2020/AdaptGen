@@ -1,0 +1,26 @@
+class Solution {
+	int Helper(int[][] dp, int index, int remains, int[] rods) {
+		if (remains == 0) {
+			return 0;
+		}
+		if (remains < 0 || index == rods.length) {
+			return Integer.MIN_VALUE;
+		}
+		if (dp[index][remains] == 0) {
+			dp[index][remains] = Math.max(Helper(dp,index + 1,remains,rods),Helper(dp,index + 1,remains - rods[index],rods));
+			dp[index][remains] = Math.max(dp[index][remains],Helper(dp,index + 1,remains - rods[index] * 2,rods) + rods[index]);
+		}
+		return dp[index][remains];
+	}
+	int tallestBillboard(int[] rods) {
+		if (rods.length == 1) {
+			return 0;
+		}
+		int total = 0;
+		for (int rod: rods) {	
+			total += rod;
+		}
+		int[][] dp = new int[rods.length][total + 1];
+		return Helper(dp,0,total,rods);
+	}
+}

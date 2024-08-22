@@ -1,0 +1,60 @@
+class Solution {
+	HashMap<Integer, Integer> depth = new HashMap();
+	HashMap<TreeNode, Integer> height = new HashMap();
+	HashMap<Integer, PriorityQueue<TreeNode>> levelMap = new HashMap();
+	void bfs(TreeNode root) {
+		Queue<TreeNode> q = new LinkedList();
+		q.add(root);
+		int level = 0;
+		while (!q.isEmpty()) {
+			int itr = q.size();
+			PriorityQueue<TreeNode> pq = levelMap.getOrDefault(level,new PriorityQueue<TreeNode>((a, b) -> {Integer.compare(height.get(b),height.get(a))}));
+			while (itr-- > 0) {
+				TreeNode current = q.remove();
+				TreeNode left = current.left;
+				TreeNode right = current.right;
+				pq.add(current);
+				depth.put(current.val,level);
+				if (left != null) {
+					q.add(left);
+				}
+				if (right != null) {
+					q.add(right);
+				}
+			}
+			levelMap.put(level,pq);
+			level++;
+		}
+	}
+	int processHeight(TreeNode root, HashMap<TreeNode, Integer> h) {
+		if (root == null) {
+			return -1;
+		}
+		int lh = processHeight(root.left,h);
+		int rh = processHeight(root.right,h);
+		h.put(root,Math.max(lh,rh) + 1);
+		return h.get(root);
+	}
+	int[] treeQueries(TreeNode root, int[] queries) {
+		HashMap<TreeNode, Integer> dheight = height;
+		int[] result = new int[queries.length];
+		processHeight(root,height);
+		bfs(root);
+		for (int i = 0; i < queries.length; i++) {
+			int level = depth.get(queries[i]);
+			PriorityQueue<TreeNode> pq = levelMap.get(level);
+			if (pq != null) {
+				if (!pq.isEmpty() && pq.peek().val == queries[i]) {
+					TreeNode top = pq.remove();
+					result[i] = pq.isEmpty() ? level - 1 : level + height.get(pq.peek());
+					pq.add(top);
+				} 
+				else {
+					int node = pq.peek().val;
+					result[i] = level + height.get(pq.peek());
+				}
+			}
+		}
+		return result;
+	}
+}

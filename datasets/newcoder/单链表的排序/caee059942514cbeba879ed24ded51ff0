@@ -1,0 +1,43 @@
+class Solution {
+	ListNode merge(ListNode n1, ListNode n2) {
+		ListNode root = new ListNode(-1);
+		ListNode cur = root;
+		while (n1 != null || n2 != null) {
+			if (n1 == null) {
+				cur.next = n2;
+				break;
+			} 
+			else if (n2 == null) {
+				cur.next = n1;
+				break;
+			} 
+			else {
+				if (n1.val < n2.val) {
+					cur.next = n1;
+					n1 = n1.next;
+				} 
+				else {
+					cur.next = n2;
+					n2 = n2.next;
+				}
+			}
+			cur = cur.next;
+		}
+		return root.next;
+	}
+	ListNode sortInList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode left = head;
+		ListNode mid = head.next;
+		ListNode right = head.next.next;
+		while (right != null && right.next != null) {
+			left = left.next;
+			mid = mid.next;
+			right = right.next.next;
+		}
+		left.next = null;
+		return merge(sortInList(head),sortInList(mid));
+	}
+}

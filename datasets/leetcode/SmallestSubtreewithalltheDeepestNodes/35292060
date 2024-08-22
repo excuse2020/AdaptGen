@@ -1,0 +1,32 @@
+class Solution {
+	int mapDepth(TreeNode root, Map<TreeNode, Integer> depthMap, int depth) {
+		if (root == null) {
+			return depth;
+		}
+		depthMap.put(root,Math.max(mapDepth(root.right,depthMap,depth + 1),mapDepth(root.left,depthMap,depth + 1)));
+		return depthMap.get(root);
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		Map<TreeNode, Integer> depthMap = new HashMap();
+		depthMap.put(root,mapDepth(root,depthMap,0));
+		return subtreeWithAllDeepest(root,depthMap);
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root, Map<TreeNode, Integer> depthMap) {
+		if (root.right == null && root.left == null) {
+			return root;
+		}
+		if (root.right == null) {
+			return subtreeWithAllDeepest(root.left,depthMap);
+		}
+		if (root.left == null) {
+			return subtreeWithAllDeepest(root.right,depthMap);
+		}
+		if (depthMap.get(root.right) > depthMap.get(root.left)) {
+			return subtreeWithAllDeepest(root.right,depthMap);
+		}
+		if (depthMap.get(root.left) > depthMap.get(root.right)) {
+			return subtreeWithAllDeepest(root.left,depthMap);
+		}
+		return root;
+	}
+}

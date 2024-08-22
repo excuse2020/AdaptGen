@@ -1,0 +1,35 @@
+class Solution {
+	boolean getPath(TreeNode root, TreeNode node, ArrayList<TreeNode> arr) {
+		if (root == null) {
+			return false;
+		}
+		arr.add(root);
+		if (root == node) {
+			return true;
+		}
+		if (getPath(root.left,node,arr) || getPath(root.right,node,arr)) {
+			return true;
+		} 
+		else {
+			arr.remove(arr.size() - 1);
+			return false;
+		}
+	}
+	TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+		ArrayList<TreeNode> pathToP = new ArrayList<>();
+		ArrayList<TreeNode> pathToQ = new ArrayList<>();
+		getPath(root,p,pathToP);
+		getPath(root,q,pathToQ);
+		for (int i = 0; i < pathToP.size() && i < pathToQ.size(); i++) {
+			if (pathToP.get(i) != pathToQ.get(i)) {
+				return pathToP.get(i - 1);
+			}
+		}
+		if (pathToP.size() < pathToQ.size()) {
+			return pathToP.get(pathToP.size() - 1);
+		} 
+		else {
+			return pathToQ.get(pathToQ.size() - 1);
+		}
+	}
+}

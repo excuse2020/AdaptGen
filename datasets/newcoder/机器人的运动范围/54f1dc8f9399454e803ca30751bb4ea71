@@ -1,0 +1,38 @@
+class Solution {
+	void DFS(boolean[][] map, int threshold, int row, int col) {
+		if (row >= map.length || row < 0 || col >= map[0].length || col < 0) {
+			return;
+		}
+		if (map[row][col]) {
+			return;
+		}
+		if (sumOfNumber(row) + sumOfNumber(col) <= threshold) {
+			map[row][col] = true;
+			DFS(map,threshold,row - 1,col);
+			DFS(map,threshold,row + 1,col);
+			DFS(map,threshold,row,col - 1);
+			DFS(map,threshold,row,col + 1);
+		}
+	}
+	int movingCount(int threshold, int rows, int cols) {
+		boolean[][] map = new boolean[rows][cols];
+		DFS(map,threshold,0,0);
+		int count = 0;
+		for (int row = 0; row < rows; ++row) {
+			for (int col = 0; col < cols; ++col) {
+				if (map[row][col]) {
+					++count;
+				}
+			}
+		}
+		return count;
+	}
+	int sumOfNumber(int a) {
+		int sum = 0;
+		while (a != 0) {
+			sum += a % 10;
+			a /= 10;
+		}
+		return sum;
+	}
+}

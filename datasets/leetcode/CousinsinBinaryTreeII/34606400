@@ -1,0 +1,38 @@
+class Solution {
+	TreeNode superRoot = new TreeNode(-1);
+	void dfs(TreeNode root, TreeNode parent, Map<Integer, Map<TreeNode, Integer>> levelVsParentvsSum, Map<Integer, Integer> levelSum, int level) {
+		if (root == null) {
+			return;
+		}
+		int levelSumNow = root.val;
+		if (levelSum.containsKey(level)) {
+			levelSumNow += levelSum.get(level);
+		}
+		levelSum.put(level,levelSumNow);
+		if (!levelVsParentvsSum.containsKey(level)) {
+			levelVsParentvsSum.put(level,new HashMap<>());
+		}
+		int parentSumNow = root.val;
+		if (levelVsParentvsSum.get(level).containsKey(parent)) {
+			parentSumNow += levelVsParentvsSum.get(level).get(parent);
+		}
+		levelVsParentvsSum.get(level).put(parent,parentSumNow);
+		dfs(root.left,root,levelVsParentvsSum,levelSum,level + 1);
+		dfs(root.right,root,levelVsParentvsSum,levelSum,level + 1);
+	}
+	TreeNode replaceValueInTree(TreeNode root) {
+		Map<Integer, Map<TreeNode, Integer>> levelVsParentvsSum = new HashMap<>();
+		Map<Integer, Integer> levelSum = new HashMap<>();
+		dfs(root,superRoot,levelVsParentvsSum,levelSum,0);
+		return updateViaDFS(root,superRoot,levelVsParentvsSum,levelSum,0);
+	}
+	TreeNode updateViaDFS(TreeNode root, TreeNode parent, Map<Integer, Map<TreeNode, Integer>> levelVsParentvsSum, Map<Integer, Integer> levelSum, int level) {
+		if (root == null) {
+			return root;
+		}
+		root.val = levelSum.get(level) - levelVsParentvsSum.get(level).get(parent);
+		updateViaDFS(root.left,root,levelVsParentvsSum,levelSum,level + 1);
+		updateViaDFS(root.right,root,levelVsParentvsSum,levelSum,level + 1);
+		return root;
+	}
+}

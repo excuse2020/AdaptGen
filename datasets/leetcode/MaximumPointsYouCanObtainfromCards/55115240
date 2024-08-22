@@ -1,0 +1,27 @@
+class Solution {
+	int maxScore(int[] cardPoints, int k) {
+		int n = cardPoints.length;
+		int windowSize = n - k;
+		int totalSum = 0;
+		for (int i = 0; i < n; i++) {
+			totalSum += cardPoints[i];
+		}
+		int minSum = 0;
+		for (int i = 0; i < windowSize; i++) {
+			minSum += cardPoints[i];
+		}
+		int prevSum = 0;
+		int nextSum = 0;
+		for (int j = 1; j <= n - windowSize; j++) {
+			prevSum += cardPoints[j - 1];
+			nextSum += cardPoints[j + windowSize - 1];
+			int currSum = minSum - prevSum + nextSum;
+			if (currSum < minSum) {
+				prevSum = 0;
+				nextSum = 0;
+				minSum = currSum;
+			}
+		}
+		return totalSum - minSum;
+	}
+}

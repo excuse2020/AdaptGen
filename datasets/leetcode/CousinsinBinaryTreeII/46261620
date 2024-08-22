@@ -1,0 +1,50 @@
+class Solution {
+	void helper1(TreeNode node, Map<Integer, Integer> map, int level) {
+		if (node == null) {
+			return;
+		}
+		if (node.left == null && node.right == null) {
+			map.putIfAbsent(level,0);
+			map.put(level,map.get(level) + node.val);
+			return;
+		}
+		map.putIfAbsent(level,0);
+		map.put(level,map.get(level) + node.val);
+		helper1(node.left,map,level + 1);
+		helper1(node.right,map,level + 1);
+	}
+	int helper2(TreeNode root, Map<Integer, Integer> map, int level) {
+		if (root == null) {
+			return 0;
+		}
+		if (root.left == null && root.right == null) {
+			return root.val;
+		}
+		int left = helper2(root.left,map,level + 1);
+		int right = helper2(root.right,map,level + 1);
+		if (root.left != null && root.right != null) {
+			root.left.val = map.get(level + 1) - left;
+			root.right.val = map.get(level + 1) - left;
+		} 
+		else if (root.left != null) {
+			root.left.val = map.get(level + 1) - left;
+		} 
+		else if (root.right != null) {
+			root.right.val = map.get(level + 1) - right;
+		}
+		return root.val;
+	}
+	TreeNode replaceValueInTree(TreeNode root) {
+		if (root.left == null && root.right == null) {
+			root.val = 0;
+			return root;
+		}
+		Map<Integer, Integer> level_sum = new HashMap<>();
+		level_sum.put(0,root.val);
+		helper1(root.left,level_sum,1);
+		helper1(root.right,level_sum,1);
+		helper2(root,level_sum,0);
+		root.val = 0;
+		return root;
+	}
+}

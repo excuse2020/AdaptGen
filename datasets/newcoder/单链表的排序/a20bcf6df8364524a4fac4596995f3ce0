@@ -1,0 +1,42 @@
+class Solution {
+	ListNode getMid(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode slow = head;
+		ListNode fast = head.next;
+		while (fast != null && fast.next != null) {
+			slow = slow.next;
+			fast = fast.next.next;
+		}
+		return slow;
+	}
+	ListNode meger(ListNode left, ListNode right) {
+		ListNode dummy = new ListNode(0);
+		ListNode p = dummy;
+		while (left != null && right != null) {
+			if (left.val < right.val) {
+				p.next = left;
+				left = left.next;
+			} 
+			else {
+				p.next = right;
+				right = right.next;
+			}
+			p = p.next;
+		}
+		p.next = (left != null) ? left : right;
+		return dummy.next;
+	}
+	ListNode sortInList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode mid = getMid(head);
+		ListNode next = mid.next;
+		mid.next = null;
+		ListNode left = sortInList(head);
+		ListNode right = sortInList(next);
+		return meger(left,right);
+	}
+}

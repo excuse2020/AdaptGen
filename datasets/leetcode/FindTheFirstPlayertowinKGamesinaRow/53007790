@@ -1,0 +1,43 @@
+class Solution {
+	int findWinningPlayer(int[] skills, int k) {
+		var list = new ArrayList<Integer>();
+		for (var num: skills) {	
+			list.add(num);
+		}
+		var deque = new ArrayDeque<>(list);
+		if (k > deque.size()) {
+			return list.indexOf(Collections.max(list));
+		}
+		var temp = k;
+		Integer fn = null;
+		while (k > 0) {
+			var num1 = deque.removeFirst();
+			var num2 = deque.removeFirst();
+			if (fn != null && Math.max(num1,num2) == fn) {
+				k--;
+				if (!num1.equals(fn)) {
+					deque.addLast(num1);
+					deque.addFirst(num2);
+				} 
+				else {
+					deque.addLast(num2);
+					deque.addFirst(num1);
+				}
+			} 
+			else {
+				if (num1 > num2) {
+					fn = num1;
+					deque.addFirst(num1);
+					deque.addLast(num2);
+				} 
+				else {
+					fn = num2;
+					deque.addFirst(num2);
+					deque.addLast(num1);
+				}
+				k = temp - 1;
+			}
+		}
+		return list.indexOf(fn);
+	}
+}

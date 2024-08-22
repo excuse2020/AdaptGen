@@ -1,0 +1,27 @@
+class Solution {
+	int cntPseudoPaths(TreeNode n, int[] arr) {
+		if (n == null) {
+			return 0;
+		}
+		arr[n.val]++;
+		if (n.left == null && n.right == null) {
+			boolean par = oddParity(arr);
+			arr[n.val]--;
+			return (par) ? 1 : 0;
+		}
+		int lft = cntPseudoPaths(n.left,arr);
+		int rgt = cntPseudoPaths(n.right,arr);
+		arr[n.val]--;
+		return lft + rgt;
+	}
+	boolean oddParity(int[] arr) {
+		int cnt = 0;
+		for (int i: arr) {	
+			cnt += (i & 1);
+		}
+		return cnt <= 1;
+	}
+	int pseudoPalindromicPaths(TreeNode root) {
+		return cntPseudoPaths(root,new int[10]);
+	}
+}

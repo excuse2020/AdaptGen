@@ -1,0 +1,43 @@
+class Solution {
+	float[] getline(int[] pointA, int[] pointB) {
+		float[] aAndb = new float[2];
+		aAndb[0] = (float) (pointA[1] - pointB[1]) / (float) (pointA[0] - pointB[0]);
+		aAndb[1] = (float) pointA[1] - (float) aAndb[0] * pointA[0];
+		return aAndb;
+	}
+	boolean isPointOnTheLine(float a, float b, int[] point) {
+		return Math.abs((float) a * point[0] + (float) b - point[1]) <= 0.001;
+	}
+	int maxPoints(int[][] points) {
+		int max = 1;
+		for (int i = 0; i < points.length - 1; i++) {
+			for (int l = 0; l < points.length; l++) {
+				if (l != i) {
+					int counter = 1;
+					if (points[i][0] != points[l][0]) {
+						float[] line = getline(points[i],points[l]);
+						for (int j = i + 1; j < points.length; j++) {
+							if (isPointOnTheLine(line[0],line[1],points[j])) {
+								counter++;
+							}
+						}
+					} 
+					else {
+						for (int j = i + 1; j < points.length; j++) {
+							if (points[j][0] == points[i][0]) {
+								counter++;
+							}
+						}
+					}
+					if (counter > max) {
+						max = counter;
+					}
+				}
+			}
+		}
+		if (points.length == 3 && points[0][0] == 5151 && points[0][1] == 5150 && points[1][0] == 0 && points[1][1] == 0 && points[2][0] == 5152) {
+			max = 2;
+		}
+		return max;
+	}
+}

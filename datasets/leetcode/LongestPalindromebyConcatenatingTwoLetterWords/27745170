@@ -1,0 +1,48 @@
+class Solution {
+	boolean isPalindrome(String s1) {
+		if (s1.charAt(0) == s1.charAt(1)) {
+			return true;
+		} 
+		else {
+			return false;
+		}
+	}
+	int longestPalindrome(String[] words) {
+		Map<String, Integer> map = new HashMap<>();
+		int flag = 0;
+		for (String str: words) {	
+			int freq = map.getOrDefault(str,0);
+			map.put(str,++freq);
+		}
+		int ans = 0;
+		for (String str: words) {	
+			if (isPalindrome(str) && flag == 0 && map.get(str) == 1) {
+				ans++;
+				flag = 1;
+			} 
+			else if (isPalindrome(str) && map.get(str) > 1) {
+				ans += 2;
+				int freq = map.get(str);
+				freq = freq - 2;
+				map.put(str,freq);
+			} 
+			else if (isPalindrome(str)) {
+				continue;
+			} 
+			else {
+				String reverse = "" + str.charAt(1);
+				if (map.containsKey(reverse) && map.get(reverse) > 0 && map.get(str) > 0) {
+					ans += 2;
+					int freq = map.get(str);
+					map.put(str,--freq);
+					int freq1 = map.get(reverse);
+					map.put(reverse,--freq1);
+				} 
+				else {
+					continue;
+				}
+			}
+		}
+		return ans * 2;
+	}
+}

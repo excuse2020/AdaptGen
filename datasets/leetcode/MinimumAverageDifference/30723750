@@ -1,0 +1,29 @@
+class Solution {
+	int minimumAverageDifference(int[] arr) {
+		int n = arr.length;
+		long[] pre = new long[n];
+		pre[0] = arr[0];
+		for (int i = 1; i < n; i++) {
+			pre[i] = pre[i - 1] + arr[i];
+		}
+		long total = pre[n - 1];
+		long min = Long.MAX_VALUE;
+		int ind = 0;
+		for (int i = 0; i < n - 1; i++) {
+			long avl = (pre[i] / (i + 1));
+			long avr = ((total - pre[i]) / (n - 1));
+			long diff = Math.abs(avl - avr);
+			if (diff < min) {
+				min = diff;
+				ind = i;
+			}
+		}
+		long last = 0;
+		last = pre[n - 1] / n;
+		if (min > last) {
+			min = last;
+			ind = n - 1;
+		}
+		return n == 1 ? 0 : ind;
+	}
+}

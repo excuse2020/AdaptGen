@@ -1,0 +1,38 @@
+class Solution {
+	int check(int elm, List<Integer> s2) {
+		int dfm = Integer.MIN_VALUE;
+		for (int r = 0; r < s2.size(); r++) {
+			int uj = Math.abs(s2.get(r) - elm);
+			dfm = Math.max(dfm,uj);
+		}
+		return dfm;
+	}
+	int maxAncestorDiff(TreeNode root) {
+		List<Integer> s1 = new ArrayList<>();
+		preorder(root,s1);
+		Collections.sort(s1);
+		return s1.get(s1.size() - 1);
+	}
+	void postorder(TreeNode root, List<Integer> s2) {
+		if (root == null) {
+			return;
+		}
+		postorder(root.left,s2);
+		postorder(root.right,s2);
+		s2.add(root.val);
+	}
+	void preorder(TreeNode root, List<Integer> s1) {
+		if (root == null) {
+			return;
+		}
+		List<Integer> s2 = new ArrayList<>();
+		postorder(root,s2);
+		int elm = root.val;
+		if (s2.size() > 0) {
+			int dif = check(elm,s2);
+			s1.add(dif);
+		}
+		preorder(root.left,s1);
+		preorder(root.right,s1);
+	}
+}

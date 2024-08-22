@@ -1,0 +1,60 @@
+class Solution {
+	boolean isConnected(int i, int j, Set<Integer>[] sets) {
+		Set<Integer> intersection = new HashSet<>(sets[i]);
+		intersection.retainAll(sets[j]);
+		return intersection.size() > 0;
+	}
+	int numBusesToDestination(int[][] routes, int source, int target) {
+		int m = routes.length;
+		Set<Integer>[] sets = new HashSet[m];
+		List<Integer>[] graph = new ArrayList[m];
+		Queue<Integer> qu = new LinkedList<>();
+		Set<Integer> des = new HashSet<>();
+		if (source == target) {
+			return 0;
+		}
+		for (int i = 0; i < m; i++) {
+			sets[i] = new HashSet<>();
+			graph[i] = new ArrayList<>();
+			for (int r: routes[i]) {	
+				sets[i].add(r);
+				if (r == source) {
+					qu.add(i);
+				}
+				if (r == target) {
+					des.add(i);
+				}
+			}
+			if (sets[i].contains(source) && sets[i].contains(target)) {
+				return 1;
+			}
+		}
+		for (int i = 0; i < m; i++) {
+			for (int j = i + 1; j < m; j++) {
+				if (isConnected(i,j,sets)) {
+					graph[i].add(j);
+					graph[j].add(i);
+				}
+			}
+		}
+		int buses = 1;
+		boolean[] visited = new boolean[m];
+		while (!qu.isEmpty()) {
+			int k = qu.size();
+			while (k-- > 0) {
+				int node = qu.poll();
+				for (int child: graph[node]) {	
+					if (!visited[child]) {
+						visited[child] = true;
+						qu.add(child);
+						if (des.contains(child)) {
+							return buses + 1;
+						}
+					}
+				}
+			}
+			buses++;
+		}
+		return -1;
+	}
+}

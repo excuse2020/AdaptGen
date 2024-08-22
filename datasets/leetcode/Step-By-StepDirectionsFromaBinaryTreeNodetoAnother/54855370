@@ -1,0 +1,59 @@
+class Solution {
+	String getDirections(TreeNode root, int startValue, int destValue) {
+		TreeNode lca = getLca(root,startValue,destValue);
+		StringBuilder sb = new StringBuilder();
+		pathtolca(lca,startValue,sb);
+		StringBuilder bs = new StringBuilder();
+		pathfromlca(lca,destValue,bs);
+		bs.reverse();
+		return sb.append(bs).toString();
+	}
+	TreeNode getLca(TreeNode root, int startvalue, int destvalue) {
+		if (root == null || root.val == startvalue || root.val == destvalue) {
+			return root;
+		}
+		TreeNode left = getLca(root.left,startvalue,destvalue);
+		TreeNode right = getLca(root.right,startvalue,destvalue);
+		if (left == null) {
+			return right;
+		}
+		if (right == null) {
+			return left;
+		}
+		return root;
+	}
+	boolean pathfromlca(TreeNode root, int value, StringBuilder sb) {
+		if (root == null) {
+			return false;
+		}
+		if (root.val == value) {
+			return true;
+		}
+		if (pathfromlca(root.left,value,sb)) {
+			sb.append("L");
+			return true;
+		}
+		if (pathfromlca(root.right,value,sb)) {
+			sb.append("R");
+			return true;
+		}
+		return false;
+	}
+	boolean pathtolca(TreeNode root, int start, StringBuilder sb) {
+		if (root == null) {
+			return false;
+		}
+		if (root.val == start) {
+			return true;
+		}
+		if (pathtolca(root.left,start,sb)) {
+			sb.append("U");
+			return true;
+		}
+		if (pathtolca(root.right,start,sb)) {
+			sb.append("U");
+			return true;
+		}
+		return false;
+	}
+}

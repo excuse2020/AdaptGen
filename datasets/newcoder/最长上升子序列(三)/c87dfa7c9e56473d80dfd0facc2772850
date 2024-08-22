@@ -1,0 +1,40 @@
+class Solution {
+	int[] LIS(int[] arr) {
+		int[] maxLength = new int[arr.length];
+		ArrayList<Integer> temp = new ArrayList<>();
+		for (int i = 0; i < arr.length; i++) {
+			if (i == 0) {
+				maxLength[i] = 1;
+				temp.add(arr[i]);
+			} 
+			else {
+				if (arr[i] > temp.get(temp.size() - 1)) {
+					temp.add(arr[i]);
+					maxLength[i] = temp.size();
+				} 
+				else {
+					for (int j = 0; j < temp.size(); j++) {
+						if (temp.get(j) >= arr[i]) {
+							temp.set(j,arr[i]);
+							maxLength[i] = j + 1;
+							break;
+						}
+					}
+				}
+			}
+		}
+		int max = temp.size();
+		int[] res = new int[max];
+		int curIndex = maxLength.length - 1;
+		for (int i = max; i > 0; i--) {
+			for (int j = curIndex; j >= 0; j--) {
+				if (maxLength[j] == i) {
+					res[i - 1] = arr[j];
+					curIndex = j - 1;
+					break;
+				}
+			}
+		}
+		return res;
+	}
+}

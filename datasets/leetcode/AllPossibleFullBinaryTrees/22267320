@@ -1,0 +1,30 @@
+class Solution {
+	Map<Integer, List<TreeNode>> m = new HashMap<>();
+	List<TreeNode> allPossibleFBT(int n) {
+		return backTrack(n);
+	}
+	List<TreeNode> backTrack(int n) {
+		if (n == 0 || n % 2 == 0) {
+			return new ArrayList<>();
+		}
+		if (n == 1) {
+			return Arrays.asList(new TreeNode(0));
+		}
+		if (m.containsKey(n)) {
+			return m.get(n);
+		}
+		List<TreeNode> res = new ArrayList<>();
+		for (int l = 1; l <= n - 2; l++) {
+			int r = n - 1;
+			List<TreeNode> leftList = backTrack(l);
+			List<TreeNode> rightList = backTrack(r);
+			for (TreeNode left: leftList) {	
+				for (TreeNode right: rightList) {	
+					res.add(new TreeNode(0, left, right));
+				}
+			}
+		}
+		m.put(n,res);
+		return res;
+	}
+}

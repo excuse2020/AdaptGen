@@ -1,0 +1,28 @@
+class Solution {
+	int findUpperBoundIndex(int[] dp, int numToInd) {
+		int low = 0;
+		int high = dp.length;
+		while (low < high) {
+			int mid = low + ((high - low) / 2);
+			if (dp[mid] <= numToInd) {
+				low = mid + 1;
+			} 
+			else {
+				high = mid;
+			}
+		}
+		return high;
+	}
+	int[] longestObstacleCourseAtEachPosition(int[] obstacles) {
+		int[] dp = new int[obstacles.length + 1];
+		int[] res = new int[obstacles.length];
+		Arrays.fill(dp,Integer.MAX_VALUE);
+		dp[0] = Integer.MIN_VALUE;
+		for (int i = 0; i < obstacles.length; i++) {
+			int upperInd = findUpperBoundIndex(dp,obstacles[i]);
+			dp[upperInd] = obstacles[i];
+			res[i] = upperInd;
+		}
+		return res;
+	}
+}

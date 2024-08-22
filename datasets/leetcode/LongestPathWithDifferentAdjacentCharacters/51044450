@@ -1,0 +1,38 @@
+class Solution {
+	Map<Integer, List<Integer>> graph;
+	Map<String, Integer> seen = new HashMap<>();
+	int dfs(int curIndex, int prevIndex) {
+		String key = curIndex + "-";
+		if (seen.containsKey(key)) {
+			return seen.get(key);
+		}
+		List<Integer> neighbors = graph.get(curIndex);
+		int ans = 0;
+		for (int neighbor: neighbors) {	
+			if (neighbor != -1 && neighbor != prevIndex) {
+				ans = Math.max(ans,dfs(neighbor,curIndex) + 1);
+			}
+		}
+		seen.put(key,ans);
+		return ans;
+	}
+	int longestPath(int[] parent, String s) {
+		graph = new HashMap<>();
+		for (int i = 0; i < parent.length; i++) {
+			graph.put(i,new ArrayList<>());
+		}
+		for (int i = 1; i < parent.length; i++) {
+			char curChar = s.charAt(i);
+			char parentChar = s.charAt(parent[i]);
+			if (curChar != parentChar) {
+				graph.get(i).add(parent[i]);
+				graph.get(parent[i]).add(i);
+			}
+		}
+		int ans = 0;
+		for (int i = 0; i < parent.length; i++) {
+			ans = Math.max(ans,1 + dfs(i,-1));
+		}
+		return ans;
+	}
+}

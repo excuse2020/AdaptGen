@@ -1,0 +1,38 @@
+class Solution {
+	int len = 0;
+	Set<String> helper(String s, int index, String partial, Set<String> res, Map<String, Set<String>> map) {
+		String str = index + "->";
+		if (map.get(str) != null) {
+			return map.get(str);
+		}
+		if (index == s.length()) {
+			if (partial.length() < len) {
+				return res;
+			}
+			if (valid(partial)) {
+				if (res.isEmpty()) {
+					len = partial.length();
+				}
+				res.add(partial);
+			}
+		} 
+		else {
+			Set<String> include = helper(s,index + 1,partial + s.charAt(index),res,map);
+			Set<String> notInclude = helper(s,index + 1,partial,res,map);
+			include.addAll(notInclude);
+			map.put(str,include);
+			return include;
+		}
+		return res;
+	}
+	List<String> removeInvalidParentheses(String s) {
+		Set<String> res;
+		res = helper(s,0,"",new HashSet<String>(),new HashMap<String, Set<String>>());
+		return new ArrayList<String>(res);
+	}
+	boolean valid(String check) {
+		int left = 0;
+		int right = 0;
+		int i = 0;
+	}
+}

@@ -1,0 +1,38 @@
+class Solution {
+	int getAnd(int l, int r, int[][] cnt) {
+		int num = 0;
+		for (int i = 0; i < 32; i++) {
+			int zero = cnt[r][i] - (l - 1 >= 0 ? cnt[l - 1][i] : 0);
+			if (zero == 0) {
+				num |= (1 << i);
+			}
+		}
+		return num;
+	}
+	int minimumDifference(int[] nums, int k) {
+		int n = nums.length;
+		int[][] cnt = new int[n][32];
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < 32; j++) {
+				int mask = (1 << j);
+				cnt[i][j] = i - 1 >= 0 ? cnt[i - 1][j] : 0;
+				if ((nums[i] & mask) == 0) {
+					cnt[i][j] += 1;
+				}
+			}
+		}
+		int l = 0;
+		int currAnd = nums[0];
+		int ans = Math.abs(k - currAnd);
+		for (int r = 1; r < n; r++) {
+			currAnd &= nums[r];
+			ans = Math.min(ans,Math.abs(k - currAnd));
+			while (l < r && currAnd < k) {
+				l++;
+				currAnd = getAnd(l,r,cnt);
+				ans = Math.min(ans,Math.abs(k - currAnd));
+			}
+		}
+		return ans;
+	}
+}

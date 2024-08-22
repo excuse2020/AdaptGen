@@ -1,0 +1,32 @@
+class Solution {
+	int gMax = Integer.MIN_VALUE;
+	int dfs(TreeNode root, boolean left, boolean right, int max, Map<TreeNode, Integer> dp) {
+		if (root == null) {
+			return 0;
+		}
+		if (dp.containsKey(root)) {
+			return dp.get(root);
+		}
+		if (left == true && root.left != null) {
+			dfs(root.left,false,true,max + 1,dp);
+		}
+		if (right == true && root.right != null) {
+			dfs(root.right,true,false,max + 1,dp);
+		}
+		gMax = Math.max(max,gMax);
+		dp.put(root,gMax);
+		dfs(root.left,false,true,1,dp);
+		dfs(root.right,true,false,1,dp);
+		return gMax;
+	}
+	int longestZigZag(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		if (root.left == null && root.right == null) {
+			return 0;
+		}
+		Map<TreeNode, Integer> dp = new HashMap<>();
+		return Math.max(dfs(root.left,false,true,1,dp),dfs(root.right,true,false,1,dp));
+	}
+}

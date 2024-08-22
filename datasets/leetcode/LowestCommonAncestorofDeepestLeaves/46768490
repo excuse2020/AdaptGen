@@ -1,0 +1,38 @@
+class Solution {
+	ArrayList<TreeNode> list = new ArrayList();
+	int maxdepth = Integer.MIN_VALUE;
+	TreeNode find(TreeNode root, int depth, int targetdepth) {
+		if (root.left == null && root.right == null && depth == targetdepth) {
+			return root;
+		}
+		TreeNode left = null;
+		TreeNode right = null;
+		if (root.left != null) {
+			left = find(root.left,depth + 1,targetdepth);
+		}
+		if (root.right != null) {
+			right = find(root.right,depth + 1,targetdepth);
+		}
+		if (left != null && right != null) {
+			return root;
+		}
+		if (left == null) {
+			return right;
+		} 
+		else {
+			return left;
+		}
+	}
+	TreeNode lcaDeepestLeaves(TreeNode root) {
+		traverse(root,0);
+		return find(root,0,maxdepth);
+	}
+	void traverse(TreeNode root, int depth) {
+		if (root == null) {
+			return;
+		}
+		maxdepth = Math.max(depth,maxdepth);
+		traverse(root.left,depth + 1);
+		traverse(root.right,depth + 1);
+	}
+}

@@ -1,0 +1,34 @@
+class Solution {
+	ArrayList<String> Permutation(String str) {
+		ArrayList<String> res = new ArrayList<String>();
+		if (str == null || str.length() == 0) {
+			return res;
+		}
+		char[] charStr = str.toCharArray();
+		Arrays.sort(charStr);
+		boolean[] vis = new boolean[str.length()];
+		Arrays.fill(vis,false);
+		StringBuffer temp = new StringBuffer();
+		recursion(res,charStr,temp,vis);
+		return res;
+	}
+	void recursion(ArrayList<String> res, char[] str, StringBuffer temp, boolean[] vis) {
+		if (temp.length() == str.length) {
+			res.add(new String(temp));
+			return;
+		}
+		for (int i = 0; i < str.length; i++) {
+			if (vis[i]) {
+				continue;
+			}
+			if (i > 0 && str[i - 1] == str[i] && !vis[i - 1]) {
+				continue;
+			}
+			vis[i] = true;
+			temp.append(str[i]);
+			recursion(res,str,temp,vis);
+			vis[i] = false;
+			temp.deleteCharAt(temp.length() - 1);
+		}
+	}
+}

@@ -1,0 +1,45 @@
+class Solution {
+	int binarySearchLowerBound(int[] startArray, int person) {
+		int low = 0, high = startArray.length - 1, mid;
+		while (low <= high) {
+			mid = (low + high) / 2;
+			if (startArray[mid] < person) {
+				low = mid + 1;
+			} 
+			else if (startArray[mid] >= person) {
+				high = mid - 1;
+			}
+		}
+		return low;
+	}
+	int binarySearchUpperBound(int[] startArray, int person) {
+		int low = 0, high = startArray.length - 1, mid;
+		while (low <= high) {
+			mid = (low + high) / 2;
+			if (startArray[mid] <= person) {
+				low = mid + 1;
+			} 
+			else if (startArray[mid] > person) {
+				high = mid - 1;
+			}
+		}
+		return high + 1;
+	}
+	int[] fullBloomFlowers(int[][] flowers, int[] people) {
+		int[] startArray = new int[flowers.length];
+		int[] endArray = new int[flowers.length];
+		int[] res_ = new int[people.length];
+		for (int i = 0; i < flowers.length; i++) {
+			startArray[i] = flowers[i][0];
+			endArray[i] = flowers[i][1];
+		}
+		Arrays.sort(startArray);
+		Arrays.sort(endArray);
+		for (int i = 0; i < people.length; i++) {
+			int no0fFlowersBoomed = binarySearchUpperBound(startArray,people[i]);
+			int noOfFlowersDied = binarySearchLowerBound(endArray,people[i]);
+			res_[i] = no0fFlowersBoomed - noOfFlowersDied;
+		}
+		return res_;
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	int k;
+	int result;
+	void dfs(int cookies, int children, int index) {
+		if (index == cookies.length) {
+			int max = 0;
+			for (int val: children) {	
+				if (val > max) {
+					max = val;
+				}
+			}
+			if (max < result) {
+				result = max;
+			}
+		}
+		if (index >= cookies.length) {
+			return;
+		}
+		int currentCookie = cookies[index];
+		for (int i = 0; i < k; i++) {
+			children[i] = children[i] + currentCookie;
+			dfs(cookies,children,index + 1);
+			children[i] = children[i] - currentCookie;
+		}
+	}
+	int distributeCookies(int[] cookies, int k) {
+		this.k = k;
+		result = Integer.MAX_VALUE;
+		dfs(cookies,new int[k],0);
+		return result;
+	}
+}

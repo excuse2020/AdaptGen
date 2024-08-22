@@ -1,0 +1,37 @@
+class Solution {
+	String FindKthPermutation(int n, int k, boolean[] used) {
+		if (n == 1) {
+			for (int i = 0; i < used.length; i++) {
+				if (!used[i]) {
+					return "" + (i + 1);
+				}
+			}
+		}
+		int factn = fact(n - 1);
+		int seg = k <= factn ? 0 : (k - 1) / factn;
+		int findsegNo = seg;
+		int cur = 0;
+		for (int i = 0; i < used.length; i++) {
+			if (used[i]) {
+				continue;
+			}
+			if (findsegNo == 0) {
+				used[i] = true;
+				cur = i;
+				break;
+			}
+			findsegNo--;
+		}
+		return (cur + 1) + FindKthPermutation(n - 1,k - (factn * seg),used);
+	}
+	int fact(int n) {
+		if (n <= 1) {
+			return 1;
+		}
+		return n * fact(n - 1);
+	}
+	String getPermutation(int n, int k) {
+		boolean[] used = new boolean[n];
+		return FindKthPermutation(n,k,used);
+	}
+}

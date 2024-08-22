@@ -1,0 +1,50 @@
+class Solution {
+	List<Integer> primeNumbers = new ArrayList<>();
+	void primeFactors(int n, List<Integer> powers) {
+		while (n % 2 == 0) {
+			powers.add(2);
+			n /= 2;
+		}
+		for (int i: primeNumbers) {	
+			if (i > n) {
+				break;
+			}
+			while (n % i == 0) {
+				powers.add(i);
+				n /= i;
+			}
+		}
+	}
+	void primeSieve(int n) {
+		BitSet bitset = new BitSet(n + 1);
+		for (long i = 0; i < n; i++) {
+			if (i == 0 || i == 1) {
+				bitset.set((int) i);
+				continue;
+			}
+			if (bitset.get((int) i)) {
+				continue;
+			}
+			primeNumbers.add((int) i);
+			for (long j = i; j <= n; j += i) {
+				bitset.set((int) j);
+			}
+		}
+	}
+	int smallestValue(int n) {
+		if (n == 2 || n == 4) {
+			return n;
+		}
+		primeSieve(n);
+		List<Integer> powers = new ArrayList<>();
+		primeFactors(n,powers);
+		while (powers.size() > 0) {
+			n = powers.stream().mapToInt((x) -> {x}).sum();
+			powers.clear();
+			primeNumbers.clear();
+			primeSieve(n);
+			primeFactors(n,powers);
+		}
+		return n;
+	}
+}

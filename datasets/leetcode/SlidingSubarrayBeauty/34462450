@@ -1,0 +1,35 @@
+class Solution {
+	int[] getSubarrayBeauty(int[] nums, int k, int x) {
+		int n = nums.length;
+		int ans = new int[n - k + 1];
+		int freq = new int[101];
+		int start = 0;
+		int end = 0;
+		int j = 0;
+		while (end < n) {
+			freq[nums[end] + 50] = freq[nums[end] + 50] + 1;
+			if (end - start + 1 == k) {
+				ans[j++] = getXthMinimum(freq,x);
+				freq[nums[start] + 50] = freq[nums[start] + 50] - 1;
+				start++;
+			}
+			end++;
+		}
+		return ans;
+	}
+	int getXthMinimum(int freq, int x) {
+		int cnt = 0;
+		for (int i = 0; i < 101; i++) {
+			if (freq[i] > 0) {
+				cnt = cnt + freq[i];
+				if (cnt >= x) {
+					if (i - 50 < 0) {
+						return i - 50;
+					}
+					break;
+				}
+			}
+		}
+		return 0;
+	}
+}

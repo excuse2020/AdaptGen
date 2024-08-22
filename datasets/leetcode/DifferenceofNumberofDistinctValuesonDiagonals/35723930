@@ -1,0 +1,47 @@
+class Solution {
+	int[][] differenceOfDistinctValues(int[][] grid) {
+		int y = grid.length, x = grid[0].length;
+		int Y = y - 1, X = x - 1;
+		int a = new int[y][x];
+		int b = new int[y][x];
+		int ans = new int[y][x];
+		for (int i = Y; i >= 0; --i) {
+			HashSet<Integer> set = new HashSet<>(50);
+			for (int r = i, c = 0; r < y && c < x; ++r, ++c) {
+				a[r][c] = set.size();
+				set.add(grid[r][c]);
+			}
+			set.clear();
+		}
+		for (int j = 1; j < x; ++j) {
+			HashSet<Integer> set = new HashSet<>(50);
+			for (int r = 0, c = j; r < y && c < x; ++r, ++c) {
+				a[r][c] = set.size();
+				set.add(grid[r][c]);
+			}
+			set.clear();
+		}
+		for (int j = 0; j != x; ++j) {
+			HashSet<Integer> set = new HashSet<>(50);
+			for (int r = Y, c = j; r >= 0 && c >= 0; --r, --c) {
+				b[r][c] = set.size();
+				set.add(grid[r][c]);
+			}
+			set.clear();
+		}
+		for (int i = Y - 1; i >= 0; --i) {
+			HashSet<Integer> set = new HashSet<>(50);
+			for (int r = i, c = X; r >= 0 && c >= 0; --r, --c) {
+				b[r][c] = set.size();
+				set.add(grid[r][c]);
+			}
+			set.clear();
+		}
+		for (int i = 0; i != y; ++i) {
+			for (int j = 0; j != x; ++j) {
+				ans[i][j] = Math.abs(a[i][j] - b[i][j]);
+			}
+		}
+		return ans;
+	}
+}

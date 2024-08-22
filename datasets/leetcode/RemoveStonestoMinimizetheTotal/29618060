@@ -1,0 +1,34 @@
+class Solution {
+	int minStoneSum(int[] piles, int k) {
+		int count = new int[100001];
+		int ans = 0;
+		for (int i = 0; i < piles.length; i++) {
+			count[piles[i]]++;
+		}
+		for (int i = count.length - 1; i > 1; i--) {
+			if (k == 0) {
+				break;
+			}
+			if (count[i] != 0) {
+				if (count[i] > k) {
+					int val = (int) Math.ceil(1.0 * i / 2);
+					count[val] += k;
+					count[i] = count[i] - k;
+					k = 0;
+				} 
+				else {
+					int val = (int) Math.ceil(1.0 * i / 2);
+					count[val] += (count[i]);
+					k = k - count[i];
+					count[i] = 0;
+				}
+			}
+		}
+		for (int i = 1; i <= 100000; i++) {
+			if (count[i] != 0) {
+				ans += (count[i] * i);
+			}
+		}
+		return ans;
+	}
+}

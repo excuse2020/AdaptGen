@@ -1,0 +1,59 @@
+class Solution {
+	int ans = Integer.MIN_VALUE;
+	int dfs(int node, ArrayList<ArrayList<Integer>> adj, String s) {
+		if (adj.get(node).size() == 0) {
+			return 1;
+		}
+		int first = -1;
+		int second = -1;
+		for (int i: adj.get(node)) {	
+			int temp = dfs(i,adj,s);
+			ans = Math.max(ans,temp);
+			if (s.charAt(i) != s.charAt(node)) {
+				if (first == -1) {
+					first = temp;
+				} 
+				else {
+					if (second == -1) {
+						second = Math.max(temp,second);
+					} 
+					else {
+						if (second < temp) {
+							first = Math.max(first,second);
+							second = temp;
+						} 
+						else {
+							first = Math.max(temp,first);
+						}
+					}
+				}
+			}
+		}
+		if (second != -1) {
+			ans = Math.max(ans,1 + first);
+			return 1 + Math.max(first,second);
+		}
+		if (first != -1) {
+			ans = Math.max(ans,1 + first);
+			return 1 + first;
+		}
+		return 1;
+	}
+	int longestPath(int[] parent, String s) {
+		int n = parent.length;
+		if (n == 1) {
+			return 1;
+		}
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			if (parent[i] != -1) {
+				adj.get(parent[i]).add(i);
+			}
+		}
+		dfs(0,adj,s);
+		return ans;
+	}
+}

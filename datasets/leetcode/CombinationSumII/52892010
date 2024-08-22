@@ -1,0 +1,28 @@
+class Solution {
+	List<List<Integer>> combinationSum2(int[] candidates, int target) {
+		List<List<Integer>> ans = new ArrayList<>();
+		Arrays.sort(candidates);
+		findCombinations(0,candidates,target,ans,new ArrayList<>());
+		return ans;
+	}
+	void findCombinations(int i, int[] arr, int target, List<List<Integer>> ans, List<Integer> ds) {
+		if (target == 0) {
+			if (!ans.contains(ds)) {
+				ans.add(new ArrayList<>(ds));
+			}
+			return;
+		}
+		if (i == arr.length) {
+			return;
+		}
+		if (arr[i] <= target) {
+			ds.add(arr[i]);
+			findCombinations(i + 1,arr,target - arr[i],ans,ds);
+			ds.remove(ds.size() - 1);
+		}
+		while (i + 1 < arr.length && arr[i] == arr[i + 1]) {
+			i++;
+		}
+		findCombinations(i + 1,arr,target,ans,ds);
+	}
+}

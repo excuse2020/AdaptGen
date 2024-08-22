@@ -1,0 +1,41 @@
+class Solution {
+	boolean isPossible(int[] batteries, int n, long target) {
+		long total = n * target;
+		long sum = 0;
+		for (int battery: batteries) {	
+			if (battery > target) {
+				sum += target;
+			} 
+			else {
+				sum += battery;
+			}
+			if (sum >= total) {
+				return true;
+			}
+		}
+		return (sum >= total);
+	}
+	long maxRunTime(int n, int[] batteries) {
+		long low = 0;
+		long totalSum = 0;
+		for (int elem: batteries) {	
+			totalSum += elem;
+			if (elem < low) {
+				low = elem;
+			}
+		}
+		long high = (totalSum / n) + 1;
+		long res = 0;
+		while (low < high) {
+			long mid = low + (high - low) / 2;
+			if (isPossible(batteries,n,mid)) {
+				res = mid;
+				low = mid + 1;
+			} 
+			else {
+				high = mid;
+			}
+		}
+		return res;
+	}
+}

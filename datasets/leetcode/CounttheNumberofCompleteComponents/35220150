@@ -1,0 +1,48 @@
+class Solution {
+	boolean bfs(int i, ArrayList<ArrayList<Integer>> ls, int indegree, int visited) {
+		Queue<Integer> q = new LinkedList<>();
+		visited[i] = 1;
+		List<Integer> check = new ArrayList<Integer>();
+		q.add(i);
+		while (q.size() > 0) {
+			int top = q.poll();
+			check.add(top);
+			for (int x: ls.get(top)) {	
+				if (visited[x] == 0) {
+					q.add(x);
+					visited[x] = 1;
+				}
+			}
+		}
+		int z = check.size() - 1;
+		for (int x: check) {	
+			if (indegree[x] < z) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int countCompleteComponents(int n, int[][] edges) {
+		int res = 0;
+		ArrayList<ArrayList<Integer>> ls = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			ls.add(new ArrayList<Integer>());
+		}
+		int indegree = new int[n];
+		for (int row: edges) {	
+			ls.get(row[0]).add(row[1]);
+			ls.get(row[1]).add(row[0]);
+			indegree[row[0]]++;
+			indegree[row[1]]++;
+		}
+		int visited = new int[n];
+		for (int i = 0; i < n; i++) {
+			if (visited[i] == 0) {
+				if (bfs(i,ls,indegree,visited) == true) {
+					res++;
+				}
+			}
+		}
+		return res;
+	}
+}

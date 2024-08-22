@@ -1,0 +1,28 @@
+class Solution {
+	int center;
+	long curTotal = 0;
+	int winSize;
+	int[] getAverages(int[] nums, int k) {
+		winSize = k * 2 + 1;
+		int[] ans = new int[nums.length];
+		Arrays.fill(ans,-1);
+		if (nums.length < winSize) {
+			return ans;
+		}
+		for (int i = 0; i < winSize; i++) {
+			curTotal += nums[i];
+		}
+		center = winSize / 2;
+		ans[center] = helper();
+		for (int i = winSize; i < nums.length; i++) {
+			int offseti = i - winSize;
+			curTotal = curTotal - nums[offseti] + nums[i];
+			center++;
+			ans[center] = helper();
+		}
+		return ans;
+	}
+	int helper() {
+		return (int) (curTotal / winSize);
+	}
+}

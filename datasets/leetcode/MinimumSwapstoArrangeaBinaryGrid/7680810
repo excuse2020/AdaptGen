@@ -1,0 +1,37 @@
+class Solution {
+	int minSwaps(int[][] grid) {
+		int n = grid.length;
+		int[] rowCount = new int[n];
+		if (n == 1) {
+			return 0;
+		}
+		for (int j = 0; j < n; j++) {
+			int count = 0;
+			for (int i = n - 1; i >= 0 && grid[j][i] != 1; i--) {
+				count++;
+			}
+			rowCount[j] = count;
+		}
+		int zeroCheck = n - 1, swap = 0, temp, sortedRows = 0, swapTemp;
+		while (zeroCheck >= 0) {
+			temp = zeroCheck;
+			for (int i = sortedRows; i < n; i++) {
+				if (rowCount[i] >= zeroCheck) {
+					for (int j = i; j > sortedRows; j--) {
+						swap++;
+						swapTemp = rowCount[j];
+						rowCount[j] = rowCount[j - 1];
+						rowCount[j - 1] = swapTemp;
+					}
+					zeroCheck--;
+					sortedRows++;
+					break;
+				}
+			}
+			if (zeroCheck == temp) {
+				return -1;
+			}
+		}
+		return swap;
+	}
+}

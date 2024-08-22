@@ -1,0 +1,70 @@
+class Solution {
+	int compute(int[] q, int n) {
+		int l = q[0];
+		int r = q[1];
+		if (l == r) {
+			return 0;
+		}
+		if ((l / 2 == r) || (r / 2 == l)) {
+			return 2;
+		}
+		int p1 = l;
+		int dist = 0;
+		while (p1 > 0 && p1 != r) {
+			p1 /= 2;
+			dist++;
+		}
+		if (p1 == r) {
+			return dist + 1;
+		}
+		int p2 = r;
+		dist = 0;
+		while (p2 > 0 && p2 != l) {
+			p2 /= 2;
+			dist++;
+		}
+		if (p2 == l) {
+			return dist + 1;
+		}
+		p1 = l;
+		p2 = r;
+		dist = 0;
+		int lca = helper(l,r);
+		int dist1 = 0;
+		while (l > lca) {
+			l >>= 1;
+			dist++;
+		}
+		int dist2 = 0;
+		while (r > lca) {
+			r >>= 1;
+			dist++;
+		}
+		return dist + 1;
+	}
+	int[] cycleLengthQueries(int n, int[][] queries) {
+		int[] ret = new int[queries.length];
+		int idx = 0;
+		for (int[] q: queries) {	
+			ret[idx++] = compute(q,n);
+		}
+		return ret;
+	}
+	int helper(int l, int r) {
+		int p1 = l, p2 = r;
+		while (p1 != p2) {
+			p1 >>= 1;
+			p2 >>= 1;
+			if (p1 == p2) {
+				break;
+			}
+			if (p1 == 1) {
+				p1 = r;
+			}
+			if (p2 == 1) {
+				p2 = l;
+			}
+		}
+		return p1;
+	}
+}

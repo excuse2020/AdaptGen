@@ -1,0 +1,32 @@
+class Solution {
+	int maxPathSum(TreeNode root) {
+		Stack<Integer> st = new Stack<Integer>();
+		st.add(root.val);
+		maxPathSum(root,st);
+		return st.peek();
+	}
+	int maxPathSum(TreeNode root, Stack<Integer> re) {
+		if (root.left == null && root.right == null) {
+			return root.val;
+		}
+		int left = 0;
+		int right = 0;
+		int max = root.val;
+		if (root.left != null) {
+			left = maxPathSum(root.left,re);
+			max = Math.max(max,left);
+			max = Math.max(max,left + root.val);
+		}
+		if (root.right != null) {
+			right = maxPathSum(root.right,re);
+			max = Math.max(max,right);
+			max = Math.max(max,right + root.val);
+		}
+		if (root.right != null && root.left != null) {
+			max = Math.max(max,right + left);
+		}
+		int currentRe = Math.max(max,re.pop());
+		re.add(currentRe);
+		return Math.max(Math.max(left + root.val,right + root.val),root.val);
+	}
+}

@@ -1,0 +1,44 @@
+class Solution {
+	boolean BST_judgement(int[] sequence, int left, int right) {
+		if (left >= right || left == right - 1) {
+			return true;
+		}
+		int root = sequence[right];
+		int mid = -1;
+		boolean flag = false;
+		for (int i = right - 1; i >= left; --i) {
+			if (!flag) {
+				if (sequence[i] < root) {
+					mid = i;
+					flag = true;
+				}
+			} 
+			else {
+				if (sequence[i] > root) {
+					flag = false;
+					break;
+				}
+			}
+		}
+		boolean res = true;
+		if (flag) {
+			res = res && BST_judgement(sequence,left,mid);
+			res = res && BST_judgement(sequence,mid + 1,right - 1);
+			return res;
+		} 
+		else {
+			if (mid == -1) {
+				res = res && BST_judgement(sequence,left,right - 1);
+				return res;
+			}
+			return false;
+		}
+	}
+	boolean VerifySquenceOfBST(int[] sequence) {
+		if (sequence.length == 0) {
+			return false;
+		}
+		boolean result = BST_judgement(sequence,0,sequence.length - 1);
+		return result;
+	}
+}

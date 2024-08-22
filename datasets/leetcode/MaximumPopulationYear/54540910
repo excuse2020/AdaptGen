@@ -1,0 +1,38 @@
+class Solution {
+	int maximumPopulation(int[][] logs) {
+		int start_year = 4000;
+		int end_year = -1;
+		for (int i = 0; i < logs.length; i++) {
+			if (logs[i][0] < start_year) {
+				start_year = logs[i][0];
+			}
+		}
+		for (int i = 0; i < logs.length; i++) {
+			if (logs[i][1] > end_year) {
+				end_year = logs[i][1];
+			}
+		}
+		int[] births = new int[end_year - start_year + 1];
+		int[] deaths = new int[end_year - start_year + 1];
+		int[] pop = new int[end_year - start_year + 1];
+		int max = -1;
+		int res = -1;
+		for (int i = 0; i < logs.length; i++) {
+			births[logs[i][0] - start_year]++;
+		}
+		for (int i = 0; i < logs.length; i++) {
+			deaths[logs[i][1] - start_year]++;
+		}
+		pop[0] = births[0] + deaths[0];
+		for (int i = 1; i < end_year - start_year + 1; i++) {
+			pop[i] = pop[i - 1] + births[i] - deaths[i];
+		}
+		for (int i = 0; i < end_year - start_year + 1; i++) {
+			if (pop[i] > max) {
+				max = pop[i];
+				res = i;
+			}
+		}
+		return res + start_year;
+	}
+}

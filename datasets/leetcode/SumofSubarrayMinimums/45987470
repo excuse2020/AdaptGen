@@ -1,0 +1,51 @@
+class Solution {
+	int[] getNSL(int[] arr, int n) {
+		int[] res = new int[n];
+		Stack<Integer> st = new Stack<>();
+		for (int i = 0; i < n; i++) {
+			if (st.isEmpty()) {
+				res[i] = -1;
+			} 
+			else {
+				while (!st.isEmpty() && arr[st.peek()] >= arr[i]) {
+					st.pop();
+				}
+				res[i] = st.isEmpty() ? -1 : st.peek();
+			}
+			st.push(i);
+		}
+		return res;
+	}
+	int[] getNSR(int[] arr, int n) {
+		int[] res = new int[n];
+		Stack<Integer> st = new Stack<>();
+		for (int i = n - 1; i >= 0; i--) {
+			if (st.isEmpty()) {
+				res[i] = n;
+			} 
+			else {
+				while (!st.isEmpty() && arr[st.peek()] > arr[i]) {
+					st.pop();
+				}
+				res[i] = st.isEmpty() ? n : st.peek();
+			}
+			st.push(i);
+		}
+		return res;
+	}
+	int sumSubarrayMins(int[] arr) {
+		int n = arr.length;
+		int[] nsl = getNSL(arr,n);
+		int[] nsr = getNSR(arr,n);
+		long sum = 0;
+		long M = 1000000007;
+		for (int i = 0; i < n; i++) {
+			long ls = (i - nsl[i]) % M;
+			long rs = (nsr[i] - i) % M;
+			long totalWays = (ls * rs) % M;
+			long totalSum = arr[i] * totalWays;
+			sum = (sum + totalSum) % M;
+		}
+		return (int) sum;
+	}
+}

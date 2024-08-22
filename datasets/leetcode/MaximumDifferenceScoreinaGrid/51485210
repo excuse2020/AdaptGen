@@ -1,0 +1,45 @@
+class Solution {
+	int ans, subres, grid_ij;
+	Integer dp;
+	int grid_m, grid_n;
+	int grid_new;
+	int res;
+	int maxScore(List<List<Integer>> grid) {
+		grid_m = grid.size();
+		grid_n = grid.get(0).size();
+		dp = new Integer[grid_m][grid_n];
+		grid_new = new int[grid_m][grid_n];
+		res = -999999;
+		for (int i = grid_m - 1; i >= 0; i--) {
+			for (int j = grid_n - 1; j >= 0; j--) {
+				grid_new[i][j] = grid.get(i).get(j);
+			}
+		}
+		for (int i = grid_m - 1; i >= 0; i--) {
+			for (int j = grid_n - 1; j >= 0; j--) {
+				traverse(i,j);
+			}
+		}
+		return res;
+	}
+	int traverse(int i, int j) {
+		ans = -1000000;
+		grid_ij = grid_new[i][j];
+		for (int c = i + 1; c < grid_m; c++) {
+			subres = grid_new[c][j] - grid_ij;
+			if (subres > 0) {
+				subres += dp[c][j];
+			}
+			ans = ans > subres ? ans : subres;
+		}
+		for (int c = j + 1; c < grid_n; c++) {
+			subres = grid_new[i][c] - grid_ij;
+			if (subres > 0) {
+				subres += dp[i][c];
+			}
+			ans = ans > subres ? ans : subres;
+		}
+		res = Math.max(res,ans);
+		return dp[i][j] = (ans > 0 ? ans : 0);
+	}
+}

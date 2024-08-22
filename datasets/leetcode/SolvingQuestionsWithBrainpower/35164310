@@ -1,0 +1,35 @@
+class Solution {
+	long maxPoint(int index, int[][] questions, long[] dp) {
+		if (index >= questions.length) {
+			return 0L;
+		}
+		if (dp[index] != -1) {
+			return dp[index];
+		}
+		long points = questions[index][0];
+		int jumps = questions[index][1];
+		long takeIt = points + maxPoint(index + jumps,questions,dp);
+		long nottakeIt = maxPoint(index + 1,questions,dp);
+		return dp[index] = Math.max(takeIt,nottakeIt);
+	}
+	long mostPoints(int[][] questions) {
+		long dp = new long[questions.length + 1];
+		Arrays.fill(dp,-1);
+		return maxPoint(0,questions,dp);
+	}
+}
+class Solution {
+	long mostPoints(int[][] questions) {
+		int n = questions.length;
+		long dp = new long[n + 1];
+		for (int i = n - 1; i >= 0; i--) {
+			long points = questions[i][0];
+			int jumps = questions[i][1];
+			jumps = Math.min(n,i + jumps);
+			long takeIt = points + dp[jumps];
+			long nottakeIt = dp[i + 1];
+			dp[i] = Math.max(takeIt,nottakeIt);
+		}
+		return dp[0];
+	}
+}

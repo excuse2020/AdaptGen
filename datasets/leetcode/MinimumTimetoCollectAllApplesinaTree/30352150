@@ -1,0 +1,39 @@
+class Solution {
+	int dfs(Map<Integer, List<int[]>> edgeMap, List<Boolean> hasApple, Integer curr) {
+		if (curr == null) {
+			return 0;
+		}
+		List<int[]> adjEdge = edgeMap.get(curr);
+		int subTreeSteps = 0;
+		if (adjEdge != null) {
+			for (int[] edge: adjEdge) {	
+				subTreeSteps += dfs(edgeMap,hasApple,edge[1]);
+			}
+		}
+		if ((subTreeSteps > 0 || hasApple.get(curr)) && curr != 0) {
+			subTreeSteps += 2;
+		}
+		return subTreeSteps;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		Map<Integer, List<int[]>> edgeMap = new HashMap<>();
+		Set<Integer> ver = new HashSet<>();
+		for (int[] edge: edges) {	
+			if (ver.contains(edge[0]) || edge[0] == 0) {
+				edgeMap.putIfAbsent(edge[0],new LinkedList<>());
+				ver.add(edge[0]);
+				ver.add(edge[1]);
+				edgeMap.get(edge[0]).add(edge);
+			} 
+			else {
+				if (ver.contains(edge[1])) {
+					ver.add(edge[0]);
+					ver.add(edge[1]);
+					edgeMap.putIfAbsent(edge[1],new LinkedList<>());
+					edgeMap.get(edge[1]).add(new int{edge[1], edge[0]});
+				}
+			}
+		}
+		return dfs(edgeMap,hasApple,0);
+	}
+}

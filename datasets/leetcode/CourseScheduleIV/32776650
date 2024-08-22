@@ -1,0 +1,38 @@
+class Solution {
+	List<List<Integer>> adj;
+	List<Set<Integer>> reachables;
+	boolean visit;
+	List<Boolean> checkIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
+		adj = new ArrayList<>();
+		reachables = new ArrayList<>();
+		visit = new boolean[numCourses];
+		for (int i = 0; i < numCourses; i++) {
+			adj.add(new ArrayList<>());
+			reachables.add(new HashSet<>());
+		}
+		for (var e: prerequisites) {	
+			adj.get(e[0]).add(e[1]);
+		}
+		for (int i = 0; i < numCourses; i++) {
+			if (!visit[i]) {
+				dfs(i);
+			}
+		}
+		List<Boolean> ans = new ArrayList<>();
+		for (var q: queries) {	
+			ans.add(reachables.get(q[0]).contains(q[1]));
+		}
+		return ans;
+	}
+	Set<Integer> dfs(int n) {
+		if (visit[n]) {
+			return reachables.get(n);
+		}
+		visit[n] = true;
+		for (var c: adj.get(n)) {	
+			reachables.get(n).add(c);
+			reachables.get(n).addAll(dfs(c));
+		}
+		return reachables.get(n);
+	}
+}

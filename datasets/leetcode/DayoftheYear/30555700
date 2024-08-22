@@ -1,0 +1,37 @@
+class Solution {
+	int dayOfYear(String date) {
+		int dayCount = 0;
+		int year = Integer.parseInt(date.substring(0,4));
+		boolean isLeapYear = ((year % 400 == 0) || (year % 4 == 0) && (year % 100 != 0));
+		int month = date.charAt(5) == 0 ? Character.getNumericValue(date.charAt(6)) : Integer.parseInt(date.substring(5,7));
+		boolean includesAugust = month >= 8;
+		int day = date.charAt(8) == 0 ? Character.getNumericValue(date.charAt(9)) : Integer.parseInt(date.substring(8,10));
+		for (int i = 1; i < month && i <= 7; i++) {
+			if (month == 1) {
+				dayCount += day;
+				return dayCount;
+			}
+			if (i == 2) {
+				dayCount += isLeapYear ? 29 : 28;
+			}
+			if (i % 2 != 0) {
+				dayCount += 31;
+			} 
+			else if (i % 2 == 0 && i != 2) {
+				dayCount += 30;
+			}
+		}
+		if (includesAugust) {
+			for (int i = 8; i < month; i++) {
+				if (i % 2 != 0) {
+					dayCount += 30;
+				} 
+				else if (i % 2 == 0) {
+					dayCount += 31;
+				}
+			}
+		}
+		dayCount += day;
+		return dayCount;
+	}
+}

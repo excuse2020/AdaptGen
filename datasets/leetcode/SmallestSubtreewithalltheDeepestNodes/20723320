@@ -1,0 +1,27 @@
+class Solution {
+	TreeNode lca = null;
+	int maxD = -1;
+	int recur(TreeNode node, int d) {
+		if (node == null) {
+			return -1;
+		}
+		if (node.left == null && node.right == null) {
+			if (d > maxD) {
+				maxD = d;
+				lca = node;
+			}
+			return d;
+		}
+		int left = recur(node.left,d + 1);
+		int right = recur(node.right,d + 1);
+		if (left == right && left == maxD) {
+			lca = node;
+			return left;
+		}
+		return Math.max(left,right);
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		recur(root,0);
+		return lca;
+	}
+}

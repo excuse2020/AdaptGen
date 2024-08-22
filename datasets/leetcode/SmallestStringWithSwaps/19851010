@@ -1,0 +1,37 @@
+class Solution {
+	int[] set;
+	int find(int x) {
+		if (x != set[x]) {
+			set[x] = find(set[x]);
+		}
+		return set[x];
+	}
+	String smallestStringWithSwaps(String s, List<List<Integer>> pairs) {
+		int n = s.length();
+		set = new int[n];
+		for (int i = 0; i < n; i++) {
+			set[i] = i;
+		}
+		for (List<Integer> p: pairs) {	
+			int a = p.get(0), b = p.get(1);
+			union(a,b);
+		}
+		char[] d = s.toCharArray();
+		PriorityQueue<Character>[] map = new PriorityQueue[n];
+		for (int i = 0; i < n; i++) {
+			int r = find(i);
+			if (map[r] == null) {
+				map[r] = new PriorityQueue<>();
+			}
+			map[r].add(d[i]);
+		}
+		StringBuilder ans = new StringBuilder();
+		for (int i = 0; i < n; i++) {
+			ans.append(map[find(i)].poll());
+		}
+		return ans.toString();
+	}
+	void union(int a, int b) {
+		set[find(set[a])] = find(b);
+	}
+}

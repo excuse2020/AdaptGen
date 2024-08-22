@@ -1,0 +1,35 @@
+class Solution {
+	int[] countVisitedNodes(List<Integer> edges) {
+		LinkedHashSet<Integer> set = new LinkedHashSet<>();
+		int[] ans = new int[edges.size()];
+		for (int i = 0; i < edges.size(); i++) {
+			if (ans[i] == 0) {
+				int node = i;
+				while (set.add(node)) {
+					node = edges.get(node);
+					if (ans[node] != 0) {
+						ans[i] = set.size() + ans[node];
+						set.clear();
+						break;
+					}
+				}
+				int dist = 0;
+				boolean cycle = false;
+				for (int n: set) {	
+					if (n == node) {
+						cycle = true;
+					}
+					if (cycle) {
+						ans[n] = set.size() - dist;
+					} 
+					else {
+						ans[n] = set.size() - dist;
+						dist++;
+					}
+				}
+				set.clear();
+			}
+		}
+		return ans;
+	}
+}

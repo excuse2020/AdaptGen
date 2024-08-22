@@ -1,0 +1,48 @@
+class Solution {
+	TreeNode build(int[] pre, int[] inv) {
+		if (pre.length == 0 || inv.length == 0) {
+			return null;
+		}
+		TreeNode root = new TreeNode(pre[0]);
+		int i = 0;
+		while (pre[0] != inv[i]) {
+			i++;
+		}
+		root.left = build(Arrays.copyOfRange(pre,1,i + 1),Arrays.copyOfRange(inv,0,i));
+		root.right = build(Arrays.copyOfRange(pre,i + 1,pre.length),Arrays.copyOfRange(inv,i + 1,inv.length));
+		return root;
+	}
+	ArrayList<Integer> right(TreeNode root) {
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(root);
+		ArrayList<Integer> ans = new ArrayList<>();
+		while (!q.isEmpty()) {
+			int k = q.size();
+			while (k-- > 0) {
+				TreeNode node = q.poll();
+				if (k == 0) {
+					ans.add(node.val);
+				}
+				if (node.left != null) {
+					q.add(node.left);
+				}
+				if (node.right != null) {
+					q.add(node.right);
+				}
+			}
+		}
+		return ans;
+	}
+	int[] solve(int[] xianxu, int[] zhongxu) {
+		if (xianxu.length == 0) {
+			return new int[0];
+		}
+		TreeNode root = build(xianxu,zhongxu);
+		ArrayList<Integer> ans = right(root);
+		int[] res = new int[ans.size()];
+		for (int i = 0; i < ans.size(); i++) {
+			res[i] = ans.get(i);
+		}
+		return res;
+	}
+}

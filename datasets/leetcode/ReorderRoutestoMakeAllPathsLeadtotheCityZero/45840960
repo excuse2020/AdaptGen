@@ -1,0 +1,43 @@
+class Solution {
+	int minReorder(int n, int[][] connections) {
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		Set<List<Integer>> edges = new HashSet<>();
+		int i;
+		for (i = 0; i < connections.length; i++) {
+			int source = connections[i][0];
+			int destination = connections[i][1];
+			List<Integer> edge = new ArrayList<>();
+			edge.add(source);
+			edge.add(destination);
+			edges.add(edge);
+			List<Integer> neighbours1 = graph.getOrDefault(source,new ArrayList<>());
+			List<Integer> neighbours2 = graph.getOrDefault(destination,new ArrayList<>());
+			neighbours1.add(destination);
+			neighbours2.add(source);
+			graph.put(source,neighbours1);
+			graph.put(destination,neighbours2);
+		}
+		Queue<Integer> q = new LinkedList<>();
+		Set<Integer> visited = new HashSet<>();
+		int count = 0;
+		q.offer(0);
+		visited.add(0);
+		while (!q.isEmpty()) {
+			int node = q.poll();
+			List<Integer> neighbours = graph.get(node);
+			for (i = 0; i < neighbours.size(); i++) {
+				if (!visited.contains(neighbours.get(i))) {
+					q.offer(neighbours.get(i));
+					visited.add(neighbours.get(i));
+					List<Integer> edge = new ArrayList<>();
+					edge.add(neighbours.get(i));
+					edge.add(node);
+					if (!edges.contains(edge)) {
+						count++;
+					}
+				}
+			}
+		}
+		return count;
+	}
+}

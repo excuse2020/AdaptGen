@@ -1,0 +1,35 @@
+class Solution {
+	int ans = 0;
+	boolean isPalindrome(int[] freq) {
+		int modSum = 0;
+		for (int i = 0; i < freq.length; i++) {
+			modSum += freq[i] % 2;
+		}
+		if (modSum > 1) {
+			return false;
+		}
+		ans++;
+		return true;
+	}
+	void palindromicPaths(TreeNode root, int[] freq) {
+		if (root == null) {
+			return;
+		}
+		if (root.left == null && root.right == null) {
+			freq[root.val]++;
+			isPalindrome(freq);
+			freq[root.val]--;
+			return;
+		}
+		freq[root.val]++;
+		palindromicPaths(root.left,freq);
+		palindromicPaths(root.right,freq);
+		freq[root.val]--;
+	}
+	int pseudoPalindromicPaths(TreeNode root) {
+		palindromicPaths(root,new int[10]);
+		int res = ans;
+		ans = 0;
+		return res;
+	}
+}

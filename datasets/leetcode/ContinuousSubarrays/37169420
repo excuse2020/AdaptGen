@@ -1,0 +1,27 @@
+class Solution {
+	long continuousSubarrays(int[] nums) {
+		TreeMap<Integer, Integer> map = new TreeMap<>();
+		long ans = 0;
+		int i = 0, j = 0;
+		while (j < nums.length) {
+			map.put(nums[j],map.getOrDefault(nums[j],0) + 1);
+			Integer low = map.firstKey();
+			Integer high = map.lastKey();
+			while ((i < j) && (high - low > 2)) {
+				int val = map.get(nums[i]);
+				if (val == 1) {
+					map.remove(nums[i]);
+				} 
+				else {
+					map.put(nums[i],val - 1);
+				}
+				i++;
+				low = map.firstKey();
+				high = map.lastKey();
+			}
+			ans += (j - i) + 1;
+			j++;
+		}
+		return ans;
+	}
+}

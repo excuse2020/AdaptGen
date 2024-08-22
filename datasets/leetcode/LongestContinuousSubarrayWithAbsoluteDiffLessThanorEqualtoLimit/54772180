@@ -1,0 +1,27 @@
+class Solution {
+	int longestSubarray(int[] nums, int limit) {
+		TreeMap<Integer, Integer> map = new TreeMap<>();
+		int prev = 0;
+		int curr = 0;
+		int n = nums.length;
+		int ans = 0;
+		while (curr < n) {
+			int v = nums[curr];
+			map.put(v,map.getOrDefault(v,0) + 1);
+			while (prev < curr && map.lastKey() - map.firstKey() > limit) {
+				int pv = nums[prev];
+				int freq = map.get(pv);
+				if (freq == 1) {
+					map.remove(pv);
+				} 
+				else {
+					map.put(pv,freq - 1);
+				}
+				prev++;
+			}
+			curr++;
+			ans = Math.max(curr - prev,ans);
+		}
+		return ans;
+	}
+}

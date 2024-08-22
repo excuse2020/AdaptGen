@@ -1,0 +1,48 @@
+class Solution {
+	int numOfMinutes(int n, int headId, int[] manager, int[] informTime) {
+		Map<Integer, List<Integer>> managerToDirectsMap = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			int managerId = manager[i];
+			if (!managerToDirectsMap.containsKey(managerId)) {
+				managerToDirectsMap.put(managerId,new ArrayList<>());
+			}
+			managerToDirectsMap.get(managerId).add(i);
+		}
+		int totalTime = 0;
+		Queue<int[]> queue = new LinkedList<>();
+		queue.offer(new int{headId, 0});
+		while (!queue.isEmpty()) {
+			int[] entry = queue.poll();
+			int managerId = entry[0], time = entry[1];
+			totalTime = Math.max(totalTime,time);
+			int nextLevelBroadcastTime = time + informTime[managerId];
+			for (int directId: managerToDirectsMap.getOrDefault(managerId,Collections.emptyList())) {	
+				queue.offer(new int{directId, nextLevelBroadcastTime});
+			}
+		}
+		return totalTime;
+	}
+}
+class Solution {
+	int dfs(int headId, Map<Integer, List<Integer>> managerToDirectsMap, int[] informTime) {
+		if (informTime[headId] == 0) {
+			return 0;
+		}
+		int time = 0;
+		for (int directId: managerToDirectsMap.get(headId)) {	
+			time = Math.max(time,dfs(directId,managerToDirectsMap,informTime));
+		}
+		return informTime[headId] + time;
+	}
+	int numOfMinutes(int n, int headId, int[] manager, int[] informTime) {
+		Map<Integer, List<Integer>> managerToDirectsMap = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			int managerId = manager[i];
+			if (!managerToDirectsMap.containsKey(managerId)) {
+				managerToDirectsMap.put(managerId,new ArrayList<>());
+			}
+			managerToDirectsMap.get(managerId).add(i);
+		}
+		return dfs(headId,managerToDirectsMap,informTime);
+	}
+}

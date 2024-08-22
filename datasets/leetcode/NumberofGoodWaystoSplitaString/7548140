@@ -1,0 +1,29 @@
+class Solution {
+	int numSplits(String s) {
+		int[] prevIncludingCurrent = new int[s.length()];
+		int[] nextExcludingCurrent = new int[s.length()];
+		Set<Character> setChars = new HashSet<>();
+		int currentUniqueChars = 0;
+		for (int i = 0; i < s.length(); i++) {
+			if (setChars.add(s.charAt(i))) {
+				currentUniqueChars++;
+			}
+			prevIncludingCurrent[i] = currentUniqueChars;
+		}
+		setChars = new HashSet<>();
+		currentUniqueChars = 0;
+		for (int i = s.length() - 1; i >= 0; i--) {
+			nextExcludingCurrent[i] = currentUniqueChars;
+			if (setChars.add(s.charAt(i))) {
+				currentUniqueChars++;
+			}
+		}
+		int ans = 0;
+		for (int i = 0; i < s.length(); i++) {
+			if (nextExcludingCurrent[i] == prevIncludingCurrent[i]) {
+				ans++;
+			}
+		}
+		return ans;
+	}
+}

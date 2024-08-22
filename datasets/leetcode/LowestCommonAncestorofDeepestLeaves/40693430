@@ -1,0 +1,40 @@
+class Solution {
+	TreeNode lca(TreeNode root, List<TreeNode> l) {
+		if (root == null || l.contains(root)) {
+			return root;
+		}
+		TreeNode left = lca(root.left,l);
+		TreeNode right = lca(root.right,l);
+		if (left == null) {
+			return right;
+		} 
+		else if (right == null) {
+			return left;
+		} 
+		else {
+			return root;
+		}
+	}
+	TreeNode lcaDeepestLeaves(TreeNode root) {
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(root);
+		List<TreeNode> l = new ArrayList<>();
+		int n = 0;
+		TreeNode t = null;
+		while (!q.isEmpty()) {
+			n = q.size();
+			l.clear();
+			for (int i = 0; i < n; i++) {
+				t = q.poll();
+				l.add(t);
+				if (t.left != null) {
+					q.add(t.left);
+				}
+				if (t.right != null) {
+					q.add(t.right);
+				}
+			}
+		}
+		return lca(root,l);
+	}
+}

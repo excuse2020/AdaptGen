@@ -1,0 +1,30 @@
+class Solution {
+	int binarySearch(int[] spells, int potions, int si, int ei, int val, long target) {
+		while (si <= ei) {
+			int mid = si + (ei - si) / 2;
+			if ((long) val * (long) potions[mid] >= target) {
+				if (mid == 0) {
+					return potions.length - mid;
+				} 
+				else if ((long) val * (long) potions[mid - 1] < target) {
+					return potions.length - mid;
+				} 
+				else {
+					ei = mid - 1;
+				}
+			} 
+			else {
+				si = mid + 1;
+			}
+		}
+		return 0;
+	}
+	int[] successfulPairs(int[] spells, int[] potions, long success) {
+		Arrays.sort(potions);
+		int[] result = new int[spells.length];
+		for (int i = 0; i < spells.length; i++) {
+			result[i] = binarySearch(spells,potions,0,potions.length - 1,spells[i],success);
+		}
+		return result;
+	}
+}

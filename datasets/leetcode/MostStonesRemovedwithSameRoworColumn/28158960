@@ -1,0 +1,60 @@
+class disjoint {
+	int[] parent;
+	int[] size;
+	void createSet(int len) {
+		parent = new int[len + 1];
+		size = new int[len + 1];
+		for (int i = 0; i < len + 1; i++) {
+			parent[i] = i;
+		}
+		Arrays.fill(size,1);
+	}
+	int findUPr(int u) {
+		if (parent[u] == u) {
+			return u;
+		}
+		return parent[u] = findUPr(parent[u]);
+	}
+	void unionBySize(int u, int v) {
+		int ul_pr_u = findUPr(u);
+		int ul_pr_v = findUPr(v);
+		if (ul_pr_u == ul_pr_v) {
+			return;
+		}
+		if (size[ul_pr_u] > size[ul_pr_v]) {
+			parent[ul_pr_v] = ul_pr_u;
+			size[ul_pr_u] += size[ul_pr_v];
+		} 
+		else {
+			parent[ul_pr_u] = ul_pr_v;
+			size[ul_pr_v] += size[ul_pr_u];
+		}
+	}
+}
+class Solution {
+	int removeStones(int[][] stones) {
+		disjoint dj = new disjoint();
+		int row = 0;
+		int col = 0;
+		int count = 0;
+		for (int i = 0; i < stones.length; i++) {
+			row = Math.max(row,stones[i][0]);
+			col = Math.max(col,stones[i][1]);
+		}
+		dj.createSet(row + col);
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < stones.length; i++) {
+			int rowNode = stones[i][0];
+			int colNode = stones[i][1] + row;
+			dj.unionBySize(rowNode,colNode);
+			map.put(rowNode,1);
+			map.put(colNode,1);
+		}
+		for (Integer i: map.keySet()) {	
+			if (dj.findUPr(i) == i) {
+				count++;
+			}
+		}
+		return stones.length - count;
+	}
+}

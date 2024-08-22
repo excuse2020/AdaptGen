@@ -1,0 +1,36 @@
+class Solution {
+	int n;
+	int nums;
+	int helper(int ind, int diff, Integer dp) {
+		if (ind == n) {
+			return 0;
+		}
+		if (dp[ind][diff + 501] != null) {
+			return dp[ind][diff + 501];
+		}
+		int res = 0;
+		if (diff == -501) {
+			for (int j = ind + 1; j < n; j++) {
+				int take = 1 + helper(j,nums[j] - nums[ind],dp);
+				int notTake = 0 + helper(j,diff,dp);
+				res = Math.max(res,Math.max(take,notTake));
+			}
+		} 
+		else {
+			for (int j = ind + 1; j < n; j++) {
+				int take = 0;
+				if (diff == nums[j] - nums[ind]) {
+					take = 1 + helper(j,nums[j] - nums[ind],dp);
+				}
+				res = Math.max(res,take);
+			}
+		}
+		return dp[ind][diff + 501] = res;
+	}
+	int longestArithSeqLength(int[] nums) {
+		this.n = nums.length;
+		this.nums = nums;
+		Integer dp = new Integer[n][1002];
+		return helper(0,-501,dp) + 1;
+	}
+}

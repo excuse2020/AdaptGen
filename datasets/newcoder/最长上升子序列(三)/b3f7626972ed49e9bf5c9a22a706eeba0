@@ -1,0 +1,40 @@
+class Solution {
+	int[] LIS(int[] arr) {
+		int len = 1, n = arr.length;
+		if (n == 0) {
+			return new int[0];
+		}
+		int[] d = new int[n + 1];
+		int[] w = new int[n];
+		d[len] = arr[0];
+		w[0] = len;
+		for (int i = 1; i < n; i++) {
+			if (arr[i] > d[len]) {
+				d[++len] = arr[i];
+				w[i] = len;
+			} 
+			else {
+				int left = 1, right = len, pos = 0;
+				while (left <= right) {
+					int mid = (left + right) >> 1;
+					if (d[mid] < arr[i]) {
+						pos = mid;
+						left = mid + 1;
+					} 
+					else {
+						right = mid - 1;
+					}
+				}
+				d[pos + 1] = arr[i];
+				w[i] = pos + 1;
+			}
+		}
+		int[] result = new int[len];
+		for (int i = n - 1, j = len; j > 0; i--) {
+			if (w[i] == j) {
+				result[--j] = arr[i];
+			}
+		}
+		return result;
+	}
+}

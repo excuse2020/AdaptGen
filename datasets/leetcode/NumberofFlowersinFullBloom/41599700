@@ -1,0 +1,53 @@
+class Solution {
+	int[] fullBloomFlowers(int[][] flowers, int[] people) {
+		int n = flowers.length;
+		int m = people.length;
+		int[] start = new int[n];
+		int[] end = new int[n];
+		for (int i = 0; i < n; i++) {
+			start[i] = flowers[i][0];
+			end[i] = flowers[i][1];
+		}
+		int[] result = new int[m];
+		Arrays.sort(start);
+		Arrays.sort(end);
+		for (int i = 0; i < m; i++) {
+			int already_bloomed = upper_bond(start,people[i]);
+			int already_dead = lower_bond(end,people[i]);
+			result[i] = already_bloomed - already_dead;
+		}
+		return result;
+	}
+	int lower_bond(int[] arr, int target) {
+		int left = 0;
+		int right = arr.length - 1;
+		int result = -1;
+		while (left <= right) {
+			int mid = left + (right - left) / 2;
+			if (arr[mid] < target) {
+				left = mid + 1;
+			} 
+			else {
+				result = mid;
+				right = mid - 1;
+			}
+		}
+		return result == -1 ? arr.length : result;
+	}
+	int upper_bond(int[] arr, int target) {
+		int left = 0;
+		int right = arr.length - 1;
+		int result = -1;
+		while (left <= right) {
+			int mid = left + (right - left) / 2;
+			if (arr[mid] > target) {
+				result = mid;
+				right = mid - 1;
+			} 
+			else {
+				left = mid + 1;
+			}
+		}
+		return result == -1 ? arr.length : result;
+	}
+}

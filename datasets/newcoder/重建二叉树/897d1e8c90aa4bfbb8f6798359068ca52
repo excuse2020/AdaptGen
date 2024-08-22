@@ -1,0 +1,38 @@
+class Solution {
+	TreeNode process(LinkedList<Integer> pre, ArrayList<Integer> vin, HashMap<Integer, Integer> nodeIndexs, int start, int end) {
+		if (start > end || pre.isEmpty()) {
+			return null;
+		}
+		if (start == end) {
+			return new TreeNode(pre.poll());
+		}
+		int val = pre.poll();
+		TreeNode root = new TreeNode(val);
+		int index = nodeIndexs.get(val);
+		TreeNode leftNode = process(pre,vin,nodeIndexs,start,index - 1);
+		TreeNode rightNode = process(pre,vin,nodeIndexs,index + 1,end);
+		root.left = leftNode;
+		root.right = rightNode;
+		return root;
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] vin) {
+		if (0 == pre.length) {
+			return null;
+		}
+		if (1 == pre.length) {
+			return new TreeNode(pre[0]);
+		}
+		LinkedList<Integer> linkedList = new LinkedList<>();
+		ArrayList<Integer> arrayList = new ArrayList<>();
+		HashMap<Integer, Integer> hashMap = new HashMap<>();
+		for (int tmp: pre) {	
+			linkedList.add(tmp);
+		}
+		for (int i = 0; i < vin.length; i++) {
+			arrayList.add(vin[i]);
+			hashMap.put(vin[i],i);
+		}
+		TreeNode root = process(linkedList,arrayList,hashMap,0,arrayList.size() - 1);
+		return root;
+	}
+}

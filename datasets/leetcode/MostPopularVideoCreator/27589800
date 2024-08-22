@@ -1,0 +1,28 @@
+class Solution {
+	List<List<String>> mostPopularCreator(String[] creators, String[] ids, int[] views) {
+		long maxi = 0;
+		HashMap<String, long[]> table = new HashMap<>();
+		for (int i = 0; i != ids.length; i++) {
+			long tmp = table.get(creators[i]);
+			if (tmp == null) {
+				table.put(creators[i],tmp = new long{0, i});
+			}
+			if (maxi < (tmp[0] += views[i])) {
+				maxi = tmp[0];
+			}
+			if (views[(int)tmp[1]] < views[i] || (views[(int)tmp[1]] == views[i] && ids[i].compareTo(ids[(int)tmp[1]]) < 0)) {
+				tmp[1] = i;
+			}
+		}
+		List<List<String>> ans = new LinkedList<>();
+		for (Map.Entry<String, long[]> it: table.entrySet()) {	
+			if (it.getValue()[0] == maxi) {
+				LinkedList<String> list = new LinkedList<>();
+				list.add(it.getKey());
+				list.add(ids[(int)it.getValue()[1]]);
+				ans.add(list);
+			}
+		}
+		return ans;
+	}
+}

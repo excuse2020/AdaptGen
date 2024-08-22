@@ -1,0 +1,33 @@
+class Solution {
+	int rows, cols;
+	int maxIncreasingCells(int[][] M) {
+		rows = M.length;
+		cols = M[0].length;
+		int[] lastFromRow = new int[rows];
+		int[] lastFromCol = new int[cols];
+		int[] longestFromRow = new int[rows];
+		int[] longestFromCol = new int[cols];
+		TreeMap<Integer, List<int[]>> valToPos = new TreeMap<>();
+		for (int r = 0; r < rows; r++) {
+			for (int c = 0; c < cols; c++) {
+				valToPos.computeIfAbsent(M[r][c],(l) -> {new ArrayList<>()}).add(new int{r, c});
+			}
+		}
+		int best = 1;
+		for (int val: valToPos.keySet()) {	
+			for (int[] curr: valToPos.get(val)) {	
+				int r = curr[0];
+				int c = curr[1];
+				M[r][c] = 1 + Math.max(longestFromRow[r],longestFromCol[c]);
+				best = Math.max(best,M[r][c]);
+			}
+			for (int[] curr: valToPos.get(val)) {	
+				int r = curr[0];
+				int c = curr[1];
+				longestFromRow[r] = Math.max(M[r][c],longestFromRow[r]);
+				longestFromCol[c] = Math.max(M[r][c],longestFromCol[c]);
+			}
+		}
+		return best;
+	}
+}

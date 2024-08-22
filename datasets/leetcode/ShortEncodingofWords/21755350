@@ -1,0 +1,27 @@
+class Solution {
+	int minimumLengthEncoding(String[] words) {
+		Map<String, Integer> wordsMap = new HashMap<>();
+		for (String word: words) {	
+			if (!wordsMap.containsKey(word)) {
+				wordsMap.put(word,0);
+			}
+			wordsMap.put(word,wordsMap.get(word) + 1);
+		}
+		for (var word: wordsMap.keySet()) {	
+			if (wordsMap.get(word) == 0) {
+				continue;
+			}
+			for (int i = 0; i < word.length(); i++) {
+				if (wordsMap.containsKey(word.substring(i))) {
+					wordsMap.put(word.substring(i),0);
+				}
+			}
+			wordsMap.put(word,1);
+		}
+		int res = 0;
+		for (var word: wordsMap.keySet()) {	
+			res += wordsMap.get(word) > 0 ? word.length() + 1 : 0;
+		}
+		return res;
+	}
+}

@@ -1,0 +1,52 @@
+class Solution {
+	int countDigitOne(int n) {
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int i = 1; i < 10; i++) {
+			map.put(i,1);
+		}
+		map.put(0,0);
+		if (n < 10) {
+			return map.get(n);
+		}
+		int count = 10;
+		int index = 1;
+		int i = 10;
+		while (i <= n) {
+			int ans;
+			if (count != i) {
+				ans = map.get(i - count) + map.get(count - 1);
+				if ((i - 1) / count == 1) {
+					ans += count - 1;
+				}
+			} 
+			else {
+				ans = map.get(count - 1);
+				if ((i) / count == 1) {
+					ans++;
+				}
+			}
+			map.put(i,ans);
+			i += count;
+			index++;
+			if (index == 10) {
+				map.put(i - 1,map.get(i - count) + map.get(count - 1));
+				index = 1;
+				count *= 10;
+			}
+		}
+		int pow = 10;
+		int ans = 0;
+		int val = n;
+		while (val > 0) {
+			ans += map.get(val % pow);
+			int temp = n % pow;
+			val = val / pow;
+			if (val % 10 == 1) {
+				ans += temp;
+			}
+			val = val * pow;
+			pow *= 10;
+		}
+		return ans;
+	}
+}

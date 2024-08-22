@@ -1,0 +1,24 @@
+class Solution {
+	int maxSumMinProduct(int[] nums) {
+		int mod = (int) Math.pow(10,9) + 7;
+		Deque<Integer> stack = new ArrayDeque<>();
+		stack.add(-1);
+		long accum = 0;
+		long product = 0;
+		long[] prefixSum = new long[nums.length + 1];
+		for (int i = 0; i <= nums.length; ++i) {
+			while (stack.peek() != -1 && (i == nums.length || nums[stack.peek()] > nums[i])) {
+				int mid = stack.pop();
+				long sum = prefixSum[i] - prefixSum[stack.peek() + 1];
+				long result = nums[mid] * sum;
+				product = Math.max(product,result);
+			}
+			stack.push(i);
+			if (i < nums.length) {
+				accum += nums[i];
+				prefixSum[i + 1] = accum;
+			}
+		}
+		return (int) (product % mod);
+	}
+}

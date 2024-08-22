@@ -1,0 +1,45 @@
+class Solution {
+	int getMaxArea(int[] height) {
+		Deque<Integer> stack = new LinkedList<>();
+		int[] newHeight = new int[height.length + 2];
+		newHeight[0] = 0;
+		newHeight[newHeight.length - 1] = 0;
+		System.arraycopy(height,0,newHeight,1,height.length);
+		stack.push(0);
+		int maxArea = 0;
+		for (int i = 1; i < newHeight.length; i++) {
+			if (newHeight[i] >= newHeight[stack.peek()]) {
+				stack.push(i);
+			} 
+			else {
+				while (!stack.isEmpty() && newHeight[i] < newHeight[stack.peek()]) {
+					int mid = stack.pop();
+					if (!stack.isEmpty()) {
+						int left = stack.peek();
+						int area = (i - left) * newHeight[mid];
+						maxArea = Math.max(maxArea,area);
+					}
+				}
+				stack.push(i);
+			}
+		}
+		return maxArea;
+	}
+	int maximalRectangle(int[][] matrix) {
+		int n = matrix.length, m = matrix[0].length;
+		int[] height = new int[m];
+		int maxArea = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				if (matrix[i][j] == 1) {
+					height[j]++;
+				} 
+				else {
+					height[j] = 0;
+				}
+			}
+			maxArea = Math.max(maxArea,getMaxArea(height));
+		}
+		return maxArea;
+	}
+}

@@ -1,0 +1,29 @@
+class Solution {
+	double helper(int i, int j, Map<Integer, Map<Integer, Double>> dp) {
+		if (i <= 0 && j <= 0) {
+			return 0.5;
+		}
+		if (i <= 0) {
+			return 1;
+		}
+		if (j <= 0) {
+			return 0;
+		}
+		if (dp.get(i) != null && dp.get(i).get(j) != null) {
+			return dp.get(i).get(j);
+		}
+		double ans = 0.25 * (helper(i - 4,j,dp) + helper(i - 3,j - 1,dp));
+		dp.computeIfAbsent(i,(k) -> {new HashMap<>()}).put(j,ans);
+		return dp.get(i).get(j);
+	}
+	double soupServings(int n) {
+		int m = (int) Math.ceil(n / 25.0);
+		Map<Integer, Map<Integer, Double>> dp = new HashMap<>();
+		for (int k = 1; k <= m; k++) {
+			if (helper(k,k,dp) >= 1 - 1e-5) {
+				return 1.0;
+			}
+		}
+		return helper(m,m,dp);
+	}
+}

@@ -1,0 +1,25 @@
+class Solution {
+	long taskSchedulerII(int[] tasks, int space) {
+		HashMap<Integer, Integer> mp = new HashMap<>();
+		long days = 0;
+		for (int i = 0; i < tasks.length; i++) {
+			if (mp.containsKey(tasks[i])) {
+				long curspace = i - mp.get(tasks[i]);
+				if (curspace < space) {
+					long breaks = space - curspace;
+					days += breaks;
+					for (Map.Entry<Integer, Integer> it: mp.entrySet()) {	
+						mp.put(it.getKey(),it.getValue() - (int) breaks);
+					}
+				}
+				mp.put(tasks[i],i);
+				days++;
+			} 
+			else {
+				mp.put(tasks[i],i);
+				days++;
+			}
+		}
+		return days;
+	}
+}

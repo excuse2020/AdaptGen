@@ -1,0 +1,52 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		ListNode l1 = reverse(head1);
+		ListNode l2 = reverse(head2);
+		Stack<Integer> s = new Stack<>();
+		int j = 0;
+		int sum = 0;
+		while (l1 != null || l2 != null) {
+			if (l1 != null) {
+				sum = sum + l1.val;
+				l1 = l1.next;
+			}
+			if (l2 != null) {
+				sum = sum + l2.val;
+				l2 = l2.next;
+			}
+			sum = sum + j;
+			int res = sum % 10;
+			s.add(res);
+			if (sum >= 10) {
+				j = 1;
+			} 
+			else {
+				j = 0;
+			}
+			sum = 0;
+		}
+		if (j == 1) {
+			s.add(1);
+		}
+		ListNode head;
+		ListNode node = new ListNode(s.pop());
+		head = node;
+		while (!s.isEmpty()) {
+			ListNode nextnode = new ListNode(s.pop());
+			node.next = nextnode;
+			node = node.next;
+		}
+		return head;
+	}
+	ListNode reverse(ListNode node) {
+		ListNode pre = null;
+		ListNode next = null;
+		while (node != null) {
+			next = node.next;
+			node.next = pre;
+			pre = node;
+			node = next;
+		}
+		return pre;
+	}
+}

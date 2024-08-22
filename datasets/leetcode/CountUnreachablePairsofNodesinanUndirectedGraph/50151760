@@ -1,0 +1,41 @@
+class Solution {
+	long countPairs(int n, int[][] edges) {
+		long ans = 0;
+		List<List<Integer>> graph = new ArrayList<>(n);
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			graph.get(edge[0]).add(edge[1]);
+			graph.get(edge[1]).add(edge[0]);
+		}
+		List<Long> disjointSet = new LinkedList<>();
+		boolean[] visited = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			if (visited[i] == true) {
+				continue;
+			}
+			visited[i] = true;
+			Stack<Integer> stk = new Stack<>();
+			stk.push(i);
+			long count = 1;
+			while (!stk.isEmpty()) {
+				int tp = stk.pop();
+				for (int adj: graph.get(tp)) {	
+					if (!visited[adj]) {
+						visited[adj] = true;
+						stk.push(adj);
+						count++;
+					}
+				}
+			}
+			disjointSet.add(count);
+		}
+		long nn = n;
+		for (long elem: disjointSet) {	
+			ans += (elem) * (nn - elem);
+			nn -= elem;
+		}
+		return ans;
+	}
+}

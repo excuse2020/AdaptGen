@@ -1,0 +1,52 @@
+class Solution {
+	int componentValue(int[] nums, int[][] edges) {
+		Map<Integer, Set<Integer>> graph = new HashMap();
+		int sum = 0;
+		int maxValue = 0;
+		for (int index = 0; index < nums.length; index += 1) {
+			sum += nums[index];
+			maxValue = Math.max(maxValue,nums[index]);
+		}
+		for (int index = 0; index < edges.length; index += 1) {
+			int u = edges[index][0];
+			int v = edges[index][1];
+			Set<Integer> children1 = graph.getOrDefault(u,new HashSet());
+			children1.add(v);
+			graph.put(u,children1);
+			Set<Integer> children2 = graph.getOrDefault(v,new HashSet());
+			children2.add(u);
+			graph.put(v,children2);
+		}
+		int ans = 0;
+		int n = nums.length;
+		int maxCount = sum / maxValue;
+		for (int index = maxCount; index > 1; index -= 1) {
+			if (sum % index == 0) {
+				boolean[] visited = new boolean[n];
+				int ans2 = isPossible(graph,sum / index,0,nums,visited);
+				if (ans2 == 0) {
+					return (index - 1);
+				}
+			}
+		}
+		return ans;
+	}
+	int isPossible(Map<Integer, Set<Integer>> graph, int targetSum, int start, int[] nums, boolean[] visited) {
+		if (nums[start] > targetSum) {
+			return nums[start];
+		}
+		visited[start] = true;
+		Set<Integer> children = graph.getOrDefault(start,new HashSet());
+		int childSum = nums[start];
+		for (Integer child: children) {	
+			if (!visited[child]) {
+				int tempAns = isPossible(graph,targetSum,child,nums,visited);
+				childSum += tempAns;
+			}
+		}
+		if (childSum == targetSum) {
+			return 0;
+		}
+		return childSum;
+	}
+}

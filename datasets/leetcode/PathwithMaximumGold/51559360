@@ -1,0 +1,26 @@
+class Solution {
+	int find(int[][] g, int i, int j, boolean[][] v) {
+		if (i < 0 || j < 0 || i == g.length || j == g[0].length || g[i][j] == 0 || v[i][j] == true) {
+			return 0;
+		}
+		int val = g[i][j];
+		v[i][j] = true;
+		int max = Math.max(Math.max(find(g,i + 1,j,v),find(g,i - 1,j,v)),Math.max(find(g,i,j + 1,v),find(g,i,j - 1,v)));
+		v[i][j] = false;
+		return val + max;
+	}
+	int getMaximumGold(int[][] grid) {
+		int res = 0;
+		int m = grid.length;
+		int n = grid[0].length;
+		boolean[][] v = new boolean[m][n];
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				if (grid[i][j] != 0) {
+					res = Math.max(res,find(grid,i,j,v));
+				}
+			}
+		}
+		return res;
+	}
+}

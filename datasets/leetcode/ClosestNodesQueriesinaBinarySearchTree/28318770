@@ -1,0 +1,59 @@
+class Solution {
+	int binarySearch(List<Integer> inorder, int query) {
+		int start = 0;
+		int stop = inorder.size() - 1;
+		int mid;
+		while (start <= stop) {
+			mid = (start + stop) / 2;
+			if (inorder.get(mid) == query) {
+				return mid;
+			} 
+			else if (inorder.get(mid) < query) {
+				start = mid + 1;
+			} 
+			else {
+				stop = mid - 1;
+			}
+		}
+		return stop + 1;
+	}
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		List<Integer> minmax;
+		List<Integer> inorder = new ArrayList<>();
+		inorderTraverse(root,inorder);
+		int index;
+		List<List<Integer>> res = new ArrayList<>();
+		for (int i: queries) {	
+			index = binarySearch(inorder,i);
+			minmax = new ArrayList<>();
+			if (index < inorder.size()) {
+				minmax.add(inorder.get(index));
+				if (inorder.get(index) == i) {
+					minmax.add(i);
+				} 
+				else {
+					if (index != 0) {
+						minmax.add(0,inorder.get(index - 1));
+					} 
+					else {
+						minmax.add(0,-1);
+					}
+				}
+			} 
+			else {
+				minmax.add(inorder.get(index - 1));
+				minmax.add(-1);
+			}
+			res.add(minmax);
+		}
+		return res;
+	}
+	void inorderTraverse(TreeNode root, List<Integer> inorder) {
+		if (root == null) {
+			return;
+		}
+		inorderTraverse(root.left,inorder);
+		inorder.add(root.val);
+		inorderTraverse(root.right,inorder);
+	}
+}

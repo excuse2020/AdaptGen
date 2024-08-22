@@ -1,0 +1,67 @@
+class Solution {
+	boolean haveIntersection(Set<Integer> set1, Set<Integer> set2) {
+		if (set1.size() > set2.size()) {
+			return haveIntersection(set2,set1);
+		}
+		for (int val: set1) {	
+			if (set2.contains(val)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	int numBusesToDestination(int[][] routes, int source, int target) {
+		if (source == target) {
+			return 0;
+		}
+		int len = routes.length;
+		Map<Integer, Set<Integer>> routeToStops = new HashMap<>();
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		Queue<Integer> queue = new LinkedList<>();
+		boolean[] visited = new boolean[len];
+		Set<Integer> end = new HashSet<>();
+		for (int i = 0; i < len; i++) {
+			Set<Integer> set = new HashSet<>();
+			for (int val: routes[i]) {	
+				set.add(val);
+				if (val == source) {
+					queue.offer(i);
+					visited[i] = true;
+				} 
+				else if (val == target) {
+					end.add(i);
+				}
+			}
+			routeToStops.put(i,set);
+			graph.put(i,new ArrayList<>());
+		}
+		for (int i = 0; i < len; i++) {
+			for (int j = i + 1; j < len; j++) {
+				if (haveIntersection(routeToStops.get(i),routeToStops.get(j))) {
+					graph.get(i).add(j);
+					graph.get(j).add(i);
+				}
+			}
+		}
+		int steps = 1;
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				int curr = queue.poll();
+				if (end.contains(curr)) {
+					return steps;
+				}
+				System.out.println("curr: " + curr);
+				for (int next: graph.get(curr)) {	
+					if (visited[next]) {
+						continue;
+					}
+					queue.offer(next);
+					visited[next] = true;
+				}
+			}
+			steps++;
+		}
+		return -1;
+	}
+}

@@ -1,0 +1,30 @@
+class Solution {
+	long maximumSubarraySum(int[] nums, int k) {
+		HashSet<Integer> uniqEls = new HashSet<>();
+		int i = 0;
+		long preSum = 0, maxSum = 0;
+		for (int j = 0; j < nums.length; j++) {
+			if (j - i + 1 > k) {
+				preSum -= nums[i];
+				uniqEls.remove(nums[i]);
+				i++;
+			}
+			if (uniqEls.add(nums[j])) {
+				preSum += nums[j];
+			} 
+			else {
+				while (uniqEls.contains(nums[j])) {
+					preSum -= nums[i];
+					uniqEls.remove(nums[i]);
+					i++;
+				}
+				preSum += nums[j];
+				uniqEls.add(nums[j]);
+			}
+			if (j - i + 1 == k) {
+				maxSum = Math.max(preSum,maxSum);
+			}
+		}
+		return maxSum;
+	}
+}

@@ -1,0 +1,44 @@
+class Solution {
+	int[] memo;
+	int deleteString(String s) {
+		memo = new int[s.length() + 1];
+		Arrays.fill(memo,-1);
+		return helper(s);
+	}
+	int helper(String s) {
+		int len = s.length();
+		if (len == 1) {
+			return 1;
+		}
+		if (memo[len] != -1) {
+			return memo[len];
+		}
+		char[] arr = s.toCharArray();
+		boolean allSame = true;
+		char fisrt = arr[0];
+		for (char ch: arr) {	
+			if (fisrt != ch) {
+				allSame = false;
+			}
+		}
+		if (allSame) {
+			return memo[len] = len;
+		}
+		int max = 0;
+		for (int j = 1; j <= len / 2; j++) {
+			if (arr[0] == arr[j]) {
+				boolean flag = true;
+				for (int k = 0; k < j; k++) {
+					if (arr[k] != arr[j + k]) {
+						flag = false;
+						break;
+					}
+				}
+				if (flag) {
+					max = Math.max(max,helper(s.substring(j)));
+				}
+			}
+		}
+		return memo[len] = max + 1;
+	}
+}

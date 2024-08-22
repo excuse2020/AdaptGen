@@ -1,0 +1,76 @@
+class Solution {
+	void add(int[] nums, int num, int lastIdx) {
+		nums[lastIdx + 1] = num;
+		moveUp(nums,lastIdx + 1);
+	}
+	int delete(int[] nums, int lastIdx) {
+		int top = nums[0];
+		nums[0] = nums[lastIdx];
+		moveDown(nums,0,lastIdx - 1);
+		return top;
+	}
+	int getLeftChildIdx(int parent, int lastIndex) {
+		int idx = 2 * parent + 1;
+		return idx > lastIndex ? -1 : idx;
+	}
+	int getRightChildIdx(int parent, int lastIndex) {
+		int idx = 2 * parent + 2;
+		return idx > lastIndex ? -1 : idx;
+	}
+	void heapify(int[] nums) {
+		int l = nums.length / 2;
+		for (int i = l; i >= 0; i--) {
+			moveDown(nums,i,nums.length - 1);
+		}
+	}
+	int lastStoneWeight(int[] stones) {
+		heapify(stones);
+		int lastIdx = stones.length - 1;
+		while (lastIdx > 0) {
+			int top1 = delete(stones,lastIdx--);
+			int top2 = delete(stones,lastIdx--);
+			int result = top1 - top2;
+			if (result != 0) {
+				add(stones,result,lastIdx++);
+			}
+		}
+		return lastIdx == 0 ? stones[0] : 0;
+	}
+	void moveDown(int[] nums, int idx, int lastIdx) {
+		int leftIdx = getLeftChildIdx(idx,lastIdx);
+		int rightIdx = getRightChildIdx(idx,lastIdx);
+		int largest = idx;
+		if (leftIdx != -1 && nums[leftIdx] > nums[largest]) {
+			largest = leftIdx;
+		}
+		if (rightIdx != -1 && nums[rightIdx] > nums[largest]) {
+			largest = rightIdx;
+		}
+		if (largest != idx) {
+			swap(nums,idx,largest);
+			moveDown(nums,largest,lastIdx);
+		}
+	}
+	void moveUp(int[] nums, int idx) {
+		int parent = (idx - 1) / 2;
+		if (parent < 0) {
+			return;
+		}
+		if (nums[idx] > nums[parent]) {
+			swap(nums,idx,parent);
+			moveUp(nums,parent);
+		}
+	}
+	void print(int[] nums, int lastIdx) {
+		StringJoiner sb = new StringJoiner(", ");
+		for (int i = 0; i <= lastIdx; i++) {
+			sb.add(String.valueOf(nums[i]));
+		}
+		System.out.println("LastIdx " + lastIdx);
+	}
+	void swap(int[] nums, int idx1, int idx2) {
+		int temp = nums[idx1];
+		nums[idx1] = nums[idx2];
+		nums[idx2] = temp;
+	}
+}

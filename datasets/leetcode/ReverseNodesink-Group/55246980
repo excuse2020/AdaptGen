@@ -1,0 +1,47 @@
+class Solution {
+	int length(ListNode head) {
+		int k = 0;
+		ListNode curr = head;
+		while (curr != null) {
+			curr = curr.next;
+			k++;
+		}
+		return k;
+	}
+	ListNode reverseKGroup(ListNode head, int k) {
+		int rotations = length(head) / k;
+		ListNode curr = head;
+		ListNode next = null, prev = null;
+		ListNode newEnd = curr;
+		int temp = k;
+		if (rotations >= 1) {
+			while (curr != null && temp > 0) {
+				next = curr.next;
+				curr.next = prev;
+				prev = curr;
+				curr = next;
+				temp = temp - 1;
+			}
+			rotations--;
+		}
+		head = prev;
+		ListNode temp1 = null;
+		while (rotations > 0) {
+			ListNode prev1 = null;
+			temp = k;
+			temp1 = newEnd;
+			newEnd = curr;
+			ListNode next1 = null;
+			while (curr != null && temp-- > 0) {
+				next1 = curr.next;
+				curr.next = prev1;
+				prev1 = curr;
+				curr = next1;
+			}
+			temp1.next = prev1;
+			rotations--;
+		}
+		newEnd.next = curr;
+		return head;
+	}
+}

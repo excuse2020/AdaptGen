@@ -1,0 +1,25 @@
+class Solution {
+	int[] decrypt(int[] code, int k) {
+		int len = code.length;
+		int[] pre = new int[len];
+		pre[0] = code[0];
+		for (int i = 1; i < len; i++) {
+			pre[i] = pre[i - 1] + code[i];
+		}
+		int[] ans = new int[len];
+		for (int i = 0; i < len; i++) {
+			if (k == 0) {
+				ans[i] = 0;
+			} 
+			else if (k < 0) {
+				k *= -1;
+				ans[i] = (i - k < 0) ? pre[i] - code[i] + pre[len - 1] - pre[len - k + i - 1] : pre[i] - pre[i - k] + code[i - k];
+				k *= -1;
+			} 
+			else {
+				ans[i] = (i + k > len - 1) ? pre[len - 1] - pre[i] + pre[k + i - len] : pre[i + k] - pre[i];
+			}
+		}
+		return ans;
+	}
+}

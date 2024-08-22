@@ -1,0 +1,42 @@
+class Solution {
+	boolean bfs(int i, List<Integer>[] graph, int[] color) {
+		color[i] = 1;
+		Queue<Integer> queue = new LinkedList<>();
+		queue.add(i);
+		while (!queue.isEmpty()) {
+			int curr = queue.poll();
+			if (graph[curr] != null) {
+				for (int next: graph[curr]) {	
+					if (color[next] == 0) {
+						color[next] = -color[curr];
+						queue.add(next);
+					} 
+					else if (color[next] == color[curr]) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		int[] color = new int[n + 1];
+		List<Integer>[] graph = new List[n + 1];
+		for (int[] e: dislikes) {	
+			if (graph[e[0]] == null) {
+				graph[e[0]] = new ArrayList<>();
+			}
+			graph[e[0]].add(e[1]);
+			if (graph[e[1]] == null) {
+				graph[e[1]] = new ArrayList<>();
+			}
+			graph[e[1]].add(e[0]);
+		}
+		for (int i = 1; i <= n; i++) {
+			if (color[i] == 0 && !bfs(i,graph,color)) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

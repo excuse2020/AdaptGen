@@ -1,0 +1,40 @@
+class Solution {
+	boolean checkValidity(String s, String t) {
+		int i = 0;
+		int j = 0;
+		if (t.length() != s.length() + 1) {
+			return false;
+		}
+		while (i < s.length() && j < t.length()) {
+			if (s.charAt(i) == t.charAt(j)) {
+				i++;
+			}
+			j++;
+		}
+		return i == s.length();
+	}
+	int longestStrChain(String[] arr) {
+		Arrays.sort(arr,(a, b) -> {Integer.compare(a.length(),b.length())});
+		int n = arr.length;
+		int dp = new int[n + 1][n + 1];
+		for (int i = 0; i <= n; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		return solve(0,-1,arr,dp);
+	}
+	int solve(int i, int prev, String arr, int dp) {
+		int n = arr.length;
+		if (i >= n) {
+			return 0;
+		}
+		if (dp[i][prev + 1] != -1) {
+			return dp[i][prev + 1];
+		}
+		int notTake = solve(i + 1,prev,arr,dp);
+		int take = 0;
+		if (prev == -1 || checkValidity(arr[prev],arr[i])) {
+			take = 1 + solve(i + 1,i,arr,dp);
+		}
+		return dp[i][prev + 1] = Math.max(take,notTake);
+	}
+}

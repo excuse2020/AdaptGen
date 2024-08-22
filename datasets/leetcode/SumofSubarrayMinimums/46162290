@@ -1,0 +1,49 @@
+class Solution {
+	int[] NSL(int[] arr) {
+		Stack<Integer> st = new Stack<>();
+		int[] a = new int[arr.length];
+		for (int i = 0; i < arr.length; i++) {
+			while (!st.isEmpty() && arr[i] < arr[st.peek()]) {
+				st.pop();
+			}
+			if (!st.isEmpty()) {
+				a[i] = st.peek();
+			} 
+			else {
+				a[i] = -1;
+			}
+			st.push(i);
+		}
+		return a;
+	}
+	int[] NSR(int[] arr) {
+		Stack<Integer> st = new Stack<>();
+		int[] a = new int[arr.length];
+		for (int i = arr.length - 1; i >= 0; i--) {
+			while (!st.isEmpty() && arr[i] <= arr[st.peek()]) {
+				st.pop();
+			}
+			if (!st.isEmpty()) {
+				a[i] = st.peek();
+			} 
+			else {
+				a[i] = arr.length;
+			}
+			st.push(i);
+		}
+		return a;
+	}
+	int sumSubarrayMins(int[] arr) {
+		int[] ls = NSL(arr);
+		int[] rs = NSR(arr);
+		int sum = 0;
+		for (int i = 0; i < arr.length; i++) {
+			int ans = i - ls[i];
+			int ans1 = rs[i] - i;
+			long totalways = ans * ans1;
+			long totalsum = arr[i] * totalways;
+			sum = (int) ((sum + totalsum) % 1000000007);
+		}
+		return sum;
+	}
+}

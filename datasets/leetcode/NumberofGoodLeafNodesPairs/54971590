@@ -1,0 +1,59 @@
+class Solution {
+	int count;
+	Map<TreeNode, TreeNode[]> graph = new HashMap<>();
+	List<TreeNode> store = new ArrayList<>();
+	int countPairs(TreeNode root, int distance) {
+		count = 0;
+		createGraph(root,null);
+		for (TreeNode leaf: store) {	
+			Map<TreeNode, Boolean> vis = new HashMap<>();
+			dfs(leaf,vis,distance,0,leaf);
+		}
+		return count / 2;
+	}
+	void createGraph(TreeNode root, TreeNode parent) {
+		if (root == null) {
+			return;
+		}
+		if (graph.containsKey(root.val) == false) {
+			graph.put(root,new TreeNode{null, null, null});
+		}
+		if (root.left != null) {
+			TreeNode nbrs = graph.get(root);
+			nbrs[0] = root.left;
+			graph.put(root,nbrs);
+		}
+		if (root.right != null) {
+			TreeNode nbrs = graph.get(root);
+			nbrs[1] = root.right;
+			graph.put(root,nbrs);
+		}
+		if (parent != null) {
+			TreeNode nbrs = graph.get(root);
+			nbrs[2] = parent;
+			graph.put(root,nbrs);
+		}
+		if (root.left == null && root.right == null) {
+			store.add(root);
+		}
+		createGraph(root.left,root);
+		createGraph(root.right,root);
+	}
+	void dfs(TreeNode src, Map<TreeNode, Boolean> vis, int dis, int level, TreeNode start) {
+		vis.put(src,true);
+		TreeNode nbrs = graph.get(src);
+		if (nbrs[1] == null && nbrs[0] == null && level <= dis) {
+			if (start != src) {
+				count++;
+			}
+		}
+		if (level > dis) {
+			return;
+		}
+		for (int i = 0; i < nbrs.length; i++) {
+			if (vis.containsKey(nbrs[i]) == false && nbrs[i] != null) {
+				dfs(nbrs[i],vis,dis,level + 1,start);
+			}
+		}
+	}
+}

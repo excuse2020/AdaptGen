@@ -1,0 +1,28 @@
+class Solution {
+	TreeNode balanceBST(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		List<Integer> inOrderTraversal = new ArrayList<>();
+		convertInorder(root,inOrderTraversal);
+		return constructBST(inOrderTraversal,0,inOrderTraversal.size() - 1);
+	}
+	TreeNode constructBST(List<Integer> inOrderTraversal, int start, int end) {
+		if (start > end) {
+			return null;
+		}
+		int mid = start + (end - start) / 2;
+		TreeNode root = new TreeNode(inOrderTraversal.get(mid));
+		root.left = constructBST(inOrderTraversal,start,mid - 1);
+		root.right = constructBST(inOrderTraversal,mid + 1,end);
+		return root;
+	}
+	void convertInorder(TreeNode root, List<Integer> inOrderTraversal) {
+		if (root == null) {
+			return;
+		}
+		convertInorder(root.left,inOrderTraversal);
+		inOrderTraversal.add(root.val);
+		convertInorder(root.right,inOrderTraversal);
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	int dfs(int ind, int[][] bombs, boolean[] visited) {
+		visited[ind] = true;
+		long r = bombs[ind][2];
+		r = r * r;
+		int ans = 0;
+		for (int i = 0; i < bombs.length; i++) {
+			if (i == ind || visited[i]) {
+				continue;
+			}
+			long xDiff = (bombs[ind][0] - bombs[i][0]);
+			long yDiff = (bombs[ind][1] - bombs[i][1]);
+			long dis = xDiff * xDiff + yDiff * yDiff;
+			if (dis <= r) {
+				ans += dfs(i,bombs,visited);
+			}
+		}
+		return ans + 1;
+	}
+	int maximumDetonation(int[][] bombs) {
+		int ans = 0;
+		int n = bombs.length;
+		boolean[] visited = new boolean[n];
+		int var;
+		for (int i = 0; i < n; i++) {
+			Arrays.fill(visited,false);
+			var = dfs(i,bombs,visited);
+			ans = Math.max(ans,var);
+		}
+		return ans;
+	}
+}

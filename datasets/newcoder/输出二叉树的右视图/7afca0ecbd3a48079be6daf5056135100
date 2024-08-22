@@ -1,0 +1,55 @@
+class Solution {
+	TreeNode getTree(int[] pre, int[] vin) {
+		if (pre.length == 0) {
+			return null;
+		}
+		TreeNode root = new TreeNode(pre[0]);
+		for (int i = 0; i < vin.length; ++i) {
+			if (pre[0] == vin[i]) {
+				root.left = getTree(Arrays.copyOfRange(pre,1,i + 1),Arrays.copyOfRange(vin,0,i));
+				root.right = getTree(Arrays.copyOfRange(pre,i + 1,pre.length),Arrays.copyOfRange(vin,i + 1,vin.length));
+				break;
+			}
+		}
+		return root;
+	}
+	ArrayList<Integer> rightSideView(TreeNode root) {
+		Map<Integer, Integer> mp = new HashMap<Integer, Integer>();
+		int max_depth = -1;
+		Stack<TreeNode> nodes = new Stack<TreeNode>();
+		Stack<Integer> depths = new Stack<Integer>();
+		nodes.push(root);
+		depths.push(0);
+		while (!nodes.isEmpty()) {
+			TreeNode node = nodes.pop();
+			int depth = depths.pop();
+			if (node != null) {
+				max_depth = Math.max(max_depth,depth);
+				if (mp.get(depth) == null) {
+					mp.put(depth,node.val);
+				}
+				nodes.push(node.left);
+				nodes.push(node.right);
+				depths.push(depth + 1);
+				depths.push(depth + 1);
+			}
+		}
+		ArrayList<Integer> res = new ArrayList<Integer>();
+		for (int i = 0; i <= max_depth; ++i) {
+			res.add(mp.get(i));
+		}
+		return res;
+	}
+	int[] solve(int[] preOrder, int[] inOrder) {
+		if (preOrder.length == 0) {
+			return new int[0];
+		}
+		TreeNode root = getTree(preOrder,inOrder);
+		ArrayList<Integer> temp = rightSideView(root);
+		int[] res = new int[temp.size()];
+		for (int i = 0; i < temp.size(); ++i) {
+			res[i] = temp.get(i);
+		}
+		return res;
+	}
+}

@@ -1,0 +1,44 @@
+class Solution {
+	List<List<Integer>> getSkyline(int[][] buildings) {
+		int maxHeightSoFar = 0;
+		Queue<int[]> startsMinQueue = new PriorityQueue<>((a, b) -> {a[0] - b[0]});
+		Queue<int[]> endsMinQueue = new PriorityQueue<>((a, b) -> {a[0] - b[0]});
+		Queue<Integer> heightsMaxQueue = new PriorityQueue<>((a, b) -> {b - a});
+		heightsMaxQueue.offer(0);
+		List<List<Integer>> result = new ArrayList<>();
+		Map<Integer, Integer> resultMap = new TreeMap<>();
+		for (int[] building: buildings) {	
+			int start = building[0];
+			int end = building[1];
+			int height = building[2];
+			startsMinQueue.offer(new int{start, height});
+			endsMinQueue.offer(new int{end, height});
+		}
+		while (!(startsMinQueue.isEmpty() && endsMinQueue.isEmpty())) {
+			if (startsMinQueue.isEmpty() || (endsMinQueue.peek()[0] < startsMinQueue.peek()[0])) {
+				int[] cur = endsMinQueue.poll();
+				int curEnd = cur[0];
+				int curHeight = cur[1];
+				heightsMaxQueue.remove(curHeight);
+				maxHeightSoFar = heightsMaxQueue.peek();
+				if (curHeight > maxHeightSoFar) {
+					resultMap.put(curEnd,maxHeightSoFar);
+				}
+			} 
+			else if (endsMinQueue.isEmpty() || (startsMinQueue.peek()[0] <= endsMinQueue.peek()[0])) {
+				int[] cur = startsMinQueue.poll();
+				int curStart = cur[0];
+				int curHeight = cur[1];
+				heightsMaxQueue.offer(curHeight);
+				if (curHeight > maxHeightSoFar) {
+					resultMap.put(curStart,Math.max(curHeight,maxHeightSoFar));
+					maxHeightSoFar = Math.max(curHeight,maxHeightSoFar);
+				}
+			}
+		}
+		for (Map.Entry<Integer, Integer> entry: resultMap.entrySet()) {	
+			result.add(Arrays.asList(entry.getKey(),entry.getValue()));
+		}
+		return result;
+	}
+}

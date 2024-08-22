@@ -1,0 +1,57 @@
+class Solution {
+	int calculate(int vertex, boolean visited, HashMap<Integer, ArrayList<Integer>> map) {
+		if (visited[vertex] == true) {
+			return 0;
+		}
+		visited[vertex] = true;
+		int count = 1;
+		if (map.containsKey(vertex) == false) {
+			return count;
+		}
+		ArrayList<Integer> temp = map.get(vertex);
+		for (int i = 0; i < temp.size(); i++) {
+			if (visited[temp.get(i)] == false) {
+				count += calculate(temp.get(i),visited,map);
+			}
+		}
+		return count;
+	}
+	long countPairs(int n, int[][] edges) {
+		HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+		for (int i = 0; i < edges.length; i++) {
+			int temp = edges[i];
+			if (map.containsKey(temp[0])) {
+				ArrayList<Integer> list = map.get(temp[0]);
+				list.add(temp[1]);
+			} 
+			else {
+				ArrayList<Integer> list = new ArrayList<>();
+				list.add(temp[1]);
+				map.put(temp[0],list);
+			}
+			if (map.containsKey(temp[1])) {
+				ArrayList<Integer> list = map.get(temp[1]);
+				list.add(temp[0]);
+			} 
+			else {
+				ArrayList<Integer> list = new ArrayList<>();
+				list.add(temp[0]);
+				map.put(temp[1],list);
+			}
+		}
+		boolean visited = new boolean[n];
+		ArrayList<Integer> l1 = new ArrayList<>();
+		for (int i = 0; i < visited.length; i++) {
+			if (visited[i] == false) {
+				int temp = calculate(i,visited,map);
+				l1.add(temp);
+			}
+		}
+		long answer = 0;
+		for (int i = 0; i < l1.size(); i++) {
+			int curr = l1.get(i);
+			answer = answer + (long) curr * (long) (n - curr);
+		}
+		return answer / 2;
+	}
+}

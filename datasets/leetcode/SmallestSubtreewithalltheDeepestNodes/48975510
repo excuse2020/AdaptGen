@@ -1,0 +1,52 @@
+class Solution {
+	TreeNode findLowestCommonAncestor(TreeNode root, List<TreeNode> nodes) {
+		if (root == null) {
+			return root;
+		}
+		for (TreeNode node: nodes) {	
+			if (root.val == node.val) {
+				return node;
+			}
+		}
+		TreeNode left = findLowestCommonAncestor(root.left,nodes);
+		TreeNode right = findLowestCommonAncestor(root.right,nodes);
+		if (left != null && right != null) {
+			return root;
+		} 
+		else if (left != null) {
+			return left;
+		} 
+		else if (right != null) {
+			return right;
+		} 
+		else {
+			return null;
+		}
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		int depth = 0;
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.offer(root);
+		List<List<TreeNode>> depthList = new ArrayList<>();
+		while (queue.size() > 0) {
+			List<TreeNode> nodeList = new ArrayList<>();
+			int size = queue.size();
+			while (size != 0) {
+				TreeNode node = queue.poll();
+				if (node.left != null) {
+					queue.add(node.left);
+				}
+				if (node.right != null) {
+					queue.add(node.right);
+				}
+				nodeList.add(node);
+				size--;
+			}
+			depthList.add(nodeList);
+		}
+		return findLowestCommonAncestor(root,depthList.get(depthList.size() - 1));
+	}
+}

@@ -1,0 +1,44 @@
+class Solution {
+	int InversePairs(int[] array) {
+		if (array.length == 0) {
+			return 0;
+		}
+		return mergeSort(array,0,array.length - 1) % 1000000007;
+	}
+	int merge(int[] array, int left, int mid, int right) {
+		int start = left;
+		int mm = mid + 1;
+		int[] tmp = new int[right - left + 1];
+		int index = 0;
+		int count = 0;
+		while (start <= mid && mm <= right) {
+			if (array[start] <= array[mm]) {
+				tmp[index++] = array[start++];
+			} 
+			else {
+				count += (mid - start + 1);
+				tmp[index++] = array[mm++];
+			}
+		}
+		while (start <= mid) {
+			tmp[index++] = array[start++];
+		}
+		while (mm <= right) {
+			tmp[index++] = array[mm++];
+		}
+		index = 0;
+		for (int i = left; i <= right; i++) {
+			array[i] = tmp[index++];
+		}
+		return count % 1000000007;
+	}
+	int mergeSort(int[] array, int left, int right) {
+		if (left >= right) {
+			return 0;
+		}
+		int mid = (left + right) >> 1;
+		int leftSum = mergeSort(array,left,mid);
+		int rightSum = mergeSort(array,mid + 1,right);
+		return (leftSum + rightSum);
+	}
+}

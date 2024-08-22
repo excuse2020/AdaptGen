@@ -1,0 +1,40 @@
+class Solution {
+	int maxProfit(int[] p) {
+		int len = p.length;
+		int dp = new int[len + 1][2][3];
+		int temp;
+		for (int i = len - 1; i >= 0; i--) {
+			for (int b = 1; b >= 0; b--) {
+				for (int cap = 1; cap < 3; cap++) {
+					if (b == 1) {
+						temp = Math.max(-p[i] + dp[i + 1][0][cap],dp[i + 1][1][cap]);
+					} 
+					else {
+						temp = Math.max(p[i] + dp[i + 1][1][cap - 1],dp[i + 1][0][cap]);
+					}
+					dp[i][b][cap] = temp;
+				}
+			}
+		}
+		return dp[0][1][2];
+	}
+	int memo(int ind, int b, int n, int cap, int p, int dp) {
+		if (ind == n) {
+			return 0;
+		}
+		if (cap == 0) {
+			return 0;
+		}
+		int sum = 0;
+		if (dp[ind][b][cap] != -1) {
+			return dp[ind][b][cap];
+		}
+		if (b == 1) {
+			sum = Math.max(-p[ind] + memo(ind + 1,0,n,cap,p,dp),memo(ind + 1,1,n,cap,p,dp));
+		} 
+		else {
+			sum = Math.max(p[ind] + memo(ind + 1,1,n,cap - 1,p,dp),memo(ind + 1,0,n,cap,p,dp));
+		}
+		return dp[ind][b][cap] = sum;
+	}
+}

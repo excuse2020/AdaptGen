@@ -1,0 +1,30 @@
+class Solution {
+	int maximumTastiness(int[] price, int k) {
+		Arrays.sort(price);
+		int n = price.length, s = 0, e = price[n - 1] - price[s], res = 0;
+		if (k == 2) {
+			return price[n - 1] - price[s];
+		}
+		while (s <= e) {
+			int mid = s + (e - s) / 2;
+			if (valid(price,mid,k)) {
+				res = mid;
+				s = mid + 1;
+			} 
+			else {
+				e = mid - 1;
+			}
+		}
+		return res;
+	}
+	boolean valid(int[] price, int x, int k) {
+		int prev = price[0], count = 1;
+		for (int i = 1; i < price.length; i++) {
+			if (price[i] - prev >= x) {
+				count++;
+				prev = price[i];
+			}
+		}
+		return count >= k;
+	}
+}

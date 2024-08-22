@@ -1,0 +1,33 @@
+class Solution {
+	int countMaxOrSubsets(int[] nums) {
+		List<List<Integer>> ans = new ArrayList<>();
+		List<Integer> temp = new ArrayList<>();
+		helper(ans,temp,nums,0);
+		int maxOR = 0;
+		for (int i: nums) {	
+			maxOR = maxOR | i;
+		}
+		int count = 0;
+		for (List<Integer> tl: ans) {	
+			int OR = 0;
+			for (int i: tl) {	
+				OR = OR | i;
+			}
+			if (OR == maxOR) {
+				count++;
+			}
+		}
+		return count;
+	}
+	void helper(List<List<Integer>> ans, List<Integer> temp, int[] nums, int idx) {
+		if (idx == nums.length) {
+			List<Integer> ba = new ArrayList<>(temp);
+			ans.add(ba);
+			return;
+		}
+		temp.add(nums[idx]);
+		helper(ans,temp,nums,idx + 1);
+		temp.remove(temp.size() - 1);
+		helper(ans,temp,nums,idx + 1);
+	}
+}

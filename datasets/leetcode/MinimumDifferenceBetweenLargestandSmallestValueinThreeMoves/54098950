@@ -1,0 +1,55 @@
+class Solution {
+	int minDifference(int[] nums) {
+		int len = nums.length, res = Integer.MAX_VALUE;
+		if (len < 5) {
+			return 0;
+		}
+		int[] aLow = new int[4];
+		Arrays.fill(aLow,Integer.MAX_VALUE);
+		int[] aHigh = new int[4];
+		Arrays.fill(aHigh,Integer.MIN_VALUE);
+		for (int val: nums) {	
+			if (val <= aLow[0]) {
+				aLow[3] = aLow[2];
+				aLow[2] = aLow[1];
+				aLow[1] = aLow[0];
+				aLow[0] = val;
+			} 
+			else if (val <= aLow[1]) {
+				aLow[3] = aLow[2];
+				aLow[2] = aLow[1];
+				aLow[1] = val;
+			} 
+			else if (val <= aLow[2]) {
+				aLow[3] = aLow[2];
+				aLow[2] = val;
+			} 
+			else if (val <= aLow[3]) {
+				aLow[3] = val;
+			}
+			if (val >= aHigh[0]) {
+				aHigh[3] = aHigh[2];
+				aHigh[2] = aHigh[1];
+				aHigh[1] = aHigh[0];
+				aHigh[0] = val;
+			} 
+			else if (val >= aHigh[1]) {
+				aHigh[3] = aHigh[2];
+				aHigh[2] = aHigh[1];
+				aHigh[1] = val;
+			} 
+			else if (val >= aHigh[2]) {
+				aHigh[3] = aHigh[2];
+				aHigh[2] = val;
+			} 
+			else if (val >= aHigh[3]) {
+				aHigh[3] = val;
+			}
+		}
+		res = Math.min(res,Math.abs(aLow[0] - aHigh[3]));
+		res = Math.min(res,Math.abs(aLow[1] - aHigh[2]));
+		res = Math.min(res,Math.abs(aLow[2] - aHigh[1]));
+		res = Math.min(res,Math.abs(aLow[3] - aHigh[0]));
+		return res;
+	}
+}

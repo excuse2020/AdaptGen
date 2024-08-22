@@ -1,0 +1,24 @@
+class Solution {
+	int[] colorTheArray(int n, int[][] queries) {
+		Set<Integer> impacted = new HashSet<>();
+		int[] arr = new int[n];
+		int[] result = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			if (impacted.contains(queries[i][0] - 1) && arr[queries[i][0] - 1] != queries[i][1]) {
+				impacted.remove(queries[i][0] - 1);
+			}
+			if (impacted.contains(queries[i][0]) && arr[queries[i][0]] != queries[i][1]) {
+				impacted.remove(queries[i][0]);
+			}
+			if (((queries[i][0] + 1 < arr.length) && arr[queries[i][0] + 1] == queries[i][1])) {
+				impacted.add(queries[i][0]);
+			}
+			if (((queries[i][0] - 1 >= 0) && arr[queries[i][0] - 1] == queries[i][1])) {
+				impacted.add(queries[i][0] - 1);
+			}
+			arr[queries[i][0]] = queries[i][1];
+			result[i] = impacted.size();
+		}
+		return result;
+	}
+}

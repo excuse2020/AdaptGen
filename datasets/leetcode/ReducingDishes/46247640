@@ -1,0 +1,22 @@
+class Solution {
+	int[][] dp;
+	int maxSatisfaction(int[] satisfaction) {
+		dp = new int[satisfaction.length][satisfaction.length];
+		for (int[] arr: dp) {	
+			Arrays.fill(arr,-1);
+		}
+		Arrays.sort(satisfaction);
+		return rec(satisfaction,0,0);
+	}
+	int rec(int[] satisfaction, int level, int time) {
+		if (level == satisfaction.length) {
+			return 0;
+		}
+		if (dp[level][time] != -1) {
+			return dp[level][time];
+		}
+		int exclude = rec(satisfaction,level + 1,time);
+		int include = (time + 1) * satisfaction[level] + rec(satisfaction,level + 1,time + 1);
+		return dp[level][time] = Math.max(include,exclude);
+	}
+}

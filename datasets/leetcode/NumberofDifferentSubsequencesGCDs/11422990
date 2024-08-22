@@ -1,0 +1,43 @@
+class Solution {
+	int countDifferentSubsequenceGCDs(int[] nums) {
+		int maxNum = findMaxNum(nums);
+		int len = maxNum + 1;
+		boolean[] numExist = new boolean[len];
+		for (int num: nums) {	
+			numExist[num] = true;
+		}
+		int gcdCount = 0;
+		for (int gcd = 1; gcd <= maxNum; gcd++) {
+			boolean found = searchGcd(numExist,gcd);
+			if (found) {
+				gcdCount++;
+			}
+		}
+		return gcdCount;
+	}
+	int findMaxNum(int[] nums) {
+		int maxNum = 0;
+		for (int num: nums) {	
+			maxNum = Math.max(maxNum,num);
+		}
+		return maxNum;
+	}
+	int getGcd(int a, int b) {
+		if (b == 0) {
+			return a;
+		}
+		return getGcd(b,a % b);
+	}
+	boolean searchGcd(boolean[] numExist, int gcd) {
+		int calculatedGcd = 0;
+		for (int num = gcd; num < numExist.length; num += gcd) {
+			if (numExist[num]) {
+				calculatedGcd = getGcd(calculatedGcd,num);
+			}
+			if (calculatedGcd == gcd) {
+				return true;
+			}
+		}
+		return false;
+	}
+}

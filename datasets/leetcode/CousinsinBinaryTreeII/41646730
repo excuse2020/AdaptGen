@@ -1,0 +1,75 @@
+class Solution {
+	int[] parents;
+	TreeNode replaceValueInTree(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		parents = new int[500006];
+		sumLevels(root);
+		solve(root);
+		return root;
+	}
+	void solve(TreeNode root) {
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(root);
+		root.val = 0;
+		int lev = 1;
+		while (!q.isEmpty()) {
+			int siz = q.size();
+			while (siz-- > 0) {
+				TreeNode cur = q.remove();
+				int sum = 0;
+				if (cur.left != null) {
+					sum += cur.left.val;
+					q.add(cur.left);
+				}
+				if (cur.right != null) {
+					sum += cur.right.val;
+					q.add(cur.right);
+				}
+				if (lev >= 2) {
+					int res = parents[lev] - sum;
+					if (cur.left != null) {
+						cur.left.val = res;
+					}
+					if (cur.right != null) {
+						cur.right.val = res;
+					}
+				} 
+				else {
+					if (cur.left != null) {
+						cur.left.val = 0;
+					}
+					if (cur.right != null) {
+						cur.right.val = 0;
+					}
+				}
+			}
+			lev++;
+		}
+	}
+	void sumLevels(TreeNode root) {
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(root);
+		int lev = 0;
+		while (!q.isEmpty()) {
+			int sum = 0;
+			int siz = q.size();
+			while (siz-- > 0) {
+				TreeNode cur = q.remove();
+				if (cur.left != null) {
+					sum += cur.left.val;
+					q.add(cur.left);
+				}
+				if (cur.right != null) {
+					sum += cur.right.val;
+					q.add(cur.right);
+				}
+			}
+			lev++;
+			if (lev >= 2) {
+				parents[lev] = sum;
+			}
+		}
+	}
+}

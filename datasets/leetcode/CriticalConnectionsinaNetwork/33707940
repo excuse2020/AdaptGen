@@ -1,0 +1,42 @@
+class Solution {
+	void addConnectionsToResult(List<List<Integer>> result, int[] serialNumber, int[] time, boolean[] visited, Map<Integer, List<Integer>> graph, int node, int currTime, int parent) {
+		if (visited[node]) {
+			return;
+		}
+		visited[node] = true;
+		serialNumber[node] = time[node] = currTime;
+		for (var edge: graph.getOrDefault(node,List.of())) {	
+			if (edge == parent) {
+				continue;
+			}
+			addConnectionsToResult(result,serialNumber,time,visited,graph,edge,currTime + 1,node);
+			time[node] = Math.min(time[node],time[edge]);
+			if (time[edge] > serialNumber[node]) {
+				result.add(List.of(node,edge));
+			}
+		}
+	}
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		var graph = getGraph(connections);
+		int[] serialNumber = new int[n];
+		int[] time = new int[n];
+		boolean[] visited = new boolean[n];
+		var result = new ArrayList<List<Integer>>();
+		for (int node = 0; node < n; node++) {
+			if (!visited[node]) {
+				addConnectionsToResult(result,serialNumber,time,visited,graph,node,0,-1);
+			}
+		}
+		return result;
+	}
+	Map<Integer, List<Integer>> getGraph(List<List<Integer>> connections) {
+		var graph = new HashMap<Integer, List<Integer>>();
+		for (List<Integer> conn: connections) {	
+			int u = conn.get(0);
+			int v = conn.get(1);
+			graph.computeIfAbsent(u,(val) -> {new ArrayList<Integer>()}).add(v);
+			graph.computeIfAbsent(v,(val) -> {new ArrayList<Integer>()}).add(u);
+		}
+		return graph;
+	}
+}

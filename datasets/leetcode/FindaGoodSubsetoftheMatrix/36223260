@@ -1,0 +1,28 @@
+class Solution {
+	List<Integer> goodSubsetofBinaryMatrix(int[][] grid) {
+		int m = grid.length, n = grid[0].length;
+		List<Integer> res = new ArrayList<>();
+		Map<Integer, Integer> seen = new HashMap<>();
+		for (int r = 0; r < m; ++r) {
+			int x = 0;
+			for (int c = 0; c < n; ++c) {
+				if (grid[r][c] != 0) {
+					x |= (1 << c);
+				}
+			}
+			if (x == 0) {
+				res.add(r);
+				return res;
+			}
+			for (int i = 0; i < (1 << n); ++i) {
+				if ((i & x) == 0 && seen.containsKey(i)) {
+					res.add(seen.get(i));
+					res.add(r);
+					return res;
+				}
+			}
+			seen.put(x,r);
+		}
+		return res;
+	}
+}

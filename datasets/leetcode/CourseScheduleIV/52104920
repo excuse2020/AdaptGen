@@ -1,0 +1,33 @@
+class Solution {
+	void bfs(int start, List<List<Integer>> adjList, boolean[][] isPrerequisite) {
+		Queue<Integer> queue = new LinkedList<>();
+		queue.offer(start);
+		while (!queue.isEmpty()) {
+			int node = queue.poll();
+			for (int neighbor: adjList.get(node)) {	
+				if (!isPrerequisite[start][neighbor]) {
+					isPrerequisite[start][neighbor] = true;
+					queue.offer(neighbor);
+				}
+			}
+		}
+	}
+	List<Boolean> checkIfPrerequisite(int n, int[][] nums, int[][] query) {
+		List<List<Integer>> adjList = new ArrayList<>();
+		boolean[][] isPrerequisite = new boolean[n][n];
+		for (int i = 0; i < n; i++) {
+			adjList.add(new ArrayList<>());
+		}
+		for (int[] pair: nums) {	
+			adjList.get(pair[0]).add(pair[1]);
+		}
+		for (int i = 0; i < n; i++) {
+			bfs(i,adjList,isPrerequisite);
+		}
+		List<Boolean> finalAns = new ArrayList<>();
+		for (int[] q: query) {	
+			finalAns.add(isPrerequisite[q[0]][q[1]]);
+		}
+		return finalAns;
+	}
+}

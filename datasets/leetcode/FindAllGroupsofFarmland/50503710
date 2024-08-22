@@ -1,0 +1,50 @@
+class Solution {
+	int r, c;
+	void dfs(int[][] graph, int i, int j, int[][] visited, int m, int n) {
+		if (i < 0 || i == m || j < 0 || j == n) {
+			return;
+		}
+		if (visited[i][j] == 1) {
+			return;
+		}
+		if (graph[i][j] == 0) {
+			return;
+		}
+		visited[i][j] = 1;
+		r = Math.max(r,i);
+		c = Math.max(c,j);
+		dfs(graph,i + 1,j,visited,m,n);
+		dfs(graph,i,j + 1,visited,m,n);
+		dfs(graph,i - 1,j,visited,m,n);
+		dfs(graph,i,j - 1,visited,m,n);
+	}
+	int[][] findFarmland(int[][] land) {
+		int m = land.length;
+		int n = land[0].length;
+		int[][] visited = new int[m][n];
+		List<List<Integer>> list = new ArrayList<>();
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				if (visited[i][j] == 1 || land[i][j] == 0) {
+					continue;
+				}
+				List<Integer> indices = new ArrayList<>();
+				indices.add(i);
+				indices.add(j);
+				r = 0;
+				c = 0;
+				dfs(land,i,j,visited,m,n);
+				indices.add(r);
+				indices.add(c);
+				list.add(indices);
+			}
+		}
+		int[][] res = new int[list.size()][4];
+		for (int i = 0; i < list.size(); i++) {
+			for (int j = 0; j < 4; j++) {
+				res[i][j] = list.get(i).get(j);
+			}
+		}
+		return res;
+	}
+}

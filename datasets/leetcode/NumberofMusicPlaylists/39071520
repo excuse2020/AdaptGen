@@ -1,0 +1,29 @@
+class Solution {
+	Long[][] dp;
+	int k;
+	int mod = 1000000007;
+	int n;
+	long helper(int oldSongs, int goal) {
+		if (oldSongs == n && goal == 0) {
+			return 1;
+		}
+		if (oldSongs > n || goal == 0) {
+			return 0;
+		}
+		if (dp[goal][oldSongs] != null) {
+			return dp[goal][oldSongs];
+		}
+		long ret = 0;
+		ret = (ret + helper(oldSongs + 1,goal - 1) * (n - oldSongs) % mod) % mod;
+		if (oldSongs > k) {
+			ret = (ret + (helper(oldSongs,goal - 1) * (oldSongs - k)) % mod) % mod;
+		}
+		return dp[goal][oldSongs] = ret;
+	}
+	int numMusicPlaylists(int n, int goal, int k) {
+		this.n = n;
+		this.k = k;
+		this.dp = new Long[goal + 1][n + 1];
+		return (int) helper(0,goal);
+	}
+}

@@ -1,0 +1,35 @@
+class Solution {
+	List<Boolean> checkIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
+		int[][] graph = new int[numCourses][numCourses];
+		for (int[] innerArray: graph) {	
+			Arrays.fill(innerArray,Integer.MAX_VALUE / 2);
+		}
+		for (int[] task: prerequisites) {	
+			int courseOne = task[0];
+			int courseTwo = task[1];
+			graph[courseOne][courseTwo] = 1;
+		}
+		for (int course = 0; course < numCourses; course++) {
+			for (int i = 0; i < numCourses; i++) {
+				for (int j = 0; j < numCourses; j++) {
+					int distance = graph[i][course] + graph[course][j];
+					if (distance < graph[i][j]) {
+						graph[i][j] = distance;
+					}
+				}
+			}
+		}
+		List<Boolean> queryAnswers = new ArrayList<>();
+		for (int[] query: queries) {	
+			int courseOne = query[0];
+			int courseTwo = query[1];
+			if (graph[courseOne][courseTwo] != Integer.MAX_VALUE / 2) {
+				queryAnswers.add(true);
+			} 
+			else {
+				queryAnswers.add(false);
+			}
+		}
+		return queryAnswers;
+	}
+}

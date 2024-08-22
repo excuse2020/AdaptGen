@@ -1,0 +1,43 @@
+class Solution {
+	int maxHeight;
+	int[] maximumHeightForPostorder;
+	int[] maximumHeightForPreorder;
+	void postorder(TreeNode root, int currHeight) {
+		if (root == null) {
+			return;
+		}
+		maximumHeightForPostorder[root.val] = maxHeight;
+		maxHeight = Math.max(maxHeight,currHeight);
+		postorder(root.right,currHeight + 1);
+		postorder(root.left,currHeight + 1);
+	}
+	void preorder(TreeNode root, int currHeight) {
+		if (root == null) {
+			return;
+		}
+		maximumHeightForPreorder[root.val] = maxHeight;
+		maxHeight = Math.max(maxHeight,currHeight);
+		preorder(root.left,currHeight + 1);
+		preorder(root.right,currHeight + 1);
+	}
+	int size(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		return size(root.left) + size(root.right);
+	}
+	int[] treeQueries(TreeNode root, int[] queries) {
+		int size = size(root);
+		maximumHeightForPreorder = new int[size + 1];
+		maximumHeightForPostorder = new int[size + 1];
+		maxHeight = 0;
+		preorder(root,0);
+		maxHeight = 0;
+		postorder(root,0);
+		for (int i = 0; i < queries.length; i++) {
+			int node = queries[i];
+			queries[i] = Math.max(maximumHeightForPreorder[node],maximumHeightForPostorder[node]);
+		}
+		return queries;
+	}
+}

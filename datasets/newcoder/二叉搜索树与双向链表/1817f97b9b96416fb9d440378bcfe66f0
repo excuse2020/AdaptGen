@@ -1,0 +1,28 @@
+class Solution {
+	TreeNode Convert(TreeNode pRootOfTree) {
+		if (pRootOfTree == null || (pRootOfTree.left == null && pRootOfTree.right == null)) {
+			return pRootOfTree;
+		}
+		return convert(pRootOfTree,false);
+	}
+	TreeNode convert(TreeNode node, boolean is_left) {
+		if (node == null) {
+			return null;
+		}
+		node.left = convert(node.left,true);
+		if (node.left != null) {
+			node.left.right = node;
+		}
+		node.right = convert(node.right,false);
+		if (node.right != null) {
+			node.right.left = node;
+		}
+		while (is_left && (node.right != null)) {
+			node = node.right;
+		}
+		while ((!is_left) && (node.left != null)) {
+			node = node.left;
+		}
+		return node;
+	}
+}

@@ -1,0 +1,29 @@
+class Solution {
+	int GetMaxTwoEvents(int i, int count, int[][] events, int[][] dp) {
+		if (count == -1 || i == events.length) {
+			return 0;
+		}
+		if (dp[i][count] != -1) {
+			return dp[i][count];
+		}
+		int nextIdx = events.length;
+		int low = i + 1;
+		int high = events.length - 1;
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			if (events[mid][0] > events[i][1]) {
+				nextIdx = mid;
+				high = mid - 1;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		int take = 0;
+		take = events[i][2] + GetMaxTwoEvents(nextIdx,count - 1,events,dp);
+		int notTake = GetMaxTwoEvents(i + 1,count,events,dp);
+		return dp[i][count] = Math.max(take,notTake);
+	}
+	int maxTwoEvents(int[][] events) {
+	}
+}

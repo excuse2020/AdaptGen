@@ -1,0 +1,36 @@
+class Solution {
+	boolean isValid(String str) {
+		Stack<Character> stack = new Stack<>();
+		int i = 0;
+	}
+	List<String> removeInvalidParentheses(String s) {
+		HashSet<String> set = new HashSet<>();
+		Queue<String> queue = new LinkedList<>();
+		boolean isValidFound = false;
+		queue.add(s);
+		List<String> result = new ArrayList<>();
+		while (!queue.isEmpty() && !isValidFound) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				String cur = queue.poll();
+				if (isValid(cur)) {
+					isValidFound = true;
+					result.add(cur);
+				} 
+				else if (!isValidFound) {
+					for (int j = 0; j < cur.length(); j++) {
+						if (Character.isLetter(cur.charAt(j))) {
+							continue;
+						}
+						String new_str = cur.substring(0,j) + cur.substring(j + 1);
+						if (!set.contains(new_str)) {
+							queue.add(new_str);
+							set.add(new_str);
+						}
+					}
+				}
+			}
+		}
+		return result;
+	}
+}

@@ -1,0 +1,54 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		ArrayList<Integer> num1 = new ArrayList<>();
+		ArrayList<Integer> num2 = new ArrayList<>();
+		while (head1 != null) {
+			num1.add(head1.val);
+			head1 = head1.next;
+		}
+		while (head2 != null) {
+			num2.add(head2.val);
+			head2 = head2.next;
+		}
+		int sumLen = Math.max(num1.size(),num2.size()) + 1;
+		int sumIndex = sumLen - 1;
+		int[] sum = new int[sumLen];
+		for (int i = 0; i < sumLen; i++) {
+			sum[i] = 0;
+		}
+		int num1Index = num1.size() - 1, num2Index = num2.size() - 1;
+		while (num1Index >= 0 && num2Index >= 0) {
+			int summ = num1.get(num1Index--) + num2.get(num2Index--);
+			sum[sumIndex--] = summ % 10;
+			sum[sumIndex] = summ / 10;
+		}
+		while (num1Index >= 0) {
+			int summ = num1.get(num1Index--) + sum[sumIndex];
+			sum[sumIndex--] = summ % 10;
+			sum[sumIndex] = summ / 10;
+		}
+		while (num2Index >= 0) {
+			int summ = num2.get(num2Index--) + sum[sumIndex];
+			sum[sumIndex--] = summ % 10;
+			sum[sumIndex] = summ / 10;
+		}
+		if (sum[0] == 0) {
+			ListNode returnHead = new ListNode(1);
+			ListNode p = returnHead;
+			for (int j = 1; j < sumLen; j++) {
+				p.next = new ListNode(sum[j]);
+				p = p.next;
+			}
+			return returnHead.next;
+		} 
+		else {
+			ListNode returnHead = new ListNode(1);
+			ListNode p = returnHead;
+			for (int j = 0; j < sumLen; j++) {
+				p.next = new ListNode(sum[j]);
+				p = p.next;
+			}
+			return returnHead.next;
+		}
+	}
+}

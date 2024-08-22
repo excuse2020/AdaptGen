@@ -1,0 +1,25 @@
+class Solution {
+	int helper(int[] arr, int day, int buy, int most, Integer[][][] dp) {
+		if (day == arr.length || most == 2) {
+			return 0;
+		}
+		if (dp[day][buy][most] != null) {
+			return dp[day][buy][most];
+		}
+		if (buy == 1) {
+			int take = helper(arr,day + 1,0,most,dp) - arr[day];
+			int not = helper(arr,day + 1,1,most,dp);
+			return dp[day][buy][most] = Math.max(take,not);
+		} 
+		else {
+			int sell = helper(arr,day + 1,1,most + 1,dp) + arr[day];
+			int not = helper(arr,day + 1,0,most,dp);
+			return dp[day][buy][most] = Math.max(sell,not);
+		}
+	}
+	int maxProfit(int[] arr) {
+		int n = arr.length;
+		Integer[][][] dp = new Integer[n][2][2];
+		return helper(arr,0,1,0,dp);
+	}
+}

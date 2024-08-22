@@ -1,0 +1,43 @@
+class Solution {
+	long maxStrength(int[] nums) {
+		List<Integer> pos = new ArrayList<>();
+		List<Integer> neg = new ArrayList<>();
+		boolean containsZero = false;
+		for (int i: nums) {	
+			if (i == 0) {
+				containsZero = true;
+			} 
+			else if (i < 0) {
+				neg.add(-i);
+			} 
+			else {
+				pos.add(i);
+			}
+		}
+		long ans = 1;
+		Collections.sort(neg);
+		if (neg.size() == 0 && pos.size() == 0) {
+			return 0;
+		}
+		if (pos.size() == 0 && neg.size() == 1 && containsZero) {
+			return 0;
+		}
+		if (pos.size() == 0 && neg.size() == 1 && !containsZero) {
+			return -neg.get(0);
+		}
+		if (neg.size() % 2 != 0) {
+			for (int i = 1; i < neg.size(); i++) {
+				ans *= neg.get(i);
+			}
+		} 
+		else {
+			for (int i: neg) {	
+				ans *= i;
+			}
+		}
+		for (int i: pos) {	
+			ans *= i;
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,48 @@
+class Solution {
+	long[] findSum(List<Integer> maxHeights) {
+		int n = maxHeights.size();
+		long[] sum = new long[n];
+		Stack<Integer> st = new Stack<>();
+		int i = 0;
+		while (i < n) {
+			while (!st.isEmpty() && maxHeights.get(st.peek()) > maxHeights.get(i)) {
+				st.pop();
+			}
+			if (st.isEmpty()) {
+				sum[i] = (long) (i + 1) * maxHeights.get(i);
+			} 
+			else {
+				sum[i] = sum[st.peek()] + (long) (i - st.peek()) * maxHeights.get(i);
+			}
+			st.push(i);
+			i++;
+		}
+		return sum;
+	}
+	long maximumSumOfHeights(List<Integer> maxHeights) {
+		int n = maxHeights.size();
+		long[] left;
+		long[] right;
+		long ans = 0;
+		left = findSum(maxHeights);
+		Collections.reverse(maxHeights);
+		right = findSum(maxHeights);
+		Collections.reverse(maxHeights);
+		reverseArray(right);
+		for (int j = 0; j < n; j++) {
+			long temp = left[j] + right[j];
+			ans = Math.max(ans,temp - maxHeights.get(j));
+		}
+		return ans;
+	}
+	void reverseArray(long arr) {
+		int i, k;
+		long temp;
+		int size = arr.length;
+		for (i = 0; i < size / 2; i++) {
+			temp = arr[i];
+			arr[i] = arr[size - i - 1];
+			arr[size - i - 1] = temp;
+		}
+	}
+}

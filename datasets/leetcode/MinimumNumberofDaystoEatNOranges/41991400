@@ -1,0 +1,38 @@
+class Solution {
+	List<Integer> getChildren(int oranges) {
+		List<Integer> children = new ArrayList<>(List.of(oranges - 1));
+		if (oranges % 2 == 0) {
+			children.add(oranges - (oranges / 2));
+		}
+		if (oranges % 3 == 0) {
+			children.add(oranges - (2 * (oranges / 3)));
+		}
+		return children;
+	}
+	int minDays(int n) {
+		Queue<Integer> queue = new ArrayDeque<>();
+		Set<Integer> visited = new HashSet<>();
+		queue.add(n);
+		int steps = 0;
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				int oranges = queue.remove();
+				if (oranges == 0) {
+					return steps;
+				}
+				if (visited.contains(oranges)) {
+					continue;
+				}
+				visited.add(oranges);
+				for (int child: getChildren(oranges)) {	
+					if (!visited.contains(child)) {
+						queue.add(child);
+					}
+				}
+			}
+			steps++;
+		}
+		return -1;
+	}
+}

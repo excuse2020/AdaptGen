@@ -1,0 +1,32 @@
+class Solution {
+	long minimumTime(int[] time, int totalTrips) {
+		long s = 1;
+		long e = Integer.MAX_VALUE;
+		for (int i = 0; i < time.length; i++) {
+			e = Math.min(e,time[i]);
+		}
+		e = e * totalTrips;
+		while (s <= e) {
+			long m = s + (e - s) / 2;
+			if (potential(time,totalTrips,m)) {
+				e = m - 1;
+			}
+			if (!potential(time,totalTrips,m)) {
+				s = m + 1;
+			}
+		}
+		return s;
+	}
+	boolean potential(int[] time, int totalTrips, long x) {
+		long tt = 0;
+		for (int i = 0; i < time.length; i++) {
+			tt = tt + (x / time[i]);
+		}
+		if (tt >= totalTrips) {
+			return true;
+		} 
+		else {
+			return false;
+		}
+	}
+}

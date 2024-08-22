@@ -1,0 +1,66 @@
+class Solution {
+	TreeNode Deserialize(String str) {
+		if (str == null || str.equals("")) {
+			return null;
+		}
+		String[] s = str.split("#");
+		for (int j = 0; j < s.length; j++) {
+			System.out.print(s[j]);
+		}
+		Deque<TreeNode> q = new LinkedList<>();
+		TreeNode root = new TreeNode(Integer.parseInt(s[0]));
+		q.offer(root);
+		int i = 1;
+		while (!q.isEmpty() && i < s.length) {
+			TreeNode node = q.poll();
+			System.out.print(i);
+			if (s[i].equals("x")) {
+				node.left = null;
+				i++;
+			} 
+			else {
+				node.left = new TreeNode(Integer.parseInt(s[i]));
+				q.offer(node.left);
+				i++;
+			}
+			if (s[i].equals("x")) {
+				node.right = null;
+				i++;
+			} 
+			else {
+				node.right = new TreeNode(Integer.parseInt(s[i]));
+				q.offer(node.right);
+				i++;
+			}
+		}
+		return root;
+	}
+	String Serialize(TreeNode root) {
+		if (root == null) {
+			return "";
+		}
+		TreeNode node = root;
+		StringBuffer sb = new StringBuffer();
+		Deque<TreeNode> queue = new LinkedList<>();
+		sb.append(node.val).append("#");
+		queue.offer(node);
+		while (!queue.isEmpty()) {
+			TreeNode cur = queue.poll();
+			if (cur.left == null) {
+				sb.append("x").append("#");
+			} 
+			else {
+				sb.append(cur.left.val).append("#");
+				queue.offer(cur.left);
+			}
+			if (cur.right == null) {
+				sb.append("x").append("#");
+			} 
+			else {
+				sb.append(cur.right.val).append("#");
+				queue.offer(cur.right);
+			}
+		}
+		return sb.toString();
+	}
+}

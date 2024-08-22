@@ -1,0 +1,26 @@
+class Solution {
+	int maximumWhiteTiles(int[][] tiles, int carpetLen) {
+		if (carpetLen == 1) {
+			return 1;
+		}
+		Arrays.sort(tiles,(int[] a, int[] b) -> {a[0] - b[0]});
+		int ans = 0, i = 0, j = 0, tmp = 0;
+		for (; ans != carpetLen; i++) {
+			int end = tiles[i][0] + carpetLen - 1;
+			for (; j != tiles.length && tiles[j][1] <= end; j++) {
+				tmp += tiles[j][1] - tiles[j][0] + 1;
+			}
+			if (j == tiles.length) {
+				return Math.max(ans,tmp);
+			}
+			ans = Math.max(ans,tmp + (end >= tiles[j][0] ? Math.min(end,tiles[j][1]) - tiles[j][0] + 1 : 0));
+			if (tmp == 0) {
+				j++;
+			} 
+			else {
+				tmp -= (tiles[i][1] - tiles[i][0] + 1);
+			}
+		}
+		return ans;
+	}
+}

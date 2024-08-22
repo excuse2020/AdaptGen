@@ -1,0 +1,61 @@
+class Solution {
+	List<Integer> afterOrder = new ArrayList<>();
+	List<Integer> inOrder = new ArrayList<>();
+	List<Integer> preOrder = new ArrayList<>();
+	void printAfterNode(TreeNode node) {
+		TreeNode root = reverse(node);
+		while (root != null) {
+			afterOrder.add(root.val);
+			root = root.right;
+		}
+		reverse(root);
+	}
+	TreeNode reverse(TreeNode node) {
+		TreeNode dummyNode = null;
+		while (node != null) {
+			TreeNode next = node.right;
+			node.right = dummyNode;
+			dummyNode = node;
+			node = next;
+		}
+		return dummyNode;
+	}
+	int[][] threeOrders(TreeNode root) {
+		if (root == null) {
+			return new int[3][0];
+		}
+		TreeNode cur = root;
+		TreeNode mostRight;
+		while (cur != null) {
+			if (cur.left != null) {
+				mostRight = cur.left;
+				while (mostRight.right != null && mostRight.right != cur) {
+					mostRight = mostRight.right;
+				}
+				if (mostRight.right == null) {
+					mostRight.right = cur;
+					preOrder.add(cur.val);
+					cur = cur.left;
+					continue;
+				} 
+				else {
+					mostRight.right = null;
+					printAfterNode(cur.left);
+				}
+			} 
+			else {
+				preOrder.add(cur.val);
+			}
+			inOrder.add(cur.val);
+			cur = cur.right;
+		}
+		printAfterNode(root);
+		int[][] ret = new int[3][preOrder.size()];
+		for (int i = 0; i < preOrder.size(); i++) {
+			ret[0][i] = preOrder.get(i);
+			ret[1][i] = inOrder.get(i);
+			ret[2][i] = afterOrder.get(i);
+		}
+		return ret;
+	}
+}

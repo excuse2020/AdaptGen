@@ -1,0 +1,29 @@
+class Solution {
+	int maxDotProduct(int[] nums1, int[] nums2) {
+		int[][] memo = new int[nums1.length + 1][nums2.length + 1];
+		for (int[] arr: memo) {	
+			Arrays.fill(arr,-1);
+		}
+		int ans = recursion(0,0,nums1,nums2,memo);
+		if (ans == 0) {
+			Arrays.sort(nums1);
+			Arrays.sort(nums2);
+			int n1 = nums1[0] * nums2[nums2.length - 1];
+			int n2 = nums1[nums1.length - 1] * nums2[0];
+			return Math.max(n1,n2);
+		}
+		return ans;
+	}
+	int recursion(int i, int j, int[] nums1, int[] nums2, int[][] memo) {
+		if (i >= nums1.length || j >= nums2.length) {
+			return 0;
+		}
+		if (memo[i][j] != -1) {
+			return memo[i][j];
+		}
+		int take = nums1[i] * nums2[j] + recursion(i + 1,j + 1,nums1,nums2,memo);
+		int skipNums1 = recursion(i + 1,j,nums1,nums2,memo);
+		int skipNums2 = recursion(i,j + 1,nums1,nums2,memo);
+		return memo[i][j] = Math.max(Math.max(take,skipNums1),skipNums2);
+	}
+}

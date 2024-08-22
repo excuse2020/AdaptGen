@@ -1,0 +1,27 @@
+class Solution {
+	Map<String, Integer> memo;
+	int helper(int[] cuts, int start, int end) {
+		int cutLen = cuts.length;
+		int currSegmentLength = (end - start);
+		if (currSegmentLength == 1) {
+			return 0;
+		}
+		String key = start + ",";
+		if (memo.containsKey(key)) {
+			return memo.get(key);
+		}
+		int minCost = Integer.MAX_VALUE;
+		for (int index = 0; index < cutLen; index++) {
+			if (cuts[index] > start && cuts[index] < end) {
+				minCost = Math.min(minCost,currSegmentLength + helper(cuts,start,cuts[index]));
+			}
+		}
+		minCost = minCost == Integer.MAX_VALUE ? 0 : minCost;
+		memo.put(key,minCost);
+		return minCost;
+	}
+	int minCost(int n, int[] cuts) {
+		memo = new HashMap<>();
+		return helper(cuts,0,n);
+	}
+}

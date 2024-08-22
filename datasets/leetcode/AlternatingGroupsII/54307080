@@ -1,0 +1,38 @@
+class Solution {
+	int findMaxAlternatingSequence(int[] duplicateColors, int index, int k) {
+		int currentCount = 1;
+		int groupCount = 0;
+		int currentColor = duplicateColors[index];
+		for (int i = index + 1; i < duplicateColors.length; i++) {
+			int value = duplicateColors[i];
+			if (currentColor == 1 && value == 0 || currentColor == 0 && value == 1) {
+				currentColor = value;
+				currentCount++;
+			} 
+			else {
+				currentCount = 1;
+			}
+			if (currentCount >= k) {
+				groupCount++;
+			}
+		}
+		return groupCount;
+	}
+	int numberOfAlternatingGroups(int[] colors, int k) {
+		int[] duplicateColors = new int[colors.length + k - 1];
+		int index = 0;
+		for (int i = 0; i < colors.length; i++) {
+			duplicateColors[index] = colors[i];
+			index++;
+		}
+		for (int i = 0; i < colors.length - 1; i++) {
+			if (index >= duplicateColors.length) {
+				break;
+			}
+			duplicateColors[index] = colors[i];
+			index++;
+		}
+		int result = findMaxAlternatingSequence(duplicateColors,0,k);
+		return result;
+	}
+}

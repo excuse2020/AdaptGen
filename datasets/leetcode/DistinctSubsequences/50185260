@@ -1,0 +1,28 @@
+class Solution {
+	int noOfDistinctString(String str1, String trgt, int idx1, int idx2, int dp) {
+		if (idx2 == 0) {
+			return dp[idx1][idx2] = 1;
+		}
+		if (idx1 == 0) {
+			return 0;
+		}
+		if (dp[idx1][idx2] != -1) {
+			return dp[idx1][idx2];
+		}
+		int include = 0, exclude = 0;
+		if (str1.charAt(idx1 - 1) == trgt.charAt(idx2 - 1)) {
+			include = noOfDistinctString(str1,trgt,idx1 - 1,idx2 - 1,dp);
+		}
+		exclude = noOfDistinctString(str1,trgt,idx1 - 1,idx2,dp);
+		return dp[idx1][idx2] = include + exclude;
+	}
+	int numDistinct(String s, String t) {
+		int dp = new int[s.length() + 1][t.length() + 1];
+		for (int i = 0; i < dp.length; i++) {
+			for (int j = 0; j < dp[i].length; j++) {
+				dp[i][j] = -1;
+			}
+		}
+		return noOfDistinctString(s,t,s.length(),t.length(),dp);
+	}
+}

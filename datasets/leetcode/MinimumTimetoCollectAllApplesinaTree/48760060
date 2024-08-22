@@ -1,0 +1,30 @@
+class Solution {
+	Map<Integer, Set<Integer>> adj = new HashMap<>();
+	int dfs(int i, boolean[] visited, List<Boolean> hasApple) {
+		int r = 0;
+		for (int n: adj.get(i)) {	
+			if (!visited[n]) {
+				visited[n] = true;
+				r += dfs(n,visited,hasApple);
+			}
+		}
+		if ((hasApple.get(i) || r > 0) && (i != 0)) {
+			r += 2;
+		}
+		return r;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		if (edges == null || edges.length == 0) {
+			return 0;
+		}
+		for (int[] edge: edges) {	
+			adj.putIfAbsent(edge[0],new HashSet<>());
+			adj.putIfAbsent(edge[1],new HashSet<>());
+			adj.get(edge[0]).add(edge[1]);
+			adj.get(edge[1]).add(edge[0]);
+		}
+		boolean[] visited = new boolean[n];
+		visited[0] = true;
+		return dfs(0,visited,hasApple);
+	}
+}

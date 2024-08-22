@@ -1,0 +1,37 @@
+class Solution {
+	Stack<Integer> stack1 = new Stack<Integer>();
+	Stack<Integer> stack2 = new Stack<Integer>();
+	void main(String[] args) {
+		Scanner scanner = new Scanner(System.in);
+		String input = scanner.nextLine();
+		String[] op = input.substring(1,input.length() - 1).split(",");
+		Solution solution = new Solution();
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < op.length - 1; i++) {
+			String ops = op[i];
+			if (ops.contains("PSH")) {
+				solution.push(Integer.parseInt(ops.substring(2)));
+			}
+			if (ops.contains("POP")) {
+				builder.append(solution.pop());
+				builder.append(",");
+			}
+		}
+		if (builder.length() > 0) {
+			System.out.println(builder.toString().substring(0,builder.length() - 1));
+		}
+	}
+	int pop() {
+		while (!stack1.isEmpty()) {
+			stack2.push(stack1.pop());
+		}
+		int res = stack2.pop();
+		while (!stack2.isEmpty()) {
+			stack1.push(stack2.pop());
+		}
+		return res;
+	}
+	void push(int node) {
+		stack1.push(node);
+	}
+}

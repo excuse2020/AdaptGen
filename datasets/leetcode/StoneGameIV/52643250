@@ -1,0 +1,34 @@
+class Solution {
+	Boolean[][] dp;
+	boolean recursion(int n, int prev) {
+		if (n == 0) {
+			if (prev == 1) {
+				return false;
+			}
+			return true;
+		}
+		if (dp[prev][n] != null) {
+			return dp[prev][n];
+		}
+		boolean ans = prev == 1 ? false : true;
+		for (int i = 1; i * i <= n; i++) {
+			if (prev == 1) {
+				if (recursion(n - i * i,0)) {
+					ans = true;
+					break;
+				}
+			} 
+			else {
+				if (!recursion(n - i * i,1)) {
+					ans = false;
+					break;
+				}
+			}
+		}
+		return dp[prev][n] = ans;
+	}
+	boolean winnerSquareGame(int n) {
+		dp = new Boolean[2][n + 1];
+		return recursion(n,1);
+	}
+}

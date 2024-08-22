@@ -1,0 +1,35 @@
+class Solution {
+	int NOT_PROCESSED = 0, IN_PROCESS = 1, PROCESSED = 2;
+	boolean canFinish(int n, int[][] pre) {
+		int[] visited = new int[n];
+		ArrayList<Integer>[] graph = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < pre.length; i++) {
+			graph[pre[i][1]].add(pre[i][0]);
+		}
+		for (int i = 0; i < n; i++) {
+			if (isCyclic(graph,visited,i)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean isCyclic(ArrayList<Integer>[] graph, int[] visited, int src) {
+		if (visited[src] == IN_PROCESS) {
+			return true;
+		}
+		if (visited[src] == PROCESSED) {
+			return false;
+		}
+		visited[src] = IN_PROCESS;
+		for (int nbr: graph[src]) {	
+			if (isCyclic(graph,visited,nbr)) {
+				return true;
+			}
+		}
+		visited[src] = PROCESSED;
+		return false;
+	}
+}

@@ -1,0 +1,35 @@
+class Solution {
+	int minDistance(int[] houses, int k) {
+		Arrays.sort(houses);
+		int[][] place = new int[houses.length][houses.length];
+		for (int i = 0; i < houses.length; ++i) {
+			for (int j = i + 1; j < houses.length; ++j) {
+				place[i][j] = placeMailBox(houses,i,j);
+			}
+		}
+		int[][] distance = new int[houses.length][k + 1];
+		for (int i = houses.length - 1; i >= 0; --i) {
+			distance[i][1] = place[i][houses.length - 1];
+			for (int j = Math.max(2,k - i); j <= houses.length - i && j <= k; ++j) {
+				distance[i][j] = Integer.MAX_VALUE;
+				for (int m = i; m < houses.length - (j - 1); ++m) {
+					distance[i][j] = Math.min(distance[i][j],place[i][m] + distance[m + 1][j - 1]);
+				}
+			}
+		}
+		return distance[0][k];
+	}
+	int placeMailBox(int[] houses, int start, int end) {
+		int median = (start + end) / 2;
+		int distance = 0;
+		for (int i = start; i <= end; ++i) {
+			if (i <= median) {
+				distance += houses[median] - houses[i];
+			} 
+			else {
+				distance += houses[i] - houses[median];
+			}
+		}
+		return distance;
+	}
+}

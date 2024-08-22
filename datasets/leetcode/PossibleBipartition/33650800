@@ -1,0 +1,50 @@
+class Solution {
+	boolean oddCycleExistsBfs(int start, List<List<Integer>> adjList, boolean[] visited, int[] parent, int[] distance) {
+		visited[start] = true;
+		Queue<Integer> queue = new LinkedList<>();
+		queue.offer(start);
+		distance[start] = 0;
+		parent[start] = -1;
+		while (!queue.isEmpty()) {
+			Integer node = queue.poll();
+			for (Integer nbr: adjList.get(node)) {	
+				if (visited[nbr] == false) {
+					visited[nbr] = true;
+					distance[nbr] = distance[node] + 1;
+					parent[nbr] = node;
+					queue.offer(nbr);
+				} 
+				else {
+					if (nbr != parent[node] && distance[node] == distance[nbr]) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		List<List<Integer>> adjList = new ArrayList<>();
+		for (int i = 0; i <= n; i++) {
+			adjList.add(new ArrayList<>());
+		}
+		for (int[] dislike: dislikes) {	
+			adjList.get(dislike[0]).add(dislike[1]);
+			adjList.get(dislike[1]).add(dislike[0]);
+		}
+		boolean[] visited = new boolean[n + 1];
+		int[] parent = new int[n + 1];
+		int[] distance = new int[n + 1];
+		if (dislikes.length == 0) {
+			return true;
+		}
+		for (int i = 1; i <= n; i++) {
+			if (visited[i] == false) {
+				if (oddCycleExistsBfs(i,adjList,visited,parent,distance) == true) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

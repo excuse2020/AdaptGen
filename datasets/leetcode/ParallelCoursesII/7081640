@@ -1,0 +1,40 @@
+class Solution {
+	int minNumberOfSemesters(int n, int[][] dependencies, int k) {
+		List<List<Integer>> graph = new ArrayList<>();
+		int[] indegree = new int[n + 1];
+		int[] outdegree = new int[n + 1];
+		for (int i = 0; i <= n; i++) {
+			graph.add(new ArrayList<Integer>());
+		}
+		for (int[] a: dependencies) {	
+			graph.get(a[0]).add(a[1]);
+			indegree[a[1]]++;
+			outdegree[a[0]]++;
+		}
+		Queue<Integer> q = new LinkedList<>();
+		for (int i = 1; i <= n; i++) {
+			if (indegree[i] == 0) {
+				q.add(i);
+			}
+		}
+		int result = 0;
+		while (!q.isEmpty()) {
+			result++;
+			int size = q.size();
+			int x = Math.min(size,k);
+			Queue<Integer> pq = new PriorityQueue<>((a, b) -> {outdegree[b] - outdegree[a]});
+			pq.addAll(q);
+			for (int i = 0; i < x; i++) {
+				int cur = pq.remove();
+				q.remove(Integer.valueOf(cur));
+				for (int adj: graph.get(cur)) {	
+					indegree[adj]--;
+					if (indegree[adj] <= 0) {
+						q.add(adj);
+					}
+				}
+			}
+		}
+		return result;
+	}
+}

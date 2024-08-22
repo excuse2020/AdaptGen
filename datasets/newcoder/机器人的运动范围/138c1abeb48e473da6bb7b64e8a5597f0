@@ -1,0 +1,29 @@
+class Solution {
+	int movingCount(int threshold, int rows, int cols) {
+		boolean[][] dp = new boolean[rows][cols];
+		process(dp,0,0,rows,cols,threshold);
+		int ans = 0;
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				if (dp[i][j] == true) {
+					ans++;
+				}
+			}
+		}
+		return ans;
+	}
+	void process(boolean[][] dp, int x, int y, int rows, int cols, int threshold) {
+		if (x < 0 || x >= rows || y < 0 || y >= cols || !withinThreshold(x,y,threshold) || dp[x][y] == true) {
+			return;
+		}
+		dp[x][y] = true;
+		process(dp,x + 1,y,rows,cols,threshold);
+		process(dp,x - 1,y,rows,cols,threshold);
+		process(dp,x,y - 1,rows,cols,threshold);
+		process(dp,x,y + 1,rows,cols,threshold);
+	}
+	boolean withinThreshold(int x, int y, int threshold) {
+		int sum = x / 10 + y / 10 + x % 10 + y % 10;
+		return sum <= threshold;
+	}
+}

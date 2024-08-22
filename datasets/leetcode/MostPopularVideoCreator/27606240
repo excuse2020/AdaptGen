@@ -1,0 +1,27 @@
+class Solution {
+	List<List<String>> mostPopularCreator(String[] creators, String[] ids, int[] views) {
+		long max = Long.MIN_VALUE;
+		HashMap<String, Long> maps = new HashMap<>();
+		HashMap<String, Integer> maps2 = new HashMap<>();
+		for (int i = 0; i < creators.length; i++) {
+			maps.put(creators[i],maps.getOrDefault(creators[i],0l) + views[i]);
+			max = Math.max(max,maps.get(creators[i]));
+			if (maps2.containsKey(creators[i])) {
+				int idx = maps2.get(creators[i]);
+				if ((views[idx] < views[i]) || (views[idx] == views[i] && ids[i].compareTo(ids[idx]) < 0)) {
+					maps2.put(creators[i],i);
+				}
+			} 
+			else {
+				maps2.put(creators[i],i);
+			}
+		}
+		List<List<String>> result = new ArrayList<>();
+		for (String s: maps.keySet()) {	
+			if (max == maps.get(s)) {
+				result.add(List.of(s,ids[maps2.get(s)]));
+			}
+		}
+		return result;
+	}
+}

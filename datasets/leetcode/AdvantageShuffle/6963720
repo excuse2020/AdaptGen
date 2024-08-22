@@ -1,0 +1,31 @@
+class Solution {
+	int[] advantageCount(int[] A, int[] B) {
+		int n = A.length;
+		if (n == 0) {
+			return A;
+		}
+		TreeMap<Integer, Integer> tmap = Arrays.stream(A).boxed().collect(Collectors.collectingAndThen(Collectors.groupingBy((a) -> {a},Collectors.summingInt((a) -> {1})),(m) -> {new TreeMap(m)}));
+		int[] res = new int[n];
+		LinkedList<Integer> stackNotFounded = new LinkedList<Integer>();
+		for (int i = 0; i < n; i++) {
+			Integer h = tmap.higherKey(B[i]);
+			if (h != null) {
+				if (tmap.compute(h,(k, v) -> {v - 1}) == 0) {
+					tmap.remove(h);
+				}
+				res[i] = h;
+			} 
+			else {
+				stackNotFounded.push(i);
+			}
+		}
+		while (!stackNotFounded.isEmpty()) {
+			Integer first = tmap.firstKey();
+			res[stackNotFounded.pop()] = first;
+			if (tmap.compute(first,(k, v) -> {v - 1}) == 0) {
+				tmap.remove(first);
+			}
+		}
+		return res;
+	}
+}

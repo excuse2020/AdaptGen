@@ -1,0 +1,44 @@
+class Solution {
+	int[] currPath;
+	int[] dis;
+	boolean[] visited;
+	void dfs(int curr, int distance, List<Integer>[] graph) {
+		visited[curr] = true;
+		currPath[curr] = Math.min(currPath[curr],distance);
+		for (int nei: graph[curr]) {	
+			if (!visited[nei]) {
+				dfs(nei,distance + 1,graph);
+			} 
+			else if (currPath[nei] != 0) {
+				dis[nei] = Math.max(dis[nei],distance - currPath[nei] + 1);
+			}
+		}
+		currPath[curr] = 0;
+	}
+	int longestCycle(int[] edges) {
+		int n = edges.length;
+		dis = new int[n];
+		currPath = new int[n];
+		visited = new boolean[n];
+		Arrays.fill(currPath,Integer.MAX_VALUE);
+		List<Integer>[] graph = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < n; i++) {
+			if (edges[i] != -1) {
+				graph[i].add(edges[i]);
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			if (!visited[i]) {
+				dfs(i,1,graph);
+			}
+		}
+		int cycle = 0;
+		for (int i = 0; i < n; i++) {
+			cycle = Math.max(cycle,dis[i]);
+		}
+		return (cycle == 0) ? -1 : cycle;
+	}
+}

@@ -1,0 +1,19 @@
+class Solution {
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		HashMap<Integer, Integer> io = new HashMap<>();
+		for (int i = 0; i < inorder.length; i++) {
+			io.put(inorder[i],i);
+		}
+		return makeTree(postorder,io,postorder.length - 1,0,inorder.length - 1);
+	}
+	TreeNode makeTree(int[] postorder, HashMap<Integer, Integer> io, int postStart, int inLeft, int inRight) {
+		if (postStart < 0 || inLeft > inRight) {
+			return null;
+		}
+		TreeNode r = new TreeNode(postorder[postStart]);
+		int split = io.get(r.val);
+		r.left = makeTree(postorder,io,postStart - (inRight - split),inLeft,split - 1);
+		r.right = makeTree(postorder,io,postStart - 1,split + 1,inRight);
+		return r;
+	}
+}

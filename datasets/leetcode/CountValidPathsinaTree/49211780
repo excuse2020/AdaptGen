@@ -1,0 +1,97 @@
+class Solution {
+	int[] id;
+	ArrayList<ArrayList<Integer>> next;
+	ArrayList<Long> nonPrime;
+	long primePathTotal = 0;
+	ArrayList<Integer> primes;
+	long countPaths(int n, int[][] edges) {
+		primes = eratosthenes(n);
+		id = new int[n + 1];
+		next = new ArrayList<>();
+		nonPrime = new ArrayList<>();
+		for (int i = 0; i <= n; i++) {
+			id[i] = i;
+			next.add(new ArrayList<>());
+			nonPrime.add(0L);
+		}
+		for (int i = 0; i < edges.length; i++) {
+			int p = edges[i][0];
+			int q = edges[i][1];
+			next.get(p).add(q);
+			next.get(q).add(p);
+			if (!isPrime(p) && !isPrime(q)) {
+				if (find(p) != find(q)) {
+					union(p,q);
+				}
+			}
+		}
+		int key;
+		for (int i = 1; i <= n; i++) {
+			key = id[i];
+			nonPrime.set(key,nonPrime.get(key) + 1);
+		}
+		for (int i = 1; i <= n; i++) {
+			key = id[i];
+			nonPrime.set(i,nonPrime.get(key));
+		}
+		int prime, total = 0, pathValue = 0;
+		ArrayList<Long> path;
+		for (int j = 0; j < primes.size(); j++) {
+			total = 0;
+			pathValue = 0;
+			prime = primes.get(j);
+			path = new ArrayList<>();
+			for (int nearestVal: next.get(prime)) {	
+				if (!isPrime(nearestVal)) {
+					long value = nonPrime.get(nearestVal);
+					path.add(value);
+					total += value;
+				}
+			}
+			for (int v = 0; v < path.size(); v++) {
+				pathValue += (total - path.get(v)) * path.get(v);
+			}
+			primePathTotal += pathValue / 2 + total;
+		}
+		return primePathTotal;
+	}
+	ArrayList<Integer> eratosthenes(int n) {
+		boolean prime = new boolean[n + 1];
+		ArrayList<Integer> arraylist = new ArrayList<>();
+		for (int i = 0; i <= n; i++) {
+			prime[i] = true;
+		}
+		for (int p = 2; p * p <= n; p++) {
+			if (prime[p] == true) {
+				for (int i = p * p; i <= n; i += p) {
+					prime[i] = false;
+				}
+			}
+		}
+		for (int i = 2; i <= n; i++) {
+			if (prime[i] == true) {
+				arraylist.add(i);
+			}
+		}
+		return arraylist;
+	}
+	int find(int x) {
+		if (x != id[x]) {
+			id[x] = find(id[x]);
+		}
+		return id[x];
+	}
+	boolean isPrime(int x) {
+		return primes.contains(x);
+	}
+	void union(int p, int q) {
+		int i = find(p);
+		int j = find(q);
+		if (i > j) {
+			id[i] = j;
+		} 
+		else {
+			id[j] = i;
+		}
+	}
+}

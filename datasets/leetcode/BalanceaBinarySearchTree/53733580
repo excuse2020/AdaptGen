@@ -1,0 +1,24 @@
+class Solution {
+	TreeNode ans(ArrayList<Integer> inorder, int st, int end) {
+		if (st > end) {
+			return null;
+		}
+		int mid = st + (end - st) / 2;
+		TreeNode root = new TreeNode(inorder.get(mid));
+		root.left = ans(inorder,st,mid - 1);
+		root.right = ans(inorder,mid + 1,end);
+		return root;
+	}
+	TreeNode balanceBST(TreeNode root) {
+		ArrayList<Integer> inorder = new ArrayList<>();
+		inorder(root,inorder);
+		return ans(inorder,0,inorder.size() - 1);
+	}
+	void inorder(TreeNode root, ArrayList<Integer> inorder) {
+		if (root != null) {
+			inorder(root.left,inorder);
+			inorder.add(root.val);
+			inorder(root.right,inorder);
+		}
+	}
+}

@@ -1,0 +1,38 @@
+class Solution {
+	boolean isWordUniversal(String word, int[] absoluteFreq) {
+		Map<Character, Integer> freq = new HashMap<Character, Integer>();
+		for (char ch: word.toCharArray()) {	
+			freq.put(ch,Integer.valueOf(1 + freq.getOrDefault(Character.valueOf(ch),Integer.valueOf(0)).intValue()));
+		}
+		boolean isPossible = true;
+		for (int i = 0, c = 97; i < 26 && c < 123; i++, c++) {
+			if (freq.getOrDefault(Character.valueOf((char) c),Integer.valueOf(0)).intValue() >= absoluteFreq[i]) {
+				continue;
+			}
+			isPossible = false;
+			break;
+		}
+		return isPossible;
+	}
+	void updateAbsoluteFreq(String word, int[] absoluteFreq) {
+		Map<Character, Integer> freq = new HashMap<Character, Integer>();
+		for (char ch: word.toCharArray()) {	
+			freq.put(ch,Integer.valueOf(1 + freq.getOrDefault(Character.valueOf(ch),Integer.valueOf(0)).intValue()));
+		}
+	}
+	List<String> wordSubsets(String[] words1, String[] words2) {
+		int[] absoluteFreq = new int[26];
+		Arrays.fill(absoluteFreq,0);
+		for (String word: words2) {	
+			updateAbsoluteFreq(word,absoluteFreq);
+		}
+		List<String> universalWords = new ArrayList<String>();
+		for (String word: words1) {	
+			if (isWordUniversal(word,absoluteFreq) == false) {
+				continue;
+			}
+			universalWords.add(word);
+		}
+		return universalWords;
+	}
+}

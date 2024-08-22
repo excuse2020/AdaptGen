@@ -1,0 +1,24 @@
+class Solution {
+	int[] finalPrices(int[] prices) {
+		List<Integer> discounts = new ArrayList<>();
+		Stack<Integer> stack = new Stack<>();
+		for (int i = prices.length - 1; i >= 0; i--) {
+			while (!stack.empty() && stack.peek() > prices[i]) {
+				stack.pop();
+			}
+			if (stack.empty()) {
+				discounts.add(-1);
+			} 
+			else {
+				discounts.add(stack.peek());
+			}
+			stack.push(prices[i]);
+		}
+		Collections.reverse(discounts);
+		int[] result = new int[prices.length];
+		for (int i = 0; i < discounts.size(); i++) {
+			result[i] = discounts.get(i) == -1 ? prices[i] : prices[i] - discounts.get(i);
+		}
+		return result;
+	}
+}

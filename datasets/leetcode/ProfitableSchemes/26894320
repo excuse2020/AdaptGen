@@ -1,0 +1,25 @@
+class Solution {
+	Integer[][][] dp;
+	int mod = (int) 1e9 + 7;
+	int profitableSchemes(int n, int minProfit, int[] group, int[] profit) {
+		dp = new Integer[group.length + 1][102][102];
+		return solve(0,n,minProfit,group,profit,0,0);
+	}
+	int solve(int i, int n, int mP, int[] g, int[] p, int x, int y) {
+		if (x > n) {
+			return 0;
+		} 
+		else if (i == g.length) {
+			if (n >= x && y >= mP) {
+				return 1;
+			}
+			return 0;
+		}
+		if (dp[i][x][y] != null) {
+			return dp[i][x][y];
+		}
+		int take = solve(i + 1,n,mP,g,p,x + g[i],Math.min(y + p[i],mP)) % mod;
+		int notTake = solve(i + 1,n,mP,g,p,x,y) % mod;
+		return dp[i][x][y] = (take + notTake) % mod;
+	}
+}

@@ -1,0 +1,35 @@
+class Solution {
+	boolean rec(int node, Set<Integer> visited, int[] lc, int[] rc) {
+		if (node == -1) {
+			return true;
+		}
+		if (visited.contains(node)) {
+			return false;
+		}
+		visited.add(node);
+		return rec(lc[node],visited,lc,rc) && rec(rc[node],visited,lc,rc);
+	}
+	boolean validateBinaryTreeNodes(int n, int[] lc, int[] rc) {
+		Set<Integer> nodes = new HashSet<>();
+		for (int i = 0; i < n; i++) {
+			if (lc[i] >= 0 && lc[i] < n) {
+				nodes.add(lc[i]);
+			}
+			if (rc[i] >= 0 && rc[i] < n) {
+				nodes.add(rc[i]);
+			}
+		}
+		int rootval = -1;
+		for (int i = 0; i < n; i++) {
+			if (!nodes.contains(i)) {
+				rootval = i;
+				break;
+			}
+		}
+		if (rootval == -1) {
+			return false;
+		}
+		Set<Integer> visited = new HashSet<>();
+		return rec(rootval,visited,lc,rc) && (visited.size() == n);
+	}
+}

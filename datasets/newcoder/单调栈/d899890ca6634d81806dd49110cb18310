@@ -1,0 +1,64 @@
+class Solution {
+	int[][] foundMonotoneStack(int[] nums) {
+		int len = nums.length;
+		int[][] arr = new int[len][2];
+		Stack<Integer> stacks = new Stack<>();
+		Stack<Integer> orders = new Stack<>();
+		int times = 0;
+		int index = 0;
+		while (index != len) {
+			if (stacks.empty()) {
+				arr[index][0] = -1;
+				stacks.push(nums[index]);
+				orders.push(index);
+				index++;
+			} 
+			else {
+				if (nums[index] > stacks.peek()) {
+					arr[index][0] = orders.peek();
+					stacks.push(nums[index]);
+					orders.push(index);
+					index++;
+				} 
+				else {
+					while (nums[index] <= stacks.peek()) {
+						stacks.pop();
+						orders.pop();
+						if (stacks.empty()) {
+							break;
+						}
+					}
+				}
+			}
+		}
+		stacks.clear();
+		orders.clear();
+		index = len - 1;
+		while (index != -1) {
+			if (stacks.empty()) {
+				arr[index][1] = -1;
+				stacks.push(nums[index]);
+				orders.push(index);
+				index--;
+			} 
+			else {
+				if (nums[index] > stacks.peek()) {
+					arr[index][1] = orders.peek();
+					stacks.push(nums[index]);
+					orders.push(index);
+					index--;
+				} 
+				else {
+					while (nums[index] <= stacks.peek()) {
+						stacks.pop();
+						orders.pop();
+						if (stacks.empty()) {
+							break;
+						}
+					}
+				}
+			}
+		}
+		return arr;
+	}
+}

@@ -1,0 +1,36 @@
+class Solution {
+	int destroyTargets(int[] nums, int space) {
+		Map<Integer, Integer> remainder_count = new HashMap<>();
+		for (int i: nums) {	
+			remainder_count.put(i % space,0);
+		}
+		for (int i: nums) {	
+			int rem = i % space;
+			remainder_count.put(rem,remainder_count.get(rem) + 1);
+		}
+		Map<Integer, Integer> getNumFromRem = new HashMap<>();
+		for (int i: nums) {	
+			int rem = i % space;
+			if (getNumFromRem.containsKey(rem)) {
+				getNumFromRem.put(rem,Math.min(getNumFromRem.get(rem),i));
+			} 
+			else {
+				getNumFromRem.put(rem,i);
+			}
+		}
+		int max = remainder_count.values().stream().mapToInt().max().orElse(0);
+		int ans = -1;
+		for (int i: remainder_count.keySet()) {	
+			int rem = i % space;
+			if (max == remainder_count.get(rem)) {
+				if (ans == -1) {
+					ans = getNumFromRem.get(rem);
+				} 
+				else if (ans > getNumFromRem.get(rem)) {
+					ans = getNumFromRem.get(rem);
+				}
+			}
+		}
+		return ans;
+	}
+}

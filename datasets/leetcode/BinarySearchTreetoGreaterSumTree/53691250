@@ -1,0 +1,38 @@
+class Solution {
+	void BST(TreeNode tree, int cnt) {
+		if (tree == null) {
+			return;
+		}
+		int val = tree.val;
+		cnt[val]++;
+		BST(tree.left,cnt);
+		BST(tree.right,cnt);
+	}
+	TreeNode bstToGst(TreeNode root) {
+		int cnt = new int[101];
+		BST(root,cnt);
+		fill_cnt(cnt);
+		fill_BST(root,cnt);
+		return root;
+	}
+	void fill_BST(TreeNode tree, int cnt) {
+		if (tree == null) {
+			return;
+		}
+		int idx = tree.val;
+		tree.val = cnt[idx];
+		fill_BST(tree.left,cnt);
+		fill_BST(tree.right,cnt);
+	}
+	void fill_cnt(int cnt) {
+		int sm = 0;
+		for (int i = 100; i >= 0; i--) {
+			int frq = cnt[i];
+			if (frq > 0) {
+				int t = frq * i;
+				sm += t;
+				cnt[i] = sm;
+			}
+		}
+	}
+}

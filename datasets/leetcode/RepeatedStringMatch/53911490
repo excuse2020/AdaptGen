@@ -1,0 +1,52 @@
+class Solution {
+	int PRIME = 101;
+	double calculateHash(String str) {
+		double hash = 0;
+		for (int i = 0; i < str.length(); i++) {
+			hash = hash + str.charAt(i) * Math.pow(PRIME,i);
+		}
+		return hash;
+	}
+	int karpRabin(String haystack, String needle) {
+		int patternLength = needle.length();
+		double patternHash = calculateHash(needle);
+		double stringHash = calculateHash(haystack.substring(0,patternLength));
+		for (int i = 0; i <= haystack.length() - patternLength; i++) {
+			if (patternHash == stringHash) {
+				if (haystack.substring(i,i + patternLength).equals(needle)) {
+					return i;
+				}
+			}
+			if (i < haystack.length() - patternLength) {
+				stringHash = updateHash(stringHash,haystack.charAt(i),haystack.charAt(i + patternLength),patternLength);
+			}
+		}
+		return -1;
+	}
+	int repeatedStringMatch(String a, String b) {
+		if (a == b) {
+			return 1;
+		}
+		int count = 1;
+		String source = a;
+		while (source.length() < b.length()) {
+			count++;
+			source = source + a;
+		}
+		if (source == b) {
+			return count;
+		}
+		if (karpRabin(source,b) != -1) {
+			return count;
+		}
+		if (karpRabin(source + a,b) != -1) {
+			return count + 1;
+		}
+		return -1;
+	}
+	double updateHash(Double currentHash, char oldChar, char newChar, int patternLength) {
+		currentHash = (currentHash - oldChar) / PRIME;
+		currentHash = currentHash + newChar * Math.pow(PRIME,patternLength - 1);
+		return currentHash;
+	}
+}

@@ -1,0 +1,40 @@
+class Solution {
+	int[] dp;
+	boolean isBeautiful(String s, int start, int end) {
+		if (start < 0 || end >= s.length()) {
+			return false;
+		}
+	}
+	boolean isPowerOf5(int num) {
+		boolean flag = true;
+		while (num != 1) {
+			if (num % 5 != 0) {
+				flag = false;
+				break;
+			}
+			num /= 5;
+		}
+		return flag;
+	}
+	int minimumBeautifulSubstrings(String s) {
+		dp = new int[s.length() + 1];
+		for (int i = 0; i <= s.length(); i++) {
+			dp[i] = -1;
+		}
+		for (int i = 0; i < s.length(); i++) {
+			int minVal = Integer.MAX_VALUE;
+			for (int j = 0; j <= i; j++) {
+				if (isBeautiful(s,j,i)) {
+					if (j == 0) {
+						minVal = 1;
+					} 
+					else if (dp[j - 1] != -1) {
+						minVal = Math.min(minVal,dp[j - 1] + 1);
+					}
+				}
+			}
+			dp[i] = minVal == Integer.MAX_VALUE ? -1 : minVal;
+		}
+		return dp[s.length() - 1];
+	}
+}

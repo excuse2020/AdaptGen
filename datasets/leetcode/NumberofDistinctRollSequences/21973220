@@ -1,0 +1,36 @@
+class Solution {
+	int mod = 1000000000 + 7;
+	int distinctSequences(int n) {
+		if (n == 1) {
+			return 6;
+		}
+		Integer dp = new Integer[n][7][7];
+		int ans = 0;
+		for (int i = 1; i <= 6; i++) {
+			for (int j = 1; j <= 6; j++) {
+				if (i != j && gcd(i,j) == 1) {
+					ans = (ans + solve(n - 1,i,j,dp)) % mod;
+				}
+			}
+		}
+		return ans;
+	}
+	int gcd(int a, int b) {
+		return b == 0 ? a : gcd(b,a % b);
+	}
+	int solve(int i, int cur, int prev, Integer dp) {
+		if (i == 1) {
+			return 1;
+		}
+		if (dp[i][cur][prev] != null) {
+			return dp[i][cur][prev];
+		}
+		int count = 0;
+		for (int x = 1; x <= 6; x++) {
+			if (x != prev && x != cur && gcd(x,cur) == 1) {
+				count = (count + solve(i - 1,x,cur,dp)) % mod;
+			}
+		}
+		return dp[i][cur][prev] = count;
+	}
+}

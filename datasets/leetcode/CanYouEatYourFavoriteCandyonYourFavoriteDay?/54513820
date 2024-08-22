@@ -1,0 +1,28 @@
+class Solution {
+	long[] preCan;
+	boolean[] canEat(int[] candiesCount, int[][] queries) {
+		boolean[] res = new boolean[queries.length];
+		int tCanType = candiesCount.length;
+		preCan = new long[tCanType];
+		preCan[0] = 0;
+		for (int i = 1; i < tCanType; i++) {
+			preCan[i] = preCan[i - 1] + candiesCount[i - 1];
+		}
+		for (int q = 0; q < queries.length; q++) {
+			res[q] = canEatCandies(queries[q],candiesCount);
+		}
+		return res;
+	}
+	boolean canEatCandies(int[] q, int[] candiesCount) {
+		int canType = q[0];
+		int day = q[1];
+		int capacity = q[2];
+		if (preCan[canType] >= (long) (day + 1) * capacity) {
+			return false;
+		}
+		if ((long) (day + 1) > preCan[canType] + candiesCount[canType]) {
+			return false;
+		}
+		return true;
+	}
+}

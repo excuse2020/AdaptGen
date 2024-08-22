@@ -1,0 +1,50 @@
+class Solution {
+	int numberOfAlternatingGroups(int[] arr, int k) {
+		int ans = 0;
+		int[] max = new int[arr.length];
+		int[] cmax = new int[arr.length];
+		max[arr.length - 1] = 1;
+		int cyc = 0;
+		if ((arr[arr.length - 1] == 0 && arr[0] == 1) || (arr[arr.length - 1] == 1 && arr[0] == 0)) {
+			cyc = 1;
+		}
+		for (int i = arr.length - 2; i >= 0; i--) {
+			if ((arr[i] == 1 && arr[i + 1] == 0) || (arr[i] == 0 && arr[i + 1] == 1)) {
+				max[i] = max[i + 1] + 1;
+			} 
+			else {
+				max[i] = 1;
+			}
+		}
+		if (max[0] < arr.length) {
+			cmax[0] = max[0];
+		} 
+		else {
+			if (cyc == 1) {
+				cmax[0] = k;
+			} 
+			else {
+				cmax[0] = max[0];
+			}
+		}
+		for (int i = 1; i < arr.length; i++) {
+			if ((i + max[i] - 1) < arr.length - 1) {
+				cmax[i] = max[i];
+			} 
+			else {
+				if (cyc == 0) {
+					cmax[i] = max[i];
+				} 
+				else {
+					cmax[i] = max[i] + cmax[0];
+				}
+			}
+		}
+		for (int i = 0; i < arr.length; i++) {
+			if (cmax[i] >= k) {
+				ans++;
+			}
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,50 @@
+class Solution {
+	int getTopVideo(int newID, int oldID, int newViews, String newName, int oldViews, String oldName) {
+		if (newViews > oldViews) {
+			return newID;
+		}
+		if (newViews < oldViews) {
+			return oldID;
+		}
+		if (newName.compareTo(oldName) <= 0) {
+			return newID;
+		}
+		return oldID;
+	}
+	List<List<String>> mostPopularCreator(String[] creators, String[] ids, int[] views) {
+		HashMap<String, Integer> viewsPC = new HashMap<String, Integer>();
+		HashMap<String, Integer> topVideoPC = new HashMap<String, Integer>();
+		HashSet<String> topCreators = new HashSet<String>();
+		int topScore = 0;
+		int lookup, topV;
+		for (int i = 0; i < creators.length; i++) {
+			lookup = viewsPC.getOrDefault(creators[i],0);
+			if (lookup + views[i] > topScore) {
+				topScore = lookup + views[i];
+				topCreators.clear();
+				topCreators.add(creators[i]);
+			} 
+			else if (lookup + views[i] == topScore) {
+				topCreators.add(creators[i]);
+			}
+			viewsPC.put(creators[i],lookup + views[i]);
+			lookup = topVideoPC.getOrDefault(creators[i],-1);
+			if (lookup == -1) {
+				topVideoPC.put(creators[i],i);
+			} 
+			else {
+				topV = getTopVideo(i,lookup,views[i],ids[i],views[lookup],ids[lookup]);
+				if (topV == i) {
+					topVideoPC.put(creators[i],topV);
+				}
+			}
+		}
+		LinkedList<List<String>> output = new LinkedList<List<String>>();
+		for (String creator: topCreators) {	
+			output.add(new LinkedList<String>());
+			output.getLast().add(creator);
+			output.getLast().add(ids[topVideoPC.get(creator)]);
+		}
+		return output;
+	}
+}

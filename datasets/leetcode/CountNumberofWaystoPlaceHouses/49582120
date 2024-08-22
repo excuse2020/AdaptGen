@@ -1,0 +1,29 @@
+class Solution {
+	int mod = 1000000007;
+	int countHousePlacements(int n) {
+		long[][] dp = new long[n + 1][2];
+		for (int i = 0; i < dp.length; i++) {
+			for (int j = 0; j < dp[i].length; j++) {
+				dp[i][j] = -1;
+			}
+		}
+		long max = helper(n,0,dp) % mod;
+		return (int) ((max * max) % mod);
+	}
+	long helper(int n, int prev, long[][] dp) {
+		if (n == 0) {
+			return 1;
+		}
+		if (dp[n][prev] != -1) {
+			return dp[n][prev] % mod;
+		}
+		if (prev == 0) {
+			long leave = helper(n - 1,0,dp) % mod;
+			long house = helper(n - 1,1,dp) % mod;
+			return dp[n][prev] = (leave + house) % mod;
+		} 
+		else {
+			return dp[n][prev] = helper(n - 1,0,dp) % mod;
+		}
+	}
+}

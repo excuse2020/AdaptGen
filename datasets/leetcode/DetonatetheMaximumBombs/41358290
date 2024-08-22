@@ -1,0 +1,53 @@
+class Solution {
+	int count = 0;
+	int max = 1;
+	boolean[] visited;
+	void bfs(List<Integer>[] graph, int start, boolean[] visited) {
+		Queue<Integer> q = new LinkedList<>();
+		q.add(start);
+		visited[start] = true;
+		count++;
+		while (!q.isEmpty()) {
+			int cur = q.poll();
+			for (int node: graph[cur]) {	
+				if (!visited[node]) {
+					count++;
+					q.add(node);
+					visited[node] = true;
+				}
+			}
+		}
+	}
+	List<Integer>[] buildGraph(int[][] bombs) {
+		List<Integer>[] graph = new List[bombs.length];
+		int m = bombs.length;
+		int n = bombs[0].length;
+		for (int i = 0; i < m; i++) {
+			graph[i] = new ArrayList<Integer>();
+			for (int j = 0; j < m; j++) {
+				if (i == j) {
+					continue;
+				}
+				if (isOverlap(bombs[i],bombs[j])) {
+					graph[i].add(j);
+				}
+			}
+		}
+		return graph;
+	}
+	boolean isOverlap(int[] a, int[] b) {
+		return Math.pow(a[0] - b[0],2) + Math.pow(a[1] - b[1],2) <= Math.pow(a[2],2);
+	}
+	int maximumDetonation(int[][] bombs) {
+		List<Integer>[] graph = buildGraph(bombs);
+		for (int i = 0; i < bombs.length; i++) {
+			if (graph[i].size() > 0) {
+				visited = new boolean[bombs.length];
+				bfs(graph,i,visited);
+				max = Math.max(max,count);
+				count = 0;
+			}
+		}
+		return max;
+	}
+}

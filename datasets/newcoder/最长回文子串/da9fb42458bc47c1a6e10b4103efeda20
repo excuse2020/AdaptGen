@@ -1,0 +1,33 @@
+class Solution {
+	int dfs(String A, int left, int right) {
+		String str = null;
+		while (left >= 0 && right < A.length()) {
+			if (A.charAt(left) == A.charAt(right)) {
+				str = A.substring(left,right + 1);
+				left--;
+				right++;
+			} 
+			else {
+				break;
+			}
+		}
+		return str == null ? 0 : str.length();
+	}
+	int getLongestPalindrome(String A) {
+		int max = 0;
+		int odd = 0, even = 0;
+		for (int i = 0; i < A.length(); i++) {
+			if (i == 0) {
+				odd = 1;
+				even = dfs(A,i,i + 1);
+			} 
+			else {
+				odd = dfs(A,i - 1,i + 1);
+				even = dfs(A,i,i + 1);
+			}
+			max = max > odd ? max : odd;
+			max = max > even ? max : even;
+		}
+		return max;
+	}
+}

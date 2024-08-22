@@ -1,0 +1,46 @@
+class Solution {
+	int maxSubarraySumCircular(int[] nums) {
+		int[] pre = new int[nums.length];
+		int[] max = new int[nums.length];
+		for (int i = 0; i < nums.length; i++) {
+			if (i == 0) {
+				pre[i] = nums[i];
+			} 
+			else {
+				pre[i] = pre[i - 1] + nums[i];
+			}
+			if (i != 0) {
+				max[i] = Math.max(max[i - 1],pre[i]);
+			} 
+			else {
+				max[i] = pre[i];
+			}
+		}
+		int ans = Integer.MIN_VALUE;
+		for (int i = 0; i < nums.length; i++) {
+			int temp = 0;
+			int flag = 0;
+			for (int j = i; j < nums.length; j++) {
+				int sum;
+				if (i == 0) {
+					sum = pre[j];
+				} 
+				else {
+					sum = pre[j] - pre[i - 1];
+				}
+				ans = Math.max(ans,sum);
+				if (sum < 0) {
+					flag = 1;
+					break;
+				}
+				if (j == nums.length - 1) {
+					temp = sum;
+				}
+			}
+			if (i != 0 && flag == 0) {
+				ans = Math.max(ans,temp + max[i - 1]);
+			}
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,38 @@
+class Solution {
+	boolean has(int i, int j, char[][] matrix, int[][] mark, char[] word, int index) {
+		if (index == word.length) {
+			return true;
+		}
+		if (i >= matrix.length || i < 0 || j >= matrix[0].length || j < 0) {
+			return false;
+		}
+		boolean hasPath = false;
+		if (mark[i][j] == 0 && matrix[i][j] == word[index]) {
+			mark[i][j] = 1;
+			hasPath = has(i + 1,j,matrix,mark,word,index + 1) || has(i - 1,j,matrix,mark,word,index + 1);
+		}
+		if (!hasPath) {
+			mark[i][j] = 0;
+		}
+		return hasPath;
+	}
+	boolean hasPath(char[][] matrix, String word) {
+		if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+			return false;
+		}
+		if (word == null || word.length() == 0) {
+			return false;
+		}
+		int m = matrix.length, n = matrix[0].length;
+		char[] wc = word.toCharArray();
+		int[][] mark = new int[m][n];
+		for (int i = 0; i < m; ++i) {
+			for (int j = 0; j < n; ++j) {
+				if (has(i,j,matrix,mark,wc,0)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+}

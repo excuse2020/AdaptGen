@@ -1,0 +1,85 @@
+class Solution {
+	TreeNode Deserialize(String str) {
+		str = str.replaceAll("\\{","");
+		str = str.replaceAll("\\}","");
+		if (str.length() == 0) {
+			return null;
+		}
+		String[] split = str.split(",");
+		TreeNode root = new TreeNode(Integer.parseInt(split[0]));
+		Queue<String> queueString = new LinkedList<>();
+		for (String s: split) {	
+			queueString.add(s);
+		}
+		queueString.poll();
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(root);
+		while (!queueString.isEmpty()) {
+			Queue<TreeNode> temp = new LinkedList<>();
+			if (!queueString.isEmpty() && !queueString.peek().equals("#")) {
+				TreeNode left = new TreeNode(Integer.parseInt(queueString.poll()));
+				queue.peek().left = left;
+				temp.add(left);
+			} 
+			else if (!queueString.isEmpty() && queueString.peek().equals("#")) {
+				queueString.poll();
+			}
+			if (!queueString.isEmpty() && !queueString.peek().equals("#")) {
+				TreeNode right = new TreeNode(Integer.parseInt(queueString.poll()));
+				queue.peek().right = right;
+				temp.add(right);
+			} 
+			else if (!queueString.isEmpty() && queueString.peek().equals("#")) {
+				queueString.poll();
+			}
+			queue.poll();
+			while (!temp.isEmpty()) {
+				queue.add(temp.poll());
+			}
+		}
+		return root;
+	}
+	String Serialize(TreeNode root) {
+		StringBuilder stringBuilder = new StringBuilder();
+		Queue<TreeNode> queue = new LinkedList<>();
+		Queue<String> queueString = new LinkedList<>();
+		if (root == null) {
+			return "{}";
+		}
+		queue.add(root);
+		queueString.add(root.val + "");
+		stringBuilder.append("{");
+		while (!queue.isEmpty()) {
+			Queue<TreeNode> tempQueue = new LinkedList<>();
+			Queue<String> tempQueueString = new LinkedList<>();
+			while (queueString.peek().equals("#")) {
+				stringBuilder.append(queueString.poll()).append(",");
+			}
+			if (queue.peek().left != null) {
+				tempQueue.add(queue.peek().left);
+				tempQueueString.add(queue.peek().left.val + "");
+			}
+			if (queue.peek().left == null) {
+				tempQueueString.add("#");
+			}
+			if (queue.peek().right != null) {
+				tempQueue.add(queue.peek().right);
+				tempQueueString.add(queue.peek().right.val + "");
+			}
+			if (queue.peek().right == null) {
+				tempQueueString.add("#");
+			}
+			stringBuilder.append(queueString.poll()).append(",");
+			queue.poll();
+			while (!tempQueue.isEmpty()) {
+				queue.add(tempQueue.poll());
+			}
+			while (!tempQueueString.isEmpty()) {
+				queueString.add(tempQueueString.poll());
+			}
+		}
+		stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+		stringBuilder.append("}");
+		return stringBuilder.toString();
+	}
+}

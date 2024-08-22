@@ -1,0 +1,28 @@
+class Solution {
+	int longestCycle = Integer.MIN_VALUE;
+	void dfs(int node, int[] edges, int count, int[] visited) {
+		int neighbour = edges[node];
+		if (visited[node] != -1) {
+			longestCycle = Math.max(longestCycle,count - visited[node]);
+			return;
+		}
+		if (node != -1) {
+			visited[node] = count;
+		}
+		if (node != -1 && neighbour != -1 && visited[neighbour] != Integer.MIN_VALUE) {
+			dfs(neighbour,edges,count + 1,visited);
+		}
+		visited[node] = Integer.MIN_VALUE;
+	}
+	int longestCycle(int[] edges) {
+		int numberOfNodes = edges.length;
+		int[] visited = new int[numberOfNodes];
+		Arrays.fill(visited,-1);
+		for (int i = 0; i < numberOfNodes; i++) {
+			if (visited[i] == -1) {
+				dfs(i,edges,1,visited);
+			}
+		}
+		return (longestCycle == Integer.MIN_VALUE || longestCycle == 0) ? -1 : longestCycle;
+	}
+}

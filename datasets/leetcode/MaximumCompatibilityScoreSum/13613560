@@ -1,0 +1,31 @@
+class Solution {
+	int max = 0;
+	int compatibilityScore(int[] student, int[] mentor) {
+		int count = 0;
+		for (int i = 0; i < student.length; i++) {
+			if (student[i] == mentor[i]) {
+				count++;
+			}
+		}
+		return count;
+	}
+	void helper(int[][] students, int[][] mentors, boolean[] selectedStudents, int currentStudentIndex, int score) {
+		if (currentStudentIndex >= students.length) {
+			max = Math.max(max,score);
+			return;
+		} 
+		else {
+			for (int i = 0; i < mentors.length; i++) {
+				if (!selectedStudents[i]) {
+					selectedStudents[i] = true;
+					helper(students,mentors,selectedStudents,currentStudentIndex + 1,score + compatibilityScore(students[currentStudentIndex],mentors[i]));
+					selectedStudents[i] = false;
+				}
+			}
+		}
+	}
+	int maxCompatibilitySum(int[][] students, int[][] mentors) {
+		helper(students,mentors,new boolean[students.length],0,0);
+		return max;
+	}
+}

@@ -1,0 +1,54 @@
+class Solution {
+	int[] amount;
+	int[] b;
+	List<Integer>[] graph;
+	int res = Integer.MIN_VALUE;
+	void dfsAlice(int level, int score, int parent, int cur) {
+		if (level == b[cur]) {
+			score += amount[cur] / 2;
+		} 
+		else if (level < b[cur]) {
+			score += amount[cur];
+		}
+		if (graph[cur].size() == 1 && graph[cur].get(0) == parent) {
+			res = Math.max(res,score);
+			return;
+		}
+		for (int next: graph[cur]) {	
+			if (next == parent) {
+				continue;
+			}
+			dfsAlice(level + 1,score,cur,next);
+		}
+	}
+	void dfsBob(int bob, int parent, int cur) {
+		if (cur == bob) {
+			b[cur] = 0;
+			return;
+		}
+		for (int next: graph[cur]) {	
+			if (next == parent) {
+				continue;
+			}
+			dfsBob(bob,cur,next);
+			b[cur] = Math.min(b[cur],b[next] + 1);
+		}
+	}
+	int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+		int n = amount.length;
+		this.b = new int[n];
+		this.amount = amount;
+		this.graph = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new ArrayList<>();
+			b[i] = n + 1;
+		}
+		for (int[] e: edges) {	
+			graph[e[0]].add(e[1]);
+			graph[e[1]].add(e[0]);
+		}
+		dfsBob(bob,-1,0);
+		dfsAlice(0,0,-1,0);
+		return res;
+	}
+}

@@ -1,0 +1,25 @@
+class Solution {
+	int[] cost;
+	int increaments;
+	int n;
+	int equalize(int head) {
+		if (head * 4 > n) {
+			increaments += Math.abs(cost[head * 2 - 1] - cost[head * 2 + 1 - 1]);
+			return Math.max(cost[head * 2 - 1],cost[head * 2 + 1 - 1]);
+		}
+		int leftPath = equalize(head * 2) + cost[head * 2 - 1];
+		int rightPath = equalize(head * 2 + 1) + cost[head * 2 + 1 - 1];
+		increaments += Math.abs(leftPath - rightPath);
+		return Math.max(leftPath,rightPath);
+	}
+	int minIncrements(int n, int[] cost) {
+		this.n = n;
+		this.cost = cost;
+		increaments = 0;
+		if (n == 3) {
+			return Math.abs(cost[1] - cost[2]);
+		}
+		equalize(1);
+		return increaments;
+	}
+}

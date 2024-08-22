@@ -1,0 +1,50 @@
+class Solution {
+	ListNode FindKthToTail(ListNode pHead, int k) {
+		if (null == pHead) {
+			return pHead;
+		}
+		pHead = reverse(pHead);
+		if (0 != k) {
+			ListNode current = pHead;
+			ListNode tailNode = null;
+			for (int i = 0; i < k; i++) {
+				if (null != current) {
+					tailNode = current;
+					current = current.next;
+				} 
+				else {
+					return null;
+				}
+			}
+			tailNode.next = null;
+		} 
+		else {
+			return null;
+		}
+		pHead = reverse(pHead);
+		return pHead;
+	}
+	ListNode reverse(ListNode head) {
+		Stack<ListNode> intStack = new Stack<>();
+		ListNode current = head;
+		ListNode tempNode = null;
+		while (null != current) {
+			tempNode = current;
+			current = current.next;
+			tempNode.next = null;
+			intStack.add(tempNode);
+		}
+		head = null;
+		while (!intStack.isEmpty()) {
+			if (null == head) {
+				current = intStack.pop();
+				head = current;
+			} 
+			else {
+				current.next = intStack.pop();
+				current = current.next;
+			}
+		}
+		return head;
+	}
+}

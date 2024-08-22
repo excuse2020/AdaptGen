@@ -1,0 +1,54 @@
+class Solution {
+	void backtrack(int[] nums, List<List<Integer>> result, List<Integer> current, boolean[] markArray) {
+		if (current.size() == nums.length) {
+			result.add(new ArrayList<>(current));
+			return;
+		}
+		for (int i = 0; i < nums.length; i++) {
+			if (markArray[i]) {
+				continue;
+			}
+			markArray[i] = true;
+			current.add(nums[i]);
+			backtrack(nums,result,current,markArray);
+			markArray[i] = false;
+			current.remove(current.size() - 1);
+		}
+	}
+	List<List<Integer>> permute(int[] nums) {
+		int length = nums.length;
+		List<List<Integer>> result = new ArrayList<>();
+		List<Integer> current = new ArrayList<>();
+		boolean[] markArray = new boolean[length];
+		backtrack(nums,result,current,markArray);
+		return result;
+	}
+}
+class Solution {
+	void backtrack(int[] nums, List<List<Integer>> result, int index) {
+		if (index >= nums.length) {
+			List<Integer> currentPermutation = new ArrayList<>();
+			for (int num: nums) {	
+				currentPermutation.add(num);
+			}
+			result.add(new ArrayList<>(currentPermutation));
+			return;
+		}
+		for (int i = index; i < nums.length; i++) {
+			swap(nums,i,index);
+			backtrack(nums,result,index + 1);
+			swap(nums,index,i);
+		}
+	}
+	List<List<Integer>> permute(int[] nums) {
+		int length = nums.length;
+		List<List<Integer>> result = new ArrayList<>();
+		backtrack(nums,result,0);
+		return result;
+	}
+	void swap(int[] nums, int i, int j) {
+		int temp = nums[i];
+		nums[i] = nums[j];
+		nums[j] = temp;
+	}
+}

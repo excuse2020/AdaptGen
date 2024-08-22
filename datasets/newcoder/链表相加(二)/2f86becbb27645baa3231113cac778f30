@@ -1,0 +1,84 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		Stack<Integer> stack1 = new Stack<>();
+		Stack<Integer> stack2 = new Stack<>();
+		Stack<Integer> stack3 = new Stack<>();
+		while (head1 != null) {
+			stack1.push(head1.val);
+			head1 = head1.next;
+		}
+		while (head2 != null) {
+			stack2.push(head2.val);
+			head2 = head2.next;
+		}
+		int add = 0;
+		while (!stack1.isEmpty() || !stack2.isEmpty()) {
+			if (stack1.isEmpty()) {
+				if (add == 1) {
+					int num = stack2.pop();
+					num++;
+					add = 0;
+					if (num >= 10) {
+						add = 1;
+						num -= 10;
+						stack3.push(num);
+					} 
+					else {
+						stack3.push(num);
+					}
+				} 
+				else {
+					int num = stack2.pop();
+					stack3.push(num);
+				}
+			} 
+			else if (stack2.isEmpty()) {
+				if (add == 1) {
+					int num = stack1.pop();
+					num++;
+					add = 0;
+					if (num >= 10) {
+						add = 1;
+						num -= 10;
+						stack3.push(num);
+					} 
+					else {
+						stack3.push(num);
+					}
+				} 
+				else {
+					int num = stack1.pop();
+					stack3.push(num);
+				}
+			} 
+			else {
+				Integer num1 = stack1.pop();
+				Integer num2 = stack2.pop();
+				Integer num3 = num1 + num2;
+				if (add == 1) {
+					num3 += 1;
+					add = 0;
+				}
+				if (num3 >= 10) {
+					add = 1;
+					num3 -= 10;
+					stack3.push(num3);
+				} 
+				else {
+					stack3.push(num3);
+				}
+			}
+		}
+		if (add == 1) {
+			stack3.push(1);
+		}
+		ListNode tmp = new ListNode(stack3.pop());
+		ListNode returnList = tmp;
+		while (!stack3.isEmpty()) {
+			ListNode tmpNode = new ListNode(stack3.pop());
+			tmp.next = tmpNode;
+			tmp = tmp.next;
+		}
+		return returnList;
+	}
+}

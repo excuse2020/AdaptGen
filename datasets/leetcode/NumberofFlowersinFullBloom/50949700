@@ -1,0 +1,26 @@
+class Solution {
+	int[] fullBloomFlowers(int[][] flowers, int[] people) {
+		int n = people.length;
+		int[] ans = new int[n];
+		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {a[0] - b[0]});
+		for (int i = 0; i < n; i++) {
+			pq.add(new int{people[i], i});
+		}
+		int count = 0;
+		TreeMap<Integer, Integer> mp = new TreeMap<>();
+		for (int i = 0; i < flowers.length; i++) {
+			mp.put(flowers[i][0],mp.getOrDefault(flowers[i][0],0) + 1);
+			mp.put(flowers[i][1] + 1,mp.getOrDefault(flowers[i][1] + 1,0) - 1);
+		}
+		for (int x: mp.keySet()) {	
+			while (!pq.isEmpty() && pq.peek()[0] < x) {
+				ans[pq.poll()[1]] = count;
+			}
+			count += mp.get(x);
+		}
+		while (!pq.isEmpty()) {
+			ans[pq.poll()[1]] = count;
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	int maxSatisfied(int[] customers, int[] grumpy, int minutes) {
+		int length = grumpy.length;
+		int maxSatisfied = 0;
+		for (int idx = 0; idx < length; idx++) {
+			if (grumpy[idx] != 1) {
+				maxSatisfied += customers[idx];
+			}
+		}
+		int output = 0, start = 0;
+		for (int begin = -1, end = 0, value = 0; end < length; begin++) {
+			while (start < minutes) {
+				if (begin != -1) {
+					if (grumpy[begin] == 1) {
+						value -= customers[begin];
+					}
+				}
+				if (grumpy[end] == 1) {
+					value += customers[end];
+				}
+				start++;
+				end++;
+			}
+			int calc = maxSatisfied + value;
+			if (output < calc) {
+				output = calc;
+			}
+			start--;
+		}
+		return output;
+	}
+}

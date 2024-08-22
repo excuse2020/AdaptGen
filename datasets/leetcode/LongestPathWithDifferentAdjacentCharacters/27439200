@@ -1,0 +1,46 @@
+class Solution {
+	int maxPathLen = Integer.MIN_VALUE;
+	Map<Integer, List<Integer>> buildNodeToChildrenMap(int[] parent) {
+		Map<Integer, List<Integer>> nodeToChildrenMap = new HashMap<>();
+		for (int i = 1; i < parent.length; i++) {
+			if (!nodeToChildrenMap.containsKey(parent[i])) {
+				List<Integer> newList = new ArrayList<>();
+				newList.add(i);
+				nodeToChildrenMap.put(parent[i],newList);
+			} 
+			else {
+				nodeToChildrenMap.get(parent[i]).add(i);
+			}
+		}
+		return nodeToChildrenMap;
+	}
+	int dfs(int node, int parent, Map<Integer, List<Integer>> nodeToChildrenMap, String s) {
+		if (!nodeToChildrenMap.containsKey(node)) {
+			return s.charAt(node) != s.charAt(parent) ? 1 : 0;
+		}
+		List<Integer> pathLengths = new ArrayList<>();
+		int maxPath = Integer.MIN_VALUE;
+		int secondMaxPath = Integer.MIN_VALUE;
+		for (Integer child: nodeToChildrenMap.get(node)) {	
+			int path = dfs(child,node,nodeToChildrenMap,s);
+			if (maxPath != Integer.MIN_VALUE && path <= maxPath) {
+				secondMaxPath = Math.max(secondMaxPath,path);
+			}
+			if (maxPath < path) {
+				secondMaxPath = maxPath;
+				maxPath = path;
+			}
+			pathLengths.add(path);
+		}
+		maxPathLen = Math.max(maxPathLen,pathLengths.size() == 1 ? pathLengths.get(0) + 1 : (maxPath + secondMaxPath) + 1);
+		return parent != -1 && s.charAt(node) != s.charAt(parent) ? maxPath + 1 : 0;
+	}
+	int longestPath(int[] parent, String s) {
+		if (parent.length <= 1) {
+			return parent.length;
+		}
+		Map<Integer, List<Integer>> nodeToChildrenMap = buildNodeToChildrenMap(parent);
+		dfs(0,-1,nodeToChildrenMap,s);
+		return maxPathLen;
+	}
+}

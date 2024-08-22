@@ -1,0 +1,37 @@
+class Solution {
+	int[] colorTheArray(int n, int[][] queries) {
+		int[] res = new int[queries.length];
+		int[] freq = new int[n + 2];
+		for (int i = 0; i < queries.length; i++) {
+			int[] nums = queries[i];
+			int index = nums[0];
+			int value = nums[1];
+			int prev = freq[index];
+			if (i == 0) {
+				freq[index] = value;
+				continue;
+			}
+			if (prev == value) {
+				res[i] = res[i - 1];
+				continue;
+			}
+			int minus = 0;
+			int add = 0;
+			if (index != 0 && freq[index - 1] != 0 && freq[index - 1] == prev) {
+				--minus;
+			}
+			if (freq[index + 1] != 0 && freq[index + 1] == prev) {
+				--minus;
+			}
+			if (index != 0 && value == freq[index - 1]) {
+				add++;
+			}
+			if (value == freq[index + 1]) {
+				add++;
+			}
+			freq[index] = value;
+			res[i] = res[i - 1] + add;
+		}
+		return res;
+	}
+}

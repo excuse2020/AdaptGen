@@ -1,0 +1,44 @@
+class Solution {
+	int countCharacters(String[] words, String chars) {
+		HashMap<Character, Integer> map = new HashMap<>();
+		HashMap<Character, Integer> new_map = new HashMap<>();
+		for (int i = 0; i < chars.length(); i++) {
+			if (map.containsKey(chars.charAt(i))) {
+				map.put(chars.charAt(i),map.get(chars.charAt(i)) + 1);
+			} 
+			else {
+				map.put(chars.charAt(i),1);
+			}
+		}
+		int length = 0;
+		for (int i = 0; i < words.length; i++) {
+			new_map.putAll(map);
+			int count = 0;
+			for (int j = 0; j < words[i].length(); j++) {
+				if (test(words[i].charAt(j),new_map)) {
+					count++;
+					continue;
+				} 
+				else {
+					break;
+				}
+			}
+			if (count == words[i].length()) {
+				length += words[i].length();
+			}
+		}
+		return (length);
+	}
+	boolean test(char s, HashMap<Character, Integer> new_map) {
+		if (new_map.containsKey(s)) {
+			new_map.put(s,new_map.get(s) - 1);
+			if (new_map.get(s) == -1) {
+				return false;
+			}
+		} 
+		else {
+			return false;
+		}
+		return true;
+	}
+}

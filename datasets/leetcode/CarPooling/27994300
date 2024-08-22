@@ -1,0 +1,27 @@
+class Solution {
+	boolean carPooling(int[][] trips, int capacity) {
+		int lastDestination = -1;
+		for (int trip: trips) {	
+			lastDestination = Math.max(lastDestination,trip[2]);
+		}
+		int highway = new int[lastDestination + 1];
+		for (int trip: trips) {	
+			highway[trip[1]] += trip[0];
+			highway[trip[2]] -= trip[0];
+		}
+		for (int i = 0; i <= lastDestination; i++) {
+			if (i == 0) {
+				if (highway[i] > capacity) {
+					return false;
+				}
+			} 
+			else {
+				highway[i] += highway[i - 1];
+				if (highway[i] > capacity) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

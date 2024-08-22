@@ -1,0 +1,51 @@
+class Solution {
+	int countCompleteComponents(int n, int[][] edges) {
+		int[] visited = new int[n];
+		int len = edges.length;
+		int[][] arr = new int[n][n];
+		for (int i = 0; i < len; i++) {
+			arr[edges[i][0]][edges[i][1]] = 1;
+			arr[edges[i][1]][edges[i][0]] = 1;
+		}
+		for (int i = 0; i < n; i++) {
+			arr[i][i] = 1;
+		}
+		int res = 0;
+		for (int i = 0; i < n; i++) {
+			if (visited[i] == 0) {
+				if (dfsCheck(i,-1,arr,visited) == 1) {
+					res++;
+				}
+			}
+		}
+		return res;
+	}
+	int dfsCheck(int curr, int parent, int[][] arr, int[] visited) {
+		if (visited[curr] == 1) {
+			return 1;
+		} 
+		else if (visited[curr] == 2) {
+			return 2;
+		}
+		if (parent != -1) {
+			for (int i = 0; i < arr.length; i++) {
+				if (arr[curr][i] != arr[parent][i]) {
+					visited[curr] = 2;
+					return visited[curr];
+				}
+			}
+		} 
+		else {
+			for (int i = 0; i < arr.length; i++) {
+				if (arr[curr][i] == 1) {
+					if (dfsCheck(i,curr,arr,visited) == 2) {
+						visited[curr] = 2;
+						return visited[curr];
+					}
+				}
+			}
+		}
+		visited[curr] = 1;
+		return 1;
+	}
+}

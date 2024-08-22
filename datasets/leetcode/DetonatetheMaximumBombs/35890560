@@ -1,0 +1,36 @@
+class Solution {
+	int count;
+	void dfs(int idx, boolean vis, ArrayList<ArrayList<Integer>> a) {
+		vis[idx] = true;
+		count++;
+		for (int i = 0; i < a.get(idx).size(); i++) {
+			if (!vis[a.get(idx).get(i)]) {
+				dfs(a.get(idx).get(i),vis,a);
+			}
+		}
+	}
+	int maximumDetonation(int[][] arr) {
+		ArrayList<ArrayList<Integer>> a = new ArrayList<>();
+		for (int i = 0; i < arr.length; i++) {
+			a.add(new ArrayList<>());
+			for (int j = 0; j < arr.length; j++) {
+				if (i != j) {
+					long x = arr[i][0] - arr[j][0];
+					long y = arr[i][1] - arr[j][1];
+					long dis = x * x + y * y;
+					if (Math.sqrt(dis) <= arr[i][2]) {
+						a.get(i).add(j);
+					}
+				}
+			}
+		}
+		int max = 0;
+		for (int i = 0; i < a.size(); i++) {
+			boolean vis = new boolean[a.size()];
+			count = 0;
+			dfs(i,vis,a);
+			max = Math.max(max,count);
+		}
+		return max;
+	}
+}

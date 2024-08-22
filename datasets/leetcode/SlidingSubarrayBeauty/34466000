@@ -1,0 +1,37 @@
+class Solution {
+	void addBeauty(TreeMap<Integer, Integer> map, int[] res, int ind, int x) {
+		for (Map.Entry<Integer, Integer> e: map.entrySet()) {	
+			if (e.getValue() >= x) {
+				res[ind] = e.getKey() < 0 ? e.getKey() : 0;
+				break;
+			} 
+			else {
+				x -= e.getValue();
+			}
+		}
+	}
+	int[] getSubarrayBeauty(int[] nums, int k, int x) {
+		TreeMap<Integer, Integer> map = new TreeMap<>();
+		int n = nums.length;
+		int res = new int[n - k + 1];
+		int ind = 0;
+		for (int i = 0; i < k; i++) {
+			map.put(nums[i],map.getOrDefault(nums[i],0) + 1);
+		}
+		addBeauty(map,res,ind++,x);
+		for (int i = 1; i < n - k + 1; i++) {
+			int addNum = nums[i + k - 1];
+			int delNum = nums[i - 1];
+			updateMap(map,addNum,delNum);
+			addBeauty(map,res,ind++,x);
+		}
+		return res;
+	}
+	void updateMap(TreeMap<Integer, Integer> map, int addNum, int delNum) {
+		map.put(addNum,map.getOrDefault(addNum,0) + 1);
+		map.put(delNum,map.get(delNum) - 1);
+		if (map.get(delNum) == 0) {
+			map.remove(delNum);
+		}
+	}
+}

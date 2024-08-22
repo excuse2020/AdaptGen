@@ -1,0 +1,57 @@
+class Solution {
+	int getNumberOfBacklogOrders(int[][] orders) {
+		PriorityQueue<int[]> sellBacklog = new PriorityQueue<>((a, b) -> {a[0] - b[0]}), buyBacklog = new PriorityQueue<>((a, b) -> {b[0] - a[0]});
+		int backlogOrderAmount = 0, ptr = 0;
+		int MOD = 1_000_000_007;
+		while (ptr < orders.length) {
+			int[] order = orders[ptr];
+			if (0 == order[2]) {
+				if (sellBacklog.size() > 0 && sellBacklog.peek()[0] <= order[0]) {
+					int[] sellOrder = sellBacklog.peek();
+					int orderQty = Math.min(order[1],sellOrder[1]);
+					sellOrder[1] -= orderQty;
+					order[1] -= orderQty;
+					backlogOrderAmount -= orderQty;
+					backlogOrderAmount += MOD;
+					backlogOrderAmount %= MOD;
+					if (0 == sellOrder[1]) {
+						sellBacklog.remove();
+					}
+					if (0 == order[1]) {
+						++ptr;
+					}
+				} 
+				else {
+					buyBacklog.add(order);
+					++ptr;
+					backlogOrderAmount += order[1] % MOD;
+					backlogOrderAmount %= MOD;
+				}
+			} 
+			else if (1 == order[2]) {
+				if (buyBacklog.size() > 0 && buyBacklog.peek()[0] >= order[0]) {
+					int[] buyOrder = buyBacklog.peek();
+					int orderQty = Math.min(order[1],buyOrder[1]);
+					buyOrder[1] -= orderQty;
+					order[1] -= orderQty;
+					backlogOrderAmount -= orderQty;
+					backlogOrderAmount += MOD;
+					backlogOrderAmount %= MOD;
+					if (0 == buyOrder[1]) {
+						buyBacklog.remove();
+					}
+					if (0 == order[1]) {
+						++ptr;
+					}
+				} 
+				else {
+					sellBacklog.add(order);
+					++ptr;
+					backlogOrderAmount += order[1] % MOD;
+					backlogOrderAmount %= MOD;
+				}
+			}
+		}
+		return backlogOrderAmount;
+	}
+}

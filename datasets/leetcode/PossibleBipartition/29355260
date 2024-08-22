@@ -1,0 +1,48 @@
+class Solution {
+	boolean bp(int[] colour, HashMap<Integer, HashSet<Integer>> adj, int v) {
+		colour[v] = 1;
+		Queue<Integer> queue = new LinkedList<>();
+		queue.add(v);
+		while (!queue.isEmpty()) {
+			int curr = queue.poll();
+			if (adj.get(curr) == null) {
+				continue;
+			}
+			for (int key: adj.get(curr)) {	
+				if (colour[key] == colour[curr]) {
+					return false;
+				}
+				if (colour[key] == -1) {
+					colour[key] = 1 - colour[curr];
+					queue.add(key);
+				}
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] d) {
+		HashMap<Integer, HashSet<Integer>> adj = new HashMap<>();
+		for (int i = 0; i < d.length; i++) {
+			int like = d[i][0];
+			int dislike = d[i][1];
+			if (!adj.containsKey(like)) {
+				adj.put(like,new HashSet<>());
+			}
+			if (!adj.containsKey(dislike)) {
+				adj.put(dislike,new HashSet<>());
+			}
+			adj.get(like).add(dislike);
+			adj.get(dislike).add(like);
+		}
+		int[] colour = new int[n + 1];
+		Arrays.fill(colour,-1);
+		for (int i = 0; i < colour.length; i++) {
+			if (colour[i] == -1) {
+				if (!bp(colour,adj,i)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

@@ -1,0 +1,48 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		String number1 = getNumber(head1);
+		String number2 = getNumber(head2);
+		int flag = 0, posa = number1.length() - 1;
+		int posb = number2.length() - 1;
+		StringBuilder result = new StringBuilder();
+		while (posa >= 0 || posb >= 0) {
+			int a = posa >= 0 ? number1.charAt(posa) - '0' : 0;
+			int b = posb >= 0 ? number2.charAt(posb) - '0' : 0;
+			int sum_ = a + b;
+			if (sum_ > 9) {
+				flag = 1;
+				sum_ = sum_ % 10;
+			} 
+			else {
+				flag = 0;
+			}
+			result.append(sum_);
+			posa--;
+			posb--;
+		}
+		if (flag == 1) {
+			result.append("1");
+		}
+		String resultStr = result.toString();
+		int idx = resultStr.length() - 1;
+		ListNode head = new ListNode(0);
+		ListNode temp = head;
+		while (idx >= 0) {
+			int val = resultStr.charAt(idx) - '0';
+			ListNode p = new ListNode(val);
+			temp.next = p;
+			temp = p;
+			idx--;
+		}
+		return head.next;
+	}
+	String getNumber(ListNode root) {
+		ListNode temp = root;
+		StringBuilder sb = new StringBuilder();
+		while (temp != null) {
+			sb.append(String.valueOf(temp.val));
+			temp = temp.next;
+		}
+		return sb.toString();
+	}
+}

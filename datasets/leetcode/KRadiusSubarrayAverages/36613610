@@ -1,0 +1,35 @@
+class Solution {
+	int[] getAverages(int[] nums, int k) {
+		int n = nums.length;
+		int avgs = new int[nums.length];
+		if ((n == 1 && k == 0) || k == 0) {
+			return (nums);
+		}
+		if (k >= n) {
+			Arrays.fill(avgs,-1);
+			return (avgs);
+		}
+		long pref = new long[n];
+		pref[0] = nums[0];
+		for (int i = 1; i < n; i++) {
+			pref[i] = nums[i] + pref[i - 1];
+		}
+		for (int i = 0; i < n; i++) {
+			if (i - k < 0 || i + k >= n) {
+				avgs[i] = -1;
+			} 
+			else {
+				long left = 0, right = 0;
+				if (i - k == 0) {
+					left = pref[i - 1];
+				} 
+				else {
+					left = pref[i - 1] - pref[i - 1 - k];
+				}
+				right = pref[i + k] - pref[i];
+				avgs[i] = (int) ((left + right) / (2 * k + 1));
+			}
+		}
+		return (avgs);
+	}
+}

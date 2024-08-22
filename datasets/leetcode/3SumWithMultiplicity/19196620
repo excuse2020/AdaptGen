@@ -1,0 +1,71 @@
+class Solution {
+	long com(int a, int b) {
+		long up = fac(a,b);
+		long down = b == 3 ? 6 : b;
+		return up / down;
+	}
+	long fac(int a, int b) {
+		long ans = a;
+		while (--b > 0) {
+			ans = ans * (a - 1);
+			a--;
+		}
+		return ans;
+	}
+	long finder(int a, int b, int c, Map<Integer, Integer> map) {
+		long ans = 1;
+		if (a != b && b != c) {
+			ans = com(map.get(a),1) * com(map.get(b),1);
+		} 
+		else if (a == b && b != c) {
+			ans = com(map.get(a),2) * com(map.get(c),1);
+		} 
+		else if (a != b && b == c) {
+			ans = com(map.get(a),1) * com(map.get(b),2);
+		} 
+		else {
+			ans = com(map.get(a),3);
+		}
+		return ans;
+	}
+	int threeSumMulti(int[] arr, int target) {
+		Arrays.sort(arr);
+		int n = arr.length;
+		long ans = 0;
+		int mod = (int) 1e9 + 7;
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int x: arr) {	
+			map.put(x,map.getOrDefault(x,0) + 1);
+		}
+		int i = 0;
+		while (i < n) {
+			int left = i + 1, right = n - 1;
+			while (left < right) {
+				int sum = arr[i] + arr[left];
+				if (sum == target) {
+					ans += finder(arr[i],arr[left],arr[right],map);
+					ans %= mod;
+					int temp = arr[left];
+					while (left < right && arr[left] == temp) {
+						left++;
+					}
+					temp = arr[right];
+					while (left < right && arr[right] == temp) {
+						right--;
+					}
+				} 
+				else if (sum < target) {
+					left++;
+				} 
+				else {
+					right--;
+				}
+			}
+			int temp = arr[i];
+			while (i < n && arr[i] == temp) {
+				i++;
+			}
+		}
+		return (int) ans;
+	}
+}

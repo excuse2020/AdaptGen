@@ -1,0 +1,30 @@
+class Solution {
+	List<List<Integer>> ans = new ArrayList<>();
+	int sum = 0;
+	void dfs(TreeNode root, int targetSum, List<Integer> subList) {
+		if (root == null) {
+			return;
+		}
+		sum = sum + root.val;
+		subList.add(root.val);
+		if (root.left == null && root.right == null) {
+			if (sum == targetSum) {
+				ans.add(new ArrayList<>(subList));
+			}
+		}
+		dfs(root.left,targetSum,subList);
+		dfs(root.right,targetSum,subList);
+		int removedNodeValue = subList.get(subList.size() - 1);
+		subList.remove(subList.size() - 1);
+		sum = sum - removedNodeValue;
+	}
+	List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+		dfs(root,targetSum,new ArrayList<Integer>());
+		if (ans.size() == 0) {
+			return new ArrayList<>();
+		} 
+		else {
+			return ans;
+		}
+	}
+}

@@ -1,0 +1,23 @@
+class Solution {
+	int N_Egg_Drop_Solution(int floors, int eggs) {
+		int dp = new int[floors + 1][eggs + 1];
+		for (int egg = 0; egg <= eggs; egg++) {
+			dp[1][egg] = 1;
+		}
+		for (int f = 0; f <= floors; f++) {
+			dp[f][1] = f;
+		}
+		for (int f = 2; f <= floors; f++) {
+			for (int egg = 2; egg <= eggs; egg++) {
+				dp[f][egg] = Integer.MAX_VALUE;
+				for (int each_floor = 1; each_floor < f; each_floor++) {
+					dp[f][egg] = Math.min(dp[f][egg],1 + Math.max(dp[each_floor - 1][egg - 1],dp[f - each_floor][egg]));
+				}
+			}
+		}
+		return dp[floors][eggs];
+	}
+	int twoEggDrop(int n) {
+		return N_Egg_Drop_Solution(n,2);
+	}
+}

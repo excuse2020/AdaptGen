@@ -1,0 +1,26 @@
+class Solution {
+	int[] informTime;
+	Map<Integer, List<Integer>> tree;
+	int dfs(int i) {
+		int managerTime = informTime[i];
+		int empTime = 0;
+		if (!tree.containsKey(i)) {
+			return 0;
+		}
+		for (int emp: tree.get(i)) {	
+			empTime = Math.max(empTime,dfs(emp));
+		}
+		return managerTime + empTime;
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		this.informTime = informTime;
+		tree = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			if (manager[i] != -1) {
+				tree.putIfAbsent(manager[i],new ArrayList<Integer>());
+				tree.get(manager[i]).add(i);
+			}
+		}
+		return dfs(headID);
+	}
+}

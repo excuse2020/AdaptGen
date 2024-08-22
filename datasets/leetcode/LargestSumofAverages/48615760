@@ -1,0 +1,39 @@
+class Solution {
+	double[][] memo;
+	int[] preSum;
+	double dfs(int[] nums, int start, int k) {
+		if (start >= nums.length) {
+			return 0;
+		}
+		if (k == 1) {
+			int curSum = rangeSum(start,nums.length - 1);
+			double curAvg = (double) curSum / (nums.length - start);
+			return curAvg;
+		}
+		if (memo[start][k] != -1) {
+			return memo[start][k];
+		}
+		double res = 0;
+		for (int i = start; i < nums.length; i++) {
+			int curSum = rangeSum(start,i);
+			double curAvg = (double) curSum / (i - start + 1);
+			res = Math.max(res,curAvg + dfs(nums,i + 1,k - 1));
+		}
+		return memo[start][k] = res;
+	}
+	double largestSumOfAverages(int[] nums, int k) {
+		this.preSum = new int[nums.length + 1];
+		this.memo = new double[nums.length][k + 1];
+		for (double[] arr: memo) {	
+			Arrays.fill(arr,-1);
+		}
+		preSum[0] = 0;
+		for (int i = 0; i < nums.length; i++) {
+			preSum[i + 1] = preSum[i] + nums[i];
+		}
+		return dfs(nums,0,k);
+	}
+	int rangeSum(int i, int j) {
+		return preSum[j + 1] - preSum[i];
+	}
+}

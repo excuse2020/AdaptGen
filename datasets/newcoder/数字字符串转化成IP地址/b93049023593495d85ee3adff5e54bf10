@@ -1,0 +1,35 @@
+class Solution {
+	void backtrack(String s, int start, StringBuffer ip, int segments, ArrayList<String> result) {
+		if (start == s.length() && segments == 4) {
+			result.add(ip.toString());
+			return;
+		} 
+		else if (start == s.length() || segments == 4) {
+			return;
+		}
+		for (int i = 1; i <= 3 && start + i <= s.length(); i++) {
+			String segment = s.substring(start,start + i);
+			if (isValidSegment(segment)) {
+				if (segments > 0) {
+					ip.append('.');
+				}
+				ip.append(segment);
+				backtrack(s,start + i,ip,segments + 1,result);
+				ip.setLength(ip.length() - segment.length());
+			}
+		}
+	}
+	boolean isValidSegment(String segment) {
+		if (segment.length() > 1 && segment.charAt(0) == '0') {
+			return false;
+		}
+		int num = Integer.parseInt(segment);
+		return num > -1 && num < 256;
+	}
+	ArrayList<String> restoreIpAddresses(String s) {
+		ArrayList<String> result = new ArrayList<>();
+		StringBuffer ip = new StringBuffer();
+		backtrack(s,0,ip,0,result);
+		return result;
+	}
+}

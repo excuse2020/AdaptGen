@@ -1,0 +1,48 @@
+class Solution {
+	int recursion(int grid, int i, int j, Integer dp) {
+		if (i >= grid.length || j >= grid[0].length) {
+			return 0;
+		}
+		if (dp[i][j] != null) {
+			return dp[i][j];
+		}
+		int bool = 0;
+		if (i + 1 < grid.length && j < grid[i + 1].length) {
+			if (grid[i][j] == grid[i + 1][j]) {
+				int result = recursion(grid,i + 1,j,dp);
+				if (result == -1) {
+					dp[i][j] = -1;
+					return dp[i][j];
+				}
+				bool = Math.min(bool,result);
+			} 
+			else {
+				dp[i][j] = -1;
+				return dp[i][j];
+			}
+		}
+		if (i < grid.length && j + 1 < grid[i].length) {
+			if (grid[i][j] == grid[i][j + 1]) {
+				dp[i][j] = -1;
+				return dp[i][j];
+			} 
+			else {
+				int result = recursion(grid,i,j + 1,dp);
+				if (result == -1) {
+					dp[i][j] = -1;
+					return dp[i][j];
+				}
+				bool = Math.min(bool,result);
+			}
+		}
+		dp[i][j] = bool;
+		return dp[i][j];
+	}
+	boolean satisfiesConditions(int[][] grid) {
+		Integer dp = new Integer[grid.length][grid[0].length];
+		if (recursion(grid,0,0,dp) < 0) {
+			return false;
+		}
+		return true;
+	}
+}

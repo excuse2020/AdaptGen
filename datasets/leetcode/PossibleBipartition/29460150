@@ -1,0 +1,69 @@
+class Solution {
+	boolean bfs(int node, List<List<Integer>> graph, int[] color) {
+		Deque<Integer> queue = new ArrayDeque<>();
+		queue.addLast(node);
+		color[node] = 1;
+		while (!queue.isEmpty()) {
+			int curr = queue.pollFirst();
+			for (int nei: graph.get(curr)) {	
+				if (color[nei] == color[curr]) {
+					return false;
+				} 
+				else if (color[nei] == 0) {
+					color[nei] = color[curr] == 1 ? -1 : 1;
+					queue.addLast(nei);
+				}
+			}
+		}
+		return true;
+	}
+	boolean dfs(int node, List<List<Integer>> graph, int[] color) {
+		Deque<Integer> stack = new ArrayDeque<>();
+		stack.addFirst(node);
+		color[node] = 1;
+		while (!stack.isEmpty()) {
+			int curr = stack.removeFirst();
+			for (int nei: graph.get(curr)) {	
+				if (color[nei] == color[curr]) {
+					return false;
+				} 
+				else if (color[nei] == 0) {
+					color[nei] = color[curr] == 1 ? -1 : 1;
+					stack.addFirst(nei);
+				}
+			}
+		}
+		return true;
+	}
+	boolean dfsR(int node, List<List<Integer>> graph, int[] color, int colour) {
+		color[node] = colour;
+		boolean res = true;
+		for (int nei: graph.get(node)) {	
+			if (color[nei] == colour) {
+				return false;
+			} 
+			else if (color[nei] == 0) {
+				color[nei] = color[node] == 1 ? -1 : 1;
+				res = dfsR(nei,graph,color,color[nei]);
+			}
+		}
+		return res;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		List<List<Integer>> graph = new ArrayList<>();
+		int[] color = new int[n + 1];
+		for (int i = 0; i <= n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int i = 0; i < dislikes.length; i++) {
+			graph.get(dislikes[i][0]).add(dislikes[i][1]);
+			graph.get(dislikes[i][1]).add(dislikes[i][0]);
+		}
+		for (int i = 1; i <= n; i++) {
+			if (color[i] == 0 && !dfsR(i,graph,color,1)) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

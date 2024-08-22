@@ -1,0 +1,65 @@
+class Solution {
+	void KuaiPaiMapIndex2(Map<Integer, int[]> map, int start, int end) {
+		int left = start;
+		int right = end;
+		int[] temp = map.get(start);
+		while (left < right) {
+			while (left < right) {
+				if (temp[1] < map.get(right)[1]) {
+					map.put(left,map.get(right));
+					break;
+				}
+				right--;
+			}
+			while (left < right) {
+				if (temp[1] >= map.get(left)[1]) {
+					map.put(right,map.get(left));
+					break;
+				}
+				left++;
+			}
+		}
+		map.put(left,temp);
+		if (left - start > 0) {
+			KuaiPaiMapIndex2(map,start,left);
+		}
+		if (end - left > 0) {
+			KuaiPaiMapIndex2(map,left + 1,end);
+		}
+	}
+	String solve(int[] nums) {
+		Map<Integer, int[]> map = new HashMap<>();
+		int max = -1;
+		for (int n: nums) {	
+			if (n > max) {
+				max = n;
+			}
+		}
+		int theSameLenth = String.valueOf(max).length();
+		int len = nums.length;
+		int c, d, cha, bu;
+		String str1 = "";
+		int[] e = new int[2];
+		for (int i = 0; i < len; i++) {
+			c = nums[i];
+			str1 = String.valueOf(c);
+			cha = theSameLenth - str1.length();
+			bu = c % 10;
+			while (cha > 0) {
+				str1 += bu;
+				cha--;
+			}
+			d = Integer.parseInt(str1);
+			map.put(i,new int{c, d});
+		}
+		KuaiPaiMapIndex2(map,0,map.size() - 1);
+		String str2 = "";
+		for (Map.Entry<Integer, int[]> entry: map.entrySet()) {	
+			str2 += String.valueOf(entry.getValue()[0]);
+		}
+		if (str2.startsWith("0")) {
+			str2 = "0";
+		}
+		return str2;
+	}
+}

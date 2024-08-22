@@ -1,0 +1,36 @@
+class Solution {
+	int minReorder(int n, int[][] connections) {
+		int count = 0;
+		HashMap<Integer, List<Integer>> bidirectionalEdges = new HashMap();
+		HashMap<Integer, Set<Integer>> uniDirectionalEdges = new HashMap();
+		for (int[] connection: connections) {	
+			List<Integer> edges = bidirectionalEdges.getOrDefault(connection[0],new LinkedList());
+			edges.add(connection[1]);
+			bidirectionalEdges.put(connection[0],edges);
+			edges = bidirectionalEdges.getOrDefault(connection[1],new LinkedList());
+			edges.add(connection[0]);
+			bidirectionalEdges.put(connection[1],edges);
+			Set<Integer> edgeSet = uniDirectionalEdges.getOrDefault(connection[0],new HashSet());
+			edgeSet.add(connection[1]);
+			uniDirectionalEdges.put(connection[0],edgeSet);
+		}
+		int visited = new int[n];
+		Queue<Integer> q = new LinkedList();
+		q.add(0);
+		visited[0] = 1;
+		while (!q.isEmpty()) {
+			int temp = q.poll();
+			List<Integer> neighbors = bidirectionalEdges.getOrDefault(temp,new LinkedList());
+			for (int i = 0; i < neighbors.size(); i++) {
+				if (visited[neighbors.get(i)] == 0) {
+					q.add(neighbors.get(i));
+					visited[neighbors.get(i)] = 1;
+					if (uniDirectionalEdges.getOrDefault(temp,new HashSet()).contains(neighbors.get(i))) {
+						count++;
+					}
+				}
+			}
+		}
+		return count;
+	}
+}

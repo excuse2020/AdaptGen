@@ -1,0 +1,41 @@
+class Solution {
+	int helper(TreeNode root, int d, Map<Integer, List<Integer>> depth_to_height, Map<Integer, Integer> height, Map<Integer, Integer> depth) {
+		if (root == null) {
+			return -1;
+		}
+		int left_height = helper(root.left,d + 1,depth_to_height,height,depth);
+		int right_height = helper(root.right,d + 1,depth_to_height,height,depth);
+		int h = Math.max(left_height,right_height) + 1;
+		height.put(root.val,h);
+		depth.put(root.val,d);
+		depth_to_height.putIfAbsent(d,new ArrayList<>());
+		depth_to_height.get(d).add(h);
+		return h;
+	}
+	int[] treeQueries(TreeNode root, int[] queries) {
+		int[] result = new int[queries.length];
+		Map<Integer, List<Integer>> depth_to_height = new HashMap<>();
+		Map<Integer, Integer> height = new HashMap<>();
+		Map<Integer, Integer> depth = new HashMap<>();
+		helper(root,0,depth_to_height,height,depth);
+		for (Map.Entry<Integer, List<Integer>> entry: depth_to_height.entrySet()) {	
+			Collections.sort(entry.getValue(),Collections.reverseOrder());
+		}
+		for (int i = 0; i < queries.length; i++) {
+			int node = queries[i];
+			int d = depth.get(node);
+			int h = height.get(node);
+			List<Integer> heights = depth_to_height.get(d);
+			if (heights.size() == 1) {
+				result[i] = d - 1;
+			} 
+			else if (heights.get(0) == h) {
+				result[i] = heights.get(1) + d;
+			} 
+			else if (heights.get(0) != h) {
+				result[i] = heights.get(0) + d;
+			}
+		}
+		return result;
+	}
+}

@@ -1,0 +1,21 @@
+class Solution {
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		Map<Integer, Integer> inOrderMap = new HashMap<>();
+		for (int i = 0; i < inorder.length; i++) {
+			inOrderMap.put(inorder[i],i);
+		}
+		TreeNode root = buildTree(inorder,0,inorder.length - 1,postorder,0,postorder.length - 1,inOrderMap);
+		return root;
+	}
+	TreeNode buildTree(int[] inorder, int instart, int inend, int[] postorder, int poststart, int postend, Map<Integer, Integer> inOrderMap) {
+		if (instart > inend || poststart > postend) {
+			return null;
+		}
+		TreeNode root = new TreeNode(postorder[postend]);
+		int inRoot = inOrderMap.get(postorder[postend]);
+		int numsLeft = inRoot - instart;
+		root.left = buildTree(inorder,instart,instart + numsLeft,postorder,poststart,poststart + numsLeft - 1,inOrderMap);
+		root.right = buildTree(inorder,inRoot + 1,inorder.length - 1,postorder,poststart + numsLeft,postend - 1,inOrderMap);
+		return root;
+	}
+}

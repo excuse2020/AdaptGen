@@ -1,0 +1,76 @@
+class Solution {
+	int componentValue(int[] nums, int[][] edges) {
+		int n = nums.length;
+		if (n == 1) {
+			return 0;
+		}
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		int[] indegree = new int[n];
+		for (int[] edge: edges) {	
+			int current = edge[0];
+			int next = edge[1];
+			map.putIfAbsent(current,new ArrayList<>());
+			map.get(current).add(next);
+			indegree[current]++;
+			map.putIfAbsent(next,new ArrayList<>());
+			map.get(next).add(current);
+			indegree[next]++;
+		}
+		int total = 0;
+		for (int num: nums) {	
+			total += num;
+		}
+		List<Integer> factors = new ArrayList<>();
+		for (int i = 1; i * i <= total; i++) {
+			if (total % i != 0) {
+				continue;
+			}
+			factors.add(i);
+			factors.add(total / i);
+		}
+		Collections.sort(factors);
+		for (int factor: factors) {	
+			Set<Integer> visited = new HashSet<>();
+			Queue<Integer> queue = new ArrayDeque<>();
+			int[] indegreenew = new int[n];
+			int[] sum = new int[n];
+			for (int i = 0; i < n; i++) {
+				indegreenew[i] = indegree[i];
+				sum[i] = nums[i];
+			}
+			for (int i = 0; i < n; i++) {
+				if (indegreenew[i] == 1) {
+					queue.offer(i);
+					visited.add(i);
+				}
+			}
+			boolean flag = false;
+			while (!queue.isEmpty()) {
+				int current = queue.poll();
+				if (sum[current] > factor) {
+					flag = true;
+					break;
+				} 
+				else if (sum[current] == factor) {
+					sum[current] = 0;
+				}
+				List<Integer> neighbors = map.get(current);
+				for (int nei: neighbors) {	
+					if (visited.contains(nei)) {
+						continue;
+					}
+					indegreenew[nei]--;
+					sum[nei] += sum[current];
+					if (indegreenew[nei] == 1) {
+						queue.offer(nei);
+						visited.add(nei);
+					}
+				}
+			}
+			if (!flag) {
+				return total / factor - 1;
+			}
+		}
+		return 0;
+	}
+}

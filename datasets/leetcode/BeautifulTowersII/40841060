@@ -1,0 +1,45 @@
+class Solution {
+	long maximumSumOfHeights(List<Integer> maxHeights) {
+		int n = maxHeights.size();
+		long[] pre = new long[n];
+		pre[0] = maxHeights.get(0);
+		Deque<int[]> deque = new ArrayDeque<>();
+		deque.add(new int{maxHeights.get(0), 0});
+		for (int i = 1; i < n; i++) {
+			while (!deque.isEmpty() && deque.getLast()[0] > maxHeights.get(i)) {
+				deque.removeLast();
+			}
+			if (deque.isEmpty()) {
+				pre[i] = (long) (i + 1) * (long) maxHeights.get(i);
+			} 
+			else {
+				int idx = deque.getLast()[1];
+				pre[i] = pre[idx] + ((long) (i - idx) * (long) maxHeights.get(i));
+			}
+			deque.addLast(new int{maxHeights.get(i), i});
+		}
+		long[] suf = new long[n];
+		suf[n - 1] = maxHeights.get(n - 1);
+		deque = new ArrayDeque<>();
+		deque.add(new int{maxHeights.get(n - 1), n - 1});
+		for (int i = n - 2; i >= 0; i--) {
+			while (!deque.isEmpty() && deque.getLast()[0] > maxHeights.get(i)) {
+				deque.removeLast();
+			}
+			if (deque.isEmpty()) {
+				suf[i] = (long) (n - i) * (long) maxHeights.get(i);
+			} 
+			else {
+				int idx = deque.getLast()[1];
+				suf[i] = suf[idx] + ((long) (idx - i) * (long) maxHeights.get(i));
+			}
+			deque.addLast(new int{maxHeights.get(i), i});
+		}
+		long ans = 0;
+		for (int i = 0; i < n; i++) {
+			long sum = pre[i] + suf[i] - maxHeights.get(i);
+			ans = Math.max(ans,sum);
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,42 @@
+class Solution {
+	Map<Integer, List<double[]>> buildGraph(int[][] edges, double[] succProb) {
+		Map<Integer, List<double[]>> graph = new HashMap<>();
+		for (int i = 0; i < edges.length; i++) {
+			int u = edges[i][0];
+			int v = edges[i][1];
+			double p = succProb[i];
+			graph.computeIfAbsent(u,(key) -> {new ArrayList<>()}).add(new double{v, p});
+			graph.computeIfAbsent(v,(key) -> {new ArrayList<>()}).add(new double{u, p});
+		}
+		return graph;
+	}
+	double maxProbability(int n, int[][] edges, double[] succProb, int start, int end) {
+		Map<Integer, List<double[]>> graph = buildGraph(edges,succProb);
+		double[] probabilities = new double[n];
+		probabilities[start] = 1.0;
+		PriorityQueue<double[]> pq = new PriorityQueue<>((a, b) -> {Double.compare(b[1],a[1])});
+		pq.offer(new double{start, 1.0});
+		while (!pq.isEmpty()) {
+			double[] curr = pq.poll();
+			int node = (int) curr[0];
+			double prob = curr[1];
+			if (node == end) {
+				return prob;
+			}
+			if (probabilities[node] < prob) {
+				continue;
+			}
+			List<double[]> neighbors = graph.getOrDefault(node,new ArrayList<>());
+			for (double[] neighbor: neighbors) {	
+				int nextNode = (int) neighbor[0];
+				double edgeProb = neighbor[1];
+				double newProb = prob * edgeProb;
+				if (newProb > probabilities[nextNode]) {
+					probabilities[nextNode] = newProb;
+					pq.offer(new double{nextNode, newProb});
+				}
+			}
+		}
+		return 0.0;
+	}
+}

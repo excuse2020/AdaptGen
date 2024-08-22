@@ -1,0 +1,34 @@
+class Solution {
+	String robotWithString(String s) {
+		int n = s.length();
+		int least = new int[n];
+		least[n - 1] = (int) s.charAt(n - 1);
+		for (int i = n - 2; i >= 0; i--) {
+			int val = (int) s.charAt(i);
+			if (least[i + 1] < val) {
+				least[i] = least[i + 1];
+			} 
+			else {
+				least[i] = val;
+			}
+		}
+		Stack<Character> stack = new Stack<>();
+		StringBuilder op = new StringBuilder();
+		for (int i = 0; i < n; i++) {
+			char ch = s.charAt(i);
+			if (i == n - 1 || least[i + 1] < (int) ch) {
+				stack.push(ch);
+			} 
+			else {
+				stack.push(ch);
+				while (!stack.isEmpty() && least[i + 1] >= (int) stack.peek()) {
+					op.append(stack.pop());
+				}
+			}
+		}
+		while (!stack.isEmpty()) {
+			op.append(stack.pop());
+		}
+		return op.toString();
+	}
+}

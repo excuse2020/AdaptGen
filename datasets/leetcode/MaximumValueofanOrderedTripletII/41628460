@@ -1,0 +1,22 @@
+class Solution {
+	long maximumTripletValue(int[] nums) {
+		int[] maxForwardDiff = new int[nums.length];
+		int maxForward = nums[0];
+		for (int j = 1; j < nums.length - 1; j++) {
+			maxForward = Math.max(nums[j - 1],maxForward);
+			if (maxForward > nums[j]) {
+				maxForwardDiff[j] = maxForward - nums[j];
+			}
+		}
+		int maxBackward = 0;
+		long max = 0;
+		for (int k = nums.length - 1; k > 1; k--) {
+			maxBackward = Math.max(nums[k],maxBackward);
+			if (maxForwardDiff[k - 1] > 0) {
+				long value = (long) maxForwardDiff[k - 1] * maxBackward;
+				max = Math.max(value,max);
+			}
+		}
+		return max;
+	}
+}

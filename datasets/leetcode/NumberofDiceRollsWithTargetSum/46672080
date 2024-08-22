@@ -1,0 +1,27 @@
+class Solution {
+	int MOD = (int) (Math.pow(10,9) + 7);
+	int findTarget(int n, int k, int target, int[][] memo) {
+		if (target == 0 && n == 0) {
+			return 1;
+		}
+		if (n == 0 || target <= 0) {
+			return 0;
+		}
+		if (memo[n][target] != -1) {
+			return (int) (memo[n][target] % MOD);
+		}
+		int totalCombo = 0;
+		for (int i = 1; i <= Math.min(k,target); i++) {
+			totalCombo = (totalCombo + findTarget(n - 1,k,target - i,memo)) % MOD;
+		}
+		memo[n][target] = totalCombo % MOD;
+		return memo[n][target];
+	}
+	int numRollsToTarget(int n, int k, int target) {
+		int[][] memo = new int[n + 1][target + 1];
+		for (int[] row: memo) {	
+			Arrays.fill(row,-1);
+		}
+		return findTarget(n,k,target,memo);
+	}
+}

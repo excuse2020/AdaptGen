@@ -1,0 +1,42 @@
+class Solution {
+	int ans;
+	int maxAncestorDiff(TreeNode root) {
+		ans = 0;
+		minAndMaxDescendent(root);
+		return ans;
+	}
+	int[] minAndMaxDescendent(TreeNode root) {
+		int[] minAndMax = new int[2];
+		if (root.left == null && root.right == null) {
+			minAndMax[0] = minAndMax[1] = root.val;
+			return minAndMax;
+		}
+		int[] leftChildMinAndMax;
+		int[] rightChildMinAndMax;
+		if (root.left != null && root.right != null) {
+			leftChildMinAndMax = minAndMaxDescendent(root.left);
+			rightChildMinAndMax = minAndMaxDescendent(root.right);
+			int min = Math.min(leftChildMinAndMax[0],rightChildMinAndMax[0]);
+			int max = Math.max(leftChildMinAndMax[1],rightChildMinAndMax[1]);
+			int maxDiff = Math.max(Math.abs(root.val - min),Math.abs(root.val - max));
+			ans = Math.max(ans,maxDiff);
+			minAndMax[0] = Math.min(root.val,min);
+			minAndMax[1] = Math.max(root.val,max);
+		} 
+		else if (root.right != null) {
+			rightChildMinAndMax = minAndMaxDescendent(root.right);
+			int maxDiff = Math.max(Math.abs(root.val - rightChildMinAndMax[0]),Math.abs(root.val - rightChildMinAndMax[1]));
+			ans = Math.max(ans,maxDiff);
+			minAndMax[0] = Math.min(root.val,rightChildMinAndMax[0]);
+			minAndMax[1] = Math.max(root.val,rightChildMinAndMax[1]);
+		} 
+		else {
+			leftChildMinAndMax = minAndMaxDescendent(root.left);
+			int maxDiff = Math.max(Math.abs(root.val - leftChildMinAndMax[0]),Math.abs(root.val - leftChildMinAndMax[1]));
+			ans = Math.max(ans,maxDiff);
+			minAndMax[0] = Math.min(root.val,leftChildMinAndMax[0]);
+			minAndMax[1] = Math.max(root.val,leftChildMinAndMax[1]);
+		}
+		return minAndMax;
+	}
+}

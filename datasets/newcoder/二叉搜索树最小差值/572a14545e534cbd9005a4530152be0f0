@@ -1,0 +1,30 @@
+class Solution {
+	int minDifference(TreeNode root) {
+		Stack<TreeNode> stack = new Stack<>();
+		Queue<Integer> queue = new LinkedList<>();
+		TreeNode node = root;
+		while (null != node) {
+			stack.push(node);
+			node = node.left;
+		}
+		while (!stack.isEmpty()) {
+			node = stack.pop();
+			queue.add(node.val);
+			if (null != node.right) {
+				node = node.right;
+				while (null != node) {
+					stack.push(node);
+					node = node.left;
+				}
+			}
+		}
+		int res = Integer.MAX_VALUE;
+		int pre = Integer.MAX_VALUE;
+		while (!queue.isEmpty()) {
+			int val = queue.poll();
+			res = Math.min(res,Math.abs(val - pre));
+			pre = val;
+		}
+		return res;
+	}
+}

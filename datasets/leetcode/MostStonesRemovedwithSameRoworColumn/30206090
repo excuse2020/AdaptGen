@@ -1,0 +1,42 @@
+class Solution {
+	int K = 10001;
+	List<Integer>[] makeGraph(int[][] stones) {
+		List<Integer>[] graph = new ArrayList[2 * K + 1];
+		for (int i = 0; i < stones.length; i++) {
+			int x = stones[i][0];
+			int y = stones[i][1] + K;
+			if (graph[x] == null) {
+				graph[x] = new ArrayList<>();
+			}
+			if (graph[y] == null) {
+				graph[y] = new ArrayList<>();
+			}
+			graph[x].add(y);
+			graph[y].add(x);
+		}
+		return graph;
+	}
+	int removeStones(int[][] stones) {
+		List<Integer>[] graph = makeGraph(stones);
+		int[] visited = new int[2 * K + 1];
+		int connectedComponents = 0;
+		for (int i = 0; i < graph.length; i++) {
+			if (visited[i] == 0 && graph[i] != null) {
+				connectedComponents++;
+				visitConnectedStones(graph,visited,i);
+			}
+		}
+		return stones.length - connectedComponents;
+	}
+	void visitConnectedStones(List<Integer>[] graph, int[] visited, int stoneLoc) {
+		visited[stoneLoc] = 1;
+		if (graph[stoneLoc] == null) {
+			return;
+		}
+		for (int neighbor: graph[stoneLoc]) {	
+			if (visited[neighbor] == 0) {
+				visitConnectedStones(graph,visited,neighbor);
+			}
+		}
+	}
+}

@@ -1,0 +1,42 @@
+class Solution {
+	int[] sortJumbled(int[] mapping, int[] nums) {
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		List<Integer> arrList = new ArrayList<>();
+		for (int x: nums) {	
+			int tens = 0;
+			int newNumber = 0;
+			int key = x;
+			if (x == 0) {
+				newNumber += Math.pow(10,tens) * mapping[x];
+			}
+			while (x > 0) {
+				int digit = x % 10;
+				x = x / 10;
+				newNumber += Math.pow(10,tens) * mapping[digit];
+				tens++;
+			}
+			if (map.containsKey(newNumber)) {
+				List<Integer> updated = map.get(newNumber);
+				updated.add(key);
+				map.put(newNumber,updated);
+			} 
+			else {
+				List<Integer> thisList = new ArrayList<>();
+				thisList.add(key);
+				map.put(newNumber,thisList);
+			}
+			arrList.add(newNumber);
+		}
+		int[] result = new int[nums.length];
+		Collections.sort(arrList);
+		int counter = 0;
+		for (int i = 0; i < arrList.size(); i++) {
+			int thisKey = arrList.get(i);
+			List<Integer> values = map.get(thisKey);
+			result[i] = values.get(0);
+			values.remove(0);
+			map.put(thisKey,values);
+		}
+		return result;
+	}
+}

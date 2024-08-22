@@ -1,0 +1,51 @@
+class Solution {
+	int base = 1000000;
+	boolean rabinKarp(String source, String pattern) {
+		if (pattern == "" || source == "") {
+			return false;
+		}
+		int maxPower = 1, hashCode = 0, patternCode = 0;
+		for (int i = 0; i < pattern.length(); i++) {
+			maxPower = (maxPower * 31) % base;
+		}
+		for (int i = 0; i < pattern.length(); i++) {
+			patternCode = ((patternCode * 31) + pattern.charAt(i)) % base;
+		}
+		for (int i = 0; i < source.length(); i++) {
+			hashCode = ((hashCode * 31) + source.charAt(i)) % base;
+			if (i < pattern.length() - 1) {
+				continue;
+			}
+			if (i >= pattern.length()) {
+				hashCode = (hashCode - source.charAt(i - pattern.length()) * maxPower) % base;
+			}
+			if (hashCode < 0) {
+				hashCode += base;
+			}
+			if (hashCode == patternCode) {
+				if (source.substring(i - pattern.length() + 1,i + 1).equals(pattern)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	int repeatedStringMatch(String a, String b) {
+		int count = 1;
+		if (a == b) {
+			return 1;
+		}
+		String source = a;
+		while (source.length() < b.length()) {
+			source += a;
+			count++;
+		}
+		if (rabinKarp(source,b)) {
+			return count;
+		}
+		if (rabinKarp(source + a,b)) {
+			return count + 1;
+		}
+		return -1;
+	}
+}

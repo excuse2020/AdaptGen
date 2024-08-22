@@ -1,0 +1,21 @@
+class Solution {
+	int maxDotProduct(int[] a, int[] b) {
+		int[][] dp = new int[a.length + 1][b.length + 1];
+		for (int[] row: dp) {	
+			Arrays.fill(row,-1);
+		}
+		return solve(0,0,a,b,dp);
+	}
+	int solve(int l, int r, int[] a, int[] b, int[][] dp) {
+		if (l == a.length || r == b.length) {
+			return Integer.MIN_VALUE;
+		}
+		if (dp[l][r] != -1) {
+			return dp[l][r];
+		}
+		int p1 = a[l] * b[r] + Math.max(0,solve(l + 1,r + 1,a,b,dp));
+		int p2 = solve(l + 1,r,a,b,dp);
+		int p3 = solve(l,r + 1,a,b,dp);
+		return dp[l][r] = Math.max(p1,Math.max(p2,p3));
+	}
+}

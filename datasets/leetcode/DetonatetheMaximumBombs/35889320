@@ -1,0 +1,48 @@
+class Solution {
+	boolean isInRange(int[] bomb1, int[] bomb2) {
+		long dx = bomb1[0] - bomb2[0];
+		long dy = bomb1[1] - bomb2[1];
+		long r1 = bomb1[2];
+		long dist = dx * dx + dy * dy;
+		return dist <= r1 * r1;
+	}
+	int maximumDetonation(int[][] bombs) {
+		int ans = 1;
+		int n = bombs.length;
+		List<Integer>[] graph = new List[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (i != j && isInRange(bombs[i],bombs[j])) {
+					graph[i].add(j);
+				}
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			Queue<Integer> queue = new LinkedList<>();
+			boolean[] detonated = new boolean[n];
+			int counter = 0;
+			queue.add(i);
+			while (!queue.isEmpty()) {
+				Integer bomb = queue.poll();
+				if (detonated[bomb]) {
+					continue;
+				}
+				detonated[bomb] = true;
+				counter++;
+				for (int adjBomb: graph[bomb]) {	
+					if (!detonated[adjBomb]) {
+						queue.add(adjBomb);
+					}
+				}
+			}
+			if (counter == n) {
+				return n;
+			}
+			ans = Math.max(ans,counter);
+		}
+		return ans;
+	}
+}

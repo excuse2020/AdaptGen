@@ -1,0 +1,46 @@
+class Solution {
+	String[] splitMessage(String message, int limit) {
+		List<String> listString = new ArrayList<String>();
+		if (limit <= 5) {
+			return listString.toArray(new String[listString.size()]);
+		}
+		int messageLength = message.length();
+		StringBuffer messageStringBuffer = new StringBuffer();
+		messageStringBuffer.append(message);
+		int finalI = 0;
+		long handleStringLength = 0;
+		for (int i = 1; i < limit - 4; i++) {
+			for (int j = 0; j < i; j++) {
+				handleStringLength += (long) (limit - 5) * (Math.pow(10,j + 1) - Math.pow(10,j));
+			}
+			if (messageLength <= handleStringLength) {
+				finalI = i;
+				break;
+			}
+			handleStringLength = 0;
+		}
+		if (finalI != 0) {
+			long empty = handleStringLength - messageLength;
+			int lastPartLength = limit - 5;
+			long NumberOfEmptyPart = empty / lastPartLength;
+			double totalParts = Math.pow(10,finalI) - 1;
+			int startIndex = 0;
+			int endIndex = 0;
+			for (int k = 1; k < totalParts + 1; k++) {
+				StringBuffer sb = new StringBuffer();
+				sb.append("<");
+				sb.append(k);
+				sb.append("/");
+				sb.append((int) totalParts);
+				sb.append(">");
+				startIndex = endIndex;
+				endIndex = startIndex + limit - sb.length();
+				StringBuffer messageBuffer = new StringBuffer();
+				messageBuffer.append(messageStringBuffer.substring(startIndex,endIndex < messageLength ? endIndex : messageLength));
+				messageBuffer.append(sb);
+				listString.add(messageBuffer.toString());
+			}
+		}
+		return listString.toArray(new String[listString.size()]);
+	}
+}

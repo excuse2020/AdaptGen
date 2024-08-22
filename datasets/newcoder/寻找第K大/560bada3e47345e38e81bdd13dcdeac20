@@ -1,0 +1,39 @@
+class Solution {
+	int findKth(int[] a, int n, int K) {
+		return headSort(a,n,K);
+	}
+	void headAdjest(int[] a, int start, int end) {
+		int temp = a[start];
+		int j;
+		for (j = start * 2 + 1; j <= end; j = j * 2 + 1) {
+			if (j < end && a[j] < a[j + 1]) {
+				j++;
+			}
+			if (temp > a[j]) {
+				break;
+			}
+			a[start] = a[j];
+			start = j;
+		}
+		a[start] = temp;
+	}
+	int headSort(int[] a, int n, int K) {
+		int i;
+		int end = n - 1;
+		int count = 0;
+		for (i = (end - 1) / 2; i >= 0; i--) {
+			headAdjest(a,i,end);
+		}
+		count++;
+		for (i = end; i > 0; i--, count++) {
+			int temp = a[0];
+			a[0] = a[i];
+			a[i] = temp;
+			if (K == count) {
+				return a[i];
+			}
+			headAdjest(a,0,i - 1);
+		}
+		return a[n - K];
+	}
+}

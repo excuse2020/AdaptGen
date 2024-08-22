@@ -1,0 +1,22 @@
+class Solution {
+	List<Integer> largestDivisibleSubset(int[] nums) {
+		Arrays.sort(nums);
+		return rec(nums,0,-1);
+	}
+	List<Integer> rec(int[] nums, int level, int prev) {
+		if (level == nums.length) {
+			return new ArrayList<>();
+		}
+		List<Integer> include = new ArrayList<>();
+		List<Integer> exclude = new ArrayList<>();
+		if (prev == -1 || nums[level] % prev == 0) {
+			include = rec(nums,level + 1,nums[level]);
+			include.add(nums[level]);
+		}
+		exclude = rec(nums,level + 1,prev);
+		if (include.size() > exclude.size()) {
+			return include;
+		}
+		return exclude;
+	}
+}

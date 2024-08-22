@@ -1,0 +1,59 @@
+class Solution {
+	int FIRST_ISLAND_MARKER = -1;
+	int SECOND_ISLAND_MARKER = -2;
+	int n;
+	Deque<int[]> queue = new ArrayDeque<>();
+	boolean findSecondIsland(int[][] grid, int row, int col, int flips) {
+		if (row < 0 || row >= n || col < 0 || col >= n || grid[row][col] > 0) {
+			return false;
+		}
+		if (grid[row][col] == SECOND_ISLAND_MARKER) {
+			return true;
+		}
+		if (grid[row][col] == 0) {
+			grid[row][col] = flips + 1;
+			queue.offer(new int{row, col, flips + 1});
+		}
+		return false;
+	}
+	void markIsland(int[][] grid, int marker, int row, int col) {
+		if (row < 0 || row >= n || col < 0 || col >= n || grid[row][col] != 1) {
+			return;
+		}
+		grid[row][col] = marker;
+		if (marker == FIRST_ISLAND_MARKER) {
+			queue.offer(new int{row, col, 0});
+		}
+		markIsland(grid,marker,row - 1,col);
+		markIsland(grid,marker,row + 1,col);
+		markIsland(grid,marker,row,col - 1);
+		markIsland(grid,marker,row,col + 1);
+	}
+	int shortestBridge(int[][] grid) {
+		n = grid.length;
+		int marker = FIRST_ISLAND_MARKER;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (grid[i][j] == 1) {
+					markIsland(grid,marker,i,j);
+					marker = SECOND_ISLAND_MARKER;
+				}
+			}
+		}
+		while (!queue.isEmpty()) {
+			var cell = queue.poll();
+			int row = cell[0];
+			int col = cell[1];
+			int flips = cell[2];
+			var isFound = false;
+			isFound = isFound || findSecondIsland(grid,row - 1,col,flips);
+			isFound = isFound || findSecondIsland(grid,row + 1,col,flips);
+			isFound = isFound || findSecondIsland(grid,row,col - 1,flips);
+			isFound = isFound || findSecondIsland(grid,row,col + 1,flips);
+			if (isFound) {
+				return cell[2];
+			}
+		}
+		throw new RuntimeException("Second island is not found.")
+	}
+}

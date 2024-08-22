@@ -1,0 +1,36 @@
+class Solution {
+	int dp;
+	int m;
+	int n;
+	int cherryPickup(int[][] grid) {
+		n = grid.length;
+		m = grid[0].length;
+		dp = new int[n + 1][m + 1][m + 1];
+		for (int i = 0; i <= n; i++) {
+			for (int j = 0; j <= m; j++) {
+				for (int k = 0; k <= m; k++) {
+					dp[i][j][k] = -1;
+				}
+			}
+		}
+		return solve(grid,0,0,m - 1);
+	}
+	int solve(int[][] grid, int robo1Row, int robo1Col, int robo2Col) {
+		if (robo1Row == n) {
+			return 0;
+		}
+		if (robo1Row >= n || robo1Col >= m || robo1Row < 0 || robo1Col < 0) {
+			return 0;
+		}
+		if (robo2Col >= m || robo2Col < 0) {
+			return 0;
+		}
+		if (dp[robo1Row][robo1Col][robo2Col] != -1) {
+			return dp[robo1Row][robo1Col][robo2Col];
+		}
+		if (robo1Col == robo2Col) {
+			return grid[robo1Row][robo1Col];
+		}
+		return dp[robo1Row][robo1Col][robo2Col] = Math.max(Math.max(grid[robo1Row][robo1Col] + grid[robo1Row][robo2Col],grid[robo1Row][robo1Col] + grid[robo1Row][robo2Col]),Math.max(Math.max(grid[robo1Row][robo1Col] + grid[robo1Row][robo2Col],grid[robo1Row][robo1Col] + grid[robo1Row][robo2Col]),Math.max(Math.max(grid[robo1Row][robo1Col] + grid[robo1Row][robo2Col],grid[robo1Row][robo1Col] + grid[robo1Row][robo2Col]),Math.max(grid[robo1Row][robo1Col] + grid[robo1Row][robo2Col],Math.max(grid[robo1Row][robo1Col] + grid[robo1Row][robo2Col],grid[robo1Row][robo1Col] + grid[robo1Row][robo2Col])))));
+	}
+}

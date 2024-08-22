@@ -1,0 +1,39 @@
+class Solution {
+	int solve(char[][] matrix) {
+		int maxS = 0;
+		int row = matrix.length;
+		int column = matrix[0].length;
+		int[][] dp = new int[row][column];
+		dp[0][0] = 0;
+		for (int i = 0; i < row; i++) {
+			if (matrix[i][0] == '1') {
+				dp[i][0] = 1;
+			} 
+			else {
+				dp[i][0] = 0;
+			}
+		}
+		for (int j = 0; j < column; j++) {
+			if (matrix[0][j] == '1') {
+				dp[0][j] = 1;
+			} 
+			else {
+				dp[0][j] = 0;
+			}
+		}
+		for (int i = 1; i < row; i++) {
+			for (int j = 1; j < column; j++) {
+				if (matrix[i][j] == '1') {
+					int temp = Math.min(dp[i - 1][j - 1],dp[i - 1][j]);
+					int temp2 = Math.min(temp,dp[i][j - 1]) + 1;
+					dp[i][j] = temp2;
+					maxS = Math.max(maxS,dp[i][j]);
+				} 
+				else if (matrix[i][j] == '0') {
+					dp[i][j] = 0;
+				}
+			}
+		}
+		return maxS * maxS;
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		List<List<Integer>> res = new LinkedList();
+		Map<Integer, List<Integer>> g = new HashMap();
+		for (int i = 0; i < n; i++) {
+			g.putIfAbsent(i,new LinkedList());
+		}
+		for (List<Integer> e: connections) {	
+			g.get(e.get(0)).add(e.get(1));
+			g.get(e.get(1)).add(e.get(0));
+		}
+		int[] rank = new int[n];
+		boolean[] v = new boolean[n];
+		dfs(0,-1,0,rank,g,v,res);
+		return res;
+	}
+	int dfs(int n, int p, int r, int[] rank, Map<Integer, List<Integer>> g, boolean[] v, List<List<Integer>> res) {
+		rank[n] = r;
+		v[n] = true;
+		for (int nei: g.get(n)) {	
+			if (nei == p) {
+				continue;
+			}
+			if (!v[nei]) {
+				int neiRank = dfs(nei,n,r + 1,rank,g,v,res);
+				rank[n] = Math.min(rank[n],neiRank);
+			} 
+			else {
+				rank[n] = Math.min(rank[n],rank[nei]);
+			}
+		}
+		if (rank[n] >= r) {
+			if (p >= 0) {
+				res.add(Arrays.asList(new Integer{n, p}));
+			}
+		}
+		return rank[n];
+	}
+}

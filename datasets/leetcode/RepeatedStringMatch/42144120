@@ -1,0 +1,44 @@
+class Solution {
+	int[] getPattern(String b) {
+		int[] pattern = new int[b.length()];
+		int i = 0;
+		int j = 1;
+		Arrays.fill(pattern,-1);
+		while (j < b.length()) {
+			if (b.charAt(i) == b.charAt(j)) {
+				pattern[j] = i;
+				i++;
+				j++;
+			} 
+			else if (i > 0) {
+				i = pattern[i - 1] + 1;
+			} 
+			else {
+				j++;
+			}
+		}
+		return pattern;
+	}
+	int repeatedStringMatch(String a, String b) {
+		int n = a.length();
+		int m = b.length();
+		int[] p = getPattern(b);
+		int i = 0;
+		int j = 0;
+		while (i < m + n) {
+			int idx = i % n;
+			if (a.charAt(idx) == b.charAt(j)) {
+				j++;
+			} 
+			else if (j > 0) {
+				j = p[j - 1] + 1;
+				continue;
+			}
+			if (j == m) {
+				return (i / n) + 1;
+			}
+			i++;
+		}
+		return -1;
+	}
+}

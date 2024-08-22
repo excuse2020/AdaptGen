@@ -1,0 +1,37 @@
+class Solution {
+	int[] distinctDifferenceArray(int[] nums) {
+		int res = new int[nums.length];
+		if (nums.length == 1) {
+			res[0] = 1;
+			return res;
+		}
+		HashMap<Integer, Integer> ml = new HashMap<>();
+		HashMap<Integer, Integer> mr = new HashMap<>();
+		for (int i = 1; i < nums.length; i++) {
+			if (mr.containsKey(nums[i])) {
+				mr.put(nums[i],mr.get(nums[i]) + 1);
+			} 
+			else {
+				mr.put(nums[i],1);
+			}
+		}
+		ml.put(nums[0],1);
+		res[0] = ml.size() - mr.size();
+		for (int i = 1; i < nums.length; i++) {
+			if (mr.containsKey(nums[i])) {
+				mr.put(nums[i],mr.get(nums[i]) - 1);
+				if (mr.get(nums[i]) == 0) {
+					mr.remove(nums[i]);
+				}
+			}
+			if (ml.containsKey(nums[i])) {
+				ml.put(nums[i],ml.get(nums[i]) + 1);
+			} 
+			else {
+				ml.put(nums[i],1);
+			}
+			res[i] = ml.size() - mr.size();
+		}
+		return res;
+	}
+}

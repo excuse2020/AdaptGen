@@ -1,0 +1,91 @@
+class Solution {
+	int money(int i, int nums, int[] dp) {
+		if (i >= nums.length) {
+			return 0;
+		}
+		if (i == nums.length - 1) {
+			return nums[nums.length - 1];
+		}
+		if (dp[i] != -1) {
+			return dp[i];
+		}
+		return dp[i] = Math.max((nums[i] + money(i + 2,nums,dp)),(money(i + 1,nums,dp)));
+	}
+	int rob(int[] nums) {
+		int dp1 = new int[nums.length + 1];
+		int dp2 = new int[nums.length + 1];
+		Arrays.fill(dp1,-1);
+		Arrays.fill(dp2,-1);
+		if (nums.length == 1) {
+			return nums[0];
+		}
+		int[] nums1 = new int[nums.length - 1];
+		int[] nums2 = new int[nums.length - 1];
+		for (int i = 1; i < nums.length; i++) {
+			nums1[i - 1] = nums[i];
+		}
+		for (int i = 0; i < nums.length - 1; i++) {
+			nums2[i] = nums[i];
+		}
+		return Math.max(money(0,nums1,dp1),money(0,nums2,dp2));
+	}
+}
+class Solution {
+	int money(int nums, int[] dp) {
+		for (int i = nums.length - 2; i >= 0; i--) {
+			dp[i] = Math.max((nums[i] + dp[i + 2]),dp[i + 1]);
+		}
+		return dp[0];
+	}
+	int rob(int[] nums) {
+		int n = nums.length;
+		if (n == 1) {
+			return nums[0];
+		}
+		int[] nums1 = new int[nums.length - 1];
+		int[] nums2 = new int[nums.length - 1];
+		for (int i = 1; i < nums.length; i++) {
+			nums1[i - 1] = nums[i];
+		}
+		for (int i = 0; i < nums.length - 1; i++) {
+			nums2[i] = nums[i];
+		}
+		int dp1 = new int[nums.length];
+		int dp2 = new int[nums.length];
+		Arrays.fill(dp1,-1);
+		Arrays.fill(dp2,-1);
+		dp1[nums1.length] = 0;
+		dp1[nums1.length - 1] = nums1[nums1.length - 1];
+		dp2[nums2.length] = 0;
+		dp2[nums2.length - 1] = nums2[nums2.length - 1];
+		return Math.max(money(nums1,dp1),money(nums2,dp2));
+	}
+}
+class Solution {
+	int money(int nums) {
+		int prev = 0;
+		int next = nums[nums.length - 1];
+		int curr;
+		for (int i = nums.length - 2; i >= 0; i--) {
+			curr = Math.max((nums[i] + prev),next);
+			prev = next;
+			next = curr;
+		}
+		return next;
+	}
+	int rob(int[] nums) {
+		int n = nums.length;
+		if (n == 1) {
+			return nums[0];
+		}
+		int[] nums1 = new int[nums.length - 1];
+		int[] nums2 = new int[nums.length - 1];
+		for (int i = 1; i < nums.length; i++) {
+			nums1[i - 1] = nums[i];
+		}
+		for (int i = 0; i < nums.length - 1; i++) {
+			nums2[i] = nums[i];
+		}
+		return Math.max(money(nums1),money(nums2));
+	}
+}

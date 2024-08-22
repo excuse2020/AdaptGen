@@ -1,0 +1,34 @@
+class Solution {
+	TreeNode findAncestor(TreeNode root, TreeNode a, TreeNode b) {
+		if (root == null || root == a || root == b) {
+			return root;
+		}
+		TreeNode left = findAncestor(root.left,a,b);
+		TreeNode right = findAncestor(root.right,a,b);
+		if (left != null && right != null) {
+			return root;
+		}
+		return left != null ? left : right;
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		List<TreeNode> deepest = new ArrayList<>();
+		traverse(root,deepest,0,-1);
+		return findAncestor(root,deepest.get(0),deepest.get(1));
+	}
+	int traverse(TreeNode node, List<TreeNode> deepest, int level, int maxLevel) {
+		if (node == null) {
+			return maxLevel;
+		}
+		if (level == maxLevel) {
+			deepest.set(1,node);
+		}
+		if (level > maxLevel) {
+			maxLevel = level;
+			deepest.clear();
+			deepest.add(node);
+			deepest.add(node);
+		}
+		maxLevel = Math.max(maxLevel,traverse(node.left,deepest,level + 1,maxLevel));
+		return Math.max(maxLevel,traverse(node.right,deepest,level + 1,maxLevel));
+	}
+}

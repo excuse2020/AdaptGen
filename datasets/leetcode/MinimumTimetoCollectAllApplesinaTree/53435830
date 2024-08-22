@@ -1,0 +1,33 @@
+class Solution {
+	List<List<Integer>> createGraph(int[][] edges, int n) {
+		List<List<Integer>> adjList = new ArrayList<>(n);
+		for (int i = 0; i < n; i++) {
+			adjList.add(new ArrayList<>(3));
+		}
+		for (int[] e: edges) {	
+			adjList.get(e[0]).add(e[1]);
+			adjList.get(e[1]).add(e[0]);
+		}
+		return adjList;
+	}
+	int dfs(int node, List<List<Integer>> adjList, List<Boolean> hasApple, boolean[] visited) {
+		if (visited[node]) {
+			return 0;
+		}
+		visited[node] = true;
+		List<Integer> childs = adjList.get(node);
+		int time = 0;
+		for (int child: childs) {	
+			time += dfs(child,adjList,hasApple,visited);
+		}
+		if (time > 0 || hasApple.get(node)) {
+			time += 2;
+		}
+		return time;
+	}
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		List<List<Integer>> adjList = createGraph(edges,hasApple.size());
+		int time = dfs(0,adjList,hasApple,new boolean[hasApple.size()]);
+		return time > 0 ? time - 2 : 0;
+	}
+}

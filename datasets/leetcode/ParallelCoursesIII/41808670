@@ -1,0 +1,35 @@
+class Solution {
+	int minimumTime(int n, int[][] rs, int[] t) {
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		int[] indegree = new int[n + 1];
+		for (int[] r: rs) {	
+			graph.computeIfAbsent(r[0],(k) -> {new ArrayList<>()}).add(r[1]);
+			indegree[r[1]]++;
+		}
+		Queue<Integer> queue = new LinkedList<>();
+		for (int i = 1; i <= n; i++) {
+			if (indegree[i] == 0) {
+				queue.offer(i);
+			}
+		}
+		int[] totalTime = new int[n + 1];
+		while (!queue.isEmpty()) {
+			int course = queue.poll();
+			totalTime[course] = Math.max(totalTime[course],t[course - 1]);
+			if (graph.containsKey(course)) {
+				for (int nextCourse: graph.get(course)) {	
+					indegree[nextCourse]--;
+					totalTime[nextCourse] = Math.max(totalTime[nextCourse],totalTime[course] + t[nextCourse - 1]);
+					if (indegree[nextCourse] == 0) {
+						queue.offer(nextCourse);
+					}
+				}
+			}
+		}
+		int minTime = 0;
+		for (int i = 1; i <= n; i++) {
+			minTime = Math.max(minTime,totalTime[i]);
+		}
+		return minTime;
+	}
+}

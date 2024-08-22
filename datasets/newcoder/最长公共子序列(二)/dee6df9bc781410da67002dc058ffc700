@@ -1,0 +1,46 @@
+class Solution {
+	String LCS(String s1, String s2) {
+		if (s1 == null || s2 == null || s1.length() == 0 || s2.length() == 0) {
+			return "-1";
+		}
+		char[] ss1 = s1.toCharArray();
+		char[] ss2 = s2.toCharArray();
+		int m = ss1.length;
+		int n = ss2.length;
+		String res = "-1";
+		int cnt = new int[m + 1][n + 1];
+		for (int i = 1; i <= m; i++) {
+			for (int j = 1; j <= n; j++) {
+				if (ss1[i - 1] == ss2[j - 1]) {
+					cnt[i][j] = cnt[i - 1][j - 1] + 1;
+				} 
+				else {
+					cnt[i][j] = Math.max(cnt[i - 1][j],cnt[i][j - 1]);
+				}
+			}
+		}
+		int len = cnt[m][n];
+		int i = m - 1, j = n - 1;
+		StringBuilder sb = new StringBuilder();
+		while (i >= 0 && j >= 0) {
+			if (ss1[i] == ss2[j]) {
+				sb.append(String.valueOf(ss1[i]));
+				i--;
+				j--;
+			} 
+			else {
+				if (cnt[i][j + 1] >= cnt[i + 1][j]) {
+					i--;
+				} 
+				else {
+					j--;
+				}
+			}
+		}
+		sb.reverse();
+		if (sb.length() != 0) {
+			res = sb.toString();
+		}
+		return res;
+	}
+}

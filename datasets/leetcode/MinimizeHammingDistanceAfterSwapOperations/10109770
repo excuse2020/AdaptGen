@@ -1,0 +1,58 @@
+class Solution {
+	Set<Integer> bfs(Map<Integer, Set<Integer>> adjs, int idx) {
+		Set<Integer> visited = new HashSet<>();
+		Queue<Integer> queue = new LinkedList<>();
+		queue.offer(idx);
+		visited.add(idx);
+		while (!queue.isEmpty()) {
+			Queue<Integer> tmp = new LinkedList<>();
+			while (!queue.isEmpty()) {
+				int node = queue.poll();
+				for (int next: adjs.getOrDefault(node,new HashSet<>())) {	
+					if (!visited.contains(next)) {
+						tmp.add(next);
+						visited.add(next);
+					}
+				}
+			}
+			queue = tmp;
+		}
+		return visited;
+	}
+	int getDistance(int[] source, int[] target, Set<Integer> connect) {
+		Map<Integer, Integer> cnt = new HashMap<>();
+		for (int idx: connect) {	
+			cnt.put(source[idx],cnt.getOrDefault(source[idx],0) + 1);
+		}
+		int ans = 0;
+		for (int idx: connect) {	
+			int val = target[idx];
+			if (cnt.getOrDefault(val,0) <= 0) {
+				ans++;
+			} 
+			else {
+				cnt.put(val,cnt.get(val) - 1);
+			}
+		}
+		return ans;
+	}
+	int minimumHammingDistance(int[] source, int[] target, int[][] allowedSwaps) {
+		Map<Integer, Set<Integer>> adjs = new HashMap<>();
+		for (int[] as: allowedSwaps) {	
+			int a = as[0];
+			int b = as[1];
+			adjs.computeIfAbsent(a,(x) -> {new HashSet<>()}).add(b);
+			adjs.computeIfAbsent(b,(x) -> {new HashSet<>()}).add(a);
+		}
+		Set<Integer> visited = new HashSet<>();
+		int ans = 0;
+		for (int i = 0; i < source.length; i++) {
+			if (!visited.contains(i)) {
+				Set<Integer> connect = bfs(adjs,i);
+				visited.addAll(connect);
+				ans += getDistance(source,target,connect);
+			}
+		}
+		return ans;
+	}
+}

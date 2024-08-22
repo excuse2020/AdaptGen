@@ -1,0 +1,24 @@
+class Solution {
+	int checkRecord(int n) {
+		int MOD = 1000000007;
+		long[] P = new long[n + 1];
+		long[] L1 = new long[n + 1];
+		long[] L2 = new long[n + 1];
+		P[0] = 1;
+		L1[0] = 0;
+		L2[0] = 0;
+		for (int i = 1; i <= n; i++) {
+			P[i] = (P[i - 1] + L1[i - 1]) % MOD;
+			L1[i] = P[i - 1];
+			L2[i] = L1[i - 1];
+		}
+		long validWithoutA = (P[n] + L1[n]) % MOD;
+		long validWithA = 0;
+		for (int i = 0; i < n; i++) {
+			long beforeA = (P[i] + L1[i]) % MOD;
+			long afterA = (P[n - i - 1] + L1[n - i - 1]) % MOD;
+			validWithA = (validWithA + beforeA * afterA % MOD) % MOD;
+		}
+		return (int) ((validWithoutA + validWithA) % MOD);
+	}
+}

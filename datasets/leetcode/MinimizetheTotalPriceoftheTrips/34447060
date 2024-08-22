@@ -1,0 +1,73 @@
+class Solution {
+	int[][] dp;
+	int[] freq;
+	HashMap<Integer, ArrayList<Integer>> graph;
+	int[] price;
+	boolean dfs(int src, int dest, int parent) {
+		if (src == dest) {
+			freq[src]++;
+			return true;
+		}
+		boolean found = false;
+		if (graph.containsKey(src)) {
+			for (int nei: graph.get(src)) {	
+				if (nei != parent) {
+					found |= dfs(nei,dest,src);
+				}
+				if (found) {
+					break;
+				}
+			}
+		}
+		if (found) {
+			freq[src]++;
+		}
+		return found;
+	}
+	int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
+		graph = new HashMap<>();
+		for (int[] edge: edges) {	
+			if (!graph.containsKey(edge[0])) {
+				graph.put(edge[0],new ArrayList<>());
+			}
+			if (!graph.containsKey(edge[1])) {
+				graph.put(edge[1],new ArrayList<>());
+			}
+			graph.get(edge[0]).add(edge[1]);
+			graph.get(edge[1]).add(edge[0]);
+		}
+		freq = new int[n];
+		for (int[] trip: trips) {	
+			dfs(trip[0],trip[1],-1);
+		}
+		dp = new int[n][2];
+		for (int i = 0; i < n; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		this.price = price;
+		return recursion(0,-1,0);
+	}
+	int recursion(int node, int parent, int half) {
+		if (dp[node][half] != -1) {
+			return dp[node][half];
+		}
+		int res1 = (price[node] * freq[node]) / 2, res2 = price[node] * freq[node];
+		if (graph.containsKey(node)) {
+			for (int i: graph.get(node)) {	
+				if (i != parent) {
+					res2 += recursion(i,node,0);
+				}
+			}
+			if (half == 1) {
+				dp[node][half] = res2;
+				return res2;
+			}
+			for (int i: graph.get(node)) {	
+				if (i != parent) {
+					res1 += recursion(i,node,1);
+				}
+			}
+		}
+		return dp[node][half] = Math.min(res1,res2);
+	}
+}

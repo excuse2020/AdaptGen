@@ -1,0 +1,41 @@
+class Solution {
+	int max = -1;
+	void dfs(Map<Integer, List<Integer>> graph, boolean[] visited, boolean[] visiting, int[] timeStep, int i, int count) {
+		List<Integer> edges = graph.get(i);
+		if (edges == null) {
+			return;
+		}
+		visited[i] = true;
+		visiting[i] = true;
+		timeStep[i] = count;
+		for (Integer edge: edges) {	
+			if (visiting[edge]) {
+				max = Math.max(max,count - timeStep[edge] + 1);
+			}
+			if (!visited[edge]) {
+				count++;
+				dfs(graph,visited,visiting,timeStep,edge,count);
+			}
+		}
+		visiting[i] = false;
+	}
+	int longestCycle(int[] edges) {
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		boolean[] visited = new boolean[edges.length];
+		boolean[] visiting = new boolean[edges.length];
+		int[] timeStep = new int[edges.length];
+		for (int i = 0; i < edges.length; i++) {
+			graph.putIfAbsent(i,new ArrayList<>());
+			if (edges[i] >= 0) {
+				graph.get(i).add(edges[i]);
+			}
+		}
+		int count = 0;
+		for (int i = 0; i < edges.length; i++) {
+			if (!visited[i]) {
+				dfs(graph,visited,visiting,timeStep,i,count);
+			}
+		}
+		return max;
+	}
+}

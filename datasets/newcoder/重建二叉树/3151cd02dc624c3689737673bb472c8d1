@@ -1,0 +1,39 @@
+class Solution {
+	TreeNode doBuild(int[] pre, int[] in, int pl, int pr, int il, int ir) {
+		if (pl < pr && il < ir) {
+			TreeNode root = new TreeNode(pre[pl]);
+			int rootIndex = index(in,il,ir,root.val);
+			int sizeL = rootIndex - il;
+			int sizeR = ir - rootIndex;
+			if (sizeL > 0) {
+				root.left = doBuild(pre,in,pl + 1,pl + sizeL,il,rootIndex - 1);
+			}
+			if (sizeR > 0) {
+				root.right = doBuild(pre,in,pl + sizeL,pr,rootIndex + 1,ir);
+			}
+			return root;
+		} 
+		else if (pl == pr) {
+			return new TreeNode(pre[pl]);
+		} 
+		else {
+			return null;
+		}
+	}
+	int index(int[] a, int il, int ir, int v) {
+		for (int i = il; i <= ir; i++) {
+			if (a[i] == v) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] in) {
+		if (pre != null) {
+			return doBuild(pre,in,0,pre.length - 1,0,in.length - 1);
+		} 
+		else {
+			return null;
+		}
+	}
+}

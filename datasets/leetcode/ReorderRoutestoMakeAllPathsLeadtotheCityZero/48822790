@@ -1,0 +1,37 @@
+class Solution {
+	int count = 0;
+	void dfs(List<List<Integer>> adj1, List<List<Integer>> adj2, int node, int parent) {
+		if (adj1.get(node).size() == 0 && adj2.get(node).size() == 0) {
+			return;
+		}
+		if (adj1.get(node).size() > 0) {
+			for (int v: adj1.get(node)) {	
+				if (v != parent) {
+					count++;
+					dfs(adj1,adj2,v,node);
+				}
+			}
+		}
+		if (adj2.get(node).size() > 0) {
+			for (int v: adj2.get(node)) {	
+				if (v != parent) {
+					dfs(adj1,adj2,v,node);
+				}
+			}
+		}
+	}
+	int minReorder(int n, int[][] connections) {
+		List<List<Integer>> adj_away = new ArrayList<>();
+		List<List<Integer>> adj_towards = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj_away.add(i,new ArrayList<>());
+			adj_towards.add(i,new ArrayList<>());
+		}
+		for (int i = 0; i < n - 1; i++) {
+			adj_away.get(connections[i][0]).add(connections[i][1]);
+			adj_towards.get(connections[i][1]).add(connections[i][0]);
+		}
+		dfs(adj_away,adj_towards,0,-1);
+		return count;
+	}
+}

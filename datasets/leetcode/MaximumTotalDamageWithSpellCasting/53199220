@@ -1,0 +1,41 @@
+class Solution {
+	long maximumTotalDamage(int[] power) {
+		ArrayList<long[]> mem = new ArrayList<>();
+		Arrays.sort(power);
+		int count = 0;
+		for (int i = 0; i < power.length; i++) {
+			if (mem.size() <= count) {
+				mem.add(new long{power[i], 1});
+			} 
+			else {
+				if (mem.get(count)[0] == power[i]) {
+					mem.get(count)[1]++;
+				} 
+				else {
+					count++;
+					mem.add(new long{power[i], 1});
+				}
+			}
+		}
+		long[] dp = new long[mem.size()];
+		dp[0] = mem.get(0)[0] * mem.get(0)[1];
+		for (int i = 1; i < mem.size(); i++) {
+			long currentDamage = mem.get(i)[0] * mem.get(i)[1];
+			if (mem.get(i)[0] - mem.get(i - 1)[0] > 2) {
+				dp[i] = Math.max(dp[i - 1],dp[i - 1] + currentDamage);
+			} 
+			else if (i >= 2 && (mem.get(i)[0] - mem.get(i - 2)[0] > 2)) {
+				dp[i] = Math.max(dp[i - 1],dp[i - 2] + currentDamage);
+			} 
+			else {
+				if (i >= 3) {
+					dp[i] = Math.max(dp[i - 1],dp[i - 3] + currentDamage);
+				} 
+				else {
+					dp[i] = Math.max(dp[i - 1],currentDamage);
+				}
+			}
+		}
+		return dp[mem.size() - 1];
+	}
+}

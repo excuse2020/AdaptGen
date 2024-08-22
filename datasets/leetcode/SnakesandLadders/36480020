@@ -1,0 +1,40 @@
+class Solution {
+	int getAt(int[][] board, int curr) {
+		curr = curr - 1;
+		int rowOffSet = curr / board.length;
+		int row = (board.length - 1) - rowOffSet;
+		int col = rowOffSet % 2 == 0 ? curr % board.length : (board.length - 1) - (curr % board.length);
+		return board[row][col];
+	}
+	int snakesAndLadders(int[][] board) {
+		Set<Integer> visited = new HashSet<>();
+		Queue<Integer> currLevel = new LinkedList<>();
+		currLevel.add(1);
+		visited.add(1);
+		int target = board.length * board.length;
+		int steps = 0;
+		while (!currLevel.isEmpty()) {
+			Queue<Integer> nextLevel = new LinkedList<>();
+			while (!currLevel.isEmpty()) {
+				int node = currLevel.poll();
+				for (int i = node + 1; i <= Math.min(node + 6,target); i++) {
+					int next = getAt(board,i);
+					if (next == -1) {
+						next = i;
+					}
+					if (visited.contains(next)) {
+						continue;
+					}
+					if (next == target) {
+						return steps + 1;
+					}
+					nextLevel.add(next);
+					visited.add(next);
+				}
+			}
+			steps++;
+			currLevel = nextLevel;
+		}
+		return -1;
+	}
+}

@@ -1,0 +1,52 @@
+class Solution {
+	TreeNode LCA(TreeNode node, int startValue, int destValue) {
+		if (node == null) {
+			return null;
+		}
+		if (node.val == startValue || node.val == destValue) {
+			return node;
+		}
+		TreeNode left = LCA(node.left,startValue,destValue);
+		TreeNode right = LCA(node.right,startValue,destValue);
+		if (left != null && right != null) {
+			return node;
+		}
+		if (left != null) {
+			return left;
+		}
+		return right;
+	}
+	String constructDirection(List<String> rootToStartVal, List<String> rootToDestVal) {
+		StringBuilder direction = new StringBuilder();
+		int i = 0;
+	}
+	boolean constructPath(TreeNode node, int targetVal, List<String> currPath) {
+		if (node == null) {
+			return false;
+		}
+		if (node.val == targetVal) {
+			return true;
+		}
+		currPath.add("L");
+		boolean targetInLeftTree = constructPath(node.left,targetVal,currPath);
+		if (targetInLeftTree) {
+			return true;
+		}
+		currPath.remove(currPath.size() - 1);
+		currPath.add("R");
+		boolean targetInRightTree = constructPath(node.right,targetVal,currPath);
+		if (targetInRightTree) {
+			return true;
+		}
+		currPath.remove(currPath.size() - 1);
+		return false;
+	}
+	String getDirections(TreeNode root, int startValue, int destValue) {
+		TreeNode lca = LCA(root,startValue,destValue);
+		List<String> rootToStartVal = new ArrayList<>();
+		List<String> rootToDestVal = new ArrayList<>();
+		constructPath(lca,startValue,rootToStartVal);
+		constructPath(lca,destValue,rootToDestVal);
+		return constructDirection(rootToStartVal,rootToDestVal);
+	}
+}

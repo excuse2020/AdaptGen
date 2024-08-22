@@ -1,0 +1,56 @@
+class Solution {
+	String PrintMinNumber(int[] nums) {
+		int n = nums.length;
+		String[] strs = new String[n];
+		for (int i = 0; i < n; i++) {
+			strs[i] = nums[i] + "";
+		}
+		quickSort(strs,0,n - 1);
+		StringBuilder sb = new StringBuilder();
+		for (String item: strs) {	
+			sb.append(item);
+		}
+		return sb.toString();
+	}
+	int partition(String[] nums, int left, int right) {
+		if (left >= right) {
+			return left;
+		}
+		String value = nums[left];
+		int start = left, end = right + 1;
+		while (start < end) {
+			while ((nums[++start] + value).compareTo(value + nums[start]) < 0) {
+				if (start >= right) {
+					break;
+				}
+			}
+			while ((nums[--end] + value).compareTo(value + nums[end]) > 0) {
+				if (end <= left) {
+					break;
+				}
+			}
+			if (start >= end) {
+				break;
+			}
+			swap(nums,start,end);
+		}
+		swap(nums,left,end);
+		return end;
+	}
+	void quickSort(String[] nums, int left, int right) {
+		if (left >= right) {
+			return;
+		}
+		int index = partition(nums,left,right);
+		quickSort(nums,left,index - 1);
+		quickSort(nums,index + 1,right);
+	}
+	void swap(String[] nums, int left, int right) {
+		if (left >= right) {
+			return;
+		}
+		String temp = nums[left];
+		nums[left] = nums[right];
+		nums[right] = temp;
+	}
+}

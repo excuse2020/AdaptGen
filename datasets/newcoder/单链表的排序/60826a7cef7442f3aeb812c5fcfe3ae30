@@ -1,0 +1,33 @@
+class Solution {
+	ListNode sortInList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode slow = head;
+		ListNode fast = head.next;
+		while (fast != null && fast.next != null) {
+			slow = slow.next;
+			fast = fast.next.next;
+		}
+		ListNode temp = slow.next;
+		slow.next = null;
+		ListNode left = sortInList(head);
+		ListNode right = sortInList(temp);
+		ListNode mergeList = new ListNode(0);
+		ListNode res = mergeList;
+		while (left != null && right != null) {
+			if (left.val < right.val) {
+				mergeList.next = left;
+				left = left.next;
+			} 
+			else {
+				mergeList.next = right;
+				right = right.next;
+			}
+			mergeList = mergeList.next;
+		}
+		System.out.println();
+		mergeList.next = left != null ? left : right;
+		return res.next;
+	}
+}

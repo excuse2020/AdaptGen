@@ -1,0 +1,28 @@
+class Solution {
+	List<Integer> getDistinctPositions(int[][] buildings) {
+		SortedSet<Integer> edgeSet = new TreeSet<>();
+		for (int[] building: buildings) {	
+			int left = building[0], right = building[1];
+			edgeSet.add(left);
+			edgeSet.add(right);
+		}
+		return new ArrayList<>(edgeSet);
+	}
+	List<List<Integer>> getSkyline(int[][] buildings) {
+		List<List<Integer>> answer = new ArrayList<>();
+		List<Integer> positions = getDistinctPositions(buildings);
+		for (int position: positions) {	
+			int maxHeight = 0;
+			for (int[] building: buildings) {	
+				int left = building[0], right = building[1], height = building[2];
+				if (left <= position && position < right) {
+					maxHeight = Math.max(maxHeight,height);
+				}
+			}
+			if (answer.isEmpty() || answer.get(answer.size() - 1).get(1) != maxHeight) {
+				answer.add(Arrays.asList(position,maxHeight));
+			}
+		}
+		return answer;
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	Integer[][][] dp;
+	int helper(int[] houses, int[][] cost, int target, int idx, int prev) {
+		if (idx == houses.length) {
+			return target == 0 ? 0 : 1000001;
+		}
+		if (target < 0) {
+			return 1000001;
+		}
+		if (dp[idx][prev][target] != null) {
+			return dp[idx][prev][target];
+		}
+		int ans = 1000001;
+		if (houses[idx] != 0) {
+			int newTarget = houses[idx] != prev ? target - 1 : target;
+			ans = helper(houses,cost,newTarget,idx + 1,houses[idx]);
+		} 
+		else {
+			for (int color = 1; color <= cost[0].length; color++) {
+				int newTarget = color != prev ? target - 1 : target;
+				int current = cost[idx][color - 1] + helper(houses,cost,newTarget,idx + 1,color);
+				ans = Math.min(ans,current);
+			}
+		}
+		return dp[idx][prev][target] = ans;
+	}
+	int minCost(int[] houses, int[][] cost, int m, int n, int target) {
+		dp = new Integer[m + 1][n + 1][target + 1];
+		int ans = helper(houses,cost,target,0,0);
+		return ans == 1000001 ? -1 : ans;
+	}
+}

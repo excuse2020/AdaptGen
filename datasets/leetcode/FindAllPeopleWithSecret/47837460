@@ -1,0 +1,49 @@
+class Solution {
+	List<Integer> findAllPeople(int n, int[][] ms, int fp) {
+		int[] p = new int[n];
+		for (int i = 0; i < n; i++) {
+			p[i] = i;
+		}
+		p[fp] = 0;
+		Arrays.sort(ms,(o1, o2) -> {o1[2] - o2[2]});
+		List<Integer> list = new ArrayList<>();
+		int j = 0, p0, p1;
+		for (int i = 0; i < ms.length; i = j) {
+			for (j = i; j < ms.length && ms[i][2] == ms[j][2]; j++) {
+				p0 = getPar(ms[j][0],p);
+				p1 = getPar(ms[j][1],p);
+				if (p0 != p1) {
+					union(p0,p1,p);
+				}
+				list.add(ms[j][0]);
+				list.add(ms[j][1]);
+			}
+			for (int x: list) {	
+				if (getPar(x,p) != 0) {
+					p[x] = x;
+				}
+			}
+			list.clear();
+		}
+		for (int i = 0; i < n; i++) {
+			if (getPar(i,p) == 0) {
+				list.add(i);
+			}
+		}
+		return list;
+	}
+	int getPar(int a, int[] p) {
+		if (p[a] == a) {
+			return a;
+		}
+		return p[a] = getPar(p[a],p);
+	}
+	void union(int a, int b, int[] p) {
+		if (b == 0) {
+			p[a] = b;
+		} 
+		else {
+			p[b] = a;
+		}
+	}
+}

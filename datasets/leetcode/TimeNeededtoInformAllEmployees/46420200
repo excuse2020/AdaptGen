@@ -1,0 +1,35 @@
+class Solution {
+	List<List<Integer>> genGraph(int n, int[] manager) {
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int i = 0; i < manager.length; i++) {
+			if (manager[i] != -1) {
+				graph.get(manager[i]).add(i);
+			}
+		}
+		return graph;
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		List<List<Integer>> subordinatesGraph = genGraph(n,manager);
+		boolean[] visited = new boolean[n];
+		Queue<Pair<Integer, Integer>> q = new LinkedList<>();
+		visited[headID] = true;
+		q.add(new Pair(headID, 0));
+		int maxTime = Integer.MIN_VALUE;
+		while (!q.isEmpty()) {
+			Pair<Integer, Integer> currNode = q.remove();
+			if (currNode.getValue() > maxTime) {
+				maxTime = currNode.getValue();
+			}
+			for (int adjNode: subordinatesGraph.get(currNode.getKey())) {	
+				if (!visited[adjNode]) {
+					visited[adjNode] = true;
+					q.add(new Pair(adjNode, currNode.getValue() + informTime[currNode.getKey()]));
+				}
+			}
+		}
+		return maxTime;
+	}
+}

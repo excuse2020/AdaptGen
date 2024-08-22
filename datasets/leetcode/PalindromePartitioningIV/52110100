@@ -1,0 +1,49 @@
+class Solution {
+	boolean canPartition(int startIndex, int noOfPartitions, String s, int[][] dp, boolean[][] palindromeArray) {
+		if (startIndex == s.length()) {
+			return false;
+		}
+		if (dp[startIndex][noOfPartitions] != -1) {
+			return dp[startIndex][noOfPartitions] == 1;
+		}
+		if (noOfPartitions == 1) {
+			if (palindromeArray[startIndex][s.length() - 1]) {
+				dp[startIndex][noOfPartitions] = 1;
+				return true;
+			}
+			dp[startIndex][noOfPartitions] = 0;
+			return false;
+		}
+		boolean isPartitioningPossible = false;
+		for (int j = startIndex; j < s.length(); j++) {
+			if (palindromeArray[startIndex][j]) {
+				isPartitioningPossible = isPartitioningPossible || canPartition(j + 1,noOfPartitions - 1,s,dp,palindromeArray);
+			}
+		}
+		dp[startIndex][noOfPartitions] = isPartitioningPossible ? 1 : 0;
+		return isPartitioningPossible;
+	}
+	boolean checkPartitioning(String s) {
+		int[][] dp = new int[s.length() + 1][4];
+		for (int i = 0; i <= s.length(); i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		boolean[][] isPalindrome = computePalindromeArray(s);
+		return canPartition(0,3,s,dp,isPalindrome);
+	}
+	boolean[][] computePalindromeArray(String s) {
+		boolean[][] palindromeArray = new boolean[s.length() + 1][s.length() + 1];
+		for (int i = 0; i < s.length(); i++) {
+			palindromeArray[i][i] = true;
+			if (i < s.length() - 1) {
+				palindromeArray[i][i + 1] = s.charAt(i) == s.charAt(i + 1);
+			}
+		}
+		for (int i = s.length() - 3; i >= 0; i--) {
+			for (int j = i + 2; j < s.length(); j++) {
+				palindromeArray[i][j] = palindromeArray[i + 1][j - 1] && s.charAt(i) == s.charAt(j);
+			}
+		}
+		return palindromeArray;
+	}
+}

@@ -1,0 +1,33 @@
+class Solution {
+	int widthOfBinaryTree(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		Deque<TreeNode> dq = new LinkedList<>();
+		TreeNode cur = root;
+		dq.offer(cur);
+		int max = 0;
+		while (!dq.isEmpty()) {
+			while (!dq.isEmpty() && dq.peekFirst() == null) {
+				dq.pollFirst();
+			}
+			while (!dq.isEmpty() && dq.peekLast() == null) {
+				dq.pollLast();
+			}
+			int size = dq.size();
+			max = Math.max(max,size);
+			for (int i = 0; i < size; i++) {
+				cur = dq.poll();
+				if (cur != null) {
+					dq.offerLast(cur.left);
+					dq.offerLast(cur.right);
+				} 
+				else {
+					dq.offerLast(null);
+					dq.offerLast(null);
+				}
+			}
+		}
+		return max;
+	}
+}

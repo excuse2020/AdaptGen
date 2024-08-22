@@ -1,0 +1,32 @@
+class Solution {
+	Long[][][] dp;
+	Long numPossiblePathsWithSum(int[][] grid, int i, int j, int sum, int k) {
+		if (i >= grid.length || j >= grid[0].length) {
+			return 0L;
+		}
+		if (i == grid.length - 1 && j == grid[0].length - 1) {
+			if ((grid[i][j] + sum) % k == 0) {
+				return 1L;
+			} 
+			else {
+				return 0L;
+			}
+		}
+		if (dp[i][j][sum] != null) {
+			return dp[i][j][sum];
+		}
+		Long down = 0L, right = 0L;
+		if (i + 1 < grid.length) {
+			down = numPossiblePathsWithSum(grid,i + 1,j,(sum + grid[i][j]) % k,k);
+		}
+		if (j + 1 < grid[0].length) {
+			right = numPossiblePathsWithSum(grid,i,j + 1,(sum + grid[i][j]) % k,k);
+		}
+		dp[i][j][sum] = (down + right) % 1000000007;
+		return (down + right) % 1000000007;
+	}
+	int numberOfPaths(int[][] grid, int k) {
+		this.dp = new Long[grid.length][grid[0].length][k + 1];
+		return (int) (numPossiblePathsWithSum(grid,0,0,0,k) % 1000000007);
+	}
+}

@@ -1,0 +1,85 @@
+class Solution {
+	int max(int a, int b, int c) {
+		if (a > b) {
+			if (a > c) {
+				return a;
+			} 
+			else {
+				return c;
+			}
+		} 
+		else {
+			if (b > c) {
+				return b;
+			} 
+			else {
+				return c;
+			}
+		}
+	}
+	int tallestBillboard(int[] rods) {
+		int[][] dp = new int[5001][3];
+		int[][] newDp = new int[5001][3];
+		int dpLen = 2, newDpLen, sub, rodsSize = rods.length;
+		dp[0][0] = 0;
+		dp[0][1] = 0;
+		dp[0][2] = 0;
+		dp[1][0] = rods[0];
+		dp[1][1] = rods[0];
+		dp[1][2] = 0;
+		for (int i = 1; i < rodsSize; i++) {
+			newDpLen = dpLen;
+			for (int j = 0; j < dpLen; j++) {
+				newDp[j][0] = dp[j][0];
+				newDp[j][1] = dp[j][1];
+				newDp[j][2] = dp[j][2];
+			}
+			for (int j = 0; j < dpLen; j++) {
+				sub = dp[j][0] + rods[i];
+				int k;
+				for (k = 0; k < dpLen; k++) {
+					if (sub == dp[k][0]) {
+						break;
+					}
+				}
+				if (k == dpLen) {
+					newDp[newDpLen][0] = sub;
+					newDp[newDpLen][1] = dp[j][1] + rods[i];
+					newDp[newDpLen][2] = dp[j][2];
+					newDpLen++;
+				} 
+				else {
+					newDp[k][1] = max(dp[j][1] + rods[i],dp[k][1],newDp[k][1]);
+					newDp[k][2] = newDp[k][1] - newDp[k][0];
+				}
+			}
+			for (int j = 0; j < dpLen; j++) {
+				sub = Math.abs(dp[j][2] + rods[i] - dp[j][1]);
+				int k;
+				for (k = 0; k < newDpLen; k++) {
+					if (sub == newDp[k][0]) {
+						break;
+					}
+				}
+				if (k == newDpLen) {
+					newDp[newDpLen][0] = sub;
+					newDp[newDpLen][1] = max(dp[j][2] + rods[i],dp[j][1],-1);
+					newDp[newDpLen][2] = newDp[newDpLen][1] - sub;
+					newDpLen++;
+				} 
+				else {
+					int midMax = max(dp[j][2] + rods[i],dp[j][1],-1);
+					newDp[k][1] = max(midMax,dp[k][1],newDp[k][1]);
+					newDp[k][2] = newDp[k][1] - newDp[k][0];
+				}
+			}
+			for (int j = 0; j < newDpLen; j++) {
+				dp[j][0] = newDp[j][0];
+				dp[j][1] = newDp[j][1];
+				dp[j][2] = newDp[j][2];
+			}
+			dpLen = newDpLen;
+		}
+		return dp[0][1];
+	}
+}

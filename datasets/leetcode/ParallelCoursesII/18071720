@@ -1,0 +1,45 @@
+class Solution {
+	int minNumberOfSemesters(int n, int[][] relations, int k) {
+		int[] courseDepMasks = new int[n];
+		for (int[] rel: relations) {	
+			courseDepMasks[rel[1] - 1] |= (1 << (rel[0] - 1));
+		}
+		int maxMask = 1 << n;
+		int[] pastSemesters = new int[maxMask];
+		Arrays.fill(pastSemesters,n);
+		pastSemesters[0] = 0;
+		int[] leftCourses = new int[maxMask];
+		Arrays.fill(leftCourses,0);
+		leftCourses[0] = k;
+		int[] lastSemesterCourses = new int[maxMask];
+		for (int mask = 1; mask < maxMask; mask++) {
+			for (int course = 0; course < n; course++) {
+				if ((mask & (1 << course)) == 0) {
+					continue;
+				}
+				int prevMask = mask ^ (1 << course);
+				boolean canDoInThisSemester = (courseDepMasks[course] & lastSemesterCourses[prevMask]) == courseDepMasks[course] && leftCourses[prevMask] > 0;
+				boolean canDoInNextSemester = (courseDepMasks[course] & prevMask) == courseDepMasks[course];
+				if (canDoInThisSemester) {
+					relax(pastSemesters,leftCourses,lastSemesterCourses,mask,pastSemesters[prevMask],leftCourses[prevMask] - 1,lastSemesterCourses[prevMask]);
+				} 
+				else if (canDoInNextSemester) {
+					relax(pastSemesters,leftCourses,lastSemesterCourses,mask,pastSemesters[prevMask] + 1,k - 1,prevMask);
+				}
+			}
+		}
+		int finalMask = (1 << n) - 1;
+		return pastSemesters[finalMask] + ((leftCourses[finalMask] < k) ? 1 : 0);
+	}
+	void relax(int[] pastSemesters, int[] leftCourses, int[] lastSemesterCourses, int mask, int pastSemesterCnt, int leftCoursesCnt, int lastSemesterMask) {
+		if (pastSemesters[mask] < pastSemesterCnt) {
+			return;
+		}
+		if (pastSemesters[mask] == pastSemesterCnt && leftCourses[mask] >= leftCoursesCnt) {
+			return;
+		}
+		pastSemesters[mask] = pastSemesterCnt;
+		leftCourses[mask] = leftCoursesCnt;
+		lastSemesterCourses[mask] = lastSemesterMask;
+	}
+}

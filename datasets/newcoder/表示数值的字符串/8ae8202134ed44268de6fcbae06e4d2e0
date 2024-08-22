@@ -1,0 +1,42 @@
+class Solution {
+	int index = 0;
+	boolean integer(String s) {
+		if (index < s.length() && (s.charAt(index) == '-' || s.charAt(index) == '+')) {
+			index++;
+		}
+		return unsigned_integer(s);
+	}
+	boolean isNumeric(String str) {
+		if (str == null || str.length() == 0) {
+			return false;
+		}
+		while (index < str.length() && str.charAt(index) == ' ') {
+			index++;
+		}
+		int n = str.length() - 1;
+		while (n >= 0 && str.charAt(n) == ' ') {
+			n--;
+		}
+		n++;
+		if (n < index) {
+			return false;
+		}
+		boolean flag = integer(str);
+		if (index < n && str.charAt(index) == '.') {
+			index++;
+			flag = unsigned_integer(str) || flag;
+		}
+		if (index < n && (str.charAt(index) == 'e' || str.charAt(index) == 'E')) {
+			index++;
+			flag = flag && integer(str);
+		}
+		return flag && (index == n);
+	}
+	boolean unsigned_integer(String s) {
+		int temp = index;
+		while (index < s.length() && (s.charAt(index) >= '0' && s.charAt(index) <= '9')) {
+			index++;
+		}
+		return index > temp;
+	}
+}

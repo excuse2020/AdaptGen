@@ -1,0 +1,43 @@
+class Solution {
+	void addByOrder(ArrayList<ArrayList<Integer>> list, ArrayList<Integer> tar) {
+		boolean flg = true;
+		for (int i = 0; i < list.size(); i++) {
+			ArrayList<Integer> item = list.get(i);
+			for (int j = 0; j < item.size(); j++) {
+				if (tar.get(j) < item.get(j)) {
+					list.add(i,tar);
+					return;
+				} 
+				else {
+					break;
+				}
+			}
+		}
+		if (flg) {
+			list.add(tar);
+		}
+	}
+	ArrayList<ArrayList<Integer>> permute(int[] num) {
+		ArrayList<ArrayList<Integer>> list = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Integer> item = new ArrayList<Integer>();
+		ArrayList<Integer> t;
+		item.add(num[0]);
+		list.add(item);
+		for (int n = 1; n < num.length; n++) {
+			ArrayList<ArrayList<Integer>> addlist = new ArrayList<ArrayList<Integer>>();
+			for (int i = 0; i < list.size(); i++) {
+				item = new ArrayList<Integer>(list.get(i));
+				t = new ArrayList<Integer>(item);
+				t.add(num[n]);
+				addByOrder(addlist,t);
+				for (int j = item.size() - 1; j >= 0; j--) {
+					t = new ArrayList<Integer>(item);
+					t.add(j,num[n]);
+					addByOrder(addlist,t);
+				}
+			}
+			list = addlist;
+		}
+		return list;
+	}
+}

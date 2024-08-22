@@ -1,0 +1,34 @@
+class Solution {
+	int minTime(int node, List<Set<Integer>> adjList, int[] time, int[] dp) {
+		if (dp[node] != 0) {
+			return dp[node];
+		}
+		int maxTime = 0;
+		for (int ele: adjList.get(node)) {	
+			int timeTaken = minTime(ele,adjList,time,dp);
+			maxTime = Math.max(timeTaken,maxTime);
+		}
+		dp[node] = maxTime + time[node];
+		return dp[node];
+	}
+	int minimumTime(int n, int[][] relations, int[] time) {
+		int[] indegree = new int[n];
+		int[] dp = new int[n];
+		List<Set<Integer>> adjList = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adjList.add(new HashSet<>());
+		}
+		for (int[] relation: relations) {	
+			indegree[relation[0] - 1]++;
+			adjList.get(relation[1] - 1).add(relation[0] - 1);
+		}
+		int maxTime = 0;
+		for (int i = 0; i < indegree.length; i++) {
+			if (indegree[i] == 0) {
+				int timeTaken = minTime(i,adjList,time,dp);
+				maxTime = Math.max(timeTaken,maxTime);
+			}
+		}
+		return maxTime;
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	Map<Integer, List<Integer>> graph = new HashMap<>();
+	void createGraph(int[][] routes) {
+		for (int i = 0; i < routes.length; i++) {
+			for (int j = 0; j < routes[i].length; j++) {
+				graph.putIfAbsent(routes[i][j],new ArrayList<Integer>());
+				graph.get(routes[i][j]).add(i);
+			}
+		}
+	}
+	int numBusesToDestination(int[][] routes, int S, int T) {
+		createGraph(routes);
+		HashSet<Integer> visited = new HashSet<>();
+		Queue<Integer> q = new LinkedList<>();
+		q.add(S);
+		int ans = 0;
+		while (!q.isEmpty()) {
+			int n = q.size();
+			for (int i = 0; i < n; i++) {
+				int stop = q.poll();
+				if (stop == T) {
+					return ans;
+				}
+				List<Integer> buses = graph.get(stop);
+				for (int bus: buses) {	
+					if (visited.contains(bus)) {
+						continue;
+					}
+					visited.add(bus);
+					for (int j = 0; j < routes[bus].length; j++) {
+						q.add(routes[bus][j]);
+					}
+				}
+			}
+			ans++;
+		}
+		return -1;
+	}
+}

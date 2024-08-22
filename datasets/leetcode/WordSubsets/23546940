@@ -1,0 +1,51 @@
+class Solution {
+	List<String> wordSubsets(String[] words1, String[] words2) {
+		List<String> res = new ArrayList<>();
+		for (String str: words1) {	
+			HashMap<Character, Integer> map = new HashMap<>();
+			for (int i = 0; i < str.length(); i++) {
+				char ch = str.charAt(i);
+				if (map.containsKey(ch)) {
+					int a = map.get(ch);
+					map.put(ch,a + 1);
+				} 
+				else {
+					map.put(ch,1);
+				}
+			}
+			boolean flag = true;
+			for (String str1: words2) {	
+				HashMap<Character, Integer> map1 = new HashMap<>();
+				for (int i = 0; i < str1.length(); i++) {
+					char ch = str1.charAt(i);
+					if (map1.containsKey(ch)) {
+						int a = map1.get(ch);
+						map1.put(ch,a + 1);
+					} 
+					else {
+						map1.put(ch,1);
+					}
+				}
+				for (char key: map1.keySet()) {	
+					if (!map.containsKey(key)) {
+						flag = false;
+						break;
+					} 
+					else {
+						if (map.get(key) < map1.get(key)) {
+							flag = false;
+							break;
+						}
+					}
+				}
+				if (!flag) {
+					break;
+				}
+			}
+			if (flag) {
+				res.add(str);
+			}
+		}
+		return res;
+	}
+}

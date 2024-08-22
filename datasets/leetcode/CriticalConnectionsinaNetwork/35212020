@@ -1,0 +1,46 @@
+class Solution {
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (List<Integer> edge: connections) {	
+			adj.get(edge.get(0)).add(edge.get(1));
+			adj.get(edge.get(1)).add(edge.get(0));
+		}
+		boolean[] vis = new boolean[n];
+		int[] dis = new int[n];
+		int[] low = new int[n];
+		Arrays.fill(dis,-1);
+		Arrays.fill(low,-1);
+		int parent = -1;
+		List<List<Integer>> ans = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			dfs(1,0,parent,ans,vis,dis,low,adj);
+		}
+		return ans;
+	}
+	void dfs(int time, int node, int parent, List<List<Integer>> ans, boolean[] vis, int[] dis, int[] low, ArrayList<ArrayList<Integer>> adj) {
+		vis[node] = true;
+		dis[node] = low[node] = time;
+		time++;
+		for (int nn: adj.get(node)) {	
+			if (!vis[nn]) {
+				dfs(time,nn,node,ans,vis,dis,low,adj);
+				low[node] = Math.min(low[nn],low[node]);
+				if (low[nn] > dis[node]) {
+					List<Integer> bridge = new ArrayList<>();
+					bridge.add(nn);
+					bridge.add(node);
+					ans.add(bridge);
+				}
+			} 
+			else if (nn == parent) {
+				continue;
+			} 
+			else {
+				low[node] = Math.min(dis[nn],low[node]);
+			}
+		}
+	}
+}

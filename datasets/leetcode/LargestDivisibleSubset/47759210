@@ -1,0 +1,54 @@
+class Solution {
+	void generate(int idx, int[] nums, List<Integer> result, List<Integer> temp, int prev) {
+		if (idx >= nums.length) {
+			if (temp.size() > result.size()) {
+				result.clear();
+				result.addAll(temp);
+			}
+			return;
+		}
+		if (prev == -1 || nums[idx] % prev == 0) {
+			temp.add(nums[idx]);
+			generate(idx + 1,nums,result,temp,nums[idx]);
+			temp.remove(temp.size() - 1);
+		}
+		generate(idx + 1,nums,result,temp,prev);
+	}
+	List<Integer> largestDivisibleSubset(int[] nums) {
+		Arrays.sort(nums);
+		List<Integer> result = new ArrayList<>();
+		List<Integer> temp = new ArrayList<>();
+		generate(0,nums,result,temp,-1);
+		return result;
+	}
+}
+class Solution {
+	List<Integer> largestDivisibleSubset(int[] arr) {
+		Arrays.sort(arr);
+		int n = arr.length;
+		int[] dp = new int[n];
+		int[] hash = new int[n];
+		int maxi = 0, lastInd = 0;
+		for (int ind = 0; ind < n; ind++) {
+			hash[ind] = ind;
+			for (int prev = 0; prev < ind; prev++) {
+				if (arr[ind] % arr[prev] == 0 && 1 + dp[prev] > dp[ind]) {
+					dp[ind] = 1 + dp[prev];
+					hash[ind] = prev;
+				}
+			}
+			if (dp[ind] > maxi) {
+				maxi = dp[ind];
+				lastInd = ind;
+			}
+		}
+		ArrayList<Integer> lis = new ArrayList<>();
+		lis.add(arr[lastInd]);
+		while (hash[lastInd] != lastInd) {
+			lastInd = hash[lastInd];
+			lis.add(arr[lastInd]);
+		}
+		Collections.reverse(lis);
+		return lis;
+	}
+}

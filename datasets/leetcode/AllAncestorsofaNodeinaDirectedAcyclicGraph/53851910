@@ -1,0 +1,28 @@
+class Solution {
+	void dfs(int start, int node, List<List<Integer>> graph, List<Set<Integer>> ancestors) {
+		for (int neighbor: graph.get(node)) {	
+			if (ancestors.get(neighbor).add(start)) {
+				dfs(start,neighbor,graph,ancestors);
+			}
+		}
+	}
+	List<List<Integer>> getAncestors(int n, int[][] edges) {
+		List<List<Integer>> graph = new ArrayList<>();
+		List<Set<Integer>> ancestors = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+			ancestors.add(new TreeSet<>());
+		}
+		for (int[] edge: edges) {	
+			graph.get(edge[0]).add(edge[1]);
+		}
+		for (int i = 0; i < n; i++) {
+			dfs(i,i,graph,ancestors);
+		}
+		List<List<Integer>> result = new ArrayList<>();
+		for (Set<Integer> set: ancestors) {	
+			result.add(new ArrayList<>(set));
+		}
+		return result;
+	}
+}

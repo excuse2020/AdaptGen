@@ -1,0 +1,41 @@
+class Solution {
+	Map<Integer, List<String>> HOURS = computeHours();
+	Map<Integer, List<String>> MINUTES = computeMinutes();
+	Map<Integer, List<String>> computeHours() {
+		Map<Integer, List<String>> hours = new HashMap<>();
+		for (int i = 0; i <= 11; i++) {
+			int bits = Integer.bitCount(i);
+			String text = String.format("%d",i);
+			hours.computeIfAbsent(bits,(k) -> {new ArrayList<>()}).add(text);
+		}
+		return hours;
+	}
+	Map<Integer, List<String>> computeMinutes() {
+		Map<Integer, List<String>> minutes = new HashMap<>();
+		for (int i = 0; i <= 59; i++) {
+			int bits = Integer.bitCount(i);
+			String text = String.format("%02d",i);
+			minutes.computeIfAbsent(bits,(k) -> {new ArrayList<>()}).add(text);
+		}
+		return minutes;
+	}
+	List<String> readBinaryWatch(int turnedOn) {
+		List<String> result = new ArrayList<>();
+		for (int hBits = 0, hLimit = turnedOn; hBits <= hLimit; hBits++) {
+			List<String> hours = HOURS.get(hBits);
+			if (hours == null) {
+				continue;
+			}
+			List<String> minutes = MINUTES.get(turnedOn - hBits);
+			if (minutes == null) {
+				continue;
+			}
+			for (String hour: hours) {	
+				for (String minute: minutes) {	
+					result.add(hour + ":");
+				}
+			}
+		}
+		return result;
+	}
+}

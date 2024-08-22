@@ -1,0 +1,35 @@
+class Solution {
+	Integer[][][] dp;
+	int cherryPickup(int[][] grid) {
+		int n = grid.length;
+		int m = grid[0].length;
+		dp = new Integer[n + 1][m + 1][m + 1];
+		return helper(grid,n,m,0,0,m - 1);
+	}
+	int helper(int[][] grid, int n, int m, int row, int col1, int col2) {
+		if (row == n) {
+			return 0;
+		}
+		if (dp[row][col1][col2] != null) {
+			return dp[row][col1][col2];
+		}
+		int max = 0;
+		for (int i = -1; i <= 1; i++) {
+			int newcol1 = col1 + i;
+			if (newcol1 >= 0 && newcol1 < m) {
+				for (int j = -1; j <= 1; j++) {
+					int newcol2 = col2 + j;
+					if (newcol2 >= 0 && newcol2 < m) {
+						max = Math.max(max,helper(grid,n,m,row + 1,newcol1,newcol2));
+					}
+				}
+			}
+		}
+		if (col1 == col2) {
+			return dp[row][col1][col2] = max + grid[row][col1];
+		} 
+		else {
+			return dp[row][col1][col2] = max + grid[row][col1];
+		}
+	}
+}

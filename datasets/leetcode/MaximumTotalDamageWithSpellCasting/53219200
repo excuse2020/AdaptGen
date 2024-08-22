@@ -1,0 +1,27 @@
+class Solution {
+	long maximumTotalDamage(int[] power) {
+		List<Pair<Integer, Long>> dp = new ArrayList<>();
+		Arrays.sort(power);
+		int i = 0;
+		while (i < power.length) {
+			int count = 1;
+			while (i + count < power.length && power[i + count] == power[i]) {
+				count++;
+			}
+			long dmg = (long) power[i] * count;
+			int len = dp.size();
+			if (len == 0) {
+				dp.add(new Pair(power[i], dmg));
+			} 
+			else {
+				int j = len - 1;
+				while (j >= 0 && dp.get(j).getKey() >= power[i] - 2) {
+					j--;
+				}
+				dp.add(new Pair(power[i], Math.max(dp.getLast().getValue(),j < 0 ? dmg : dp.get(j).getValue() + dmg)));
+			}
+			i += count;
+		}
+		return dp.getLast().getValue();
+	}
+}

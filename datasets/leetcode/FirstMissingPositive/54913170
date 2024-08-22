@@ -1,0 +1,30 @@
+class Solution {
+	int firstMissingPositive(int[] nums) {
+		int n = nums.length;
+		int shift = segregate(nums);
+		for (int i = shift; i < n; i++) {
+			int num = Math.abs(nums[i]);
+			if (num - 1 < n - shift && nums[num - 1 + shift] > 0) {
+				nums[num - 1 + shift] = -nums[num - 1 + shift];
+			}
+		}
+		for (int i = shift; i < n; i++) {
+			if (nums[i] > 0) {
+				return i - shift + 1;
+			}
+		}
+		return n - shift + 1;
+	}
+	int segregate(int[] nums) {
+		int j = 0;
+		for (int i = 0; i < nums.length; i++) {
+			if (nums[i] <= 0) {
+				int temp = nums[i];
+				nums[i] = nums[j];
+				nums[j] = temp;
+				j++;
+			}
+		}
+		return j;
+	}
+}

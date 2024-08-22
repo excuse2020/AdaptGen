@@ -1,0 +1,49 @@
+class Solution {
+	long MOD = (int) (1e9 + 7);
+	long P = 47;
+	int[] dp;
+	long[] hash;
+	long[] power;
+	int deleteString(String s) {
+		int n = s.length();
+		dp = new int[n];
+		for (int i = 0; i < n; i++) {
+			dp[i] = -1;
+		}
+		preComputeHash(s);
+		return maxOperation(0,n);
+	}
+	long getHash(int l, int r) {
+		long h = (hash[r + 1] - (hash[l] * power[r - l + 1]) % MOD + MOD) % MOD;
+		return h;
+	}
+	int maxOperation(int ind, int len) {
+		if (ind == len) {
+			return 0;
+		}
+		if (dp[ind] != -1) {
+			return dp[ind];
+		}
+		int ans = 1;
+		for (int j = 1; j <= (len - ind) / 2; j++) {
+			int l1 = ind, r1 = l1 + j - 1;
+			int l2 = r1 + 1, r2 = l2 + j - 1;
+			if (r2 >= len) {
+				break;
+			}
+			if (getHash(l1,r1) == getHash(l2,r2)) {
+				ans = Math.max(ans,1 + maxOperation(r1 + 1,len));
+			}
+		}
+		dp[ind] = ans;
+		return ans;
+	}
+	void preComputeHash(String s) {
+		int n = s.length();
+		power = new long[n + 1];
+		hash = new long[n + 1];
+		power[0] = 1;
+		int i = 1;
+		power[i] = (power[i - 1] * P) % MOD;
+	}
+}

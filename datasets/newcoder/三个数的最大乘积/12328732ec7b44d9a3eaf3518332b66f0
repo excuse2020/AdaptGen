@@ -1,0 +1,47 @@
+class Solution {
+	void quickSort(int[] nums, int left, int right) {
+		if (left >= right) {
+			return;
+		}
+		int randomIndex = (int) (left + (Math.random() * (right - left)));
+		swap(nums,right,randomIndex);
+		int pivot = nums[right];
+		int minRight = left - 1;
+		int maxLeft = right;
+		int cur = left;
+		while (cur < maxLeft) {
+			if (nums[cur] < pivot) {
+				swap(nums,cur++,++minRight);
+			} 
+			else if (nums[cur] > pivot) {
+				swap(nums,cur,--maxLeft);
+			} 
+			else {
+				cur++;
+			}
+		}
+		swap(nums,maxLeft++,right);
+		quickSort(nums,left,minRight);
+		quickSort(nums,maxLeft,right);
+	}
+	void quickSortMain(int[] nums) {
+		if (nums == null || nums.length == 0) {
+			return;
+		}
+		quickSort(nums,0,nums.length - 1);
+	}
+	long solve(int[] nums) {
+		if (nums == null || nums.length < 3) {
+			return 0;
+		}
+		quickSortMain(nums);
+		long res1 = (long) nums[0] * nums[1];
+		long res2 = (long) nums[nums.length - 1] * nums[nums.length - 2];
+		return Math.max(res1,res2);
+	}
+	void swap(int[] nums, int i, int j) {
+		int temp = nums[i];
+		nums[i] = nums[j];
+		nums[j] = temp;
+	}
+}

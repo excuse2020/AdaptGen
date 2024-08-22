@@ -1,0 +1,33 @@
+class Solution {
+	TreeNode balanceBST(TreeNode root) {
+		List<Integer> list = new ArrayList<>();
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(root);
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				TreeNode temp = queue.poll();
+				if (temp.left != null) {
+					queue.add(temp.left);
+				}
+				if (temp.right != null) {
+					queue.add(temp.right);
+				}
+				list.add(temp.val);
+			}
+		}
+		Collections.sort(list);
+		TreeNode ans = binarySearchTree(0,list.size() - 1,list);
+		return ans;
+	}
+	TreeNode binarySearchTree(int l, int r, List<Integer> list) {
+		if (l > r) {
+			return null;
+		}
+		int mid = (l + r) / 2;
+		TreeNode node = new TreeNode(list.get(mid));
+		node.left = binarySearchTree(l,mid - 1,list);
+		node.right = binarySearchTree(mid + 1,r,list);
+		return node;
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	int minEatingSpeed(int[] piles, int h) {
+		if (h < piles.length) {
+			return -1;
+		}
+		long low = 0;
+		long high = 0;
+		for (int n: piles) {	
+			high += n;
+			if (low > n) {
+				low = n;
+			}
+		}
+		while (low < high) {
+			long mid = low + (high - low) / 2;
+			if (valid(piles,h,mid)) {
+				high = mid;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		return (int) high;
+	}
+	boolean valid(int[] piles, int h, long mid) {
+		for (int pile: piles) {	
+			if (pile <= mid) {
+				h--;
+			} 
+			else {
+				h -= Math.ceil(pile / (double) mid);
+			}
+			if (h < 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

@@ -1,0 +1,24 @@
+class Solution {
+	HashMap<Integer, Integer> mp = new HashMap<>();
+	TreeNode buildTree(int[] inorder, int[] preorder) {
+		for (int i = 0; i < inorder.length; i++) {
+			mp.put(inorder[i],i);
+		}
+		return fn(preorder,inorder,0,preorder.length - 1,0,inorder.length - 1);
+	}
+	TreeNode fn(int[] p, int[] in, int pi, int pe, int ii, int ie) {
+		if (pi == pe) {
+			return new TreeNode(p[pe]);
+		}
+		if (pi > pe || ii > ie) {
+			return null;
+		}
+		TreeNode cur = new TreeNode(p[pe]);
+		int ind = mp.get(p[pe]);
+		int lcount = ind - ii;
+		int rcount = in.length - ind + 1;
+		cur.left = fn(p,in,pi,pi + lcount - 1,ii,ind - 1);
+		cur.right = fn(p,in,pi + lcount,pe - 1,ind + 1,ie);
+		return cur;
+	}
+}

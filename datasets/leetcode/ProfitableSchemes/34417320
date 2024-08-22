@@ -1,0 +1,25 @@
+class Solution {
+	int[][][] dp = new int[101][101][101];
+	int mod = 1000000007;
+	int helper(int index, int count, int profit, int n, int minProfit, int[] group, int[] profits) {
+		if (index == group.length) {
+			return profit >= minProfit ? 1 : 0;
+		}
+		if (dp[index][count][profit] != -1) {
+			return dp[index][count][profit];
+		}
+		int ans = helper(index + 1,count,profit,n,minProfit,group,profits);
+		if (count + group[index] <= n) {
+			ans += helper(index + 1,count + group[index],Math.min(minProfit,profit + profits[index]),n,minProfit,group,profits);
+		}
+		return dp[index][count][profit] = ans % mod;
+	}
+	int profitableSchemes(int n, int minProfit, int[] group, int[] profit) {
+		for (int i = 0; i <= group.length; i++) {
+			for (int j = 0; j <= n; j++) {
+				Arrays.fill(dp[i][j],-1);
+			}
+		}
+		return helper(0,0,0,n,minProfit,group,profit);
+	}
+}

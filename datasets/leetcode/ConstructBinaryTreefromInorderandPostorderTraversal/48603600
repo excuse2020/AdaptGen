@@ -1,0 +1,21 @@
+class Solution {
+	int idx;
+	HashMap<Integer, Integer> map = new HashMap<>();
+	TreeNode buildBinaryTree(int[] postorder, int start, int end) {
+		if (start > end) {
+			return null;
+		}
+		int value = postorder[idx--];
+		TreeNode root = new TreeNode(value);
+		root.right = buildBinaryTree(postorder,map.get(value) + 1,end);
+		root.left = buildBinaryTree(postorder,start,map.get(value) - 1);
+		return root;
+	}
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		idx = postorder.length - 1;
+		for (int i = 0; i < inorder.length; i++) {
+			map.put(inorder[i],i);
+		}
+		return buildBinaryTree(postorder,0,postorder.length - 1);
+	}
+}

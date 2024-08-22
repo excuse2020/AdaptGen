@@ -1,0 +1,37 @@
+class Solution {
+	int max = Integer.MIN_VALUE;
+	int check(int[][] matrix, boolean[] taken) {
+		int count = 0;
+		for (int i = 0; i < matrix.length; i++) {
+			boolean covered = true;
+			for (int j = 0; j < matrix[0].length; j++) {
+				if (taken[j] == false && matrix[i][j] == 1) {
+					covered = false;
+				}
+			}
+			if (covered == true) {
+				count++;
+			}
+		}
+		return count;
+	}
+	void dfs(int[][] matrix, int index, int numSelect, boolean[] taken) {
+		if (numSelect == 0) {
+			int k = check(matrix,taken);
+			max = Math.max(max,k);
+		}
+		if (index >= matrix[0].length) {
+			return;
+		}
+		for (int i = index; i < matrix[0].length; i++) {
+			taken[i] = true;
+			dfs(matrix,i + 1,numSelect - 1,taken);
+			taken[i] = false;
+		}
+	}
+	int maximumRows(int[][] matrix, int numSelect) {
+		boolean[] taken = new boolean[matrix[0].length];
+		dfs(matrix,0,numSelect,taken);
+		return max;
+	}
+}

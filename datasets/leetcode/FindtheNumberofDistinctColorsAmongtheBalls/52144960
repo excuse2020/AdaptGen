@@ -1,0 +1,30 @@
+class Solution {
+	int[] queryResults(int limit, int[][] queries) {
+		HashMap<Integer, Integer> ballColorMap = new HashMap<Integer, Integer>();
+		HashMap<Integer, Integer> colorFreqMap = new HashMap<>();
+		int n = queries.length;
+		int result = new int[n];
+		int uniqueCount = 0;
+		for (int index = 0; index < n; index++) {
+			int ball = queries[index][0];
+			int color = queries[index][1];
+			if (!ballColorMap.containsKey(ball)) {
+				ballColorMap.put(ball,color);
+			} 
+			else {
+				int oldColor = ballColorMap.get(ball);
+				if (colorFreqMap.containsKey(oldColor)) {
+					int value = colorFreqMap.get(oldColor);
+					colorFreqMap.put(oldColor,value - 1);
+					if (colorFreqMap.get(oldColor) == 0) {
+						colorFreqMap.remove(oldColor);
+					}
+				}
+				ballColorMap.put(ball,color);
+			}
+			colorFreqMap.put(color,colorFreqMap.getOrDefault(color,0) + 1);
+			result[index] = colorFreqMap.keySet().size();
+		}
+		return result;
+	}
+}

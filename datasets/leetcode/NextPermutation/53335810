@@ -1,0 +1,50 @@
+class Solution {
+	int findBreakPoint(int[] nums) {
+		int breakPoint = -1;
+		for (int i = nums.length - 2; i >= 0; i--) {
+			if (nums[i] < nums[i + 1]) {
+				breakPoint = i;
+				break;
+			}
+		}
+		return breakPoint;
+	}
+	int justGreater(int[] nums, int breakPoint) {
+		int breakPointValue = nums[breakPoint];
+		for (int i = nums.length - 1; i > breakPoint; i--) {
+			if (nums[i] > breakPointValue) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	void nextPermutation(int[] nums) {
+		if (nums.length == 1) {
+		} 
+		else {
+			int breakPoint = findBreakPoint(nums);
+			if (breakPoint == -1) {
+				nums = swap(nums,0,nums.length - 1);
+			} 
+			else {
+				int justBigger = justGreater(nums,breakPoint);
+				int temp = nums[breakPoint];
+				nums[breakPoint] = nums[justBigger];
+				nums[justBigger] = temp;
+				nums = swap(nums,breakPoint + 1,nums.length - 1);
+			}
+		}
+	}
+	int[] swap(int[] nums, int start, int end) {
+		int lo = start;
+		int hi = end;
+		while (lo <= hi) {
+			int temp = nums[lo];
+			nums[lo] = nums[hi];
+			nums[hi] = temp;
+			lo++;
+			hi--;
+		}
+		return nums;
+	}
+}

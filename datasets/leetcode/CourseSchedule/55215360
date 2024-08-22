@@ -1,0 +1,41 @@
+class Solution {
+	boolean canFinish(int n, int[][] pre) {
+		boolean[] isVisited = new boolean[n];
+		boolean[] pathVisited = new boolean[n];
+		List<Integer>[] graph = createGraph(n,pre);
+		for (int i = 0; i < n; i++) {
+			if (!isVisited[i]) {
+				if (dfs(isVisited,pathVisited,graph,i)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	List<Integer>[] createGraph(int n, int[][] pre) {
+		List<Integer>[] graph = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < pre.length; i++) {
+			graph[pre[i][1]].add(pre[i][0]);
+		}
+		return graph;
+	}
+	boolean dfs(boolean[] isVisited, boolean[] pathVisited, List<Integer>[] graph, int start) {
+		isVisited[start] = true;
+		pathVisited[start] = true;
+		for (int i = 0; i < graph[start].size(); i++) {
+			if (pathVisited[graph[start].get(i)]) {
+				return true;
+			} 
+			else if (!isVisited[graph[start].get(i)]) {
+				if (dfs(isVisited,pathVisited,graph,graph[start].get(i))) {
+					return true;
+				}
+			}
+		}
+		pathVisited[start] = false;
+		return false;
+	}
+}

@@ -1,0 +1,65 @@
+class Solution {
+	boolean canReachCorner(int X, int Y, int[][] circles) {
+		int n = circles.length;
+		System.out.println(n);
+		ArrayList<Integer> graph = new ArrayList[circles.length + 4];
+		for (int i = 0; i < n + 4; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < circles.length; i++) {
+			for (int j = i + 1; j < circles.length; j++) {
+				double dist = (double) Math.sqrt((double) Math.pow((double) circles[i][0] - circles[j][0],2) + (double) Math.pow((double) circles[i][1] - circles[j][1],2));
+				double dia = (double) circles[i][2] + circles[j][2];
+				if (dia >= dist) {
+					graph[i].add(j);
+					graph[j].add(i);
+				}
+				if (i == 2 && j == 4) {
+				}
+			}
+			if (circles[i][0] <= circles[i][2]) {
+				graph[i].add(n);
+				graph[n].add(i);
+			}
+			if ((Y - circles[i][1]) <= circles[i][2]) {
+				graph[i].add(n + 1);
+				graph[n + 1].add(i);
+			}
+			if ((X - circles[i][0]) <= circles[i][2]) {
+				graph[i].add(n + 2);
+				graph[n + 2].add(i);
+			}
+			if (circles[i][1] <= circles[i][2]) {
+				graph[i].add(n + 3);
+				graph[n + 3].add(i);
+			}
+		}
+		boolean f1 = helper(n,new boolean[circles.length + 4],graph,n + 3);
+		System.out.println();
+		boolean f2 = helper(n,new boolean[circles.length + 4],graph,n + 2);
+		boolean f3 = helper(n + 1,new boolean[circles.length + 4],graph,n + 2);
+		boolean f4 = helper(n + 1,new boolean[circles.length + 4],graph,n + 3);
+		System.out.print(f1 + " ");
+		if (f1 || f2) {
+			return false;
+		}
+		return true;
+	}
+	boolean helper(int i, boolean vis, ArrayList<Integer> graph, int target) {
+		if (i == target) {
+			System.out.print(i + " ");
+			return true;
+		}
+		if (vis[i]) {
+			return false;
+		}
+		vis[i] = true;
+		for (int j = 0; j < graph[i].size(); j++) {
+			if (helper(graph[i].get(j),vis,graph,target)) {
+				System.out.print(i + " ");
+				return true;
+			}
+		}
+		return false;
+	}
+}

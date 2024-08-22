@@ -1,0 +1,57 @@
+class Solution {
+	int compare(String version1, String version2) {
+		int index1 = 0, index2 = 0;
+		String[] arr1 = splitByDigit(version1);
+		String[] arr2 = splitByDigit(version2);
+		while (index1 < arr1.length && index2 < arr2.length) {
+			if (parseInt(arr1[index1].toCharArray()) < parseInt(arr2[index2].toCharArray())) {
+				return -1;
+			} 
+			else if (parseInt(arr1[index1].toCharArray()) > parseInt(arr2[index2].toCharArray())) {
+				return 1;
+			} 
+			else {
+				index1++;
+				index2++;
+			}
+		}
+		while (index1 < arr1.length) {
+			if (parseInt(arr1[index1].toCharArray()) != 0) {
+				return 1;
+			}
+			index1++;
+		}
+		while (index2 < arr2.length) {
+			if (parseInt(arr2[index2].toCharArray()) != 0) {
+				return 1;
+			}
+			index2++;
+		}
+		return 0;
+	}
+	int parseInt(char[] arr) {
+		int i = 0;
+		while (arr[i] == 0) {
+			i++;
+		}
+		int ret = 0;
+		while (i < arr.length) {
+			ret += ret * 10 + (arr[i++] - '0');
+		}
+		return ret;
+	}
+	String[] splitByDigit(String s) {
+		int begin = -1, rush = 0;
+		char[] arr = s.toCharArray();
+		List<String> list = new ArrayList<>();
+		while (rush < arr.length) {
+			begin = rush;
+			while (rush < arr.length && arr[rush] != '.') {
+				rush++;
+			}
+			list.add(new String(arr, begin, rush - begin));
+			++rush;
+		}
+		return list.toArray(new String[0]);
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	int change(int[] a, int start, int end) {
+		int base = a[start];
+		int left = start;
+		int right = end;
+		while (left < right) {
+			while (left < end && a[left] <= base) {
+				left++;
+			}
+			while (right > start && a[right] > base) {
+				right--;
+			}
+			if (left < right) {
+				swap(a,left,right);
+			}
+		}
+		if (right != start) {
+			swap(a,right,start);
+		}
+		return right;
+	}
+	int findKth(int[] a, int n, int K) {
+		quickSort(a,0,a.length - 1);
+		return a[n - K];
+	}
+	void quickSort(int[] a, int start, int end) {
+		if (end - start <= 0) {
+			return;
+		}
+		int index = change(a,start,end);
+		quickSort(a,start,index - 1);
+		quickSort(a,index + 1,end);
+	}
+	void swap(int[] nums, int i, int j) {
+		int temp = nums[i];
+		nums[i] = nums[j];
+		nums[j] = temp;
+	}
+}

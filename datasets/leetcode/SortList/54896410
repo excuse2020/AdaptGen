@@ -1,0 +1,43 @@
+class Solution {
+	ListNode findMid(ListNode head) {
+		ListNode i = head, j = head.next.next;
+		while (j != null && j.next != null) {
+			i = i.next;
+			j = j.next.next;
+		}
+		return i;
+	}
+	ListNode marge(ListNode left, ListNode right) {
+		ListNode dummy = new ListNode(-1);
+		ListNode temp = dummy;
+		while (left != null && right != null) {
+			if (left.val < right.val) {
+				temp.next = left;
+				left = left.next;
+			} 
+			else {
+				temp.next = right;
+				right = right.next;
+			}
+			temp = temp.next;
+		}
+		if (left != null) {
+			temp.next = left;
+		} 
+		else {
+			temp.next = right;
+		}
+		return dummy.next;
+	}
+	ListNode sortList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode mid = findMid(head);
+		ListNode left = head, right = mid.next;
+		mid.next = null;
+		left = sortList(left);
+		right = sortList(right);
+		return marge(left,right);
+	}
+}

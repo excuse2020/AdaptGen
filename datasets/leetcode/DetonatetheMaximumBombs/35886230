@@ -1,0 +1,34 @@
+class Solution {
+	boolean isOverlap(int[] p1, int[] p2) {
+		long x1 = p1[0], y1 = p1[1], r1 = p1[2];
+		long x2 = p2[0], y2 = p2[1], r2 = p2[2];
+		long xd = x1 - x2, yd = y1 - y2;
+		return (xd * xd + yd * yd) <= (r1 * r1);
+	}
+	int maximumDetonation(int[][] bombs) {
+		int maxDetonations = 1, size = bombs.length;
+		for (int i = 0; i < size; i++) {
+			boolean[] visited = new boolean[size];
+			Arrays.fill(visited,false);
+			Queue<Integer> qu = new LinkedList<>();
+			qu.add(i);
+			int detonations = 1;
+			visited[i] = true;
+			while (!qu.isEmpty()) {
+				int curr = qu.poll();
+				for (int j = 0; j < size; j++) {
+					if (j == curr) {
+						continue;
+					}
+					if (!visited[j] && isOverlap(bombs[curr],bombs[j])) {
+						visited[j] = true;
+						qu.add(j);
+						detonations++;
+					}
+				}
+			}
+			maxDetonations = Math.max(maxDetonations,detonations);
+		}
+		return maxDetonations;
+	}
+}

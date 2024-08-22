@@ -1,0 +1,24 @@
+class Solution {
+	Integer[] dp;
+	int doit(int[] prices, int ind) {
+		if (ind < 0) {
+			return 0;
+		}
+		if (dp[ind] != null) {
+			return dp[ind];
+		}
+		int max = doit(prices,ind - 1);
+		for (int i = ind - 1; i >= 0; i--) {
+			int profit = prices[ind] - prices[i];
+			int prev = doit(prices,i - 2);
+			max = Math.max(max,Math.max(prev + profit,prev));
+		}
+		dp[ind] = max;
+		return max;
+	}
+	int maxProfit(int[] prices) {
+		dp = new Integer[prices.length];
+		doit(prices,prices.length - 1);
+		return dp[prices.length - 1];
+	}
+}

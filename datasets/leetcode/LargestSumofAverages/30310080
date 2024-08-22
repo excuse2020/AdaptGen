@@ -1,0 +1,30 @@
+class Solution {
+	double largestSumOfAverages(int[] nums, int k) {
+		double[][] memo = new double[nums.length][k + 1];
+		return recur(nums,k,0,0,memo);
+	}
+	double recur(int[] nums, int k, int index, int partition, double[][] memo) {
+		if (index == nums.length) {
+			return 0.0;
+		}
+		double sum = 0;
+		if (k - partition == 1) {
+			for (int i = index; i < nums.length; i++) {
+				sum += nums[i];
+			}
+			double avg = sum / (nums.length - index);
+			return avg;
+		}
+		if (memo[index][partition] != 0) {
+			return memo[index][partition];
+		}
+		double ans = 0;
+		for (int i = index; i < nums.length; i++) {
+			sum += nums[i];
+			double avg = sum / (i - index + 1);
+			double temp = recur(nums,k,i + 1,partition + 1,memo);
+			ans = Math.max(ans,temp + avg);
+		}
+		return memo[index][partition] = ans;
+	}
+}

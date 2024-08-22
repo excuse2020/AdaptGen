@@ -1,0 +1,62 @@
+class Solution {
+	int maximumRows(int[][] mat, int cols) {
+		int max = Integer.MIN_VALUE;
+		int n = mat.length;
+		int m = mat[0].length;
+		int maxPossibilites = 1 << m;
+		for (int k = 0; k < maxPossibilites; ++k) {
+			if (Integer.bitCount(k) != cols) {
+				continue;
+			}
+			int count = 0;
+			for (int i = 0; i < n; ++i) {
+				boolean take = true;
+				for (int j = 0; j < m; ++j) {
+					if ((k >> j & 1) == 0 && mat[i][j] == 1) {
+						take = false;
+						break;
+					}
+				}
+				if (take) {
+					count++;
+				}
+			}
+			max = Math.max(max,count);
+		}
+		return max;
+	}
+	int util(int mat, int k, int col) {
+		int n = mat.length;
+		int m = mat[0].length;
+		if (k == 0) {
+			int count = 0;
+			for (int i = 0; i < n; i++) {
+				boolean take = true;
+				for (int j = 0; j < m; j++) {
+					if (mat[i][j] == 1) {
+						take = false;
+						break;
+					}
+				}
+				if (take) {
+					count++;
+				}
+			}
+			return count;
+		}
+		if (col == m) {
+			return Integer.MIN_VALUE;
+		}
+		int temp = new int[n];
+		for (int i = 0; i < n; i++) {
+			temp[i] = mat[i][col];
+			mat[i][col] = 0;
+		}
+		int a = util(mat,k - 1,col + 1);
+		for (int i = 0; i < n; i++) {
+			mat[i][col] = temp[i];
+		}
+		int b = util(mat,k,col + 1);
+		return Math.max(a,b);
+	}
+}

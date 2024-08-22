@@ -1,0 +1,21 @@
+class Solution {
+	int twoCitySchedCost(int[][] costs) {
+		int n = costs.length;
+		int[][][] dp = new int[(n / 2) + 1][(n / 2) + 1][n + 1];
+		for (int arrived_a = 0; arrived_a <= (n / 2); arrived_a++) {
+			for (int arrived_b = 0; arrived_b <= (n / 2); arrived_b++) {
+				for (int index = n - 1; index >= 0; index--) {
+					int a_take = Integer.MAX_VALUE, b_take = Integer.MAX_VALUE;
+					if (arrived_a > 0) {
+						a_take = costs[index][0] + dp[arrived_a - 1][arrived_b][index + 1];
+					}
+					if (arrived_b > 0) {
+						b_take = costs[index][1] + dp[arrived_a][arrived_b - 1][index + 1];
+					}
+					dp[arrived_a][arrived_b][index] = Math.min(a_take,b_take);
+				}
+			}
+		}
+		return dp[n / 2][n / 2][0];
+	}
+}

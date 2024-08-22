@@ -1,0 +1,51 @@
+class Solution {
+	ListNode Merge(ListNode pHead1, ListNode pHead2) {
+		if (pHead1 == null) {
+			return pHead2;
+		}
+		if (pHead2 == null) {
+			return pHead1;
+		}
+		ListNode head = new ListNode(-1);
+		ListNode p1 = pHead1, p2 = pHead2, tail = head;
+		while (p1 != null && p2 != null) {
+			if (p1.val < p2.val) {
+				tail.next = p1;
+				tail = tail.next;
+				p1 = p1.next;
+			} 
+			else {
+				tail.next = p2;
+				tail = tail.next;
+				p2 = p2.next;
+			}
+		}
+		while (p1 != null) {
+			tail.next = p1;
+			tail = tail.next;
+			p1 = p1.next;
+		}
+		while (p2 != null) {
+			tail.next = p2;
+			tail = tail.next;
+			p2 = p2.next;
+		}
+		return head.next;
+	}
+	ListNode mergeKLists(ArrayList<ListNode> lists) {
+		return mergeLists(lists,0,lists.size() - 1);
+	}
+	ListNode mergeLists(ArrayList<ListNode> lists, int low, int high) {
+		if (low > high) {
+			return null;
+		}
+		if (low + 1 == high) {
+			return Merge(lists.get(low),lists.get(high));
+		}
+		if (low == high) {
+			return lists.get(low);
+		}
+		int mid = (low + high) / 2;
+		return Merge(mergeLists(lists,low,mid),mergeLists(lists,mid + 1,high));
+	}
+}

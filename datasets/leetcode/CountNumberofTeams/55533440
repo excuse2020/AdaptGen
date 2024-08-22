@@ -1,0 +1,56 @@
+class Solution {
+	int[][] memo;
+	int dp(int[] nums, int i, int count) {
+		if (count == 2) {
+			return 1;
+		}
+		if (i >= nums.length) {
+			return 0;
+		}
+		if (memo[i][count] != -1) {
+			return memo[i][count];
+		}
+		int res = 0;
+		for (int j = i + 1; j < nums.length; j++) {
+			if (nums[i] < nums[j]) {
+				res += dp(nums,j,count + 1);
+			}
+		}
+		return memo[i][count] = res;
+	}
+	int dp1(int[] nums, int i, int count) {
+		if (count == 2) {
+			return 1;
+		}
+		if (i >= nums.length) {
+			return 0;
+		}
+		if (memo[i][count] != -1) {
+			return memo[i][count];
+		}
+		int res = 0;
+		for (int j = i + 1; j < nums.length; j++) {
+			if (nums[i] > nums[j]) {
+				res += dp1(nums,j,count + 1);
+			}
+		}
+		return memo[i][count] = res;
+	}
+	int numTeams(int[] ratings) {
+		this.memo = new int[ratings.length][3];
+		for (int[] row: memo) {	
+			Arrays.fill(row,-1);
+		}
+		int res = 0;
+		for (int i = 0; i < ratings.length; i++) {
+			res += dp(ratings,i,0);
+		}
+		for (int[] row: memo) {	
+			Arrays.fill(row,-1);
+		}
+		for (int i = 0; i < ratings.length; i++) {
+			res += dp1(ratings,i,0);
+		}
+		return res;
+	}
+}

@@ -1,0 +1,25 @@
+class Solution {
+	int countDays(int days, int[][] meetings) {
+		int n = meetings.length;
+		List<int[]> ls = new ArrayList<>();
+		int[] current = new int[2];
+		Arrays.sort(meetings,(a, b) -> {Integer.compare(a[0],b[0])});
+		current = meetings[0];
+		for (int i = 1; i < n; i++) {
+			if (current[1] >= meetings[i][0]) {
+				current[1] = Math.max(current[1],meetings[i][1]);
+			} 
+			else {
+				ls.add(current);
+				current = meetings[i];
+			}
+		}
+		ls.add(current);
+		int res = ls.get(0)[0] - 1;
+		for (int i = 1; i < ls.size(); i++) {
+			res += ls.get(i)[0] - ls.get(i - 1)[1];
+		}
+		res += days - ls.get(ls.size() - 1)[1];
+		return res;
+	}
+}

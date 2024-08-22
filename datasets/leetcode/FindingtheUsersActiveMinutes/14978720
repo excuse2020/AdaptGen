@@ -1,0 +1,25 @@
+class Solution {
+	int[] findingUsersActiveMinutes(int[][] logs, int k) {
+		int[] ans = new int[k];
+		HashMap<Integer, HashSet<Integer>> hm = new HashMap<>();
+		for (int[] log: logs) {	
+			hm.put(log[0],new HashSet<Integer>());
+		}
+		for (int[] log: logs) {	
+			hm.get(log[0]).add(log[1]);
+		}
+		HashMap<Integer, Integer> freq = new HashMap<>();
+		for (int i = 1; i <= k; i++) {
+			freq.put(i,0);
+		}
+		for (Map.Entry<Integer, HashSet<Integer>> map: hm.entrySet()) {	
+			if (freq.containsKey(map.getValue().size())) {
+				freq.put(map.getValue().size(),freq.get(map.getValue().size()) + 1);
+			}
+		}
+		for (Map.Entry<Integer, Integer> map: freq.entrySet()) {	
+			ans[map.getKey() - 1] = map.getValue();
+		}
+		return ans;
+	}
+}

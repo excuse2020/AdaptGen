@@ -1,0 +1,35 @@
+class Solution {
+	int helper(int i, int j, int[][] dp, int[][] matrix) {
+		if (i == matrix.length - 1) {
+			return matrix[i][j];
+		}
+		if (dp[i][j] != Integer.MAX_VALUE) {
+			return dp[i][j];
+		}
+		int way1 = Integer.MAX_VALUE;
+		int way2 = Integer.MAX_VALUE;
+		int way3 = Integer.MAX_VALUE;
+		way1 = helper(i + 1,j,dp,matrix);
+		if (j - 1 >= 0) {
+			way2 = helper(i + 1,j - 1,dp,matrix);
+		}
+		if (j + 1 < matrix.length) {
+			way3 = helper(i + 1,j + 1,dp,matrix);
+		}
+		return dp[i][j] = matrix[i][j] + Math.min(way1,Math.min(way2,way3));
+	}
+	int minFallingPathSum(int[][] matrix) {
+		if (matrix.length == 1) {
+			return matrix[0][0];
+		}
+		int dp = new int[matrix.length][matrix[0].length];
+		for (int[] ele: dp) {	
+			Arrays.fill(ele,Integer.MAX_VALUE);
+		}
+		int answer = Integer.MAX_VALUE;
+		for (int i = 0; i < matrix[0].length; i++) {
+			answer = Math.min(answer,helper(0,i,dp,matrix));
+		}
+		return answer;
+	}
+}

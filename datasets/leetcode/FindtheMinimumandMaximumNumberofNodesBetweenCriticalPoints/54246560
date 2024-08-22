@@ -1,0 +1,46 @@
+class Solution {
+	int[] nodesBetweenCriticalPoints(ListNode head) {
+		int[] ans = new int[2];
+		int min = Integer.MAX_VALUE;
+		List<Integer> l = new ArrayList<>();
+		int count = 1;
+		ListNode q = head;
+		ListNode p = head.next;
+		while (p != null) {
+			count++;
+			if (p.val > q.val && p.next != null && p.val > p.next.val) {
+				l.add(count);
+			} 
+			else if (p.val < q.val && p.next != null && p.val < p.next.val) {
+				l.add(count);
+			}
+			q = p;
+			p = p.next;
+		}
+		Collections.sort(l);
+		if (l.size() != 0) {
+			if (l.size() == 1) {
+				ans[1] = -1;
+				ans[0] = -1;
+			} 
+			else {
+				ans[1] = l.get(l.size() - 1) - l.get(0);
+				for (int i = 1; i < l.size(); i++) {
+					int diff = l.get(i) - l.get(i - 1);
+					min = Math.min(min,diff);
+				}
+				if (min == Integer.MAX_VALUE) {
+					ans[0] = -1;
+				} 
+				else {
+					ans[0] = min;
+				}
+			}
+		} 
+		else {
+			ans[1] = -1;
+			ans[0] = -1;
+		}
+		return ans;
+	}
+}

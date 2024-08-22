@@ -1,0 +1,33 @@
+class Solution {
+	int[] answerQueries(int[] nums, int[] queries) {
+		Arrays.sort(nums);
+		int[] prefixSum = new int[nums.length + 1];
+		for (int i = 0; i < nums.length; i++) {
+			prefixSum[i + 1] = prefixSum[i] + nums[i];
+		}
+		int[] ans = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			ans[i] = findIndex(prefixSum,queries[i]);
+		}
+		return ans;
+	}
+	int findIndex(int[] prefSum, int sum) {
+		int ans = 0;
+		int left = 0;
+		int right = prefSum.length - 1;
+		while (left < right) {
+			int mid = left + (right - left) / 2;
+			if (prefSum[mid] == sum) {
+				return mid;
+			} 
+			else if (prefSum[mid] > sum) {
+				right = mid - 1;
+			} 
+			else {
+				ans = mid;
+				left = mid + 1;
+			}
+		}
+		return prefSum[right] <= sum ? right : ans;
+	}
+}

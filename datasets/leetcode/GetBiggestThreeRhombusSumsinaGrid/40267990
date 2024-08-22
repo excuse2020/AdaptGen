@@ -1,0 +1,37 @@
+class Solution {
+	int m;
+	int n;
+	int[] getBiggestThree(int[][] grid) {
+		n = grid.length;
+		m = grid[0].length;
+		int radius = Math.min(n,m) / 2;
+		TreeSet<Integer> top3 = new TreeSet<>((a, b) -> {b - a});
+		for (int d = 0; d <= radius; d++) {
+			for (int i = d; i < n - d; i++) {
+				for (int j = d; j < m - d; j++) {
+					top3.add(getSum(i,j,d,grid));
+					if (top3.size() > 3) {
+						top3.remove(top3.last());
+					}
+				}
+			}
+		}
+		int[] answer = new int[top3.size()];
+		int i = 0;
+		Iterator<Integer> it = top3.iterator();
+		while (it.hasNext()) {
+			answer[i++] = it.next();
+		}
+		return answer;
+	}
+	int getSum(int i, int j, int d, int[][] grid) {
+		if (d == 0) {
+			return grid[i][j];
+		}
+		int sum = 0;
+		for (int t = 0; t < d; t++) {
+			sum += grid[i + d - t][j + t] + grid[i - d + t][j - t];
+		}
+		return sum;
+	}
+}

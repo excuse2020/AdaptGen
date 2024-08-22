@@ -1,0 +1,48 @@
+class Solution {
+	int dfs(String[] words, int n, int index, int[] cache) {
+		if (index == n) {
+			return 0;
+		} 
+		else if (cache[index] != -1) {
+			return cache[index];
+		}
+		int max = 1;
+		for (int k = 0; k < n; k++) {
+			if (k != index && isPredecessor(words[index],words[k])) {
+				int ans = 1 + dfs(words,n,k,cache);
+				max = Math.max(ans,max);
+			}
+		}
+		cache[index] = max;
+		return max;
+	}
+	boolean isPredecessor(String s1, String s2) {
+		int len1 = s1.length();
+		int len2 = s2.length();
+		if (len1 != len2 - 1) {
+			return false;
+		}
+		int i, j, skip;
+		i = j = skip = 0;
+		while (i < len1 && j < len2) {
+			if (s1.charAt(i) == s2.charAt(j)) {
+				i++;
+				j++;
+			} 
+			else {
+				j++;
+				skip++;
+			}
+		}
+		return skip == 1 || i == j;
+	}
+	int longestStrChain(String[] words) {
+		int n = words.length;
+		int[] cache = new int[n];
+		Arrays.fill(cache,-1);
+		for (int i = 0; i < n; i++) {
+			dfs(words,n,i,cache);
+		}
+		return Arrays.stream(cache).max().getAsInt();
+	}
+}

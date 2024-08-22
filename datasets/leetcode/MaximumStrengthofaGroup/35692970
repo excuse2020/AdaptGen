@@ -1,0 +1,34 @@
+class Solution {
+	long ans = Integer.MIN_VALUE;
+	void backtrack(ArrayList<Integer> temp, long sum, int index, int count, int inc) {
+		if (index >= temp.size()) {
+			if (inc == 0) {
+				return;
+			}
+			ans = Math.max(ans,sum);
+			return;
+		}
+		for (int i = index; i < temp.size(); i++) {
+			backtrack(temp,sum * temp.get(i),i + 1,count + 1,inc + 1);
+			backtrack(temp,sum,i + 1,count + 1,inc);
+		}
+		return;
+	}
+	long maxStrength(int[] nums) {
+		ArrayList<Integer> temp = new ArrayList<>();
+		boolean ifZero = false;
+		for (int i: nums) {	
+			if (i != 0) {
+				temp.add(i);
+			} 
+			else {
+				ifZero = true;
+			}
+		}
+		backtrack(temp,1,0,1,0);
+		if (ans < 0 && ifZero) {
+			return 0;
+		}
+		return ans;
+	}
+}

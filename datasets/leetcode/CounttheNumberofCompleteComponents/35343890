@@ -1,0 +1,38 @@
+class Solution {
+	int countCompleteComponents(int n, int[][] edges) {
+		ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			int src = edges[i][0];
+			int dest = edges[i][1];
+			graph.get(src).add(dest);
+			graph.get(dest).add(src);
+		}
+		boolean[] visited = new boolean[n];
+		int vtces = n;
+		int ans = 0;
+		for (int vt = 0; vt < vtces; vt++) {
+			if (visited[vt] == false) {
+				ArrayList<Integer> comp = new ArrayList<>();
+				int e = new int[1];
+				drawtreeedges(graph,visited,vt,comp,e);
+				if (e[0] == (comp.size() * (comp.size() - 1))) {
+					ans++;
+				}
+			}
+		}
+		return ans;
+	}
+	void drawtreeedges(ArrayList<ArrayList<Integer>> graph, boolean[] visited, int src, ArrayList<Integer> comp, int edge) {
+		visited[src] = true;
+		comp.add(src);
+		for (int e: graph.get(src)) {	
+			edge[0]++;
+			if (visited[e] == false) {
+				drawtreeedges(graph,visited,e,comp,edge);
+			}
+		}
+	}
+}

@@ -1,0 +1,29 @@
+class Solution {
+	String removeDuplicateLetters(String str) {
+		int len = str.length();
+		char[] chars = str.toCharArray();
+		int[] lastIndex = new int[26];
+		for (int i = 0; i < len; i++) {
+			lastIndex[chars[i] - 'a'] = i;
+		}
+		Deque<Character> stack = new ArrayDeque<>(len);
+		boolean[] visited = new boolean[26];
+		for (int i = 0; i < len; i++) {
+			char currentCh = chars[i];
+			if (visited[currentCh - 'a']) {
+				continue;
+			}
+			while (!stack.isEmpty() && currentCh < stack.peekLast() && lastIndex[stack.peekLast() - 'a'] > i) {
+				Character top = stack.removeLast();
+				visited[top - 'a'] = false;
+			}
+			stack.addLast(currentCh);
+			visited[currentCh - 'a'] = true;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (Character ch: stack) {	
+			sb.append(ch);
+		}
+		return sb.toString();
+	}
+}

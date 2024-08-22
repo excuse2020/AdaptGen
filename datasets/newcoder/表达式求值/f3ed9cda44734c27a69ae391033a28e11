@@ -1,0 +1,75 @@
+class Solution {
+	void calculate(Stack<Integer> nums, char op) {
+		int a = nums.pop();
+		int b = nums.pop();
+		if (op == '*') {
+			nums.add(a * b);
+			return;
+		}
+		if (op == '+') {
+			nums.add(a + b);
+			return;
+		}
+		nums.add(b - a);
+	}
+	int compute(String s) {
+		Stack<Character> ops = new Stack<>();
+		Stack<Integer> nums = new Stack<>();
+		int i = 0;
+		while (i < s.length()) {
+			char c = s.charAt(i);
+			if (c == '*') {
+				ops.add(c);
+				++i;
+			} 
+			else if (c == '-') {
+				while (!ops.isEmpty() && (ops.peek() == '*' || ops.peek() == '-')) {
+					calculate(nums,ops.pop());
+				}
+				ops.add(c);
+				++i;
+			} 
+			else if (c == '+') {
+				while (!ops.isEmpty() && ops.peek() == '*') {
+					calculate(nums,ops.pop());
+				}
+				ops.add(c);
+				++i;
+			} 
+			else if (c == '(') {
+				ops.add(c);
+				++i;
+			} 
+			else if (c == ')') {
+				while (ops.peek() != '(') {
+					calculate(nums,ops.pop());
+				}
+				ops.pop();
+				++i;
+			} 
+			else {
+				StringBuilder num = new StringBuilder("");
+				int len = s.length();
+				while (c >= '0' && c <= '9') {
+					num.append(c);
+					++i;
+					if (i >= len) {
+						break;
+					}
+					c = s.charAt(i);
+				}
+				nums.add(Integer.valueOf(num.toString()));
+			}
+		}
+		while (!ops.isEmpty()) {
+			calculate(nums,ops.pop());
+		}
+		return nums.pop();
+	}
+	int solve(String s) {
+		if (s == null || s.length() == 0) {
+			return 0;
+		}
+		return compute(s);
+	}
+}

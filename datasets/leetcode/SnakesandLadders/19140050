@@ -1,0 +1,54 @@
+class Solution {
+	int snakesAndLadders(int[][] grid) {
+		int n = grid.length;
+		int[] board = new int[(n * n) + 1];
+		boolean[] vis = new boolean[(n * n) + 1];
+		ArrayDeque<Integer> qu = new ArrayDeque<>();
+		int i = n - 1;
+		boolean f = true;
+		int count = 1;
+		while (i >= 0) {
+			if (f) {
+				int j = 0;
+				while (j < n) {
+					board[count++] = grid[i][j++];
+				}
+			} 
+			else {
+				int j = n - 1;
+				while (j >= 0) {
+					board[count++] = grid[i][j--];
+				}
+			}
+			f = !f;
+			i--;
+		}
+		qu.offerLast(board[1] == -1 ? 1 : board[1]);
+		if (board[1] == n * n) {
+			return 1;
+		}
+		vis[board[1] == -1 ? 1 : board[1]] = true;
+		int moves = 1;
+		while (!qu.isEmpty()) {
+			int lv = qu.size();
+			for (int j = 0; j < lv; j++) {
+				int cur = qu.poll();
+				for (int k = 1; k <= 6; k++) {
+					int temp = cur + k;
+					if (temp <= n * n && !vis[temp]) {
+						vis[temp] = true;
+						if (board[temp] != -1) {
+							temp = board[temp];
+						}
+						qu.offerLast(temp);
+						if (temp == n * n) {
+							return moves;
+						}
+					}
+				}
+			}
+			moves++;
+		}
+		return -1;
+	}
+}

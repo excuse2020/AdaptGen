@@ -1,0 +1,41 @@
+class Solution {
+	int count;
+	long countPairs(int n, int[][] edges) {
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int[] temp: edges) {	
+			int u = temp[0];
+			int v = temp[1];
+			adj.get(u).add(v);
+			adj.get(v).add(u);
+		}
+		boolean[] visited = new boolean[n];
+		long ans = 0;
+		long sum = 0;
+		ArrayList<Integer> comp = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			if (visited[i] == false) {
+				count = 0;
+				dfs(i,visited,adj);
+				comp.add(count);
+			}
+		}
+		System.out.println(Arrays.asList(comp));
+		for (int val: comp) {	
+			sum += val;
+			ans += (long) val * (n - sum);
+		}
+		return ans;
+	}
+	void dfs(int s, boolean[] visited, List<List<Integer>> adj) {
+		visited[s] = true;
+		count++;
+		for (int it: adj.get(s)) {	
+			if (visited[it] == false) {
+				dfs(it,visited,adj);
+			}
+		}
+	}
+}

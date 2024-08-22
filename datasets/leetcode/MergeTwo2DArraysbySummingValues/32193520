@@ -1,0 +1,36 @@
+class Solution {
+	int dumpRemainingFromIndex(int startIndex, int mergeIndex, int[][] sourceArray, int[][] targetArray) {
+		for (int i = startIndex; i < sourceArray.length; i++) {
+			targetArray[mergeIndex++] = sourceArray[i];
+		}
+		return mergeIndex;
+	}
+	int[][] mergeArrays(int[][] nums1, int[][] nums2) {
+		int mergeIndex = 0;
+		int[][] mergeList = new int[nums1.length + nums2.length][2];
+		int pointer1 = 0;
+		int pointer2 = 0;
+		while (pointer1 < nums1.length && pointer2 < nums2.length) {
+			int id1 = nums1[pointer1][0];
+			int id2 = nums2[pointer2][0];
+			if (id1 == id2) {
+				mergeList[mergeIndex][0] = id1;
+				mergeList[mergeIndex][1] = nums1[pointer1++][1] + nums2[pointer2++][1];
+			} 
+			else if (id1 < id2) {
+				mergeList[mergeIndex] = nums1[pointer1++];
+			} 
+			else {
+				mergeList[mergeIndex] = nums2[pointer2++];
+			}
+			mergeIndex++;
+		}
+		if (pointer1 < nums1.length) {
+			mergeIndex = dumpRemainingFromIndex(pointer1,mergeIndex,nums1,mergeList);
+		} 
+		else if (pointer2 < nums2.length) {
+			mergeIndex = dumpRemainingFromIndex(pointer2,mergeIndex,nums2,mergeList);
+		}
+		return Arrays.copyOfRange(mergeList,0,mergeIndex);
+	}
+}

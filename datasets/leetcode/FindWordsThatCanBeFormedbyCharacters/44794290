@@ -1,0 +1,40 @@
+class Solution {
+	int countCharacters(String[] words, String chars) {
+		int result = 0;
+		HashMap<Character, Integer> charVals = new HashMap<>();
+		for (int i = 0; i < chars.length(); i++) {
+			if (charVals.containsKey(chars.charAt(i))) {
+				int val = charVals.get(chars.charAt(i));
+				charVals.put(chars.charAt(i),++val);
+			} 
+			else {
+				charVals.put(chars.charAt(i),1);
+			}
+		}
+		for (String s: words) {	
+			boolean canForm = true;
+			HashMap<Character, Integer> word = new HashMap<>();
+			for (int i = 0; i < s.length(); i++) {
+				if (word.containsKey(s.charAt(i))) {
+					int val = word.get(s.charAt(i));
+					word.put(s.charAt(i),++val);
+				} 
+				else {
+					word.put(s.charAt(i),1);
+				}
+			}
+			for (Map.Entry<Character, Integer> entry: word.entrySet()) {	
+				if (charVals.containsKey(entry.getKey()) && charVals.get(entry.getKey()) >= entry.getValue()) {
+					continue;
+				} 
+				else {
+					canForm = false;
+				}
+			}
+			if (canForm) {
+				result += s.length();
+			}
+		}
+		return result;
+	}
+}

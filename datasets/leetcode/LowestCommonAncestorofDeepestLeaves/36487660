@@ -1,0 +1,42 @@
+class Solution {
+	TreeNode ans1;
+	HashMap<TreeNode, Boolean> map;
+	int deep(TreeNode node) {
+		if (node == null) {
+			return 0;
+		}
+		return 1 + Math.max(deep(node.left),deep(node.right));
+	}
+	void dfs(TreeNode node, int i, int d) {
+		if (node == null) {
+			return;
+		}
+		if (i == d) {
+			map.put(node,false);
+		}
+		dfs(node.left,i + 1,d);
+		dfs(node.right,i + 1,d);
+	}
+	int go(TreeNode node) {
+		if (node == null) {
+			return 0;
+		}
+		int ans = 0;
+		if (map.containsKey(node)) {
+			ans = 1;
+		}
+		ans += go(node.left) + go(node.right);
+		if (ans == map.size() && ans1 == null) {
+			ans1 = node;
+		}
+		return ans;
+	}
+	TreeNode lcaDeepestLeaves(TreeNode root) {
+		int d = deep(root);
+		map = new HashMap<>();
+		dfs(root,1,d);
+		ans1 = null;
+		go(root);
+		return ans1;
+	}
+}

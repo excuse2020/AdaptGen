@@ -1,0 +1,34 @@
+class Solution {
+	int helper(int prices, int i, boolean hasStock, int dp, int t) {
+		if (t == 2 || i == prices.length) {
+			return 0;
+		}
+		int stockState = hasStock ? 1 : 0;
+		if (dp[i][stockState][t] != -1) {
+			return dp[i][stockState][t];
+		}
+		if (hasStock) {
+			int profit1 = prices[i] + helper(prices,i + 1,false,dp,t + 1);
+			int profit2 = helper(prices,i + 1,true,dp,t);
+			dp[i][stockState][t] = Math.max(profit1,profit2);
+		} 
+		else {
+			int profit1 = -prices[i] + helper(prices,i + 1,true,dp,t);
+			int profit2 = helper(prices,i + 1,false,dp,t);
+			dp[i][stockState][t] = Math.max(profit1,profit2);
+		}
+		return dp[i][stockState][t];
+	}
+	int maxProfit(int[] prices) {
+		int dp = new int[prices.length][2][3];
+		for (int[][] day: dp) {	
+			for (int[] state: day) {	
+				Arrays.fill(state,-1);
+			}
+		}
+		boolean hasStock = false;
+		int transactions = 0;
+		int maxProfit = helper(prices,0,hasStock,dp,transactions);
+		return maxProfit;
+	}
+}

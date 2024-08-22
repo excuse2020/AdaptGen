@@ -1,0 +1,50 @@
+class Solution {
+	int N;
+	List<Integer>[] graph;
+	int bobTraverse(int cur, int prev, int step, int bob, int[] amount) {
+		if (cur == bob) {
+			amount[cur] = (step == 1) ? amount[cur] / 2 : 0;
+			return 1;
+		}
+		for (int e: graph[cur]) {	
+			if (e == prev) {
+				continue;
+			}
+			int res = bobTraverse(e,cur,step + 1,bob,amount);
+			if (res > 0) {
+				res++;
+				if (step == res) {
+					amount[cur] /= 2;
+				} 
+				else if (step > res) {
+					amount[cur] = 0;
+				}
+				return res;
+			}
+		}
+		return 0;
+	}
+	int getMax(int cur, int prev, int step, int[] amount) {
+		int max = Integer.MIN_VALUE;
+		for (int e: graph[cur]) {	
+			if (e == prev) {
+				continue;
+			}
+			max = Math.max(max,getMax(e,cur,step + 1,amount));
+		}
+		return (max == Integer.MIN_VALUE) ? amount[cur] : max + amount[cur];
+	}
+	int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+		N = edges.length + 1;
+		graph = new ArrayList[N];
+		for (int i = 0; i < N; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int[] e: edges) {	
+			graph[e[0]].add(e[1]);
+			graph[e[1]].add(e[0]);
+		}
+		bobTraverse(0,-1,1,bob,amount);
+		return getMax(0,-1,1,amount);
+	}
+}

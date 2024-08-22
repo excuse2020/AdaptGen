@@ -1,0 +1,55 @@
+class Solution {
+	Map<Integer, Integer> UF = new HashMap<>();
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		if (n == 2) {
+			return connections;
+		}
+		List<List<Integer>> ret = new ArrayList<>();
+		Set<List<Integer>> temp = new HashSet<>();
+		for (List<Integer> l: connections) {	
+			temp.add(l);
+		}
+		for (List<Integer> l: connections) {	
+			temp.remove(l);
+			if (!isConnected(n,temp)) {
+				ret.add(l);
+			}
+			temp.add(l);
+		}
+		return ret;
+	}
+	boolean isConnected(int n, Set<List<Integer>> s) {
+		UF.clear();
+		for (List<Integer> l: s) {	
+			if (!UF.keySet().contains(l.get(0)) && !UF.keySet().contains(l.get(1))) {
+				UF.put(l.get(0),l.get(0));
+				UF.put(l.get(1),l.get(0));
+			} 
+			else if (!UF.keySet().contains(l.get(0)) && UF.keySet().contains(l.get(1))) {
+				UF.put(l.get(0),UF.get(l.get(1)));
+			} 
+			else if (UF.keySet().contains(l.get(0)) && !UF.keySet().contains(l.get(1))) {
+				UF.put(l.get(1),UF.get(l.get(0)));
+			} 
+			else {
+				int temp = UF.get(l.get(0));
+				for (int j: UF.keySet()) {	
+					if (UF.get(j) == temp) {
+						UF.put(j,UF.get(l.get(1)));
+					}
+				}
+				UF.put(l.get(0),UF.get(l.get(1)));
+			}
+		}
+		int g = UF.get(0);
+		if (UF.size() != n) {
+			return false;
+		}
+		for (int x: UF.keySet()) {	
+			if (UF.get(x) != g) {
+				return false;
+			}
+		}
+		return true;
+	}
+}

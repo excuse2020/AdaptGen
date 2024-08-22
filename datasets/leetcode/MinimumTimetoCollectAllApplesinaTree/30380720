@@ -1,0 +1,30 @@
+class Solution {
+	int minTime(int n, int[][] edges, List<Boolean> hasApple) {
+		int[] parents = new int[n];
+		boolean[] visited = new boolean[n];
+		Arrays.fill(parents,-1);
+		parents[0] = 0;
+		for (int[] e: edges) {	
+			if (parents[e[1]] == -1) {
+				parents[e[1]] = e[0];
+			} 
+			else {
+				parents[e[0]] = e[1];
+			}
+		}
+		int count = 0;
+		visited[0] = true;
+		for (int vertex = 1; vertex < n; vertex++) {
+			if (visited[vertex] || !hasApple.get(vertex)) {
+				continue;
+			}
+			int cur = vertex;
+			while (!visited[cur]) {
+				count += 2;
+				visited[cur] = true;
+				cur = parents[cur];
+			}
+		}
+		return count;
+	}
+}

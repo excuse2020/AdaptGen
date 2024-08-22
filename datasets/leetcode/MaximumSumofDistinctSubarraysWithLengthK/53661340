@@ -1,0 +1,42 @@
+class Solution {
+	long maximumSubarraySum(int[] nums, int k) {
+		HashMap<Integer, Integer> m = new HashMap<>();
+		long freq = 0, currentsum = 0, totalsum = 0;
+		for (int i = 0; i < nums.length; i++) {
+			if (i < k) {
+				if (m.containsKey(nums[i]) == false) {
+					freq++;
+					m.put(nums[i],1);
+				} 
+				else {
+					int data1 = m.get(nums[i]);
+					m.put(nums[i],data1 + 1);
+				}
+				currentsum += nums[i];
+			} 
+			else {
+				currentsum -= nums[i - k];
+				currentsum += nums[i];
+				int data1 = m.get(nums[i - k]);
+				m.put(nums[i - k],data1 - 1);
+				if (data1 - 1 == 0) {
+					freq--;
+				}
+				if (m.containsKey(nums[i]) == true) {
+					int data2 = m.get(nums[i]);
+					m.put(nums[i],data2 + 1);
+				} 
+				else {
+					m.put(nums[i],1);
+				}
+				if (m.get(nums[i]) == 1) {
+					freq++;
+				}
+			}
+			if (freq == k) {
+				totalsum = Math.max(totalsum,currentsum);
+			}
+		}
+		return totalsum;
+	}
+}

@@ -1,0 +1,29 @@
+class Solution {
+	int res;
+	int dfs(int src, ArrayList<Integer>[] children, String s) {
+		PriorityQueue<Integer> pq = new PriorityQueue<>();
+		for (int child: children[src]) {	
+			int cur = dfs(child,children,s);
+			if (s.charAt(child) != s.charAt(src)) {
+				pq.offer(-cur);
+			}
+		}
+		int b1 = pq.isEmpty() ? 0 : -pq.poll();
+		int b2 = pq.isEmpty() ? 0 : -pq.poll();
+		res = Math.max(res,b1 + b2);
+		return b1 + 1;
+	}
+	int longestPath(int[] parent, String s) {
+		res = 0;
+		int n = parent.length;
+		ArrayList<Integer>[] children = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			children[i] = new ArrayList<>();
+		}
+		for (int i = 1; i < n; i++) {
+			children[parent[i]].add(i);
+		}
+		dfs(0,children,s);
+		return res;
+	}
+}

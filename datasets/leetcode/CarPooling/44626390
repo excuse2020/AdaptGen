@@ -1,0 +1,24 @@
+class Solution {
+	boolean carPooling(int[][] trips, int capacity) {
+		int currentCapacity = capacity;
+		TreeMap<Integer, Integer> map = new TreeMap();
+		for (int[] trip: trips) {	
+			int from = trip[1];
+			int to = trip[2];
+			int num = trip[0];
+			map.put(from,map.getOrDefault(from,0) + num);
+			map.put(to,map.getOrDefault(to,0) - num);
+		}
+		while (!map.isEmpty()) {
+			Map.Entry<Integer, Integer> currEntry = map.firstEntry();
+			int num = currEntry.getValue();
+			if (num > currentCapacity) {
+				return false;
+			}
+			currentCapacity -= num;
+			int time = currEntry.getKey();
+			map.remove(time);
+		}
+		return true;
+	}
+}

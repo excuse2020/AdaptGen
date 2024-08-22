@@ -1,0 +1,31 @@
+class Solution {
+	int numberOfWeakCharacters(int[][] properties) {
+		int m = properties.length;
+		int count = 0;
+		Arrays.sort(properties,(a, b) -> {Integer.compare(a[0],b[0])});
+		int currAttack = properties[m - 1][0];
+		int maxDefence = properties[m - 1][1];
+		int overallMaxDef = -1;
+		for (int i = m - 2; i >= 0; i--) {
+			if (properties[i][0] == currAttack) {
+				if (maxDefence < properties[i][1]) {
+					maxDefence = properties[i][1];
+				}
+				if (overallMaxDef != -1 && overallMaxDef > properties[i][1]) {
+					count++;
+				}
+			} 
+			else {
+				if (overallMaxDef < maxDefence) {
+					overallMaxDef = maxDefence;
+				}
+				maxDefence = properties[i][1];
+				currAttack = properties[i][0];
+				if (overallMaxDef > properties[i][1]) {
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+}

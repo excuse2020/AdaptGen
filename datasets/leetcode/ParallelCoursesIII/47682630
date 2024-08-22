@@ -1,0 +1,35 @@
+class Solution {
+	int[] calculated;
+	int dfs(List<Integer>[] graph, int node, int[] time) {
+		if (calculated[node - 1] != -1) {
+			return calculated[node - 1];
+		}
+		List<Integer> li = graph[node - 1];
+		int add = 0;
+		for (Integer i: li) {	
+			add = Math.max(add,dfs(graph,i,time));
+		}
+		calculated[node - 1] = add + time[node - 1];
+		return add + time[node - 1];
+	}
+	int minimumTime(int n, int[][] relations, int[] time) {
+		calculated = new int[n];
+		Arrays.fill(calculated,-1);
+		int[] indegree = new int[n];
+		List<Integer>[] graph = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new ArrayList<>();
+		}
+		for (int[] rel: relations) {	
+			graph[rel[0] - 1].add(rel[1]);
+			indegree[rel[1] - 1]++;
+		}
+		int ans = 0;
+		for (int i = 1; i <= n; i++) {
+			if (indegree[i - 1] == 0) {
+				ans = Math.max(ans,dfs(graph,i,time));
+			}
+		}
+		return ans;
+	}
+}

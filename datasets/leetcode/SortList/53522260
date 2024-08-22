@@ -1,0 +1,58 @@
+class Solution {
+	ListNode getMid(ListNode head) {
+		ListNode hare = head;
+		ListNode rabbit = head.next;
+		while (rabbit != null && rabbit.next != null) {
+			hare = hare.next;
+			rabbit = rabbit.next.next;
+		}
+		return hare;
+	}
+	ListNode merge(ListNode left, ListNode right) {
+		if (left == null) {
+			return right;
+		}
+		if (right == null) {
+			return left;
+		}
+		ListNode ans = new ListNode(-1);
+		ListNode cur = ans;
+		while (left != null && right != null) {
+			if (left.val <= right.val) {
+				cur.next = left;
+				cur = left;
+				left = left.next;
+			} 
+			else {
+				cur.next = right;
+				cur = right;
+				right = right.next;
+			}
+		}
+		if (left != null) {
+			cur.next = left;
+			cur = left;
+			left = left.next;
+		} 
+		else if (right != null) {
+			cur.next = right;
+			cur = right;
+			right = right.next;
+		}
+		ans = ans.next;
+		return ans;
+	}
+	ListNode sortList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode mid = getMid(head);
+		ListNode left = head;
+		ListNode right = mid.next;
+		mid.next = null;
+		left = sortList(left);
+		right = sortList(right);
+		ListNode result = merge(left,right);
+		return result;
+	}
+}

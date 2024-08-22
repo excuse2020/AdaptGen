@@ -1,0 +1,39 @@
+class Solution {
+	int bitLength(int num) {
+		int length = 0;
+		while (num != 0) {
+			length++;
+			num >>= 1;
+		}
+		return length;
+	}
+	int[] cycleLengthQueries(int n, int[][] queries) {
+		int[] answer = new int[queries.length];
+		int a, b, cycle;
+		for (int i = 0; i < queries.length; i++) {
+			a = queries[i][0];
+			b = queries[i][1];
+			cycle = bitLength(a) + bitLength(b);
+			a = reverseBits(a);
+			b = reverseBits(b);
+			while (a != 1 && b != 1) {
+				if ((a & 1) != (b & 1)) {
+					break;
+				}
+				a >>= 1;
+				b >>= 1;
+				cycle -= 2;
+			}
+			answer[i] = cycle;
+		}
+		return answer;
+	}
+	int reverseBits(int num) {
+		int reverse = 1;
+		while (num != 0) {
+			reverse = (reverse << 1) | (num & 1);
+			num >>= 1;
+		}
+		return reverse;
+	}
+}

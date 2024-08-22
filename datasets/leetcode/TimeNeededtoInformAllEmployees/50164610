@@ -1,0 +1,28 @@
+class Solution {
+	int count;
+	int call(int n, int h, int[] man, int[] it, Map<Integer, List<Integer>> mp) {
+		if (count == n) {
+			return 0;
+		}
+		if (mp.get(h) == null) {
+			return 0;
+		}
+		int temp = 0;
+		for (int i: mp.get(h)) {	
+			if (man[i] == h) {
+				temp = Math.max(call(n,i,man,it,mp),temp);
+				count++;
+			}
+		}
+		return it[h] + temp;
+	}
+	int numOfMinutes(int n, int h, int[] manager, int[] informTime) {
+		count = 0;
+		Map<Integer, List<Integer>> mp = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			mp.putIfAbsent(manager[i],new ArrayList<>());
+			mp.get(manager[i]).add(i);
+		}
+		return call(n,h,manager,informTime,mp);
+	}
+}

@@ -1,0 +1,21 @@
+class Solution {
+	int memoization(int row, int col, List<List<Integer>> triangle, int n, int[][] dp) {
+		if (row == n - 1) {
+			return triangle.get(row).get(col);
+		}
+		if (dp[row][col] != -10001) {
+			return dp[row][col];
+		}
+		int down = triangle.get(row).get(col) + memoization(row + 1,col,triangle,n,dp);
+		int diagonal = triangle.get(row).get(col) + memoization(row + 1,col + 1,triangle,n,dp);
+		return dp[row][col] = Math.min(down,diagonal);
+	}
+	int minimumTotal(List<List<Integer>> triangle) {
+		int[][] dp = new int[triangle.size()][triangle.size()];
+		int n = triangle.size();
+		for (int[] temp: dp) {	
+			Arrays.fill(temp,-10001);
+		}
+		return memoization(0,0,triangle,n,dp);
+	}
+}

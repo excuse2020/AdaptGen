@@ -1,0 +1,22 @@
+class Solution {
+	int minCost(int totalLength, int[] cutPoints) {
+		Arrays.sort(cutPoints);
+		int numCuts = cutPoints.length;
+		int[] extendedCuts = new int[numCuts + 2];
+		System.arraycopy(cutPoints,0,extendedCuts,1,numCuts);
+		extendedCuts[0] = 0;
+		extendedCuts[numCuts + 1] = totalLength;
+		int[][] dp = new int[numCuts + 2][numCuts + 2];
+		for (int len = 2; len <= numCuts + 1; len++) {
+			for (int start = 0; start + len <= numCuts + 1; start++) {
+				int end = start + len;
+				dp[start][end] = Integer.MAX_VALUE;
+				for (int partition = start + 1; partition < end; partition++) {
+					int cost = dp[start][partition] + dp[partition][end];
+					dp[start][end] = Math.min(dp[start][end],cost);
+				}
+			}
+		}
+		return dp[0][numCuts + 1];
+	}
+}

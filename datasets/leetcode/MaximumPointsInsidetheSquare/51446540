@@ -1,0 +1,36 @@
+class Solution {
+	int maxPointsInsideSquare(int[][] points, String s) {
+		Map<Integer, List<Character>> lmap = new TreeMap<>();
+		int n = points.length;
+		int maxlevel = 0;
+		for (int i = 0; i < n; i++) {
+			int x = points[i][0];
+			int y = points[i][1];
+			int level = Math.max(Math.abs(x),Math.abs(y));
+			maxlevel = Math.max(maxlevel,level);
+			if (lmap.containsKey(level)) {
+				lmap.get(level).add(s.charAt(i));
+			} 
+			else {
+				List<Character> list = new ArrayList<>();
+				list.add(s.charAt(i));
+				lmap.put(level,list);
+			}
+		}
+		Set<Character> set = new HashSet<>();
+		int ans = 0;
+		for (int key: lmap.keySet()) {	
+			List<Character> list = lmap.get(key);
+			int si = list.size();
+			for (int j = 0; j < si; j++) {
+				char ch = list.get(j);
+				if (set.contains(ch)) {
+					return ans;
+				}
+				set.add(ch);
+			}
+			ans += list.size();
+		}
+		return n;
+	}
+}

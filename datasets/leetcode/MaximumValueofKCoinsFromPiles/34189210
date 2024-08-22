@@ -1,0 +1,51 @@
+class Solution {
+	int maxValueOfCoins(List<List<Integer>> piles, int k) {
+		int n = piles.size();
+		int m = 0;
+		return tabulation(piles,k);
+	}
+	int memoization(int i, List<List<Integer>> piles, int k, Integer[][] dp) {
+		if (k == 0 || i == piles.size()) {
+			return 0;
+		}
+		if (dp[i][k] != null) {
+			return dp[i][k];
+		}
+		int nt = memoization(i + 1,piles,k,dp);
+		int t = 0;
+		int sum = 0;
+		for (int j = 0; j < k && j < piles.get(i).size(); j++) {
+			sum += piles.get(i).get(j);
+			t = Math.max(t,sum + memoization(i + 1,piles,k - j,dp));
+		}
+		return dp[i][k] = Math.max(nt,t);
+	}
+	int recursion(int i, List<List<Integer>> piles, int k) {
+		if (k == 0 || i == piles.size()) {
+			return 0;
+		}
+		int t = recursion(i + 1,piles,k);
+		int sum = 0;
+		for (int j = 0; j < k && j < piles.get(i).size(); j++) {
+			sum += piles.get(i).get(j);
+			t = Math.max(t,sum + recursion(i + 1,piles,k - j));
+		}
+		return t;
+	}
+	int tabulation(List<List<Integer>> piles, int k) {
+		int n = piles.size();
+		int[][] dp = new int[n + 1][k + 1];
+		for (int i = n - 1; i >= 0; i--) {
+			for (int z = 1; z <= k; z++) {
+				int t = dp[i + 1][z];
+				int sum = 0;
+				for (int j = 0; j < Math.min(z,piles.get(i).size()); j++) {
+					sum += piles.get(i).get(j);
+					t = Math.max(t,sum + dp[i + 1][z - j - 1]);
+				}
+				dp[i][z] = t;
+			}
+		}
+		return dp[0][k];
+	}
+}

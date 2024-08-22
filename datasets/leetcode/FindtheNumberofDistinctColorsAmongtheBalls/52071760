@@ -1,0 +1,23 @@
+class Solution {
+	int[] queryResults(int limit, int[][] queries) {
+		int[] ans = new int[queries.length];
+		Map<Integer, Integer> labelToColorMap = new HashMap<>();
+		Map<Integer, Integer> colorToFreqMap = new HashMap<>();
+		int index = 0;
+		for (int[] q: queries) {	
+			int label = q[0];
+			int color = q[1];
+			if (labelToColorMap.containsKey(label)) {
+				int prevColor = labelToColorMap.get(label);
+				colorToFreqMap.put(prevColor,colorToFreqMap.getOrDefault(prevColor,0) - 1);
+				if (colorToFreqMap.get(prevColor) == 0) {
+					colorToFreqMap.remove(prevColor);
+				}
+			}
+			colorToFreqMap.put(color,colorToFreqMap.getOrDefault(color,0) + 1);
+			labelToColorMap.put(label,color);
+			ans[index++] = colorToFreqMap.size();
+		}
+		return ans;
+	}
+}

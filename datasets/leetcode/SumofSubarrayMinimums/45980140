@@ -1,0 +1,28 @@
+class Solution {
+	int mod = 1000_000_000 + 7;
+	int sumSubarrayMins(int[] arr) {
+		int n = arr.length;
+		int[] nextMinIndex = new int[n];
+		int[] dp = new int[n];
+		int sumOfMins = 0;
+		Stack<Integer> monotonicStack = new Stack<>();
+		for (int i = 0; i < n; i++) {
+			while (!monotonicStack.isEmpty() && arr[monotonicStack.peek()] > arr[i]) {
+				nextMinIndex[monotonicStack.pop()] = i;
+			}
+			monotonicStack.push(i);
+			nextMinIndex[i] = i;
+		}
+		for (int i = n - 1; i >= 0; i--) {
+			if (nextMinIndex[i] != i) {
+				dp[i] = (int) ((arr[i] * (nextMinIndex[i] - i)) % mod);
+				dp[i] = (dp[i] + dp[nextMinIndex[i]]) % mod;
+			} 
+			else {
+				dp[i] = (int) (((long) arr[i] * (n - i)) % mod);
+			}
+			sumOfMins = (sumOfMins + dp[i]) % mod;
+		}
+		return sumOfMins;
+	}
+}

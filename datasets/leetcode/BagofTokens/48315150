@@ -1,0 +1,26 @@
+class Solution {
+	int bagOfTokensScore(int[] tokens, int power) {
+		int vis = new int[tokens.length];
+		int score = 0;
+		int c = 0;
+		Arrays.sort(tokens);
+		return countpower(tokens,power,vis,score,c);
+	}
+	int countpower(int tokens, int power, int vis, int score, int c) {
+		for (int k = 0; k < tokens.length; k++) {
+			if (vis[k] == 0 && tokens[k] <= power) {
+				vis[k] = 1;
+				return countpower(tokens,power - tokens[k],vis,score + 1,c + 1);
+			}
+		}
+		if (c < tokens.length - 1) {
+			for (int k = tokens.length - 1; k >= 0; k--) {
+				if (vis[k] == 0 && score > 0) {
+					vis[k] = 1;
+					return countpower(tokens,power + tokens[k],vis,score - 1,c + 1);
+				}
+			}
+		}
+		return score;
+	}
+}

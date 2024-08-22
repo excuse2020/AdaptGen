@@ -1,0 +1,49 @@
+class Solution {
+	boolean isPal(long pal) {
+		String palS = String.valueOf(pal);
+		int l = 0;
+		int r = palS.length() - 1;
+		while (l < r) {
+			if (palS.charAt(l) != palS.charAt(r)) {
+				return false;
+			}
+			l++;
+			r--;
+		}
+		return true;
+	}
+	int superpalindromesInRange(String minS, String maxS) {
+		int cnt = 0;
+		long min = Long.parseLong(minS);
+		long max = Long.parseLong(maxS);
+		for (int left = 0; left < Integer.MAX_VALUE; left++) {
+			int right = 0;
+			int rightLen = 0;
+			for (int k = left; k > 0; k /= 10, rightLen++) {
+				right *= 10;
+				right += k % 10;
+			}
+			int shift = (int) Math.pow(10,rightLen);
+			for (int mid = 0; mid <= 9; mid++) {
+				int pal = left * 10 + mid;
+				pal = pal * shift + right;
+				long supPal = (long) pal * pal;
+				if (supPal > max) {
+					break;
+				}
+				if (supPal >= min && isPal(supPal)) {
+					cnt++;
+				}
+			}
+			int pal = left * shift + right;
+			long supPal = (long) pal * pal;
+			if (supPal > max) {
+				return cnt;
+			}
+			if (supPal >= min && isPal(supPal)) {
+				cnt++;
+			}
+		}
+		return cnt;
+	}
+}

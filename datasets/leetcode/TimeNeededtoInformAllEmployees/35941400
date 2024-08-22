@@ -1,0 +1,25 @@
+class Solution {
+	HashMap<Integer, ArrayList<Integer>> ds = new HashMap();
+	int max = 0;
+	void dfs(int node, int crrtime, int[] informTime) {
+		ArrayList<Integer> sub = ds.get(node);
+		if (sub == null) {
+			return;
+		}
+		int time = crrtime + informTime[node];
+		if (time > max) {
+			max = time;
+		}
+		for (int i: sub) {	
+			dfs(i,time,informTime);
+		}
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		for (int i = 0; i < n; i++) {
+			ds.computeIfAbsent(manager[i],(k) -> {new ArrayList()}).add(i);
+		}
+		System.out.println(ds);
+		dfs(headID,0,informTime);
+		return max;
+	}
+}

@@ -1,0 +1,44 @@
+class Solution {
+	int MOD = 1_000_000_007;
+	Integer[][] dp;
+	int numRollsToTarget(int n, int k, int target) {
+		dp = new Integer[n + 1][target + 1];
+		return solveTab(n,k,target);
+	}
+	int solveMemo(int n, int k, int target) {
+		if (n == 0) {
+			if (target == 0) {
+				return 1;
+			}
+			return 0;
+		}
+		if (dp[n][target] != null) {
+			return dp[n][target];
+		}
+		int res = 0;
+		for (int i = 1; i <= k; i++) {
+			if (target - i >= 0) {
+				res = (res + solveMemo(n - 1,k,target - i)) % MOD;
+			}
+		}
+		return dp[n][target] = res;
+	}
+	int solveTab(int n, int k, int target) {
+		for (int i = 0; i < dp.length; i++) {
+			Arrays.fill(dp[i],0);
+		}
+		dp[0][0] = 1;
+		for (int i = 1; i <= n; i++) {
+			for (int t = 0; t <= target; t++) {
+				int res = 0;
+				for (int idx = 1; idx <= k; idx++) {
+					if (t - idx >= 0) {
+						res = (res + dp[i - 1][t - idx]) % MOD;
+					}
+				}
+				dp[i][t] = res;
+			}
+		}
+		return dp[n][target];
+	}
+}

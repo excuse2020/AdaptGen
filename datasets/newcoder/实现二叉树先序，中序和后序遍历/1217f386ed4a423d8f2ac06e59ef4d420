@@ -1,0 +1,74 @@
+class Solution {
+	int getSize(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		int sizeL = getSize(root.left);
+		int sizeR = getSize(root.right);
+		return sizeL + sizeR;
+	}
+	int[] inOrderByStack(TreeNode root, int size) {
+		int[] arr = new int[size];
+		int idx = 0;
+		Stack<TreeNode> stack = new Stack<>();
+		TreeNode cur = root;
+		while (!stack.isEmpty() || cur != null) {
+			if (cur != null) {
+				stack.push(cur);
+				cur = cur.left;
+			}
+			if (cur == null) {
+				TreeNode temp = stack.pop();
+				arr[idx++] = temp.val;
+				cur = temp.right;
+			}
+		}
+		return arr;
+	}
+	int[] postOrderByStack(TreeNode root, int size) {
+		int[] arr = new int[size];
+		int idx = size - 1;
+		Stack<TreeNode> stack = new Stack<>();
+		stack.push(root);
+		while (!stack.isEmpty()) {
+			TreeNode temp = stack.pop();
+			arr[idx--] = temp.val;
+			if (temp.left != null) {
+				stack.push(temp.left);
+			}
+			if (temp.right != null) {
+				stack.push(temp.right);
+			}
+		}
+		return arr;
+	}
+	int[] preOrderByStack(TreeNode root, int size) {
+		int[] arr = new int[size];
+		int idx = 0;
+		Stack<TreeNode> stack = new Stack<>();
+		TreeNode cur = root;
+		while (!stack.isEmpty() || cur != null) {
+			if (cur != null) {
+				arr[idx++] = cur.val;
+				stack.push(cur);
+				cur = cur.left;
+			}
+			if (cur == null) {
+				TreeNode temp = stack.pop();
+				cur = temp.right;
+			}
+		}
+		return arr;
+	}
+	int[][] threeOrders(TreeNode root) {
+		int size = getSize(root);
+		if (size == 0) {
+			return new int[0][0];
+		}
+		int[][] result = new int[3][size];
+		result[0] = preOrderByStack(root,size);
+		result[1] = inOrderByStack(root,size);
+		result[2] = postOrderByStack(root,size);
+		return result;
+	}
+}

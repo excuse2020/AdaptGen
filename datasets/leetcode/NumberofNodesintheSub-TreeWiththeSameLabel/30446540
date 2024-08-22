@@ -1,0 +1,29 @@
+class Solution {
+	int ans;
+	Map<Integer, ArrayList<Integer>> map = new HashMap<>();
+	HashSet<Integer> seen = new HashSet<>();
+	int[] countSubTrees(int n, int[][] edges, String labels) {
+		ans = new int[n];
+		int i;
+		for (i = 0; i < n; i++) {
+			map.put(i,new ArrayList<Integer>());
+		}
+		for (int[] edge: edges) {	
+			map.get(edge[0]).add(edge[1]);
+			map.get(edge[1]).add(edge[0]);
+		}
+		System.out.println(map);
+		dfs(0,labels);
+		return ans;
+	}
+	int[] dfs(int node, String labels) {
+		int count = new int[26];
+		char c = labels.charAt(node);
+		for (int child: map.get(node)) {	
+			int[] sub = dfs(child,labels);
+			for (int i = 0; i < 26; i++) {
+				count[i] += sub[i];
+			}
+		}
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	Long[] dp1, dp2;
+	int k = 1000_000_007;
+	int maxSum(int[] nums1, int[] nums2) {
+		dp1 = new Long[nums1.length];
+		dp2 = new Long[nums2.length];
+		return (int) (Math.max(path1Helper(nums1,nums2,0) % k,path2Helper(nums1,nums2,0) % k));
+	}
+	long path1Helper(int[] nums1, int[] nums2, int index) {
+		if (index == nums1.length) {
+			return 0;
+		}
+		long val = nums1[index];
+		if (dp1[index] != null) {
+			return dp1[index];
+		}
+		int indexPath2 = Arrays.binarySearch(nums2,(int) val);
+		long res = val + path1Helper(nums1,nums2,index + 1);
+		if (indexPath2 >= 0) {
+			res = Math.max(res,val + path2Helper(nums1,nums2,indexPath2 + 1));
+		}
+		return dp1[index] = res;
+	}
+	long path2Helper(int[] nums1, int[] nums2, int index) {
+		if (index == nums2.length) {
+			return 0;
+		}
+		long val = nums2[index];
+		if (dp2[index] != null) {
+			return dp2[index];
+		}
+		int indexPath1 = Arrays.binarySearch(nums1,(int) val);
+		long res = val + path2Helper(nums1,nums2,index + 1);
+		if (indexPath1 >= 0) {
+			res = Math.max(res,val + path1Helper(nums1,nums2,indexPath1 + 1));
+		}
+		return dp2[index] = res;
+	}
+}

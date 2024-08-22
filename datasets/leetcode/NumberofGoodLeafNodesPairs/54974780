@@ -1,0 +1,46 @@
+class Solution {
+	List<TreeNode> leafList;
+	HashMap<TreeNode, TreeNode> parentMap;
+	int res;
+	int countPairs(TreeNode root, int dist) {
+		leafList = new ArrayList<>();
+		parentMap = new HashMap<>();
+		parentTracker(root,null);
+		for (TreeNode leaf: leafList) {	
+			Set<TreeNode> set = new HashSet<>();
+			set.add(leaf);
+			dfs(parentMap.get(leaf),1,dist,set);
+		}
+		return res / 2;
+	}
+	void dfs(TreeNode node, int count, int dist, Set<TreeNode> set) {
+		if (node == null || count > dist) {
+			return;
+		}
+		set.add(node);
+		if (node.left == null && node.right == null) {
+			res++;
+			return;
+		}
+		if (!set.contains(parentMap.get(node))) {
+			dfs(parentMap.get(node),count + 1,dist,set);
+		}
+		if (!set.contains(node.left)) {
+			dfs(node.left,count + 1,dist,set);
+		}
+		if (!set.contains(node.right)) {
+			dfs(node.right,count + 1,dist,set);
+		}
+	}
+	void parentTracker(TreeNode node, TreeNode parent) {
+		if (node == null) {
+			return;
+		}
+		if (node.left == null && node.right == null) {
+			leafList.add(node);
+		}
+		parentMap.put(node,parent);
+		parentTracker(node.left,node);
+		parentTracker(node.right,node);
+	}
+}

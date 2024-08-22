@@ -1,0 +1,28 @@
+class Solution {
+	int[][] memory;
+	int dfs(String str1, int i, String str2, int j) {
+		if (memory[i][j] != 0) {
+			return memory[i][j];
+		}
+		if (i == 0 && j == 0) {
+			return 0;
+		}
+		if (i == 0 && j != 0) {
+			return memory[i][j] = dfs(str1,i,str2,j - 1) + 1;
+		}
+		if (i != 0 && j == 0) {
+			return memory[i][j] = dfs(str1,i - 1,str2,j) + 1;
+		}
+		if (str1.charAt(i - 1) == str2.charAt(j - 1)) {
+			return memory[i][j] = dfs(str1,i - 1,str2,j - 1);
+		} 
+		else {
+			return memory[i][j] = Math.min(dfs(str1,i - 1,str2,j - 1),Math.min(dfs(str1,i,str2,j - 1),dfs(str1,i - 1,str2,j))) + 1;
+		}
+	}
+	int editDistance(String str1, String str2) {
+		int m = str1.length(), n = str2.length();
+		memory = new int[m + 1][n + 1];
+		return dfs(str1,m,str2,n);
+	}
+}

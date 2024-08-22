@@ -1,0 +1,29 @@
+class Solution {
+	long helper(Long[][] dp, List<Integer> robot, List<Integer> factory, int i, int j) {
+		if (i == robot.size()) {
+			return 0;
+		}
+		if (j == factory.size()) {
+			return (long) 1e14;
+		}
+		if (dp[i][j] != null) {
+			return dp[i][j];
+		}
+		long min = (long) 1e14;
+		min = Math.min(min,helper(dp,robot,factory,i + 1,j + 1) + Math.abs(robot.get(i) - factory.get(j)));
+		min = Math.min(min,helper(dp,robot,factory,i,j + 1));
+		return dp[i][j] = min;
+	}
+	long minimumTotalDistance(List<Integer> robot, int[][] factory) {
+		Collections.sort(robot);
+		List<Integer> fact = new ArrayList<Integer>();
+		for (int i = 0; i < factory.length; i++) {
+			for (int j = 0; j < factory[i][1]; j++) {
+				fact.add(factory[i][0]);
+			}
+		}
+		Collections.sort(fact);
+		Long[][] dp = new Long[robot.size() + 1][fact.size() + 1];
+		return helper(dp,robot,fact,0,0);
+	}
+}

@@ -1,0 +1,35 @@
+class Solution {
+	int count(int n, int lc, int rc) {
+		if (n == -1) {
+			return 0;
+		}
+		return 1 + count(lc[n],lc,rc);
+	}
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		int indeg = new int[n];
+		for (int i = 0; i < n; i++) {
+			if (leftChild[i] != -1) {
+				indeg[leftChild[i]]++;
+			}
+			if (rightChild[i] != -1) {
+				indeg[rightChild[i]]++;
+			}
+		}
+		int c1 = 0, c2 = 0;
+		int root = -1;
+		for (int i = 0; i < n; i++) {
+			if (indeg[i] == 0) {
+				c1++;
+				root = i;
+			} 
+			else if (indeg[i] == 1) {
+				c2++;
+			}
+		}
+		if (c1 != 1 || c2 != n - 1) {
+			return false;
+		}
+		int cnt = count(root,leftChild,rightChild);
+		return cnt == n;
+	}
+}

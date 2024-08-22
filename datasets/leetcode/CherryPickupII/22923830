@@ -1,0 +1,74 @@
+class Solution {
+	int cherryPickup(int[][] grid) {
+		int r = grid.length;
+		int c = grid[0].length;
+		int[][][] dp = new int[r][c][c];
+		for (int i = 0; i < r; i++) {
+			for (int j = 0; j < c; j++) {
+				for (int k = 0; k < c; k++) {
+					dp[i][j][k] = -1;
+				}
+			}
+		}
+		return func2(0,0,c - 1,r,c,grid,dp);
+	}
+	int func(int i, int j1, int j2, int r, int c, int[][] arr) {
+		if (j1 < 0 || j2 < 0 || j1 >= c || j2 >= c) {
+			return -99999999;
+		}
+		if (i == r - 1) {
+			if (j1 == j2) {
+				return arr[i][j1];
+			} 
+			else {
+				return arr[i][j1] + arr[i][j2];
+			}
+		}
+		int max = -99999999;
+		for (int dj1 = -1; dj1 <= 1; dj1++) {
+			for (int dj2 = -1; dj2 <= 1; dj2++) {
+				int val = 0;
+				if (j1 == j2) {
+					val += arr[i][j1];
+				} 
+				else {
+					val += arr[i][j1] + arr[i][j2];
+				}
+				val += func(i + 1,j1 + dj1,j2 + dj2,r,c,arr);
+				max = Math.max(max,val);
+			}
+		}
+		return max;
+	}
+	int func2(int i, int j1, int j2, int r, int c, int[][] arr, int[][][] dp) {
+		if (j1 < 0 || j2 < 0 || j1 >= c || j2 >= c) {
+			return -99999999;
+		}
+		if (i == r - 1) {
+			if (j1 == j2) {
+				return arr[i][j1];
+			} 
+			else {
+				return arr[i][j1] + arr[i][j2];
+			}
+		}
+		if (dp[i][j1][j2] != -1) {
+			return dp[i][j1][j2];
+		}
+		int max = -99999999;
+		for (int dj1 = -1; dj1 <= 1; dj1++) {
+			for (int dj2 = -1; dj2 <= 1; dj2++) {
+				int val = 0;
+				if (j1 == j2) {
+					val += arr[i][j1];
+				} 
+				else {
+					val += arr[i][j1] + arr[i][j2];
+				}
+				val += func2(i + 1,j1 + dj1,j2 + dj2,r,c,arr,dp);
+				max = Math.max(max,val);
+			}
+		}
+		return dp[i][j1][j2] = max;
+	}
+}

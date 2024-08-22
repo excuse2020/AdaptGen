@@ -1,0 +1,28 @@
+class Solution {
+	int helper(int screen, int clipBoard, int n, int[][] dp) {
+		if (screen == n) {
+			return 0;
+		}
+		if (screen > n) {
+			return Integer.MAX_VALUE / 2;
+		}
+		if (dp[screen][clipBoard] != -1) {
+			return dp[screen][clipBoard];
+		}
+		int copyPaste = 2 + helper(2 * screen,screen,n,dp);
+		int paste = 1 + helper(screen + clipBoard,clipBoard,n,dp);
+		dp[screen][clipBoard] = Math.min(copyPaste,paste);
+		return dp[screen][clipBoard];
+	}
+	int minSteps(int n) {
+		if (n < 2) {
+			return 0;
+		}
+		int[][] dp = new int[1001][1001];
+		for (int[] arr: dp) {	
+			Arrays.fill(arr,-1);
+		}
+		int steps = helper(1,1,n,dp) + 1;
+		return steps;
+	}
+}

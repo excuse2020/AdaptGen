@@ -1,0 +1,34 @@
+class Solution {
+	int getMaximumGold(int[][] grid) {
+		int output = 0;
+		int m = grid.length;
+		int n = grid[0].length;
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				output = Math.max(output,recursion(grid,i,j,new boolean[m][n]));
+			}
+		}
+		return output;
+	}
+	int recursion(int[][] grid, int row, int col, boolean[][] visited) {
+		if (grid[row][col] == 0 || visited[row][col]) {
+			return 0;
+		}
+		visited[row][col] = true;
+		int total = 0;
+		if (row > 0) {
+			total = Math.max(total,recursion(grid,row - 1,col,visited));
+		}
+		if (col > 0) {
+			total = Math.max(total,recursion(grid,row,col - 1,visited));
+		}
+		if (row < visited.length - 1) {
+			total = Math.max(total,recursion(grid,row + 1,col,visited));
+		}
+		if (col < visited[0].length - 1) {
+			total = Math.max(total,recursion(grid,row,col + 1,visited));
+		}
+		visited[row][col] = false;
+		return total + grid[row][col];
+	}
+}

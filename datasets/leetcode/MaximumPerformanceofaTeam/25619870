@@ -1,0 +1,23 @@
+class Solution {
+	int maxPerformance(int n, int[] speed, int[] efficiency, int k) {
+		PriorityQueue<int[]> queue = new PriorityQueue<>(new Comparator<int[]>());
+		long sum = 0;
+		long res = 0;
+		long mod = 1000000007;
+		for (int i = 0; i < n; i++) {
+			queue.offer(new int{efficiency[i], speed[i]});
+		}
+		PriorityQueue<int[]> heap = new PriorityQueue<>(new Comparator<int[]>());
+		while (!queue.isEmpty()) {
+			int[] tmp = queue.poll();
+			if (heap.size() == k) {
+				int[] tt = heap.poll();
+				sum -= tt[1];
+			}
+			heap.offer(tmp);
+			sum = sum + tmp[1];
+			res = Math.max(res,sum * tmp[0]);
+		}
+		return (int) (res % mod);
+	}
+}

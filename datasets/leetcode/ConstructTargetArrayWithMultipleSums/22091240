@@ -1,0 +1,26 @@
+class Solution {
+	boolean isPossible(int[] target) {
+		PriorityQueue<Long> heap = new PriorityQueue<Long>(Collections.reverseOrder());
+		long sum = 0;
+		for (int i: target) {	
+			heap.add((long) i);
+			sum += i;
+		}
+		while (heap.peek() > 1) {
+			long a = heap.poll();
+			if (sum - a == 1) {
+				return true;
+			}
+			if ((a < sum - a) || (sum - a == 0)) {
+				return false;
+			}
+			long temp = a % (sum - a);
+			if (temp <= 0) {
+				return false;
+			}
+			sum = -a + sum;
+			heap.offer(temp);
+		}
+		return true;
+	}
+}

@@ -1,0 +1,38 @@
+class Solution {
+	int findNext(int arr, int ind) {
+		int ans = arr.length, i = ind + 1, j = arr.length - 1;
+		while (i <= j) {
+			int mid = (i + j) / 2;
+			if (arr[mid][0] > arr[ind][1]) {
+				ans = mid;
+				j = mid - 1;
+			} 
+			else {
+				i = mid + 1;
+			}
+		}
+		return ans;
+	}
+	int maxTwoEvents(int[][] arr) {
+		int n = arr.length;
+		int dp = new int[n][3];
+		for (int d: dp) {	
+			Arrays.fill(d,-1);
+		}
+		Arrays.sort(arr,(a, b) -> {a[0] - b[0]});
+		return solver(arr,0,dp,0);
+	}
+	int solver(int arr, int ind, int dp, int events) {
+		if (ind == arr.length || events == 2) {
+			return 0;
+		}
+		if (dp[ind][events] != -1) {
+			return dp[ind][events];
+		}
+		int max = 0;
+		int nextInd = findNext(arr,ind);
+		int pick = arr[ind][2] + solver(arr,nextInd,dp,events + 1);
+		int notPick = solver(arr,ind + 1,dp,events);
+		return dp[ind][events] = Math.max(pick,notPick);
+	}
+}

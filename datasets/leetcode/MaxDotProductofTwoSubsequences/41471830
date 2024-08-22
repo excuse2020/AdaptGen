@@ -1,0 +1,22 @@
+class Solution {
+	int maxDotProduct(int[] nums1, int[] nums2) {
+		int[][] t = new int[nums1.length + 1][nums2.length + 1];
+		for (int[] rows: t) {	
+			Arrays.fill(rows,-1);
+		}
+		return maxDotProduct(nums1,nums2,0,0,t);
+	}
+	int maxDotProduct(int[] nums1, int[] nums2, int i, int j, int[][] t) {
+		if (i == nums1.length || j == nums2.length) {
+			return -10000;
+		}
+		if (t[i][j] != -1) {
+			return t[i][j];
+		}
+		int val = nums1[i] * nums2[j];
+		int take_j = maxDotProduct(nums1,nums2,i,j + 1,t);
+		int take_i = maxDotProduct(nums1,nums2,i + 1,j,t);
+		int take_i_j = val + maxDotProduct(nums1,nums2,i + 1,j + 1,t);
+		return t[i][j] = Math.max(Math.max(val,take_j),Math.max(take_i,take_i_j));
+	}
+}

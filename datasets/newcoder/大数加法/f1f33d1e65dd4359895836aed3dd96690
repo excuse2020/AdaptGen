@@ -1,0 +1,44 @@
+class Solution {
+	String solve(String s, String t) {
+		String longStr = null;
+		String shortStr = null;
+		if (s.length() > t.length()) {
+			longStr = s;
+			shortStr = t;
+		} 
+		else {
+			longStr = t;
+			shortStr = s;
+		}
+		int len = longStr.length();
+		char[] result = new char[len + 1];
+		boolean isCarry = false;
+		for (int i = len - 1, j = shortStr.length() - 1; i >= 0; i--) {
+			int c1 = longStr.charAt(i) - '0';
+			if (j >= 0) {
+				int c2 = shortStr.charAt(j) - '0';
+				int sum = isCarry ? c1 + c2 : c1 + c2;
+				isCarry = sum > 9;
+				if (isCarry) {
+					result[i + 1] = (char) (sum - 10 + '0');
+				} 
+				else {
+					result[i + 1] = (char) (sum + '0');
+				}
+				j--;
+			} 
+			else {
+				int sum = isCarry ? c1 + 1 : c1;
+				isCarry = sum > 9;
+				if (isCarry) {
+					result[i + 1] = (char) (sum - 10 + '0');
+				} 
+				else {
+					result[i + 1] = (char) (sum + '0');
+				}
+			}
+		}
+		result[0] = isCarry ? '1' : ' ';
+		return isCarry ? new String(result) : new String(result).trim();
+	}
+}

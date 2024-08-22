@@ -1,0 +1,52 @@
+class Solution {
+	void backtrack(String word, String beginWord, Map<String, ArrayList<String>> map, ArrayList<String> temp, List<List<String>> results) {
+		temp.add(0,word);
+		if (word.equals(beginWord)) {
+			results.add(new ArrayList<>(temp));
+			temp.remove(0);
+			return;
+		}
+		for (String next: map.get(word)) {	
+			backtrack(next,beginWord,map,temp,results);
+		}
+		temp.remove(0);
+	}
+	List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+		Set<String> wordDict = new HashSet<>(wordList);
+		List<List<String>> results = new ArrayList<>();
+		if (!wordDict.contains(endWord)) {
+			return results;
+		}
+		Map<String, ArrayList<String>> map = new HashMap<>();
+		Set<String> currentLevel = new HashSet<>();
+		boolean found = false;
+		currentLevel.add(beginWord);
+		while (!currentLevel.isEmpty() && !found) {
+			wordDict.removeAll(currentLevel);
+			Set<String> nextLevel = new HashSet<>();
+			for (String currentWord: currentLevel) {	
+				ArrayList<String> nextWords = getNextWords(currentWord,wordDict);
+				for (String nextWord: nextWords) {	
+					if (nextWord.equals(endWord)) {
+						found = true;
+					}
+					map.putIfAbsent(nextWord,new ArrayList<>());
+					map.get(nextWord).add(currentWord);
+					nextLevel.add(nextWord);
+				}
+			}
+			currentLevel = nextLevel;
+		}
+		if (found) {
+			backtrack(endWord,beginWord,map,new ArrayList<>(),results);
+		}
+		return results;
+	}
+	ArrayList<String> getNextWords(String word, Set<String> wordDict) {
+		ArrayList<String> nextWords = new ArrayList<>();
+		StringBuilder sb = new StringBuilder(word);
+		int i = 0;
+		char originalChar = sb.charAt(i);
+		char c;
+	}
+}

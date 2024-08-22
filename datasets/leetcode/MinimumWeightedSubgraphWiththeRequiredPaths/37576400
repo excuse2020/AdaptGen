@@ -1,0 +1,85 @@
+class Solution {
+	long INF = Long.MAX_VALUE / 2;
+	int _n, _m;
+	int[] heads, dests, nexts, weights;
+	int idx;
+	boolean[] visited;
+	void add(int a, int b, int c) {
+		dests[idx] = b;
+		nexts[idx] = heads[a];
+		heads[a] = idx;
+		weights[idx] = c;
+		idx++;
+	}
+	void dijkstra(long[] dists, int src) {
+		visited = new boolean[_n];
+		Arrays.fill(dists,INF);
+		dists[src] = 0;
+		Arrays.fill(visited,false);
+		PriorityQueue<long[]> pq = new PriorityQueue<>((o1, o2) -> {Math.toIntExact(o1[1] - o2[1])});
+		pq.offer(new long{src, dists[src]});
+		while (!pq.isEmpty()) {
+			long[] poll = pq.poll();
+			int id = (int) poll[0];
+			if (visited[id]) {
+				continue;
+			}
+			visited[id] = true;
+			for (int i = heads[id]; i != -1; i = nexts[i]) {
+				int neighbour = dests[i];
+				if (dists[neighbour] > dists[id] + weights[i]) {
+					dists[neighbour] = dists[id] + weights[i];
+					pq.offer(new long{neighbour, dists[neighbour]});
+				}
+			}
+		}
+	}
+	void initBackwardAdjacencyTable(int[][] edges) {
+		heads = new int[_n];
+		Arrays.fill(heads,-1);
+		dests = new int[_m];
+		nexts = new int[_m];
+		weights = new int[_m];
+		idx = 0;
+		for (int[] edge: edges) {	
+			int dest = edge[0];
+			int source = edge[1];
+			int weight = edge[2];
+			add(source,dest,weight);
+		}
+	}
+	void initForwardAdjacencyTable(int[][] edges) {
+		heads = new int[_n];
+		Arrays.fill(heads,-1);
+		dests = new int[_m];
+		nexts = new int[_m];
+		weights = new int[_m];
+		idx = 0;
+		for (int[] edge: edges) {	
+			int source = edge[0];
+			int dest = edge[1];
+			int weight = edge[2];
+			add(source,dest,weight);
+		}
+	}
+	long minimumWeight(int n, int[][] edges, int src1, int src2, int dest) {
+		_n = n;
+		_m = edges.length;
+		long[] aDists = new long[n];
+		long[] bDists = new long[n];
+		long[] cDists = new long[n];
+		initForwardAdjacencyTable(edges);
+		dijkstra(aDists,src1);
+		dijkstra(bDists,src2);
+		initBackwardAdjacencyTable(edges);
+		dijkstra(cDists,dest);
+		long res = INF;
+		for (int i = 0; i < n; i++) {
+			if (aDists[i] == INF || bDists[i] == INF || cDists[i] == INF) {
+				continue;
+			}
+			res = Math.min(res,aDists[i] + bDists[i]);
+		}
+		return res == INF ? -1 : res;
+	}
+}

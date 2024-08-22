@@ -1,0 +1,32 @@
+class Solution {
+	int lx, ly;
+	void dfs(int[][] land, int row, int col) {
+		if (row < 0 || row >= land.length || col < 0 || col >= land[row].length) {
+			return;
+		}
+		if (land[row][col] == 0) {
+			return;
+		}
+		land[row][col] = 0;
+		lx = Math.max(row,lx);
+		ly = Math.max(col,ly);
+		dfs(land,row + 1,col);
+		dfs(land,row,col + 1);
+	}
+	int[][] findFarmland(int[][] land) {
+		int rows = land.length;
+		int cols = land[0].length;
+		List<int[]> ans = new ArrayList<>();
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				if (land[i][j] == 1) {
+					lx = i;
+					ly = j;
+					dfs(land,i,j);
+					ans.add(new int{i, j, lx, ly});
+				}
+			}
+		}
+		return ans.toArray(new int[ans.size()]);
+	}
+}

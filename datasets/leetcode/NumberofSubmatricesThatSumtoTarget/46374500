@@ -1,0 +1,38 @@
+class Solution {
+	int numSubmatrixSumTarget(int[][] matrix, int target) {
+		int[][] sum_matrix = new int[matrix.length][matrix[0].length];
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix[0].length; j++) {
+				int top = 0, left = 0, top_left = 0;
+				if (i > 0) {
+					top = sum_matrix[i - 1][j];
+				}
+				if (j > 0) {
+					left = sum_matrix[i][j - 1];
+				}
+				if (i > 0 && j > 0) {
+					top_left = sum_matrix[i - 1][j - 1];
+				}
+				sum_matrix[i][j] = matrix[i][j] + top - top_left;
+			}
+		}
+		int res = 0;
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = i; j < matrix.length; j++) {
+				HashMap<Integer, Integer> map = new HashMap<>();
+				map.put(0,1);
+				for (int k = 0; k < matrix[0].length; k++) {
+					int currentSum = sum_matrix[j][k];
+					if (i - 1 >= 0) {
+						currentSum = currentSum - sum_matrix[i - 1][k];
+					}
+					if (map.containsKey(currentSum - target)) {
+						res += map.get(currentSum - target);
+					}
+					map.merge(currentSum,1,);
+				}
+			}
+		}
+		return res;
+	}
+}

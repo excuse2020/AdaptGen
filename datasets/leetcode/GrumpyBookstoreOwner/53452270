@@ -1,0 +1,27 @@
+class Solution {
+	int maxSatisfied(int[] customers, int[] grumpy, int minutes) {
+		int n = customers.length;
+		int ans = 0, total = 0;
+		for (int i = 0; i < n; i++) {
+			if (grumpy[i] == 0) {
+				total += customers[i];
+			}
+		}
+		int windowAll = 0, windowPartial = 0;
+		for (int i = 0; i < n; i++) {
+			windowAll += customers[i];
+			if (grumpy[i] == 0) {
+				windowPartial += customers[i];
+			}
+			if (i + 1 >= minutes) {
+				ans = Math.max(ans,total - windowPartial + windowAll);
+				int left = i - minutes + 1;
+				windowAll -= customers[left];
+				if (grumpy[left] == 0) {
+					windowPartial -= customers[left];
+				}
+			}
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,31 @@
+class Solution {
+	int[] countSubTrees(int n, int[][] edges, String labels) {
+		Map<Integer, List<Integer>> adjMap = new HashMap<>();
+		for (int[] edge: edges) {	
+			adjMap.putIfAbsent(edge[0],new LinkedList<>());
+			adjMap.putIfAbsent(edge[1],new LinkedList<>());
+			adjMap.get(edge[0]).add(edge[1]);
+			adjMap.get(edge[1]).add(edge[0]);
+		}
+		int[] res = new int[n];
+		dfs(-1,0,adjMap,labels,res);
+		return res;
+	}
+	Map<Character, Integer> dfs(int prev, int curr, Map<Integer, List<Integer>> adjMap, String labels, int[] res) {
+		System.out.println(curr);
+		List<Integer> adjVertices = adjMap.get(curr);
+		char currChar = labels.charAt(curr);
+		Map<Character, Integer> childCountMap = new HashMap<>();
+		for (int v: adjVertices) {	
+			if (prev != v) {
+				Map<Character, Integer> subTreeMap = dfs(curr,v,adjMap,labels,res);
+				for (char key: subTreeMap.keySet()) {	
+					childCountMap.put(key,childCountMap.getOrDefault(key,0) + subTreeMap.get(key));
+				}
+			}
+		}
+		childCountMap.put(currChar,childCountMap.getOrDefault(currChar,0) + 1);
+		res[curr] += childCountMap.get(currChar);
+		return childCountMap;
+	}
+}

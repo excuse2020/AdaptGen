@@ -1,0 +1,39 @@
+class Solution {
+	int funt(int n) {
+		int s = 0;
+		while (n > 0) {
+			int rem = n % 10;
+			s += rem;
+			n = n / 10;
+		}
+		return s;
+	}
+	int maximumSum(int[] nums) {
+		HashMap<Integer, ArrayList<Integer>> hm = new HashMap<>();
+		for (int i = 0; i < nums.length; i++) {
+			int sum = funt(nums[i]);
+			if (hm.containsKey(sum) == false) {
+				hm.put(sum,new ArrayList<Integer>());
+			}
+			hm.get(sum).add(nums[i]);
+		}
+		int max = -1;
+		for (int key: hm.keySet()) {	
+			ArrayList<Integer> al = hm.get(key);
+			int first = Integer.MIN_VALUE;
+			int second = Integer.MIN_VALUE;
+			for (int i = 0; i < al.size(); i++) {
+				int current = al.get(i);
+				if (first < current) {
+					second = first;
+					first = current;
+				} 
+				else if (second < current) {
+					second = current;
+				}
+			}
+			max = Math.max(max,first + second);
+		}
+		return max;
+	}
+}

@@ -1,0 +1,41 @@
+class Solution {
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		List<Integer> inorder = new ArrayList<>();
+		storeInorder(root,inorder);
+		List<List<Integer>> result = new ArrayList<>();
+		for (int query: queries) {	
+			result.add(search(inorder,query));
+		}
+		return result;
+	}
+	List<Integer> search(List<Integer> arr, int key) {
+		int mini = -1;
+		int maxi = -1;
+		int low = 0;
+		int high = arr.size() - 1;
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			int val = arr.get(mid);
+			if (val == key) {
+				return new ArrayList<>(Arrays.asList(val,val));
+			} 
+			else if (val < key) {
+				mini = val;
+				low = mid + 1;
+			} 
+			else {
+				maxi = val;
+				high = mid - 1;
+			}
+		}
+		return new ArrayList<>(Arrays.asList(mini,maxi));
+	}
+	void storeInorder(TreeNode root, List<Integer> inorder) {
+		if (root == null) {
+			return;
+		}
+		storeInorder(root.left,inorder);
+		inorder.add(root.val);
+		storeInorder(root.right,inorder);
+	}
+}

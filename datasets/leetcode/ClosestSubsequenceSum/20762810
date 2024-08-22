@@ -1,0 +1,35 @@
+class Solution {
+	int minAbsDifference(int[] nums, int goal) {
+		Set<Integer> ss1 = new HashSet<>();
+		TreeSet<Integer> ss2 = new TreeSet<>();
+		ss1.add(0);
+		ss2.add(0);
+		int n = nums.length;
+		for (int i = 0; i < n / 2; i++) {
+			Set<Integer> ns = new HashSet<>(ss1);
+			for (int e: ss1) {	
+				ns.add(e + nums[i]);
+			}
+			ss1 = ns;
+		}
+		for (int i = n / 2; i < n; i++) {
+			TreeSet<Integer> ns = new TreeSet<>(ss2);
+			for (int e: ss2) {	
+				ns.add(e + nums[i]);
+			}
+			ss2 = ns;
+		}
+		int ans = Math.abs(goal);
+		for (int e: ss1) {	
+			Integer hi = ss2.higher(goal - e);
+			if (hi != null) {
+				ans = Math.min(ans,Math.abs(goal - e));
+			}
+			Integer lo = ss2.lower(goal - e);
+			if (lo != null) {
+				ans = Math.min(ans,Math.abs(goal - e));
+			}
+		}
+		return ans;
+	}
+}

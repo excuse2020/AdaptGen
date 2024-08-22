@@ -1,0 +1,29 @@
+class Solution {
+	int[] assignTasks(int[] servers, int[] tasks) {
+		PriorityQueue<int[]> freeServers = new PriorityQueue<>(new Comparator<int[]>());
+		PriorityQueue<int[]> usedServers = new PriorityQueue<>(new Comparator<int[]>());
+		int[] assignedServerMap = new int[tasks.length];
+		for (int i = 0; i < servers.length; i++) {
+			freeServers.add(new int{servers[i], i});
+		}
+		for (int timer = 0; timer < tasks.length; timer++) {
+			int curTaskTime = tasks[timer];
+			while (!usedServers.isEmpty() && usedServers.peek()[0] <= timer) {
+				int[] polledTaskServerPair = usedServers.poll();
+				freeServers.add(new int{polledTaskServerPair[1], polledTaskServerPair[2]});
+			}
+			if (!freeServers.isEmpty()) {
+				int[] assignedServer = freeServers.poll();
+				assignedServerMap[timer] = assignedServer[1];
+				usedServers.add(new int{timer + curTaskTime, assignedServer[0], assignedServer[1]});
+			} 
+			else {
+				int[] polledTaskServerPair = usedServers.poll();
+				assignedServerMap[timer] = polledTaskServerPair[2];
+				polledTaskServerPair[0] = polledTaskServerPair[0] + curTaskTime;
+				usedServers.add(polledTaskServerPair);
+			}
+		}
+		return assignedServerMap;
+	}
+}

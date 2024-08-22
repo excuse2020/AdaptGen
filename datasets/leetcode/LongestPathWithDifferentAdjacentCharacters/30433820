@@ -1,0 +1,34 @@
+class Solution {
+	int maxPathLen = 0;
+	int backtracking(int node, Map<Integer, List<Integer>> tree, String s, int[] memo) {
+		if (memo[node] != 0) {
+			return memo[node];
+		}
+		List<Integer> children = tree.getOrDefault(node,new ArrayList<Integer>());
+		int[] topTwoPaths = new int[2];
+		int oneSidePathLen = 0;
+		for (int child: children) {	
+			oneSidePathLen = backtracking(child,tree,s,memo);
+			if (s.charAt(child) != s.charAt(node)) {
+				if (oneSidePathLen > topTwoPaths[0]) {
+					topTwoPaths[1] = topTwoPaths[0];
+					topTwoPaths[0] = oneSidePathLen;
+				} 
+				else if (oneSidePathLen > topTwoPaths[1]) {
+					topTwoPaths[1] = oneSidePathLen;
+				}
+			}
+		}
+		maxPathLen = Math.max(maxPathLen,1 + topTwoPaths[0]);
+		return memo[node] = 1 + topTwoPaths[0];
+	}
+	int longestPath(int[] parent, String s) {
+		Map<Integer, List<Integer>> tree = new HashMap<>();
+		int n = parent.length;
+		for (int i = 1; i < n; i++) {
+			tree.computeIfAbsent(parent[i],(k) -> {new ArrayList<Integer>()}).add(i);
+		}
+		backtracking(0,tree,s,new int[n]);
+		return maxPathLen;
+	}
+}

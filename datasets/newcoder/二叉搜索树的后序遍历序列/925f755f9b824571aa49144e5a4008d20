@@ -1,0 +1,44 @@
+class Solution {
+	boolean VerifySquenceOfBST(int[] sequence) {
+		if (sequence.length == 0) {
+			return false;
+		}
+		int[][] record = getRightMin(sequence);
+		return f(sequence,0,sequence.length - 1,record);
+	}
+	boolean f(int[] sequence, int L, int R, int[][] r) {
+		if (L >= R) {
+			return true;
+		}
+		int headVal = sequence[R];
+		int leftMax = 0;
+		int rightMin;
+		for (int i = L - 1; i <= R - 1; i++) {
+			leftMax = i == L - 1 ? -1 : Math.max(sequence[i],leftMax);
+			rightMin = i == R - 1 ? 100001 : r[i + 1][R - 1];
+			if (leftMax >= headVal || headVal >= rightMin) {
+				continue;
+			}
+			if (f(sequence,L,i,r) && f(sequence,i + 1,R - 1,r)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	int[][] getRightMin(int[] sequence) {
+		int N = sequence.length;
+		int[][] record = new int[N][N];
+		for (int i = 0; i < N; i++) {
+			record[i][i] = sequence[i];
+			if (i + 1 < N) {
+				record[i][i + 1] = Math.min(sequence[i + 1],record[i][i]);
+			}
+		}
+		for (int i = N - 3; i >= 0; i--) {
+			for (int j = i + 2; j < N; j++) {
+				record[i][j] = Math.min(record[i][j - 1],sequence[j]);
+			}
+		}
+		return record;
+	}
+}

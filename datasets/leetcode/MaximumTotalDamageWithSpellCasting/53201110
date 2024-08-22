@@ -1,0 +1,29 @@
+class Solution {
+	long maximumTotalDamage(int[] power) {
+		Arrays.sort(power);
+		int n = power.length;
+		long dp = new long[n][2];
+		dp[0][0] = power[0];
+		dp[0][1] = 0;
+		long ans = power[0];
+		for (int i = 1; i < n; i++) {
+			if (power[i] == power[i - 1]) {
+				dp[i][0] = power[i] + dp[i - 1][0];
+				dp[i][1] = dp[i - 1][1];
+				ans = Math.max(ans,Math.max(dp[i][1],dp[i][0]));
+				continue;
+			}
+			int offset = 1;
+			dp[i][1] = Math.max(dp[i - 1][0],dp[i - 1][1]);
+			while (i - offset >= 0 && power[i] - power[i - offset] <= 2) {
+				offset++;
+			}
+			if (i - offset >= 0) {
+				dp[i][0] = Math.max(dp[i - offset][1],dp[i - offset][0]) + power[i];
+			}
+			dp[i][0] = Math.max(dp[i][0],power[i]);
+			ans = Math.max(ans,Math.max(dp[i][0],dp[i][1]));
+		}
+		return ans;
+	}
+}

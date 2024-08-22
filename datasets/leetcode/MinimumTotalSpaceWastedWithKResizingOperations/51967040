@@ -1,0 +1,31 @@
+class Solution {
+	int minSpaceWastedKResizing(int[] nums, int k) {
+		int len = nums.length;
+		int[] dp = new int[len + 1];
+		Arrays.fill(dp,0);
+		for (int iteration = k; iteration >= 0; iteration--) {
+			for (int i = nums.length - 1; i >= 0; i--) {
+				int waste = 0;
+				int max = nums[i];
+				int min = dp[i + 1];
+				for (int j = i; j >= 0; j--) {
+					if (nums[j] <= max) {
+						waste += (max - nums[j]);
+					} 
+					else {
+						waste += (i - j) * (nums[j] - max);
+						max = nums[j];
+					}
+					if (iteration != k) {
+						min = Math.min(min,waste + dp[j]);
+					} 
+					else {
+						min = waste;
+					}
+				}
+				dp[i + 1] = min;
+			}
+		}
+		return dp[len];
+	}
+}

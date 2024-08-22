@@ -1,0 +1,88 @@
+class Solution {
+	int[] giveNGL(int[] A) {
+		int n = A.length;
+		int[] nge = new int[n];
+		Stack<Integer> st = new Stack<>();
+		for (int i = 0; i < n; i++) {
+			while (!st.isEmpty() && A[i] > A[st.peek()]) {
+				st.pop();
+			}
+			if (st.empty() == false) {
+				nge[i] = st.peek();
+			} 
+			else {
+				nge[i] = -1;
+			}
+			st.push(i);
+		}
+		return nge;
+	}
+	int[] giveNGR(int[] A) {
+		int n = A.length;
+		int[] nge = new int[n];
+		Stack<Integer> st = new Stack<>();
+		for (int i = n - 1; i >= 0; i--) {
+			while (!st.isEmpty() && A[i] >= A[st.peek()]) {
+				st.pop();
+			}
+			if (st.empty() == false) {
+				nge[i] = st.peek();
+			} 
+			else {
+				nge[i] = n;
+			}
+			st.push(i);
+		}
+		return nge;
+	}
+	int[] giveNSL(int[] A) {
+		int n = A.length;
+		int[] nsl = new int[n];
+		Stack<Integer> st = new Stack<>();
+		for (int i = 0; i < n; i++) {
+			while (!st.isEmpty() && A[i] < A[st.peek()]) {
+				st.pop();
+			}
+			nsl[i] = st.isEmpty() ? -1 : st.peek();
+			st.push(i);
+		}
+		return nsl;
+	}
+	int[] giveNSR(int[] A) {
+		int n = A.length;
+		int[] nsr = new int[n];
+		Stack<Integer> st = new Stack<>();
+		for (int i = n - 1; i >= 0; i--) {
+			while (!st.isEmpty() && A[i] <= A[st.peek()]) {
+				st.pop();
+			}
+			nsr[i] = st.isEmpty() ? n : st.peek();
+			st.push(i);
+		}
+		return nsr;
+	}
+	long subArrayRanges(int[] nums) {
+		long result = sumSubarrayMaxs(nums) - sumSubarrayMins(nums);
+		return result;
+	}
+	long sumSubarrayMaxs(int[] arr) {
+		int[] ngr = giveNGR(arr);
+		int[] ngl = giveNGL(arr);
+		long result = 0;
+		int mod = (int) (1e9 + 7);
+		for (int i = 0; i < arr.length; i++) {
+			result = (result + ((long) (i - ngl[i]) * (ngr[i] - i)));
+		}
+		return result;
+	}
+	long sumSubarrayMins(int[] arr) {
+		int[] nsr = giveNSR(arr);
+		int[] nsl = giveNSL(arr);
+		long result = 0;
+		int mod = (int) (1e9 + 7);
+		for (int i = 0; i < arr.length; i++) {
+			result = (result + ((long) (i - nsl[i]) * (nsr[i] - i) % mod * arr[i]));
+		}
+		return result;
+	}
+}

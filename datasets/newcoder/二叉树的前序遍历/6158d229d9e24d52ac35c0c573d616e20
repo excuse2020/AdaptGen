@@ -1,0 +1,45 @@
+class Solution {
+	int[] preorderTraversal(TreeNode root) {
+		ArrayList<Integer> res = new ArrayList<Integer>();
+		ArrayList<TreeNode> stack = new ArrayList<TreeNode>();
+		boolean ispop = false;
+		while (root != null) {
+			if (stack.size() == 0 || ispop == false) {
+				res.add(root.val);
+				stack.add(root);
+				if (root.left != null) {
+					root = root.left;
+					continue;
+				} 
+				else {
+					root = stack.get(stack.size() - 1);
+					ispop = true;
+					continue;
+				}
+			}
+			if (ispop) {
+				stack.remove(stack.size() - 1);
+				if (root.right == null) {
+					if (stack.size() > 0) {
+						root = stack.get(stack.size() - 1);
+						continue;
+					} 
+					else {
+						break;
+					}
+				} 
+				else {
+					root = root.right;
+					ispop = false;
+					continue;
+				}
+			}
+			break;
+		}
+		int[] result = new int[res.size()];
+		for (int i = 0; i < res.size(); i++) {
+			result[i] = res.get(i);
+		}
+		return result;
+	}
+}

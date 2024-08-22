@@ -1,0 +1,53 @@
+class Solution {
+	void InOrder(TreeNode node, List<Integer> list) {
+		if (node != null) {
+			InOrder(node.left,list);
+			list.add(node.val);
+			InOrder(node.right,list);
+		}
+	}
+	void PostOrder(TreeNode node, List<Integer> list) {
+		Stack<TreeNode> stack = new Stack<>();
+		TreeNode r = null;
+		while (node != null || !stack.isEmpty()) {
+			if (node != null) {
+				stack.push(node);
+				node = node.left;
+			} 
+			else {
+				node = stack.peek();
+				if (node.right != null && node.right != r) {
+					node = node.right;
+				} 
+				else {
+					list.add(node.val);
+					stack.pop();
+					r = node;
+					node = null;
+				}
+			}
+		}
+	}
+	void PreOrder(TreeNode node, List<Integer> list) {
+		if (node != null) {
+			list.add(node.val);
+			PreOrder(node.left,list);
+			PreOrder(node.right,list);
+		}
+	}
+	int[][] threeOrders(TreeNode root) {
+		List<Integer> list1 = new ArrayList<>();
+		List<Integer> list2 = new ArrayList<>();
+		List<Integer> list3 = new ArrayList<>();
+		PreOrder(root,list1);
+		InOrder(root,list2);
+		PostOrder(root,list3);
+		int[][] arr = new int[3][list1.size()];
+		for (int i = 0; i < list1.size(); i++) {
+			arr[0][i] = list1.get(i);
+			arr[1][i] = list2.get(i);
+			arr[2][i] = list3.get(i);
+		}
+		return arr;
+	}
+}

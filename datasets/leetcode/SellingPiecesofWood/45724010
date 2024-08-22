@@ -1,0 +1,19 @@
+class Solution {
+	long[][] dp = new long[201][201];
+	long sellingWood(int maxH, int maxW, int[][] prices) {
+		for (int[] e: prices) {	
+			dp[e[0]][e[1]] = (long) e[2];
+		}
+		for (int h = 1; h <= maxH; h++) {
+			for (int w = 1; w <= maxW; w++) {
+				for (int prevH = 1; prevH <= h / 2; prevH++) {
+					dp[h][w] = Math.max(dp[h][w],dp[prevH][w] + dp[h - prevH][w]);
+				}
+				for (int prevW = 1; prevW <= w / 2; prevW++) {
+					dp[h][w] = Math.max(dp[h][w],dp[h][prevW] + dp[h][w - prevW]);
+				}
+			}
+		}
+		return dp[maxH][maxW];
+	}
+}

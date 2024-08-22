@@ -1,0 +1,46 @@
+class Solution {
+	void bfs(Set<String> startSet, Set<String> endSet, Map<String, List<String>> map, Set<String> words, boolean reverse) {
+		if (startSet.size() == 0) {
+			return;
+		}
+		if (startSet.size() > endSet.size()) {
+			bfs(endSet,startSet,map,words,!reverse);
+			return;
+		}
+		Set<String> temp = new HashSet<>();
+		words.removeAll(startSet);
+		boolean found = false;
+		char[] chs = s.toCharArray();
+		int i = 0;
+		char old = chs[i];
+		char k;
+	}
+	void dfs(String beginWord, String endWord, Map<String, List<String>> map, List<String> path, List<List<String>> res) {
+		if (beginWord.equals(endWord)) {
+			res.add(new ArrayList<>(path));
+			return;
+		}
+		for (String next: map.getOrDefault(beginWord,new ArrayList<>())) {	
+			path.add(next);
+			dfs(next,endWord,map,path,res);
+			path.remove(path.size() - 1);
+		}
+	}
+	List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+		List<List<String>> res = new ArrayList<>();
+		Set<String> words = new HashSet<>(wordList);
+		if (!words.contains(endWord)) {
+			return res;
+		}
+		Map<String, List<String>> map = new HashMap<>();
+		Set<String> startSet = new HashSet<>();
+		Set<String> endSet = new HashSet<>();
+		startSet.add(beginWord);
+		endSet.add(endWord);
+		bfs(startSet,endSet,map,words,false);
+		List<String> path = new ArrayList<>();
+		path.add(beginWord);
+		dfs(beginWord,endWord,map,path,res);
+		return res;
+	}
+}

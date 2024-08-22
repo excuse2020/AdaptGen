@@ -1,0 +1,55 @@
+class Solution {
+	Map<String, Integer> distance;
+	Map<String, Set<String>> graph;
+	List<List<String>> result;
+	Map<String, Set<String>> buildGraph(String beginWord, List<String> wordList) {
+		Map<String, Set<String>> map = new HashMap<>();
+		Queue<String> queue = new LinkedList<>();
+		queue.add(beginWord);
+		distance.put(beginWord,0);
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				String word = queue.poll();
+				Set<String> set = map.getOrDefault(word,new HashSet<>());
+				map.put(word,set);
+				for (String s: wordList) {	
+					int cnt = 0;
+					for (int j = 0; j < word.length(); j++) {
+						if (s.charAt(j) != word.charAt(j)) {
+							cnt++;
+						}
+					}
+					if (cnt == 1) {
+						if (!distance.containsKey(s)) {
+							queue.add(s);
+							distance.put(s,distance.get(word) + 1);
+						}
+						set.add(s);
+					}
+				}
+			}
+		}
+		return map;
+	}
+	void dfs(String word, String target, List<String> solution) {
+		solution.add(word);
+		if (target.equals(word)) {
+			result.add(solution);
+		} 
+		else {
+			for (String child: graph.get(word)) {	
+				if (distance.get(word) + 1 == distance.getOrDefault(child,Integer.MAX_VALUE)) {
+					dfs(child,target,new ArrayList<>(solution));
+				}
+			}
+		}
+	}
+	List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+		distance = new HashMap<>();
+		graph = buildGraph(beginWord,wordList);
+		result = new ArrayList<>();
+		dfs(beginWord,endWord,new ArrayList<>());
+		return result;
+	}
+}

@@ -1,0 +1,24 @@
+class Solution {
+	int[] secondGreaterElement(int[] nums) {
+		Stack<Integer> st = new Stack<>();
+		PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> {nums[a] - nums[b]});
+		int n = nums.length;
+		int ans = new int[n];
+		for (int i = 0; i < n; i++) {
+			while (!pq.isEmpty() && nums[i] > nums[pq.peek()]) {
+				ans[pq.poll()] = nums[i];
+			}
+			while (!st.isEmpty() && nums[i] > nums[st.peek()]) {
+				pq.offer(st.pop());
+			}
+			st.push(i);
+		}
+		while (!st.isEmpty()) {
+			ans[st.pop()] = -1;
+		}
+		while (!pq.isEmpty()) {
+			ans[pq.poll()] = -1;
+		}
+		return ans;
+	}
+}

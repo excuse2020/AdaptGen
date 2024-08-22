@@ -1,0 +1,30 @@
+class Solution {
+	int[] postorderTraversal(TreeNode root) {
+		List<Integer> list = new ArrayList<>();
+		ArrayDeque<TreeNode> stack = new ArrayDeque<>();
+		TreeNode cur = root;
+		TreeNode pre = null;
+		while (cur != null || !stack.isEmpty()) {
+			while (cur != null) {
+				stack.offerLast(cur);
+				cur = cur.left;
+			}
+			cur = stack.peekLast();
+			if (cur.right != null && pre != cur.right) {
+				cur = cur.right;
+			} 
+			else {
+				cur = stack.pollLast();
+				list.add(cur.val);
+				pre = cur;
+				cur = null;
+			}
+		}
+		int[] res = new int[list.size()];
+		int i = 0;
+		for (Integer val: list) {	
+			res[i++] = val;
+		}
+		return res;
+	}
+}

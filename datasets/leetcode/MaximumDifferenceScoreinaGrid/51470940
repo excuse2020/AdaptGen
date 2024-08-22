@@ -1,0 +1,43 @@
+class Solution {
+	int max(int a, int b, int c) {
+		return Math.max(a,Math.max(b,c));
+	}
+	int maxScore(List<List<Integer>> grid) {
+		int n = grid.size();
+		int m = grid.get(0).size();
+		int[][] dp = new int[n][m];
+		for (int i = n - 1; i >= 0; i--) {
+			for (int j = m - 1; j >= 0; j--) {
+				if (i == n - 1 && j == m - 1) {
+					dp[i][j] = grid.get(i).get(j);
+					continue;
+				}
+				if (i == n - 1) {
+					dp[i][j] = Math.max(grid.get(i).get(j),dp[i][j + 1]);
+					continue;
+				}
+				if (j == m - 1) {
+					dp[i][j] = Math.max(grid.get(i).get(j),dp[i + 1][j]);
+					continue;
+				}
+				if (i + 1 < n && j + 1 < m) {
+					dp[i][j] = Math.max(grid.get(i).get(j),max(dp[i + 1][j],dp[i][j + 1],dp[i + 1][j + 1]));
+				}
+			}
+		}
+		int ans = -100005;
+		int secondans = -100005;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				ans = Math.max(ans,dp[i][j] - grid.get(i).get(j));
+				if (i + 1 < n) {
+					secondans = Math.max(secondans,dp[i + 1][j] - grid.get(i).get(j));
+				}
+				if (j + 1 < m) {
+					secondans = Math.max(secondans,dp[i][j + 1] - grid.get(i).get(j));
+				}
+			}
+		}
+		return ans == 0 ? secondans : ans;
+	}
+}

@@ -1,0 +1,91 @@
+class Solution {
+	List<Integer> binarySearch(List<Integer> inorder, int val) {
+		int low = 0;
+		int high = inorder.size() - 1;
+		List<Integer> minMax = new ArrayList<>(2);
+		minMax.add(-1);
+		minMax.add(-1);
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			if (inorder.get(mid) == val) {
+				minMax.set(0,val);
+				minMax.set(1,val);
+				break;
+			} 
+			else if (inorder.get(mid) > val) {
+				high = mid - 1;
+				minMax.set(1,inorder.get(mid));
+			} 
+			else {
+				low = mid + 1;
+				minMax.set(0,inorder.get(mid));
+			}
+		}
+		return minMax;
+	}
+	List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+		List<List<Integer>> result = new ArrayList<>();
+		List<Integer> inorder = new ArrayList<>();
+		inorderTraversal(root,inorder);
+		for (Integer q: queries) {	
+			result.add(binarySearch(inorder,q));
+		}
+		return result;
+	}
+	void inorderTraversal(TreeNode root, List<Integer> inorder) {
+		if (root == null) {
+			return;
+		}
+		inorderTraversal(root.left,inorder);
+		inorder.add(root.val);
+		inorderTraversal(root.right,inorder);
+	}
+	int maxSmallestValue(TreeNode root, int num, int max) {
+		if (root == null) {
+			return max == Integer.MAX_VALUE ? -1 : max;
+		}
+		if (root.val == num) {
+			return num;
+		} 
+		else if (root.val > num) {
+			return maxSmallestValue(root.left,num,Math.min(root.val,max));
+		} 
+		else {
+			return maxSmallestValue(root.right,num,max);
+		}
+	}
+	List<Integer> minAndMaxValue(TreeNode root, int num, int min, int max) {
+		if (root == null) {
+			List<Integer> minMax = new ArrayList<>(2);
+			minMax.add(min == Integer.MIN_VALUE ? -1 : min);
+			minMax.add(max == Integer.MAX_VALUE ? -1 : max);
+			return minMax;
+		}
+		if (root.val == num) {
+			List<Integer> minMax = new ArrayList<>(2);
+			minMax.add(num);
+			minMax.add(num);
+			return minMax;
+		} 
+		else if (root.val > num) {
+			return minAndMaxValue(root.left,num,min,Math.min(root.val,max));
+		} 
+		else {
+			return minAndMaxValue(root.right,num,Math.max(root.val,min),max);
+		}
+	}
+	int minLargestValue(TreeNode root, int num, int min) {
+		if (root == null) {
+			return min == Integer.MIN_VALUE ? -1 : min;
+		}
+		if (root.val == num) {
+			return num;
+		} 
+		else if (root.val > num) {
+			return minLargestValue(root.left,num,min);
+		} 
+		else {
+			return minLargestValue(root.right,num,Math.max(root.val,min));
+		}
+	}
+}

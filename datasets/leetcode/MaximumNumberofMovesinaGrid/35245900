@@ -1,0 +1,29 @@
+class Solution {
+	int dfs(int[][] grid, int r, int c, int[][] dp) {
+		if (dp[r][c] == -1) {
+			int length = -1;
+			if (r - 1 >= 0 && c + 1 < grid[0].length && grid[r - 1][c + 1] > grid[r][c]) {
+				length = dfs(grid,r - 1,c + 1,dp);
+			}
+			if (c + 1 < grid[0].length && grid[r][c + 1] > grid[r][c]) {
+				length = Math.max(length,dfs(grid,r,c + 1,dp));
+			}
+			if (r + 1 < grid.length && c + 1 < grid[0].length && grid[r + 1][c + 1] > grid[r][c]) {
+				length = Math.max(length,dfs(grid,r + 1,c + 1,dp));
+			}
+			dp[r][c] = length + 1;
+		}
+		return dp[r][c];
+	}
+	int maxMoves(int[][] grid) {
+		var dp = new int[grid.length][grid[0].length];
+		for (int[] ints: dp) {	
+			Arrays.fill(ints,-1);
+		}
+		int length = 0;
+		for (int i = 0; i < grid.length; i++) {
+			length = Math.max(length,dfs(grid,i,0,dp));
+		}
+		return length;
+	}
+}

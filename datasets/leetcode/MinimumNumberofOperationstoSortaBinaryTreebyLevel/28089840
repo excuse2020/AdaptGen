@@ -1,0 +1,49 @@
+class Solution {
+	int minSwaps(List<Integer> list) {
+		int n = list.size();
+		Map<Integer, Integer> map = new HashMap();
+		for (int i = 0; i < n; i++) {
+			map.put(list.get(i),i);
+		}
+		Collections.sort(list);
+		int ans = 0;
+		boolean vis = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			if (vis[i] || map.get(list.get(i)) == i) {
+				continue;
+			}
+			int j = i, sz = 0;
+			while (!vis[j]) {
+				vis[j] = true;
+				j = map.get(list.get(j));
+				sz++;
+			}
+			if (sz > 0) {
+				ans += sz - 1;
+			}
+		}
+		return ans;
+	}
+	int minimumOperations(TreeNode root) {
+		Deque<TreeNode> q = new ArrayDeque();
+		q.add(root);
+		int ans = 0;
+		while (q.size() > 0) {
+			int size = q.size();
+			List<Integer> list = new ArrayList();
+			while (size-- > 0) {
+				TreeNode node = q.removeFirst();
+				list.add(node.val);
+				if (node.left != null) {
+					q.add(node.left);
+				}
+				if (node.right != null) {
+					q.add(node.right);
+				}
+			}
+			int curr = minSwaps(list);
+			ans += curr;
+		}
+		return ans;
+	}
+}

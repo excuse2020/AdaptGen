@@ -1,0 +1,62 @@
+class Solution {
+	int answer(int currentLane, int index, int obstacles, int dp) {
+		if (index == obstacles.length - 1) {
+			return 0;
+		}
+		if (dp[currentLane][index] != -1) {
+			return dp[currentLane][index];
+		}
+		int count = 0;
+		if (obstacles[index + 1] == currentLane) {
+			if (currentLane == 1) {
+				int option1 = Integer.MAX_VALUE;
+				if (obstacles[index] != 2) {
+					option1 = answer(2,index,obstacles,dp);
+				}
+				int option2 = Integer.MAX_VALUE;
+				if (obstacles[index] != 3) {
+					option2 = answer(3,index,obstacles,dp);
+				}
+				dp[currentLane][index] = Math.min(option1,option2) + 1;
+				return dp[currentLane][index];
+			} 
+			else if (currentLane == 2) {
+				int option1 = Integer.MAX_VALUE;
+				if (obstacles[index] != 1) {
+					option1 = answer(1,index,obstacles,dp);
+				}
+				int option2 = Integer.MAX_VALUE;
+				if (obstacles[index] != 3) {
+					option2 = answer(3,index,obstacles,dp);
+				}
+				dp[currentLane][index] = Math.min(option1,option2) + 1;
+				return dp[currentLane][index];
+			} 
+			else {
+				int option1 = Integer.MAX_VALUE;
+				if (obstacles[index] != 2) {
+					option1 = answer(2,index,obstacles,dp);
+				}
+				int option2 = Integer.MAX_VALUE;
+				if (obstacles[index] != 1) {
+					option2 = answer(1,index,obstacles,dp);
+				}
+				dp[currentLane][index] = Math.min(option1,option2) + 1;
+				return dp[currentLane][index];
+			}
+		} 
+		else {
+			dp[currentLane][index] = answer(currentLane,index + 1,obstacles,dp);
+			return dp[currentLane][index];
+		}
+	}
+	int minSideJumps(int[] obstacles) {
+		int dp = new int[4][obstacles.length + 1];
+		for (int i = 0; i < dp.length; i++) {
+			for (int j = 0; j < dp[0].length; j++) {
+				dp[i][j] = -1;
+			}
+		}
+		return answer(2,0,obstacles,dp);
+	}
+}

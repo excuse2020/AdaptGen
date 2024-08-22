@@ -1,0 +1,51 @@
+class Solution {
+	void bfs(ArrayList<ArrayList<Integer>> graph, int src, int[] vis) {
+		Queue<int[]> q = new LinkedList<>();
+		q.add(new int{src, 0});
+		while (q.size() > 0) {
+			int rem = q.remove();
+			int v = rem[0];
+			int path = rem[1];
+			if (vis[v] != 0) {
+				continue;
+			}
+			vis[v] = path;
+			for (int nbr: graph.get(v)) {	
+				if (vis[nbr] == 0) {
+					q.add(new int{nbr, path + 1});
+				}
+			}
+		}
+	}
+	int networkBecomesIdle(int[][] edges, int[] patience) {
+		ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+		int n = patience.length;
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int e: edges) {	
+			int u = e[0];
+			int v = e[1];
+			graph.get(u).add(v);
+			graph.get(v).add(u);
+		}
+		int timeTaken = new int[n];
+		bfs(graph,0,timeTaken);
+		timeTaken[0] = 0;
+		int max = 0;
+		for (int i = 1; i < n; i++) {
+			int val = timeTaken[i] * 2;
+			if (val <= patience[i]) {
+				max = Math.max(val,max);
+			} 
+			else {
+				int mod = val % patience[i];
+				if (mod == 0) {
+					mod = patience[i];
+				}
+				max = Math.max(max,val - mod + val);
+			}
+		}
+		return max + 1;
+	}
+}

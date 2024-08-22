@@ -1,0 +1,42 @@
+class Solution {
+	long countPairs(int n, int[][] edges) {
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		storeGraph(graph,edges);
+		boolean[] visited = new boolean[n];
+		long pairCount = 0, pairedNodesCount = 0;
+		for (int i = 0; i < n; i++) {
+			if (!visited[i]) {
+				int groupNodeCount = dfs(graph,i,visited);
+				pairCount += (long) (n - groupNodeCount) * (long) groupNodeCount;
+				pairedNodesCount += groupNodeCount;
+			}
+		}
+		return pairCount;
+	}
+	int dfs(Map<Integer, List<Integer>> graph, int node, boolean[] visited) {
+		if (visited[node]) {
+			return 0;
+		}
+		visited[node] = true;
+		int visitCount = 1;
+		List<Integer> neighbors = graph.get(node);
+		if (neighbors != null) {
+			for (int neighbor: neighbors) {	
+				visitCount += dfs(graph,neighbor,visited);
+			}
+		}
+		return visitCount;
+	}
+	void storeGraph(Map<Integer, List<Integer>> graph, int[][] edges) {
+		for (int[] edge: edges) {	
+			int a = edge[0];
+			int b = edge[1];
+			List<Integer> aNeighbors = graph.getOrDefault(a,new LinkedList<>());
+			aNeighbors.add(b);
+			graph.put(a,aNeighbors);
+			List<Integer> bNeighbors = graph.getOrDefault(b,new LinkedList<>());
+			bNeighbors.add(a);
+			graph.put(b,bNeighbors);
+		}
+	}
+}

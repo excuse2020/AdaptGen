@@ -1,0 +1,50 @@
+class Solution {
+	int solve(String s) {
+		s = s.trim();
+		Stack<Integer> stack = new Stack<>();
+		int sum = 0, number = 0;
+		char sign = '+';
+		char[] cs = s.toCharArray();
+		for (int i = 0; i < cs.length; i++) {
+			char c = cs[i];
+			if (c == '(') {
+				int j = i + 1;
+				int cntPar = 1;
+				while (cntPar > 0) {
+					if (cs[j] == '(') {
+						cntPar++;
+					}
+					if (cs[j] == ')') {
+						cntPar--;
+					}
+					j++;
+				}
+				number = solve(s.substring(i + 1,j - 1));
+				i = j - 1;
+			}
+			if (Character.isDigit(c)) {
+				number = number * 10 + c - '0';
+			}
+			if (!Character.isDigit(c) || i == cs.length - 1) {
+				if (sign == '+') {
+					stack.push(number);
+				} 
+				else if (sign == '-') {
+					stack.push(-1 * number);
+				} 
+				else if (sign == '*') {
+					stack.push(stack.pop() * number);
+				} 
+				else if (sign == '/') {
+					stack.push(stack.pop() / number);
+				}
+				number = 0;
+				sign = c;
+			}
+		}
+		while (!stack.isEmpty()) {
+			sum += stack.pop();
+		}
+		return sum;
+	}
+}

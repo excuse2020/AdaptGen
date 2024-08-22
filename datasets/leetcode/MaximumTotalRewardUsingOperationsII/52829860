@@ -1,0 +1,56 @@
+class Solution {
+	Map<Integer, Boolean> cache = new HashMap<>();
+	List<Integer> list = new ArrayList<Integer>();
+	boolean calculate(int reqd) {
+		int id = Collections.binarySearch(list,reqd);
+		if (id >= 0) {
+			return true;
+		}
+		id = -id - 1;
+		for (int i = id - 1; i >= 0; i--) {
+			int diff = reqd - list.get(i);
+			if (diff * 2 >= reqd) {
+				break;
+			}
+			if (isPossible(diff)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	boolean isPossible(int reqd) {
+		if (!cache.containsKey(reqd)) {
+			cache.put(reqd,calculate(reqd));
+		}
+		return cache.get(reqd);
+	}
+	int maxTotalReward(int[] rewardValues) {
+		Set<Integer> set = new HashSet<>();
+		for (int r: rewardValues) {	
+			set.add(r);
+		}
+		list.addAll(set);
+		Collections.sort(list);
+		int ret = list.get(list.size() - 1);
+		for (int i = list.size() - 1; i >= 0; i--) {
+			int cur = list.get(i);
+			if (cur * 2 < ret) {
+				break;
+			}
+			int reqd = cur - 1;
+			while (true) {
+				if (isPossible(reqd)) {
+					ret = Math.max(cur + reqd,ret);
+					break;
+				} 
+				else {
+					reqd = reqd - 1;
+					if (ret >= cur + reqd) {
+						break;
+					}
+				}
+			}
+		}
+		return ret;
+	}
+}

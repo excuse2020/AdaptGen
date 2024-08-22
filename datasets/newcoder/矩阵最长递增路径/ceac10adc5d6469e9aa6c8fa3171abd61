@@ -1,0 +1,40 @@
+class Solution {
+	int[][] paths;
+	int searchMaxPath(int[][] matrix, int row, int col, int pre) {
+		if (row < 0 || col < 0 || row >= matrix.length || col >= matrix.length) {
+			return 0;
+		}
+		if (matrix[row][col] <= pre) {
+			return 0;
+		}
+		if (paths[row][col] > 0) {
+			return paths[row][col];
+		}
+		int max = 0;
+		int temp = 0;
+		temp = searchMaxPath(matrix,row - 1,col,matrix[row][col]);
+		max = Math.max(temp,max);
+		temp = searchMaxPath(matrix,row + 1,col,matrix[row][col]);
+		max = Math.max(temp,max);
+		temp = searchMaxPath(matrix,row,col - 1,matrix[row][col]);
+		max = Math.max(temp,max);
+		temp = searchMaxPath(matrix,row,col + 1,matrix[row][col]);
+		max = Math.max(temp,max);
+		paths[row][col] = max + 1;
+		return paths[row][col];
+	}
+	int solve(int[][] matrix) {
+		int max = 0;
+		if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+			return max;
+		}
+		paths = new int[matrix.length][matrix[0].length];
+		for (int i = 0; i < matrix.length; ++i) {
+			for (int j = 0; j < matrix[0].length; ++j) {
+				int temp = searchMaxPath(matrix,i,j,-1);
+				max = Math.max(temp,max);
+			}
+		}
+		return max;
+	}
+}

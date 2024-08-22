@@ -1,0 +1,39 @@
+class Solution {
+	int MOD = (int) 1e9 + 7;
+	int dfs(int x, int y, int jumps, int[][][] dp) {
+		if (x < 0 || y < 0 || x > 3 || y > 2 || (x == 3 && y == 0) || (x == 3 && y == 2)) {
+			return 0;
+		}
+		if (jumps == 1) {
+			return 1;
+		}
+		if (dp[x][y][jumps] != -1) {
+			return dp[x][y][jumps];
+		}
+		int c = 0;
+		c = (c + dfs(x - 1,y + 2,jumps - 1,dp)) % MOD;
+		c = (c + dfs(x + 1,y + 2,jumps - 1,dp)) % MOD;
+		c = (c + dfs(x - 1,y - 2,jumps - 1,dp)) % MOD;
+		c = (c + dfs(x + 1,y - 2,jumps - 1,dp)) % MOD;
+		c = (c + dfs(x - 2,y + 1,jumps - 1,dp)) % MOD;
+		c = (c + dfs(x + 2,y + 1,jumps - 1,dp)) % MOD;
+		c = (c + dfs(x - 2,y - 1,jumps - 1,dp)) % MOD;
+		c = (c + dfs(x + 2,y - 1,jumps - 1,dp)) % MOD;
+		return (dp[x][y][jumps] = c);
+	}
+	int knightDialer(int x) {
+		int[][][] dp = new int[4][3][x + 1];
+		for (int[][] arr: dp) {	
+			for (int[] arr2: arr) {	
+				Arrays.fill(arr2,-1);
+			}
+		}
+		int ans = 0;
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 3; j++) {
+				ans = (ans + dfs(i,j,x,dp)) % MOD;
+			}
+		}
+		return ans % MOD;
+	}
+}

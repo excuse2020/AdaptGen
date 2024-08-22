@@ -1,0 +1,46 @@
+class Solution {
+	List<Boolean> checkIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
+		HashMap<Integer, HashSet<Integer>> outMap = new HashMap();
+		HashMap<Integer, HashSet<Integer>> preMap = new HashMap();
+		List<Boolean> res = new ArrayList();
+		Queue<Integer> queue = new LinkedList();
+		int[] inCount = new int[numCourses];
+		for (int i = 0; i < numCourses; i++) {
+			outMap.put(i,new HashSet());
+			preMap.put(i,new HashSet());
+		}
+		for (int[] prereq: prerequisites) {	
+			int prev = prereq[0];
+			int next = prereq[1];
+			outMap.get(prev).add(next);
+			inCount[next]++;
+		}
+		for (int i = 0; i < numCourses; i++) {
+			if (inCount[i] == 0) {
+				queue.offer(i);
+			}
+		}
+		while (!queue.isEmpty()) {
+			int course = queue.poll();
+			HashSet<Integer> nextCourses = outMap.get(course);
+			if (!nextCourses.isEmpty()) {
+				for (int nextCourse: nextCourses) {	
+					preMap.get(nextCourse).add(course);
+					preMap.get(nextCourse).addAll(preMap.get(course));
+					inCount[nextCourse]--;
+					if (inCount[nextCourse] == 0) {
+						queue.offer(nextCourse);
+					}
+				}
+			}
+		}
+		for (int[] query: queries) {	
+			int start = query[0];
+			int end = query[1];
+			if (preMap.containsKey(end)) {
+				res.add(preMap.get(end).contains(start));
+			}
+		}
+		return res;
+	}
+}

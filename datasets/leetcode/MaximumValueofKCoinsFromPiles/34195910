@@ -1,0 +1,29 @@
+class Solution {
+	int[][] visited;
+	int maxValueOfCoins(List<List<Integer>> piles, int k) {
+		visited = new int[k + 1][piles.size() + 1];
+		for (int[] i: visited) {	
+			Arrays.fill(i,-1);
+		}
+		if (k == 0 || piles.size() == 0) {
+			return 0;
+		}
+		return solve(piles,k,0);
+	}
+	int solve(List<List<Integer>> piles, int k, int pile) {
+		if (k == 0 || pile >= piles.size()) {
+			return 0;
+		}
+		if (visited[k][pile] != -1) {
+			return visited[k][pile];
+		}
+		int sum = 0;
+		int consider = 0;
+		for (int i = 0; i < piles.get(pile).size() && k - i > 0; i++) {
+			sum += piles.get(pile).get(i);
+			consider = Math.max(consider,sum + solve(piles,k - (i + 1),pile + 1));
+		}
+		int not_consider = solve(piles,k,pile + 1);
+		return visited[k][pile] = Math.max(consider,not_consider);
+	}
+}

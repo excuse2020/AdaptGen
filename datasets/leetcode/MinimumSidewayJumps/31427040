@@ -1,0 +1,37 @@
+class Solution {
+	Map<Long, Integer> cache = new HashMap<>();
+	long hash(int curIndex, int curLane) {
+		long res = curIndex;
+		res = res << 32;
+		res += curLane;
+		return res;
+	}
+	int jumpForward(int[] obstacles, int currentIndex, int curLane, int targetLane) {
+		if (obstacles[currentIndex] != targetLane && obstacles[currentIndex + 1] != targetLane) {
+			int steps = sideJumpHelper(obstacles,currentIndex + 1,targetLane);
+			if (curLane != targetLane) {
+				steps++;
+			}
+			return steps;
+		}
+		return Integer.MAX_VALUE;
+	}
+	int minSideJumps(int[] obstacles) {
+		return sideJumpHelper(obstacles,0,2);
+	}
+	int sideJumpHelper(int[] obstacles, int currentIndex, int curLane) {
+		Long hash = hash(currentIndex,curLane);
+		if (cache.containsKey(hash)) {
+			return cache.get(hash);
+		}
+		int minJump = Integer.MAX_VALUE;
+		if (currentIndex == obstacles.length - 1) {
+			return 0;
+		}
+		minJump = Math.min(jumpForward(obstacles,currentIndex,curLane,1),minJump);
+		minJump = Math.min(jumpForward(obstacles,currentIndex,curLane,2),minJump);
+		minJump = Math.min(jumpForward(obstacles,currentIndex,curLane,3),minJump);
+		cache.put(hash,minJump);
+		return minJump;
+	}
+}

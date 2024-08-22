@@ -1,0 +1,62 @@
+class Solution {
+	int lower_bound(ArrayList<int[]> list, int target) {
+		int l = 0, h = list.size() - 1;
+		int ans = -1;
+		while (l <= h) {
+			int m = (l + h) / 2;
+			if (list.get(m)[0] == target) {
+				return list.get(m)[1];
+			}
+			if (list.get(m)[0] < target) {
+				ans = m;
+				l = m + 1;
+			} 
+			else {
+				h = m - 1;
+			}
+		}
+		return ans == -1 ? 0 : list.get(ans)[1];
+	}
+	int[] maxPoints(int[][] grid, int[] queries) {
+		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {grid[a[0]][a[1]] - grid[b[0]][b[1]]});
+		ArrayList<int[]> list = new ArrayList<>();
+		int maxNum = 1000001;
+		int lastSmaller = grid[0][0];
+		pq.add(new int{0, 0});
+		int nodesTravelled = 0;
+		while (!pq.isEmpty()) {
+			int[] node = pq.poll();
+			int r = node[0], c = node[1];
+			int num = grid[r][c] % maxNum;
+			if (num >= lastSmaller) {
+				list.add(new int{lastSmaller, nodesTravelled});
+				System.out.println(lastSmaller + "  ");
+				lastSmaller = num + 1;
+			}
+			nodesTravelled++;
+			grid[r][c] += maxNum;
+			if (r < (grid.length - 1) && (grid[r + 1][c] < maxNum)) {
+				grid[r + 1][c] += maxNum;
+				pq.add(new int{r + 1, c});
+			}
+			if (r > 0 && (grid[r - 1][c] < maxNum)) {
+				grid[r - 1][c] += maxNum;
+				pq.add(new int{r - 1, c});
+			}
+			if (c < (grid[0].length - 1) && (grid[r][c + 1] < maxNum)) {
+				grid[r][c + 1] += maxNum;
+				pq.add(new int{r, c + 1});
+			}
+			if (c > 0 && (grid[r][c - 1] < maxNum)) {
+				grid[r][c - 1] += maxNum;
+				pq.add(new int{r, c - 1});
+			}
+		}
+		list.add(new int{lastSmaller, nodesTravelled});
+		int[] ans = new int[queries.length];
+		for (int i = 0; i < queries.length; ++i) {
+			ans[i] = lower_bound(list,queries[i]);
+		}
+		return ans;
+	}
+}

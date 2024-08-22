@@ -1,0 +1,61 @@
+class Solution {
+	void combinations(Map<Integer, List<Integer>> graph, int vertex, int[] inDegree, List<Integer> seq, List<List<Integer>> combinations) {
+		List<Integer> adjs = graph.remove(vertex);
+		if (adjs == null) {
+			return;
+		}
+		seq.add(vertex);
+		if (seq.size() == inDegree.length - 1) {
+			combinations.add(new ArrayList<>(seq));
+		} 
+		else {
+			for (int adj: adjs) {	
+				inDegree[adj]--;
+			}
+			for (int i = 1, n = inDegree.length; i < n; i++) {
+				if (inDegree[i] == 0) {
+					combinations(graph,i,inDegree,seq,combinations);
+				}
+			}
+			for (int adj: adjs) {	
+				inDegree[adj]++;
+			}
+		}
+		seq.remove(seq.size() - 1);
+		graph.put(vertex,adjs);
+	}
+	int minNumberOfSemesters(int n, int[][] edges, int k) {
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		for (int i = 1; i <= n; i++) {
+			graph.put(i,new ArrayList<>());
+		}
+		int[] inDegree = new int[n + 1];
+		for (int[] dep: edges) {	
+			graph.get(dep[0]).add(dep[1]);
+			inDegree[dep[1]]++;
+		}
+		List<Integer> seq = new ArrayList<>();
+		List<List<Integer>> combinations = new ArrayList<>();
+		for (int i = 1; i <= n; i++) {
+			if (inDegree[i] == 0) {
+				combinations(graph,i,inDegree,seq,combinations);
+			}
+		}
+		int result = n;
+		for (List<Integer> combination: combinations) {	
+			int counter = 1, w = 0;
+			Set<Integer> dependents = new HashSet<>();
+			for (int course: combination) {	
+				if (dependents.contains(course) || w == k) {
+					counter++;
+					w = 0;
+					dependents.clear();
+				}
+				w++;
+				dependents.addAll(graph.get(course));
+			}
+			result = Math.min(result,counter);
+		}
+		return result;
+	}
+}

@@ -1,0 +1,45 @@
+class Solution {
+	int result;
+	void getAnswer(int index, ArrayList<Integer> colChoosen, int cols, Map<Integer, Set<Integer>> columnIndexToRowHavingOnes, int m, int n) {
+		if (colChoosen.size() == cols) {
+			Set<Integer> rowNotCoveredByChoosenColumns = new HashSet<>();
+			for (int i = 0; i < n; i++) {
+				if (!colChoosen.contains(i)) {
+					rowNotCoveredByChoosenColumns.addAll(columnIndexToRowHavingOnes.get(i));
+				}
+			}
+			result = Math.max(result,m - rowNotCoveredByChoosenColumns.size());
+			return;
+		}
+		if (index == n) {
+			return;
+		}
+		colChoosen.add(index);
+		getAnswer(index + 1,colChoosen,cols,columnIndexToRowHavingOnes,m,n);
+		colChoosen.remove(colChoosen.size() - 1);
+		getAnswer(index + 1,colChoosen,cols,columnIndexToRowHavingOnes,m,n);
+	}
+	int maximumRows(int[][] mat, int cols) {
+		int m = mat.length;
+		int n = mat[0].length;
+		result = -1;
+		if (cols == n) {
+			return m;
+		}
+		Map<Integer, Set<Integer>> columnIndexToRowHavingOnes = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			columnIndexToRowHavingOnes.put(i,new HashSet<>());
+		}
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				if (mat[i][j] == 1) {
+					Set<Integer> set = columnIndexToRowHavingOnes.get(j);
+					set.add(i);
+					columnIndexToRowHavingOnes.put(j,set);
+				}
+			}
+		}
+		getAnswer(0,new ArrayList<Integer>(),cols,columnIndexToRowHavingOnes,m,n);
+		return result;
+	}
+}

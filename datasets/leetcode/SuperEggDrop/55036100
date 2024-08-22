@@ -1,0 +1,34 @@
+class Solution {
+	int helper(int k, int n, HashMap<Integer, Integer> memo) {
+		if (k == 1 || n == 0) {
+			return n;
+		}
+		int key = (k << 16) | n;
+		if (memo.containsKey(key)) {
+			return memo.get(key);
+		}
+		int l = 1, h = n;
+		while (l < h - 1) {
+			int m = l + (h - l) / 2;
+			int n1 = helper(k - 1,m - 1,memo);
+			int n2 = helper(k,n - m,memo);
+			if (n1 > n2) {
+				h = m;
+			} 
+			else if (n1 < n2) {
+				l = m;
+			} 
+			else {
+				l = m;
+				h = m;
+				break;
+			}
+		}
+		memo.put(key,1 + Math.min(Math.max(helper(k - 1,l - 1,memo),helper(k,n - l,memo)),Math.max(helper(k - 1,h - 1,memo),helper(k,h - l,memo))));
+		return memo.get(key);
+	}
+	int superEggDrop(int k, int n) {
+		HashMap<Integer, Integer> memo = new HashMap<>();
+		return helper(k,n,memo);
+	}
+}

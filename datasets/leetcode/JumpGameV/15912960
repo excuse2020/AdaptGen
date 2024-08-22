@@ -1,0 +1,48 @@
+class Solution {
+	HashMap<Integer, List<Integer>> map = new HashMap<>();
+	int[] memo;
+	int dfs(int[] arr, int i) {
+		if (memo[i] >= 0) {
+			return memo[i];
+		}
+		int res = 1;
+		for (int j: map.getOrDefault(i,new ArrayList<>())) {	
+			res = Math.max(res,1 + dfs(arr,j));
+		}
+		memo[i] = res;
+		return res;
+	}
+	int maxJumps(int[] arr, int d) {
+		Stack<Integer> stack = new Stack<>();
+		memo = new int[arr.length];
+		Arrays.fill(memo,-1);
+		for (int i = 0; i < arr.length; i++) {
+			List<Integer> list = new ArrayList<>();
+			while (!stack.isEmpty() && arr[stack.peek()] < arr[i]) {
+				int curind = stack.pop();
+				if (Math.abs(curind - i) <= d) {
+					list.add(curind);
+				}
+			}
+			map.put(i,list);
+			stack.push(i);
+		}
+		stack = new Stack<>();
+		for (int i = arr.length - 1; i >= 0; i--) {
+			List<Integer> list = map.get(i);
+			while (!stack.isEmpty() && arr[stack.peek()] < arr[i]) {
+				int curind = stack.pop();
+				if (Math.abs(curind - i) <= d) {
+					list.add(curind);
+				}
+			}
+			map.put(i,list);
+			stack.push(i);
+		}
+		int res = 0;
+		for (int i = 0; i < arr.length; i++) {
+			res = Math.max(res,dfs(arr,i));
+		}
+		return res;
+	}
+}

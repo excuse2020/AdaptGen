@@ -1,0 +1,30 @@
+class Solution {
+	Integer[][] memo;
+	int helper(int[] arr, int k, int startIndex, int subarrayStartIndex) {
+		int n = arr.length;
+		if (startIndex >= n) {
+			return 0;
+		}
+		if (memo[subarrayStartIndex][startIndex] != null) {
+			return memo[subarrayStartIndex][startIndex];
+		}
+		int maxSum = 0;
+		int currSum = 0;
+		int currMaxVal = 0;
+		for (int endIndex = startIndex; endIndex < n; endIndex++) {
+			currMaxVal = Math.max(currMaxVal,arr[endIndex]);
+			int subarrayWindow = endIndex - subarrayStartIndex + 1;
+			if (subarrayWindow > k) {
+				break;
+			}
+			currSum = subarrayWindow * currMaxVal;
+			maxSum = Math.max(maxSum,currSum + helper(arr,k,endIndex + 1,endIndex + 1));
+		}
+		return memo[subarrayStartIndex][startIndex] = maxSum;
+	}
+	int maxSumAfterPartitioning(int[] arr, int k) {
+		int n = arr.length;
+		memo = new Integer[n + 1][n + 1];
+		return helper(arr,k,0,0);
+	}
+}

@@ -1,0 +1,44 @@
+class Solution {
+	Map<TreeNode, TreeNode> map = new HashMap<>();
+	TreeNode n1;
+	TreeNode n2;
+	Set<TreeNode> set = new HashSet<>();
+	void createMap(TreeNode root, int o1, int o2) {
+		if (root == null) {
+			return;
+		}
+		if (root.val == o1) {
+			n1 = root;
+		}
+		if (root.val == o2) {
+			n2 = root;
+		}
+		if (root.left != null) {
+			map.put(root.left,root);
+			createMap(root.left,o1,o2);
+		}
+		if (root.right != null) {
+			map.put(root.right,root);
+			createMap(root.right,o1,o2);
+		}
+	}
+	int lowestCommonAncestor(TreeNode root, int o1, int o2) {
+		map.put(root,null);
+		createMap(root,o1,o2);
+		set.add(n1);
+		while (map.get(n1) != null) {
+			set.add(map.get(n1));
+			n1 = map.get(n1);
+		}
+		if (set.contains(n2)) {
+			return n2.val;
+		}
+		while (map.get(n2) != null) {
+			if (set.contains(map.get(n2))) {
+				return map.get(n2).val;
+			}
+			n2 = map.get(n2);
+		}
+		return root.val;
+	}
+}

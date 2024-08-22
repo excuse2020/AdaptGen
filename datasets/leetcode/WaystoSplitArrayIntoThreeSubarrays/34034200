@@ -1,0 +1,32 @@
+class Solution {
+	int count = 0;
+	void split(int[] nums, int[] prefix, int previousSplitStartIndex, int previousSplitLastIndex, int splitIndex) {
+		int previousSplitSum = 0;
+		if (splitIndex != 0) {
+			previousSplitSum = sum(prefix,previousSplitStartIndex,previousSplitLastIndex - 1);
+		}
+		if (splitIndex == 2) {
+			if (previousSplitSum <= sum(prefix,previousSplitLastIndex,nums.length - 1)) {
+				count++;
+			}
+			return;
+		}
+		for (int i = previousSplitLastIndex; i < nums.length; i++) {
+			if (previousSplitSum <= sum(prefix,previousSplitLastIndex,i)) {
+				split(nums,prefix,previousSplitLastIndex,i + 1,splitIndex + 1);
+			}
+		}
+	}
+	int sum(int[] prefix, int start, int end) {
+		return prefix[end] - (start > 0 ? prefix[start - 1] : 0);
+	}
+	int waysToSplit(int[] nums) {
+		int[] prefix = new int[nums.length];
+		prefix[0] = nums[0];
+		for (int i = 1; i < nums.length; i++) {
+			prefix[i] += prefix[i - 1] + nums[i];
+		}
+		split(nums,prefix,0,0,0);
+		return count;
+	}
+}

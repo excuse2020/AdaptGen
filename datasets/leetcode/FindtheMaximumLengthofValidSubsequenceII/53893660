@@ -1,0 +1,27 @@
+class Solution {
+	int maximumLength(int[] nums, int k) {
+		int len = nums.length;
+		int[][] dp = new int[len][k];
+		for (int i = 0; i < len; i++) {
+			nums[i] = nums[i] % k;
+		}
+		HashMap<Integer, Integer> map = new HashMap<>();
+		int ans = 1;
+		for (int i = 0; i < len; i++) {
+			int rem = nums[i];
+			for (int j = 0; j < k; j++) {
+				int prevRem = (j + k - rem) % k;
+				if (!map.containsKey(prevRem)) {
+					dp[i][j] = 1;
+				} 
+				else {
+					int prevIndex = map.get(prevRem);
+					dp[i][j] = dp[prevIndex][j] + 1;
+					ans = Math.max(ans,dp[i][j]);
+				}
+			}
+			map.put(rem,i);
+		}
+		return ans;
+	}
+}

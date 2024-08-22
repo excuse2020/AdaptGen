@@ -1,0 +1,39 @@
+class Solution {
+	boolean noCycle;
+	boolean[] onPath;
+	boolean[] visited;
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		visited = new boolean[numCourses];
+		onPath = new boolean[numCourses];
+		noCycle = true;
+		List<Integer>[] graph = createGraph(numCourses,prerequisites);
+		for (int i = 0; i < numCourses; i++) {
+			traverse(graph,i);
+		}
+		return noCycle;
+	}
+	List<Integer>[] createGraph(int n, int[][] prerequisites) {
+		List<Integer>[] graph = new LinkedList[n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new LinkedList<Integer>();
+		}
+		for (int[] prerequisite: prerequisites) {	
+			graph[prerequisite[1]].add(prerequisite[0]);
+		}
+		return graph;
+	}
+	void traverse(List<Integer>[] graph, int node) {
+		if (onPath[node]) {
+			noCycle = false;
+		}
+		if (!noCycle || visited[node]) {
+			return;
+		}
+		visited[node] = true;
+		onPath[node] = true;
+		for (Integer neighbor: graph[node]) {	
+			traverse(graph,neighbor);
+		}
+		onPath[node] = false;
+	}
+}

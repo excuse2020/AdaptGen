@@ -1,0 +1,39 @@
+class Solution {
+	int cherryPickup(int[][] grid) {
+		var memo = new HashMap<String, Integer>();
+		return maxCrawl(grid,0,0,0,grid[0].length - 1,memo);
+	}
+	boolean isWithinBounds(int[][] grid, int i, int j) {
+		return i > -1 && i < grid.length && j > -1 && j < grid[0].length;
+	}
+	int max(int nums) {
+		int max = Integer.MIN_VALUE;
+		for (int e: nums) {	
+			max = Math.max(e,max);
+		}
+		return max;
+	}
+	int maxCrawl(int[][] grid, int li, int lj, int ri, int rj, HashMap<String, Integer> memo) {
+		if (memo.containsKey(li + ":")) {
+			return memo.get(li + ":");
+		}
+		if (!isWithinBounds(grid,li,lj) || !isWithinBounds(grid,ri,rj)) {
+			return 0;
+		} 
+		else if (li == ri && lj == rj) {
+			return 0;
+		}
+		int sumRobotValues = grid[li][lj] + grid[ri][rj];
+		int comb1 = sumRobotValues + maxCrawl(grid,li + 1,lj,ri + 1,rj,memo);
+		int comb2 = sumRobotValues + maxCrawl(grid,li + 1,lj,ri + 1,rj + 1,memo);
+		int comb3 = sumRobotValues + maxCrawl(grid,li + 1,lj,ri + 1,rj - 1,memo);
+		int comb4 = sumRobotValues + maxCrawl(grid,li + 1,lj - 1,ri + 1,rj,memo);
+		int comb5 = sumRobotValues + maxCrawl(grid,li + 1,lj - 1,ri + 1,rj + 1,memo);
+		int comb6 = sumRobotValues + maxCrawl(grid,li + 1,lj - 1,ri + 1,rj - 1,memo);
+		int comb7 = sumRobotValues + maxCrawl(grid,li + 1,lj + 1,ri + 1,rj,memo);
+		int comb8 = sumRobotValues + maxCrawl(grid,li + 1,lj + 1,ri + 1,rj + 1,memo);
+		int comb9 = sumRobotValues + maxCrawl(grid,li + 1,lj + 1,ri + 1,rj - 1,memo);
+		memo.put(li + ":",max(comb1,comb2,comb3,comb4,comb5,comb6,comb7,comb8,comb9));
+		return memo.get(li + ":");
+	}
+}

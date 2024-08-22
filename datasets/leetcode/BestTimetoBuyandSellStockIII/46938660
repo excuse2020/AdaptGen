@@ -1,0 +1,33 @@
+class Solution {
+	int helper(int[] prices, int idx, int trans, int[][] dp) {
+		if (idx == prices.length || trans == 4) {
+			return 0;
+		}
+		if (dp[idx][trans] != -1) {
+			return dp[idx][trans];
+		}
+		if (trans % 2 == 0) {
+			return dp[idx][trans] = Math.max(-prices[idx] + helper(prices,idx + 1,trans + 1,dp),helper(prices,idx + 1,trans,dp));
+		} 
+		else {
+			return dp[idx][trans] = Math.max(prices[idx] + helper(prices,idx + 1,trans + 1,dp),helper(prices,idx + 1,trans,dp));
+		}
+	}
+	int maxProfit(int[] prices) {
+		int n = prices.length;
+		int[] curr = new int[5];
+		int[] after = new int[5];
+		for (int idx = n - 1; idx >= 0; idx--) {
+			for (int trans = 3; trans >= 0; trans--) {
+				if (trans % 2 == 0) {
+					curr[trans] = Math.max(-prices[idx] + after[trans + 1],after[trans]);
+				} 
+				else {
+					curr[trans] = Math.max(prices[idx] + after[trans + 1],after[trans]);
+				}
+			}
+			after = curr;
+		}
+		return curr[0];
+	}
+}

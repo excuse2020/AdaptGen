@@ -1,0 +1,36 @@
+class Solution {
+	double find_slope(int X_1, int Y_1, int X_2, int Y_2) {
+		return (((X_2 - X_1) != 0) ? ((double) (((double) (Y_2 - Y_1)) / ((double) (X_2 - X_1)))) : (-999));
+	}
+	int maxPoints(int[][] points_matrix) {
+		int N = points_matrix.length;
+		if (N <= 2) {
+			return N;
+		}
+		int maximum_points_on_a_line = 2;
+		for (int i = 0; (i < N); i++) {
+			for (int j = (i + 1); (j < N); j++) {
+				int point_1_X = points_matrix[i][0];
+				int point_1_Y = points_matrix[i][1];
+				int point_2_X = points_matrix[j][0];
+				int point_2_Y = points_matrix[j][1];
+				int current_points_on_a_line_count = 2;
+				for (int k = 0; (k < N); k++) {
+					if ((k == i) || (k == j)) {
+						continue;
+					}
+					int point_3_X = points_matrix[k][0];
+					int point_3_Y = points_matrix[k][1];
+					double slope_1 = find_slope(point_1_X,point_1_Y,point_2_X,point_2_Y);
+					double slope_2 = find_slope(point_1_X,point_1_Y,point_3_X,point_3_Y);
+					double slope_3 = find_slope(point_2_X,point_2_Y,point_3_X,point_3_Y);
+					if ((slope_1 == slope_2) && (slope_1 == slope_3)) {
+						current_points_on_a_line_count++;
+					}
+				}
+				maximum_points_on_a_line = Math.max(maximum_points_on_a_line,current_points_on_a_line_count);
+			}
+		}
+		return maximum_points_on_a_line;
+	}
+}

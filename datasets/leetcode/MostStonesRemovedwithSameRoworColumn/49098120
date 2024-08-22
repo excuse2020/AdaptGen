@@ -1,0 +1,50 @@
+class Solution {
+	int findParent(int u, int[] par) {
+		if (u == par[u]) {
+			return u;
+		}
+		par[u] = findParent(par[u],par);
+		return par[u];
+	}
+	int removeStones(int[][] stones) {
+		int maxrow = 0;
+		int maxcol = 0;
+		for (int i = 0; i < stones.length; i++) {
+			maxrow = Math.max(maxrow,stones[i][0]);
+			maxcol = Math.max(maxcol,stones[i][1]);
+		}
+		int[] par = new int[maxrow + maxcol];
+		for (int i = 0; i < par.length; i++) {
+			par[i] = i;
+		}
+		int[] size = new int[maxrow + maxcol];
+		Arrays.fill(size,1);
+		for (int i = 0; i < stones.length; i++) {
+			int rownode = stones[i][0];
+			int colnode = stones[i][1] + maxrow;
+			union(rownode,colnode,par,size);
+		}
+		int count = 0;
+		for (int i = 0; i < size.length; i++) {
+			if (size[i] != 1 && par[i] == i) {
+				count++;
+			}
+		}
+		return stones.length - count;
+	}
+	void union(int a, int b, int[] par, int[] size) {
+		int ap = findParent(a,par);
+		int bp = findParent(b,par);
+		if (ap == bp) {
+			return;
+		}
+		if (size[ap] >= size[bp]) {
+			par[bp] = ap;
+			size[ap] += size[bp];
+		} 
+		else {
+			par[ap] = bp;
+			size[bp] += size[ap];
+		}
+	}
+}

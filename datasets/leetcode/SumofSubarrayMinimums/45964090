@@ -1,0 +1,30 @@
+class Solution {
+	int modulo = 1000000007;
+	int sum(int[] arr, int low, int high) {
+		if (low > high) {
+			return 0;
+		}
+		if (low == high) {
+			return arr[low];
+		}
+		int min = Integer.MAX_VALUE;
+		int min_idx = -1;
+		for (int i = low; i <= high; i++) {
+			if (min > arr[i]) {
+				min = arr[i];
+				min_idx = i;
+			}
+		}
+		int left = sum(arr,low,min_idx - 1);
+		int right = sum(arr,min_idx + 1,high);
+		long min_contribution = high - low + 1 + (min_idx - low) * (high - min_idx);
+		long val = (min * min_contribution);
+		val = val % modulo;
+		int total = ((int) val + left) % modulo;
+		total = (total + right) % modulo;
+		return total;
+	}
+	int sumSubarrayMins(int[] arr) {
+		return sum(arr,0,arr.length - 1);
+	}
+}

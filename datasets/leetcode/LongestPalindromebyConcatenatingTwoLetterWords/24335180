@@ -1,0 +1,39 @@
+class Solution {
+	int longestPalindrome(String[] words) {
+		HashMap<String, Integer> pairCount = new HashMap<String, Integer>();
+		HashSet<String> symmetric = new HashSet<String>();
+		int strLen = 0;
+		for (int i = 0; i < words.length; i++) {
+			if (pairCount.get(words[i]) == null) {
+				String newWord = "" + words[i].charAt(1);
+				if (pairCount.get(newWord) != null) {
+					pairCount.put(newWord,pairCount.get(newWord) + 1);
+				} 
+				else {
+					pairCount.put(newWord,1);
+				}
+				if (words[i].charAt(0) == words[i].charAt(1)) {
+					symmetric.add(words[i]);
+				}
+			} 
+			else {
+				int nbVal = pairCount.get(words[i]);
+				strLen += 4;
+				nbVal--;
+				if (nbVal == 0) {
+					pairCount.remove(words[i]);
+					if (symmetric.contains(words[i])) {
+						symmetric.remove(words[i]);
+					}
+				} 
+				else {
+					pairCount.put(words[i],nbVal);
+				}
+			}
+		}
+		if (symmetric.size() > 0) {
+			strLen += 2;
+		}
+		return (strLen);
+	}
+}

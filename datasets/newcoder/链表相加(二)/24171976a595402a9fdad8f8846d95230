@@ -1,0 +1,88 @@
+class Solution {
+	ListNode RevserList(ListNode head) {
+		Stack<ListNode> stack = new Stack<>();
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode temp = head;
+		while (temp != null) {
+			stack.push(temp);
+			temp = temp.next;
+		}
+		head.next = null;
+		ListNode cur = stack.pop();
+		ListNode curTemp = cur;
+		while (!stack.isEmpty()) {
+			curTemp.next = stack.pop();
+			curTemp = curTemp.next;
+		}
+		return cur;
+	}
+	ListNode addInList(ListNode head1, ListNode head2) {
+		if (head1 == null && head2 == null) {
+			return null;
+		}
+		if (head1 == null) {
+			return head2;
+		}
+		if (head2 == null) {
+			return head1;
+		}
+		ListNode temp1 = RevserList(head1);
+		ListNode temp2 = RevserList(head2);
+		int count = 0;
+		ListNode res = new ListNode(0);
+		ListNode cur = res;
+		while (temp1 != null && temp2 != null) {
+			if (temp1.val + temp2.val >= 10) {
+				cur.next = new ListNode(temp1.val + temp2.val - 10 + count);
+				count = 1;
+				temp1 = temp1.next;
+				temp2 = temp2.next;
+				cur = cur.next;
+			} 
+			else {
+				cur.next = new ListNode(temp1.val + temp2.val);
+				count = 0;
+				temp1 = temp1.next;
+				temp2 = temp2.next;
+				cur = cur.next;
+			}
+		}
+		while (temp1 != null) {
+			if (temp1.val + count == 10) {
+				cur.next = new ListNode(temp1.val + count - 10);
+				count = 1;
+				cur = cur.next;
+				temp1 = temp1.next;
+				if (temp1 == null) {
+					cur.next = new ListNode(1);
+				}
+			} 
+			else {
+				cur.next = new ListNode(temp1.val + count);
+				count = 0;
+				cur = cur.next;
+				temp1 = temp1.next;
+			}
+		}
+		while (temp2 != null) {
+			if (temp2.val + count == 10) {
+				cur.next = new ListNode(temp2.val + count - 10);
+				cur = cur.next;
+				count = 1;
+				temp2 = temp2.next;
+				if (temp2 == null) {
+					cur.next = new ListNode(1);
+				}
+			} 
+			else {
+				cur.next = new ListNode(temp2.val + count);
+				count = 0;
+				cur = cur.next;
+				temp2 = temp2.next;
+			}
+		}
+		return RevserList(res.next);
+	}
+}

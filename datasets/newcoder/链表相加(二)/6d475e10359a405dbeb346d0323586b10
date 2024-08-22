@@ -1,0 +1,61 @@
+class Solution {
+	ListNode ReverseList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode pre = null;
+		ListNode cur = head;
+		ListNode tmp = null;
+		while (cur != null) {
+			tmp = cur.next;
+			cur.next = pre;
+			pre = cur;
+			cur = tmp;
+		}
+		return pre;
+	}
+	ListNode addInList(ListNode head1, ListNode head2) {
+		head1 = ReverseList(head1);
+		head2 = ReverseList(head2);
+		ListNode dummyNode = new ListNode(-1);
+		ListNode cur = dummyNode;
+		ListNode newNode;
+		int carry = 0;
+		int tmp = 0;
+		while (head1 != null || head2 != null || carry == 1) {
+			if (head1 == null && head2 != null) {
+				tmp = head2.val + carry;
+				head2 = head2.next;
+			} 
+			else if (head2 == null && head1 != null) {
+				tmp = head1.val + carry;
+				head1 = head1.next;
+			} 
+			else if (head1 == null && head2 == null) {
+				tmp = carry;
+			} 
+			else {
+				tmp = head1.val + head2.val;
+				head1 = head1.next;
+				head2 = head2.next;
+			}
+			if (tmp > 10) {
+				newNode = new ListNode(tmp - 10);
+				carry = 1;
+			} 
+			else if (tmp < 10) {
+				newNode = new ListNode(tmp);
+				carry = 0;
+			} 
+			else {
+				newNode = new ListNode(0);
+				carry = 1;
+			}
+			System.out.println(tmp);
+			cur.next = newNode;
+			cur = newNode;
+		}
+		dummyNode.next = ReverseList(dummyNode.next);
+		return dummyNode.next;
+	}
+}

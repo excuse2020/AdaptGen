@@ -1,0 +1,22 @@
+class Solution {
+	int maxTotalReward(int[] rv) {
+		Arrays.sort(rv);
+		Integer dp = new Integer[rv.length + 1][4097];
+		return rec(rv,0,0,dp);
+	}
+	int rec(int[] arr, int i, int x, Integer dp) {
+		if (dp[i][x] != null) {
+			return dp[i][x];
+		}
+		if (i == arr.length) {
+			return dp[i][x] = 0;
+		}
+		int take = 0;
+		if (arr[i] > x) {
+			take = arr[i] + rec(arr,i + 1,x + arr[i],dp);
+		}
+		int ntake = rec(arr,i + 1,x,dp);
+		int ans = Math.max(take,ntake);
+		return dp[i][x] = ans;
+	}
+}

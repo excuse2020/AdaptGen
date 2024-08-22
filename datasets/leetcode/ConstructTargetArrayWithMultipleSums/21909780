@@ -1,0 +1,30 @@
+class Solution {
+	boolean isPossible(int[] target) {
+		int n = target.length;
+		if (n == 1 && target[0] != 1) {
+			return false;
+		} 
+		else if (n == 1) {
+			return true;
+		}
+		PriorityQueue<Integer> max = new PriorityQueue<>(n, Collections.reverseOrder());
+		int sum = 0;
+		for (int i = 0; i < n; i++) {
+			sum += target[i];
+			max.add(target[i]);
+		}
+		while (max.peek() != 1) {
+			int tempSum = sum - max.peek();
+			int missing = max.peek() % tempSum;
+			if ((missing == 0 && tempSum != 1) || missing == max.peek()) {
+				return false;
+			} 
+			else {
+				max.poll();
+				max.add(missing);
+				sum = tempSum + missing;
+			}
+		}
+		return true;
+	}
+}

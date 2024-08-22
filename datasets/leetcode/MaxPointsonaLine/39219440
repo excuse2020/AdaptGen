@@ -1,0 +1,36 @@
+class Solution {
+	double calculateSlope(int[] point1, int[] point2) {
+		if (point2[0] == point1[0]) {
+			return Double.POSITIVE_INFINITY;
+		}
+		return (double) (point2[1] - point1[1]) / (point2[0] - point1[0]);
+	}
+	int maxPoints(int[][] points) {
+		if (points.length <= 2) {
+			return points.length;
+		}
+		int maxCount = 2;
+		for (int i = 0; i < points.length; i++) {
+			Map<Double, Integer> slopeMap = new HashMap<>();
+			int duplicate = 0;
+			for (int j = 0; j < points.length; j++) {
+				if (i == j) {
+					continue;
+				}
+				if (points[i][0] == points[j][0] && points[i][1] == points[j][1]) {
+					duplicate++;
+				} 
+				else {
+					double slope = calculateSlope(points[i],points[j]);
+					slopeMap.put(slope,slopeMap.getOrDefault(slope,1) + 1);
+				}
+			}
+			int localMax = duplicate;
+			for (int count: slopeMap.values()) {	
+				localMax = Math.max(localMax,count);
+			}
+			maxCount = Math.max(maxCount,localMax + duplicate);
+		}
+		return maxCount;
+	}
+}

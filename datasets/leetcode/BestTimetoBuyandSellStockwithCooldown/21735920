@@ -1,0 +1,22 @@
+class Solution {
+	int getPreviousProfit(int[] maxxProfit, int buyDay) {
+		if (buyDay > 1) {
+			return maxxProfit[buyDay - 2];
+		}
+		return 0;
+	}
+	int maxProfit(int[] prices) {
+		int len = prices.length;
+		int[] maxxProfit = new int[len];
+		for (int sellDay = 1; sellDay < len; sellDay++) {
+			maxxProfit[sellDay] = maxxProfit[sellDay - 1];
+			for (int buyDay = 0; buyDay < sellDay; buyDay++) {
+				int profitOnSellingStocks = (prices[sellDay] - prices[buyDay]);
+				int previousProfit = getPreviousProfit(maxxProfit,buyDay);
+				int profitBuyingOnBuyDay = profitOnSellingStocks + previousProfit;
+				maxxProfit[sellDay] = Math.max(maxxProfit[sellDay],profitBuyingOnBuyDay);
+			}
+		}
+		return maxxProfit[len - 1];
+	}
+}

@@ -1,0 +1,49 @@
+class Solution {
+	int[] productQueries(int n, int[][] queries) {
+		int qn = queries.length;
+		int[] ans = new int[qn];
+		int mod = (int) Math.pow(10,9) + 7;
+		LinkedList<Integer> pows = new LinkedList<>();
+		while (n > 0) {
+			int curr = 1;
+			int pow = 0;
+			while (curr < n) {
+				curr <<= 1;
+				pow++;
+			}
+			if (curr > n) {
+				curr >>= 1;
+				pow--;
+			}
+			n -= curr;
+			pows.addFirst(pow);
+		}
+		System.out.println(pows);
+		int[] pref = new int[pows.size()];
+		int j = 0;
+		for (int p: pows) {	
+			if (j > 0) {
+				pref[j] = pref[j - 1];
+			}
+			pref[j] += p;
+			j++;
+		}
+		int maxPow = 32 * 32;
+		int[] twoToPower = new int[maxPow];
+		twoToPower[0] = 1;
+		for (int pow = 1; pow < maxPow; pow++) {
+			twoToPower[pow] = (2 * twoToPower[pow - 1]) % mod;
+		}
+		for (int i = 0; i < qn; i++) {
+			int[] q = queries[i];
+			int l = q[0];
+			int r = q[1];
+			int sumOfPows = pref[r];
+			if (l > 0) {
+				sumOfPows -= pref[l - 1];
+			}
+			ans[i] = twoToPower[sumOfPows];
+		}
+		return ans;
+	}
+}

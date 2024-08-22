@@ -1,0 +1,37 @@
+class Solution {
+	int[] uf;
+	int find(int x) {
+		if (uf[x] == 0) {
+			uf[x] = x;
+		}
+		if (uf[x] != x) {
+			uf[x] = find(uf[x]);
+		}
+		return uf[x];
+	}
+	String smallestStringWithSwaps(String s, List<List<Integer>> pairs) {
+		int n = s.length();
+		uf = new int[n + 1];
+		for (List<Integer> list: pairs) {	
+			union(list.get(0) + 1,list.get(1) + 1);
+		}
+		HashMap<Integer, PriorityQueue<Character>> map = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			int pp = find(i + 1);
+			map.putIfAbsent(pp,new PriorityQueue<Character>());
+			map.get(pp).offer(s.charAt(i));
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < n; i++) {
+			sb.append(map.get(uf[i + 1]).poll());
+		}
+		return sb.toString();
+	}
+	void union(int x, int y) {
+		int p1 = find(x), p2 = find(y);
+		if (p1 == p2) {
+			return;
+		}
+		uf[p1] = p2;
+	}
+}

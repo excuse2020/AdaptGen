@@ -1,0 +1,29 @@
+class Solution {
+	int dfs(int[][] grid, int[][] memo, int row, int col, int val) {
+		int max = 0;
+		if (row < 0 || row == grid.length || col == grid[0].length || grid[row][col] <= val) {
+			return max;
+		}
+		if (memo[row][col] != -1) {
+			return memo[row][col];
+		}
+		for (int x = -1; x <= 1; x++) {
+			max = Math.max(dfs(grid,memo,row + x,col + 1,grid[row][col]),max);
+		}
+		memo[row][col] = 1 + max;
+		return memo[row][col];
+	}
+	int maxMoves(int[][] grid) {
+		int m = grid.length, n = grid[0].length;
+		int[][] memo = new int[m][n];
+		for (int[] arr: memo) {	
+			Arrays.fill(arr,-1);
+		}
+		int max = 0;
+		for (int row = 0; row < m; row++) {
+			memo[row][0] = dfs(grid,memo,row,0,0);
+			max = Math.max(memo[row][0],max);
+		}
+		return max - 1;
+	}
+}

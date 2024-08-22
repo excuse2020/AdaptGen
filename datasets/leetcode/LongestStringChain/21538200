@@ -1,0 +1,60 @@
+class Solution {
+	HashMap<String, Integer> dp = new HashMap<>();
+	HashMap<Integer, ArrayList<String>> h = new HashMap<>();
+	int dfs(String s1, int len, HashSet<String> set) {
+		if (!h.containsKey(len)) {
+			return 0;
+		}
+		if (dp.containsKey(s1)) {
+			return dp.get(s1);
+		}
+		int ans = 0;
+		for (String s: h.get(len)) {	
+			if (!isPredecessor(s,s1)) {
+				continue;
+			}
+			if (set.contains(s)) {
+				continue;
+			}
+			int temp = dfs(s,len + 1,set);
+			dp.put(s,temp);
+			ans = Math.max(ans,1 + temp);
+		}
+		return ans;
+	}
+	boolean isPredecessor(String l, String s) {
+		int diff = 0;
+		int i = 0, j = 0;
+		while (i < l.length() && j < s.length()) {
+			if (l.charAt(i) == s.charAt(j)) {
+				i++;
+				j++;
+			} 
+			else if (diff == 0 && l.charAt(i) != s.charAt(j)) {
+				diff++;
+				i++;
+			} 
+			else {
+				return false;
+			}
+		}
+		if (diff == 1 && i < l.length()) {
+			return false;
+		}
+		return true;
+	}
+	int longestStrChain(String[] words) {
+		for (String word: words) {	
+			if (!h.containsKey(word.length())) {
+				h.put(word.length(),new ArrayList<String>());
+			}
+			h.get(word.length()).add(word);
+		}
+		int ans = 0;
+		for (String s: words) {	
+			int currAns = 1 + dfs(s,s.length() + 1,new HashSet<String>());
+			ans = Math.max(ans,currAns);
+		}
+		return ans;
+	}
+}

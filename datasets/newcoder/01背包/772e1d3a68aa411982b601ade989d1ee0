@@ -1,0 +1,40 @@
+class Solution {
+	int[][] memo;
+	int n;
+	int[] value;
+	int[] weight;
+	int knapsack(int V, int n, int[][] vw) {
+		int[] weight = new int[n];
+		int[] value = new int[n];
+		for (int i = 0; i < n; i++) {
+			weight[i] = vw[i][0];
+			value[i] = vw[i][1];
+		}
+		return process(weight,value,n,V);
+	}
+	int process(int[] weight, int[] value, int n, int bagWeight) {
+		memo = new int[n][bagWeight + 1];
+		for (int i = 0; i < n; i++) {
+			Arrays.fill(memo[i],-1);
+		}
+		this.weight = weight;
+		this.value = value;
+		this.n = n;
+		return process(0,bagWeight);
+	}
+	int process(int index, int bagAvl) {
+		if (bagAvl == 0 || index == n) {
+			return 0;
+		}
+		if (memo[index][bagAvl] != -1) {
+			return memo[index][bagAvl];
+		}
+		int p1 = process(index + 1,bagAvl);
+		int p2 = 0;
+		if (bagAvl >= weight[index]) {
+			p2 = process(index + 1,bagAvl - weight[index]) + value[index];
+		}
+		memo[index][bagAvl] = Math.max(p1,p2);
+		return memo[index][bagAvl];
+	}
+}

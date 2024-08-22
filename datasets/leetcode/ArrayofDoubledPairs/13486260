@@ -1,0 +1,68 @@
+class Solution {
+	boolean canReorderDoubled(int[] arr) {
+		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+		int n = arr.length;
+		for (int i = 0; i < n; i++) {
+			map.put(arr[i],map.getOrDefault(arr[i],0) + 1);
+		}
+		for (int i = 0; i < n; i++) {
+			if (arr[i] % 2 == -1 || arr[i] % 2 == 1) {
+				Integer count1 = map.get(arr[i]);
+				Integer count2 = map.get(2 * arr[i]);
+				if (count2 == null || count2 == 0) {
+					return false;
+				}
+				map.put(arr[i],count1 - 1);
+				map.put(2 * arr[i],count2 - 1);
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			if (arr[i] % 2 == 0) {
+				Integer count1 = map.get(arr[i]);
+				Integer count2 = map.get(2 * arr[i]);
+				Integer count3 = map.get(arr[i] / 2);
+				if (count1 != 0) {
+					if (count2 != null && count2 != 0 && (count3 == null || count3 == 0)) {
+						map.put(arr[i],count1 - 1);
+						map.put(2 * arr[i],count2 - 1);
+						if (arr[i] == 0) {
+							map.put(0,count1 - 2);
+						}
+					} 
+					else if (count3 != null && count3 != 0 && (count2 == null || count2 == 0)) {
+						map.put(arr[i],count1 - 1);
+						map.put(arr[i] / 2,count3 - 1);
+						if (arr[i] == 0) {
+							map.put(0,count1 - 2);
+						}
+					}
+				}
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			Integer count1 = map.get(arr[i]);
+			if (count1 != 0) {
+				Integer count2 = map.get(2 * arr[i]);
+				Integer count3 = map.get(arr[i] / 2);
+				if (count2 != null && count2 != 0) {
+					map.put(arr[i],count1 - 1);
+					map.put(2 * arr[i],count2 - 1);
+					if (arr[i] == 0) {
+						map.put(0,count1 - 2);
+					}
+				} 
+				else if (count3 != null && count3 != 0) {
+					map.put(arr[i],count1 - 1);
+					map.put(arr[i] / 2,count3 - 1);
+					if (arr[i] == 0) {
+						map.put(0,count1 - 2);
+					}
+				} 
+				else {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

@@ -1,0 +1,36 @@
+class Solution {
+	int memo;
+	int n;
+	int solve(int i, int[] stoneValue) {
+		if (i >= n) {
+			return 0;
+		}
+		int stone = 0;
+		int result = Integer.MIN_VALUE;
+		if (memo[i] != -1) {
+			return memo[i];
+		}
+		result = Math.max(stoneValue[i] - solve(i + 1,stoneValue),result);
+		if (i + 1 < n) {
+			result = Math.max(stoneValue[i] + stoneValue[i + 1] - solve(i + 2,stoneValue),result);
+		}
+		if (i + 2 < n) {
+			result = Math.max(stoneValue[i] + stoneValue[i + 1] - solve(i + 3,stoneValue),result);
+		}
+		return memo[i] = result;
+	}
+	String stoneGameIII(int[] stoneValue) {
+		n = stoneValue.length;
+		memo = new int[n + 1];
+		Arrays.fill(memo,-1);
+		if (solve(0,stoneValue) == 0) {
+			return "Tie";
+		} 
+		else if (solve(0,stoneValue) > 0) {
+			return "Alice";
+		} 
+		else {
+			return "Bob";
+		}
+	}
+}

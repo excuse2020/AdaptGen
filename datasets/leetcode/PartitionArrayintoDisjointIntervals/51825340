@@ -1,0 +1,25 @@
+class Solution {
+	int partitionDisjoint(int[] nums) {
+		TreeMap<Integer, Integer> map = new TreeMap<>();
+		for (int ele: nums) {	
+			map.put(ele,map.getOrDefault(ele,0) + 1);
+		}
+		int max_from_left = 0;
+		int min_from_right = 0;
+		for (int i = 0; i < nums.length; i++) {
+			map.put(nums[i],map.get(nums[i]) - 1);
+			if (map.get(nums[i]) == 0) {
+				map.remove(nums[i]);
+			}
+			max_from_left = Math.max(max_from_left,nums[i]);
+			min_from_right = map.firstKey();
+			if (max_from_left <= min_from_right) {
+				return i + 1;
+			}
+		}
+		for (int key: map.keySet()) {	
+			System.out.println(key + " -> ");
+		}
+		return 0;
+	}
+}

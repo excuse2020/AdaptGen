@@ -1,0 +1,35 @@
+class Solution {
+	int maximumSum(int[] nums) {
+		Map<Long, List<Integer>> m = new HashMap<>();
+		for (int i: nums) {	
+			long x = sum(i);
+			if (m.containsKey(x)) {
+				List<Integer> k = m.get(x);
+				k.add(i);
+				m.put(x,k);
+			} 
+			else {
+				List<Integer> k = new ArrayList<>();
+				k.add(i);
+				m.put(x,k);
+			}
+		}
+		int max = -1;
+		for (List<Integer> x: m.values()) {	
+			if (x.size() > 1) {
+				Collections.sort(x);
+				int sum = x.get(x.size() - 1) + x.get(x.size() - 2);
+				max = Math.max(max,sum);
+			}
+		}
+		return max;
+	}
+	long sum(int n) {
+		int sum = 0;
+		while (n != 0) {
+			sum += n % 10;
+			n /= 10;
+		}
+		return sum;
+	}
+}

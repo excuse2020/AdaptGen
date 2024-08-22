@@ -1,0 +1,46 @@
+class Solution {
+	void bfs(int[] edges, int[] d, int cur, int[] vis, Queue<Integer> q) {
+		q.offer(cur);
+		while (!q.isEmpty()) {
+			int curNode = q.poll();
+			if (vis[curNode] == 1) {
+				continue;
+			}
+			vis[curNode] = 1;
+			if (edges[curNode] == -1) {
+				continue;
+			}
+			if (d[edges[curNode]] == Integer.MAX_VALUE && d[curNode] != Integer.MAX_VALUE) {
+				d[edges[curNode]] = d[curNode] + 1;
+				q.offer(edges[curNode]);
+			}
+		}
+	}
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		if (node1 == node2) {
+			return node1;
+		}
+		if (edges[node1] == -1 && edges[node2] == -1) {
+			return -1;
+		}
+		int n = edges.length;
+		int[] d1 = new int[n];
+		int[] d2 = new int[n];
+		Arrays.fill(d1,Integer.MAX_VALUE);
+		d1[node1] = 0;
+		Arrays.fill(d2,Integer.MAX_VALUE);
+		d2[node2] = 0;
+		bfs(edges,d1,node1,new int[n],new LinkedList<>());
+		bfs(edges,d2,node2,new int[n],new LinkedList<>());
+		int minSoFar = Integer.MAX_VALUE;
+		int ans = -1;
+		for (int i = 0; i < n; i++) {
+			int maxSoFar = Math.max(d1[i],d2[i]);
+			if (minSoFar > maxSoFar) {
+				minSoFar = maxSoFar;
+				ans = i;
+			}
+		}
+		return ans;
+	}
+}

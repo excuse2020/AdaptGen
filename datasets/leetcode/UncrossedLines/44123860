@@ -1,0 +1,30 @@
+class Solution {
+	int n, m;
+	int bruteforce(int[] nums1, int[] nums2, int i, int j, int[][] cache) {
+		if (i >= n || j >= m) {
+			return 0;
+		}
+		if (cache[i][j] != -1) {
+			return cache[i][j];
+		}
+		int lines_max = 0;
+		for (int p = i; p < n; p++) {
+			for (int q = j; q < m; q++) {
+				if (nums1[p] == nums2[q]) {
+					lines_max = Math.max(lines_max,1 + bruteforce(nums1,nums2,p + 1,q + 1,cache));
+				}
+			}
+		}
+		cache[i][j] = lines_max;
+		return lines_max;
+	}
+	int maxUncrossedLines(int[] nums1, int[] nums2) {
+		n = nums1.length;
+		m = nums2.length;
+		int[][] cache = new int[n][m];
+		for (int[] arr: cache) {	
+			Arrays.fill(arr,-1);
+		}
+		return bruteforce(nums1,nums2,0,0,cache);
+	}
+}

@@ -1,0 +1,38 @@
+class Solution {
+	int longestCycle(int[] edges) {
+		int len = edges.length;
+		int maxCycle = -1;
+		boolean[] visited = new boolean[len];
+		int[] markCycle = new int[len];
+		int cycleNumber = 0;
+		for (int i = 0; i < len; i++) {
+			if (visited[i]) {
+				continue;
+			}
+			int node = i;
+			boolean isCycle = false;
+			cycleNumber += 1;
+			while (!visited[node]) {
+				visited[node] = true;
+				markCycle[node] = cycleNumber;
+				if (edges[node] == -1) {
+					break;
+				}
+				node = edges[node];
+			}
+			if (visited[node] && cycleNumber == markCycle[node] && (edges[node] != -1)) {
+				isCycle = true;
+			}
+			if (isCycle) {
+				int localCycle = 1;
+				int nextNode = edges[node];
+				while (nextNode != node) {
+					localCycle++;
+					nextNode = edges[nextNode];
+				}
+				maxCycle = Math.max(maxCycle,localCycle);
+			}
+		}
+		return maxCycle;
+	}
+}

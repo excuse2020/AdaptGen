@@ -1,0 +1,30 @@
+class Solution {
+	int[] fullBloomFlowers(int[][] flowers, int[] people) {
+		HashMap<Integer, Integer> map = new HashMap();
+		int n = people.length;
+		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {a[0] - b[0]});
+		for (int flower: flowers) {	
+			pq.add(new int{flower[0], 0});
+			pq.add(new int{flower[1] + 1, 1});
+		}
+		int count = 0;
+		for (int p: Arrays.stream(people).sorted().toArray()) {	
+			while (pq.size() > 0 && pq.peek()[0] <= p) {
+				int time = pq.poll();
+				if (time[1] == 0) {
+					count++;
+				} 
+				else {
+					count--;
+				}
+			}
+			map.put(p,count);
+		}
+		int[] ans = new int[n];
+		int i = 0;
+		for (int p: people) {	
+			ans[i++] = map.get(p);
+		}
+		return ans;
+	}
+}

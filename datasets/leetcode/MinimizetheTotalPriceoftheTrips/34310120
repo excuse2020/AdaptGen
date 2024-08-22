@@ -1,0 +1,59 @@
+class Solution {
+	Integer[][] dp;
+	int[] freq;
+	boolean dfs(List<List<Integer>> graph, int cur, int end, boolean[] visited) {
+		if (cur == end) {
+			visited[cur] = true;
+			freq[cur]++;
+			return true;
+		}
+		visited[cur] = true;
+		boolean res = false;
+		List<Integer> neighbors = graph.get(cur);
+		for (int neighbor: neighbors) {	
+			if (visited[neighbor]) {
+				continue;
+			}
+			res = res || dfs(graph,neighbor,end,visited);
+		}
+		if (res) {
+			freq[cur]++;
+		}
+		return res;
+	}
+	int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
+		List<List<Integer>> graph = new ArrayList<>();
+		dp = new Integer[n][2];
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int[] edge: edges) {	
+			graph.get(edge[0]).add(edge[1]);
+			graph.get(edge[1]).add(edge[0]);
+		}
+		freq = new int[n];
+		for (int[] trip: trips) {	
+			dfs(graph,trip[0],trip[1],new boolean[n]);
+		}
+		return Math.min(solve(graph,0,true,price,-1),solve(graph,0,false,price,-1));
+	}
+	int solve(List<List<Integer>> graph, int cur, boolean flag, int[] price, int parent) {
+		int index = flag ? 0 : 1;
+		if (dp[cur][index] != null) {
+			return dp[cur][index];
+		}
+		List<Integer> neighbors = graph.get(cur);
+		int res = flag ? (price[cur] * freq[cur]) : ((price[cur] / 2) * freq[cur]);
+		for (int neighbor: neighbors) {	
+			if (neighbor != parent) {
+				if (flag) {
+					res += Math.min(solve(graph,neighbor,true,price,cur),solve(graph,neighbor,false,price,cur));
+				} 
+				else {
+					res += solve(graph,neighbor,true,price,cur);
+				}
+			}
+		}
+		return dp[cur][index] = res;
+	}
+}

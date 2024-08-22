@@ -1,0 +1,40 @@
+class Solution {
+	int count = 0;
+	void dfs(int[][] matrix, int depth, int n, int m) {
+		int temp = matrix[n][m];
+		if (!((n - 1 >= 0 && matrix[n - 1][m] > temp) || (m - 1 >= 0 && matrix[n][m - 1] > temp) || (n + 1 < matrix.length && matrix[n + 1][m] > temp)|| (m + 1 < matrix[0].length && matrix[n][m + 1] > temp))) {
+			if (count < depth) {
+				count = depth;
+			}
+			return;
+		}
+		if (n - 1 >= 0 && matrix[n - 1][m] > temp) {
+			matrix[n][m] = -1;
+			dfs(matrix,depth + 1,n - 1,m);
+			matrix[n][m] = temp;
+		}
+		if (m - 1 >= 0 && matrix[n][m - 1] > temp) {
+			matrix[n][m] = -1;
+			dfs(matrix,depth + 1,n,m - 1);
+			matrix[n][m] = temp;
+		}
+		if (n + 1 < matrix.length && matrix[n + 1][m] > temp) {
+			matrix[n][m] = -1;
+			dfs(matrix,depth + 1,n + 1,m);
+			matrix[n][m] = temp;
+		}
+		if (m + 1 < matrix[0].length && matrix[n][m + 1] > temp) {
+			matrix[n][m] = -1;
+			dfs(matrix,depth + 1,n,m + 1);
+			matrix[n][m] = temp;
+		}
+	}
+	int solve(int[][] matrix) {
+		for (int i = 0; i < matrix.length; i++) {
+			for (int t = 0; t < matrix[0].length; t++) {
+				dfs(matrix,1,i,t);
+			}
+		}
+		return count;
+	}
+}

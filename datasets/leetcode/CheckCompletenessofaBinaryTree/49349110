@@ -1,0 +1,40 @@
+class Solution {
+	boolean isCompleteTree(TreeNode root) {
+		if (root == null) {
+			return true;
+		}
+		Queue<TreeNode> level = new LinkedList<>();
+		level.add(root);
+		int h = 0;
+		while (!level.isEmpty()) {
+			int levelSz = level.size();
+			boolean hasNull = false;
+			for (int i = 0; i < levelSz; i++) {
+				TreeNode n = level.poll();
+				if (n.left == null) {
+					hasNull = true;
+				} 
+				else if (hasNull) {
+					return false;
+				} 
+				else {
+					level.add(n.left);
+				}
+				if (n.right == null) {
+					hasNull = true;
+				} 
+				else if (hasNull) {
+					return false;
+				} 
+				else {
+					level.add(n.right);
+				}
+			}
+			if (!level.isEmpty() && levelSz < Math.pow(2,h)) {
+				return false;
+			}
+			h++;
+		}
+		return true;
+	}
+}

@@ -1,0 +1,38 @@
+class Solution {
+	int[][] dp;
+	int solve(int i, int n, int[][] costs) {
+		if (n < 0) {
+			return Integer.MAX_VALUE;
+		}
+		if (i == costs.length) {
+			if (n != 0) {
+				return Integer.MAX_VALUE;
+			}
+			return 0;
+		}
+		if (dp[i][n] != -1) {
+			return dp[i][n];
+		}
+		int a = solve(i + 1,n - 1,costs);
+		if (a != Integer.MAX_VALUE) {
+			a = a + costs[i][0];
+		}
+		int b = solve(i + 1,n,costs);
+		if (b != Integer.MAX_VALUE) {
+			b = b + costs[i][1];
+		}
+		int c = Math.min(a,b);
+		dp[i][n] = c;
+		return c;
+	}
+	int twoCitySchedCost(int[][] costs) {
+		int m = costs.length;
+		int n = m / 2;
+		dp = new int[m + 1][n + 1];
+		for (int[] arr: dp) {	
+			Arrays.fill(arr,-1);
+		}
+		int ans = solve(0,n,costs);
+		return ans;
+	}
+}

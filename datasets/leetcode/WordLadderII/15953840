@@ -1,0 +1,76 @@
+class Solution {
+	List<List<Integer>> buildGraph(List<String> wordList) {
+		int n = wordList.size();
+		List<List<Integer>> g = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			g.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			for (int j = i + 1; j < n; j++) {
+				if (intersects(wordList.get(i),wordList.get(j))) {
+					g.get(i).add(j);
+					g.get(j).add(i);
+				}
+			}
+		}
+		return g;
+	}
+	List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+		wordList.add(0,beginWord);
+		List<List<Integer>> g = buildGraph(wordList);
+		List<List<String>> res = new ArrayList<>();
+		int min = Integer.MAX_VALUE;
+		int target = wordList.indexOf(endWord);
+		int source = wordList.indexOf(beginWord);
+		Queue<Pair> q = new ArrayDeque<>();
+		q.add(new Pair<Integer, List<String>>(source, new ArrayList<>()));
+		int[] visited = new int[wordList.size()];
+		while (q.size() > 0) {
+			int size = q.size();
+			for (int i = 0; i < size; i++) {
+				Pair<Integer, List<String>> node = q.poll();
+				Integer index = node.getKey();
+				visited[index] = 1;
+				String word = wordList.get(index);
+				List<String> path = node.getValue();
+				path.add(word);
+				if (path.size() > min) {
+					continue;
+				}
+				if (index == target) {
+					if (path.size() < min) {
+						min = path.size();
+						res.clear();
+						res.add(path);
+					} 
+					else if (path.size() == min) {
+						res.add(path);
+					}
+				} 
+				else {
+					for (Integer nei: g.get(index)) {	
+						String neiWord = wordList.get(nei);
+						if (visited[nei] == 0) {
+							q.add(new Pair<>(nei, new ArrayList<>(path)));
+						}
+					}
+				}
+			}
+		}
+		return res;
+	}
+	boolean intersects(String a, String b) {
+		int i = 0;
+		int count = 0;
+		while (i < a.length()) {
+			if (a.charAt(i) != b.charAt(i)) {
+				count++;
+			}
+			if (count > 1) {
+				return false;
+			}
+			i++;
+		}
+		return count == 1;
+	}
+}

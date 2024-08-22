@@ -1,0 +1,25 @@
+class Solution {
+	void backTracking(int[] candidates, int index, int target, List<Integer> currList, List<List<Integer>> combinations) {
+		if (target == 0) {
+			combinations.add(new ArrayList<>(currList));
+			return;
+		}
+		for (int i = index; i < candidates.length; i++) {
+			if (i > index && candidates[i] == candidates[i - 1]) {
+				continue;
+			}
+			if (candidates[i] > target) {
+				break;
+			}
+			currList.add(candidates[i]);
+			backTracking(candidates,i + 1,target - candidates[i],currList,combinations);
+			currList.remove(currList.size() - 1);
+		}
+	}
+	List<List<Integer>> combinationSum2(int[] candidates, int target) {
+		List<List<Integer>> combinations = new ArrayList<>();
+		Arrays.sort(candidates);
+		backTracking(candidates,0,target,new ArrayList<>(),combinations);
+		return combinations;
+	}
+}

@@ -1,0 +1,44 @@
+class Solution {
+	int res = 0;
+	void count(int[][] mat, List<Integer> selectedCol) {
+		int c = 0;
+		Set<Integer> set = new HashSet<>();
+		for (int x: selectedCol) {	
+			set.add(x);
+		}
+		for (int i = 0; i < mat.length; i++) {
+			boolean flag = true;
+			for (int j = 0; j < mat[0].length; j++) {
+				if (mat[i][j] == 1 && !set.contains(j)) {
+					flag = false;
+					break;
+				}
+			}
+			if (flag) {
+				c++;
+			}
+		}
+		res = Math.max(res,c);
+	}
+	void find(int[][] mat, int m, int index, int num, List<Integer> selectedColumn) {
+		if (selectedColumn.size() > num) {
+			return;
+		}
+		if (selectedColumn.size() == num) {
+			count(mat,selectedColumn);
+			return;
+		}
+		for (int i = index; i < m; i++) {
+			selectedColumn.add(i);
+			find(mat,m,i + 1,num,selectedColumn);
+			selectedColumn.remove(selectedColumn.size() - 1);
+		}
+		return;
+	}
+	int maximumRows(int[][] mat, int num) {
+		int rowSize = mat.length;
+		int colSize = mat[0].length;
+		find(mat,colSize,0,num,new ArrayList<>());
+		return res;
+	}
+}

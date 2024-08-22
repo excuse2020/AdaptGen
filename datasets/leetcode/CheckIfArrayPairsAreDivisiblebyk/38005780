@@ -1,0 +1,33 @@
+class Solution {
+	boolean canArrange(int[] arr, int k) {
+		Map<Integer, Integer> remainderFrequency = new HashMap<>();
+		for (int number: arr) {	
+			int remainder = number % k;
+			if (remainder == 0 && remainderFrequency.containsKey(remainder)) {
+				decrease(remainderFrequency,remainder);
+			} 
+			else if (remainderFrequency.containsKey(-remainder)) {
+				decrease(remainderFrequency,-remainder);
+			} 
+			else if (remainderFrequency.containsKey(k - remainder)) {
+				decrease(remainderFrequency,k - remainder);
+			} 
+			else if (remainderFrequency.containsKey(-k - remainder)) {
+				decrease(remainderFrequency,-k - remainder);
+			} 
+			else {
+				remainderFrequency.merge(remainder,1,);
+			}
+		}
+		return remainderFrequency.isEmpty();
+	}
+	void decrease(Map<Integer, Integer> remainderFrequency, int remainder) {
+		int currentFrequency = remainderFrequency.get(remainder);
+		if (currentFrequency > 1) {
+			remainderFrequency.put(remainder,currentFrequency - 1);
+		} 
+		else {
+			remainderFrequency.remove(remainder);
+		}
+	}
+}

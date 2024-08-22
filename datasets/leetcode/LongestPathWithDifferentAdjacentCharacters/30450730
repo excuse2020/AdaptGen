@@ -1,0 +1,39 @@
+class Solution {
+	int result = 1;
+	int _longestPath(int n, ArrayList<ArrayList<Integer>> graph, String s) {
+		ArrayList<Integer> longestChildrenPaths = new ArrayList<Integer>();
+		for (int connection: graph.get(n)) {	
+			int longestOfChild = _longestPath(connection,graph,s);
+			if (s.charAt(connection) != s.charAt(n)) {
+				longestChildrenPaths.add(longestOfChild);
+			}
+		}
+		if (longestChildrenPaths.isEmpty()) {
+			return 1;
+		}
+		int longestPath = Collections.max(longestChildrenPaths);
+		if (longestChildrenPaths.size() > 1) {
+			longestChildrenPaths.remove(longestChildrenPaths.indexOf(longestPath));
+			int secondLongest = Collections.max(longestChildrenPaths);
+			int longestOfTwo = longestPath + secondLongest;
+			if (longestOfTwo > result) {
+				result = longestOfTwo;
+			}
+		} 
+		else if (longestPath + 1 > result) {
+			result = longestPath + 1;
+		}
+		return longestPath + 1;
+	}
+	int longestPath(int[] parent, String s) {
+		ArrayList<ArrayList<Integer>> graph = new ArrayList<ArrayList<Integer>>();
+		for (int i = 0; i < parent.length; i++) {
+			graph.add(new ArrayList<Integer>());
+		}
+		for (int i = 0; ++i < parent.length; ) {
+			graph.get(parent[i]).add(i);
+		}
+		_longestPath(0,graph,s);
+		return result;
+	}
+}

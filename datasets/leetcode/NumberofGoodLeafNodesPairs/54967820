@@ -1,0 +1,45 @@
+class Solution {
+	int ans;
+	int dist;
+	int countPairs(TreeNode root, int distance) {
+		dist = distance;
+		ans = 0;
+		helper(root);
+		return ans;
+	}
+	List<Integer> helper(TreeNode root) {
+		if (root == null) {
+			return new ArrayList<>();
+		}
+		if (root.left == null && root.right == null) {
+			return new ArrayList<>(Arrays.asList(1));
+		}
+		List<Integer> left = helper(root.left);
+		List<Integer> right = helper(root.right);
+		List<Integer> result = new ArrayList<>();
+		for (int leftDist: left) {	
+			if (leftDist >= dist) {
+				continue;
+			}
+			for (int rightDist: right) {	
+				if (rightDist >= dist) {
+					continue;
+				}
+				if (leftDist + rightDist <= dist) {
+					ans++;
+				}
+			}
+		}
+		for (int leftDist: left) {	
+			if (leftDist + 1 < dist) {
+				result.add(leftDist + 1);
+			}
+		}
+		for (int rightDist: right) {	
+			if (rightDist + 1 < dist) {
+				result.add(rightDist + 1);
+			}
+		}
+		return result;
+	}
+}

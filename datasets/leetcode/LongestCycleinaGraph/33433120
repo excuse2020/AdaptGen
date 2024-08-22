@@ -1,0 +1,27 @@
+class Solution {
+	int dfs(int[] edges, int cur, Map<Integer, Integer> dist, int curDist, boolean[] visited) {
+		if (visited[cur]) {
+			return -1;
+		}
+		if (dist.containsKey(cur)) {
+			visited[cur] = true;
+			return curDist - dist.get(cur);
+		}
+		if (edges[cur] == -1) {
+			visited[cur] = true;
+			return -1;
+		}
+		dist.put(cur,curDist);
+		int res = dfs(edges,edges[cur],dist,curDist + 1,visited);
+		visited[cur] = true;
+		return res;
+	}
+	int longestCycle(int[] edges) {
+		int res = -1;
+		boolean[] visited = new boolean[edges.length];
+		for (int i = 0; i < edges.length; i++) {
+			res = Math.max(res,dfs(edges,i,new HashMap<>(),1,visited));
+		}
+		return res;
+	}
+}

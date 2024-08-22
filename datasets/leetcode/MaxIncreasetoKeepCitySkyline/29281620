@@ -1,0 +1,40 @@
+class Solution {
+	int maxCol(int col, int[][] grid) {
+		int max = 0;
+		for (int i = 0; i < grid.length; i++) {
+			if (grid[i][col] > max) {
+				max = grid[i][col];
+			}
+		}
+		return max;
+	}
+	int maxIncreaseKeepingSkyline(int[][] grid) {
+		int[] rowmax = new int[grid.length];
+		int[] colmax = new int[grid.length];
+		int res = 0;
+		for (int i = 0; i < grid.length; i++) {
+			rowmax[i] = maxRow(i,grid);
+		}
+		for (int i = 0; i < grid.length; i++) {
+			colmax[i] = maxCol(i,grid);
+		}
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid.length; j++) {
+				int minOfRowAndCol = Math.min(rowmax[i],colmax[j]);
+				int num = minOfRowAndCol - grid[i][j];
+				grid[i][j] += num;
+				res += num;
+			}
+		}
+		return res;
+	}
+	int maxRow(int row, int[][] grid) {
+		int max = 0;
+		for (int i = 0; i < grid.length; i++) {
+			if (grid[row][i] > max) {
+				max = grid[row][i];
+			}
+		}
+		return max;
+	}
+}

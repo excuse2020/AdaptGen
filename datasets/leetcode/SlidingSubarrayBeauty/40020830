@@ -1,0 +1,35 @@
+class Solution {
+	int findXSmallest(int[] negCount, int x) {
+		int count = 0;
+		for (int i = 0; i < negCount.length; i++) {
+			count += negCount[i];
+			if (count >= x) {
+				return i - 50;
+			}
+		}
+		return 0;
+	}
+	int[] getSubarrayBeauty(int[] nums, int k, int x) {
+		int[] ans = new int[nums.length - k + 1];
+		int[] negCount = new int[50];
+		int left = 0;
+		int ansPtr = 0;
+		for (int right = 0; right < nums.length; right++) {
+			if (nums[right] < 0) {
+				negCount[nums[right] + 50] += 1;
+			}
+			if (right - left >= k) {
+				if (nums[left] < 0) {
+					negCount[nums[left] + 50] -= 1;
+				}
+				left += 1;
+			}
+			if (right - left == k - 1) {
+				int result = findXSmallest(negCount,x);
+				ans[ansPtr] = result;
+				ansPtr += 1;
+			}
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,35 @@
+class Solution {
+	int dfs(boolean[][] vis, int row, int col, int[][] grid) {
+		vis[row][col] = true;
+		int sum = grid[row][col];
+		int sum1 = 0;
+		if (row - 1 >= 0 && grid[row - 1][col] != 0 && !vis[row - 1][col]) {
+			sum1 = Math.max(sum1,dfs(vis,row - 1,col,grid));
+		}
+		if ((row + 1 <= (grid.length - 1)) && grid[row + 1][col] != 0 && !vis[row + 1][col]) {
+			sum1 = Math.max(sum1,dfs(vis,row + 1,col,grid));
+		}
+		if ((col + 1 <= (grid[0].length - 1)) && grid[row][col + 1] != 0 && !vis[row][col + 1]) {
+			sum1 = Math.max(sum1,dfs(vis,row,col + 1,grid));
+		}
+		if (col - 1 >= 0 && grid[row][col - 1] != 0 && !vis[row][col - 1]) {
+			sum1 = Math.max(sum1,dfs(vis,row,col - 1,grid));
+		}
+		vis[row][col] = false;
+		return sum + sum1;
+	}
+	int getMaximumGold(int[][] grid) {
+		int m = grid.length;
+		int n = grid[0].length;
+		boolean[][] vis = new boolean[m][n];
+		int ans = 0;
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				if (!vis[i][j] && grid[i][j] != 0) {
+					ans = Math.max(ans,dfs(vis,i,j,grid));
+				}
+			}
+		}
+		return ans;
+	}
+}

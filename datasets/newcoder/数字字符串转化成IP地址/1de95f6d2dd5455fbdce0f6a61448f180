@@ -1,0 +1,45 @@
+class Solution {
+	void dfs(String s, StringBuilder sb, ArrayList<String> res, int pointSum, int start) {
+		if (pointSum == 3) {
+			String sTemp = s.substring(start,s.length());
+			if (isValid(sTemp)) {
+				sb.append(sTemp);
+				res.add(new String(sb.toString()));
+				sb.delete(sb.length() - sTemp.length(),sb.length());
+				return;
+			}
+		}
+		if (start >= s.length()) {
+			return;
+		}
+		for (int i = start; i < s.length(); i++) {
+			String sTemp = s.substring(start,i + 1);
+			if (!isValid(sTemp)) {
+				return;
+			} 
+			else {
+				sb.append(sTemp).append(".");
+				pointSum++;
+				dfs(s,sb,res,pointSum,i + 1);
+				sb.delete(sb.length() - sTemp.length(),sb.length());
+				pointSum--;
+			}
+		}
+	}
+	boolean isValid(String s) {
+		if (s.length() == 0 || (s.charAt(0) == '0' && s.length() != 1)) {
+			return false;
+		}
+		int a = Integer.parseInt(s);
+		return a >= 0 && a <= 255;
+	}
+	ArrayList<String> restoreIpAddresses(String s) {
+		if (s.length() < 4 || s.length() > 12) {
+			return new ArrayList<>();
+		}
+		StringBuilder sb = new StringBuilder();
+		ArrayList<String> res = new ArrayList<>();
+		dfs(s,sb,res,0,0);
+		return res;
+	}
+}

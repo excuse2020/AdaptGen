@@ -1,0 +1,24 @@
+class Solution {
+	int memo(int[][] costs, int[][] memo, int aCounter, int bCounter) {
+		if (aCounter + bCounter > costs.length - 1) {
+			return 0;
+		}
+		if (memo[aCounter][bCounter] != 0) {
+			return memo[aCounter][bCounter];
+		}
+		int chooseA = Integer.MAX_VALUE;
+		int chooseB = Integer.MAX_VALUE;
+		if (aCounter < costs.length / 2) {
+			chooseA = costs[aCounter + bCounter][0] + memo(costs,memo,aCounter + 1,bCounter);
+		}
+		if (bCounter < costs.length / 2) {
+			chooseB = costs[aCounter + bCounter][1] + memo(costs,memo,aCounter,bCounter + 1);
+		}
+		memo[aCounter][bCounter] = Math.min(chooseA,chooseB);
+		return memo[aCounter][bCounter];
+	}
+	int twoCitySchedCost(int[][] costs) {
+		int[][] memo = new int[costs.length / 2 + 1][costs.length / 2 + 1];
+		return memo(costs,memo,0,0);
+	}
+}

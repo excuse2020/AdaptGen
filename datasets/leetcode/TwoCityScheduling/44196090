@@ -1,0 +1,61 @@
+class Solution {
+	int twoCitySchedCost(int[][] costs) {
+		int n = costs.length;
+		Map<Integer, Integer> diffA = new HashMap<>();
+		Map<Integer, Integer> diffB = new HashMap<>();
+		int costA = 0, costB = 0;
+		int countA = 0, countB = 0;
+		for (int i = 0; i < n; i++) {
+			int[] arr = costs[i];
+			if (arr[0] < arr[1]) {
+				countA++;
+				costA += arr[0];
+				diffA.put(i,(arr[1] - arr[0]));
+			} 
+			else {
+				countB++;
+				costB += arr[1];
+				diffB.put(i,(arr[0] - arr[1]));
+			}
+		}
+		while (countA != countB) {
+			if (countA < countB) {
+				Set<Integer> ans = diffB.keySet();
+				int minIndex = 0;
+				int min = Integer.MAX_VALUE;
+				for (int key: ans) {	
+					if (min > diffB.get(key)) {
+						minIndex = key;
+						min = diffB.get(key);
+					}
+				}
+				diffB.remove(minIndex);
+				int temp1 = costs[minIndex][0];
+				int temp2 = costs[minIndex][1];
+				countA++;
+				countB--;
+				costB -= temp2;
+				costA += temp1;
+			} 
+			else {
+				Set<Integer> ans = diffA.keySet();
+				int minIndex = 0;
+				int min = Integer.MAX_VALUE;
+				for (int key: ans) {	
+					if (min > diffA.get(key)) {
+						minIndex = key;
+						min = diffA.get(key);
+					}
+				}
+				diffA.remove(minIndex);
+				int temp1 = costs[minIndex][0];
+				int temp2 = costs[minIndex][1];
+				countA--;
+				countB++;
+				costB += temp2;
+				costA -= temp1;
+			}
+		}
+		return costA + costB;
+	}
+}

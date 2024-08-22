@@ -1,0 +1,63 @@
+class Solution {
+	boolean isPossible(int n, List<List<Integer>> edges) {
+		Map<Integer, Set<Integer>> graph = new HashMap<>();
+		for (int i = 1; i <= n; i++) {
+			graph.put(i,new HashSet<>());
+		}
+		for (List<Integer> edge: edges) {	
+			graph.get(edge.get(0)).add(edge.get(1));
+			graph.get(edge.get(1)).add(edge.get(0));
+		}
+		List<Integer> odd = new ArrayList<>();
+		for (int i = 1; i <= n; i++) {
+			if (graph.get(i).size() % 2 == 1) {
+				if (odd.size() == 4) {
+					return false;
+				} 
+				else {
+					odd.add(i);
+				}
+			}
+		}
+		int odds = odd.size();
+		if (odds == 0) {
+			return true;
+		} 
+		else if (odds == 1 || odds == 3) {
+			return false;
+		} 
+		else if (odds == 2) {
+			int v1 = odd.get(0);
+			int v2 = odd.get(1);
+			if (!graph.get(v1).contains(v2)) {
+				return true;
+			} 
+			else {
+				for (int i = 1; i <= n; i++) {
+					if (graph.get(i).size() % 2 == 0 && !graph.get(i).contains(v1) && !graph.get(i).contains(v2)) {
+						return true;
+					}
+				}
+				return false;
+			}
+		} 
+		else {
+			int v1 = odd.get(0);
+			int v2 = odd.get(1);
+			int v3 = odd.get(2);
+			int v4 = odd.get(3);
+			if (!graph.get(v1).contains(v2) && !graph.get(v3).contains(v4)) {
+				return true;
+			} 
+			else if (!graph.get(v1).contains(v3) && !graph.get(v2).contains(v4)) {
+				return true;
+			} 
+			else if (!graph.get(v1).contains(v4) && !graph.get(v2).contains(v3)) {
+				return true;
+			} 
+			else {
+				return false;
+			}
+		}
+	}
+}

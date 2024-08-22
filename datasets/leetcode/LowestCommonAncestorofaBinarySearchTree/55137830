@@ -1,0 +1,27 @@
+class Solution {
+	void getSerializedTree(TreeNode node, TreeNode target, List<TreeNode> result) {
+		if (node == null) {
+			return;
+		}
+		result.add(node);
+		if (node == target) {
+			return;
+		}
+		getSerializedTree(node.left,target,result);
+		getSerializedTree(node.right,target,result);
+		if (result.get(result.size() - 1) != target) {
+			result.remove(result.size() - 1);
+		}
+	}
+	TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+		List<TreeNode> pathToP = new LinkedList<>();
+		List<TreeNode> pathToQ = new LinkedList<>();
+		getSerializedTree(root,p,pathToP);
+		getSerializedTree(root,q,pathToQ);
+		TreeNode prev = root;
+		for (int i = 0; i < Math.min(pathToP.size(),pathToQ.size()) && pathToP.get(i) == pathToQ.get(i); i++) {
+			prev = pathToP.get(i);
+		}
+		return prev;
+	}
+}

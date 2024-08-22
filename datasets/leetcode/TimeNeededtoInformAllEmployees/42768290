@@ -1,0 +1,27 @@
+class Solution {
+	int totalTime = 0;
+	void informAllEmployees(int depth, int source, List<List<Integer>> employees, int inform, boolean visited) {
+		if (visited[source]) {
+			return;
+		}
+		totalTime = Math.max(totalTime,depth);
+		visited[source] = true;
+		for (int child: employees.get(source)) {	
+			informAllEmployees(depth + inform[source],child,employees,inform,visited);
+		}
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		List<List<Integer>> employees = new ArrayList();
+		for (int i = 0; i < n; i++) {
+			employees.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			if (manager[i] != -1) {
+				employees.get(manager[i]).add(i);
+			}
+		}
+		boolean visited = new boolean[n];
+		informAllEmployees(0,headID,employees,informTime,visited);
+		return totalTime;
+	}
+}

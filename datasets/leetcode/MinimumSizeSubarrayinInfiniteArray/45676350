@@ -1,0 +1,40 @@
+class Solution {
+	int minSizeSubarray(int[] arr, int target) {
+		int n = arr.length;
+		int sum = 0;
+		for (int e: arr) {	
+			sum += e;
+		}
+		if (sum == target) {
+			return n;
+		}
+		if (target > sum) {
+			int remaining = target % sum;
+			int partialResult = (target / sum) * n;
+			return slidingWindow(arr,remaining,partialResult);
+		} 
+		else {
+			return slidingWindow(arr,target,0);
+		}
+	}
+	int slidingWindow(int[] arr, int target, int partialResult) {
+		int n = arr.length;
+		int l = 0, r = 0;
+		int runningSum = 0;
+		int result = Integer.MAX_VALUE;
+		boolean found = false;
+		while (r < (2 * n)) {
+			runningSum += arr[r % n];
+			while (runningSum > target && l <= r) {
+				runningSum -= arr[l % n];
+				l++;
+			}
+			if (runningSum == target) {
+				result = Math.min(result,r - l + 1);
+				found = true;
+			}
+			r++;
+		}
+		return found ? result + partialResult : -1;
+	}
+}

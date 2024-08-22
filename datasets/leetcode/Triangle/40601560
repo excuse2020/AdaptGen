@@ -1,0 +1,31 @@
+class Solution {
+	int minimumTotal(List<List<Integer>> triangle) {
+		int n = triangle.get(triangle.size() - 1).size();
+		int prev = new int[n];
+		for (int row = n - 1; row >= 0; row--) {
+			int curr = new int[n];
+			for (int col = row; col >= 0; col--) {
+				if (row == n - 1) {
+					curr[col] = triangle.get(row).get(col);
+					continue;
+				}
+				int up = triangle.get(row).get(col) + prev[col];
+				int upLeft = triangle.get(row).get(col) + prev[col + 1];
+				curr[col] = Math.min(up,upLeft);
+			}
+			prev = curr;
+		}
+		return prev[0];
+	}
+	int task(List<List<Integer>> t, int row, int col, int[][] dp) {
+		if (row == t.size() - 1) {
+			return t.get(row).get(col);
+		}
+		if (dp[row][col] != -1) {
+			return dp[row][col];
+		}
+		int up = t.get(row).get(col) + task(t,row + 1,col,dp);
+		int upLeft = t.get(row).get(col) + task(t,row + 1,col + 1,dp);
+		return dp[row][col] = Math.min(up,upLeft);
+	}
+}

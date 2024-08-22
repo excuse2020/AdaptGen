@@ -1,0 +1,26 @@
+class Solution {
+	int MOD = 1_000_000_007;
+	long count(int picked, int delivered, int n, Long[][] dp) {
+		if (picked == n && delivered == n) {
+			return 1;
+		}
+		if (dp[picked][delivered] != null) {
+			return dp[picked][delivered];
+		}
+		long c = 0;
+		if (picked < n) {
+			c += (n - picked) * count(picked + 1,delivered,n,dp);
+			c %= MOD;
+		}
+		if (delivered < picked) {
+			c += (picked - delivered) * count(picked,delivered + 1,n,dp);
+			c %= MOD;
+		}
+		dp[picked][delivered] = c;
+		return c;
+	}
+	int countOrders(int n) {
+		Long[][] dp = new Long[501][501];
+		return (int) count(0,0,n,dp);
+	}
+}

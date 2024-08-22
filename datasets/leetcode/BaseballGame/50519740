@@ -1,0 +1,34 @@
+class Solution {
+	int calPoints(String[] operations) {
+		Stack<Integer> record = new Stack<Integer>();
+		for (int i = 0; i < operations.length; i++) {
+			String var = operations[i];
+			if (var.matches("-?\\\\d+")) {
+				record.push(Integer.parseInt(var));
+			}
+			if (var.equals("C")) {
+				if (record.size() > 0) {
+					record.pop();
+				}
+			}
+			if (var.equals("D")) {
+				if (!record.isEmpty()) {
+					record.push(record.peek() * 2);
+				}
+			}
+			if (var.equals("+")) {
+				if (record.size() >= 2) {
+					int top = record.pop();
+					int newTop = top + record.peek();
+					record.push(top);
+					record.push(newTop);
+				}
+			}
+		}
+		int sum = 0;
+		while (!record.isEmpty()) {
+			sum += record.pop();
+		}
+		return sum;
+	}
+}

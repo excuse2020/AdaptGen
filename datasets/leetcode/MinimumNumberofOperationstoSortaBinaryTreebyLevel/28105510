@@ -1,0 +1,47 @@
+class Solution {
+	int minSwaps(int[] arr) {
+		Map<Integer, Integer> map = new HashMap<>();
+		int[] sortedArr = arr.clone();
+		for (int i = 0; i < arr.length; i++) {
+			map.put(arr[i],i);
+		}
+		Arrays.sort(sortedArr);
+		int swaps = 0;
+		for (int i = 0; i < arr.length; i++) {
+			if (arr[i] != sortedArr[i]) {
+				int index1 = map.get(sortedArr[i]);
+				int index2 = map.get(arr[i]);
+				map.put(arr[i],index1);
+				map.put(sortedArr[i],index2);
+				arr[index1] = arr[i];
+				arr[index2] = sortedArr[i];
+				swaps++;
+			}
+		}
+		return swaps;
+	}
+	int minimumOperations(TreeNode root) {
+		return solve(root);
+	}
+	int solve(TreeNode node) {
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(node);
+		int count = 0;
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			int[] arr = new int[size];
+			for (int i = 0; i < size; i++) {
+				TreeNode currNode = queue.poll();
+				if (currNode.left != null) {
+					queue.add(currNode.left);
+				}
+				if (currNode.right != null) {
+					queue.add(currNode.right);
+				}
+				arr[i] = currNode.val;
+			}
+			count += minSwaps(arr);
+		}
+		return count;
+	}
+}

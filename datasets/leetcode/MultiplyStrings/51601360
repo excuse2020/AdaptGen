@@ -1,0 +1,47 @@
+class Solution {
+	String multiply(String num1, String num2) {
+		int maxOutputSize = num1.length() + num2.length();
+		int[][] sumArray = new int[num2.length()][maxOutputSize];
+		for (int[] arr: sumArray) {	
+			Arrays.fill(arr,0);
+		}
+		int horizontalOffset = 0;
+		int curLine, curColumn;
+		int carry = 0;
+		curLine = 0;
+		curColumn = 0;
+		for (int i = num2.length() - 1; i >= 0; i--) {
+			for (int j = num1.length() - 1; j >= 0; j--) {
+				int lowerDigit = Character.digit(num2.charAt(i),10);
+				int upperDigit = Character.digit(num1.charAt(j),10);
+				int result = lowerDigit * upperDigit + carry;
+				int remainder = result % 10;
+				sumArray[curLine][curColumn++] = remainder;
+				carry = result / 10;
+				if (j == 0) {
+					sumArray[curLine][curColumn] = carry;
+					carry = 0;
+					curLine++;
+					curColumn = ++horizontalOffset;
+				}
+			}
+		}
+		int[] output = new int[maxOutputSize];
+		for (int col = 0; col < maxOutputSize; col++) {
+			int result = 0;
+			for (int line = 0; line < sumArray.length; line++) {
+				result += sumArray[line][col];
+			}
+			result += carry;
+			int remainder = result % 10;
+			carry = result / 10;
+			output[col] = remainder;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = output.length - 1; i >= 0; i--) {
+			sb.append(Character.forDigit(output[i],10));
+		}
+		String resultNotStripped = sb.toString();
+		int cur = 0;
+	}
+}

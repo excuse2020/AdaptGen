@@ -1,0 +1,24 @@
+class Solution {
+	int[] distinctDifferenceArray(int[] nums) {
+		HashMap<Integer, Integer> prefix = new HashMap<>();
+		HashMap<Integer, Integer> suffix = new HashMap<>();
+		int[] result = new int[nums.length];
+		for (int num: nums) {	
+			prefix.put(num,prefix.getOrDefault(num,0) + 1);
+		}
+		if (prefix.get(nums[nums.length - 1]) == 0) {
+			prefix.remove(nums[nums.length - 1]);
+		}
+		result[nums.length - 1] = prefix.size();
+		for (int i = nums.length - 2; i >= 0; i--) {
+			int x = nums[i + 1];
+			suffix.put(x,suffix.getOrDefault(x,0) + 1);
+			prefix.put(x,prefix.get(x) - 1);
+			if (prefix.get(x) == 0) {
+				prefix.remove(x);
+			}
+			result[i] = prefix.size() - suffix.size();
+		}
+		return result;
+	}
+}

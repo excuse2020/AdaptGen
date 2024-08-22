@@ -1,0 +1,33 @@
+class Solution {
+	int ans;
+	String labels;
+	boolean vis;
+	int[] DFS(int node, List<Integer> adj) {
+		vis[node] = true;
+		int cnt = new int[26];
+		for (int a: adj[node]) {	
+			if (!vis[a]) {
+				int freq = DFS(a,adj);
+				for (int i = 0; i < 26; i++) {
+					cnt[i] += freq[i];
+				}
+			}
+		}
+	}
+	int[] countSubTrees(int n, int[][] edges, String labels) {
+		List<Integer> adj = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			adj[i] = new ArrayList();
+		}
+		for (int[] e: edges) {	
+			adj[e[0]].add(e[1]);
+			adj[e[1]].add(e[0]);
+		}
+		this.labels = labels;
+		vis = new boolean[n];
+		ans = new int[n];
+		Arrays.fill(ans,1);
+		DFS(0,adj);
+		return ans;
+	}
+}

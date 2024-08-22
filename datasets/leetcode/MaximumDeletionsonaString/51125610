@@ -1,0 +1,22 @@
+class Solution {
+	int deleteString(String s) {
+		int dp = new int[s.length()];
+		return deleteStringCharacters(s,dp,0);
+	}
+	int deleteStringCharacters(String s, int[] dp, int index) {
+		if (index >= s.length()) {
+			return 0;
+		}
+		if (dp[index] != 0) {
+			return dp[index];
+		}
+		int res = 1;
+		for (int i = index; i < (index + (s.length() - index) / 2); i++) {
+			if (0 == dp[i] && (s.substring(index,i + 1)).equals(s.substring(i + 1,i + 1 - index))) {
+				res = Math.max(res,1 + deleteStringCharacters(s,dp,i + 1));
+			}
+		}
+		dp[index] = res;
+		return res;
+	}
+}

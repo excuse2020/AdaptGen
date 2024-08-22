@@ -1,0 +1,56 @@
+class Solution {
+	long inf = Long.MAX_VALUE;
+	int mod = (int) 1e9 + 7;
+	int countRestrictedPaths(int n, int[][] edges) {
+		List<int[]>[] adj = new List[n + 1];
+		for (int i = 1; i <= n; i++) {
+			adj[i] = new ArrayList<>();
+		}
+		for (int[] e: edges) {	
+			adj[e[0]].add(new int{e[1], e[2]});
+			adj[e[1]].add(new int{e[0], e[2]});
+		}
+		long[] dist = dikstra(adj,n);
+		int[] dp = new int[n + 1];
+		Arrays.fill(dp,-1);
+		int ways = countWays(1,adj,dist,n,dp);
+		return ways;
+	}
+	int countWays(int node, List<int[]>[] adj, long[] dist, int n, int[] dp) {
+		if (node == n) {
+			return 1;
+		}
+		if (dp[node] != -1) {
+			return dp[node];
+		}
+		int ans = 0;
+		for (int[] nb: adj[node]) {	
+			if (dist[node] == inf || dist[nb[0]] == inf) {
+				continue;
+			}
+			if (dist[node] > dist[nb[0]]) {
+				int ways = countWays(nb[0],adj,dist,n,dp);
+				ans = (ans + ways) % mod;
+			}
+		}
+		dp[node] = ans;
+		return ans;
+	}
+	long[] dikstra(List<int[]>[] adj, int n) {
+		long[] dist = new long[n + 1];
+		Arrays.fill(dist,inf);
+		Queue<long[]> pq = new PriorityQueue<>((a, b) -> {Long.compare(a[1],b[1])});
+		dist[n] = 0;
+		pq.add(new long{n, 0});
+		while (!pq.isEmpty()) {
+			long[] curr = pq.poll();
+			for (int[] nb: adj[(int)curr[0]]) {	
+				if (curr[1] + nb[1] < dist[nb[0]]) {
+					dist[nb[0]] = curr[1] + nb[1];
+					pq.add(new long{nb[0], dist[nb[0]]});
+				}
+			}
+		}
+		return dist;
+	}
+}

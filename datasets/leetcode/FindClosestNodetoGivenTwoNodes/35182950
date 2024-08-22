@@ -1,0 +1,27 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int n1, int n2) {
+		int n = edges.length;
+		int[] d1 = new int[n];
+		int[] d2 = new int[n];
+		dfs(edges,n1,d1,1);
+		dfs(edges,n2,d2,1);
+		int minDistance = Integer.MAX_VALUE;
+		int result = -1;
+		for (int node = 0; node < n; node++) {
+			boolean isVisitedByBoth = d1[node] != 0 && d2[node] != 0;
+			int distance = Math.max(d1[node],d2[node]);
+			if (isVisitedByBoth && distance < minDistance) {
+				minDistance = distance;
+				result = node;
+			}
+		}
+		return result;
+	}
+	void dfs(int[] edges, int node, int[] visited, int distance) {
+		visited[node] = distance;
+		int neighbor = edges[node];
+		if (neighbor != -1 && visited[neighbor] == 0) {
+			dfs(edges,neighbor,visited,distance + 1);
+		}
+	}
+}

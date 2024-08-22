@@ -1,0 +1,90 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < edges.length; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int u = 0; u < edges.length; u++) {
+			if (edges[u] != -1) {
+				graph.get(u).add(edges[u]);
+			}
+		}
+		Queue<Integer> queue1 = new LinkedList<>();
+		Queue<Integer> queue2 = new LinkedList<>();
+		boolean visited1 = new boolean[edges.length];
+		boolean visited2 = new boolean[edges.length];
+		queue1.offer(node1);
+		queue2.offer(node2);
+		visited1[node1] = visited2[node2] = true;
+		int steps = 0;
+		int ans = Integer.MAX_VALUE;
+		while (!queue1.isEmpty() && !queue2.isEmpty()) {
+			int size = Math.max(queue1.size(),queue2.size());
+			while (size-- > 0) {
+				int cur1 = -1, cur2 = -1;
+				if (!queue1.isEmpty()) {
+					cur1 = queue1.poll();
+				}
+				if (!queue2.isEmpty()) {
+					cur2 = queue2.poll();
+				}
+				if (visited1[cur2] && visited2[cur1]) {
+					ans = Math.min(ans,cur1);
+					ans = Math.min(ans,cur2);
+					return ans;
+				}
+				if (cur1 == cur2) {
+					return cur1;
+				}
+				if (visited1[cur2]) {
+					return cur2;
+				}
+				if (visited2[cur1]) {
+					return cur1;
+				}
+				if (cur1 != -1) {
+					for (int n: graph.get(cur1)) {	
+						if (!visited1[n]) {
+							visited1[n] = true;
+							queue1.add(n);
+						}
+					}
+				}
+				if (cur2 != -1) {
+					for (int n: graph.get(cur2)) {	
+						if (!visited2[n]) {
+							visited2[n] = true;
+							queue2.add(n);
+						}
+					}
+				}
+				steps++;
+			}
+		}
+		while (!queue1.isEmpty()) {
+			int cur1 = queue1.poll();
+			if (cur1 == node2 || visited2[cur1]) {
+				return cur1;
+			}
+			for (int n: graph.get(cur1)) {	
+				if (!visited1[n]) {
+					visited1[n] = true;
+					queue1.add(n);
+				}
+			}
+		}
+		while (!queue2.isEmpty()) {
+			int cur2 = queue2.poll();
+			if (cur2 == node1 || visited1[cur2]) {
+				return cur2;
+			}
+			for (int n: graph.get(cur2)) {	
+				if (!visited2[n]) {
+					visited2[n] = true;
+					queue2.add(n);
+				}
+			}
+		}
+		return -1;
+	}
+}

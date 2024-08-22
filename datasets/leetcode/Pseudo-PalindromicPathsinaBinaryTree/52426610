@@ -1,0 +1,27 @@
+class Solution {
+	int helper(TreeNode root, int[] freq, int depth) {
+		if (root == null) {
+			return 0;
+		}
+		freq[root.val - 1]++;
+		int count = 0;
+		if (root.left == null && root.right == null) {
+			int odds = 0;
+			for (int f: freq) {	
+				if (f % 2 != 0) {
+					odds++;
+				}
+			}
+			freq[root.val - 1]--;
+			return depth % 2 == 0 ? odds == 0 ? 1 : 0 : odds == 1 ? 1 : 0;
+		}
+		count += helper(root.left,freq,depth + 1);
+		count += helper(root.right,freq,depth + 1);
+		freq[root.val - 1]--;
+		return count;
+	}
+	int pseudoPalindromicPaths(TreeNode root) {
+		int[] freqency = new int[9];
+		return helper(root,freqency,1);
+	}
+}

@@ -1,0 +1,42 @@
+class Solution {
+	int[][] highestPeak(int[][] isWater) {
+		int n = isWater.length, m = isWater[0].length;
+		boolean[][] visited = new boolean[n][m];
+		LinkedList<int[]> queue = new LinkedList<int[]>();
+		int[][] sol = new int[n][m];
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				if (isWater[i][j] == 1) {
+					visit(i,j,0,visited,queue,sol);
+				}
+			}
+		}
+		int height = 1;
+		while (!queue.isEmpty()) {
+			int k = queue.size();
+			for (int i = 0; i < k; i++) {
+				int[] last = queue.poll();
+				int row = last[0], col = last[1];
+				if (row > 0 && !visited[row - 1][col]) {
+					visit(row - 1,col,height,visited,queue,sol);
+				}
+				if (row < n - 1 && !visited[row + 1][col]) {
+					visit(row + 1,col,height,visited,queue,sol);
+				}
+				if (col > 0 && !visited[row][col - 1]) {
+					visit(row,col - 1,height,visited,queue,sol);
+				}
+				if (col < m - 1 && !visited[row][col + 1]) {
+					visit(row,col + 1,height,visited,queue,sol);
+				}
+			}
+			height++;
+		}
+		return sol;
+	}
+	void visit(int i, int j, int height, boolean[][] visited, LinkedList<int[]> queue, int[][] sol) {
+		queue.add(new int{i, j});
+		visited[i][j] = true;
+		sol[i][j] = height;
+	}
+}

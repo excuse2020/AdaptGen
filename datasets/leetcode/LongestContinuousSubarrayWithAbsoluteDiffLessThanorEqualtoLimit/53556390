@@ -1,0 +1,30 @@
+class Solution {
+	int longestSubarray(int[] nums, int limit) {
+		int n = nums.length;
+		int maxLen = 0;
+		PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+		PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+		int i = 0;
+		int j = 0;
+		int min = 0;
+		int max = 0;
+		while (j < n) {
+			int el = nums[j];
+			minHeap.add(el);
+			maxHeap.add(el);
+			min = minHeap.peek();
+			max = maxHeap.peek();
+			while (i <= j && max - min > limit) {
+				int temp = nums[i];
+				minHeap.remove(temp);
+				maxHeap.remove(temp);
+				min = minHeap.peek();
+				max = maxHeap.peek();
+				i++;
+			}
+			maxLen = Math.max(maxLen,j - i + 1);
+			j++;
+		}
+		return maxLen;
+	}
+}

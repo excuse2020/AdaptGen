@@ -1,0 +1,23 @@
+class Solution {
+	HashMap<Integer, Integer> hash = new HashMap<>();
+	TreeNode dfs(int[] pre, int[] vin, int prel, int prer, int vinl, int vinr) {
+		if (prel > prer) {
+			return null;
+		}
+		int rootval = pre[prel];
+		TreeNode root = new TreeNode(rootval);
+		int vinroot = hash.get(rootval);
+		int treesize = vinroot - vinl;
+		root.left = dfs(pre,vin,prel + 1,prel + treesize,vinl,vinroot - 1);
+		root.right = dfs(pre,vin,prel + treesize,prer,vinroot + 1,vinr);
+		return root;
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] vin) {
+		int n = vin.length;
+		for (int i = 0; i < n; i++) {
+			hash.put(vin[i],i);
+		}
+		TreeNode root = dfs(pre,vin,0,n - 1,0,n - 1);
+		return root;
+	}
+}

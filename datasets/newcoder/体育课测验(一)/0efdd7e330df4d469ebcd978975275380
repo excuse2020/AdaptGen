@@ -1,0 +1,83 @@
+class Solution {
+	int[] T;
+	int V;
+	HashSet<Integer>[] adj;
+	int[] flag;
+	boolean hasCircle = false;
+	void bfs() {
+		Queue<Integer> queue = new LinkedList<>();
+		for (int i = 0; i < V; i++) {
+			if (T[i] == 0) {
+				queue.offer(i);
+			}
+		}
+		int count = 0;
+		int u;
+		while (!queue.isEmpty()) {
+			u = queue.poll();
+			count++;
+			for (Integer v: adj[u]) {	
+				if (--T[v] == 0) {
+					queue.offer(v);
+				}
+			}
+		}
+		hasCircle = (count != V);
+	}
+	boolean canFinish(int numProject, ArrayList<ArrayList<Integer>> groups) {
+		return solution1(numProject,groups);
+	}
+	void dfs(int u) {
+		flag[u] = 1;
+		for (Integer v: adj[u]) {	
+			if (flag[v] == 0) {
+				dfs(v);
+				if (hasCircle) {
+					return;
+				}
+			} 
+			else if (flag[v] == 1) {
+				hasCircle = true;
+				return;
+			}
+		}
+		flag[u] = 2;
+	}
+	boolean solution1(int numProject, ArrayList<ArrayList<Integer>> groups) {
+		V = numProject;
+		adj = new HashSet[V];
+		for (int i = 0; i < V; i++) {
+			adj[i] = new HashSet<>();
+		}
+		T = new int[V];
+		int u, v;
+		for (ArrayList<Integer> group: groups) {	
+			u = group.get(1);
+			v = group.get(0);
+			adj[u].add(v);
+			T[v]++;
+		}
+		bfs();
+		return !hasCircle;
+	}
+	boolean solution2(int numProject, ArrayList<ArrayList<Integer>> groups) {
+		V = numProject;
+		adj = new HashSet[V];
+		for (int i = 0; i < V; i++) {
+			adj[i] = new HashSet<>();
+		}
+		flag = new int[V];
+		int u, v;
+		for (ArrayList<Integer> group: groups) {	
+			u = group.get(1);
+			v = group.get(0);
+			adj[u].add(v);
+		}
+		for (int i = 0; i < V; i++) {
+			if (flag[i] == 0) {
+				dfs(i);
+			}
+		}
+		return !hasCircle;
+	}
+}

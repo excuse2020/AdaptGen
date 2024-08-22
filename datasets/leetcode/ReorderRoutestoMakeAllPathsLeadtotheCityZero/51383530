@@ -1,0 +1,35 @@
+class Solution {
+	int minReorder(int n, int[][] connections) {
+		Map<Integer, Set<Integer>> graphOut = new HashMap<>();
+		Map<Integer, List<Integer>> graph = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			graphOut.put(i,new HashSet<>());
+			graph.put(i,new ArrayList<>());
+		}
+		for (int i = 0; i < connections.length; i++) {
+			graphOut.get(connections[i][0]).add(connections[i][1]);
+			graph.get(connections[i][0]).add(connections[i][1]);
+			graph.get(connections[i][1]).add(connections[i][0]);
+		}
+		int count = 0;
+		boolean[] visited = new boolean[n];
+		visited[0] = true;
+		Queue<Integer> queue = new LinkedList<>();
+		queue.add(0);
+		while (!queue.isEmpty()) {
+			int front = queue.remove();
+			List<Integer> list = graph.get(front);
+			for (int i = 0; i < list.size(); i++) {
+				int city = list.get(i);
+				if (!visited[city]) {
+					queue.add(city);
+					visited[city] = true;
+					if (graphOut.get(front).contains(city)) {
+						count++;
+					}
+				}
+			}
+		}
+		return count;
+	}
+}

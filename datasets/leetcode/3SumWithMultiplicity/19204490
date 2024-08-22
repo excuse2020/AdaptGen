@@ -1,0 +1,51 @@
+class Solution {
+	int threeSumMulti(int[] nums, int target) {
+		int[] bucket = new int[101];
+		long tuples = 0;
+		for (int num: nums) {	
+			bucket[num]++;
+		}
+		int count = 0;
+		for (int i = 0; i < 101; i++) {
+			if (bucket[i] != 0) {
+				nums[count++] = i;
+			}
+		}
+		for (int i = 0; i < count; i++) {
+			int newTarget = target - nums[i];
+			int left = i;
+			int right = count - 1;
+			while (left <= right) {
+				if (nums[left] + nums[right] == newTarget) {
+					if (left == i && right == left && bucket[nums[i]] >= 3) {
+						long n = bucket[nums[i]];
+						tuples = (tuples + ((n * (n - 1)) / 6)) % 1000000007;
+					} 
+					else if (left == i && right != left && bucket[nums[i]] >= 2) {
+						long n = bucket[nums[i]];
+						tuples = (tuples + ((n * (n - 1)) / 2) * bucket[nums[right]]) % 1000000007;
+					} 
+					else if (right == i && left != i && bucket[nums[i]] >= 2) {
+						long n = bucket[nums[i]];
+						tuples = (tuples + ((n * (n - 1)) / 2) * bucket[nums[left]]) % 1000000007;
+					} 
+					else if (left == right && i != left && bucket[nums[left]] >= 2) {
+						tuples = (tuples + ((bucket[nums[left]] * (bucket[nums[left]] - 1)) / 2) * bucket[nums[i]]) % 1000000007;
+					} 
+					else if (left != i && i != right && left != right) {
+						tuples = (tuples + (bucket[nums[i]] * bucket[nums[left]])) % 1000000007;
+					}
+					left++;
+					right--;
+				} 
+				else if (nums[left] + nums[right] < newTarget) {
+					left++;
+				} 
+				else {
+					right--;
+				}
+			}
+		}
+		return (int) tuples;
+	}
+}

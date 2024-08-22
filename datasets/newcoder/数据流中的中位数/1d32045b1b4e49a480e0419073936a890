@@ -1,0 +1,34 @@
+class Solution {
+	PriorityQueue<Integer> maxHeap = new PriorityQueue<>((o1, o2) -> {o2.compareTo(o1)});
+	PriorityQueue<Integer> minHeap = new PriorityQueue();
+	Double GetMedian() {
+		double mid = 0;
+		if (this.maxHeap.size() > this.minHeap.size()) {
+			mid = (double) this.maxHeap.peek();
+		} 
+		else if (this.maxHeap.size() < this.minHeap.size()) {
+			mid = (double) this.minHeap.peek();
+		} 
+		else {
+			mid = (double) (this.minHeap.peek() + this.maxHeap.peek()) / 2;
+		}
+		return mid;
+	}
+	void Insert(Integer num) {
+		if (!maxHeap.isEmpty() && num <= maxHeap.peek()) {
+			maxHeap.offer(num);
+		} 
+		else {
+			minHeap.offer(num);
+		}
+		modifyHeap();
+	}
+	void modifyHeap() {
+		if (this.maxHeap.size() - this.minHeap.size() > 1) {
+			this.minHeap.offer(this.maxHeap.poll());
+		}
+		if (this.minHeap.size() - this.maxHeap.size() > 1) {
+			this.maxHeap.offer(this.minHeap.poll());
+		}
+	}
+}

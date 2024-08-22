@@ -1,0 +1,51 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		if (head1 == null) {
+			return head2;
+		}
+		if (head2 == null) {
+			return head1;
+		}
+		Stack<ListNode> s1 = new Stack<>();
+		Stack<ListNode> s2 = new Stack<>();
+		ListNode p = head1, q = head2;
+		while (p != null) {
+			s1.push(p);
+			p = p.next;
+		}
+		while (q != null) {
+			s2.push(q);
+			q = q.next;
+		}
+		int flag = 0;
+		if (s1.size() >= s2.size()) {
+			p = caculateList(s1,s2);
+		} 
+		else {
+			p = caculateList(s2,s1);
+		}
+		return p;
+	}
+	ListNode caculateList(Stack<ListNode> s1, Stack<ListNode> s2) {
+		int flag = 0;
+		ListNode node = null;
+		while (s1.size() > 0 && s2.size() > 0) {
+			node = s1.pop();
+			node.val = node.val + s2.pop().val;
+			flag = node.val / 10;
+			node.val = node.val % 10;
+		}
+		while (s1.size() > 0) {
+			node = s1.pop();
+			node.val = node.val + flag;
+			flag = node.val / 10;
+			node.val = node.val % 10;
+		}
+		if (flag > 0) {
+			ListNode node1 = new ListNode(flag);
+			node1.next = node;
+			node = node1;
+		}
+		return node;
+	}
+}

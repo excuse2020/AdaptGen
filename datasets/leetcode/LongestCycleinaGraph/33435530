@@ -1,0 +1,38 @@
+class Solution {
+	int maxLength = 0, currLength = 0;
+	Set<Integer> visited = new HashSet<>();
+	void dfs(int node, Set<Integer> isBeingVisited, int length, int[] edges) {
+		if (isBeingVisited.contains(node)) {
+			currLength = Math.max(currLength,length);
+			isBeingVisited.remove(node);
+			return;
+		}
+		if (visited.contains(node)) {
+			return;
+		}
+		visited.add(node);
+		isBeingVisited.add(node);
+		if (edges[node] != -1) {
+			dfs(edges[node],isBeingVisited,length + 1,edges);
+		}
+		if (!isBeingVisited.contains(node)) {
+			maxLength = Math.max(maxLength,currLength - length);
+			currLength = length;
+			return;
+		}
+		isBeingVisited.remove(node);
+	}
+	int longestCycle(int[] edges) {
+		if (edges == null || edges.length <= 1) {
+			return 0;
+		}
+		Set<Integer> isBeingVisited = new HashSet<>();
+		for (int i = 0; i < edges.length; i++) {
+			if (visited.contains(i)) {
+				continue;
+			}
+			dfs(i,isBeingVisited,0,edges);
+		}
+		return maxLength > 0 ? maxLength : -1;
+	}
+}

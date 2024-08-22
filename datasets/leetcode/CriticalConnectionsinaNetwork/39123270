@@ -1,0 +1,46 @@
+class Solution {
+	List<List<Integer>> ans = new ArrayList<>();
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (var v: connections) {	
+			graph.get(v.get(0)).add(v.get(1));
+			graph.get(v.get(1)).add(v.get(0));
+		}
+		int curr = new int[n];
+		int min = new int[n];
+		Arrays.fill(min,Integer.MAX_VALUE);
+		HashSet<Integer> visited = new HashSet<>();
+		for (int i = 0; i < n; i++) {
+			if (!visited.contains(i)) {
+				recur(i,i,0,graph,visited,curr,min);
+			}
+		}
+		return ans;
+	}
+	void recur(int i, int parent, int time, ArrayList<ArrayList<Integer>> graph, HashSet<Integer> visited, int curr, int min) {
+		visited.add(i);
+		curr[i] = time;
+		min[i] = time;
+		for (var v: graph.get(i)) {	
+			if (v == parent) {
+				continue;
+			}
+			if (!visited.contains(v)) {
+				recur(v,i,time + 1,graph,visited,curr,min);
+				min[i] = Math.min(min[i],min[v]);
+				if (curr[i] < min[v]) {
+					ArrayList<Integer> temp = new ArrayList<>();
+					temp.add(i);
+					temp.add(v);
+					ans.add(temp);
+				}
+			} 
+			else {
+				min[i] = Math.min(min[i],min[v]);
+			}
+		}
+	}
+}

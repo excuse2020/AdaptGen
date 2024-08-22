@@ -1,0 +1,25 @@
+class Solution {
+	int maxValueOfCoins(List<List<Integer>> piles, int k) {
+		for (List<Integer> pile: piles) {	
+			for (int i = 1; i < pile.size(); i++) {
+				pile.set(i,pile.get(i) + pile.get(i - 1));
+			}
+		}
+		int[][] DP = new int[piles.size() + 1][k + 1];
+		return recursiveCheck(piles,DP,0,k);
+	}
+	int recursiveCheck(List<List<Integer>> piles, int[][] DP, int index, int count) {
+		if (count == 0 || index == piles.size()) {
+			return 0;
+		}
+		if (DP[index][count] != 0) {
+			return DP[index][count];
+		}
+		DP[index][count] = recursiveCheck(piles,DP,index + 1,count);
+		for (int i = 1; i <= Math.min(piles.get(index).size(),count); i++) {
+			int currResult = piles.get(index).get(i - 1) + recursiveCheck(piles,DP,index + 1,count - i);
+			DP[index][count] = Math.max(DP[index][count],currResult);
+		}
+		return DP[index][count];
+	}
+}

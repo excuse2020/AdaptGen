@@ -1,0 +1,29 @@
+class Solution {
+	int countCharacters(String[] words, String chars) {
+		int res = 0;
+		Map<Character, Integer> map = new HashMap<>();
+		for (char c: chars.toCharArray()) {	
+			map.put(c,map.getOrDefault(c,0) + 1);
+		}
+		for (String word: words) {	
+			res += helper(map,res,word,0);
+		}
+		return res;
+	}
+	int helper(Map map, int res, String word, int start) {
+		if (start == word.length()) {
+			return word.length();
+		}
+		char c = word.charAt(start);
+		int count = (int) map.getOrDefault(c,0);
+		if (count == 0) {
+			return 0;
+		} 
+		else {
+			map.put(c,count - 1);
+			res = helper(map,res,word,start + 1);
+			map.put(c,count);
+		}
+		return res;
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	boolean matchReplacement(String s, String sub, char[][] mappings) {
+		HashMap<Character, HashSet<Character>> hm = new HashMap<>();
+		for (char[] x: mappings) {	
+			if (hm.containsKey(x[0]) == false) {
+				hm.put(x[0],new HashSet<>());
+				hm.get(x[0]).add(x[1]);
+			} 
+			else {
+				hm.get(x[0]).add(x[1]);
+			}
+		}
+		for (int i = 0; i <= s.length() - sub.length(); i++) {
+			int count = 0;
+			for (int j = 0; j < sub.length(); j++) {
+				if (sub.charAt(j) == s.charAt(i + j)) {
+					count++;
+				} 
+				else if (hm.containsKey(sub.charAt(j)) && hm.get(sub.charAt(j)).contains(s.charAt(i + j))) {
+					count++;
+				} 
+				else {
+					break;
+				}
+			}
+			if (count == sub.length()) {
+				return true;
+			}
+		}
+		return false;
+	}
+}

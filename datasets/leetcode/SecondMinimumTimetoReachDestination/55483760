@@ -1,0 +1,47 @@
+class Solution {
+	int secondMinimum(int n, int[][] edges, int time, int change) {
+		int[] firstpr = new int[n + 1];
+		int[] secondpr = new int[n + 1];
+		List<List<Integer>> linkbnaalo = new ArrayList<>();
+		for (int i = 0; i <= n; i++) {
+			linkbnaalo.add(new ArrayList<>());
+		}
+		for (int[] vals: edges) {	
+			int node = vals[0];
+			int linkednode = vals[1];
+			linkbnaalo.get(node).add(linkednode);
+			linkbnaalo.get(linkednode).add(node);
+		}
+		Arrays.fill(firstpr,Integer.MAX_VALUE);
+		Arrays.fill(secondpr,Integer.MAX_VALUE);
+		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {a[0] - b[0]});
+		pq.offer(new int{0, 1});
+		firstpr[1] = 0;
+		while (!pq.isEmpty()) {
+			int[] curr = pq.poll();
+			int timepass = curr[0];
+			int node = curr[1];
+			if (secondpr[n] != Integer.MAX_VALUE && node == n) {
+				return secondpr[n];
+			}
+			int greenhaiyared = timepass / change;
+			if (greenhaiyared % 2 == 1) {
+				timepass = change * (greenhaiyared + 1);
+			}
+			int newtime = timepass + time;
+			for (int pdosi: linkbnaalo.get(node)) {	
+				newtime = timepass + time;
+				if (firstpr[pdosi] > newtime) {
+					secondpr[pdosi] = firstpr[pdosi];
+					firstpr[pdosi] = newtime;
+					pq.offer(new int{newtime, pdosi});
+				} 
+				else if (secondpr[pdosi] > newtime && firstpr[pdosi] != newtime) {
+					secondpr[pdosi] = newtime;
+					pq.offer(new int{newtime, pdosi});
+				}
+			}
+		}
+		return -1;
+	}
+}

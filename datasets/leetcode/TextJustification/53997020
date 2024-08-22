@@ -1,0 +1,55 @@
+class Solution {
+	List<String> fullJustify(String[] words, int maxWidth) {
+		List<String> result = new ArrayList<>();
+		int index = 0;
+		while (index < words.length) {
+			int lineStart = index;
+			int lineEnd = index;
+			int lineLength = 0;
+			while (lineEnd < words.length && lineLength + words[lineEnd].length() <= maxWidth) {
+				lineLength += words[lineEnd].length() + 1;
+				lineEnd += 1;
+			}
+			String justifiedString = getString(words,maxWidth,lineStart,lineEnd - 1);
+			result.add(justifiedString);
+			index = lineEnd;
+		}
+		return result;
+	}
+	String getString(String[] words, int maxWidth, int startIndex, int endIndex) {
+		StringBuilder sb = new StringBuilder();
+		int numberWords = endIndex - startIndex + 1;
+		if (endIndex == (words.length - 1) || numberWords == 1) {
+			for (int i = startIndex; i <= endIndex; i++) {
+				sb.append(words[i]);
+				if (i < endIndex) {
+					sb.append(" ");
+				}
+			}
+			while (sb.length() < maxWidth) {
+				sb.append(" ");
+			}
+		} 
+		else {
+			int totalSpace = maxWidth;
+			for (int i = startIndex; i <= endIndex; i++) {
+				totalSpace -= words[i].length();
+			}
+			int spaceBetweenWord = totalSpace / (numberWords - 1);
+			int extraSpace = totalSpace % (numberWords - 1);
+			for (int i = startIndex; i <= endIndex; i++) {
+				sb.append(words[i]);
+				if (i < endIndex) {
+					for (int j = 0; j < spaceBetweenWord; j++) {
+						sb.append(" ");
+					}
+					if (extraSpace > 0) {
+						sb.append(" ");
+						extraSpace -= 1;
+					}
+				}
+			}
+		}
+		return sb.toString();
+	}
+}

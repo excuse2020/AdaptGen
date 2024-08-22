@@ -1,0 +1,28 @@
+class Solution {
+	int numRollsToTarget(int n, int k, int target) {
+		int[][] dp = new int[n + 1][target + 1];
+		for (int[] d: dp) {	
+			Arrays.fill(d,-1);
+		}
+		return rollDice(n,k,target,dp);
+	}
+	int rollDice(int n, int k, int target, int[][] dp) {
+		if (n == 0 && target == 0) {
+			return 1;
+		}
+		if (n <= 0 || target <= 0 || k * n < target) {
+			return 0;
+		}
+		if (dp[n][target] != -1) {
+			return dp[n][target];
+		}
+		int ans = 0;
+		for (int i = 1; i <= k; i++) {
+			if (target - i >= 0) {
+				ans = (ans + rollDice(n - 1,k,target - i,dp) % 1000_000_007) % 1000_000_007;
+			}
+		}
+		dp[n][target] = ans;
+		return dp[n][target];
+	}
+}

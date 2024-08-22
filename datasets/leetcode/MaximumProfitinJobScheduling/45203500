@@ -1,0 +1,45 @@
+class Solution {
+	int binarySearch(ArrayList<int[]> list, int t, int i) {
+		int start = 0;
+		int end = i;
+		while (start < end) {
+			int mid = (start + end) / 2;
+			if (list.get(mid)[1] > t) {
+				end = mid;
+			} 
+			else {
+				start = mid + 1;
+			}
+		}
+		return start - 1;
+	}
+	int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
+		ArrayList<int[]> intervals = new ArrayList<>();
+		for (int i = 0; i < startTime.length; ++i) {
+			intervals.add(new int{startTime[i], endTime[i], profit[i]});
+		}
+		intervals.sort(new HeheComparator());
+		int[] maxProfitEndingI = new int[startTime.length];
+		maxProfitEndingI[0] = intervals.get(0)[2];
+		for (int i = 1; i < intervals.size(); ++i) {
+			int[] job = intervals.get(i);
+			int maxProfit = job[2];
+			int last = binarySearch(intervals,job[0],i);
+			if (last != -1) {
+				maxProfit = Math.max(maxProfit,maxProfitEndingI[last] + job[2]);
+			}
+			maxProfit = Math.max(maxProfit,maxProfitEndingI[i - 1]);
+			maxProfitEndingI[i] = maxProfit;
+		}
+		return maxProfitEndingI[maxProfitEndingI.length - 1];
+	}
+}
+class HeheComparator {
+	int compare(int[] a, int[] b) {
+		int compareEnd = Integer.compare(a[1],b[1]);
+		if (compareEnd != 0) {
+			return compareEnd;
+		}
+		return Integer.compare(a[0],b[0]);
+	}
+}

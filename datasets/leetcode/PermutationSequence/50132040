@@ -1,0 +1,39 @@
+class Solution {
+	int factorial(int n) {
+		int ans = 1;
+		for (int i = 1; i <= n; i++) {
+			ans = ans * i;
+		}
+		return ans;
+	}
+	int findUnusedNumber(boolean[] number, int part) {
+		int cnt = 0;
+		for (int i = 1; i <= number.length; i++) {
+			if (number[i] == false) {
+				cnt++;
+			}
+			if (cnt == part) {
+				number[i] = true;
+				return i;
+			}
+		}
+		return -1;
+	}
+	void func(int n, int k, boolean[] number, StringBuilder sb) {
+		if (n == 1) {
+			sb.append(findUnusedNumber(number,1));
+			return;
+		}
+		int partitionSize = factorial(n) / n;
+		int part = (int) Math.ceil((double) k / partitionSize);
+		sb.append(String.valueOf(findUnusedNumber(number,part)));
+		int newK = k - ((part - 1) * partitionSize);
+		func(n - 1,newK,number,sb);
+	}
+	String getPermutation(int n, int k) {
+		boolean[] number = new boolean[n + 1];
+		StringBuilder sb = new StringBuilder();
+		func(n,k,number,sb);
+		return sb.toString();
+	}
+}

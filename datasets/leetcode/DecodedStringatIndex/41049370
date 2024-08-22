@@ -1,0 +1,49 @@
+class Solution {
+	String decodeAtIndex(String s, int k) {
+		int i = 0;
+		long cnt = 0;
+		long cnt1 = 0;
+		int h = 0;
+		int hh = 0;
+		while (h < s.length()) {
+			while (s.charAt(h) < 48 || s.charAt(h) > 57) {
+				cnt++;
+				cnt1++;
+				if (cnt == k) {
+					return "" + s.charAt(h);
+				}
+				hh = h;
+				h++;
+			}
+			while (s.charAt(h) >= 48 && s.charAt(h) <= 57) {
+				cnt += cnt * (s.charAt(h) - 48);
+				cnt1 += cnt1 * (s.charAt(h) - 48);
+				if (cnt >= k) {
+					k--;
+					while (true) {
+						while (h >= 0 && s.charAt(h) >= 48 && s.charAt(h) <= 57) {
+							cnt /= (s.charAt(h) - 48);
+							h--;
+						}
+						hh = h;
+						while (h >= 0 && (s.charAt(h) < 48 || s.charAt(h) > 57)) {
+							i = h;
+							h--;
+						}
+						k = (int) k % (int) cnt;
+						long rem = cnt - (hh - i + 1);
+						if (k >= rem) {
+							return "" + s.charAt((k - (int) rem) + i);
+						}
+						cnt -= (hh - i + 1);
+					}
+				}
+				h++;
+			}
+			cnt1 = 0;
+			i = h;
+			hh = h;
+		}
+		return "a";
+	}
+}

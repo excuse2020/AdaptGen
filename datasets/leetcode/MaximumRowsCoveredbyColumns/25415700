@@ -1,0 +1,50 @@
+class Solution {
+	List<Integer> combinations = new ArrayList<>();
+	void generatePermutations(int length, int choose, int index, int count, int binaryVal) {
+		if (count == choose) {
+			combinations.add(binaryVal);
+			return;
+		} 
+		else if (index >= length) {
+			return;
+		} 
+		else {
+			int take = binaryVal | 1 << (index);
+			generatePermutations(length,choose,index + 1,count + 1,take);
+			int leave = binaryVal;
+			generatePermutations(length,choose,index + 1,count,leave);
+		}
+	}
+	int getMaxRowsCovered(int combination, int[][] matrix) {
+		int[] selection = new int[matrix[0].length];
+		for (int i = 0; i < matrix[0].length; i++) {
+			selection[i] = ((combination & (1 << i)) != 0) ? 1 : 0;
+		}
+		int rowCount = 0;
+		for (int i = 0; i < matrix.length; i++) {
+			rowCount += isRowCovered(matrix,selection,i) ? 1 : 0;
+		}
+		return rowCount;
+	}
+	boolean isRowCovered(int[][] matrix, int[] selection, int row) {
+		boolean allZero = true;
+		boolean allSelected = true;
+		for (int col = 0; col < matrix[0].length; col++) {
+			if (matrix[row][col] != 0) {
+				allZero = false;
+			}
+			if (matrix[row][col] == 1 && selection[col] != 1) {
+				allSelected = false;
+			}
+		}
+		return allZero || allSelected;
+	}
+	int maximumRows(int[][] matrix, int numSelect) {
+		generatePermutations(matrix[0].length,numSelect,0,0,0);
+		int max = 0;
+		for (int combination: combinations) {	
+			max = Math.max(max,getMaxRowsCovered(combination,matrix));
+		}
+		return max;
+	}
+}

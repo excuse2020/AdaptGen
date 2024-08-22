@@ -1,0 +1,26 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		int numberOfNodes = edges.length;
+		int[] distanceToNodesFromNode1 = new int[numberOfNodes];
+		Arrays.fill(distanceToNodesFromNode1,-1);
+		int[] distanceToNodesFromNode2 = Arrays.copyOf(distanceToNodesFromNode1,distanceToNodesFromNode1.length);
+		moveTillEnd(node1,edges,distanceToNodesFromNode1,0);
+		moveTillEnd(node2,edges,distanceToNodesFromNode2,0);
+		int min = Integer.MAX_VALUE;
+		int answer = -1;
+		for (int i = 0; i < numberOfNodes; i++) {
+			if (distanceToNodesFromNode1[i] != -1 && distanceToNodesFromNode2[i] != -1 && min > Math.max(distanceToNodesFromNode1[i],distanceToNodesFromNode2[i])) {
+				min = Math.max(distanceToNodesFromNode1[i],distanceToNodesFromNode2[i]);
+				answer = i;
+			}
+		}
+		return min == Integer.MAX_VALUE ? -1 : answer;
+	}
+	void moveTillEnd(int start, int[] edges, int[] distanceToReachableNodes, int currentStepsMade) {
+		if (start == -1 || distanceToReachableNodes[start] != -1) {
+			return;
+		}
+		distanceToReachableNodes[start] = currentStepsMade++;
+		moveTillEnd(edges[start],edges,distanceToReachableNodes,currentStepsMade);
+	}
+}

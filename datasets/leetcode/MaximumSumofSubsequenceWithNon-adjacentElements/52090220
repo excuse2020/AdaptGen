@@ -1,0 +1,26 @@
+class Solution {
+	int NoAdjacent(int[] nums) {
+		if (nums == null || nums.length == 0) {
+			return 0;
+		}
+		int incl = 0;
+		int excl = 0;
+		for (int num: nums) {	
+			int newExcl = Math.max(incl,excl);
+			incl = excl + num;
+			excl = newExcl;
+		}
+		return Math.max(incl,excl);
+	}
+	int maximumSumSubsequence(int[] nums, int[][] queries) {
+		int totalSum = 0;
+		for (int[] query: queries) {	
+			int pos = query[0];
+			int x = query[1];
+			nums[pos] = x;
+			int maxSum = NoAdjacent(nums);
+			totalSum = (totalSum + maxSum) % 1000000007;
+		}
+		return totalSum;
+	}
+}

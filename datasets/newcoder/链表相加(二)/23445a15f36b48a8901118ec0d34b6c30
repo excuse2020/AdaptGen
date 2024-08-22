@@ -1,0 +1,62 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		ListNode result = new ListNode(-1);
+		ListNode dumpy = result;
+		int carry = 0;
+		int Remainder = 0;
+		int lastCarry = 0;
+		boolean flag = false;
+		Stack<Integer> stack1 = new Stack<Integer>();
+		Stack<Integer> stack2 = new Stack<Integer>();
+		while (head1 != null) {
+			stack1.push(head1.val);
+			head1 = head1.next;
+		}
+		while (head2 != null) {
+			stack2.push(head2.val);
+			head2 = head2.next;
+		}
+		while (!stack1.isEmpty() && !stack2.isEmpty()) {
+			int i = stack1.pop();
+			int j = stack2.pop();
+			lastCarry = carry;
+			carry = (i + j) / 10;
+			Remainder = (i + j) % 10;
+			result.val = Remainder;
+			result.next = new ListNode(-1);
+			result = result.next;
+		}
+		lastCarry = carry;
+		while (!stack1.isEmpty()) {
+			int k = stack1.pop();
+			result.val = (k + lastCarry) % 10;
+			result.next = new ListNode(-1);
+			result = result.next;
+			lastCarry = (k + lastCarry) / 10;
+			flag = true;
+		}
+		while (!stack2.isEmpty()) {
+			int k = stack2.pop();
+			result.val = (k + lastCarry) % 10;
+			result.next = new ListNode(-1);
+			result = result.next;
+			lastCarry = (k + lastCarry) / 10;
+			flag = true;
+		}
+		if (lastCarry != 0 && flag == true) {
+			result.val = lastCarry;
+		}
+		result.next = null;
+		return reverse(dumpy);
+	}
+	ListNode reverse(ListNode head) {
+		ListNode newHead = null;
+		while (head != null && head.val != -1) {
+			ListNode Head_next = head.next;
+			head.next = newHead;
+			newHead = head;
+			head = Head_next;
+		}
+		return newHead;
+	}
+}

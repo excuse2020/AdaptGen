@@ -1,0 +1,41 @@
+class Solution {
+	int[] myarr = new int[220000];
+	int mycount = 0;
+	int mymod = (int) 1e9 + 7;
+	int InversePairs(int[] myarray) {
+		if (myarray == null || myarray.length == 0) {
+			return 0;
+		}
+		MergeSort(0,myarray.length - 1,myarray);
+		return mycount;
+	}
+	void Merge(int l, int mid, int r, int[] array) {
+		int i = l, j = mid + 1, k = l;
+		while (i <= mid && j <= r) {
+			if (array[i] <= array[j]) {
+				myarr[k++] = array[i++];
+			} 
+			else {
+				mycount = (mycount + mid - i + 1) % mymod;
+				myarr[k++] = array[j++];
+			}
+		}
+		while (i <= mid) {
+			myarr[k++] = array[i++];
+		}
+		while (j <= r) {
+			myarr[k++] = array[j++];
+		}
+		for (i = l; i <= r; i++) {
+			array[i] = myarr[i];
+		}
+	}
+	void MergeSort(int l, int r, int[] array) {
+		if (l < r) {
+			int mid = (l + r) >> 1;
+			MergeSort(l,mid,array);
+			MergeSort(mid + 1,r,array);
+			Merge(l,mid,r,array);
+		}
+	}
+}

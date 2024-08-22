@@ -1,0 +1,38 @@
+class Solution {
+	int max = -1, maxindex = -1;
+	void max(int a1, int a2, int[] num) {
+		for (int i = a1; i <= a2; i++) {
+			if (i == a1) {
+				max = num[i];
+				maxindex = i;
+			} 
+			else {
+				if (max <= num[i]) {
+					max = num[i];
+					maxindex = i;
+				}
+			}
+		}
+	}
+	ArrayList<Integer> maxInWindows(int[] num, int size) {
+		if (num == null || size <= 0 || size > num.length) {
+			return null;
+		}
+		ArrayList<Integer> list = new ArrayList<>();
+		max(0,size - 1,num);
+		list.add(max);
+		for (int i = size; i < num.length; i++) {
+			if (maxindex > i - size) {
+				if (max <= num[i]) {
+					max = num[i];
+					maxindex = i;
+				}
+			} 
+			else {
+				max(i - size + 1,i,num);
+			}
+			list.add(max);
+		}
+		return list;
+	}
+}

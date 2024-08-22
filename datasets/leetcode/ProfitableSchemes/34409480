@@ -1,0 +1,41 @@
+class Solution {
+	int MODULO = 1_000_000_007;
+	int[] group;
+	int[][][] memo;
+	int minProfit;
+	int[] profit;
+	int profitableSchemes(int n, int minProfit, int[] group, int[] profit) {
+		this.minProfit = minProfit;
+		this.group = group;
+		this.profit = profit;
+		this.memo = new int[n + 1][group.length + 1][minProfit + 1];
+		for (int i = 0; i <= n; i++) {
+			for (int j = 0; j <= group.length; j++) {
+				Arrays.fill(this.memo[i][j],-1);
+			}
+		}
+		int profitableScheme = (minProfit != 0) ? 0 : 1;
+		profitableScheme += profitableSchemes(n,0,0);
+		return profitableScheme;
+	}
+	int profitableSchemes(int n, int idx, int currentProfit) {
+		if (idx == group.length) {
+			return 0;
+		}
+		if (memo[n][idx][currentProfit] != -1) {
+			return memo[n][idx][currentProfit];
+		}
+		int ret = 0;
+		ret = (ret + profitableSchemes(n,idx + 1,currentProfit)) % MODULO;
+		if (n >= group[idx]) {
+			int newProfit = currentProfit + profit[idx];
+			if (newProfit >= minProfit) {
+				ret += 1;
+				newProfit = minProfit;
+			}
+			ret = (ret + profitableSchemes(n - group[idx],idx + 1,newProfit)) % MODULO;
+		}
+		memo[n][idx][currentProfit] = ret;
+		return ret;
+	}
+}

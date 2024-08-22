@@ -1,0 +1,26 @@
+class Solution {
+	int ans = -1;
+	void dfs(int[] edges, int i, HashMap<Integer, Integer> dis, boolean[] vis) {
+		vis[i] = true;
+		int neighbour = edges[i];
+		if (neighbour != -1 && !vis[neighbour]) {
+			dis.put(neighbour,dis.get(i) + 1);
+			dfs(edges,neighbour,dis,vis);
+		} 
+		else if (neighbour != -1 && dis.containsKey(neighbour)) {
+			ans = Math.max(ans,dis.get(i) - dis.get(neighbour) + 1);
+		}
+	}
+	int longestCycle(int[] edges) {
+		int n = edges.length;
+		boolean[] vis = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			if (!vis[i]) {
+				HashMap<Integer, Integer> dis = new HashMap<>();
+				dis.put(i,1);
+				dfs(edges,i,dis,vis);
+			}
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,41 @@
+class Solution {
+	int gcd(int A, int B) {
+		if (B == 0) {
+			return A;
+		}
+		return gcd(B,A % B);
+	}
+	int minOperations(int[] nums) {
+		int N = nums.length;
+		int gcdValue = nums[0];
+		int ones = 0;
+		if (gcdValue == 1) {
+			ones++;
+		}
+		for (int i = 1; i < N; i++) {
+			if (nums[i] == 1) {
+				ones++;
+			}
+			if (gcdValue > 1) {
+				gcdValue = gcd(gcdValue,nums[i]);
+			}
+		}
+		if (gcdValue > 1) {
+			return -1;
+		}
+		if (ones > 0) {
+			return N - ones;
+		}
+		int ans = Integer.MAX_VALUE;
+		for (int i = 0; i < N; i++) {
+			int value = nums[i];
+			for (int j = i + 1; j < N; j++) {
+				value = gcd(value,nums[j]);
+				if (value == 1) {
+					ans = Math.min(ans,(j - i) + (N - 1));
+				}
+			}
+		}
+		return ans;
+	}
+}

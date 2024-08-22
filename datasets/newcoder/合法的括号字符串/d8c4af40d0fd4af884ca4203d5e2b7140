@@ -1,0 +1,42 @@
+class Solution {
+	boolean isValidString(String s) {
+		char[] str = s.toCharArray();
+		Deque<Character> stack = new LinkedList<>();
+		Deque<Integer> stackNum = new LinkedList<>();
+		Deque<Character> stack2 = new LinkedList<>();
+		Deque<Integer> stackNum2 = new LinkedList<>();
+		for (int i = 0; i < str.length; i++) {
+			if (str[i] == '(') {
+				stack.push(str[i]);
+				stackNum.push(i);
+			} 
+			else if (str[i] == '*') {
+				stack2.push(str[i]);
+				stackNum2.push(i);
+			} 
+			else {
+				if (!stack.isEmpty()) {
+					stack.pop();
+					stackNum.pop();
+				} 
+				else {
+					if (stack2.isEmpty()) {
+						return false;
+					} 
+					else {
+						stack2.pop();
+						stackNum2.pop();
+					}
+				}
+			}
+		}
+		while (!stack.isEmpty() && !stack2.isEmpty()) {
+			if (stackNum.pop() > stackNum2.pop()) {
+				return false;
+			}
+			stack.pop();
+			stack2.pop();
+		}
+		return stack.isEmpty();
+	}
+}

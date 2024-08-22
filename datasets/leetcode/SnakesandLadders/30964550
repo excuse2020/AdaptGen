@@ -1,0 +1,70 @@
+class Solution {
+	int step = -1;
+	int f(int i, int j, int[][] board, int r, int c, int[][] vis, int[][][] dp, int currStep, int chk) {
+		if (i >= r || j >= c * c || i < 0 || j < 0 || currStep >= step) {
+			return step;
+		}
+		if (((i & 1) != chk && vis[i][(c - 1) - (j % c)] == 1) || ((i & 1) == chk && vis[i][j % c] == 1)) {
+			return step;
+		}
+		if (dp[i][j][currStep] != -1) {
+			return dp[i][j][currStep];
+		}
+		if (i == 0 && j == ((c * c) - 1)) {
+			return dp[i][j][currStep] = currStep;
+		}
+		int s = 1, e = 6;
+		int flag = step;
+		if ((i & 1) != chk) {
+			vis[i][(c - 1) - (j % c)] = 1;
+		} 
+		else {
+			vis[i][j % c] = 1;
+		}
+		for (int dj = s; dj <= e; dj++) {
+			int dc = (j + dj);
+			int dr = (r - 1) - (dc / r);
+			dc = dc % c;
+			if ((dr & 1) != chk) {
+				dc = (c - 1) - dc;
+			}
+			if (dr >= r || dc >= c || dr < 0 || dc < 0) {
+				continue;
+			}
+			if (board[dr][dc] == -1) {
+				flag = Math.min(flag,currStep + f(dr,j + dj,board,r,c,vis,dp,currStep + 1,chk));
+			} 
+			else if (board[dr][dc] != -1) {
+				int x = (r - 1) - ((board[dr][dc] - 1) / r);
+				flag = Math.min(flag,currStep + f(x,board[dr][dc] - 1,board,r,c,vis,dp,currStep + 1,chk));
+			}
+		}
+		if ((i & 1) != chk) {
+			vis[i][(c - 1) - (j % c)] = 0;
+		} 
+		else {
+			vis[i][j % c] = 0;
+		}
+		return dp[i][j][currStep] = flag;
+	}
+	int snakesAndLadders(int[][] board) {
+		int r = board.length;
+		int c = board[0].length;
+		int[][] vis = new int[r][c];
+		int[][][] dp = new int[r][405][405];
+		step = (r * r) + 2;
+		for (int i = 0; i < r; i++) {
+			for (int j = 0; j < 405; j++) {
+				Arrays.fill(dp[i][j],-1);
+			}
+		}
+		f(r - 1,0,board,r,c,vis,dp,0,((r - 1) & 1));
+		for (int s = 0; s < 405; s++) {
+			if (dp[0][(c * c) - 1][s] != -1 && dp[0][(c * c) - 1][s] <= step) {
+				step = s;
+				break;
+			}
+		}
+		return (step == (r * r) + 2) ? -1 : step;
+	}
+}

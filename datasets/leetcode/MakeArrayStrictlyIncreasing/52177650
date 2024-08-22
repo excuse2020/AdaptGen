@@ -1,0 +1,39 @@
+class Solution {
+	int binarySearch(int[] arr, int num) {
+		int l = 0, r = arr.length, m = 0;
+		while (l < r) {
+			m = l + (r - l) / 2;
+			if (arr[m] <= num) {
+				l = m + 1;
+			} 
+			else {
+				r = m;
+			}
+		}
+		return l;
+	}
+	int countOperations(int i, int prev, int[] arr1, int[] arr2, Map<List<Integer>, Integer> map) {
+		if (i >= arr1.length) {
+			return 0;
+		}
+		if (map.containsKey(Arrays.asList(i,prev))) {
+			return map.get(Arrays.asList(i,prev));
+		}
+		int count = 2001;
+		if (arr1[i] > prev) {
+			count = countOperations(i + 1,arr1[i],arr1,arr2,map);
+		}
+		int index = binarySearch(arr2,prev);
+		if (index < arr2.length) {
+			count = Math.min(count,1 + countOperations(i + 1,arr2[index],arr1,arr2,map));
+		}
+		map.put(Arrays.asList(i,prev),count);
+		return count;
+	}
+	int makeArrayIncreasing(int[] arr1, int[] arr2) {
+		Arrays.sort(arr2);
+		Map<List<Integer>, Integer> map = new HashMap<>();
+		int res = countOperations(0,-1,arr1,arr2,map);
+		return (res <= 2000) ? res : -1;
+	}
+}

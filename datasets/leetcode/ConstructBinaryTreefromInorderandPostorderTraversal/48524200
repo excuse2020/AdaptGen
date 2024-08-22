@@ -1,0 +1,32 @@
+class Solution {
+	TreeNode buildSubTree(int[] inorder, int[] postorder, Map<Integer, Integer> postorderIndexMap) {
+		if (inorder.length == 0) {
+			return null;
+		}
+		Map<Integer, Integer> inorderIndexMap = new HashMap<>();
+		for (int i = 0; i < inorder.length; i++) {
+			inorderIndexMap.put(inorder[i],i);
+		}
+		int rootNodePostOrderIndex = -1;
+		for (int i = 0; i < inorder.length; i++) {
+			if (postorderIndexMap.containsKey(inorder[i])) {
+				if (rootNodePostOrderIndex == -1 || postorderIndexMap.get(inorder[i]) > rootNodePostOrderIndex) {
+					rootNodePostOrderIndex = postorderIndexMap.get(inorder[i]);
+				}
+			}
+		}
+		int rootNodeVal = postorder[rootNodePostOrderIndex];
+		int rootNodeIndexFromInorder = inorderIndexMap.get(rootNodeVal);
+		TreeNode tree = new TreeNode(rootNodeVal);
+		tree.left = buildSubTree(Arrays.copyOfRange(inorder,0,rootNodeIndexFromInorder),postorder,postorderIndexMap);
+		tree.right = buildSubTree(Arrays.copyOfRange(inorder,rootNodeIndexFromInorder + 1,inorder.length),postorder,postorderIndexMap);
+		return tree;
+	}
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		Map<Integer, Integer> postorderIndexMap = new HashMap<>();
+		for (int i = 0; i < postorder.length; i++) {
+			postorderIndexMap.put(postorder[i],i);
+		}
+		return buildSubTree(inorder,postorder,postorderIndexMap);
+	}
+}

@@ -1,0 +1,34 @@
+class Solution {
+	int[] left;
+	int[][][][] memo;
+	int dp(List<Integer>[] dirs, int last) {
+		int max = 0;
+		if (memo[last][left[0]][left[1]][left[2]] != 0) {
+			return memo[last][left[0]][left[1]][left[2]];
+		}
+		for (int newStep: dirs[last]) {	
+			if (left[newStep] >= 1) {
+				left[newStep]--;
+				max = Math.max(max,dp(dirs,newStep) + 2);
+				left[newStep]++;
+			}
+		}
+		memo[last][left[0]][left[1]][left[2]] = max;
+		return max;
+	}
+	int longestString(int x, int y, int z) {
+		int maxVal = Math.max(x,y);
+		maxVal = Math.max(maxVal,z) + 1;
+		this.memo = new int[3][maxVal][maxVal][maxVal];
+		left = new int[3];
+		left[0] = x;
+		left[1] = y;
+		left[2] = z;
+		List<Integer>[] dirs = new List[3];
+		dirs[0] = Arrays.asList(1);
+		dirs[1] = Arrays.asList(0,2);
+		dirs[2] = Arrays.asList(0,2);
+		int result = Math.max(Math.max(dp(dirs,0),dp(dirs,1)),dp(dirs,2));
+		return result;
+	}
+}

@@ -1,0 +1,28 @@
+class Solution {
+	Map parent = new HashMap();
+	Set visited = new HashSet();
+	void dfs(TreeNode root) {
+		if (root.left != null) {
+			parent.put(root.left.val,root.val);
+			dfs(root.left);
+		}
+		if (root.right != null) {
+			parent.put(root.right.val,root.val);
+			dfs(root.right);
+		}
+	}
+	int lowestCommonAncestor(TreeNode root, int o1, int o2) {
+		dfs(root);
+		while (parent.get(o1) != null) {
+			visited.add(o1);
+			o1 = parent.get(o1);
+		}
+		while (parent.get(o2) != null) {
+			if (visited.contains(o2)) {
+				return o2;
+			}
+			o2 = parent.get(o2);
+		}
+		return root.val;
+	}
+}

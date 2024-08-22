@@ -1,0 +1,45 @@
+class Solution {
+	int deepest = 0;
+	HashMap<Integer, LinkedList<TreeNode>> map = new HashMap<>();
+	TreeNode lowestAncestor(TreeNode root, TreeNode p, TreeNode q) {
+		if (root == null) {
+			return null;
+		}
+		if (root == p || root == q) {
+			return root;
+		}
+		TreeNode left = lowestAncestor(root.left,p,q);
+		TreeNode right = lowestAncestor(root.right,p,q);
+		if (left != null && right != null) {
+			return root;
+		}
+		return left != null ? left : right;
+	}
+	void process(TreeNode root, int depth) {
+		if (root == null) {
+			return;
+		}
+		if (map.containsKey(depth)) {
+			map.get(depth).add(root);
+		} 
+		else {
+			LinkedList<TreeNode> list = new LinkedList<>();
+			list.add(root);
+			map.put(depth,list);
+		}
+		deepest = Math.max(deepest,depth);
+		process(root.left,depth + 1);
+		process(root.right,depth + 1);
+	}
+	TreeNode subtreeWithAllDeepest(TreeNode root) {
+		process(root,1);
+		Queue<TreeNode> queue = map.get(deepest);
+		while (queue.size() > 1) {
+			TreeNode node1 = queue.poll();
+			TreeNode node2 = queue.poll();
+			TreeNode ansNode = lowestAncestor(root,node1,node2);
+			queue.offer(ansNode);
+		}
+		return queue.poll();
+	}
+}

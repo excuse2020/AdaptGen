@@ -1,0 +1,21 @@
+class Solution {
+	int maxTime = 0;
+	void helper(Map<Integer, ArrayDeque<Integer>> tree, int i, int time) {
+		Deque<Integer> list = tree.get(i);
+		int inform = list.pollFirst();
+		while (!list.isEmpty()) {
+			helper(tree,list.pollFirst(),time + inform);
+		}
+		maxTime = Math.max(maxTime,time);
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		Map<Integer, ArrayDeque<Integer>> tree = new HashMap<>();
+		for (int i = 0; i < manager.length; ++i) {
+			tree.computeIfAbsent(i,(k) -> {new ArrayDeque<Integer>()}).addFirst(informTime[i]);
+			tree.computeIfAbsent(manager[i],(k) -> {new ArrayDeque<Integer>()}).addLast(i);
+		}
+		int start = tree.get(-1).pollFirst();
+		helper(tree,start,0);
+		return maxTime;
+	}
+}

@@ -1,0 +1,42 @@
+class Solution {
+	int res;
+	int longestPath(int[] parent, String s) {
+		int n = s.length();
+		Map<Integer, List<Integer>> map = new HashMap<Integer, List<Integer>>();
+		for (int i = 0; i < n; i++) {
+			map.put(i,new ArrayList<Integer>());
+		}
+		for (int i = 1; i < parent.length; i++) {
+			List<Integer> temp = map.get(parent[i]);
+			temp.add(i);
+			map.put(parent[i],temp);
+		}
+		res = 1;
+		recur(0,parent,s,map);
+		return res;
+	}
+	int recur(int node, int[] parent, String s, Map<Integer, List<Integer>> map) {
+		int cntMax = 1;
+		int first = 0;
+		int second = 0;
+		for (int child: map.get(node)) {	
+			int cnt = recur(child,parent,s,map);
+			if (s.charAt(node) != s.charAt(child)) {
+				cntMax = Math.max(cntMax,cnt + 1);
+				if (cnt > first) {
+					int temp = first;
+					first = cnt;
+					second = temp;
+				} 
+				else if (cnt > second) {
+					second = cnt;
+				}
+				res = Math.max(res,first + second);
+			}
+		}
+		if (node != 0 && s.charAt(node) == s.charAt(parent[node])) {
+			return 0;
+		}
+		return cntMax;
+	}
+}

@@ -1,0 +1,43 @@
+class Solution {
+	boolean isBipartiteDFS(int color, int[] colorArr, int node, ArrayList<ArrayList<Integer>> disLikeAdjList) {
+		colorArr[node] = color;
+		for (int adjNode: disLikeAdjList.get(node)) {	
+			if (colorArr[adjNode] == -1) {
+				if (isBipartiteDFS(1 - color,colorArr,adjNode,disLikeAdjList) == false) {
+					return false;
+				}
+			} 
+			else if (colorArr[node] == colorArr[adjNode]) {
+				return false;
+			}
+		}
+		return true;
+	}
+	ArrayList<ArrayList<Integer>> makeAdjList(int[][] dislikes, int n) {
+		ArrayList<ArrayList<Integer>> disLikeList = new ArrayList<>();
+		for (int i = 0; i <= n; i++) {
+			ArrayList<Integer> list = new ArrayList<Integer>();
+			disLikeList.add(list);
+		}
+		for (int[] disLike: dislikes) {	
+			int u = disLike[0];
+			int v = disLike[1];
+			disLikeList.get(u).add(v);
+			disLikeList.get(v).add(u);
+		}
+		return disLikeList;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		ArrayList<ArrayList<Integer>> disLikeAdjList = makeAdjList(dislikes,n);
+		int[] colorArr = new int[n + 1];
+		Arrays.fill(colorArr,-1);
+		for (int i = 0; i < n; i++) {
+			if (colorArr[i] == -1) {
+				if (isBipartiteDFS(0,colorArr,i,disLikeAdjList) == false) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

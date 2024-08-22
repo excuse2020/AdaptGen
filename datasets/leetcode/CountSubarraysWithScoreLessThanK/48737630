@@ -1,0 +1,26 @@
+class Solution {
+	int bs(long arr, int left, int right, int tgt, long k) {
+		while (left <= right) {
+			int mid = left + (right - left) / 2;
+			int diff = tgt - mid;
+			if ((arr[tgt] - arr[mid]) * (diff) < k) {
+				right = mid - 1;
+			} 
+			else {
+				left = mid + 1;
+			}
+		}
+		return left;
+	}
+	long countSubarrays(int[] nums, long k) {
+		int len = nums.length;
+		long pre = new long[len + 1];
+		long res = 0;
+		for (int i = 1; i < len + 1; i++) {
+			pre[i] = pre[i - 1] + nums[i - 1];
+			int allowedPos = bs(pre,0,i,i,k);
+			res += (i - allowedPos);
+		}
+		return res;
+	}
+}

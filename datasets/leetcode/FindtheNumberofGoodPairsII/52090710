@@ -1,0 +1,27 @@
+class Solution {
+	int getDivisors(int num, HashMap<Integer, Integer> map) {
+		int count = 0;
+		for (int i = 1; i * i <= num; i++) {
+			if (num % i == 0) {
+				if (map.containsKey(i)) {
+					count += map.get(i);
+				}
+				if (i != num / i && map.containsKey(num / i)) {
+					count += map.get(num / i);
+				}
+			}
+		}
+		return count;
+	}
+	long numberOfPairs(int[] nums1, int[] nums2, int k) {
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int num: nums2) {	
+			map.put(num * k,map.getOrDefault(num * k,0) + 1);
+		}
+		long res = 0;
+		for (int num: nums1) {	
+			res += (long) getDivisors(num,map);
+		}
+		return res;
+	}
+}

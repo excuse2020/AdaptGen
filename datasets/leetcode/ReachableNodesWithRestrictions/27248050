@@ -1,0 +1,32 @@
+class Solution {
+	int reachableNodes(int n, int[][] edges, int[] restricted) {
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			adj.get(edges[i][0]).add(edges[i][1]);
+			adj.get(edges[i][1]).add(edges[i][0]);
+		}
+		HashSet<Integer> cant = new HashSet<>();
+		for (int i: restricted) {	
+			cant.add(i);
+		}
+		int ans = 1;
+		Queue<Integer> q = new LinkedList<>();
+		q.add(0);
+		boolean[] vis = new boolean[n];
+		while (!q.isEmpty()) {
+			int front = q.poll();
+			vis[front] = true;
+			for (int i: adj.get(front)) {	
+				if (!vis[i] && !cant.contains(i)) {
+					ans++;
+					vis[i] = true;
+					q.add(i);
+				}
+			}
+		}
+		return ans;
+	}
+}

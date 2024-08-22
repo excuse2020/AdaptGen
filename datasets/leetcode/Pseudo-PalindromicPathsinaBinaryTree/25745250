@@ -1,0 +1,28 @@
+class Solution {
+	int ans;
+	int noOfSetBits(long x) {
+		int cnt = 0;
+		while (x != 0) {
+			x = x & (x - 1);
+			cnt++;
+		}
+		return cnt;
+	}
+	int pseudoPalindromicPaths(TreeNode root) {
+		ans = 0;
+		solve(root,0);
+		return ans;
+	}
+	TreeNode solve(TreeNode node, int mask) {
+		if (node == null) {
+			return null;
+		}
+		mask = mask ^ (1 << node.val);
+		TreeNode left = solve(node.left,mask);
+		TreeNode right = solve(node.right,mask);
+		if (left == null && right == null && noOfSetBits(mask) <= 1) {
+			ans++;
+		}
+		return node;
+	}
+}

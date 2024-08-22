@@ -1,0 +1,19 @@
+class Solution {
+	int numberOfPaths(int[][] grid, int k) {
+		long[][][] DP = new long[grid.length][grid[0].length][k];
+		DP[0][0][grid[0][0] % k]++;
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				for (int p = 0; p < k; p++) {
+					if (j > 0 && DP[i][j - 1][p] > 0) {
+						DP[i][j][(p + grid[i][j]) % k] = (DP[i][j][(p + grid[i][j]) % k] + DP[i][j - 1][p]) % 1_000_000_007l;
+					}
+					if (i > 0 && DP[i - 1][j][p] > 0) {
+						DP[i][j][(p + grid[i][j]) % k] = (DP[i][j][(p + grid[i][j]) % k] + DP[i - 1][j][p]) % 1_000_000_007l;
+					}
+				}
+			}
+		}
+		return (int) DP[grid.length - 1][grid[0].length - 1][0];
+	}
+}

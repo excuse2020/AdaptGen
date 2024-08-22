@@ -1,0 +1,26 @@
+class Solution {
+	long mod = (long) (1e9 + 7);
+	long helper(int n, int goal, int k, int currLen, int currSongs, Long dp) {
+		if (currLen == goal) {
+			if (currSongs == n) {
+				return 1;
+			}
+			return 0;
+		}
+		if (dp[currLen][currSongs] != null) {
+			return dp[currLen][currSongs];
+		}
+		long repeat = helper(n,goal,k,currLen + 1,currSongs,dp) * (long) Math.max(0,currSongs - k);
+		repeat %= mod;
+		long unique = 0;
+		if (currSongs < n) {
+			unique = helper(n,goal,k,currLen + 1,currSongs + 1,dp) * (long) (n - currSongs);
+		}
+		unique %= mod;
+		return dp[currLen][currSongs] = ((repeat + unique) % mod);
+	}
+	int numMusicPlaylists(int n, int goal, int k) {
+		Long dp = new Long[goal + 1][n + 1];
+		return (int) (helper(n,goal,k,0,0,dp));
+	}
+}

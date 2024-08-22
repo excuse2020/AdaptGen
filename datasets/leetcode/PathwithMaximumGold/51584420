@@ -1,0 +1,60 @@
+class Solution {
+	int H, W;
+	int fullGrid(int[][] grid) {
+		int total = 0;
+		for (int y = 0; y < H; y++) {
+			for (int x = 0; x < W; x++) {
+				if (grid[y][x] == 0) {
+					return -1;
+				} 
+				else {
+					total += grid[y][x];
+				}
+			}
+		}
+		return total;
+	}
+	int getMaximumGold(int[][] grid) {
+		H = grid.length;
+		W = grid[0].length;
+		int total = fullGrid(grid);
+		if (total != -1) {
+			return total;
+		}
+		int res = 0;
+		boolean[] intermediate = new boolean[400];
+		for (int y = 0; y < H; y++) {
+			for (int x = 0; x < W; x++) {
+				if (grid[y][x] == 0) {
+					continue;
+				}
+				if (intermediate[H * y + x]) {
+					continue;
+				}
+				int num = helper(y,x,0,grid,intermediate);
+				if (num > res) {
+					res = num;
+				}
+			}
+		}
+		return res;
+	}
+	int helper(int y, int x, int pre, int[][] grid, boolean[] intermediate) {
+		if (y == -1 || x == -1 || y == H || x == W || grid[y][x] <= 0) {
+			return pre;
+		}
+		int val = pre + grid[y][x];
+		int res = val;
+		intermediate[H * y + x] = true;
+		grid[y][x] *= -1;
+		res = Math.max(res,helper(y - 1,x,val,grid,intermediate));
+		res = Math.max(res,helper(y + 1,x,val,grid,intermediate));
+		res = Math.max(res,helper(y,x - 1,val,grid,intermediate));
+		res = Math.max(res,helper(y,x + 1,val,grid,intermediate));
+		grid[y][x] *= -1;
+		if (res == val) {
+			intermediate[H * y + x] = false;
+		}
+		return res;
+	}
+}

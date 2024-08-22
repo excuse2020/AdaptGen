@@ -1,0 +1,65 @@
+class Solution {
+	int dfs(TreeNode node, Map<Integer, Integer> h) {
+		if (node == null) {
+			return 0;
+		}
+		int left = dfs(node.left,h);
+		int right = dfs(node.right,h);
+		int curr = Math.max(left,right);
+		h.put(node.val,curr);
+		return curr + 1;
+	}
+	int[] treeQueries(TreeNode root, int[] que) {
+		Map<Integer, Integer> h = new HashMap<>();
+		dfs(root,h);
+		Map<Integer, PriorityQueue<Integer>> perLevel = new HashMap<>();
+		Map<Integer, Integer> toLevel = new HashMap<>();
+		LinkedList<TreeNode> queue = new LinkedList<>();
+		queue.add(root);
+		int level = 0;
+		while (!queue.isEmpty()) {
+			for (int sz = queue.size(); sz > 0; sz--) {
+				var node = queue.poll();
+				toLevel.put(node.val,level);
+				var heap = perLevel.computeIfAbsent(level,(key) -> {new PriorityQueue<>((p, q) -> {h.get(p) - h.get(q)})});
+				heap.add(node.val);
+				if (heap.size() > 2) {
+					heap.poll();
+				}
+				if (node.left != null) {
+					queue.add(node.left);
+				}
+				if (node.right != null) {
+					queue.add(node.right);
+				}
+			}
+			level++;
+		}
+		int rootH = h.get(root.val);
+		int[] res = new int[que.length];
+		for (int i = 0; i < res.length; i++) {
+			int val = que[i];
+			if (val == root.val) {
+				continue;
+			}
+			int level = toLevel.get(val);
+			int currH = h.get(val);
+			var heap = perLevel.get(level);
+			int min = heap.poll();
+			int max = heap.isEmpty() ? min : heap.peek();
+			heap.add(min);
+			if (val != max) {
+				res[i] = rootH;
+			} 
+			else {
+				if (min != max) {
+					res[i] = level + h.get(min);
+				} 
+				else {
+					res[i] = level - 1;
+				}
+			}
+		}
+		return res;
+	}
+}

@@ -1,0 +1,23 @@
+class Solution {
+	Map<Integer, Integer> dp;
+	int maxTotalReward(int[] rewardValues) {
+		this.dp = new HashMap<>();
+		Arrays.sort(rewardValues);
+		return solve(rewardValues,0,0);
+	}
+	int solve(int[] reward, int idx, int points) {
+		if (idx == reward.length) {
+			return 0;
+		}
+		if (dp.containsKey(points)) {
+			return dp.get(points);
+		}
+		int take = 0;
+		if (reward[idx] > points) {
+			take = reward[idx] + solve(reward,idx + 1,points + reward[idx]);
+		}
+		int notTake = solve(reward,idx + 1,points);
+		dp.put(points,Math.max(take,notTake));
+		return Math.max(take,notTake);
+	}
+}

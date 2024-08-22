@@ -1,0 +1,41 @@
+class Solution {
+	List<List<Integer>> list;
+	int[] vals;
+	boolean dfs(int n, boolean[] visited) {
+		if (visited[n]) {
+			return true;
+		}
+		visited[n] = true;
+		for (int c: list.get(n)) {	
+			if (vals[n] * vals[c] > 0) {
+				return false;
+			}
+			vals[c] = -vals[n];
+			if (!dfs(c,visited)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean possibleBipartition(int n, int[][] dislikes) {
+		vals = new int[n];
+		list = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			list.add(new ArrayList<>());
+		}
+		for (int[] e: dislikes) {	
+			list.get(e[0] - 1).add(e[1] - 1);
+			list.get(e[1] - 1).add(e[0] - 1);
+		}
+		boolean[] visited = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			if (vals[i] == 0) {
+				vals[i] = -1;
+				if (!dfs(i,visited)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

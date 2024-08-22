@@ -1,0 +1,56 @@
+class Solution {
+	void QuickSort(ListNode leftpre, ListNode rightnex) {
+		if (leftpre.next == null) {
+			return;
+		}
+		if (leftpre.next.next == rightnex) {
+			return;
+		}
+		ListNode left = leftpre.next;
+		ListNode slowpre = left;
+		ListNode fastpre = left;
+		while (fastpre.next != null && fastpre.next != rightnex) {
+			if (left.val > fastpre.next.val) {
+				if (slowpre != fastpre) {
+					if (slowpre.next == fastpre) {
+						ListNode fast = fastpre.next;
+						fastpre.next = fast.next;
+						fast.next = slowpre.next;
+						slowpre.next = fast;
+						fastpre = slowpre.next;
+					} 
+					else {
+						ListNode slow = slowpre.next;
+						ListNode fast = fastpre.next;
+						ListNode node = fast.next;
+						fast.next = slow.next;
+						slowpre.next = fast;
+						slow.next = node;
+						fastpre.next = slow;
+					}
+				}
+				slowpre = slowpre.next;
+			}
+			fastpre = fastpre.next;
+		}
+		if (left != slowpre) {
+			ListNode slow = slowpre.next;
+			leftpre.next = left.next;
+			left.next = slowpre.next;
+			slowpre.next = left;
+			QuickSort(leftpre,slowpre.next);
+			if (slowpre.next != null) {
+				QuickSort(slowpre.next,rightnex);
+			}
+			return;
+		}
+		QuickSort(slowpre,rightnex);
+		return;
+	}
+	ListNode SortList(ListNode head) {
+		ListNode phead = new ListNode(0);
+		phead.next = head;
+		QuickSort(phead,null);
+		return phead.next;
+	}
+}

@@ -1,0 +1,30 @@
+class Solution {
+	int countDifferentSubsequenceGCDs(int[] A) {
+		int cnt = 0;
+		HashMap<Integer, Integer> factorToGcd = new HashMap<>();
+		for (int num: A) {	
+			for (int i = 1; i * i <= num; i++) {
+				if (num % i != 0) {
+					continue;
+				}
+				int i2 = num / i;
+				int gcd1 = gcd(factorToGcd.getOrDefault(i,num),num);
+				int gcd2 = gcd(factorToGcd.getOrDefault(i2,num),num);
+				factorToGcd.put(i,gcd1);
+				factorToGcd.put(i2,gcd2);
+			}
+		}
+		for (int f: factorToGcd.keySet()) {	
+			if (factorToGcd.get(f) == f) {
+				cnt++;
+			}
+		}
+		return cnt;
+	}
+	int gcd(int a, int b) {
+		if (b == 0) {
+			return a;
+		}
+		return gcd(b,a % b);
+	}
+}

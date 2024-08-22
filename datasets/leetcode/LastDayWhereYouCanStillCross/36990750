@@ -1,0 +1,39 @@
+class Solution {
+	boolean dfs(int i, int j, boolean[][] grid) {
+		if (i < 0 || i == grid.length || j < 0 || j == grid[0].length || grid[i][j]) {
+			return false;
+		}
+		if (i == grid.length - 1) {
+			return true;
+		}
+		grid[i][j] = true;
+		if (dfs(i + 1,j,grid) || dfs(i - 1,j,grid)) {
+			return true;
+		}
+		return false;
+	}
+	int latestDayToCross(int row, int col, int[][] cells) {
+		int i = 1, j = row * col;
+		while (i < j) {
+			int mid = i + (j - i) / 2;
+			boolean[][] grid = new boolean[row][col];
+			boolean cross = false;
+			for (int k = 0; k < mid; k++) {
+				grid[cells[k][0] - 1][cells[k][1] - 1] = true;
+			}
+			for (int k = 0; k < col; k++) {
+				if (!grid[0][k] && dfs(0,k,grid)) {
+					cross = true;
+					break;
+				}
+			}
+			if (cross) {
+				i = mid + 1;
+			} 
+			else {
+				j = mid;
+			}
+		}
+		return i - 1;
+	}
+}

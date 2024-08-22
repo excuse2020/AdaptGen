@@ -1,0 +1,44 @@
+class Solution {
+	int BOARD_SIZE = 3;
+	boolean validTicTacToe(String[] board) {
+		PlayerState xState = new PlayerState();
+		PlayerState oState = new PlayerState();
+		int i = 0;
+		String row = board[i];
+		int j = 0;
+		char c = row.charAt(j);
+	}
+	class PlayerState {
+		int IS_COVERED = (1 << BOARD_SIZE) - 1;
+		int[] colCov = new int[BOARD_SIZE];
+		int count = 0;
+		int mainDiagCov = 0;
+		int[] rowCov = new int[BOARD_SIZE];
+		int secondDiagCov = 0;
+		boolean isCovered(int cov) {
+			return IS_COVERED == cov;
+		}
+		boolean isCoveredAny(int[] covArr) {
+			for (int cov: covArr) {	
+				if (isCovered(cov)) {
+					return true;
+				}
+			}
+			return false;
+		}
+		boolean isWon() {
+			return isCovered(mainDiagCov) || isCovered(secondDiagCov);
+		}
+		void update(int i, int j) {
+			count++;
+			rowCov[j] |= (1 << i);
+			colCov[i] |= (1 << j);
+			if (i == j) {
+				mainDiagCov |= (1 << i);
+			}
+			if (i == BOARD_SIZE - j) {
+				secondDiagCov |= (1 << i);
+			}
+		}
+	}
+}

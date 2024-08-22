@@ -1,0 +1,48 @@
+class Solution {
+	long maxStrength(int[] nums) {
+		long ans = 1;
+		int negatives = 0;
+		if (nums.length == 1 && nums[0] == 0) {
+			return 0;
+		}
+		int noOfZeroes = 0;
+		Set<Integer> set = new HashSet<>();
+		List<Integer> list = new ArrayList<>();
+		for (int num: nums) {	
+			if (num > 0) {
+				ans *= num;
+			}
+			if (num < 0) {
+				negatives++;
+				list.add(num);
+			}
+			if (num == 0) {
+				noOfZeroes++;
+			}
+			set.add(num);
+		}
+		if (noOfZeroes == nums.length) {
+			return 0;
+		}
+		if (negatives % 2 == 0) {
+			for (Integer num: list) {	
+				ans *= num;
+			}
+			return ans;
+		}
+		Collections.sort(list);
+		for (int i = 0; i < list.size() - 1; i++) {
+			ans *= list.get(i);
+		}
+		if (ans == 1 && negatives == nums.length) {
+			return list.get(list.size() - 1);
+		}
+		if (ans == 1 && set.contains(1)) {
+			return 1;
+		}
+		if (ans == 1) {
+			return 0;
+		}
+		return ans;
+	}
+}

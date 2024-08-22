@@ -1,0 +1,48 @@
+class Solution {
+	int helper(int n, int k, int budget, List<Integer> stock, List<Integer> compo, List<Integer> cost) {
+		int remain = budget;
+		int left = 0, right = (int) (2 * 1e8);
+		while (left + 1 < right) {
+			int mid = left + (right - left) / 2;
+			if (ok(mid,budget,compo,stock,cost)) {
+				left = mid;
+			} 
+			else {
+				right = mid;
+			}
+		}
+		if (ok(right,budget,compo,stock,cost)) {
+			return right;
+		}
+		if (ok(left,budget,compo,stock,cost)) {
+			return left;
+		}
+		return -1;
+	}
+	int maxNumberOfAlloys(int n, int k, int budget, List<List<Integer>> composition, List<Integer> stock, List<Integer> cost) {
+		int ans = 0;
+		for (List<Integer> c: composition) {	
+			ans = Math.max(ans,helper(n,k,budget,stock,compo,cost));
+		}
+		return ans;
+	}
+	boolean ok(int target, int budget, List<Integer> compo, List<Integer> stock, List<Integer> cost) {
+		long demand = 0L;
+		if (target == 0) {
+			return true;
+		}
+		for (int i = 0; i < compo.size(); i++) {
+			demand += (long) compo.get(i) * cost.get(i);
+		}
+		long total = demand * target;
+		for (int i = 0; i < stock.size(); i++) {
+			if (stock.get(i) >= (long) target * compo.get(i)) {
+				total -= (long) cost.get(i) * target;
+			} 
+			else {
+				total -= (long) cost.get(i) * stock.get(i);
+			}
+		}
+		return total <= budget;
+	}
+}

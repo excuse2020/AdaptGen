@@ -1,0 +1,31 @@
+class Solution {
+	HashMap<String, Integer> hm = new HashMap<>();
+	int compression(char[] ch, int i, char prev, int freq, int k) {
+		String key = i + ",";
+		if (hm.containsKey(key)) {
+			return hm.get(key);
+		}
+		if (k < 0) {
+			return Integer.MAX_VALUE;
+		}
+		if (i == ch.length) {
+			return 0;
+		}
+		int res = compression(ch,i + 1,prev,freq,k - 1);
+		if (ch[i] == prev) {
+			int count = 0;
+			if (freq == 1 || freq == 9 || freq == 99) {
+				count = 1;
+			}
+			res = Math.min(res,count + compression(ch,i + 1,prev,freq + 1,k));
+		} 
+		else {
+			res = Math.min(res,1 + compression(ch,i + 1,ch[i],1,k));
+		}
+		hm.put(key,res);
+		return res;
+	}
+	int getLengthOfOptimalCompression(String s, int k) {
+		return compression(s.toCharArray(),0,(char) 26,0,k);
+	}
+}

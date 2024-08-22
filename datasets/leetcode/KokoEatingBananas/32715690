@@ -1,0 +1,43 @@
+class Solution {
+	boolean canFinishEating(double speed, int totalTime, int[] bananas) {
+		double timeTaken = 0;
+		for (int i = 0; i < bananas.length; i++) {
+			double t = (double) bananas[i] / speed;
+			t = Math.ceil(t);
+			timeTaken += t;
+			if (timeTaken > totalTime) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int minEatingSpeed(int[] bananas, int totalTime) {
+		double maxSpeed = 0;
+		double minSpeed = Integer.MAX_VALUE;
+		for (int i = 0; i < bananas.length; i++) {
+			if (maxSpeed < bananas[i]) {
+				maxSpeed = bananas[i];
+			}
+			if (minSpeed > bananas[i]) {
+				minSpeed = bananas[i];
+			}
+		}
+		if (maxSpeed == minSpeed) {
+			if (bananas.length <= totalTime && totalTime / bananas.length == 1) {
+				return (int) maxSpeed;
+			}
+			return (int) (Math.ceil((maxSpeed * bananas.length) / totalTime));
+		}
+		minSpeed = minSpeed / totalTime;
+		while (minSpeed < maxSpeed) {
+			double mid = minSpeed + (maxSpeed - minSpeed) / 2;
+			if (canFinishEating(mid,totalTime,bananas)) {
+				maxSpeed = mid;
+			} 
+			else {
+				minSpeed = Math.ceil(mid);
+			}
+		}
+		return (int) minSpeed;
+	}
+}

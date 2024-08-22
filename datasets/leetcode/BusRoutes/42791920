@@ -1,0 +1,76 @@
+class Solution {
+	void connectExistingNodes(Node node, List<Node> nodes, int[] route) {
+		for (int j = nodes.size() - 1; j >= 0; --j) {
+			for (int r: route) {	
+				if (nodes.get(j).routes.contains(r)) {
+					nodes.get(j).addChild(node);
+					node.addChild(nodes.get(j));
+					break;
+				}
+			}
+		}
+	}
+	void initializeQueueAndVisited(List<Node> nodes, int source, Queue<Node> queue, Set<Node> visited) {
+		for (Node node: nodes) {	
+			if (node.routes.contains(source)) {
+				queue.offer(node);
+				visited.add(node);
+			}
+		}
+	}
+	int numBusesToDestination(int[][] routes, int source, int target) {
+		if (source == target) {
+			return 0;
+		}
+		List<Node> nodes = prepareNodes(routes);
+		Queue<Node> queue = new LinkedList<>();
+		Set<Node> visited = new HashSet<>();
+		initializeQueueAndVisited(nodes,source,queue,visited);
+		return performBFS(queue,visited,target);
+	}
+	int performBFS(Queue<Node> queue, Set<Node> visited, int target) {
+		int noOfBuses = 1;
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; ++i) {
+				Node front = queue.poll();
+				if (front.routes.contains(target)) {
+					return noOfBuses;
+				}
+				visitChildren(queue,visited,front);
+			}
+			noOfBuses++;
+		}
+		return -1;
+	}
+	List<Node> prepareNodes(int[][] routes) {
+		List<Node> nodes = new ArrayList<>();
+		for (int[] route: routes) {	
+			Node node = new Node();
+			for (int r: route) {	
+				node.addRoute(r);
+			}
+			connectExistingNodes(node,nodes,route);
+			nodes.add(node);
+		}
+		return nodes;
+	}
+	void visitChildren(Queue<Node> queue, Set<Node> visited, Node front) {
+		for (Node node: front.children) {	
+			if (!visited.contains(node)) {
+				queue.offer(node);
+				visited.add(node);
+			}
+		}
+	}
+	class Node {
+		List<Node> children = new ArrayList<>();
+		Set<Integer> routes = new HashSet<>();
+		void addChild(Node child) {
+			children.add(child);
+		}
+		void addRoute(int route) {
+			routes.add(route);
+		}
+	}
+}

@@ -1,0 +1,55 @@
+class Solution {
+	int firstCompleteIndex(int[] arr, int[][] mat) {
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		int m = mat.length;
+		int n = mat[0].length;
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				List<Integer> list1 = new ArrayList<>();
+				list1.add(i);
+				list1.add(j);
+				map.put(mat[i][j],list1);
+			}
+		}
+		Map<Integer, List<Integer>> map1 = new HashMap<>();
+		Map<Integer, List<Integer>> map2 = new HashMap<>();
+		for (int i = 0; i < arr.length; i++) {
+			List<Integer> temp = map.get(arr[i]);
+			int x = temp.get(0);
+			int y = temp.get(1);
+			if (map1.containsKey(x)) {
+				List<Integer> list = map1.get(x);
+				list.add(y);
+				if (list.size() == n) {
+					return i;
+				}
+				map1.put(x,list);
+			} 
+			else {
+				List<Integer> list = new ArrayList<>();
+				list.add(y);
+				if (list.size() == n) {
+					return i;
+				}
+				map1.put(x,list);
+			}
+			if (map2.containsKey(y)) {
+				List<Integer> list = map2.get(y);
+				list.add(x);
+				if (list.size() == m) {
+					return i;
+				}
+				map2.put(y,list);
+			} 
+			else {
+				List<Integer> list = new ArrayList<>();
+				list.add(x);
+				if (list.size() == m) {
+					return i;
+				}
+				map2.put(y,list);
+			}
+		}
+		return -1;
+	}
+}

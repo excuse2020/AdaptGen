@@ -1,0 +1,24 @@
+class Solution {
+	int minCost(int n, int[] cuts) {
+		Arrays.sort(cuts);
+		int pieces = new int[cuts.length + 1][2];
+		int start = 0;
+		for (int i = 0; i < cuts.length; i++) {
+			pieces[i][0] = start;
+			pieces[i][1] = start = cuts[i];
+		}
+		pieces[cuts.length][0] = start;
+		pieces[cuts.length][1] = n;
+		int dp = new int[cuts.length + 1][cuts.length + 1];
+		for (int i = 1; i <= cuts.length; i++) {
+			for (int j = 0; j + i <= cuts.length; j++) {
+				int min = Integer.MAX_VALUE;
+				for (int l = j; l < j + i; l++) {
+					min = Math.min(min,dp[j][l] + dp[l + 1][j + i]);
+				}
+				dp[j][j + i] = min + pieces[j + i][1] - pieces[j][0];
+			}
+		}
+		return dp[0][cuts.length];
+	}
+}

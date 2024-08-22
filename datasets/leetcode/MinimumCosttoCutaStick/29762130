@@ -1,0 +1,32 @@
+class Solution {
+	int minCost(int n, int[] cuts) {
+		int[] A = new int[cuts.length + 2];
+		A[0] = 0;
+		A[cuts.length + 1] = n;
+		for (int i = 1; i < cuts.length + 1; i++) {
+			A[i] = cuts[i - 1];
+		}
+		Arrays.sort(A);
+		int[][] dp = new int[A.length - 1][A.length - 1];
+		for (int i = 0; i < A.length - 1; i++) {
+			for (int j = 0; j < A.length - 1; j++) {
+				dp[i][j] = -1;
+			}
+		}
+		return stickCut(1,A.length - 2,A,dp);
+	}
+	int stickCut(int i, int j, int[] A, int[][] dp) {
+		if (i > j) {
+			return 0;
+		}
+		if (dp[i][j] != -1) {
+			return dp[i][j];
+		}
+		int min = Integer.MAX_VALUE;
+		for (int k = i; k <= j; k++) {
+			int temp = A[j + 1] - A[i - 1] + stickCut(i,k - 1,A,dp) + stickCut(k + 1,j,A,dp);
+			min = Math.min(temp,min);
+		}
+		return dp[i][j] = min;
+	}
+}

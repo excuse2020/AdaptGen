@@ -1,0 +1,28 @@
+class Solution {
+	int driver(int n, int[] scores, int grid, int[][] movecost) {
+		int ans = Integer.MAX_VALUE;
+		for (int i = 0; i < grid[0].length; i++) {
+			ans = Math.min(ans,recur(0,i,scores,n,grid,movecost));
+		}
+		return ans;
+	}
+	int minPathCost(int[][] grid, int[][] moveCost) {
+		int scores = new int[grid.length * grid[0].length];
+		Arrays.fill(scores,-1);
+		return driver(grid.length,scores,grid,moveCost);
+	}
+	int recur(int row, int col, int[] scores, int n, int[][] grid, int[][] movecost) {
+		if (row == n - 1) {
+			return grid[row][col];
+		}
+		if (scores[grid[row][col]] != -1) {
+			return scores[grid[row][col]];
+		}
+		int ans = Integer.MAX_VALUE;
+		for (int i = 0; i < grid[0].length; i++) {
+			int temp = recur(row + 1,i,scores,n,grid,movecost) + grid[row][col];
+			ans = Math.min(ans,temp);
+		}
+		return scores[grid[row][col]] = ans;
+	}
+}

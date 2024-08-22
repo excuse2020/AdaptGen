@@ -1,0 +1,33 @@
+class Solution {
+	String solve(String s, String t) {
+		if ("0".equals(s) || "0".equals(t)) {
+			return "0";
+		}
+		if (!s.matches("^\\d*$") || !t.matches("^\\d*$")) {
+			return null;
+		}
+		int[] num = new int[s.length() + t.length()];
+		char[] sCharArray = s.toCharArray();
+		char[] tCharArray = t.toCharArray();
+		for (int i = sCharArray.length - 1; i >= 0; i--) {
+			for (int j = tCharArray.length - 1; j >= 0; j--) {
+				num[i + j + 1] += (sCharArray[i] - '0') * (tCharArray[j] - '0');
+			}
+		}
+		int rs = 0;
+		for (int i = num.length - 1; i >= 0; i--) {
+			int temp = num[i] + rs;
+			num[i] = temp % 10;
+			rs = temp / 10;
+		}
+		int curPos = 0;
+		StringBuilder sb = new StringBuilder();
+		while (curPos < num.length && num[curPos] == 0) {
+			curPos++;
+		}
+		for (int i = curPos; i < num.length; i++) {
+			sb.append(num[i]);
+		}
+		return sb.toString();
+	}
+}

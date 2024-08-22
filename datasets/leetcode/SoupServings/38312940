@@ -1,0 +1,31 @@
+class Solution {
+	double soupProbabilityHelper(int soupA, int soupB, double[][] memo) {
+		if (soupA <= 0 && soupB <= 0) {
+			return 0.5;
+		}
+		if (soupA <= 0) {
+			return 1.0;
+		}
+		if (soupB <= 0) {
+			return 0.0;
+		}
+		if (memo[soupA][soupB] > 0) {
+			return memo[soupA][soupB];
+		}
+		double prob = 0.0;
+		prob += 0.25 * soupProbabilityHelper(soupA - 4,soupB,memo);
+		prob += 0.25 * soupProbabilityHelper(soupA - 3,soupB - 1,memo);
+		prob += 0.25 * soupProbabilityHelper(soupA - 2,soupB - 2,memo);
+		prob += 0.25 * soupProbabilityHelper(soupA - 1,soupB - 3,memo);
+		memo[soupA][soupB] = prob;
+		return prob;
+	}
+	double soupServings(int n) {
+		if (n >= 4800) {
+			return 1.0;
+		}
+		n = (n + 24) / 25;
+		double[][] memo = new double[n + 1][n + 1];
+		return soupProbabilityHelper(n,n,memo);
+	}
+}

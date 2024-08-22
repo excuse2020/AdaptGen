@@ -1,0 +1,37 @@
+class Solution {
+	boolean findTrace(TreeNode node, int val, Deque<Integer> stack) {
+		if (node == null) {
+			return false;
+		}
+		if (node.val != val) {
+			stack.offerLast(node.val);
+			if (findTrace(node.left,val,stack)) {
+				return true;
+			}
+			if (findTrace(node.right,val,stack)) {
+				return true;
+			}
+			stack.pollLast();
+			return false;
+		} 
+		else {
+			stack.offerLast(node.val);
+			return true;
+		}
+	}
+	int lowestCommonAncestor(TreeNode root, int o1, int o2) {
+		if (root == null) {
+			return 0;
+		}
+		Deque<Integer> stack1 = new ArrayDeque<>();
+		Deque<Integer> stack2 = new ArrayDeque<>();
+		findTrace(root,o1,stack1);
+		findTrace(root,o2,stack2);
+		int result = 0;
+		int temp = 0;
+		while (stack1.size() != 0 && stack2.size() != 0 && (temp = stack1.pollFirst()) == stack2.pollFirst()) {
+			result = temp;
+		}
+		return result;
+	}
+}

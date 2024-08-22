@@ -1,0 +1,37 @@
+class Solution {
+	int countDigitOne(int n) {
+		int scale = 1;
+		int scaleCount = 0;
+		List<Integer> countByScale = new ArrayList();
+		int countPrevScale = 1;
+		countByScale.add(0);
+		countByScale.add(countPrevScale);
+		while (n > scale) {
+			scale *= 10;
+			scaleCount++;
+			countPrevScale = countPrevScale * 10 + scale;
+			countByScale.add(countPrevScale);
+		}
+		if (n == scale) {
+			scaleCount++;
+		} 
+		else {
+			scale = scale / 10;
+		}
+		int totalCount = 0;
+		while (scale > 0) {
+			int q = n / scale;
+			if (q > 1) {
+				totalCount += scale;
+			} 
+			else if (q == 1) {
+				totalCount += n % scale + 1;
+			}
+			totalCount += q * countByScale.get(scaleCount - 1);
+			n = n % scale;
+			scale = scale / 10;
+			scaleCount--;
+		}
+		return totalCount;
+	}
+}

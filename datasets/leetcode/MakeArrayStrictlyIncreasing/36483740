@@ -1,0 +1,33 @@
+class Solution {
+	int makeArrayIncreasing(int[] arr1, int[] arr2) {
+		Arrays.sort(arr2);
+		HashMap<String, Long> temp = new HashMap<>();
+		int ans = (int) solve(arr1,0,arr2,0,-1,temp);
+		if (ans == Integer.MAX_VALUE) {
+			return -1;
+		}
+		return ans;
+	}
+	long solve(int[] arr1, int i, int[] arr2, int j, int prev, HashMap<String, Long> temp) {
+		if (i == arr1.length) {
+			return 0;
+		}
+		if (temp.containsKey(i + " ")) {
+			return temp.get(i + " ");
+		}
+		long way1 = Integer.MAX_VALUE, way2 = Integer.MAX_VALUE;
+		while (j < arr2.length && prev >= arr2[j]) {
+			j++;
+		}
+		if (j < arr2.length) {
+			way2 = 1 + solve(arr1,i + 1,arr2,j + 1,arr2[j],temp);
+		}
+		if (arr1[i] > prev) {
+			way1 = solve(arr1,i + 1,arr2,j,arr1[i],temp);
+		}
+		if (prev != -1) {
+			temp.put(i + " ",Math.min(way1,way2));
+		}
+		return Math.min(way1,way2);
+	}
+}

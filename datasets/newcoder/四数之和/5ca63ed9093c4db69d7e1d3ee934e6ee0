@@ -1,0 +1,55 @@
+class Solution {
+	ArrayList<ArrayList<Integer>> fournumber(ArrayList<Integer> nums, int target) {
+		ArrayList<ArrayList<Integer>> list = new ArrayList<>();
+		List<Integer> values = new ArrayList<>();
+		List<String> indexs = new ArrayList<>();
+		Map<Integer, List<String>> map = new HashMap<>();
+		for (int i = 0; i < nums.size(); i++) {
+			int num1 = nums.get(i);
+			for (int j = i + 1; j < nums.size(); j++) {
+				int num2 = nums.get(j);
+				int sum = num1 + num2;
+				values.add(sum);
+				String key = null;
+				int min = Math.min(num1,num2);
+				if (min == num1) {
+					key = i + ",";
+				} 
+				else {
+					key = j + ",";
+				}
+				indexs.add(key);
+				if (map.get(sum) != null) {
+					map.get(sum).add(key);
+				} 
+				else {
+					List<String> idx = new ArrayList<>();
+					idx.add(key);
+					map.put(sum,idx);
+				}
+			}
+		}
+		Set<String> set = new HashSet<>();
+		int i = 0;
+		int num1 = values.get(i);
+		String index1 = indexs.get(i);
+		String[] arr1 = index1.split(",");
+		Integer num2 = target - num1;
+		String[] arr2 = null;
+		for (String index2: map.get(num2)) {	
+			arr2 = index2.split(",");
+			if (arr1[0].equals(arr2[0]) || arr1[0].equals(arr2[1])) {
+				arr2 = null;
+				continue;
+			} 
+			else {
+				break;
+			}
+		}
+		ArrayList<Integer> item = new ArrayList<>();
+		item.add(nums.get(Integer.parseInt(arr1[0])));
+		item.add(nums.get(Integer.parseInt(arr1[1])));
+		item.add(nums.get(Integer.parseInt(arr2[0])));
+		item.add(nums.get(Integer.parseInt(arr2[1])));
+	}
+}

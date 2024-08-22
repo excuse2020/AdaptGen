@@ -1,0 +1,45 @@
+class Solution {
+	int binSearch(int[] arr, int low, int high, int x) {
+		int idx = -1;
+		while (low <= high) {
+			int mid = (low + high) / 2;
+			if (arr[mid] == x) {
+				return mid;
+			} 
+			else if (arr[mid] > x) {
+				idx = mid;
+				high = mid - 1;
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		return idx;
+	}
+	int maximumTastiness(int[] price, int k) {
+		int n = price.length;
+		Arrays.sort(price);
+		int temp = k;
+		int low = 0, high = price[n - 1] - price[0];
+		int mid = 0, idx = 0, maxTastiness = 0;
+		while (low <= high) {
+			mid = (low + high) / 2;
+			idx = 0;
+			while (k-- > 1) {
+				idx = binSearch(price,idx + 1,n - 1,price[idx] + mid);
+				if (idx == -1) {
+					break;
+				}
+			}
+			if (idx != -1) {
+				maxTastiness = mid;
+				low = mid + 1;
+			} 
+			else {
+				high = mid - 1;
+			}
+			k = temp;
+		}
+		return maxTastiness;
+	}
+}

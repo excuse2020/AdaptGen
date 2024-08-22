@@ -1,0 +1,42 @@
+class Solution {
+	int[] beautifulArray(int n) {
+		int[] arr = new int[n];
+		for (int i = 0; i < n; i++) {
+			arr[i] = i + 1;
+		}
+		return beautify(arr);
+	}
+	int[] beautify(int[] arr) {
+		if (arr.length <= 2) {
+			return arr;
+		}
+		int n = arr.length;
+		int[] leftArray = new int[(n + 1) / 2];
+		int[] rightArray = new int[n / 2];
+		populateAlternateLeftAndRight(leftArray,rightArray,arr);
+		leftArray = beautify(leftArray);
+		rightArray = beautify(rightArray);
+		return concatenate(leftArray,rightArray);
+	}
+	int[] concatenate(int[] arr1, int[] arr2) {
+		int[] combinedArr = new int[arr1.length + arr2.length];
+		copyToArr(arr1,0,combinedArr);
+		copyToArr(arr2,arr1.length,combinedArr);
+		return combinedArr;
+	}
+	void copyToArr(int[] source, int start, int[] target) {
+		for (int i = 0; i < source.length; i++) {
+			target[start++] = source[i];
+		}
+	}
+	void populateAlternateLeftAndRight(int[] left, int[] right, int[] arr) {
+		for (int i = 0; i < arr.length; i++) {
+			if (i % 2 == 0) {
+				left[i / 2] = arr[i];
+			} 
+			else {
+				right[i / 2] = arr[i];
+			}
+		}
+	}
+}

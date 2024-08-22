@@ -1,0 +1,33 @@
+class Solution {
+	Map<Integer, List<TreeNode>> map = new HashMap();
+	List<TreeNode> allPossibleFBT(int n) {
+		List<TreeNode> al = new ArrayList();
+		if (map.containsKey(n)) {
+			return map.get(n);
+		}
+		if (n == 1) {
+			al.add(new TreeNode(0));
+			map.put(n,al);
+		} 
+		else if (n == 3) {
+			TreeNode root = new TreeNode(0, new TreeNode(0), new TreeNode(0));
+			al.add(root);
+			map.put(n,al);
+		} 
+		else {
+			for (int i = 1; i < n; i++) {
+				int j = n - 1;
+				List<TreeNode> left = allPossibleFBT(i);
+				List<TreeNode> right = allPossibleFBT(j);
+				for (TreeNode l: left) {	
+					for (TreeNode r: right) {	
+						TreeNode root = new TreeNode(0, l, r);
+						al.add(root);
+					}
+				}
+			}
+			map.put(n,al);
+		}
+		return map.get(n);
+	}
+}

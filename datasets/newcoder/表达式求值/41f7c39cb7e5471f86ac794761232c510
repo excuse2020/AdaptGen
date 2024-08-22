@@ -1,0 +1,89 @@
+class Solution {
+	char c;
+	int idx;
+	int num = 0;
+	String s;
+	Type tokenId;
+	int E() {
+		int n = T();
+		while (tokenId == Type.ADD || tokenId == Type.SUB) {
+			if (tokenId == Type.ADD) {
+				match(Type.ADD);
+				n += T();
+			} 
+			else {
+				match(Type.SUB);
+				n -= T();
+			}
+		}
+		return n;
+	}
+	int F() {
+		int n = 0;
+		if (tokenId == Type.LB) {
+			match(Type.LB);
+			n = E();
+			match(Type.RB);
+		} 
+		else {
+			n = num;
+			match(Type.NUM);
+		}
+		return n;
+	}
+	int T() {
+		int n = F();
+		while (tokenId == Type.MUL) {
+			match(Type.MUL);
+			n *= F();
+		}
+		return n;
+	}
+	void getToken() {
+		if (idx == s.length()) {
+			tokenId = Type.END;
+			return;
+		}
+		c = s.charAt(idx++);
+		if (c == '(') {
+			tokenId = Type.LB;
+		} 
+		else if (c == ')') {
+			tokenId = Type.RB;
+		} 
+		else if (c == '+') {
+			tokenId = Type.ADD;
+		} 
+		else if (c == '-') {
+			tokenId = Type.SUB;
+		} 
+		else if (c == '*') {
+			tokenId = Type.MUL;
+		} 
+		else {
+			num = c - '0';
+			tokenId = Type.NUM;
+			while (idx < s.length()) {
+				char nextC = s.charAt(idx);
+				if (nextC >= '0' && nextC <= '9') {
+					num = num * 10 + nextC - '0';
+					idx++;
+				} 
+				else {
+					break;
+				}
+			}
+		}
+	}
+	void match(Type id) {
+		if (id != tokenId) {
+			System.out.println("..");
+		}
+		getToken();
+	}
+	int solve(String s) {
+		this.s = s;
+		getToken();
+		return E();
+	}
+}

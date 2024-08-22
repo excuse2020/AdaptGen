@@ -1,0 +1,23 @@
+class Solution {
+	int mod = 1_000_000_007;
+	int distinctSubseqII(String s) {
+		int[] freq = new int[26];
+		Arrays.fill(freq,-1);
+		int len = s.length();
+		int[] dp = new int[len + 1];
+		dp[0] = 1;
+		for (int i = 0; i < len; i++) {
+			char c = s.charAt(i);
+			dp[i + 1] = dp[i] * 2 % mod;
+			if (freq[c - 97] > -1) {
+				int prev = freq[c - 97];
+				dp[i + 1] -= dp[prev];
+			}
+			dp[i + 1] %= mod;
+			freq[c - 97] = i;
+		}
+		dp[len]--;
+		dp[len] = dp[len] < 0 ? dp[len] + mod : dp[len];
+		return dp[len];
+	}
+}

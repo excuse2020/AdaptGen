@@ -1,0 +1,43 @@
+class Solution {
+	int maxLevelSum(TreeNode root) {
+		int sum = Integer.MIN_VALUE;
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(root);
+		int level = 0;
+		int levelSum = 0;
+		int ans = 0;
+		TreeNode sp = new TreeNode(Integer.MIN_VALUE);
+		q.add(sp);
+		while (q.size() > 0) {
+			TreeNode cur = q.poll();
+			if (cur.val == Integer.MIN_VALUE) {
+				level++;
+				if (q.size() > 0) {
+					if (levelSum > sum) {
+						sum = levelSum;
+						ans = level;
+					}
+					levelSum = 0;
+					q.add(cur);
+				} 
+				else {
+					if (levelSum > sum) {
+						sum = levelSum;
+						ans = level;
+					}
+					break;
+				}
+			} 
+			else {
+				levelSum += cur.val;
+				if (cur.left != null) {
+					q.add(cur.left);
+				}
+				if (cur.right != null) {
+					q.add(cur.right);
+				}
+			}
+		}
+		return ans;
+	}
+}

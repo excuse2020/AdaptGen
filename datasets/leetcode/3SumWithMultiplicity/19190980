@@ -1,0 +1,41 @@
+class Solution {
+	int threeSumMulti(int[] arr, int target) {
+		long answer = 0;
+		long mod = 1000000007;
+		Arrays.sort(arr);
+		for (int i = 0; i < arr.length; i++) {
+			int findValue = target - arr[i];
+			int j = i + 1;
+			int k = arr.length - 1;
+			while (j < k) {
+				if (arr[j] + arr[k] < findValue) {
+					j++;
+				} 
+				else if (arr[j] + arr[k] > findValue) {
+					k--;
+				} 
+				else if (arr[j] != arr[k]) {
+					int leftNumCount = 1, rightNumCount = 1;
+					while (j + 1 < k && arr[j] == arr[j + 1]) {
+						leftNumCount++;
+						j++;
+					}
+					while (k - 1 > j && arr[k] == arr[k - 1]) {
+						rightNumCount++;
+						k--;
+					}
+					answer = answer + (rightNumCount * leftNumCount);
+					answer = answer % mod;
+					j++;
+					k--;
+				} 
+				else {
+					answer = answer + (k - j) * (k - j + 1) / 2;
+					answer = answer % mod;
+					break;
+				}
+			}
+		}
+		return (int) answer;
+	}
+}

@@ -1,0 +1,48 @@
+class Solution {
+	void bottomRightDistinct(int[][] grid, int[][] bottomRight, int m, int n) {
+		for (int i = 0; i < m - 1; i++) {
+			Set<Integer> set = new HashSet<>();
+			for (int j = n - 1, k = i; j >= 0 && k >= 0; j--, k--) {
+				bottomRight[k][j] = set.size();
+				set.add(grid[k][j]);
+			}
+		}
+		for (int j = n - 1; j > 0; j--) {
+			Set<Integer> set = new HashSet<>();
+			for (int i = m - 1, k = j; i >= 0 && k >= 0; i--, k--) {
+				bottomRight[i][k] = set.size();
+				set.add(grid[i][k]);
+			}
+		}
+	}
+	int[][] differenceOfDistinctValues(int[][] grid) {
+		int m = grid.length;
+		int n = grid[0].length;
+		int[][] topLeft = new int[m][n];
+		int[][] bottomRight = new int[m][n];
+		topLeftDistinct(grid,topLeft,m,n);
+		bottomRightDistinct(grid,bottomRight,m,n);
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				grid[i][j] = Math.abs(topLeft[i][j] - bottomRight[i][j]);
+			}
+		}
+		return grid;
+	}
+	void topLeftDistinct(int[][] grid, int[][] topLeft, int m, int n) {
+		for (int i = m - 1; i > 0; i--) {
+			Set<Integer> set = new HashSet<>();
+			for (int j = 0, k = i; j < n && k < m; j++, k++) {
+				topLeft[k][j] = set.size();
+				set.add(grid[k][j]);
+			}
+		}
+		for (int j = 0; j < n; j++) {
+			Set<Integer> set = new HashSet<>();
+			for (int i = 0, k = j; i < m && k < n; i++, k++) {
+				topLeft[i][k] = set.size();
+				set.add(grid[i][k]);
+			}
+		}
+	}
+}

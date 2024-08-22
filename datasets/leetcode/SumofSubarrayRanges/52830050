@@ -1,0 +1,46 @@
+class Solution {
+	long maxSubarraySum(int[] nums, int n) {
+		Stack<Integer> st = new Stack<>();
+		long sum = 0;
+		for (int i = 0; i < n; i++) {
+			while (!st.isEmpty() && nums[st.peek()] < nums[i]) {
+				int topEl = st.pop();
+				int leftNextMaxIndex = st.isEmpty() ? -1 : st.peek();
+				int rightNextMaxIndex = i;
+				sum += (long) nums[topEl] * (long) ((topEl - leftNextMaxIndex) * (rightNextMaxIndex - topEl));
+			}
+			st.push(i);
+		}
+		int rightNextMaxIndex = n;
+		while (!st.isEmpty()) {
+			int topEl = st.pop();
+			int leftNextMaxIndex = st.isEmpty() ? -1 : st.peek();
+			sum += (long) nums[topEl] * (long) ((topEl - leftNextMaxIndex) * (rightNextMaxIndex - topEl));
+		}
+		return sum;
+	}
+	long minSubarraySum(int[] nums, int n) {
+		Stack<Integer> st = new Stack<>();
+		long sum = 0;
+		for (int i = 0; i < n; i++) {
+			while (!st.isEmpty() && nums[st.peek()] > nums[i]) {
+				int topEl = st.pop();
+				int leftNextMinIndex = st.isEmpty() ? -1 : st.peek();
+				int rightNextMinIndex = i;
+				sum += (long) nums[topEl] * (long) ((topEl - leftNextMinIndex) * (rightNextMinIndex - topEl));
+			}
+			st.push(i);
+		}
+		int rightNextMinIndex = n;
+		while (!st.isEmpty()) {
+			int topEl = st.pop();
+			int leftNextMinIndex = st.isEmpty() ? -1 : st.peek();
+			sum += (long) nums[topEl] * (long) ((topEl - leftNextMinIndex) * (rightNextMinIndex - topEl));
+		}
+		return sum;
+	}
+	long subArrayRanges(int[] nums) {
+		int n = nums.length;
+		return Math.abs(maxSubarraySum(nums,n) - minSubarraySum(nums,n));
+	}
+}

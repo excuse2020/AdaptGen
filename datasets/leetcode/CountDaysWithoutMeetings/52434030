@@ -1,0 +1,24 @@
+class Solution {
+	int countDays(int days, int[][] meetings) {
+		Arrays.sort(meetings,(a, b) -> {Integer.compare(a[0],b[0])});
+		List<int[]> ll = new ArrayList<>();
+		int cnt = 0;
+		int currMeeting = meetings[0];
+		for (int i = 1; i < meetings.length; i++) {
+			if (meetings[i][0] <= currMeeting[1]) {
+				currMeeting[1] = Math.max(currMeeting[1],meetings[i][1]);
+			} 
+			else {
+				ll.add(currMeeting);
+				currMeeting = meetings[i];
+			}
+		}
+		ll.add(currMeeting);
+		cnt += ll.get(0)[0] - 1;
+		for (int i = 1; i < ll.size(); i++) {
+			cnt += (ll.get(i)[0] - ll.get(i - 1)[1]) - 1;
+		}
+		cnt += days - ll.get(ll.size() - 1)[1];
+		return cnt;
+	}
+}

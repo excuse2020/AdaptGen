@@ -1,0 +1,52 @@
+class Solution {
+	ArrayList<Integer> a;
+	boolean[] isArraySpecial(int[] nums, int[][] queries) {
+		a = new ArrayList<>();
+		boolean ans = new boolean[queries.length];
+		solve(nums);
+		for (int i = 0; i < a.size(); i++) {
+			System.out.println(a.get(i) + " ");
+		}
+		for (int i = 0; i < queries.length; i++) {
+			int start = queries[i][0];
+			int end = queries[i][1];
+			if (start == end || a.size() == 0) {
+				ans[i] = true;
+			} 
+			else {
+				if (search(start,end)) {
+					ans[i] = false;
+				} 
+				else {
+					ans[i] = true;
+				}
+			}
+		}
+		return ans;
+	}
+	boolean search(int start, int end) {
+		int l = 0;
+		int h = a.size() - 1;
+		while (l <= h) {
+			int mid = (l + h) / 2;
+			if ((a.get(mid) <= end && a.get(mid) + 1 <= end) && (a.get(mid) >= start && a.get(mid) + 1 >= start)) {
+				System.out.println(mid + "m");
+				return true;
+			} 
+			else if (a.get(mid) < start) {
+				l = mid + 1;
+			} 
+			else {
+				h = mid - 1;
+			}
+		}
+		return false;
+	}
+	void solve(int nums) {
+		for (int i = 0; i < nums.length - 1; i++) {
+			if ((nums[i] % 2 == 0 && nums[i + 1] % 2 == 0) || (nums[i] % 2 == 1 && nums[i + 1] % 2 == 1)) {
+				a.add(i);
+			}
+		}
+	}
+}

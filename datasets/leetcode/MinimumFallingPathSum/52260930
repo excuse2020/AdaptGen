@@ -1,0 +1,33 @@
+class Solution {
+	int m, n;
+	int[][] minSumDp;
+	int dfsFallingSum(int i, int j, int[][] matrix) {
+		if (i < 0 || j < 0 || i >= m || j >= n) {
+			return 100000;
+		}
+		if (minSumDp[i][j] != 1000000) {
+			return minSumDp[i][j];
+		}
+		if (i == m - 1) {
+			return matrix[i][j];
+		}
+		int op1 = matrix[i][j] + dfsFallingSum(i + 1,j,matrix);
+		int op2 = matrix[i][j] + dfsFallingSum(i + 1,j + 1,matrix);
+		int op3 = matrix[i][j] + dfsFallingSum(i + 1,j - 1,matrix);
+		return minSumDp[i][j] = Math.min(op1,Math.min(op2,op3));
+	}
+	int minFallingPathSum(int[][] matrix) {
+		m = matrix.length;
+		n = matrix[0].length;
+		minSumDp = new int[m][n];
+		for (int[] i: minSumDp) {	
+			Arrays.fill(i,1000000);
+		}
+		int minFallingSum = Integer.MAX_VALUE;
+		for (int j = 0; j < n; j++) {
+			int fallingSum = dfsFallingSum(0,j,matrix);
+			minFallingSum = Math.min(minFallingSum,fallingSum);
+		}
+		return minFallingSum;
+	}
+}

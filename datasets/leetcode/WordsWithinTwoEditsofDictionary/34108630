@@ -1,0 +1,55 @@
+class Solution {
+	List<String> twoEditWords(String[] queries, String[] dictionary) {
+		Trie trie = new Trie();
+		for (String word: dictionary) {	
+			trie.insert(word);
+		}
+		List<String> ans = new ArrayList<>();
+		for (String word: queries) {	
+			if (trie.check(word)) {
+				ans.add(word);
+			}
+		}
+		return ans;
+	}
+	class Node {
+		Map<Character, Node> cache = new HashMap<>();
+		boolean eof = false;
+	}
+	class Trie {
+		Node root = new Node();
+		boolean check(String word) {
+			return check(root,word,0,0);
+		}
+		boolean check(Node node, String word, int index, int count) {
+			if (index == word.length()) {
+				return count <= 2;
+			}
+			if (count > 2) {
+				return false;
+			}
+			char ch = word.charAt(index);
+			Map<Character, Node> cache = node.cache;
+			for (char key: node.cache.keySet()) {	
+				int cnt = count;
+				if (key != ch) {
+					cnt++;
+				}
+				if (check(node.cache.get(key),word,index + 1,cnt)) {
+					return true;
+				}
+			}
+			return false;
+		}
+		void insert(String word) {
+			Node curr = root;
+			for (char ch: word.toCharArray()) {	
+				if (!curr.cache.containsKey(ch)) {
+					curr.cache.put(ch,new Node());
+				}
+				curr = curr.cache.get(ch);
+			}
+			curr.eof = true;
+		}
+	}
+}

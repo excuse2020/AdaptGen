@@ -1,0 +1,28 @@
+class Solution {
+	int minimumOperations(int[] nums, int start, int goal) {
+		int[] bfs = new int[1001];
+		Queue<Integer> q = new LinkedList();
+		q.offer(start);
+		int moves = 0;
+		while (!q.isEmpty()) {
+			int len = q.size();
+			for (int i = 0; i < len; i++) {
+				int val = q.poll();
+				if (val == goal) {
+					return moves;
+				}
+				if (val > 1000 || val < 0 || bfs[val] != 0) {
+					continue;
+				}
+				bfs[val] = 1;
+				for (int n: nums) {	
+					q.offer(val + n);
+					q.offer(val - n);
+					q.offer(val ^ n);
+				}
+			}
+			moves++;
+		}
+		return -1;
+	}
+}

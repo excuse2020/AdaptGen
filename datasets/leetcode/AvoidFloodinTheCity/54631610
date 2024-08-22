@@ -1,0 +1,52 @@
+class Solution {
+	int[] avoidFlood(int[] rains) {
+		int[] output = new int[rains.length];
+		HashMap<Integer, Integer> map = new HashMap<>();
+		int numOfZeros = 0;
+		List<Integer> zerosIndex = new ArrayList<>();
+		int lastVal = -1;
+		for (int i = 0; i < rains.length; i++) {
+			if (rains[i] > 0) {
+				if (lastVal == -1) {
+					lastVal = rains[i];
+				}
+				if (map.containsKey(rains[i])) {
+					int temp = checkZeroIndex(zerosIndex,map.get(rains[i]));
+					if (numOfZeros == 0 || temp == -1) {
+						return new int[0];
+					} 
+					else {
+						output[temp] = rains[i];
+						zerosIndex.remove(Integer.valueOf(temp));
+						output[i] = -1;
+						numOfZeros--;
+						map.put(rains[i],i);
+					}
+				} 
+				else {
+					if (output[i] != -1) {
+						output[i] = -1;
+					}
+					map.put(rains[i],i);
+				}
+			} 
+			else {
+				numOfZeros++;
+				zerosIndex.add(i);
+			}
+		}
+		while (zerosIndex.size() != 0) {
+			output[zerosIndex.get(0)] = lastVal;
+			zerosIndex.remove(0);
+		}
+		return output;
+	}
+	int checkZeroIndex(List<Integer> list, int i) {
+		for (int j = 0; j < list.size(); j++) {
+			if (list.get(j) > i) {
+				return list.get(j);
+			}
+		}
+		return -1;
+	}
+}

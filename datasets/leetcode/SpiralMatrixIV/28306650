@@ -1,0 +1,56 @@
+class Solution {
+	int[][] helper(int p, int r, ListNode head, int[][] ans, int k, int l) {
+		ListNode temp = head;
+		if (ans.length == 1 && ans[0].length == 1) {
+			ans[0][0] = temp.val;
+			return ans;
+		}
+		if (p == 1 && r == 1 && temp.next == null && ans.length == ans[0].length) {
+			ans[ans.length / 2][ans.length / 2] = temp.val;
+		}
+		if (p < 0 || r < 0 || k > ans.length - 1 || l < 0 || temp == null) {
+			return ans;
+		}
+		for (int i = k; i < r - 1; i++) {
+			if (temp == null) {
+				break;
+			}
+			ans[k][i] = temp.val;
+			temp = temp.next;
+		}
+		for (int i = k; i < p - 1; i++) {
+			if (temp == null) {
+				break;
+			}
+			ans[i][l] = temp.val;
+			temp = temp.next;
+		}
+		for (int i = l; i > k; i--) {
+			if (temp == null) {
+				break;
+			}
+			ans[p - 1][i] = temp.val;
+			temp = temp.next;
+		}
+		for (int i = p - 1; i > k; i--) {
+			if (temp == null) {
+				break;
+			}
+			ans[i][k] = temp.val;
+			temp = temp.next;
+		}
+		helper(p - 1,r - 1,temp,ans,k + 1,l - 1);
+		return ans;
+	}
+	int[][] spiralMatrix(int m, int n, ListNode head) {
+		int[][] ans = new int[m][n];
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				ans[i][j] = -1;
+			}
+		}
+		ans = helper(m,n,head,ans,0,n - 1);
+		ListNode temp = head;
+		return ans;
+	}
+}

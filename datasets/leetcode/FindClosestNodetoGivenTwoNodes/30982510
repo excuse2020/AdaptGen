@@ -1,0 +1,41 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		if (edges[node1] == node2 && edges[node2] == node1) {
+			return 0;
+		}
+		int n = edges.length;
+		int[] s1 = new int[n];
+		int[] s2 = new int[n];
+		for (int i = 0; i < n; i++) {
+			s1[i] = s2[i] = -1;
+		}
+		s1[node1] = 0;
+		s2[node2] = 0;
+		find(node1,edges,s1,1);
+		find(node2,edges,s2,1);
+		int min = Integer.MAX_VALUE, node = -1;
+		for (int i = 0; i < n; i++) {
+			if (s1[i] != -1 && s2[i] != -1) {
+				int t = Math.max(s1[i],s2[i]);
+				if (min > t) {
+					min = t;
+					node = i;
+				} 
+				else if (min == t) {
+					node = Math.min(node,i);
+				}
+			}
+		}
+		return node;
+	}
+	void find(int i, int[] edges, int[] s, int d) {
+		if (edges[i] == -1) {
+			return;
+		}
+		if (s[edges[i]] != -1) {
+			return;
+		}
+		s[edges[i]] = d;
+		find(edges[i],edges,s,d + 1);
+	}
+}

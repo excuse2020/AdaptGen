@@ -1,0 +1,39 @@
+class Solution {
+	int longestStrChain(String[] words) {
+		int[] chainTillNow = new int[words.length];
+		Arrays.sort(words,(a, b) -> {a.length() - b.length()});
+		chainTillNow[0] = 1;
+		int res = 1;
+		for (int i = 1; i < words.length; i++) {
+			chainTillNow[i] = 1;
+			for (int j = 0; j < i; j++) {
+				if (words[j].length() + 1 == words[i].length()) {
+					int ptr = 0;
+					String smallWord = words[j];
+					String bigWord = words[i];
+					boolean skipped = false;
+					boolean valid = true;
+					for (int k = 0; k < bigWord.length(); k++) {
+						if (ptr < smallWord.length() && bigWord.charAt(k) == smallWord.charAt(ptr)) {
+							ptr++;
+						} 
+						else {
+							if (skipped == false) {
+								skipped = true;
+							} 
+							else {
+								valid = false;
+								break;
+							}
+						}
+					}
+					if (valid == true) {
+						chainTillNow[i] = Math.max(chainTillNow[i],chainTillNow[j] + 1);
+					}
+				}
+			}
+			res = Math.max(chainTillNow[i],res);
+		}
+		return res;
+	}
+}

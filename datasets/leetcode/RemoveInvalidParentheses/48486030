@@ -1,0 +1,57 @@
+class Solution {
+	char CLOSE_BRACKET;
+	char OPEN_BRACKET;
+	Set<String> set = new HashSet<>();
+	void generateValidBracketString(String s, int badBracketCount, Set<String> brackets) {
+		if (set.contains(s)) {
+			return;
+		}
+		if (badBracketCount < 0) {
+			return;
+		}
+		set.add(s);
+		if (badBracketCount == 0) {
+			if (isBalanced(s) == 0) {
+				brackets.add(s);
+			}
+			return;
+		}
+		for (int i = 0; i < s.length(); i++) {
+			String left = s.substring(0,i);
+			String right = s.substring(i + 1);
+			String ros = left + right;
+			generateValidBracketString(ros,badBracketCount - 1,brackets);
+		}
+	}
+	int isBalanced(String s) {
+		Stack<Character> stack = new Stack<>();
+		for (Character ch: s.toCharArray()) {	
+			if (ch == OPEN_BRACKET) {
+				stack.add(ch);
+			} 
+			else if (ch == CLOSE_BRACKET) {
+				if (!stack.isEmpty() && stack.peek() == OPEN_BRACKET) {
+					stack.pop();
+				} 
+				else {
+					stack.add(ch);
+				}
+			}
+		}
+		return stack.size();
+	}
+	List<String> removeInvalidParentheses(String s) {
+		int badBracketCount = Math.abs(isBalanced(s));
+		System.out.println("badBracketCount=" + badBracketCount);
+		Set<String> brackets = new HashSet<>();
+		generateValidBracketString(s,badBracketCount,brackets);
+		List<String> result = new ArrayList<>();
+		if (brackets.size() == 0) {
+			brackets.add("");
+		}
+		for (String bracket: brackets) {	
+			result.add(bracket);
+		}
+		return result;
+	}
+}

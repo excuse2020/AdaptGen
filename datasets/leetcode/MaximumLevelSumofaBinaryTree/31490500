@@ -1,0 +1,26 @@
+class Solution {
+	void goDFS(TreeNode node, int lvl, Map<Integer, Integer> map) {
+		if (node == null) {
+			return;
+		}
+		int sum = map.computeIfAbsent(lvl,(k) -> {0});
+		sum += node.val;
+		map.put(lvl,sum);
+		lvl++;
+		goDFS(node.left,lvl,map);
+		goDFS(node.right,lvl,map);
+	}
+	int maxLevelSum(TreeNode root) {
+		Map<Integer, Integer> map = new LinkedHashMap<>();
+		goDFS(root,1,map);
+		int max = Integer.MIN_VALUE, lvlMax = 0;
+		for (int lvl: map.keySet()) {	
+			int sum = map.get(lvl);
+			if (max < sum) {
+				max = sum;
+				lvlMax = lvl;
+			}
+		}
+		return lvlMax;
+	}
+}

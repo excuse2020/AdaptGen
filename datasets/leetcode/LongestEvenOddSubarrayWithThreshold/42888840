@@ -1,0 +1,28 @@
+class Solution {
+	int[] memo;
+	int dp(int[] nums, int start, int threshold) {
+		if (start == nums.length - 1) {
+			return memo[start] = (nums[start] <= threshold) ? 1 : 0;
+		}
+		int sub = dp(nums,start + 1,threshold);
+		if (nums[start] % 2 != nums[start + 1] % 2) {
+			return memo[start] = (nums[start] <= threshold) ? sub + 1 : 0;
+		} 
+		else {
+			return memo[start] = (nums[start] <= threshold) ? 1 : 0;
+		}
+	}
+	int longestAlternatingSubarray(int[] nums, int threshold) {
+		this.memo = new int[nums.length];
+		Arrays.fill(memo,-1);
+		dp(nums,0,threshold);
+		int res = 0;
+		for (int i = 0; i < memo.length; i++) {
+			if (nums[i] % 2 != 0) {
+				continue;
+			}
+			res = Math.max(res,memo[i]);
+		}
+		return res;
+	}
+}

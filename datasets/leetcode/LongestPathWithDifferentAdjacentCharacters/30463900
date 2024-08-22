@@ -1,0 +1,34 @@
+class Solution {
+	int res = 0;
+	String str;
+	int dfs(int currN, List<Integer> aList) {
+		int a = 0, b = 0;
+		for (int child: aList[currN]) {	
+			int len = dfs(child,aList);
+			if (str.charAt(currN) != str.charAt(child)) {
+				if (len > a) {
+					b = a;
+					a = len;
+				} 
+				else if (len > b && a >= b) {
+					b = len;
+				}
+			}
+		}
+		res = Math.max(res,a + b);
+		return a + 1;
+	}
+	int longestPath(int[] parent, String s) {
+		str = s;
+		int n = parent.length;
+		List<Integer> aList = new List[n];
+		for (int i = 0; i < n; i++) {
+			aList[i] = new ArrayList<Integer>();
+		}
+		for (int i = 1; i < n; i++) {
+			aList[parent[i]].add(i);
+		}
+		dfs(0,aList);
+		return res;
+	}
+}

@@ -1,0 +1,30 @@
+class Solution {
+	int[][] dp;
+	int mod = 1000000007;
+	int n;
+	int backTrack(int pos, int k, int target) {
+		if (pos == n) {
+			return ((target == 0) ? 1 : 0);
+		}
+		if (target <= 0) {
+			return 0;
+		}
+		if (dp[pos][target] != -1) {
+			return dp[pos][target];
+		}
+		int count = 0;
+		for (int j = 1; j <= k; j++) {
+			count = (count + backTrack(pos + 1,k,target - j) % mod) % mod;
+		}
+		dp[pos][target] = count;
+		return count;
+	}
+	int numRollsToTarget(int n, int k, int target) {
+		this.n = n;
+		dp = new int[n + 1][target + 1];
+		for (int i = 0; i < dp.length; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		return backTrack(0,k,target) % mod;
+	}
+}

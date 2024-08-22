@@ -1,0 +1,29 @@
+class Solution {
+	Map<Integer, List<int[]>> treeMap = new HashMap<>();
+	int bfs(int n, int headID, int[] manager, int[] informTime) {
+		Queue<int[]> queueNode = new LinkedList<>();
+		queueNode.offer(new int{headID, informTime[headID]});
+		int maxTime = 0;
+		while (!queueNode.isEmpty()) {
+			int[] currentQueue = queueNode.poll();
+			int currentNode = currentQueue[0];
+			int currentTime = currentQueue[1];
+			maxTime = Math.max(maxTime,currentTime);
+			if (this.treeMap.containsKey(currentNode)) {
+				for (int[] nextQueue: this.treeMap.get(currentNode)) {	
+					queueNode.offer(new int{nextQueue[0], nextQueue[1] + currentTime});
+				}
+			}
+		}
+		return maxTime;
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		for (int i = 0; i < manager.length; i++) {
+			int key = manager[i];
+			int value = i;
+			treeMap.putIfAbsent(key,new ArrayList<>());
+			treeMap.get(key).add(new int{value, informTime[i]});
+		}
+		return bfs(n,headID,manager,informTime);
+	}
+}

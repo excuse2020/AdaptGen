@@ -1,0 +1,35 @@
+class Solution {
+	List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+		List<List<int[]>> list = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			list.add(new ArrayList<>());
+		}
+		for (int[] meeting: meetings) {	
+			list.get(meeting[0]).add(new int{meeting[1], meeting[2]});
+			list.get(meeting[1]).add(new int{meeting[0], meeting[2]});
+		}
+		int[] allInromur = new int[n];
+		Arrays.fill(allInromur,-1);
+		allInromur[firstPerson] = 0;
+		allInromur[0] = 0;
+		Queue<Integer> q = new LinkedList<>();
+		q.add(0);
+		q.add(firstPerson);
+		while (!q.isEmpty()) {
+			int next = q.poll();
+			for (int[] l: list.get(next)) {	
+				if ((allInromur[l[0]] == -1 || allInromur[l[0]] > l[1]) && l[1] >= allInromur[next]) {
+					q.add(l[0]);
+					allInromur[l[0]] = l[1];
+				}
+			}
+		}
+		List<Integer> ans = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			if (allInromur[i] != -1) {
+				ans.add(i);
+			}
+		}
+		return ans;
+	}
+}

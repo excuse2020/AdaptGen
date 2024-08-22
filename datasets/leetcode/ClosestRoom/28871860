@@ -1,0 +1,55 @@
+class Solution {
+	int[] closestRoom(int[][] rooms, int[][] queries) {
+		Arrays.sort(rooms,(r1, r2) -> {Integer.compare(r1[0],r2[0])});
+		int[][] oq = new int[queries.length][3];
+		for (int i = 0; i < queries.length; i++) {
+			oq[i][0] = i;
+			oq[i][1] = queries[i][0];
+			oq[i][2] = queries[i][1];
+		}
+		PriorityQueue<int[]> aq = new PriorityQueue<int[]>((q1, q2) -> {Integer.compare(q1[2],q2[2])});
+		Arrays.sort(oq,(q1, q2) -> {Integer.compare(q1[1],q2[1])});
+		int[] ra = new int[queries.length];
+		int nq = 0;
+		for (int i = 0; i < rooms.length; i++) {
+			while (nq < oq.length && oq[nq][1] <= rooms[i][0]) {
+				aq.add(oq[nq++]);
+			}
+			while (!aq.isEmpty() && aq.peek()[2] <= rooms[i][1]) {
+				ra[aq.poll()[0]] = i + 1;
+			}
+		}
+		aq.clear();
+		int[] rd = new int[queries.length];
+		nq = oq.length - 1;
+		for (int i = rooms.length - 1; i >= 0; i--) {
+			while (nq >= 0 && oq[nq][1] >= rooms[i][0]) {
+				aq.add(oq[nq--]);
+			}
+			while (!aq.isEmpty() && aq.peek()[2] <= rooms[i][1]) {
+				rd[aq.poll()[0]] = i + 1;
+			}
+		}
+		for (int i = 0; i < queries.length; i++) {
+			if (rd[i] == 0 && ra[i] == 0) {
+				ra[i] = -1;
+				continue;
+			}
+			if (rd[i] == 0) {
+				ra[i] = rooms[ra[i] - 1][0];
+				continue;
+			}
+			if (ra[i] == 0) {
+				ra[i] = rooms[rd[i] - 1][0];
+				continue;
+			}
+			if (rooms[ra[i] - 1][0] - queries[i][0] < queries[i][0] - rooms[rd[i] - 1][0]) {
+				ra[i] = rooms[ra[i] - 1][0];
+			} 
+			else {
+				ra[i] = rooms[rd[i] - 1][0];
+			}
+		}
+		return ra;
+	}
+}

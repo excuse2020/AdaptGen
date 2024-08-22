@@ -1,0 +1,50 @@
+class Solution {
+	ListNode addInList(ListNode head1, ListNode head2) {
+		if (head1 == null && head2 == null) {
+			return null;
+		}
+		if (head1 == null) {
+			return head2;
+		}
+		if (head2 == null) {
+			return head1;
+		}
+		head1 = reverse(head1);
+		head2 = reverse(head2);
+		ListNode head3 = new ListNode(-1);
+		int low = 0;
+		int high = 0;
+		while (head1 != null || head2 != null) {
+			int x, y;
+			x = head1 == null ? 0 : head1.val;
+			y = head2 == null ? 0 : head2.val;
+			low = (x + y) % 10;
+			ListNode s = new ListNode(low);
+			high = (x + y) / 10;
+			s.next = head3.next;
+			head3.next = s;
+			if (head1 != null) {
+				head1 = head1.next;
+			}
+			if (head2 != null) {
+				head2 = head2.next;
+			}
+		}
+		if (high == 1) {
+			ListNode res = new ListNode(high);
+			res.next = head3.next;
+			head3.next = res;
+		}
+		return head3.next;
+	}
+	ListNode reverse(ListNode head) {
+		ListNode pre = null;
+		while (head != null) {
+			ListNode post = head.next;
+			head.next = pre;
+			pre = head;
+			head = post;
+		}
+		return pre;
+	}
+}

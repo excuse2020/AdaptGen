@@ -1,0 +1,44 @@
+class Solution {
+	long continuousSubarrays(int[] nums) {
+		int left = 0, right = 0;
+		long res = 0;
+		Deque<Integer> upper = new LinkedList<>();
+		Deque<Integer> lower = new LinkedList<>();
+		while (right < nums.length) {
+			int cur = nums[right];
+			while (!lower.isEmpty() && nums[lower.peekLast()] >= cur) {
+				lower.pollLast();
+			}
+			lower.offerLast(right);
+			while (!upper.isEmpty() && nums[upper.peekLast()] <= cur) {
+				upper.pollLast();
+			}
+			upper.offerLast(right);
+			if (!lower.isEmpty() && cur - nums[lower.peekFirst()] > 2) {
+				int dest = 0;
+				while (!lower.isEmpty() && cur - nums[lower.peekFirst()] > 2) {
+					dest = lower.pollFirst() + 1;
+				}
+				res += (long) (right - left + 1) * (right - left) / 2 - (right - dest + 1) * (right - dest) / 2;
+				left = dest;
+				while (!upper.isEmpty() && upper.peekFirst() < left) {
+					upper.pollFirst();
+				}
+			} 
+			else if (!upper.isEmpty() && nums[upper.peekFirst()] - cur > 2) {
+				int dest = 0;
+				while (!upper.isEmpty() && nums[upper.peekFirst()] - cur > 2) {
+					dest = upper.pollFirst() + 1;
+				}
+				res += (long) (right - left + 1) * (right - left) / 2 - (right - dest + 1) * (right - dest) / 2;
+				left = dest;
+				while (!lower.isEmpty() && lower.peekFirst() < left) {
+					lower.pollFirst();
+				}
+			}
+			right++;
+		}
+		res += (long) (right - left + 1) * (right - left) / 2;
+		return res;
+	}
+}

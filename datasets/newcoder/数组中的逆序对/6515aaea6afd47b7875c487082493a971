@@ -1,0 +1,45 @@
+class Solution {
+	int cnt;
+	int InversePairs(int[] array) {
+		if (array.length == 0) {
+			return 0;
+		}
+		int[] temp = new int[array.length];
+		return sort(array,0,array.length - 1,temp);
+	}
+	int merge(int[] array, int inStart, int inMid, int inEnd, int[] temp) {
+		int res = 0;
+		int i = inStart;
+		int j = inMid + 1;
+		int k = inStart;
+		while (i <= inMid && j <= inEnd) {
+			if (array[i] <= array[j]) {
+				temp[k++] = array[i++];
+			}
+			if (array[i] > array[j]) {
+				res = (res + (inMid - i + 1)) % 1000000007;
+				temp[k++] = array[j++];
+			}
+		}
+		while (i <= inMid) {
+			temp[k++] = array[i++];
+		}
+		while (j <= inEnd) {
+			temp[k++] = array[j++];
+		}
+		for (int l = inStart; l < k; ++l) {
+			array[l] = temp[l];
+		}
+		return res;
+	}
+	int sort(int[] array, int inStart, int inEnd, int[] temp) {
+		if (inStart < inEnd) {
+			int mid = (inStart + inEnd) / 2;
+			int res1 = sort(array,inStart,mid,temp);
+			int res2 = sort(array,mid + 1,inEnd,temp);
+			int res3 = merge(array,inStart,mid,inEnd,temp);
+			return (res1 + res2) % 1000000007;
+		}
+		return 0;
+	}
+}

@@ -1,0 +1,46 @@
+class Solution {
+	void dfs(int[][] grid, int i, int j, Queue<int[]> bfs, int len) {
+		bfs.offer(new int{i, j});
+		grid[i][j] = 2;
+		for (int[] pair: new int{{i + 1, j}, {i - 1, j}, {i, j + 1}, {i, j - 1}}) {	
+			int curX = pair[0], curY = pair[1];
+			if (0 <= curX && curX < len && 0 <= curY && curY < len && grid[curX][curY] == 1) {
+				dfs(grid,curX,curY,bfs,len);
+			}
+		}
+	}
+	int shortestBridge(int[][] grid) {
+		Queue<int[]> bfs = new LinkedList<>();
+		int len = grid.length;
+		for (int i = 0; i < len && bfs.isEmpty(); i++) {
+			for (int j = 0; j < len; j++) {
+				if (grid[i][j] == 1) {
+					dfs(grid,i,j,bfs,len);
+					break;
+				}
+			}
+		}
+		int count = 0;
+		while (!bfs.isEmpty()) {
+			int size = bfs.size();
+			while (size > 0) {
+				int[] cur = bfs.poll();
+				for (int[] pair: new int{{cur[0] + 1, cur[1]}, {cur[0] - 1, cur[1]}, {cur[0], cur[1] + 1}, {cur[0], cur[1] - 1}}) {	
+					int curX = pair[0], curY = pair[1];
+					if (0 <= curX && curX < len && 0 <= curY && curY < len) {
+						if (grid[curX][curY] == 1) {
+							return count;
+						} 
+						else if (grid[curX][curY] == 0) {
+							grid[curX][curY] = -1;
+							bfs.offer(pair);
+						}
+					}
+				}
+				size--;
+			}
+			count++;
+		}
+		return count;
+	}
+}

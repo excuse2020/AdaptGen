@@ -1,0 +1,65 @@
+class Solution {
+	HashMap<Integer, List<Integer>> levels = new HashMap<>();
+	HashMap<Integer, List<int[]>> maxHeight = new HashMap<>();
+	HashMap<Integer, Integer> node2level = new HashMap<>();
+	HashMap<Integer, Integer> parent = new HashMap<>();
+	HashMap<Integer, int[]> upDown = new HashMap<>();
+	int cal(int i) {
+		int max = -1;
+		List<int[]> height = maxHeight.get(node2level.get(i));
+		for (int[] s: height) {	
+			if (s[0] != i) {
+				max = s[1];
+				break;
+			}
+		}
+		if (max == -1) {
+			return upDown.get(parent.get(i))[0];
+		}
+		return max;
+	}
+	int dfs(TreeNode root, int dis, int prev) {
+		if (root == null) {
+			return 0;
+		}
+		int left = dfs(root.left,dis + 1,root.val);
+		int right = dfs(root.right,dis + 1,root.val);
+		int res = Math.max(left,right) + 1;
+		upDown.put(root.val,new int{dis, Math.max(left,right)});
+		parent.put(root.val,prev);
+		return res;
+	}
+	void level(TreeNode root) {
+		Queue<TreeNode> queue = new LinkedList<>();
+		int level = 0;
+		queue.offer(root);
+		while (!queue.isEmpty()) {
+			levels.put(level,new LinkedList<>());
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				TreeNode cur = queue.poll();
+				node2level.put(cur.val,level);
+				levels.get(level).add(cur.val);
+				if (cur.left != null) {
+					queue.offer(cur.left);
+				}
+				if (cur.right != null) {
+					queue.offer(cur.right);
+				}
+			}
+			level++;
+		}
+	}
+	int[] treeQueries(TreeNode root, int[] queries) {
+		level(root);
+		dfs(root,0,-1);
+		int n = queries.length;
+		int[] res = new int[n];
+		for (int l: levels.keySet()) {	
+			maxHeight.put(l,new ArrayList<int[]>());
+		}
+		for (int node: levels.get(l)) {	
+			maxHeight.get(l).add(new int{node, upDown.get(node)[0] + upDown.get(node)[1]});
+		}
+	}
+}

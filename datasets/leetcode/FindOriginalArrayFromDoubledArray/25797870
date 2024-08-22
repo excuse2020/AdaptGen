@@ -1,0 +1,45 @@
+class Solution {
+	int[] findOriginalArray(int[] changed) {
+		int n = changed.length;
+		if (n % 2 == 1) {
+			return new int[0];
+		}
+		TreeMap<Integer, Integer> map = new TreeMap<>((a, b) -> {a - b});
+		for (int num: changed) {	
+			map.put(num,map.getOrDefault(num,0) + 1);
+		}
+		List<Integer> result = new ArrayList<>();
+		for (int key: map.keySet()) {	
+			int count = map.get(key);
+			if (key == 0) {
+				if (count % 2 == 1) {
+					return new int[0];
+				}
+				count /= 2;
+				while (count-- > 0) {
+					result.add(key);
+				}
+			}
+			if (count == 0) {
+				continue;
+			}
+			int doubleCount = map.getOrDefault(key * 2,0);
+			if (doubleCount < count) {
+				return new int[0];
+			}
+			map.put(key * 2,(doubleCount - count));
+			while (count-- > 0) {
+				result.add(key);
+			}
+		}
+		if (result.size() > n / 2) {
+			return new int[0];
+		}
+		int[] res = new int[n / 2];
+		int i = 0;
+		for (int num: result) {	
+			res[i++] = num;
+		}
+		return res;
+	}
+}

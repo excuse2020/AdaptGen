@@ -1,0 +1,37 @@
+class Solution {
+	int dfs(int node, boolean[] visited, List<List<Integer>> adj) {
+		visited[node] = true;
+		int count = 1;
+		for (int child: adj.get(node)) {	
+			if (!visited[child]) {
+				count += dfs(child,visited,adj);
+			}
+		}
+		return count;
+	}
+	int maximumDetonation(int[][] bombs) {
+		int n = bombs.length;
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (i != j) {
+					int xi = bombs[i][0], yi = bombs[i][1], ri = bombs[i][2];
+					int xj = bombs[j][0], yj = bombs[j][1];
+					if ((long) ri * ri >= (long) (xi - xj) * (xi - xj) + (long) (yi - yj) * (yi - yj)) {
+						adj.get(i).add(j);
+					}
+				}
+			}
+		}
+		int maxBombsDiffused = 0;
+		for (int i = 0; i < n; i++) {
+			boolean[] visited = new boolean[n];
+			int bombsDiffused = dfs(i,visited,adj);
+			maxBombsDiffused = Math.max(maxBombsDiffused,bombsDiffused);
+		}
+		return maxBombsDiffused;
+	}
+}

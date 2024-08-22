@@ -1,0 +1,82 @@
+class Solution {
+	List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+		boolean[][] adjMat = new boolean[wordList.size() + 1][wordList.size() + 1];
+		List<String> nodes = new ArrayList<>();
+		nodes.add(beginWord);
+		int endWordPos = -1;
+		for (int i = 0; i < wordList.size(); i++) {
+			nodes.add(wordList.get(i));
+			if (endWordPos == -1 && wordList.get(i).equals(endWord)) {
+				endWordPos = i + 1;
+			}
+		}
+		if (endWordPos == -1) {
+			return new ArrayList<List<String>>();
+		}
+		for (int i = 0; i < nodes.size(); i++) {
+			for (int j = 0; j < nodes.size(); j++) {
+				if (i == j) {
+					adjMat[i][j] = false;
+				} 
+				else {
+					adjMat[i][j] = adjMat[j][i] = this.isTransformable(nodes.get(i),nodes.get(j));
+				}
+			}
+		}
+		int[] ladderLength = new int[wordList.size() + 1];
+		Arrays.fill(ladderLength,-1);
+		ladderLength[0] = 1;
+		this.setMinLengthBFS(adjMat,ladderLength);
+		if (ladderLength[endWordPos] == -1) {
+			return new ArrayList<List<String>>();
+		}
+		return this.getMinTransformSeqs(nodes,adjMat,ladderLength,endWordPos,ladderLength[endWordPos]);
+	}
+	List<List<String>> getMinTransformSeqs(List<String> nodes, boolean[][] adjMat, int[] ladderLength, int pos, int dist) {
+		List<List<String>> res = new ArrayList<>();
+		if (pos == 0) {
+			List<String> r = new ArrayList<>();
+			r.add(nodes.get(0));
+			res.add(r);
+			return res;
+		}
+		for (int i = 0; i < ladderLength.length; i++) {
+			if (adjMat[pos][i] && ladderLength[pos] - 1 == ladderLength[i]) {
+				List<List<String>> seqs = this.getMinTransformSeqs(nodes,adjMat,ladderLength,i,ladderLength[pos] - 1);
+				for (List<String> seq: seqs) {	
+					seq.add(nodes.get(pos));
+					res.add(seq);
+				}
+			}
+		}
+		return res;
+	}
+	boolean isTransformable(String source, String target) {
+		int countUnmatched = 0;
+		for (int j = 0; j < target.length(); j++) {
+			if (source.charAt(j) != target.charAt(j)) {
+				countUnmatched++;
+			}
+			if (countUnmatched > 1) {
+				return false;
+			}
+		}
+		return countUnmatched == 1;
+	}
+	void setMinLengthBFS(boolean[][] adjMat, int[] ladderLength) {
+		boolean[] visited = new boolean[ladderLength.length];
+		Queue<Integer> q = new LinkedList<>();
+		q.add(0);
+		visited[0] = true;
+		while (!q.isEmpty()) {
+			int r = q.poll();
+			for (int k = 0; k < ladderLength.length; k++) {
+				if (adjMat[r][k] && !visited[k]) {
+					q.add(k);
+					ladderLength[k] = ladderLength[r] + 1;
+					visited[k] = true;
+				}
+			}
+		}
+	}
+}

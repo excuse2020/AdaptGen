@@ -1,0 +1,55 @@
+class Solution {
+	boolean bfs(int node, List<List<Integer>> adj, int[] vis, int[] degree, int n) {
+		int[] pathVis = new int[n];
+		Queue<Integer> q = new LinkedList<>();
+		q.add(node);
+		int cnt = 1;
+		vis[node] = 1;
+		pathVis[node] = 1;
+		while (!q.isEmpty()) {
+			int currNode = q.remove();
+			for (int adjNode: adj.get(currNode)) {	
+				if (vis[adjNode] == 0 && pathVis[adjNode] == 0) {
+					cnt++;
+					vis[adjNode] = 1;
+					pathVis[adjNode] = 1;
+					q.add(adjNode);
+				}
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			if (pathVis[i] == 1 && degree[i] != cnt - 1) {
+				return false;
+			}
+		}
+		return true;
+	}
+	int countCompleteComponents(int n, int[][] edges) {
+		int[] degree = new int[n];
+		for (int i = 0; i < edges.length; i++) {
+			degree[edges[i][0]]++;
+			degree[edges[i][1]]++;
+		}
+		int cnt = 0;
+		List<List<Integer>> adj = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<>());
+		}
+		for (int i = 0; i < edges.length; i++) {
+			int u = edges[i][0];
+			int v = edges[i][1];
+			adj.get(u).add(v);
+			adj.get(v).add(u);
+		}
+		int[] vis = new int[n];
+		int[] ans = new int[1];
+		for (int i = 0; i < n; i++) {
+			if (vis[i] == 0) {
+				if (bfs(i,adj,vis,degree,n)) {
+					cnt++;
+				}
+			}
+		}
+		return cnt;
+	}
+}

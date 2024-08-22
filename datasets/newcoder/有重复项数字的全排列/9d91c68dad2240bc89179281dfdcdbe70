@@ -1,0 +1,29 @@
+class Solution {
+	ArrayList<ArrayList<Integer>> result = new ArrayList<>();
+	void backTrack(int[] num, boolean[] mark, LinkedList<Integer> track) {
+		if (track.size() == num.length) {
+			result.add(new ArrayList<Integer>(track));
+			return;
+		}
+		for (int i = 0; i < num.length; i++) {
+			if (mark[i]) {
+				continue;
+			}
+			if (i > 0 && num[i] == num[i - 1] && !mark[i - 1]) {
+				continue;
+			}
+			mark[i] = true;
+			track.add(num[i]);
+			backTrack(num,mark,track);
+			track.removeLast();
+			mark[i] = false;
+		}
+	}
+	ArrayList<ArrayList<Integer>> permuteUnique(int[] num) {
+		Arrays.sort(num);
+		boolean[] mark = new boolean[num.length];
+		LinkedList<Integer> track = new LinkedList<>();
+		backTrack(num,mark,track);
+		return result;
+	}
+}

@@ -1,0 +1,58 @@
+class Solution {
+	int findFirst(char[] characters, int start, int end, char target) {
+		if (start > end) {
+			return -1;
+		}
+		int mid = (start + end) / 2;
+		if ((mid == 0 || characters[mid - 1] < target) && characters[mid] == target) {
+			return mid;
+		}
+		if (target > characters[mid]) {
+			return findFirst(characters,mid + 1,end,target);
+		}
+		return findFirst(characters,start,mid - 1,target);
+	}
+	int findFrequencyOfSmallestCharacter(String word) {
+		char[] characters = word.toCharArray();
+		Arrays.sort(characters);
+		int firstPosition = findFirst(characters,0,characters.length - 1,characters[0]);
+		int lastPosition = findLast(characters,0,characters.length - 1,characters[0]);
+		return lastPosition - firstPosition + 1;
+	}
+	int findLast(char[] characters, int start, int end, char target) {
+		if (start > end) {
+			return -1;
+		}
+		int mid = (start + end) / 2;
+		if ((mid == characters.length - 1 || characters[mid + 1] > target) && characters[mid] == target) {
+			return mid;
+		}
+		if (target >= characters[mid]) {
+			return findLast(characters,mid + 1,end,target);
+		}
+		return findLast(characters,start,mid - 1,target);
+	}
+	int[] numSmallerByFrequency(String[] queries, String[] words) {
+		int m = queries.length;
+		int n = words.length;
+		int[] queriesFreq = new int[m];
+		for (int i = 0; i < m; i++) {
+			queriesFreq[i] = findFrequencyOfSmallestCharacter(queries[i]);
+		}
+		int[] wordsFreq = new int[n];
+		for (int i = 0; i < n; i++) {
+			wordsFreq[i] = findFrequencyOfSmallestCharacter(words[i]);
+		}
+		int[] result = new int[m];
+		for (int i = 0; i < m; i++) {
+			int count = 0;
+			for (int j = 0; j < n; j++) {
+				if (queriesFreq[i] < wordsFreq[j]) {
+					count++;
+				}
+			}
+			result[i] = count;
+		}
+		return result;
+	}
+}

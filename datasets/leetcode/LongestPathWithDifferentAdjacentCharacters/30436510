@@ -1,0 +1,35 @@
+class Solution {
+	int ans = 1;
+	Map<Integer, List<Integer>> children = new HashMap<>();
+	int genratePathDFS(int currNode, String str) {
+		if (!children.containsKey(currNode)) {
+			return 1;
+		}
+		int maxPath1 = 0, maxPath2 = 0;
+		for (int nextNode: children.get(currNode)) {	
+			int currPath = genratePathDFS(nextNode,str);
+			ans = Math.max(ans,currPath);
+			if (str.charAt(currNode) == str.charAt(nextNode)) {
+				continue;
+			}
+			if (currPath > maxPath1) {
+				maxPath2 = maxPath1;
+				maxPath1 = currPath;
+			} 
+			else {
+				maxPath2 = Math.max(maxPath2,currPath);
+			}
+		}
+		ans = Math.max(ans,maxPath1 + maxPath2);
+		return maxPath1 + 1;
+	}
+	int longestPath(int[] parent, String s) {
+		for (int i = 1; i < parent.length; i++) {
+			int j = parent[i];
+			children.putIfAbsent(j,new LinkedList<>());
+			children.get(j).add(i);
+		}
+		genratePathDFS(0,s);
+		return ans;
+	}
+}

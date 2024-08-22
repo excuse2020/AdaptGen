@@ -1,0 +1,24 @@
+class Solution {
+	TreeNode buildTree(int[] inorder, int[] postorder) {
+		if (postorder.length == 0 || inorder.length == 0) {
+			return null;
+		}
+		HashMap<Integer, Integer> inorderIndexMap = new HashMap<>();
+		for (int i = 0; i < inorder.length; i++) {
+			inorderIndexMap.put(inorder[i],i);
+		}
+		return buildTree(postorder,0,postorder.length - 1,inorder,0,inorder.length - 1,inorderIndexMap);
+	}
+	TreeNode buildTree(int[] postorder, int postStart, int postEnd, int[] inorder, int inStart, int inEnd, HashMap<Integer, Integer> inorderIndexMap) {
+		if (postStart > postEnd || inStart > inEnd) {
+			return null;
+		}
+		int rootValue = postorder[postEnd];
+		TreeNode root = new TreeNode(rootValue);
+		int rootIndex = inorderIndexMap.get(rootValue);
+		int leftTreeSize = rootIndex - inStart;
+		root.right = buildTree(postorder,postStart + leftTreeSize,postEnd - 1,inorder,rootIndex + 1,inEnd,inorderIndexMap);
+		root.left = buildTree(postorder,postStart,postStart + leftTreeSize - 1,inorder,inStart,rootIndex - 1,inorderIndexMap);
+		return root;
+	}
+}

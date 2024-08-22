@@ -1,0 +1,49 @@
+class Solution {
+	int dp;
+	int scoreAlice(int[] stones, int chance, int index) {
+		int n = stones.length;
+		if (index >= n) {
+			return 0;
+		}
+		if (dp[chance][index] != Integer.MIN_VALUE) {
+			return dp[chance][index];
+		}
+		int choose1 = 0, choose2 = 0, choose3 = 0;
+		int ans = 0;
+		if (chance == 0) {
+			choose1 = choose2 = choose3 = Integer.MIN_VALUE;
+			choose1 = stones[index] + scoreAlice(stones,1,index + 1);
+			if (index + 1 < n) {
+				choose2 = stones[index] + stones[index + 1];
+			}
+			if (index + 2 < n) {
+				choose3 = stones[index] + stones[index + 1];
+			}
+			ans = Math.max(choose1,Math.max(choose2,choose3));
+		} 
+		else {
+			choose1 = choose2 = choose3 = Integer.MAX_VALUE;
+			choose1 = scoreAlice(stones,0,index + 1);
+			if (index + 1 < n) {
+				choose2 = scoreAlice(stones,0,index + 2);
+			}
+			if (index + 2 < n) {
+				choose3 = scoreAlice(stones,0,index + 3);
+			}
+			ans = Math.min(choose1,Math.min(choose2,choose3));
+		}
+		return dp[chance][index] = ans;
+	}
+	String stoneGameIII(int[] stones) {
+		dp = new int[2][stones.length + 1];
+		for (int[] ar: dp) {	
+			Arrays.fill(ar,Integer.MIN_VALUE);
+		}
+		int A = scoreAlice(stones,0,0);
+		for (int[] ar: dp) {	
+			Arrays.fill(ar,Integer.MIN_VALUE);
+		}
+		int B = scoreAlice(stones,1,0);
+		return A == B ? "Tie" : (A > B ? "Alice" : "Bob");
+	}
+}

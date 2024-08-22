@@ -1,0 +1,53 @@
+class Solution {
+	boolean isDecimalNumber(String s, boolean isSignAllowed) {
+		if (s.startsWith("-") || s.startsWith("+")) {
+			if (!isSignAllowed) {
+				return false;
+			}
+			return isDecimalNumber(s.substring(1),false);
+		}
+		if (s.contains(".")) {
+			int i = s.indexOf(".");
+			String first = s.substring(0,i);
+			String second = s.substring(i + 1);
+			if (first.length() > 0 && second.length() > 0) {
+				return isIntegerNumber(first,false) && isIntegerNumber(second,false);
+			} 
+			else if (first.length() > 0) {
+				return isIntegerNumber(first,false);
+			} 
+			else if (second.length() > 0) {
+				return isIntegerNumber(second,false);
+			} 
+			else {
+				return false;
+			}
+		}
+		return isIntegerNumber(s,false);
+	}
+	boolean isIntegerNumber(String s, boolean isSignAllowed) {
+		if (s.startsWith("-") || s.startsWith("+")) {
+			if (!isSignAllowed) {
+				return false;
+			}
+			return isIntegerNumber(s.substring(1),false);
+		}
+		return s.matches("[0-9]+");
+	}
+	boolean isNumber(String s) {
+		if (s.contains("e") || s.contains("E")) {
+			String temp = "e";
+			if (s.contains("E")) {
+				temp = "E";
+			}
+			int i = s.indexOf(temp);
+			String first = s.substring(0,i);
+			String second = s.substring(i + 1);
+			if (first.length() == 0 || second.length() == 0) {
+				return false;
+			}
+			return isDecimalNumber(first,true) && isIntegerNumber(second,true);
+		}
+		return isDecimalNumber(s,true);
+	}
+}

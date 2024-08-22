@@ -1,0 +1,53 @@
+class Solution {
+	boolean canReorderDoubled(int[] arr) {
+		int pos_max = 0, neg_min = 0, pos_n = 0, neg_n = 0, n = arr.length;
+		for (int i = 0; i < n; ++i) {
+			if (arr[i] > 0) {
+				pos_max = Math.max(pos_max,arr[i]);
+				pos_n++;
+			}
+			if (arr[i] < 0) {
+				neg_min = Math.min(neg_min,arr[i]);
+				neg_n++;
+			}
+		}
+		if (pos_n % 2 == 1 || neg_n % 2 == 1) {
+			return false;
+		}
+		int[] posTable = new int[pos_max + 1], negTable = new int[-neg_min + 1];
+		for (int num: arr) {	
+			if (num >= 0) {
+				posTable[num]++;
+			} 
+			else {
+				negTable[-num]++;
+			}
+		}
+		if (posTable[0] % 2 == 1) {
+			return false;
+		}
+		for (int i = 0; i < pos_max + 1; ++i) {
+			while (posTable[i] > 0) {
+				if (i * 2 < pos_max + 1 && posTable[i * 2] > 0) {
+					posTable[i]--;
+					posTable[i * 2]--;
+				} 
+				else {
+					return false;
+				}
+			}
+		}
+		for (int i = 1; i < -neg_min + 1; ++i) {
+			while (negTable[i] > 0) {
+				if (i * 2 < -neg_min + 1 && negTable[i * 2] > 0) {
+					negTable[i]--;
+					negTable[i * 2]--;
+				} 
+				else {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+}

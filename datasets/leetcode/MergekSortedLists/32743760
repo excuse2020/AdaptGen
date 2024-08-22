@@ -1,0 +1,49 @@
+class Solution {
+	ListNode merge(ListNode n1, ListNode n2) {
+		if (n1 == null) {
+			return n2;
+		}
+		if (n2 == null) {
+			return n1;
+		}
+		ListNode temp1 = n1;
+		ListNode temp2 = n2;
+		ListNode curr = new ListNode(0);
+		while (temp1 != null && temp2 != null) {
+			if (temp1.val <= temp2.val) {
+				curr.next = temp1;
+				temp1 = temp1.next;
+			} 
+			else {
+				curr.next = temp2;
+				temp2 = temp2.next;
+			}
+			curr = curr.next;
+		}
+		if (temp1 != null) {
+			curr.next = temp1;
+		}
+		if (temp2 != null) {
+			curr.next = temp2;
+		}
+		return n1.val <= n2.val ? n1 : n2;
+	}
+	ListNode mergeKLists(ListNode[] lists) {
+		return recursiveMerge(lists,0,lists.length - 1);
+	}
+	ListNode recursiveMerge(ListNode[] lists, int lo, int hi) {
+		if (lists == null || lists.length == 0) {
+			return null;
+		}
+		if (hi - lo == 1) {
+			return merge(lists[lo],lists[hi]);
+		}
+		if (hi == lo) {
+			return lists[hi];
+		}
+		int mid = (lo + hi) / 2;
+		ListNode left = recursiveMerge(lists,lo,mid);
+		ListNode right = recursiveMerge(lists,mid + 1,hi);
+		return merge(left,right);
+	}
+}

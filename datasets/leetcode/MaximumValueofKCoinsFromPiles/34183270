@@ -1,0 +1,26 @@
+class Solution {
+	Integer dp;
+	int maxValueOfCoins(List<List<Integer>> piles, int k) {
+		int len = 0;
+		for (List<Integer> l: piles) {	
+			len = Math.max(len,l.size());
+		}
+		dp = new Integer[piles.size()][len][k + 1];
+		return util(piles,0,0,k);
+	}
+	int util(List<List<Integer>> piles, int idx, int j, int left) {
+		if (left == 0) {
+			return 0;
+		}
+		if (idx == piles.size()) {
+			return Integer.MIN_VALUE;
+		}
+		if (j == piles.get(idx).size()) {
+			return Integer.MIN_VALUE;
+		}
+		if (dp[idx][j][left] != null) {
+			return dp[idx][j][left];
+		}
+		return dp[idx][j][left] = Math.max(Math.max(piles.get(idx).get(j) + util(piles,idx,j + 1,left - 1),util(piles,idx + 1,0,left)),piles.get(idx).get(j) + util(piles,idx + 1,0,left - 1));
+	}
+}

@@ -1,0 +1,49 @@
+class Solution {
+	int cols = 0;
+	int rows = 0;
+	int total = 0;
+	void braary(int row, int col, char[][] grid, int[][] meme, int[][] trip, boolean inser) {
+		if (grid[row][col] == '1') {
+			if (inser) {
+				meme[row][col] = 1;
+			}
+			if (meme[row][col] == 0 && !inser) {
+				total++;
+				meme[row][col] = 1;
+			}
+			if (row < rows - 1) {
+				trip[row + 1][col] = 1;
+				braary(row + 1,col,grid,meme,trip,true);
+			}
+			if (col < cols - 1) {
+				trip[row][col + 1] = 1;
+				braary(row,col + 1,grid,meme,trip,true);
+			}
+			if (col - 1 >= 0 && trip[row][col - 1] == 0) {
+				trip[row][col - 1] = 1;
+				braary(row,col - 1,grid,meme,trip,true);
+			}
+			if (row - 1 >= 0 && trip[row - 1][col] == 0) {
+				trip[row - 1][col] = 1;
+				braary(row - 1,col,grid,meme,trip,true);
+			}
+		}
+	}
+	void search(char[][] grid, int[][] meme) {
+		int[][] trip = new int[grid.length][grid[0].length];
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				if (meme[i][j] == 0) {
+					braary(i,j,grid,meme,trip,false);
+				}
+			}
+		}
+	}
+	int solve(char[][] grid) {
+		int[][] mem = new int[grid.length][grid[0].length];
+		rows = grid.length;
+		cols = grid[0].length;
+		search(grid,mem);
+		return total;
+	}
+}

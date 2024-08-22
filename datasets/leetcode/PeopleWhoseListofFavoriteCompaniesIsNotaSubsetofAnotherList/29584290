@@ -1,0 +1,34 @@
+class Solution {
+	List<Integer> peopleIndexes(List<List<String>> favorites) {
+		int count = 0;
+		HashMap<String, Integer> map = new HashMap<>();
+		List<Set<Integer>> ppl = new ArrayList<>();
+		List<Integer> res = new ArrayList<>();
+		int n = favorites.size();
+		for (List<String> s: favorites) {	
+			HashSet<Integer> set = new HashSet<>();
+			for (String str: s) {	
+				if (!map.containsKey(str)) {
+					map.put(str,count++);
+				}
+				set.add(map.get(str));
+			}
+			ppl.add(set);
+		}
+		for (int i = 0; i < n; i++) {
+			boolean valid = true;
+			for (int j = 0; j < n && valid; j++) {
+				if (ppl.get(j).size() <= ppl.get(i).size()) {
+					continue;
+				}
+				if (ppl.get(j).containsAll(ppl.get(i))) {
+					valid = false;
+				}
+			}
+			if (valid) {
+				res.add(i);
+			}
+		}
+		return res;
+	}
+}

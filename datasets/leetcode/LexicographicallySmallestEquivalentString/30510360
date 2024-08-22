@@ -1,0 +1,46 @@
+class Solution {
+	String smallestEquivalentString(String s1, String s2, String baseStr) {
+		Map<Integer, TreeSet<Character>> map1 = new HashMap<>();
+		Map<Character, Integer> map2 = new HashMap<>();
+		for (int i = 0; i < s1.length(); i++) {
+			if (map2.containsKey(s1.charAt(i)) && map2.containsKey(s2.charAt(i))) {
+				if (map2.get(s1.charAt(i)) == map2.get(s2.charAt(i))) {
+					continue;
+				} 
+				else {
+					int old = map2.get(s1.charAt(i));
+					int neww = map2.get(s2.charAt(i));
+					map2.replaceAll((k, v) -> {v == old ? neww : v});
+					map1.get(neww).addAll(map1.get(old));
+				}
+			} 
+			else if (map2.containsKey(s1.charAt(i))) {
+				map2.put(s2.charAt(i),map2.get(s1.charAt(i)));
+				map1.get(map2.get(s1.charAt(i))).add(s2.charAt(i));
+			} 
+			else if (map2.containsKey(s2.charAt(i))) {
+				map2.put(s1.charAt(i),map2.get(s2.charAt(i)));
+				map1.get(map2.get(s2.charAt(i))).add(s1.charAt(i));
+			} 
+			else {
+				map2.put(s1.charAt(i),i);
+				map2.put(s2.charAt(i),i);
+				map1.put(i,new TreeSet<Character>());
+				map1.get(i).add(s1.charAt(i));
+				map1.get(i).add(s2.charAt(i));
+			}
+		}
+		String res = "";
+		for (int i = 0; i < baseStr.length(); i++) {
+			if (map2.containsKey(baseStr.charAt(i))) {
+				if (map1.get(map2.get(baseStr.charAt(i))).first() != null) {
+					res = res + map1.get(map2.get(baseStr.charAt(i))).first();
+				}
+			} 
+			else {
+				res = res + baseStr.charAt(i);
+			}
+		}
+		return res;
+	}
+}

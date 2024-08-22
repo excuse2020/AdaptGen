@@ -1,0 +1,66 @@
+class Solution {
+	boolean IsNum(char num) {
+		if ('0' <= num && num <= '9') {
+			return true;
+		} 
+		else {
+			return false;
+		}
+	}
+	int calculate(char op, int b, int a) {
+		if (op == '+') {
+			return a + b;
+		}
+		if (op == '-') {
+			return a - b;
+		}
+		if (op == '*') {
+			return a * b;
+		}
+		return 0;
+	}
+	int solve(String s) {
+		Stack<Character> ops = new Stack<Character>();
+		Stack<Integer> nums = new Stack<>();
+		char[] ch = s.toCharArray();
+		for (int i = 0; i < ch.length; i++) {
+			if (ch[i] == '(' || ch[i] == '*') {
+				ops.push(ch[i]);
+			} 
+			else if (IsNum(ch[i])) {
+				String temp = "";
+				while (i < ch.length && IsNum(ch[i])) {
+					temp = temp + ch[i++];
+				}
+				i--;
+				nums.push(Integer.parseInt(temp));
+			} 
+			else if (ch[i] == '+' || ch[i] == '-') {
+				while (!ops.empty() && (ops.peek() == '*' || ops.peek() == '+' || ops.peek() == '-')) {
+					int num1 = nums.pop();
+					int num2 = nums.pop();
+					int res = calculate(ops.pop(),num1,num2);
+					nums.push(res);
+				}
+				ops.push(ch[i]);
+			} 
+			else if (ch[i] == ')') {
+				while (!ops.empty() && ops.peek() != '(') {
+					int num1 = nums.pop();
+					int num2 = nums.pop();
+					int res = calculate(ops.pop(),num1,num2);
+					nums.push(res);
+				}
+				ops.pop();
+			}
+		}
+		int res = 0;
+		while (!ops.empty()) {
+			int num1 = nums.pop();
+			int num2 = nums.pop();
+			int temp_res = calculate(ops.pop(),num1,num2);
+			nums.push(temp_res);
+		}
+		return nums.pop();
+	}
+}

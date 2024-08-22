@@ -1,0 +1,49 @@
+class Solution {
+	int countCompleteComponents(int n, int[][] edges) {
+		List<List<Integer>> graph = graphGenerator(n,edges);
+		boolean visited = new boolean[n];
+		int count = 0;
+		for (int i = 0; i < n; i++) {
+			if (!visited[i]) {
+				List<Integer> currentTraversalList = new ArrayList<>();
+				dfs(graph,i,visited,currentTraversalList);
+				boolean flag = false;
+				int size = currentTraversalList.size();
+				for (Integer node: currentTraversalList) {	
+					if (graph.get(node).size() != size - 1) {
+						flag = true;
+					}
+				}
+				if (flag == false) {
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+	void dfs(List<List<Integer>> graph, int currentNode, boolean visited, List<Integer> currentTraversalList) {
+		if (visited[currentNode]) {
+			return;
+		}
+		visited[currentNode] = true;
+		currentTraversalList.add(currentNode);
+		for (int nodes: graph.get(currentNode)) {	
+			if (!visited[nodes]) {
+				dfs(graph,nodes,visited,currentTraversalList);
+			}
+		}
+	}
+	List<List<Integer>> graphGenerator(int n, int edges) {
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			graph.add(new ArrayList<>());
+		}
+		for (int edge: edges) {	
+			int u = edge[0];
+			int v = edge[1];
+			graph.get(u).add(v);
+			graph.get(v).add(u);
+		}
+		return graph;
+	}
+}

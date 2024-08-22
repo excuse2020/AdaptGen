@@ -1,0 +1,34 @@
+class Solution {
+	int COL;
+	int ROW;
+	Integer[][] memo;
+	int helper(int[][] grid, int row, int col, int prevVal) {
+		if (isOutOfBounds(row,col)) {
+			return 0;
+		}
+		if (prevVal >= grid[row][col]) {
+			return 0;
+		}
+		if (memo[row][col] != null) {
+			return memo[row][col];
+		}
+		int currMoves = 0;
+		currMoves = Math.max(currMoves,1 + helper(grid,row - 1,col + 1,grid[row][col]));
+		currMoves = Math.max(currMoves,1 + helper(grid,row,col + 1,grid[row][col]));
+		currMoves = Math.max(currMoves,1 + helper(grid,row + 1,col + 1,grid[row][col]));
+		return memo[row][col] = currMoves;
+	}
+	boolean isOutOfBounds(int row, int col) {
+		return row < 0 || row >= ROW || col < 0 || col >= COL;
+	}
+	int maxMoves(int[][] grid) {
+		ROW = grid.length;
+		COL = grid[0].length;
+		memo = new Integer[ROW][COL];
+		int maxMoves = 0;
+		for (int row = 0; row < ROW; row++) {
+			maxMoves = Math.max(maxMoves,helper(grid,row,0,-1));
+		}
+		return maxMoves - 1;
+	}
+}

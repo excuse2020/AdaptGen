@@ -1,0 +1,21 @@
+class Solution {
+	int profitableSchemes(int n, int minProfit, int[] group, int[] profit) {
+		int[][] dp = new int[minProfit + 1][n + 1];
+		dp[0][0] = 1;
+		int mod = 1000000007;
+		for (int k = 0; k < group.length; k++) {
+			int g = group[k];
+			int p = profit[k];
+			for (int i = minProfit; 0 <= i; i--) {
+				for (int j = n; g <= j; j--) {
+					dp[i][j] = (dp[i][j] + dp[Math.max(0,i - p)][j - g]) % mod;
+				}
+			}
+		}
+		int result = 0;
+		for (int num: dp[minProfit]) {	
+			result = (result + num) % mod;
+		}
+		return result;
+	}
+}

@@ -1,0 +1,32 @@
+class Solution {
+	int[] advantageCount(int[] nums1, int[] nums2) {
+		TreeMap<Integer, Integer> map = new TreeMap<>();
+		int n = nums1.length;
+		for (int i = 0; i < n; i++) {
+			map.put(nums1[i],map.getOrDefault(nums1[i],0) + 1);
+		}
+		int[] nums = new int[n];
+		for (int i = 0; i < n; i++) {
+			Integer x = map.ceilingKey(nums2[i] + 1);
+			if (x == null) {
+				nums[i] = map.firstKey();
+				if (map.get(nums[i]) == 1) {
+					map.remove(nums[i]);
+				} 
+				else {
+					map.put(nums[i],map.getOrDefault(nums[i],0) - 1);
+				}
+			} 
+			else {
+				nums[i] = x;
+				if (map.get(x) == 1) {
+					map.remove(x);
+				} 
+				else {
+					map.put(x,map.getOrDefault(x,0) - 1);
+				}
+			}
+		}
+		return nums;
+	}
+}

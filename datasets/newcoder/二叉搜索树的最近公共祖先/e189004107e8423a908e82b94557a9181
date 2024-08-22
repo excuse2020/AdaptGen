@@ -1,0 +1,29 @@
+class Solution {
+	int findLCA(TreeNode root, int min, int max, int p, int q) {
+		int numInLeft = root.left == null ? 0 : numInRange(min,root.val,p,q);
+		int numInRight = root.right == null ? 0 : numInRange(root.val,max,p,q);
+		if (numInLeft == 1 || numInRight == 1) {
+			return root.val;
+		} 
+		else if (numInLeft == 2) {
+			return findLCA(root.left,min,root.val,p,q);
+		} 
+		else {
+			return findLCA(root.right,root.val,max,p,q);
+		}
+	}
+	int lowestCommonAncestor(TreeNode root, int p, int q) {
+		return findLCA(root,Integer.MIN_VALUE,Integer.MAX_VALUE,p,q);
+	}
+	int numInRange(int min, int max, int p, int q) {
+		if ((p > min && p < max) && (q > min && q < max)) {
+			return 2;
+		}
+		if ((p > min && p < max) || (q > min && q < max)) {
+			return 1;
+		} 
+		else {
+			return 0;
+		}
+	}
+}

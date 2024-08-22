@@ -1,0 +1,39 @@
+class Solution {
+	int count = 0;
+	int[] temp = new int[100005];
+	int InversePairs(int[] array) {
+		int n = array.length;
+		if (n <= 1) {
+			return 0;
+		}
+		mergrSort(array,temp,0,n - 1);
+		return count;
+	}
+	void mergrSort(int[] a, int[] tem, int l, int r) {
+		if (l < r) {
+			int mid = l + (r - l) / 2;
+			mergrSort(a,tem,l,mid);
+			mergrSort(a,tem,mid + 1,r);
+			int l1 = l, r1 = mid + 1, k = 0;
+			while (l1 <= mid && r1 <= r) {
+				if (a[l1] <= a[r1]) {
+					tem[k++] = a[l1++];
+				} 
+				else {
+					tem[k++] = a[r1++];
+					count += (mid - l1 + 1);
+					count = count % 1000000007;
+				}
+			}
+			while (l1 <= mid) {
+				tem[k++] = a[l1++];
+			}
+			while (r1 <= r) {
+				tem[k++] = a[r1++];
+			}
+			for (int i = 0; i < k; ++i) {
+				a[l + i] = tem[i];
+			}
+		}
+	}
+}

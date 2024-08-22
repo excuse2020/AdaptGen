@@ -1,0 +1,28 @@
+class Solution {
+	int[] colorTheArray(int n, int[][] queries) {
+		int qlen = queries.length;
+		int ans = new int[qlen];
+		int color = new int[n];
+		int prevAdj = 0;
+		for (int i = 0; i < qlen; i++) {
+			int left = 0, right = 0, qidx = queries[i][0], qcol = queries[i][1];
+			if (qidx > 0 && color[qidx] != 0) {
+				left = color[qidx] == color[qidx - 1] ? 1 : 0;
+			}
+			if (qidx < n - 1 && color[qidx] != 0) {
+				right = color[qidx] == color[qidx + 1] ? 1 : 0;
+			}
+			ans[i] += prevAdj - left;
+			color[qidx] = qcol;
+			if (qidx > 0 && color[qidx] != 0) {
+				left = color[qidx] == color[qidx - 1] ? 1 : 0;
+			}
+			if (qidx < n - 1 && color[qidx] != 0) {
+				right = color[qidx] == color[qidx + 1] ? 1 : 0;
+			}
+			ans[i] += left + right;
+			prevAdj = ans[i];
+		}
+		return ans;
+	}
+}

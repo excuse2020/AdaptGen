@@ -1,0 +1,35 @@
+class Solution {
+	int[] findOriginalArray(int[] changed) {
+		TreeMap<Integer, Integer> map = new TreeMap<>();
+		for (int i = 0; i < changed.length; i++) {
+			map.put(changed[i],map.getOrDefault(changed[i],0) + 1);
+		}
+		int res = new int[changed.length / 2];
+		if (res.length == 0 || changed.length % 2 == 1) {
+			return new int[0];
+		}
+		int j = 0;
+		for (Map.Entry<Integer, Integer> entry: map.entrySet()) {	
+			int key = entry.getKey();
+			int value = entry.getValue();
+			while (value > 0) {
+				if (map.containsKey(key * 2) && map.get(key * 2) > 0) {
+					value--;
+					res[j++] = key;
+					int r = map.get(key * 2);
+					if (key == key * 2) {
+						value--;
+					} 
+					else {
+						r--;
+					}
+					map.put(key * 2,r);
+				} 
+				else if (value > 0) {
+					return new int[0];
+				}
+			}
+		}
+		return res;
+	}
+}

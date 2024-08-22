@@ -1,0 +1,44 @@
+class Solution {
+	TreeNode createBinaryTree(int[][] descriptions) {
+		Map<Integer, TreeNode> nodeMap = new HashMap<>();
+		Set<Integer> parent = new HashSet<>();
+		int n = descriptions.length;
+		for (int i = 0; i < n; i++) {
+			if (nodeMap.containsKey(descriptions[i][0])) {
+				if (descriptions[i][2] == 1) {
+					nodeMap.get(descriptions[i][0]).left = new TreeNode(descriptions[i][1]);
+				} 
+				else {
+					nodeMap.get(descriptions[i][0]).right = new TreeNode(descriptions[i][1]);
+				}
+			} 
+			else {
+				nodeMap.put(descriptions[i][0],new TreeNode(descriptions[i][0]));
+			}
+			parent.add(descriptions[i][0]);
+		}
+		for (int i = 0; i < n; i++) {
+			if (descriptions[i][2] == 1) {
+				nodeMap.get(descriptions[i][0]).left = new TreeNode(descriptions[i][1]);
+			} 
+			else {
+				nodeMap.get(descriptions[i][0]).right = new TreeNode(descriptions[i][1]);
+			}
+			parent.remove(descriptions[i][1]);
+		}
+		int prnt = parent.iterator().next();
+		TreeNode node = null;
+		for (Map.Entry<Integer, TreeNode> entry: nodeMap.entrySet()) {	
+			if (entry.getValue().left != null && nodeMap.containsKey(entry.getValue().left.val)) {
+				entry.getValue().left = nodeMap.get(entry.getValue().left.val);
+			}
+			if (entry.getValue().right != null && nodeMap.containsKey(entry.getValue().right.val)) {
+				entry.getValue().right = nodeMap.get(entry.getValue().right.val);
+			}
+			if (node == null && entry.getKey() == prnt) {
+				node = entry.getValue();
+			}
+		}
+		return node;
+	}
+}

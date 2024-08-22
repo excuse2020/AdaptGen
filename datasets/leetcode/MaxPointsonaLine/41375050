@@ -1,0 +1,50 @@
+class Solution {
+	int maxPoints(int[][] points) {
+		int a = points.length;
+		int b = points[0].length;
+		if (points.length == 0) {
+			return 0;
+		}
+		int max = 1;
+		for (int i = 0; i < points.length; i++) {
+			int coord1 = points[i];
+			HashMap<Double, HashSet<Integer>> hm = new HashMap<Double, HashSet<Integer>>();
+			int count = 0;
+			for (int j = i + 1; j < points.length; j++) {
+				int coord2 = points[j];
+				double y = (double) (coord2[1] - coord1[1]);
+				double x = (double) (coord2[0] - coord1[0]);
+				double slope = y / x;
+				if (y == 0.0 && x != 0.0) {
+					slope = 0.0;
+				}
+				if (x == 0.0 && y != 0.0) {
+					slope = 1.0 / x;
+				}
+				if (coord1[0] == coord2[0] && coord1[1] == coord2[1]) {
+					count++;
+				}
+				if (hm.containsKey(slope)) {
+					hm.get(slope).add(i);
+					hm.get(slope).add(j);
+				} 
+				else {
+					if (y != 0.0 || x != 0.0) {
+						HashSet<Integer> hs = new HashSet<Integer>();
+						hs.add(i);
+						hs.add(j);
+						hm.put(slope,hs);
+					}
+				}
+			}
+			max = Math.max(max,(count + 1));
+			for (Map.Entry<Double, HashSet<Integer>> set: hm.entrySet()) {	
+				int size = set.getValue().size() + count;
+				if (size > max) {
+					max = size;
+				}
+			}
+		}
+		return max;
+	}
+}

@@ -1,0 +1,52 @@
+class Solution {
+	int minimumOperations(TreeNode root) {
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(root);
+		int count = 0;
+		while (!q.isEmpty()) {
+			int k = q.size();
+			int[] arr = new int[k];
+			int[] arr2 = new int[k];
+			for (int i = 0; i < k; i++) {
+				TreeNode temp = q.remove();
+				if (temp.left != null) {
+					q.add(temp.left);
+				}
+				if (temp.right != null) {
+					q.add(temp.right);
+				}
+				arr[i] = temp.val;
+				arr2[i] = temp.val;
+			}
+			Arrays.sort(arr2);
+			HashMap<Integer, Integer> map = new HashMap<>();
+			HashMap<Integer, Integer> map3 = new HashMap<>();
+			for (int i = 0; i < k; i++) {
+				map.put(i,arr2[i]);
+				map3.put(arr[i],i);
+			}
+			for (int i = 0; i < k; i++) {
+				if (map.get(i) != arr[i]) {
+					count++;
+					int j = map3.get(map.get(i));
+					map3.put(arr[i],j);
+					map3.put(arr[j],i);
+					swap(arr,i,j);
+				}
+			}
+		}
+		return count;
+	}
+	void printArr(int[] arr) {
+		for (int a: arr) {	
+			System.out.print(a + " ");
+		}
+		System.out.println();
+	}
+	void swap(int[] arr, int i, int j) {
+		System.out.println("i: " + i);
+		int temp = arr[i];
+		arr[i] = arr[j];
+		arr[j] = temp;
+	}
+}

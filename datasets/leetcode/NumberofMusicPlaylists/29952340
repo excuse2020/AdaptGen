@@ -1,0 +1,25 @@
+class Solution {
+	int mod = 1000000007;
+	long getAllPossiblePlayList(int n, int goal, int k, int currentLen, int curSongNum, Long[][] dp) {
+		if (currentLen == goal) {
+			if (curSongNum == n) {
+				return 1;
+			}
+			return 0;
+		}
+		if (dp[currentLen][curSongNum] != null) {
+			return dp[currentLen][curSongNum];
+		}
+		long op1 = (long) Math.max(0,curSongNum - k) * getAllPossiblePlayList(n,goal,k,currentLen + 1,curSongNum,dp);
+		op1 %= mod;
+		long op2 = 0;
+		if (curSongNum < n) {
+			op2 = getAllPossiblePlayList(n,goal,k,currentLen + 1,curSongNum + 1,dp) * (long) (n - curSongNum);
+		}
+		op2 %= mod;
+		return dp[currentLen][curSongNum] = ((op1 + op2) % mod);
+	}
+	int numMusicPlaylists(int n, int goal, int k) {
+		return (int) getAllPossiblePlayList(n,goal,k,0,0,new Long[goal + 1][n + 1]);
+	}
+}

@@ -1,0 +1,20 @@
+class Solution {
+	int constrainedSubsetSum(int[] nums, int k) {
+		int n = nums.length, dp = new int[n], max = nums[0];
+		PriorityQueue<Integer> scoreAt = new PriorityQueue<>((a, b) -> {dp[b] - dp[a]});
+		for (int i = 0; i < n; i++) {
+			dp[i] = nums[i];
+			while (!scoreAt.isEmpty() && scoreAt.peek() < i - k) {
+				scoreAt.poll();
+			}
+			if (!scoreAt.isEmpty()) {
+				dp[i] += dp[scoreAt.peek()];
+			}
+			max = Math.max(max,dp[i]);
+			if (dp[i] > 0) {
+				scoreAt.offer(i);
+			}
+		}
+		return max;
+	}
+}

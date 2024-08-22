@@ -1,0 +1,37 @@
+class Solution {
+	int maximumSum(int[] nums) {
+		HashMap<Integer, int[]> bestTwo = new HashMap<>();
+		int maxP = -1;
+		for (int i = 0; i < nums.length; i++) {
+			int digit = 0;
+			int num = nums[i];
+			while (num != 0) {
+				digit += num % 10;
+				num = num / 10;
+			}
+			if (!bestTwo.containsKey(digit)) {
+				bestTwo.put(digit,new int{0, nums[i]});
+			} 
+			else {
+				int[] line = bestTwo.get(digit);
+				if (nums[i] > line[1]) {
+					line[0] = line[1];
+					line[1] = nums[i];
+				} 
+				else if (nums[i] > line[0]) {
+					line[0] = nums[i];
+				}
+			}
+			if (tableSum(bestTwo.get(digit)) > maxP) {
+				maxP = tableSum(bestTwo.get(digit));
+			}
+		}
+		return maxP == 0 ? -1 : maxP;
+	}
+	int tableSum(int[] arr) {
+		if (arr[0] == 0) {
+			return -1;
+		}
+		return arr[0] + arr[1];
+	}
+}

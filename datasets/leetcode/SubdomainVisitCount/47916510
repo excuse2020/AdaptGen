@@ -1,0 +1,27 @@
+class Solution {
+	List<String> subdomainVisits(String[] cpdomains) {
+		Map<String, Integer> domainCount = new HashMap<>();
+		for (String cpDomain: cpdomains) {	
+			update(domainCount,cpDomain);
+		}
+		return domainCount.entrySet().stream().map((k) -> {k.getValue() + " "}).collect(Collectors.toList());
+	}
+	List<String> toSubDomains(String domain) {
+		List<String> result = new ArrayList<>();
+		String[] split = domain.split("\\\\.");
+		result.add(domain);
+		if (split.length > 2) {
+			result.add(split[1] + ".");
+		}
+		result.add(split[split.length - 1]);
+		return result;
+	}
+	void update(Map<String, Integer> domainCount, String cpDomain) {
+		String[] cpDomainSplit = cpDomain.split(" ");
+		int count = Integer.parseInt(cpDomainSplit[0]);
+		List<String> subDomains = toSubDomains(cpDomainSplit[1]);
+		for (String subDomain: subDomains) {	
+			domainCount.put(subDomain,domainCount.getOrDefault(subDomain,0) + count);
+		}
+	}
+}

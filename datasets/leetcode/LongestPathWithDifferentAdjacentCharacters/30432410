@@ -1,0 +1,39 @@
+class Solution {
+	List<Integer>[] adj;
+	int maxLength = 0;
+	int n;
+	int dfs(int node, char[] s) {
+		int length = 1;
+		int max1 = 0;
+		int max2 = 0;
+		for (int child: adj[node]) {	
+			int l = dfs(child,s);
+			if (s[child] != s[node]) {
+				length = Math.max(length,l + 1);
+				if (l > max2) {
+					if (l > max1) {
+						max2 = max1;
+						max1 = l;
+					} 
+					else {
+						max2 = l;
+					}
+				}
+			}
+		}
+		maxLength = Math.max(maxLength,max1 + max2);
+		return length;
+	}
+	int longestPath(int[] parent, String s) {
+		n = parent.length;
+		adj = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			adj[i] = new ArrayList<>();
+		}
+		for (int i = 1; i < n; i++) {
+			adj[parent[i]].add(i);
+		}
+		dfs(0,s.toCharArray());
+		return maxLength;
+	}
+}

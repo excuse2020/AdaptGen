@@ -1,0 +1,43 @@
+class Solution {
+	Map<Integer, Integer> map = new HashMap();
+	int[] bfs(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		Deque<TreeNode> dq = new LinkedList<>();
+		List<Integer> list = new ArrayList<>();
+		dq.offer(root);
+		for (TreeNode temp = root; !dq.isEmpty(); ) {
+			for (int size = dq.size(); size > 0; size--) {
+				temp = dq.poll();
+				if (temp.left != null) {
+					dq.offerLast(temp.left);
+				}
+				if (temp.right != null) {
+					dq.offerLast(temp.right);
+				}
+			}
+			list.add(temp.val);
+		}
+		return list.stream().mapToInt().toArray();
+	}
+	TreeNode build(int[] xianxu, int xstart, int xend, int[] zhongxu, int zstart, int zend) {
+		if (xstart > xend) {
+			return null;
+		}
+		int rootval = xianxu[xstart];
+		int index = map.get(rootval);
+		int length = index - zstart;
+		TreeNode root = new TreeNode(rootval);
+		root.left = build(xianxu,xstart + 1,xstart + length,zhongxu,zstart,index - 1);
+		root.right = build(xianxu,xstart + length,xend,zhongxu,index + 1,zend);
+		return root;
+	}
+	int[] solve(int[] xianxu, int[] zhongxu) {
+		for (int i = 0; i < zhongxu.length; i++) {
+			map.put(zhongxu[i],i);
+		}
+		TreeNode root = build(xianxu,0,xianxu.length - 1,zhongxu,0,zhongxu.length - 1);
+		return bfs(root);
+	}
+}

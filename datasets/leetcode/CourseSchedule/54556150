@@ -1,0 +1,36 @@
+class Solution {
+	ArrayList<ArrayList<Integer>> adjList = new ArrayList<>();
+	Set<Integer> visited;
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		for (int course = 0; course < numCourses; course++) {
+			adjList.add(new ArrayList<>());
+		}
+		for (int pre = 0; pre < prerequisites.length; pre++) {
+			adjList.get(prerequisites[pre][0]).add(prerequisites[pre][1]);
+		}
+		for (int course = 0; course < numCourses; course++) {
+			visited = new HashSet<>();
+			if (dfs(course) == false) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean dfs(int course) {
+		if (visited.contains(course)) {
+			return false;
+		}
+		if (adjList.get(course).isEmpty()) {
+			return true;
+		}
+		visited.add(course);
+		for (Integer pre: adjList.get(course)) {	
+			if (dfs(pre) == false) {
+				return false;
+			}
+		}
+		adjList.get(course).clear();
+		visited.remove(course);
+		return true;
+	}
+}

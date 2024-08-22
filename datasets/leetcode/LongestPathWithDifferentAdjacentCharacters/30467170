@@ -1,0 +1,46 @@
+class Solution {
+	int max = Integer.MIN_VALUE;
+	int dfs(List<List<Integer>> graph, int src, boolean[] vis, String labels) {
+		vis[src] = true;
+		List<Integer> nbrs = graph.get(src);
+		List<Integer> current = new ArrayList();
+		for (int nbr: nbrs) {	
+			if (vis[nbr]) {
+				continue;
+			}
+			int temp = dfs(graph,nbr,vis,labels);
+			if (labels.charAt(nbr) != labels.charAt(src)) {
+				current.add(temp);
+			}
+		}
+		Collections.sort(current,Collections.reverseOrder());
+		vis[src] = false;
+		if (current.size() > 1) {
+			max = Math.max(max,current.get(0) + current.get(1));
+			return Math.max(current.get(0),current.get(1)) + 1;
+		} 
+		else if (current.size() == 1) {
+			max = Math.max(max,current.get(0) + 1);
+			return current.get(0) + 1;
+		} 
+		else {
+			max = Math.max(max,1);
+			return 1;
+		}
+	}
+	int longestPath(int[] parent, String s) {
+		int n = parent.length;
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i <= n; i++) {
+			graph.add(new ArrayList());
+		}
+		for (int i = 0; i < n; i++) {
+			if (parent[i] == -1) {
+				continue;
+			}
+			graph.get(parent[i]).add(i);
+		}
+		dfs(graph,0,new boolean[n],s);
+		return max;
+	}
+}

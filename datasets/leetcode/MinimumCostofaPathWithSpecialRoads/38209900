@@ -1,0 +1,27 @@
+class Solution {
+	int minimumCost(int[] start, int[] target, int[][] specialRoads) {
+		PriorityQueue<int[]> pq = new PriorityQueue<>((int[] v1, int[] v2) -> {Integer.compare(v1[2],v2[2])});
+		boolean[] visited = new boolean[specialRoads.length + 1];
+		int cost = Math.abs(target[0] - start[0]) + Math.abs(target[1] - start[1]);
+		pq.add(new int{start[0], start[1], 0, specialRoads.length});
+		while (!pq.isEmpty()) {
+			int[] cur = pq.poll();
+			if (cur[0] == target[0] && cur[1] == target[1]) {
+				return cur[2];
+			}
+			if (visited[cur[3]]) {
+				continue;
+			}
+			visited[cur[3]] = true;
+			cost = Math.abs(target[0] - cur[0]) + Math.abs(target[1] - cur[1]);
+			pq.add(new int{target[0], target[1], cost, cur[3]});
+			int i = -1;
+			for (int[] road: specialRoads) {	
+				i++;
+				cost = Math.abs(road[0] - cur[0]) + Math.abs(road[1] - cur[1]);
+				pq.add(new int{road[2], road[3], cost, i});
+			}
+		}
+		return 0;
+	}
+}

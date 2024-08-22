@@ -1,0 +1,55 @@
+class Solution {
+	List<String> fullJustify(String[] words, int maxWidth) {
+		List<String> res = new ArrayList<>();
+		List<String> list = new ArrayList<>();
+		int currWidth = 0;
+		for (String word: words) {	
+			int candidate = list.size() == 0 ? 0 : list.size() - 1;
+			if (currWidth + word.length() > maxWidth) {
+				StringBuilder sb = new StringBuilder();
+				int totalGap = maxWidth - currWidth;
+				int atleastGap = 0;
+				int extraGap = 0;
+				if (candidate > 0) {
+					atleastGap = totalGap / candidate;
+					extraGap = totalGap % candidate;
+				}
+				for (int i = 0; i < list.size(); i++) {
+					sb.append(list.get(i));
+					if (i == list.size() - 1) {
+						break;
+					}
+					for (int j = 0; j < atleastGap; j++) {
+						sb.append(" ");
+					}
+					if (extraGap > 0) {
+						sb.append(" ");
+						extraGap--;
+					}
+				}
+				while (sb.length() < maxWidth) {
+					sb.append(" ");
+				}
+				res.add(sb.toString());
+				currWidth = 0;
+				list.clear();
+			}
+			list.add(word);
+			currWidth += word.length();
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < list.size(); i++) {
+			sb.append(list.get(i));
+			if (i == list.size() - 1) {
+				break;
+			}
+			sb.append(" ");
+		}
+		int lastGap = maxWidth - sb.length();
+		for (int i = 0; i < lastGap; i++) {
+			sb.append(" ");
+		}
+		res.add(sb.toString());
+		return res;
+	}
+}

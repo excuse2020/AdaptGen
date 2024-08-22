@@ -1,0 +1,38 @@
+class Solution {
+	int minInd;
+	int minMaxDistance;
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		minMaxDistance = edges.length;
+		minInd = -1;
+		int[] distance = new int[edges.length];
+		int[] pathVisited = new int[edges.length];
+		iterative(edges,node1,-1,distance,pathVisited,1);
+		iterative(edges,node2,-1,distance,pathVisited,2);
+		return minInd;
+	}
+	void iterative(int[] edges, int node, int dist, int[] distance, int[] pathVisited, int node12) {
+		while (true) {
+			if (node == -1 || pathVisited[node] == node12 || (node12 == 2 && pathVisited[node] == 3)) {
+				return;
+			}
+			pathVisited[node]++;
+			if (node12 == 2) {
+				pathVisited[node]++;
+			}
+			if (node12 == 2) {
+				distance[node] = Math.max(dist + 1,distance[node]);
+				if (pathVisited[node] == 3) {
+					if (distance[node] < minMaxDistance || (distance[node] == minMaxDistance && node < minInd)) {
+						minMaxDistance = distance[node];
+						minInd = node;
+					}
+				}
+			} 
+			else {
+				distance[node] = dist + 1;
+			}
+			node = edges[node];
+			dist = dist + 1;
+		}
+	}
+}

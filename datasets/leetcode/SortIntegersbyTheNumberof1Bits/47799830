@@ -1,0 +1,54 @@
+class Solution {
+	void merge(int l, int r, int m, int[] arr) {
+		int[] temp = new int[r - l + 1];
+		int i = l;
+		int j = m + 1;
+		int k = 0;
+		while (i <= m && j <= r) {
+			if (Integer.bitCount(arr[i]) < Integer.bitCount(arr[j])) {
+				temp[k] = arr[i];
+				i++;
+			} 
+			else if (Integer.bitCount(arr[i]) > Integer.bitCount(arr[j])) {
+				temp[k] = arr[j];
+				j++;
+			} 
+			else {
+				if (arr[i] < arr[j]) {
+					temp[k] = arr[i];
+					i++;
+				} 
+				else {
+					temp[k] = arr[j];
+					j++;
+				}
+			}
+			k++;
+		}
+		while (i <= m) {
+			temp[k] = arr[i];
+			i++;
+			k++;
+		}
+		while (j <= r) {
+			temp[k] = arr[j];
+			j++;
+			k++;
+		}
+		for (int x = l; x <= r; x++) {
+			arr[x] = temp[x - l];
+		}
+	}
+	void mergesort(int l, int r, int[] arr) {
+		if (l < r) {
+			int m = l + (r - l) / 2;
+			mergesort(l,m,arr);
+			mergesort(m + 1,r,arr);
+			merge(l,r,m,arr);
+		}
+	}
+	int[] sortByBits(int[] arr) {
+		mergesort(0,arr.length - 1,arr);
+		return arr;
+	}
+}

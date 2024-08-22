@@ -1,0 +1,31 @@
+class Solution {
+	List<Integer> topStudents(String[] positive_feedback, String[] negative_feedback, String[] report, int[] student_id, int k) {
+		PriorityQueue<Pair<Integer, Integer>> pq = new PriorityQueue<>(new Comparator<Pair<Integer, Integer>>());
+		Set<String> pfs = new HashSet<>();
+		Collections.addAll(pfs,positive_feedback);
+		Set<String> nfs = new HashSet<>();
+		Collections.addAll(nfs,negative_feedback);
+		for (int i = 0; i < student_id.length; i++) {
+			int si = student_id[i];
+			String[] r = report[i].split(" ");
+			int score = 0;
+			for (String s: r) {	
+				if (pfs.contains(s)) {
+					score += 3;
+				} 
+				else if (nfs.contains(s)) {
+					score -= 1;
+				}
+			}
+			pq.offer(new Pair<>(si, score));
+		}
+		List<Integer> ans = new ArrayList<>();
+		while (!pq.isEmpty()) {
+			if (k-- == 0) {
+				break;
+			}
+			ans.add(pq.poll().getKey());
+		}
+		return ans;
+	}
+}

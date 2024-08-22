@@ -1,0 +1,36 @@
+class Solution {
+	record Key(int row, int col) {
+	}
+	int dfs(int row, int col, int[][] matrix, Map<Key, Integer> memo) {
+		if (memo.containsKey(new Key(row, col))) {
+			return memo.get(new Key(row, col));
+		}
+		if (isInBounds(row,col,matrix) && row == matrix.length - 1) {
+			return matrix[row][col];
+		}
+		if (!isInBounds(row,col,matrix)) {
+			return Integer.MAX_VALUE;
+		}
+		int current = matrix[row][col];
+		int res1 = dfs(row + 1,col - 1,matrix,memo);
+		int res2 = dfs(row + 1,col + 1,matrix,memo);
+		int res3 = dfs(row + 1,col,matrix,memo);
+		res1 = res1 == Integer.MAX_VALUE ? Integer.MAX_VALUE : res1 + current;
+		res2 = res2 == Integer.MAX_VALUE ? Integer.MAX_VALUE : res2 + current;
+		res3 = res3 == Integer.MAX_VALUE ? Integer.MAX_VALUE : res3 + current;
+		int ans = Math.min(res1,Math.min(res2,res3));
+		memo.put(new Key(row, col),ans);
+		return ans;
+	}
+	boolean isInBounds(int row, int col, int[][] matrix) {
+		return row >= 0 && row < matrix.length && col >= 0 && col < matrix[row].length;
+	}
+	int minFallingPathSum(int[][] matrix) {
+		int minSum = Integer.MAX_VALUE;
+		Map<Key, Integer> memo = new HashMap<>();
+		for (int col = 0; col < matrix[0].length; col++) {
+			minSum = Math.min(minSum,dfs(0,col,matrix,memo));
+		}
+		return minSum;
+	}
+}

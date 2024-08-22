@@ -1,0 +1,35 @@
+class Solution {
+	int[] temperatures(int[] temperatures) {
+		int len = temperatures.length;
+		int[] res = new int[len];
+		Stack<Integer> stacks = new Stack<>();
+		Stack<Integer> orders = new Stack<>();
+		int index = len - 1;
+		while (index != -1) {
+			if (stacks.empty()) {
+				res[index] = 0;
+				stacks.push(temperatures[index]);
+				orders.push(index);
+				index--;
+			} 
+			else {
+				if (temperatures[index] < stacks.peek()) {
+					res[index] = orders.peek() - index;
+					stacks.push(temperatures[index]);
+					orders.push(index);
+					index--;
+				} 
+				else {
+					while (temperatures[index] >= stacks.peek()) {
+						stacks.pop();
+						orders.pop();
+						if (stacks.empty()) {
+							break;
+						}
+					}
+				}
+			}
+		}
+		return res;
+	}
+}

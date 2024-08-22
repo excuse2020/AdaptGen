@@ -1,0 +1,22 @@
+class Solution {
+	boolean[] isArraySpecial(int[] nums, int[][] queries) {
+		int n = nums.length;
+		int[] prefix = new int[n];
+		for (int i = 1; i < n; i++) {
+			if (nums[i - 1] % 2 == nums[i] % 2) {
+				prefix[i] = prefix[i - 1];
+			} 
+			else {
+				prefix[i] = prefix[i - 1] + 1;
+			}
+		}
+		boolean[] ans = new boolean[queries.length];
+		int ptr = 0;
+		for (int[] range: queries) {	
+			int diff = range[1] - range[0] + 1;
+			int count = prefix[range[1]] - prefix[range[0]];
+			ans[ptr++] = count == diff - 1 || diff == 1;
+		}
+		return ans;
+	}
+}

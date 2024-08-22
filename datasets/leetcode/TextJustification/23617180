@@ -1,0 +1,44 @@
+class Solution {
+	String build(String[] words, int i, int n, int curr, int max) {
+		StringBuilder sb = new StringBuilder(max);
+		int totalSpace = max - curr;
+		int numBreaks = n == 1 ? 1 : n - 1;
+		for (int idx = i - n; idx < i; idx++) {
+			sb.append(words[idx]);
+			if (numBreaks > 0) {
+				int spaces = (totalSpace + numBreaks - 1) / numBreaks;
+				for (int s = 0; s < spaces; s++) {
+					sb.append(" ");
+				}
+				totalSpace -= spaces;
+				numBreaks--;
+			}
+		}
+		return sb.toString();
+	}
+	List<String> fullJustify(String[] words, int maxWidth) {
+		List<String> res = new ArrayList<>();
+		int i = 0, n = 0, curr = 0, len = words.length;
+		while (i < len) {
+			if (curr + n <= maxWidth) {
+				curr += words[i].length();
+				n++;
+				i++;
+			} 
+			else {
+				res.add(build(words,i,n,curr,maxWidth));
+				n = 0;
+				curr = 0;
+			}
+		}
+		if (n > 0) {
+			StringBuilder sb = new StringBuilder(maxWidth);
+			sb.append(build(words,i,n,curr,curr + n - 1));
+			while (sb.length() < maxWidth) {
+				sb.append(" ");
+			}
+			res.add(sb.toString());
+		}
+		return res;
+	}
+}

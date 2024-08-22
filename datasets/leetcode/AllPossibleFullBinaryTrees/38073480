@@ -1,0 +1,30 @@
+class Solution {
+	List<TreeNode> allPossibleFBT(int n) {
+		return f(new TreeNode(n - 1));
+	}
+	List<TreeNode> f(TreeNode root) {
+		int val = root.val;
+		if (val == 0) {
+			List<TreeNode> l = new ArrayList();
+			l.add(root);
+			return l;
+		}
+		val -= 2;
+		List<TreeNode> ans = new ArrayList();
+		for (int i = 0; i <= val; i += 2) {
+			TreeNode le = new TreeNode(i);
+			List<TreeNode> Left = f(le);
+			TreeNode ri = new TreeNode(val - i);
+			List<TreeNode> Right = f(ri);
+			for (TreeNode l: Left) {	
+				for (TreeNode r: Right) {	
+					TreeNode curr = new TreeNode();
+					curr.left = l;
+					curr.right = r;
+					ans.add(curr);
+				}
+			}
+		}
+		return ans;
+	}
+}

@@ -1,0 +1,45 @@
+class Solution {
+	boolean bsearch(int start, int end, ArrayList<Integer> arr) {
+		int low = 0;
+		int high = arr.size() - 1;
+		while (low <= high) {
+			int mid = (low + high) / 2;
+			int midVal = arr.get(mid);
+			if (midVal >= start && midVal <= end) {
+				return true;
+			} 
+			else if (midVal < start) {
+				low = mid + 1;
+			} 
+			else {
+				high = mid - 1;
+			}
+		}
+		return false;
+	}
+	boolean[] isArraySpecial(int[] nums, int[][] queries) {
+		ArrayList<Integer> arr = new ArrayList<Integer>();
+		for (int i = 0; i < nums.length - 1; i++) {
+			int res1 = nums[i] % 2;
+			int res2 = nums[i + 1] % 2;
+			if (res2 + res1 != 1) {
+				arr.add(i);
+			}
+		}
+		boolean ans = new boolean[queries.length];
+		Arrays.fill(ans,true);
+		if (arr.size() == 0) {
+			return ans;
+		}
+		int j = 0;
+		for (int[] q: queries) {	
+			int start = q[0];
+			int end = q[1] - 1;
+			if (bsearch(start,end,arr)) {
+				ans[j] = false;
+			}
+			j++;
+		}
+		return ans;
+	}
+}

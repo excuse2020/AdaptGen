@@ -1,0 +1,35 @@
+class Solution {
+	int waysToSplit(int[] nums) {
+		int n = nums.length;
+		long res = 0;
+		for (int i = 1; i < n; i++) {
+			nums[i] += nums[i - 1];
+		}
+		for (int i = 0; i < n - 2; i++) {
+			int j = i + 1;
+			int right = n - 2;
+			while (j <= right) {
+				int mid = (j + right) / 2;
+				if (nums[mid] - nums[i] < nums[i]) {
+					j = mid + 1;
+				} 
+				else {
+					right = mid - 1;
+				}
+			}
+			int k = j;
+			right = n - 2;
+			while (k <= right) {
+				int mid = (k + right) / 2;
+				if (nums[mid] - nums[i] <= nums[n - 1] - nums[mid]) {
+					k = mid + 1;
+				} 
+				else {
+					right = mid - 1;
+				}
+			}
+			res = (res + k - j) % 1000000007;
+		}
+		return (int) res;
+	}
+}

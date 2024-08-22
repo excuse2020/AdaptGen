@@ -1,0 +1,45 @@
+class Solution {
+	boolean btreeGameWinningMove(TreeNode root, int n, int x) {
+		LinkedList<TreeNode> queue = new LinkedList<>();
+		queue.offerLast(root);
+		TreeNode target = null;
+		while (!queue.isEmpty()) {
+			target = queue.pollFirst();
+			if (target.val == x) {
+				break;
+			}
+			if (target.left != null) {
+				queue.offerLast(target.left);
+			}
+			if (target.right != null) {
+				queue.offerLast(target.right);
+			}
+		}
+		int left = countRoot(target.left);
+		if (left > n - left) {
+			return true;
+		}
+		int right = countRoot(target.right);
+		if (right > n - right) {
+			return true;
+		}
+		int temp = left + right;
+		if (n - temp > temp) {
+			return true;
+		}
+		return false;
+	}
+	int countRoot(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		int res = 1;
+		if (root.left != null) {
+			res += countRoot(root.left);
+		}
+		if (root.right != null) {
+			res += countRoot(root.right);
+		}
+		return res;
+	}
+}

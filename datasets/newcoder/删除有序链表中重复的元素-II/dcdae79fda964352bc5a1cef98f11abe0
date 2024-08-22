@@ -1,0 +1,28 @@
+class Solution {
+	ListNode deleteDuplicates(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		Map<Integer, Integer> counter = new HashMap<>();
+		ListNode cur = head;
+		while (cur != null) {
+			int val = cur.val;
+			counter.putIfAbsent(val,0);
+			counter.put(val,counter.get(val) + 1);
+			cur = cur.next;
+		}
+		ListNode dummy = new ListNode(0);
+		dummy.next = head;
+		cur = head;
+		ListNode tail = dummy;
+		while (cur != null) {
+			if (counter.get(cur.val) == 1) {
+				tail.next.val = cur.val;
+				tail = tail.next;
+			}
+			cur = cur.next;
+		}
+		tail.next = null;
+		return dummy.next;
+	}
+}

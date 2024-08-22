@@ -1,0 +1,22 @@
+class Solution {
+	record Job(int startTime, int endTime, int profit) {
+	}
+	int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
+		int n = startTime.length;
+		List<Job> jobs = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			jobs.add(new Job(startTime[i], endTime[i], profit[i]));
+		}
+		jobs.sort(Comparator.comparing((job) -> {job.endTime}));
+		TreeMap<Integer, Integer> dp = new TreeMap<>();
+		dp.put(0,0);
+		for (Job job: jobs) {	
+			int prevProfit = dp.floorEntry(job.startTime).getValue();
+			int maxProfit = prevProfit + job.profit;
+			if (maxProfit > dp.lastEntry().getValue()) {
+				dp.put(job.endTime,maxProfit);
+			}
+		}
+		return dp.lastEntry().getValue();
+	}
+}

@@ -1,0 +1,50 @@
+class Solution {
+	String compressString(String param) {
+		if ("".equals(param)) {
+			return "";
+		}
+		List<Map<Character, Integer>> list = new ArrayList<>();
+		char[] chars = param.toCharArray();
+		Character cur = chars[0];
+		String compressStr = "";
+		String temp = "";
+		int count = 1;
+		HashMap<Character, Integer> characterIntegerHashMap;
+		for (int i = 0; i < chars.length; i++) {
+			if (i == (chars.length - 1)) {
+				characterIntegerHashMap = new HashMap<>();
+				characterIntegerHashMap.put(chars[i],count);
+				list.add(characterIntegerHashMap);
+				count = 1;
+				break;
+			}
+			if ((chars[i] == chars[i + 1])) {
+				count++;
+			} 
+			else {
+				characterIntegerHashMap = new HashMap<>();
+				characterIntegerHashMap.put(chars[i],count);
+				list.add(characterIntegerHashMap);
+				count = 1;
+			}
+		}
+		for (int i = 0; i < list.size(); i++) {
+			String curStr = "";
+			Character key = 'c';
+			Map<Character, Integer> characterIntegerMap = list.get(i);
+			Iterator<Character> iterator = characterIntegerMap.keySet().iterator();
+			while (iterator.hasNext()) {
+				key = iterator.next();
+			}
+			Integer integer = characterIntegerMap.get(key);
+			if (integer == 1) {
+				curStr = key.toString();
+			} 
+			else {
+				curStr = key.toString() + integer;
+			}
+			compressStr += curStr;
+		}
+		return compressStr;
+	}
+}

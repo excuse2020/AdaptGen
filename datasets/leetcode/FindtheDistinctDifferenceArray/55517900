@@ -1,0 +1,28 @@
+class Solution {
+	int[] distinctDifferenceArray(int[] nums) {
+		int n = nums.length;
+		int[] diff = new int[n];
+		int[] freqPrefix = new int[51];
+		int[] freqSuffix = new int[51];
+		int distinctPrefixCount = 0;
+		int distinctSuffixCount = 0;
+		for (int i = 0; i < n; i++) {
+			if (freqSuffix[nums[i]] == 0) {
+				distinctSuffixCount++;
+			}
+			freqSuffix[nums[i]]++;
+		}
+		for (int i = 0; i < n; i++) {
+			if (freqPrefix[nums[i]] == 0) {
+				distinctPrefixCount++;
+			}
+			freqPrefix[nums[i]]++;
+			freqSuffix[nums[i]]--;
+			if (freqSuffix[nums[i]] == 0) {
+				distinctSuffixCount--;
+			}
+			diff[i] = distinctPrefixCount - distinctSuffixCount;
+		}
+		return diff;
+	}
+}

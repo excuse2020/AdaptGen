@@ -1,0 +1,39 @@
+class Solution {
+	Map<Integer, PriorityQueue<Integer>> graph = new HashMap<>();
+	int[] neighbourSums;
+	void appendNeighbour(int a, int bv, int k) {
+		if (k > 0 && bv > 0) {
+			PriorityQueue<Integer> pq;
+			if (graph.containsKey(a)) {
+				pq = graph.get(a);
+			} 
+			else {
+				pq = new PriorityQueue<Integer>((x, y) -> {x - y});
+			}
+			if (pq.size() < k) {
+				pq.offer(bv);
+				neighbourSums[a] += bv;
+			} 
+			else if (pq.peek() < bv) {
+				neighbourSums[a] -= pq.poll();
+				pq.offer(bv);
+				neighbourSums[a] += bv;
+			}
+			graph.put(a,pq);
+		}
+	}
+	int maxStarSum(int[] vals, int[][] edges, int k) {
+		int N = vals.length;
+		neighbourSums = new int[N];
+		for (int[] e: edges) {	
+			int a = e[0], b = e[1];
+			appendNeighbour(a,vals[b],k);
+			appendNeighbour(b,vals[a],k);
+		}
+		int result = Integer.MIN_VALUE;
+		for (int i = 0; i < N; i++) {
+			result = Math.max(result,vals[i] + neighbourSums[i]);
+		}
+		return result;
+	}
+}

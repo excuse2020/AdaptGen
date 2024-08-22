@@ -1,0 +1,35 @@
+class Solution {
+	int maxPoints(int[][] points) {
+		int maxP = 0, coordinates = points.length;
+		if (coordinates < 3) {
+			return coordinates;
+		}
+		for (int i = coordinates - 1; i > 0; i--) {
+			int X = points[i][0];
+			int Y = points[i][1];
+			Map<Double, Integer> hashmap = new HashMap<>();
+			for (int j = i + 1; j < coordinates; j++) {
+				double dy = points[j][1] - Y;
+				double dx = points[j][0] - X;
+				if (dx != 0) {
+					hashmap.merge(dy / dx,1,);
+				} 
+				else {
+					hashmap.merge(Double.MAX_VALUE,1,);
+				}
+			}
+			for (int k = i - 1; k >= 0; k--) {
+				double dy = Y - points[k][1];
+				double dx = X - points[k][0];
+				if (dx != 0) {
+					hashmap.merge(dy / dx,1,);
+				} 
+				else {
+					hashmap.merge(Double.MAX_VALUE,1,);
+				}
+			}
+			maxP = ((Collections.max(hashmap.values()) + 1) > maxP) ? Collections.max(hashmap.values()) + 1 : maxP;
+		}
+		return maxP;
+	}
+}

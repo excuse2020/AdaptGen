@@ -1,0 +1,36 @@
+class Solution {
+	int findValIn(int[] in, int val) {
+		for (int i = 0; i < in.length; i++) {
+			if (val == in[i]) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	TreeNode makeTree(int[] pre, int[] in, int pre_start, int pre_end, int in_start, int in_end) {
+		TreeNode mid_node = new TreeNode(pre[pre_start]);
+		int idx_in = findValIn(in,pre[pre_start]);
+		int left_num = idx_in - in_start;
+		int right_num = in_end - idx_in;
+		if (left_num == 0) {
+			mid_node.left = null;
+		} 
+		else {
+			mid_node.left = makeTree(pre,in,pre_start + 1,pre_start + left_num,in_start,idx_in - 1);
+		}
+		if (right_num == 0) {
+			mid_node.right = null;
+		} 
+		else {
+			mid_node.right = makeTree(pre,in,pre_start + left_num,pre_start + left_num,idx_in + 1,in_end);
+		}
+		return mid_node;
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] in) {
+		if (pre.length == 0) {
+			return null;
+		}
+		TreeNode root = makeTree(pre,in,0,pre.length - 1,0,in.length - 1);
+		return root;
+	}
+}

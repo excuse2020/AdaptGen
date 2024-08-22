@@ -1,0 +1,25 @@
+class Solution {
+	int maxTime;
+	void dfs(Map<Integer, List<Pair<Integer, Integer>>> graph, int currentNode, int timeForCurrent) {
+		List<Pair<Integer, Integer>> subOrdinates = graph.get(currentNode);
+		if (subOrdinates == null) {
+			maxTime = Math.max(maxTime,timeForCurrent);
+			return;
+		}
+		for (int i = 0; i < subOrdinates.size(); i++) {
+			dfs(graph,(int) subOrdinates.get(i).getKey(),(int) subOrdinates.get(i).getValue() + timeForCurrent);
+		}
+	}
+	int numOfMinutes(int n, int headID, int[] managerArray, int[] informTime) {
+		maxTime = 0;
+		Map<Integer, List<Pair<Integer, Integer>>> graph = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			if (i == headID) {
+				continue;
+			}
+			graph.computeIfAbsent(managerArray[i],(k) -> {new ArrayList<>()}).add(new Pair(i, informTime[i]));
+		}
+		dfs(graph,headID,informTime[headID]);
+		return maxTime;
+	}
+}

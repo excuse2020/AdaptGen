@@ -1,0 +1,52 @@
+class Solution {
+	List<Integer>[] graph;
+	int[] rank;
+	List<List<Integer>> res;
+	List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		graph = (ArrayList<Integer>[]) new ArrayList[n];
+		rank = new int[n];
+		res = new ArrayList<>();
+		Arrays.fill(rank,-1);
+		for (List<Integer> conn: connections) {	
+			int min = Math.min(conn.get(0),conn.get(1));
+			int max = Math.max(conn.get(0),conn.get(1));
+			if ((graph[conn.get(0)]) == null) {
+				graph[conn.get(0)] = new ArrayList<Integer>();
+			}
+			if ((graph[conn.get(1)]) == null) {
+				graph[conn.get(1)] = new ArrayList<Integer>();
+			}
+			graph[conn.get(0)].add(conn.get(1));
+			graph[conn.get(1)].add(conn.get(0));
+		}
+		dfs(0,0,-1,"");
+		return res;
+	}
+	int dfs(int node, int depth, int parent, String indent) {
+		System.out.println(indent + "dfs node: ");
+		if (rank[node] >= 0) {
+			System.out.println(indent + "node ");
+			return rank[node];
+		}
+		rank[node] = depth;
+		int min_back_depth = Integer.MAX_VALUE;
+		for (int neighbor: graph[node]) {	
+			System.out.print(indent + "    n: ");
+			System.out.print("  rank[n]: " + rank[neighbor]);
+			System.out.print(" rank[node]: " + rank[node]);
+			if (neighbor == parent || rank[neighbor] >= rank[node]) {
+				System.out.println(" skip");
+				continue;
+			}
+			System.out.println("");
+			int back_depth = dfs(neighbor,depth + 1,node,indent + "    ");
+			if (back_depth > rank[node]) {
+				System.out.println(indent + "    adding: ");
+				res.add(Arrays.asList(neighbor,node));
+			}
+			min_back_depth = Math.min(min_back_depth,back_depth);
+		}
+		System.out.println(indent + "node ");
+		return min_back_depth;
+	}
+}

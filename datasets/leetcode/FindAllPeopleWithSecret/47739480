@@ -1,0 +1,59 @@
+class Solution {
+	void dfs(int start, Map<Integer, Set<Integer>> graph, Set<Integer> shh, Set<Integer> visited) {
+		shh.add(start);
+		visited.add(start);
+		for (int neighbor: graph.get(start)) {	
+			if (!visited.contains(neighbor)) {
+				dfs(neighbor,graph,shh,visited);
+			}
+		}
+	}
+	List<Integer> findAllPeople(int n, int[][] meetings, int firstPerson) {
+		List<Integer> res = new ArrayList<>();
+		Arrays.sort(meetings,(a, b) -> {a[2] - b[2]});
+		Set<Integer> shh = new HashSet<>();
+		shh.add(0);
+		shh.add(firstPerson);
+		int time = 0;
+		List<int[]> meets = new ArrayList<>();
+		int i = 0;
+		while (i < meetings.length) {
+			time = meetings[i][2];
+			meets.add(meetings[i]);
+			while (i + 1 < meetings.length && meetings[i + 1][2] == time) {
+				i++;
+				meets.add(meetings[i]);
+			}
+			i++;
+			handleMeetings(meets,shh);
+			meets = new ArrayList<>();
+		}
+		res.addAll(shh);
+		return res;
+	}
+	void handleMeetings(List<int[]> meets, Set<Integer> shh) {
+		Map<Integer, Set<Integer>> graph = new HashMap<>();
+		Set<Integer> startPoints = new HashSet<>();
+		for (int[] meet: meets) {	
+			graph.putIfAbsent(meet[0],new HashSet<>());
+			graph.putIfAbsent(meet[1],new HashSet<>());
+			graph.get(meet[0]).add(meet[1]);
+			graph.get(meet[1]).add(meet[0]);
+			if (shh.contains(meet[0])) {
+				startPoints.add(meet[0]);
+			}
+			if (shh.contains(meet[1])) {
+				startPoints.add(meet[1]);
+			}
+		}
+		if (startPoints.size() == 0) {
+			return;
+		}
+		Set<Integer> visited = new HashSet();
+		for (int start: startPoints) {	
+			if (!visited.contains(start)) {
+				dfs(start,graph,shh,visited);
+			}
+		}
+	}
+}

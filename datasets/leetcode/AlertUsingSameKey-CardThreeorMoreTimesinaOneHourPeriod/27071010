@@ -1,0 +1,34 @@
+class Solution {
+	List<String> alertNames(String[] keyName, String[] keyTime) {
+		Map<String, List<Integer>> map = new HashMap<>();
+		for (int i = 0; i < keyName.length; i++) {
+			if (map.containsKey(keyName[i]) == false) {
+				List<Integer> list = new ArrayList<>();
+				list.add(convert(keyTime[i]));
+				map.put(keyName[i],list);
+			} 
+			else {
+				map.get(keyName[i]).add(convert(keyTime[i]));
+			}
+		}
+		List<String> ans = new ArrayList<>();
+		for (String names: map.keySet()) {	
+			List<Integer> time = map.get(names);
+			Collections.sort(time);
+			for (int i = 0; i < time.size() - 2; i++) {
+				if (time.get(i + 2) - time.get(i) <= 60) {
+					ans.add(names);
+					break;
+				}
+			}
+		}
+		Collections.sort(ans);
+		return ans;
+	}
+	int convert(String s) {
+		String[] arr = s.split(":");
+		int hour = Integer.parseInt(arr[0]);
+		int min = Integer.parseInt(arr[1]);
+		return (hour * 60) + min;
+	}
+}

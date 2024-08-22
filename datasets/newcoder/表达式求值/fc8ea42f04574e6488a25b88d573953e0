@@ -1,0 +1,80 @@
+class Solution {
+	boolean isNumber(char c) {
+		return c >= '0' && c <= '9';
+	}
+	int priority(char c) {
+		if (c == '+' || c == '-') {
+			return 1;
+		}
+		if (c == '*' || c == '/') {
+			return 2;
+		}
+		return 0;
+	}
+	int res(char c, int o1, int o2) {
+		if (c == '+') {
+			return o1 + o2;
+		}
+		if (c == '-') {
+			return o1 - o2;
+		}
+		if (c == '/') {
+			return o1 / o2;
+		}
+		if (c == '*') {
+			return o1 * o2;
+		}
+		return 0;
+	}
+	int solve(String s) {
+		LinkedList<Integer> numStack = new LinkedList<>();
+		LinkedList<Character> opsStack = new LinkedList<>();
+		int len = s.length();
+		for (int i = 0; i < len; i++) {
+			char ch = s.charAt(i);
+			if (ch == ' ') {
+				continue;
+			}
+			if (isNumber(ch)) {
+				int num = 0;
+				while (i < len && isNumber(s.charAt(i))) {
+					num = num * 10 + s.charAt(i) - '0';
+					i++;
+				}
+				numStack.push(num);
+				i--;
+			} 
+			else if (ch == '(') {
+				opsStack.push(ch);
+			} 
+			else if (ch == ')') {
+				while (!opsStack.isEmpty() && opsStack.peek() != '(') {
+					Character op = opsStack.pop();
+					Integer a = numStack.pop();
+					Integer b = numStack.pop();
+					int r = res(op,b,a);
+					numStack.push(r);
+				}
+				opsStack.pop();
+			} 
+			else {
+				while (!opsStack.isEmpty() && priority(ch) <= priority(opsStack.peek())) {
+					Character op = opsStack.pop();
+					Integer a = numStack.pop();
+					Integer b = numStack.pop();
+					int r = res(op,b,a);
+					numStack.push(r);
+				}
+				opsStack.push(ch);
+			}
+		}
+		while (!opsStack.isEmpty()) {
+			Character op = opsStack.pop();
+			Integer a = numStack.pop();
+			Integer b = numStack.pop();
+			int r = res(op,b,a);
+			numStack.push(r);
+		}
+		return numStack.pop();
+	}
+}

@@ -1,0 +1,46 @@
+class Solution {
+	int bfs(Map<Integer, List<Integer>> adjMap, int index) {
+		Set<Integer> visited = new HashSet<>();
+		Queue<Integer> queue = new LinkedList<>();
+		queue.offer(index);
+		visited.add(index);
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				int currBomb = queue.poll();
+				List<Integer> childBombs = adjMap.get(currBomb);
+				for (int c = 0; c < childBombs.size(); c++) {
+					int childBomb = childBombs.get(c);
+					if (!visited.contains(childBomb)) {
+						queue.offer(childBomb);
+						visited.add(childBomb);
+					}
+				}
+			}
+		}
+		return visited.size();
+	}
+	int maximumDetonation(int[][] bombs) {
+		Map<Integer, List<Integer>> adjMap = new HashMap<>();
+		int len = bombs.length;
+		for (int i = 0; i < len; i++) {
+			adjMap.put(i,new ArrayList<>());
+			for (int j = 0; j < len; j++) {
+				long x1 = bombs[i][0];
+				long y1 = bombs[i][1];
+				long r1 = bombs[i][2];
+				long x2 = bombs[j][0];
+				long y2 = bombs[j][1];
+				long distance = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
+				if (r1 * r1 >= distance) {
+					adjMap.get(i).add(j);
+				}
+			}
+		}
+		int max = 0;
+		for (int i = 0; i < len; i++) {
+			max = Math.max(max,bfs(adjMap,i));
+		}
+		return max;
+	}
+}

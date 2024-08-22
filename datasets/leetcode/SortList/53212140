@@ -1,0 +1,68 @@
+class Solution {
+	ListNode merge(ListNode head1, ListNode head2) {
+		if (head1 == null) {
+			return head2;
+		}
+		if (head2 == null) {
+			return head1;
+		}
+		ListNode iter1 = head1;
+		ListNode iter2 = head2;
+		ListNode newHead = null;
+		ListNode iterator = null;
+		if (iter1.val <= iter2.val) {
+			iterator = iter1;
+			iter1 = iter1.next;
+		} 
+		else {
+			iterator = iter2;
+			iter2 = iter2.next;
+		}
+		newHead = iterator;
+		iterator.next = null;
+		while (iter1 != null && iter2 != null) {
+			if (iter1.val <= iter2.val) {
+				iterator.next = iter1;
+				iter1 = iter1.next;
+			} 
+			else {
+				iterator.next = iter2;
+				iter2 = iter2.next;
+			}
+			iterator = iterator.next;
+			iterator.next = null;
+		}
+		if (iter1 != null) {
+			iterator.next = iter1;
+		} 
+		else if (iter2 != null) {
+			iterator.next = iter2;
+		}
+		return newHead;
+	}
+	ListNode mergesort(ListNode head) {
+		if (head == null) {
+			return null;
+		}
+		if (head.next == null) {
+			return head;
+		}
+		ListNode left = head;
+		ListNode mid = null;
+		ListNode slow = head;
+		ListNode fast = head.next.next;
+		while (fast != null && fast.next != null) {
+			fast = fast.next.next;
+			slow = slow.next;
+		}
+		mid = slow.next;
+		slow.next = null;
+		ListNode leftSorted = mergesort(head);
+		ListNode rightSorted = mergesort(mid);
+		ListNode merged = merge(leftSorted,rightSorted);
+		return merged;
+	}
+	ListNode sortList(ListNode head) {
+		return mergesort(head);
+	}
+}

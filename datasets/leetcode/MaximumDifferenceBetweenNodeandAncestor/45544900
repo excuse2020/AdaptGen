@@ -1,0 +1,26 @@
+class Solution {
+	int maxGlobal = -1;
+	int maxAncestorDiff(TreeNode root) {
+		int l = minMaxPath(root.left,root.val,root.val);
+		int r = minMaxPath(root.right,root.val,root.val);
+		return Math.max(l,r);
+	}
+	void maxChecker(int rootVal, TreeNode child) {
+		if (child == null) {
+			return;
+		}
+		maxGlobal = Math.max(maxGlobal,Math.abs(rootVal - child.val));
+		maxChecker(rootVal,child.left);
+		maxChecker(rootVal,child.right);
+	}
+	int minMaxPath(TreeNode root, int min, int max) {
+		if (root == null) {
+			return Math.abs(max - min);
+		}
+		int lValue = Math.min(min,root.val);
+		int rValue = Math.max(max,root.val);
+		int l = minMaxPath(root.left,lValue,rValue);
+		int r = minMaxPath(root.right,lValue,rValue);
+		return Math.max(l,r);
+	}
+}

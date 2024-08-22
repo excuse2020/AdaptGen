@@ -1,0 +1,43 @@
+class Solution {
+	int[] findOrder(int numCourses, int[][] prerequisites) {
+		List<List<Integer>> adjList = new ArrayList<>();
+		for (int i = 0; i < numCourses; i++) {
+			adjList.add(new ArrayList<>());
+		}
+		for (int[] prerequisite: prerequisites) {	
+			adjList.get(prerequisite[1]).add(prerequisite[0]);
+		}
+		List<Integer> result = new ArrayList<>();
+		boolean[] visited = new boolean[numCourses];
+		boolean[] inStack = new boolean[numCourses];
+		for (int i = 0; i < numCourses; i++) {
+			if (!visited[i]) {
+				if (hasCycle(adjList,visited,inStack,i,result)) {
+					return new int[0];
+				}
+			}
+		}
+		int[] order = new int[numCourses];
+		for (int i = 0; i < numCourses; i++) {
+			order[i] = result.get(numCourses - 1);
+		}
+		return order;
+	}
+	boolean hasCycle(List<List<Integer>> adjList, boolean[] visited, boolean[] inStack, int node, List<Integer> result) {
+		visited[node] = true;
+		inStack[node] = true;
+		for (int neighbor: adjList.get(node)) {	
+			if (!visited[neighbor]) {
+				if (hasCycle(adjList,visited,inStack,neighbor,result)) {
+					return true;
+				}
+			} 
+			else if (inStack[neighbor]) {
+				return true;
+			}
+		}
+		inStack[node] = false;
+		result.add(node);
+		return false;
+	}
+}

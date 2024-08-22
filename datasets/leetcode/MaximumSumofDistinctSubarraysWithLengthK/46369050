@@ -1,0 +1,30 @@
+class Solution {
+	long maximumSubarraySum(int[] nums, int k) {
+		long res = 0;
+		long currSum = 0;
+		Set<Integer> set = new HashSet<>();
+		int slow = 0;
+		int fast = 0;
+		while (fast < nums.length) {
+			if (set.add(nums[fast])) {
+				currSum += nums[fast];
+				if (fast - slow + 1 == k) {
+					res = Math.max(res,currSum);
+					fast++;
+					set.remove(nums[slow]);
+					currSum -= nums[slow];
+					slow++;
+				} 
+				else {
+					fast++;
+				}
+			} 
+			else {
+				set.remove(nums[slow]);
+				currSum -= nums[slow];
+				slow++;
+			}
+		}
+		return res;
+	}
+}

@@ -1,0 +1,39 @@
+class Solution {
+	ArrayList<Integer> zhongList = new ArrayList<>();
+	boolean[] judgeIt(TreeNode root) {
+		zhongxu(root);
+		boolean[] returnArray = new boolean[2];
+		returnArray[0] = judgeUper();
+		returnArray[1] = judgeWanQuan(root);
+		return returnArray;
+	}
+	boolean judgeUper() {
+		for (int i = 0; i < zhongList.size() - 1; i++) {
+			if (zhongList.get(i) > zhongList.get(i + 1)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean judgeWanQuan(TreeNode root) {
+		LinkedList<TreeNode> duiLie = new LinkedList<>();
+		duiLie.add(root);
+		TreeNode del = null;
+		while (duiLie.peek() != null) {
+			del = duiLie.poll();
+			duiLie.add(del.left);
+			duiLie.add(del.right);
+		}
+		while (!duiLie.isEmpty() && duiLie.peek() == null) {
+			duiLie.poll();
+		}
+		return duiLie.isEmpty();
+	}
+	void zhongxu(TreeNode root) {
+		if (root != null) {
+			zhongxu(root.left);
+			zhongList.add(root.val);
+			zhongxu(root.right);
+		}
+	}
+}

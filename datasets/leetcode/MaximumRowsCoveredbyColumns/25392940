@@ -1,0 +1,37 @@
+class Solution {
+	int M, N;
+	int findMaxRow(int cols, int[][] mat, List<Integer> list) {
+		if (cols == 0) {
+			int rows = 0;
+			for (int i = 0; i < M; i++) {
+				boolean isAdded = true;
+				for (int j: list) {	
+					if (mat[i][j] == 1) {
+						isAdded = false;
+						break;
+					}
+				}
+				if (isAdded) {
+					rows++;
+				}
+			}
+			return rows;
+		}
+		int last = list.size() != 0 ? list.get(list.size() - 1) : -1;
+		int maxRow = -1;
+		for (int i = last + 1; i < N; i++) {
+			list.add(i);
+			maxRow = Math.max(maxRow,findMaxRow(cols - 1,mat,list));
+			list.remove(list.size() - 1);
+		}
+		return maxRow;
+	}
+	int maximumRows(int[][] mat, int cols) {
+		M = mat.length;
+		N = mat[0].length;
+		if (cols == N) {
+			return M;
+		}
+		return findMaxRow(N - cols,mat,new ArrayList<>());
+	}
+}

@@ -1,0 +1,42 @@
+class Solution {
+	int MAX_VAL = 50;
+	int MIN_VAL = -50;
+	int OFFSET = -MIN_VAL;
+	int[] getSubarrayBeauty(int[] nums, int k, int x) {
+		var res = new int[nums.length - k + 1];
+		var counts = new int[MAX_VAL - MIN_VAL + 2];
+		int min = MAX_VAL;
+		int max = MIN_VAL;
+		for (int i = 0; i < k - 1; i++) {
+			counts[nums[i] + OFFSET]++;
+			min = Math.min(min,nums[i]);
+			max = Math.max(max,nums[i]);
+		}
+		for (int i = 0; i < nums.length - k + 1; i++) {
+			int next = nums[i + k - 1];
+			counts[next + OFFSET]++;
+			max = Math.max(max,next);
+			min = Math.min(min,next);
+			int xMin = 0;
+			int count = 0;
+			for (int j = min - MIN_VAL; j <= max + OFFSET; j++) {
+				count += counts[j];
+				if (count >= x) {
+					xMin = j - OFFSET;
+					break;
+				}
+			}
+			res[i] = Math.min(xMin,0);
+			counts[nums[i] + OFFSET]--;
+			if (counts[nums[i] + OFFSET] == 0) {
+				if (nums[i] == max) {
+					max = MAX_VAL;
+				}
+				if (nums[i] == min) {
+					min = MIN_VAL;
+				}
+			}
+		}
+		return res;
+	}
+}

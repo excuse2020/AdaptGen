@@ -1,0 +1,35 @@
+class Solution {
+	boolean checkRunTime(int n, int[] batteries, long time) {
+		long currSum = 0;
+		int numOfComputers = 0;
+		for (int battery: batteries) {	
+			currSum += battery;
+			if (currSum >= time) {
+				numOfComputers++;
+				currSum -= time;
+			}
+		}
+		return numOfComputers >= n;
+	}
+	long maxRunTime(int n, int[] batteries) {
+		Arrays.sort(batteries);
+		long sum = 0;
+		int min = 0;
+		for (int battery: batteries) {	
+			sum += battery;
+			min = Math.min(min,battery);
+		}
+		long left = min, right = sum / n;
+		while (left + 1 < right) {
+			long mid = left + (right - left) / 2;
+			boolean canRun = checkRunTime(n,batteries,mid);
+			if (canRun) {
+				left = mid;
+			} 
+			else {
+				right = mid - 1;
+			}
+		}
+		return checkRunTime(n,batteries,right) ? right : left;
+	}
+}

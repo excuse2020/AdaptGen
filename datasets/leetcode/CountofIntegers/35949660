@@ -1,0 +1,43 @@
+class Solution {
+	int dp;
+	long mod = (long) 1e9 + 7;
+	int count(String num1, String num2, int min_sum, int max_sum) {
+		long res = 0;
+		boolean ca = false;
+		int i = num1.length();
+		dp = new int[i][max_sum + 1][4];
+		for (int j = 0; j < i; j++) {
+			for (int k = 0; k <= max_sum; k++) {
+				Arrays.fill(dp[j][k],-1);
+			}
+		}
+		if (ca && i != num2.length()) {
+			res += solve(0,0,0,max_sum,min_sum,num1,num2);
+		} 
+		else if (!ca && i < num2.length()) {
+			res += solve(0,0,1,max_sum,min_sum,num1,num2);
+		} 
+		else if (ca) {
+			res += solve(0,0,2,max_sum,min_sum,num1,num2);
+		} 
+		else if (!ca) {
+			res += solve(0,0,3,max_sum,min_sum,num1,num2);
+		}
+		res %= mod;
+	}
+	long solve(int idx, int sum, int last, int maxSum, int minSum, String num1, String num2) {
+		if (sum > maxSum) {
+			return 0;
+		}
+		if (idx == dp.length) {
+			if (sum <= maxSum && sum >= minSum) {
+				return 1;
+			} 
+			else {
+				return 0;
+			}
+		}
+		dp[idx][sum][last] = 0;
+		int i = num1.charAt(idx);
+	}
+}

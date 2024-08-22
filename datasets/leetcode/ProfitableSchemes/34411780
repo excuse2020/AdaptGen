@@ -1,0 +1,30 @@
+class Solution {
+	int MOD = 1000000007;
+	int[][][] dp;
+	int profitableSchemes(int n, int minProfit, int[] group, int[] profit) {
+		dp = new int[n + 1][group.length + 1][minProfit + 1];
+		for (int[][] d: dp) {	
+			for (int[] e: d) {	
+				Arrays.fill(e,-1);
+			}
+		}
+		return solve(0,n,minProfit,group,profit);
+	}
+	int solve(int ind, int n, int minProfit, int[] group, int[] profit) {
+		if (n < 0) {
+			return 0;
+		}
+		if (ind == group.length) {
+			return minProfit <= 0 ? 1 : 0;
+		}
+		if (minProfit <= 0) {
+			minProfit = 0;
+		}
+		if (dp[n][ind][minProfit] != -1) {
+			return dp[n][ind][minProfit];
+		}
+		int take = solve(ind + 1,n - group[ind],minProfit - profit[ind],group,profit);
+		int notTake = solve(ind + 1,n,minProfit,group,profit);
+		return dp[n][ind][minProfit] = (int) (take + notTake) % MOD;
+	}
+}

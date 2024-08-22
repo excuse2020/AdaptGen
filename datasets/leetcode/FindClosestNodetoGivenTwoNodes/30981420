@@ -1,0 +1,36 @@
+class Solution {
+	int closestMeetingNode(int[] edges, int node1, int node2) {
+		if (node1 == node2) {
+			return node1;
+		}
+		HashMap<Integer, Integer> mapNode1 = new HashMap<>();
+		getItDone(edges,node1,0,mapNode1,new HashSet<>());
+		HashMap<Integer, Integer> mapNode2 = new HashMap<>();
+		getItDone(edges,node2,0,mapNode2,new HashSet<>());
+		int step = Integer.MAX_VALUE;
+		int ans = -1;
+		for (Integer node: mapNode1.keySet()) {	
+			if (mapNode2.containsKey(node)) {
+				int res = Math.max(mapNode1.get(node),mapNode2.get(node));
+				if (res < step) {
+					step = res;
+					ans = node;
+				} 
+				else if (res == step) {
+					ans = Math.min(ans,node);
+				}
+			}
+		}
+		return ans;
+	}
+	void getItDone(int[] edges, int node, int step, HashMap<Integer, Integer> map, HashSet<Integer> nodeIndex) {
+		if (!nodeIndex.add(node)) {
+			return;
+		}
+		if (node == -1) {
+			return;
+		}
+		map.put(node,step);
+		getItDone(edges,edges[node],step + 1,map,nodeIndex);
+	}
+}

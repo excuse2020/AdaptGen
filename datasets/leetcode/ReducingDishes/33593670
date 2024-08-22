@@ -1,0 +1,25 @@
+class Solution {
+	int[][] dp;
+	int help(int[] satisfaction, int index, int time) {
+		if (index == satisfaction.length) {
+			return 0;
+		}
+		if (dp[index][time] != -1) {
+			return dp[index][time];
+		}
+		int include = satisfaction[index] * (time + 1) + help(satisfaction,index + 1,time + 1);
+		int exclude = 0 + help(satisfaction,index + 1,time);
+		return dp[index][time] = Math.max(include,exclude);
+	}
+	int maxSatisfaction(int[] satisfaction) {
+		Arrays.sort(satisfaction);
+		int index = 501;
+		int time = 501;
+		dp = new int[index][time];
+		for (int i = 0; i < index; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		int result = help(satisfaction,0,0);
+		return result;
+	}
+}

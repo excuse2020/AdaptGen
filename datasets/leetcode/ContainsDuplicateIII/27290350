@@ -1,0 +1,28 @@
+class Solution {
+	boolean containsNearbyAlmostDuplicate(int[] nums, int indexDiff, int valDiff) {
+		TreeMap<Integer, Integer> map = new TreeMap<>();
+		map.put(nums[0],0);
+		for (int i = 1; i < nums.length; i++) {
+			if (map.containsKey(nums[i]) && i - map.get(nums[i]) <= indexDiff) {
+				return true;
+			}
+			map.put(nums[i],i);
+			Integer left = map.lowerKey(nums[i]), right = map.higherKey(nums[i]);
+			while (left != null && map.get(left) < i - indexDiff) {
+				map.remove(left);
+				left = map.lowerKey(nums[i]);
+			}
+			while (right != null && map.get(right) < i - indexDiff) {
+				map.remove(right);
+				right = map.higherKey(nums[i]);
+			}
+			if (left != null && nums[i] - left <= valDiff) {
+				return true;
+			}
+			if (right != null && right - nums[i] <= valDiff) {
+				return true;
+			}
+		}
+		return false;
+	}
+}

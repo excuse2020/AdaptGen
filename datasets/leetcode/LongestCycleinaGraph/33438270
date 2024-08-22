@@ -1,0 +1,27 @@
+class Solution {
+	int res = Integer.MIN_VALUE;
+	void dfs(int node, int[] edges, int curr, int[] len, boolean[] visited) {
+		if (node == -1 || visited[node]) {
+			return;
+		}
+		if (len[node] != 0) {
+			res = Math.max(res,curr - len[node]);
+			return;
+		}
+		len[node] = curr;
+		dfs(edges[node],edges,curr + 1,len,visited);
+		visited[node] = true;
+		len[node] = 0;
+	}
+	int longestCycle(int[] edges) {
+		int[] len = new int[edges.length];
+		boolean[] visited = new boolean[len.length];
+		for (int i = 0; i < len.length; i++) {
+			if (len[i] != 0 || visited[i]) {
+				continue;
+			}
+			dfs(i,edges,1,len,visited);
+		}
+		return res == Integer.MIN_VALUE ? -1 : res;
+	}
+}

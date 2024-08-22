@@ -1,0 +1,76 @@
+class Solution {
+	Map<String, Boolean> cache = new HashMap<>();
+	int dp;
+	boolean check(int[] a) {
+		int x = -1;
+		boolean first = true;
+		for (int i = 0; i < 26; i++) {
+			if (a[i] == 0) {
+				continue;
+			}
+			if (first) {
+				first = false;
+				x = a[i];
+				continue;
+			}
+			if (a[i] != x) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean[][] findValid(String s) {
+		int n = s.length();
+		boolean[][] valid = new boolean[n][n];
+		int i = 0;
+		int a = new int[26];
+		int j = i;
+	}
+	boolean isValid(String s) {
+		if (cache.containsKey(s)) {
+			return cache.get(s);
+		}
+		int[] freq = new int[26];
+		int other = 0;
+	}
+	int minimumSubstringsInPartition(String s) {
+		int n = s.length();
+		boolean[][] valid = findValid(s);
+		int dp = new int[n];
+		for (int i = 0; i < n; i++) {
+			dp[i] = Integer.MAX_VALUE;
+		}
+		for (int i = 0; i < n; i++) {
+			if (valid[0][i]) {
+				dp[i] = 1;
+			} 
+			else {
+				for (int j = 0; j < i; j++) {
+					if (j + 1 < n && dp[j] != Integer.MAX_VALUE && valid[j + 1][i]) {
+						dp[i] = Math.min(dp[i],dp[j] + 1);
+					}
+				}
+			}
+		}
+		return dp[n - 1];
+	}
+	int minimumSubstringsInPartition1(String s) {
+		dp = new int[s.length()];
+		return partition(0,s);
+	}
+	int partition(int i, String s) {
+		if (i == s.length()) {
+			return 0;
+		}
+		if (dp[i] != 0) {
+			return dp[i];
+		}
+		int min = s.substring(i).length();
+		for (int j = i + 1; j <= s.length(); j++) {
+			if (isValid(s.substring(i,j))) {
+				min = Math.min(min,partition(j,s) + 1);
+			}
+		}
+		return dp[i] = min;
+	}
+}

@@ -1,0 +1,81 @@
+class Solution {
+	int getMaxJump(int[] inputArray, int index, int[] maxJumpsCache, int maxDist) {
+		if (index >= inputArray.length || index < 0) {
+			return 0;
+		}
+		if (maxJumpsCache[index] != -1) {
+			return maxJumpsCache[index];
+		}
+		List<Integer> leftIndex = new ArrayList<>();
+		int curMax = -1;
+		for (int i = index - 1; i >= (index - maxDist) && i >= 0; i--) {
+			if (inputArray[i] >= inputArray[index]) {
+				break;
+			} 
+			else {
+				if (leftIndex.isEmpty()) {
+					leftIndex.add(i);
+					curMax = inputArray[i];
+				} 
+				else {
+					if (inputArray[i] > curMax) {
+						leftIndex.clear();
+						leftIndex.add(i);
+						curMax = inputArray[i];
+					} 
+					else if (inputArray[i] == curMax) {
+						leftIndex.add(i);
+					}
+				}
+			}
+		}
+		int leftJumpRes = 0;
+		for (int posLeft: leftIndex) {	
+			leftJumpRes = Math.max(getMaxJump(inputArray,posLeft,maxJumpsCache,maxDist),leftJumpRes);
+		}
+		List<Integer> rightIndex = new ArrayList<>();
+		curMax = -1;
+		for (int i = index + 1; i <= (index + maxDist) && i < inputArray.length; i++) {
+			if (inputArray[i] >= inputArray[index]) {
+				break;
+			} 
+			else {
+				if (rightIndex.isEmpty()) {
+					rightIndex.add(i);
+					curMax = inputArray[i];
+				} 
+				else {
+					if (inputArray[i] > curMax) {
+						rightIndex.clear();
+						rightIndex.add(i);
+						curMax = inputArray[i];
+					} 
+					else if (inputArray[i] == curMax) {
+						rightIndex.add(i);
+					}
+				}
+			}
+		}
+		int rightJumpRes = 0;
+		for (int pos: rightIndex) {	
+			rightJumpRes = Math.max(getMaxJump(inputArray,pos,maxJumpsCache,maxDist),rightJumpRes);
+		}
+		maxJumpsCache[index] = 1 + Math.max(leftJumpRes,rightJumpRes);
+		return maxJumpsCache[index];
+	}
+	int maxJumps(int[] inputArray, int maxDist) {
+		if (inputArray == null || inputArray.length == 0 || maxDist < 1) {
+			return 0;
+		}
+		int res = 0;
+		int[] maxJumps = new int[inputArray.length];
+		for (int i = 0; i < maxJumps.length; i++) {
+			maxJumps[i] = -1;
+		}
+		for (int i = 0; i < inputArray.length; i++) {
+			int tempMaxJump = getMaxJump(inputArray,i,maxJumps,maxDist);
+			res = Math.max(res,tempMaxJump);
+		}
+		return res;
+	}
+}

@@ -1,0 +1,38 @@
+class Solution {
+	int k;
+	int findKth(int[] a, int n, int K) {
+		this.k = K;
+		int ans = quickSortFindKth(a,0,n - 1);
+		return ans;
+	}
+	int getMid(int[] nums, int left, int right) {
+		int pivot = nums[left];
+		while (left < right) {
+			while (left < right && nums[right] <= pivot) {
+				right--;
+			}
+			nums[left] = nums[right];
+			while (left < right && nums[left] >= pivot) {
+				left++;
+			}
+			nums[right] = nums[left];
+		}
+		nums[left] = pivot;
+		return left;
+	}
+	int quickSortFindKth(int[] nums, int left, int right) {
+		if (left < right) {
+			int mid = getMid(nums,left,right);
+			if (mid + 1 == k) {
+				return nums[mid];
+			}
+			if (mid + 1 > k) {
+				return quickSortFindKth(nums,left,mid - 1);
+			}
+			if (mid + 1 < k) {
+				return quickSortFindKth(nums,mid + 1,right);
+			}
+		}
+		return nums[left];
+	}
+}

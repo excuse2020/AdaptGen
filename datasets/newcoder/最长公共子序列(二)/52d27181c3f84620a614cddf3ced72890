@@ -1,0 +1,35 @@
+class Solution {
+	String LCS(String s1, String s2) {
+		char[] c1 = s1.toCharArray();
+		char[] c2 = s2.toCharArray();
+		int[][] dp = new int[c1.length + 1][c2.length + 1];
+		for (int i = 1; i <= c1.length; i++) {
+			for (int j = 1; j <= c2.length; j++) {
+				if (c1[i - 1] == c2[j - 1]) {
+					dp[i][j] = dp[i - 1][j - 1] + 1;
+				} 
+				else {
+					dp[i][j] = Math.max(dp[i - 1][j],dp[i][j - 1]);
+				}
+			}
+		}
+		if (dp[c1.length][c2.length] == 0) {
+			return "-1";
+		}
+		int curRow = c1.length;
+		int curCol = c2.length;
+		String ans = "";
+		while (curRow > 0 && curCol > 0 && dp[curRow][curCol] != 0) {
+			while (dp[curRow][curCol] == dp[curRow][curCol - 1]) {
+				curCol--;
+			}
+			while (dp[curRow][curCol] == dp[curRow - 1][curCol]) {
+				curRow--;
+			}
+			ans = c1[curRow - 1] + ans;
+			curRow--;
+			curCol--;
+		}
+		return ans;
+	}
+}

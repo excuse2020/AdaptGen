@@ -1,0 +1,27 @@
+class Solution {
+	long maximumSubarraySum(int[] nums, int k) {
+		int n = nums.length;
+		Map<Integer, Integer> freq = new HashMap<>();
+		int start = 0;
+		int end = 0;
+		long currSum = 0;
+		long distinctSubarrayMaxSum = 0;
+		while (end < n) {
+			currSum += nums[end];
+			freq.put(nums[end],freq.getOrDefault(nums[end],0) + 1);
+			if (end - start + 1 == k) {
+				if (freq.size() == k) {
+					distinctSubarrayMaxSum = Math.max(distinctSubarrayMaxSum,currSum);
+				}
+				currSum -= nums[start];
+				freq.put(nums[start],freq.getOrDefault(nums[start],0) - 1);
+				if (freq.get(nums[start]) <= 0) {
+					freq.remove(nums[start]);
+				}
+				start++;
+			}
+			end++;
+		}
+		return distinctSubarrayMaxSum;
+	}
+}

@@ -1,0 +1,46 @@
+class Solution {
+	int longest_path = 1;
+	int longestPath(int[] parent, String s) {
+		HashMap<Integer, List<Integer>> map = new HashMap<>();
+		for (int i = 1; i < parent.length; i++) {
+			map.computeIfAbsent(parent[i],(x) -> {new ArrayList<>()}).add(i);
+		}
+		postfix(0,map,s);
+		return longest_path;
+	}
+	Node postfix(int source, HashMap<Integer, List<Integer>> map, String s) {
+		if (!map.containsKey(source)) {
+			Node node = new Node();
+			node.nodeCount = 1;
+			node.ch = s.charAt(source);
+			return node;
+		}
+		List<Integer> list = map.get(source);
+		int max = 0;
+		int second_max = 0;
+		for (int i = 0; i < list.size(); i++) {
+			int a = list.get(i);
+			Node n = postfix(a,map,s);
+			if (n.ch != s.charAt(source)) {
+				if (n.nodeCount >= max) {
+					second_max = max;
+					max = n.nodeCount;
+				} 
+				else if (n.nodeCount > second_max) {
+					second_max = n.nodeCount;
+				}
+			}
+		}
+		Node node = new Node();
+		node.nodeCount = 1 + max;
+		node.ch = s.charAt(source);
+		if (node.nodeCount + second_max > longest_path) {
+			longest_path = node.nodeCount + second_max;
+		}
+		return node;
+	}
+	class Node {
+		char ch;
+		int nodeCount;
+	}
+}

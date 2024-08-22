@@ -1,0 +1,24 @@
+class Solution {
+	void flatten(TreeNode root) {
+		flatten_(root);
+	}
+	TreeNode flatten_(TreeNode root) {
+		if (root == null) {
+			return null;
+		}
+		if (root.right == null && root.left == null) {
+			return root;
+		}
+		TreeNode tailOfRightChild = flatten_(root.right);
+		TreeNode tailOfLeftChild = flatten_(root.left);
+		TreeNode temp1 = root.right;
+		if (root.left != null) {
+			root.right = root.left;
+		}
+		root.left = null;
+		if (tailOfLeftChild != null) {
+			tailOfLeftChild.right = temp1;
+		}
+		return tailOfRightChild != null ? tailOfRightChild : tailOfLeftChild;
+	}
+}

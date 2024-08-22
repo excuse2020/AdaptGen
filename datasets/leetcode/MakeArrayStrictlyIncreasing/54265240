@@ -1,0 +1,50 @@
+class Solution {
+	int binarysearch(int[] arr2, int prev) {
+		int low = 0;
+		int high = arr2.length - 1;
+		int ans = -1;
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			if (arr2[mid] > prev) {
+				high = mid - 1;
+				ans = arr2[mid];
+			} 
+			else {
+				low = mid + 1;
+			}
+		}
+		return ans;
+	}
+	int makeArrayIncreasing(int[] arr1, int[] arr2) {
+		HashMap<List<Integer>, Integer> hs = new HashMap<>();
+		Arrays.sort(arr2);
+		int idx = 0;
+		int result = solve(arr1,arr2,idx,Integer.MIN_VALUE,hs);
+		return result == 1e9 + 7 ? -1 : result;
+	}
+	int solve(int[] arr1, int[] arr2, int idx, int prev, HashMap<List<Integer>, Integer> hs) {
+		if (idx == arr1.length) {
+			return 0;
+		}
+		List<Integer> m = new ArrayList<>();
+		m.add(idx);
+		m.add(prev);
+		if (hs.containsKey(m)) {
+			return hs.get(m);
+		}
+		int res1 = (int) 1e9 + 7;
+		if (arr1[idx] > prev) {
+			res1 = solve(arr1,arr2,idx + 1,arr1[idx],hs);
+		}
+		int res2 = (int) 1e9 + 7;
+		int ans = binarysearch(arr2,prev);
+		if (ans != -1) {
+			res2 = 1 + solve(arr1,arr2,idx + 1,ans,hs);
+		}
+		List<Integer> arr = new ArrayList<>();
+		arr.add(idx);
+		arr.add(prev);
+		hs.put(arr,Math.min(res1,res2));
+		return Math.min(res1,res2);
+	}
+}

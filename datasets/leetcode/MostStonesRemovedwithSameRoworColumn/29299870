@@ -1,0 +1,37 @@
+class Solution {
+	int removeStones(int[][] stones) {
+		Map<Integer, Set<int[]>> xStones = new HashMap<>();
+		Map<Integer, Set<int[]>> yStones = new HashMap<>();
+		Set<int[]> allStones = new HashSet<>(stones.length);
+		for (int[] stone: stones) {	
+			xStones.computeIfAbsent(stone[0],(k) -> {new HashSet<>()}).add(stone);
+			yStones.computeIfAbsent(stone[1],(k) -> {new HashSet<>()}).add(stone);
+			allStones.add(stone);
+		}
+		int trees = 0;
+		while (!allStones.isEmpty()) {
+			trees++;
+			int[] rootStone = allStones.iterator().next();
+			allStones.remove(rootStone);
+			Set<int[]> tree = new HashSet<>();
+			tree.add(rootStone);
+			while (!tree.isEmpty()) {
+				int[] next = tree.iterator().next();
+				tree.remove(next);
+				Set<int[]> x = xStones.remove(next[0]);
+				Set<int[]> y = yStones.remove(next[1]);
+				if (x != null) {
+					x.remove(next);
+					tree.addAll(x);
+					allStones.removeAll(x);
+				}
+				if (y != null) {
+					y.remove(next);
+					tree.addAll(y);
+					allStones.removeAll(y);
+				}
+			}
+		}
+		return stones.length - trees;
+	}
+}

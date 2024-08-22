@@ -1,0 +1,28 @@
+class Solution {
+	int gcd(int a, int b) {
+		return b == 0 ? a : gcd(b,a % b);
+	}
+	int minOperations(int[] nums) {
+		int ones = 0;
+		for (int num: nums) {	
+			if (num == 1) {
+				ones++;
+			}
+		}
+		if (ones > 0) {
+			return nums.length - ones;
+		}
+		int shortest1 = nums.length + 1;
+		for (int i = 0; i < nums.length; i++) {
+			int curr = nums[i];
+			for (int j = i + 1; j < Math.min(i + shortest1,nums.length); j++) {
+				curr = gcd(curr,nums[j]);
+				if (curr == 1) {
+					shortest1 = j - i + 1;
+					break;
+				}
+			}
+		}
+		return shortest1 > nums.length ? -1 : shortest1 + nums.length - 2;
+	}
+}

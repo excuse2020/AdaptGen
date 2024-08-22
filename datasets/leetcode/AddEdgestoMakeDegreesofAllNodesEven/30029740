@@ -1,0 +1,89 @@
+class Solution {
+	boolean find(int a, int b, int c, int d, HashMap<Integer, ArrayList<Integer>> map) {
+		ArrayList<Integer> y = map.get(a);
+		for (int i = 0; i < y.size(); i++) {
+			if (y.get(i) == b) {
+				return false;
+			}
+		}
+		y = map.get(c);
+		for (int i = 0; i < y.size(); i++) {
+			if (y.get(i) == d) {
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean find2(int a, int b, HashMap<Integer, ArrayList<Integer>> map) {
+		for (int i = 1; i <= map.size(); i++) {
+			if (i == a || i == b) {
+				continue;
+			}
+			int f = 0;
+			for (int it: map.get(i)) {	
+				if (it == a || it == b) {
+					f = 1;
+					break;
+				}
+			}
+			if (f == 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+	boolean isPossible(int n, List<List<Integer>> edges) {
+		HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+		for (int i = 1; i <= n; i++) {
+			map.put(i,new ArrayList<Integer>());
+		}
+		long e = (long) n;
+		ArrayList<Integer> x = new ArrayList<>();
+		e = e * (e - 1) / 2;
+		for (List<Integer> al: edges) {	
+			int a = al.get(0);
+			int b = al.get(1);
+			map.get(a).add(b);
+			map.get(b).add(a);
+		}
+		int odd = 0;
+		int z = 0;
+		for (int i = 1; i <= n; i++) {
+			int t = map.get(i).size();
+			if (t % 2 != 0) {
+				odd++;
+				x.add(i);
+			}
+			if (t == 0) {
+				z++;
+			}
+			if (t == n - 1 && t % 2 != 0) {
+				return false;
+			}
+		}
+		if (odd == 0) {
+			return true;
+		}
+		if (odd == 2) {
+			int a = x.get(0);
+			int b = x.get(1);
+			ArrayList<Integer> y = map.get(a);
+			for (int i = 0; i < y.size(); i++) {
+				if (y.get(i) == b) {
+					return find2(a,b,map);
+				}
+			}
+			return true;
+		}
+		if (odd == 4) {
+			int a = x.get(0);
+			int b = x.get(1);
+			int c = x.get(2);
+			int d = x.get(3);
+			if (find(a,b,c,d,map) || find(a,c,b,d,map)) {
+				return true;
+			}
+		}
+		return false;
+	}
+}

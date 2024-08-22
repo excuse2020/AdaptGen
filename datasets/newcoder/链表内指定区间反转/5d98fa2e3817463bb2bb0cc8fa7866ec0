@@ -1,0 +1,39 @@
+class Solution {
+	ListNode overturn(ListNode x, ListNode rear) {
+		ListNode i = x;
+		ListNode j = x.next;
+		while (true) {
+			if (j == rear) {
+				x.next = rear;
+				return i;
+			}
+			x.next = i;
+			i = j;
+			j = j.next;
+			i.next = x.next;
+		}
+	}
+	ListNode reverseBetween(ListNode head, int m, int n) {
+		if (m == n) {
+			return head;
+		}
+		ListNode front_front = m == 1 ? null : head;
+		ListNode front;
+		ListNode rear;
+		int index = 0;
+		while (++index < m - 1) {
+			front_front = front_front.next;
+		}
+		front = front_front == null ? head : front_front.next;
+		rear = front.next;
+		index = m;
+		while (++index < n) {
+			rear = rear.next;
+		}
+		if (front_front == null) {
+			return overturn(front,rear.next);
+		}
+		front_front.next = overturn(front,rear.next);
+		return head;
+	}
+}

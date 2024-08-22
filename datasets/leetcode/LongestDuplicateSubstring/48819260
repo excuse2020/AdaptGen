@@ -1,0 +1,65 @@
+class Solution {
+	long R = 31;
+	long mod = (1 << 31) - 1;
+	boolean compare(String s, int i, int j, int len) {
+		for (int count = 0; count < len; count++) {
+			if (s.charAt(i) != s.charAt(j)) {
+				return false;
+			}
+			i++;
+			j++;
+		}
+		return true;
+	}
+	int findDuplicateSubstringWithLength(String s, int len) {
+		Map<Long, List<Integer>> map = new HashMap<>();
+		long hash = hash(s,len);
+		map.put(hash,new ArrayList<>());
+		map.get(hash).add(0);
+		long RM = 1l;
+		for (int i = 1; i < len; i++) {
+			RM = (R * RM) % mod;
+		}
+		for (int i = len; i < s.length(); i++) {
+			int startIndex = i - len + 1;
+			hash = (hash + mod - RM * s.charAt(i - len) % mod) % mod;
+			hash = (hash * R + s.charAt(i)) % mod;
+			if (!map.containsKey(hash)) {
+				map.put(hash,new ArrayList<>());
+			} 
+			else {
+				for (int j: map.get(hash)) {	
+					if (compare(s,startIndex,j,len)) {
+						return startIndex;
+					}
+				}
+			}
+			map.get(hash).add(startIndex);
+		}
+		return -1;
+	}
+	long hash(String s, int len) {
+		long h = 0;
+		for (int i = 0; i < len; i++) {
+			h = (R * h + s.charAt(i)) % mod;
+		}
+		return h;
+	}
+	String longestDupSubstring(String s) {
+		int low = 1, high = s.length() - 1;
+		int start = -1, maxLen = 1;
+		while (low <= high) {
+			int len = low + (high - low) / 2;
+			int startIndex = findDuplicateSubstringWithLength(s,len);
+			if (startIndex != -1) {
+				start = startIndex;
+				maxLen = len;
+				low = len + 1;
+			} 
+			else {
+				high = len - 1;
+			}
+		}
+		return start == -1 ? "" : s.substring(start,start + maxLen);
+	}
+}

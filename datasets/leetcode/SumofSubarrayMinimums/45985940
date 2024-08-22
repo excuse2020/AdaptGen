@@ -1,0 +1,19 @@
+class Solution {
+	record VI(int v, int i, long ps) {
+	}
+	int sumSubarrayMins(int[] arr) {
+		long mod = 1_000_000_000 + 7;
+		Deque<VI> mst = new ArrayDeque<>(List.of(new VI(0, -1, 0)));
+		long ans = 0;
+		for (int i = 0, n = arr.length; i < n; ++i) {
+			int v = arr[i];
+			while (v <= mst.getLast().v()) {
+				mst.removeLast();
+			}
+			long ps = mst.getLast().ps() + (i - mst.getLast().i()) * v;
+			ans += ps;
+			mst.addLast(new VI(v, i, ps));
+		}
+		return (int) (ans % mod);
+	}
+}

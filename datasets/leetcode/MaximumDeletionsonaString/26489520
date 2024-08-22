@@ -1,0 +1,45 @@
+class Solution {
+	int deleteString(String s) {
+		int a = s.charAt(0);
+		for (int i = 0; i < s.length(); i++) {
+			if (s.charAt(i) != a) {
+				break;
+			}
+			if (i == s.length() - 1) {
+				return s.length();
+			}
+		}
+		return dp(s,0,new int[s.length()]);
+	}
+	int dp(String s, int i, int[] memo) {
+		if (memo[i] != 0) {
+			return memo[i];
+		}
+		memo[i] = 1;
+		int[] z = getz(s,i);
+		for (int j = 1; j < z.length; j++) {
+			if (z[j] >= j) {
+				memo[i] = Math.max(memo[i],1 + dp(s,i + j,memo));
+			}
+		}
+		return memo[i];
+	}
+	int[] getz(String s, int offset) {
+		int n = s.length() - offset;
+		int[] z = new int[n];
+		int l = 0, r = 0;
+		z[0] = n;
+		for (int i = 1; i < n; ++i) {
+			if (i <= r) {
+				z[i] = Math.min(r - i + 1,z[i - l]);
+			}
+			while (i + z[i] < n && s.charAt(z[i] + offset) == s.charAt(i + z[i])) {
+				++z[i];
+			}
+			if (i + z[i] - 1 > r) {
+				l = i;
+			}
+		}
+		return z;
+	}
+}

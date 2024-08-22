@@ -1,0 +1,49 @@
+class Solution {
+	List<Integer> findSubStringIndexes(String s, String[] words) {
+		List<Integer> indexes = new ArrayList<>();
+		HashMap<String, Integer> hashtable = populateHashTable(words);
+		int n = words.length;
+		int l1 = words[0].length();
+		int l2 = words.length * l1;
+		for (int i = 0; i < (s.length() - l2) + 1; i++) {
+			HashMap<String, Integer> hashtable1 = new HashMap<>(hashtable);
+			if (validateSubstring(s.substring(i,i + l2),hashtable1,l1,n)) {
+				indexes.add(i);
+			}
+		}
+		return indexes;
+	}
+	List<Integer> findSubstring(String s, String[] words) {
+		return findSubStringIndexes(s,words);
+	}
+	HashMap<String, Integer> populateHashTable(String[] words) {
+		HashMap<String, Integer> hashtable = new HashMap<>();
+		for (String str: words) {	
+			int count = 1;
+			if (hashtable.containsKey(str)) {
+				count = hashtable.get(str) + 1;
+			}
+			hashtable.put(str,count);
+		}
+		return hashtable;
+	}
+	boolean validateSubstring(String subString, HashMap<String, Integer> hashtable, int l1, int n) {
+		int counter = 1;
+		int begin = 0;
+		int end = l1;
+		while (counter <= n) {
+			String s = subString.substring(begin,end);
+			if (hashtable.containsKey(s)) {
+				begin = end;
+				end = end + l1;
+				counter++;
+				int c = hashtable.get(s);
+				hashtable.put(s,--c);
+			} 
+			else {
+				break;
+			}
+		}
+		return hashtable.entrySet().stream().noneMatch((ht) -> {ht.getValue() != 0});
+	}
+}

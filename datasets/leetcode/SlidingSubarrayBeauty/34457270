@@ -1,0 +1,33 @@
+class Solution {
+	int[] getSubarrayBeauty(int[] nums, int k, int x) {
+		int n = nums.length;
+		int[] result = new int[n - k + 1];
+		TreeMap<Integer, Integer> minHeap = new TreeMap<>();
+		for (int i = 0; i < n; i++) {
+			int num = nums[i];
+			minHeap.put(num,minHeap.getOrDefault(num,0) + 1);
+			if (i >= k) {
+				int out = nums[i - k];
+				minHeap.put(out,minHeap.get(out) - 1);
+				if (minHeap.get(out) == 0) {
+					minHeap.remove(out);
+				}
+			}
+			if (i >= k - 1) {
+				int cnt = 0;
+				int beauty = 0;
+				Iterator<Map.Entry<Integer, Integer>> it = minHeap.entrySet().iterator();
+				while (it.hasNext() && cnt < x) {
+					Map.Entry<Integer, Integer> entry = it.next();
+					cnt += entry.getValue();
+					if (cnt >= x) {
+						beauty = entry.getKey();
+						break;
+					}
+				}
+				result[i - k + 1] = beauty < 0 ? beauty : 0;
+			}
+		}
+		return result;
+	}
+}

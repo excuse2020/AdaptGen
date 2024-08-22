@@ -1,0 +1,49 @@
+class Solution {
+	List<Integer> findSubstring(String s, String[] words) {
+		int sl = s.length(), wl = words.length, swl = words[0].length(), begin = 0, end = 0, len = 0, count = 0;
+		Map<String, Integer> map = new HashMap<>();
+		Map<String, Integer> tmap = new HashMap<>();
+		for (String ss: words) {	
+			map.put(ss,map.getOrDefault(ss,0) + 1);
+		}
+		List<Integer> res = new ArrayList<>();
+		String sub, sub1;
+		for (int i = 0; i < swl; i++) {
+			tmap = new HashMap<>();
+			begin = i;
+			count = 0;
+			for (int k = i; k + swl <= sl; k += swl) {
+				sub = s.substring(k,k + swl);
+				if (map.containsKey(sub)) {
+					tmap.put(sub,tmap.getOrDefault(sub,0) + 1);
+					count++;
+					while (begin + swl <= sl && tmap.get(sub) > map.get(sub)) {
+						sub1 = s.substring(begin,begin + swl);
+						if (tmap.containsKey(sub1)) {
+							tmap.put(sub1,tmap.get(sub1) - 1);
+							count--;
+							begin += swl;
+						} 
+						else {
+							k = begin + swl;
+							break;
+						}
+					}
+				} 
+				else {
+					tmap.clear();
+					count = 0;
+					begin = k + swl;
+				}
+				if (count == wl) {
+					res.add(begin);
+					sub = s.substring(begin,begin + swl);
+					tmap.put(sub,tmap.get(sub) - 1);
+					begin += swl;
+					count--;
+				}
+			}
+		}
+		return res;
+	}
+}

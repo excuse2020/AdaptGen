@@ -1,0 +1,53 @@
+class Solution {
+	ArrayList<String> list = new ArrayList<String>();
+	String ns = "";
+	ArrayList<String> Permutation(String str) {
+		if (str == "") {
+			return new ArrayList<String>();
+		}
+		HashMap<Character, Integer> map = new HashMap<>();
+		char[] ch = str.toCharArray();
+		for (char c: ch) {	
+			if (!map.containsKey(c)) {
+				map.put(c,1);
+			} 
+			else {
+				int tmp = (int) map.get(c);
+				map.remove(c);
+				map.put(c,++tmp);
+			}
+		}
+		return perm(map,"");
+	}
+	ArrayList<String> perm(HashMap<Character, Integer> map, String n) {
+		if (map.size() == 1) {
+			char c = (char) map.entrySet().iterator().next().getKey();
+			int num = (int) map.entrySet().iterator().next().getValue();
+			String str = new String(ns) + c;
+			num--;
+			if (num > 0) {
+				str += c;
+			}
+			list.add(str);
+			return list;
+		}
+		Iterator<Entry<Character, Integer>> it = map.entrySet().iterator();
+		while (it.hasNext()) {
+			Entry entry = it.next();
+			char key = (char) entry.getKey();
+			int val = (int) entry.getValue();
+			ns = n;
+			ns += entry.getKey().toString();
+			HashMap<Character, Integer> mapn = new HashMap<Character, Integer>();
+			mapn.putAll(map);
+			if (val > 1) {
+				mapn.put(key,--val);
+			} 
+			else {
+				mapn.remove(key);
+			}
+			perm(mapn,ns);
+		}
+		return list;
+	}
+}

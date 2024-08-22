@@ -1,0 +1,62 @@
+class Solution {
+	int a;
+	int b;
+	boolean[] f;
+	boolean[] nf;
+	boolean[] pf;
+	int x;
+	int func(int cur, int steps, boolean back) {
+		if (cur < 0 || cur > 2000 + b) {
+			return -1;
+		}
+		if (f[cur] || pf[cur]) {
+			return -1;
+		}
+		steps++;
+		if (cur == x) {
+			return steps;
+		}
+		int s2 = -1;
+		int s1 = -1;
+		if (cur - b >= x) {
+			if (back) {
+				nf[cur] = true;
+			} 
+			else {
+				pf[cur] = true;
+				s2 = func(cur - b,steps,true);
+			}
+			if (s2 == -1) {
+				s1 = func(cur + a,steps,false);
+			}
+		} 
+		else {
+			s1 = func(cur + a,steps,false);
+			if (s1 == -1) {
+				if (back) {
+					nf[cur] = true;
+				} 
+				else {
+					pf[cur] = true;
+					s2 = func(cur - b,steps,true);
+				}
+			}
+		}
+		return s1 == -1 ? s2 : s1;
+	}
+	int minimumJumps(int[] forbidden, int a, int b, int x) {
+		if (x == 0) {
+			return 0;
+		}
+		this.a = a;
+		this.b = b;
+		this.x = x;
+		pf = new boolean[2000 + a];
+		nf = new boolean[2000 + a];
+		f = new boolean[2000 + a];
+		for (int i = 0; i < forbidden.length; i++) {
+			f[forbidden[i]] = true;
+		}
+		return func(a,0,false);
+	}
+}

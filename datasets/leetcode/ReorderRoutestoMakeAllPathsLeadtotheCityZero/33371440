@@ -1,0 +1,47 @@
+class Solution {
+	int step = 0;
+	Map<Integer, Set<Integer>> actualDirection(int[][] connections) {
+		Map<Integer, Set<Integer>> actGraph = new HashMap<>();
+		for (int[] connection: connections) {	
+			if (!actGraph.containsKey(connection[0])) {
+				actGraph.put(connection[0],new HashSet<>());
+			}
+			if (!actGraph.containsKey(connection[1])) {
+				actGraph.put(connection[1],new HashSet<>());
+			}
+			actGraph.get(connection[0]).add(connection[1]);
+		}
+		return actGraph;
+	}
+	void dfs(int parent, int currNode, Map<Integer, Set<Integer>> biDirecGraph, Map<Integer, Set<Integer>> actGraph) {
+		for (Integer adjNode: biDirecGraph.get(currNode)) {	
+			if (adjNode == parent) {
+				continue;
+			}
+			if (!actGraph.get(adjNode).contains(currNode)) {
+				step++;
+			}
+			dfs(currNode,adjNode,biDirecGraph,actGraph);
+		}
+	}
+	Map<Integer, Set<Integer>> makeAdjList(int[][] connections) {
+		Map<Integer, Set<Integer>> graph = new HashMap<>();
+		for (int[] connection: connections) {	
+			if (!graph.containsKey(connection[0])) {
+				graph.put(connection[0],new HashSet<>());
+			}
+			if (!graph.containsKey(connection[1])) {
+				graph.put(connection[1],new HashSet<>());
+			}
+			graph.get(connection[0]).add(connection[1]);
+			graph.get(connection[1]).add(connection[0]);
+		}
+		return graph;
+	}
+	int minReorder(int n, int[][] connections) {
+		Map<Integer, Set<Integer>> biDirecGraph = makeAdjList(connections);
+		Map<Integer, Set<Integer>> actGraph = actualDirection(connections);
+		dfs(-1,0,biDirecGraph,actGraph);
+		return step;
+	}
+}

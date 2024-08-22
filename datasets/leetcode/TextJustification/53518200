@@ -1,0 +1,40 @@
+class Solution {
+	String formatString(String[] words, int l, int r, int sumOfChars, int maxWidth) {
+		StringBuilder res = new StringBuilder();
+		int numOfSpaces = (maxWidth - sumOfChars) / Math.max(r - l,1);
+		int numOfSpacesLeft = (maxWidth - sumOfChars) % Math.max(r - l,1);
+		if (r == words.length) {
+			numOfSpaces = 1;
+			numOfSpacesLeft = 0;
+		}
+		String indent = "";
+		for (int i = l; i < r; i++) {
+			res.append(indent);
+			res.append(words[i]);
+			indent = " ".repeat(getNumOfSpaces(numOfSpaces,numOfSpacesLeft--));
+		}
+		if (r == words.length || (r - l) == 1) {
+			res.append(" ".repeat(maxWidth - res.length()));
+		}
+		return String.valueOf(res);
+	}
+	List<String> fullJustify(String[] words, int maxWidth) {
+		int l = 0;
+		int r = 0;
+		int n = words.length;
+		List<String> ans = new ArrayList<>();
+		while (r < n) {
+			int sumOfChars = 0;
+			while (r < n && sumOfChars + words[r].length() <= maxWidth) {
+				sumOfChars += words[r].length();
+				r++;
+			}
+			ans.add(formatString(words,l,r,sumOfChars,maxWidth));
+			l = r;
+		}
+		return ans;
+	}
+	int getNumOfSpaces(int numOfSpaces, int numOfSpacesLeft) {
+		return numOfSpaces + (numOfSpacesLeft > 0 ? 1 : 0);
+	}
+}

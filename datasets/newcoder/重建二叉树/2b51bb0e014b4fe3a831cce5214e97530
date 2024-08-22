@@ -1,0 +1,37 @@
+class Solution {
+	int[] in;
+	int[] pre;
+	TreeNode reBuildBinaryTree(int st1, int ed1, int st2, int ed2) {
+		if (st1 == ed1 || st2 == ed2) {
+			return new TreeNode(pre[st1]);
+		}
+		if (st1 > ed1 || st2 > ed2) {
+			return null;
+		}
+		TreeNode root = new TreeNode(pre[st1]);
+		int par = st2;
+		for (int i = st2; i <= ed2; i++) {
+			if (in[i] == pre[st1]) {
+				par = i;
+				break;
+			}
+		}
+		int leftsize = par - st2;
+		int rightsize = ed2 - par;
+		root.left = reBuildBinaryTree(st1 + 1,st1 + leftsize,st2,par - 1);
+		root.right = reBuildBinaryTree(st1 + leftsize,ed1,par + 1,ed2);
+		return root;
+	}
+	TreeNode reConstructBinaryTree(int[] pre, int[] in) {
+		this.pre = pre;
+		this.in = in;
+		if (pre == null || in == null) {
+			return null;
+		}
+		if (pre.length == 0 || in.length == 0) {
+			return null;
+		}
+		TreeNode treeNode = reBuildBinaryTree(0,pre.length - 1,0,in.length - 1);
+		return treeNode;
+	}
+}

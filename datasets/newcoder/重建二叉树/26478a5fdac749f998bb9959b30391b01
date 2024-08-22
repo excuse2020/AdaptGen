@@ -1,0 +1,18 @@
+class Solution {
+	TreeNode reConstructBinaryTree(int[] pre, int[] in) {
+		return rebuild(pre,0,pre.length - 1,in,0,in.length - 1);
+	}
+	TreeNode rebuild(int[] pre, int preLeft, int preRight, int[] in, int inLeft, int inRight) {
+		if (preLeft > preRight) {
+			return null;
+		}
+		TreeNode root = new TreeNode(pre[preLeft]);
+		int rootIndex = inLeft;
+		while (rootIndex <= inRight && in[rootIndex] != pre[preLeft]) {
+			rootIndex++;
+		}
+		root.left = rebuild(pre,preLeft + 1,preLeft + rootIndex - inLeft,in,inLeft,rootIndex - 1);
+		root.right = rebuild(pre,preLeft + rootIndex - inLeft + 1,preRight,in,rootIndex + 1,inRight);
+		return root;
+	}
+}

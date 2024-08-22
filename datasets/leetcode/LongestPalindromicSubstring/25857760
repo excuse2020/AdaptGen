@@ -1,0 +1,36 @@
+class Solution {
+	int maxLen;
+	int start;
+	void expand(String s, int left, int right) {
+		while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+			right++;
+			left--;
+		}
+		int len = right - left;
+		if (len > maxLen) {
+			maxLen = len;
+			start = left + 1;
+		}
+	}
+	String longestPalindrome(String s) {
+		maxLen = 1;
+		int pos = s.length() / 2;
+		for (int i = 1; i <= s.length(); i++) {
+			expand(s,pos,pos);
+			expand(s,pos,pos + 1);
+			if (i % 2 == 0) {
+				pos += i;
+				if ((s.length() - pos) * 2 <= maxLen) {
+					break;
+				}
+			} 
+			else {
+				pos -= i;
+				if ((pos + 1) * 2 <= maxLen) {
+					break;
+				}
+			}
+		}
+		return s.substring(start,start + maxLen);
+	}
+}

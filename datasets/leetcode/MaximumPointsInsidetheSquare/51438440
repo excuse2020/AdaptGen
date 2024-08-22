@@ -1,0 +1,28 @@
+class Solution {
+	int maxPointsInsideSquare(int[][] points, String s) {
+		int min = -1;
+		Map<Character, List<Integer>> mp1 = new HashMap<>();
+		for (int i = 0; i < points.length; i++) {
+			List<Integer> li = mp1.getOrDefault(s.charAt(i),new ArrayList<Integer>());
+			li.add(Math.max(Math.abs(points[i][0]),Math.abs(points[i][1])));
+			mp1.put(s.charAt(i),li);
+		}
+		for (List<Integer> x: mp1.values()) {	
+			Collections.sort(x);
+			int val = x.get(0);
+			min = Math.max(min,val);
+		}
+		for (List<Integer> x: mp1.values()) {	
+			if (x.size() > 1) {
+				min = Math.min(min,x.get(1) - 1);
+			}
+		}
+		int ans = 0;
+		for (int i = 0; i < points.length; i++) {
+			if (Math.abs(points[i][0]) <= min && Math.abs(points[i][1]) <= min) {
+				ans++;
+			}
+		}
+		return ans;
+	}
+}

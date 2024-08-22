@@ -1,0 +1,45 @@
+class Solution {
+	List<String> fullJustify(String[] words, int maxWidth) {
+		List<String> results = new ArrayList<>();
+		Queue<String> queue = new ArrayDeque<>();
+		int ll = 0;
+		for (String word: words) {	
+			int wl = word.length();
+			if (!queue.isEmpty() && ll + wl > maxWidth) {
+				results.add(justify(queue,maxWidth - ll,false));
+				ll = 0;
+			} 
+			else if (!queue.isEmpty()) {
+				queue.add(" ");
+				ll++;
+			}
+			queue.add(word);
+			ll += wl;
+		}
+		if (!queue.isEmpty()) {
+			results.add(justify(queue,maxWidth - ll,true));
+		}
+		return results;
+	}
+	String justify(Queue<String> queue, int restSpaces, boolean last) {
+		StringBuilder sb = new StringBuilder();
+		int sl = queue.size() / 2, space = (sl == 0) ? restSpaces : restSpaces / sl, mod = (sl == 0 || last) ? restSpaces : restSpaces % sl;
+		while (!queue.isEmpty()) {
+			String word = queue.poll();
+			if (word.equals(" ") && !last) {
+				IntStream.range(0,space + 1).forEach((num) -> {sb.append(" ")});
+				if (mod > 0) {
+					sb.append(" ");
+					mod--;
+				}
+			} 
+			else {
+				sb.append(word);
+			}
+		}
+		if (mod > 0) {
+			IntStream.range(0,mod).forEach((num) -> {sb.append(" ")});
+		}
+		return sb.toString();
+	}
+}

@@ -1,0 +1,25 @@
+class Solution {
+	long maximumSubarraySum(int[] nums, int k) {
+		int n = nums.length;
+		if (n < k) {
+			return 0;
+		}
+		long res = 0;
+		long sum = 0;
+		HashSet<Integer> seen = new HashSet<>();
+		for (int right = 0, left = 0; right < n; right++) {
+			int curr = nums[right];
+			while (seen.contains(curr) || seen.size() == k) {
+				seen.remove(nums[left]);
+				sum -= nums[left];
+				left++;
+			}
+			seen.add(curr);
+			sum += curr;
+			if (seen.size() == k && sum > res) {
+				res = sum;
+			}
+		}
+		return res;
+	}
+}

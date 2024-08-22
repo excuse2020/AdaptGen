@@ -1,0 +1,48 @@
+class Solution {
+	TreeNode replaceValueInTree(TreeNode root) {
+		List<Integer> level_sum = new ArrayList<>();
+		Queue<TreeNode> q = new LinkedList<>();
+		q.offer(root);
+		while (!q.isEmpty()) {
+			int n = q.size();
+			int sum = 0;
+			while (n-- > 0) {
+				TreeNode res = q.poll();
+				sum += res.val;
+				if (res.left != null) {
+					q.offer(res.left);
+				}
+				if (res.right != null) {
+					q.offer(res.right);
+				}
+			}
+			level_sum.add(sum);
+		}
+		int i = 0;
+		q.offer(root);
+		root.val = 0;
+		while (!q.isEmpty()) {
+			int n = q.size();
+			i++;
+			while (n-- > 0) {
+				TreeNode res = q.poll();
+				int sum = 0;
+				if (res.left != null) {
+					q.add(res.left);
+					sum += res.left.val;
+				}
+				if (res.right != null) {
+					q.add(res.right);
+					sum += res.right.val;
+				}
+				if (res.left != null) {
+					res.left.val = level_sum.get(i) - sum;
+				}
+				if (res.right != null) {
+					res.right.val = level_sum.get(i) - sum;
+				}
+			}
+		}
+		return root;
+	}
+}

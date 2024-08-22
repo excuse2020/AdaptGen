@@ -1,0 +1,39 @@
+class Solution {
+	int amountOfTime(TreeNode root, int start) {
+		Map<Integer, List<Integer>> mp = new HashMap<>();
+		Set<Integer> vis = new HashSet<>();
+		createGraph(root,mp,0);
+		Queue<Integer> qu = new LinkedList<>();
+		qu.add(start);
+		vis.add(start);
+		int ans = -1;
+		while (!qu.isEmpty()) {
+			int sz = qu.size();
+			while (sz-- > 0) {
+				int val = qu.poll();
+				for (int i = 0; i < mp.get(val).size(); i++) {
+					if (!vis.contains(mp.get(val).get(i))) {
+						qu.offer(mp.get(val).get(i));
+						vis.add(mp.get(val).get(i));
+					}
+				}
+			}
+			ans++;
+		}
+		return ans;
+	}
+	void createGraph(TreeNode root, Map<Integer, List<Integer>> mp, Integer parent) {
+		if (root == null) {
+			return;
+		}
+		if (!mp.containsKey(root.val)) {
+			mp.put(root.val,new ArrayList<>());
+		}
+		if (parent != 0) {
+			mp.get(root.val).add(parent);
+			mp.get(parent).add(root.val);
+		}
+		createGraph(root.left,mp,root.val);
+		createGraph(root.right,mp,root.val);
+	}
+}

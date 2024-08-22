@@ -1,0 +1,45 @@
+class Solution {
+	void dfs(TreeNode root, int level, List<Integer> levelSums) {
+		if (root == null) {
+			return;
+		}
+		int sum = 0;
+		if (root.left != null) {
+			sum = sum + root.left.val;
+		}
+		if (root.right != null) {
+			sum = sum + root.right.val;
+		}
+		if (root.left != null) {
+			root.left.val = levelSums.get(level + 1) - sum;
+		}
+		if (root.right != null) {
+			root.right.val = levelSums.get(level + 1) - sum;
+		}
+		dfs(root.left,level + 1,levelSums);
+		dfs(root.right,level + 1,levelSums);
+	}
+	TreeNode replaceValueInTree(TreeNode root) {
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.offer(root);
+		List<Integer> levelSums = new ArrayList<>();
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			int sum = 0;
+			for (int i = 0; i < size; i++) {
+				TreeNode value = queue.poll();
+				if (value.left != null) {
+					queue.offer(value.left);
+				}
+				if (value.right != null) {
+					queue.offer(value.right);
+				}
+				sum = sum + value.val;
+			}
+			levelSums.add(sum);
+		}
+		dfs(root,0,levelSums);
+		root.val = 0;
+		return root;
+	}
+}

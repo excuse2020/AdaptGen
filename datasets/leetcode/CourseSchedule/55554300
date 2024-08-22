@@ -1,0 +1,40 @@
+class Solution {
+	Map<Integer, Boolean> mem = new HashMap<>();
+	boolean canFinish(int numCourses, int[][] prerequisites) {
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int a: prerequisites) {	
+			map.computeIfAbsent(a[0],(k) -> {new ArrayList<>()}).add(a[1]);
+		}
+		int count = 0;
+		for (int i = 0; i < numCourses; i++) {
+			Set<Integer> visited = new HashSet<>();
+			if (fun(map,i,visited)) {
+				count++;
+			}
+		}
+		return count >= numCourses;
+	}
+	boolean fun(Map<Integer, List<Integer>> map, int c, Set<Integer> visited) {
+		if (visited.contains(c)) {
+			return false;
+		}
+		if (mem.containsKey(c)) {
+			return mem.get(c);
+		}
+		int count = 0;
+		if (map.containsKey(c)) {
+			List<Integer> courses = map.get(c);
+			for (Integer cc: courses) {	
+				visited.add(c);
+				boolean ret = fun(map,cc,visited);
+				mem.put(cc,ret);
+				if (!ret) {
+					return false;
+				}
+				visited.remove(c);
+			}
+			return true;
+		}
+		return true;
+	}
+}

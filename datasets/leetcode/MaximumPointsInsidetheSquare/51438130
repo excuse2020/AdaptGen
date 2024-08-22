@@ -1,0 +1,26 @@
+class Solution {
+	int maxPointsInsideSquare(int[][] points, String s) {
+		TreeMap<Integer, List<Character>> map = new TreeMap<>();
+		for (int i = 0; i < points.length; i++) {
+			int distance = Math.max(Math.abs(points[i][0]),Math.abs(points[i][1]));
+			map.computeIfAbsent(distance,(_) -> {new ArrayList<>()}).add(s.charAt(i));
+		}
+		Set<Character> used = new HashSet<>();
+		int maxPoints = 0;
+		for (Map.Entry<Integer, List<Character>> entry: map.entrySet()) {	
+			List<Character> tagsAtDist = entry.getValue();
+			int localAdd = 0;
+			for (char tag: tagsAtDist) {	
+				if (!used.contains(tag)) {
+					used.add(tag);
+					localAdd++;
+				} 
+				else {
+					return maxPoints;
+				}
+			}
+			maxPoints += localAdd;
+		}
+		return maxPoints;
+	}
+}

@@ -1,0 +1,25 @@
+class Solution {
+	void radixSort(Pair<String, Integer>[] nums, int digit) {
+		List<Pair<String, Integer>>[] buckets = new ArrayList[10];
+	}
+	int[] smallestTrimmedNumbers(String[] nums, int[][] queries) {
+		int n = nums.length;
+		int m = nums[0].length();
+		Pair<String, Integer>[][] sortedNums = new Pair[m + 1][n];
+		Pair<String, Integer>[] sorted = new Pair[n];
+		for (int i = 0; i < n; i++) {
+			sorted[i] = new Pair<>(nums[i], i);
+		}
+		for (int len = 1; len <= m; len++) {
+			radixSort(sorted,m - len);
+			System.arraycopy(sorted,0,sortedNums[len],0,n);
+		}
+		int[] result = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			int len = queries[i][1];
+			int kth = queries[i][0];
+			result[i] = sortedNums[len][kth - 1].getValue();
+		}
+		return result;
+	}
+}

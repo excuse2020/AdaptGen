@@ -1,0 +1,21 @@
+class Solution {
+	boolean stoneGame(int[] piles) {
+		int n = piles.length;
+		int sum = Arrays.stream(piles).sum();
+		int[][] dp = new int[n][n];
+		for (int i = n - 1; i >= 0; i--) {
+			for (int j = i; j < n; j++) {
+				if (i == j) {
+					dp[i][j] = piles[i];
+				} 
+				else if (i == j - 1) {
+					dp[i][j] = Math.max(piles[i],piles[j]);
+				} 
+				else {
+					dp[i][j] = Math.max(piles[i] + dp[i + 1][j],piles[j] + dp[i][j - 1]);
+				}
+			}
+		}
+		return (double) dp[0][n - 1] > (double) sum / 2;
+	}
+}

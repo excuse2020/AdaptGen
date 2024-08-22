@@ -1,0 +1,34 @@
+class Solution {
+	Integer[] last_pos;
+	int m = 1000000007;
+	Integer[][] memo;
+	int sz = 0;
+	int numMusicPlaylists(int n, int g, int k) {
+		if (memo == null) {
+			last_pos = new Integer[n + 1];
+			memo = new Integer[n + 1][g + 1];
+		}
+		if (memo[sz][g] != null) {
+			return memo[sz][g];
+		}
+		if (g == 0) {
+			return sz >= n ? 1 : 0;
+		}
+		long res = 0;
+		for (int i = 1; i <= n; ++i) {
+			if (last_pos[i] == null || last_pos[i] - g > k) {
+				Integer lastpos = last_pos[i];
+				int f = 0;
+				if (last_pos[i] == null) {
+					f = 1;
+				}
+				sz += f;
+				last_pos[i] = g;
+				res = (res + numMusicPlaylists(n,g - 1,k)) % m;
+				sz -= f;
+				last_pos[i] = lastpos;
+			}
+		}
+		return memo[sz][g] = (int) res;
+	}
+}

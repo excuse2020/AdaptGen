@@ -1,0 +1,35 @@
+class Solution {
+	ListNode deleteDuplication(ListNode pHead) {
+		if (pHead == null || pHead.next == null) {
+			return pHead;
+		}
+		ListNode res = new ListNode(0);
+		ListNode slow = pHead, fast = pHead.next;
+		ListNode pre = res;
+		int repeat = 0;
+		while (fast != null) {
+			if (slow.val == fast.val) {
+				repeat = slow.val;
+				slow = fast.next;
+				fast = slow == null ? null : slow.next;
+			} 
+			else if (repeat == slow.val) {
+				slow = fast;
+				fast = fast.next;
+			} 
+			else {
+				res.next = slow;
+				fast = fast.next;
+				slow = slow.next;
+				res = res.next;
+			}
+		}
+		if (slow != null && repeat != slow.val) {
+			res.next = slow;
+		} 
+		else {
+			res.next = null;
+		}
+		return pre.next == null ? null : pre.next;
+	}
+}

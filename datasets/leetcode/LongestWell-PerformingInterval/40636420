@@ -1,0 +1,32 @@
+class Solution {
+	int longestWPI(int[] hours) {
+		int n = hours.length;
+		int[] diffOfTiringDays = new int[n + 1];
+		diffOfTiringDays[0] = 0;
+		HashMap<Integer, Integer> map = new HashMap<>();
+		int preDiff = 0;
+		map.put(0,0);
+		for (int i = 1; i <= n; i++) {
+			if (hours[i - 1] > 8) {
+				diffOfTiringDays[i] = diffOfTiringDays[i - 1] + 1;
+			} 
+			else {
+				diffOfTiringDays[i] = diffOfTiringDays[i - 1] - 1;
+			}
+			if (diffOfTiringDays[i] < preDiff) {
+				map.put(diffOfTiringDays[i],i);
+				preDiff = diffOfTiringDays[i];
+			}
+		}
+		int res = 0;
+		for (int i = n; i >= 0; i--) {
+			if (diffOfTiringDays[i] > 0) {
+				res = Math.max(res,i);
+			} 
+			else if (map.get(diffOfTiringDays[i] - 1) != null) {
+				res = Math.max(res,i - map.get(diffOfTiringDays[i] - 1));
+			}
+		}
+		return res;
+	}
+}

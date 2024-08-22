@@ -1,0 +1,37 @@
+class Solution {
+	int solve(String nums) {
+		int[] dp = new int[nums.length()];
+		dp[0] = nums.charAt(0) == '0' ? 0 : 1;
+		if (nums.length() == 1) {
+			return dp[0];
+		}
+		if (nums.charAt(1) != '0') {
+			dp[1] = dp[0];
+		}
+		int a = Integer.parseInt("" + nums.charAt(0));
+		if (a >= 10 && a <= 26) {
+			dp[1]++;
+		}
+		for (int i = 2; i < nums.length(); i++) {
+			if (nums.charAt(i) == '0') {
+				if (nums.charAt(i - 1) == '0') {
+					return 0;
+				}
+				if (nums.charAt(i - 1) > '2') {
+					return 0;
+				} 
+				else {
+					dp[i] = 0;
+				}
+			} 
+			else {
+				dp[i] = dp[i - 1];
+			}
+			int tmp = Integer.parseInt("" + nums.charAt(i - 1));
+			if (tmp >= 10 && tmp <= 26) {
+				dp[i] += dp[i - 2];
+			}
+		}
+		return dp[nums.length() - 1];
+	}
+}

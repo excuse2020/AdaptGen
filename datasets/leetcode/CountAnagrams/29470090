@@ -1,0 +1,75 @@
+class Solution {
+	int countAnagrams(String s) {
+		String tokens = s.split(" ");
+		long ans = 1;
+		for (var t: tokens) {	
+			Map<Character, Integer> mp = new HashMap<>();
+			for (int i = 0; i < t.length(); i++) {
+				mp.put(t.charAt(i),mp.getOrDefault(t.charAt(i),0) + 1);
+			}
+			long d = 1;
+			for (var ent: mp.entrySet()) {	
+				d = mulMod(d,fact[ent.getValue()]);
+			}
+			ans = mulMod(ans,divMod(fact[t.length()],d));
+		}
+		return (int) ans;
+	}
+}
+class Modulo {
+	int MOD = (int) 1e9 + 7;
+	long fact;
+	long inv;
+	long invFact;
+	long divMod(long a, long b) {
+		return mulMod(a,invMod(b));
+	}
+	long factMod(int n) {
+		return fact[n];
+	}
+	long invMod(long num) {
+		return powMod(num,MOD - 2);
+	}
+	long mulMod(long a, long b) {
+		long ans = 0;
+		for (; b != 0; ) {
+			if ((b & 1) == 1) {
+				ans += a;
+				ans %= MOD;
+			}
+			a += a;
+			a %= MOD;
+			b >>= 1;
+		}
+		return ans;
+	}
+	long nCrMod(int n, int r) {
+		if (n < r) {
+			return 0;
+		}
+		if (r == 0) {
+			return 1;
+		}
+		return mulMod(fact[n],mulMod(invFact[n - r],invFact[r]));
+	}
+	long powMod(long base, long exp) {
+		long ans = 1;
+		for (; exp != 0; ) {
+			if ((exp & 1) == 1) {
+				ans *= base;
+				ans %= MOD;
+			}
+			base *= base;
+			base %= MOD;
+			exp = exp >> 1;
+		}
+		return ans;
+	}
+	void preComputeInverse(int N) {
+		inv[0] = 0;
+		inv[1] = 1;
+		for (int i = 2; i <= N; ++i) {
+			inv[i] = (MOD - (MOD / i)) * inv[MOD % i] % MOD;
+		}
+	}
+}

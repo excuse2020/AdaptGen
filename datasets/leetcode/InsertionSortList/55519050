@@ -1,0 +1,52 @@
+class Solution {
+	ListNode insertionSortList(ListNode head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+		ListNode left = head;
+		ListNode midelem = mid(left);
+		ListNode right = midelem.next;
+		midelem.next = null;
+		left = insertionSortList(left);
+		right = insertionSortList(right);
+		ListNode ans = merge(left,right);
+		return ans;
+	}
+	ListNode merge(ListNode A, ListNode B) {
+		if (A == null) {
+			return B;
+		}
+		if (B == null) {
+			return A;
+		}
+		ListNode dummy = new ListNode(-1);
+		ListNode curr = dummy;
+		while (A != null && B != null) {
+			if (A.val <= B.val) {
+				curr.next = A;
+				A = A.next;
+			} 
+			else {
+				curr.next = B;
+				B = B.next;
+			}
+			curr = curr.next;
+		}
+		if (A != null) {
+			curr.next = A;
+		} 
+		else {
+			curr.next = B;
+		}
+		return dummy.next;
+	}
+	ListNode mid(ListNode head) {
+		ListNode slow = head;
+		ListNode fast = head;
+		while (fast != null && fast.next != null && fast.next.next != null) {
+			slow = slow.next;
+			fast = fast.next.next;
+		}
+		return slow;
+	}
+}

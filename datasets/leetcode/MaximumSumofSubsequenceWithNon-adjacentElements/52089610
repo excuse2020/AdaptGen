@@ -1,0 +1,37 @@
+class Solution {
+	int MOD = 1_000_000_007;
+	int maximumSumSubsequence(int[] nums, int[][] queries) {
+		int n = nums.length;
+		long[] inc = new long[n];
+		long[] exc = new long[n];
+		inc[0] = Math.max(0,nums[0]);
+		exc[0] = 0;
+		for (int i = 1; i < n; i++) {
+			inc[i] = Math.max(0,nums[i] + exc[i - 1]);
+			exc[i] = Math.max(inc[i - 1],exc[i - 1]);
+		}
+		long max = Math.max(inc[n - 1],exc[n - 1]);
+		long total = 0;
+		for (int[] query: queries) {	
+			int pos = query[0];
+			int _val = query[1];
+			nums[pos] = _val;
+			if (pos == 0) {
+				inc[0] = Math.max(0,nums[0]);
+				exc[0] = 0;
+			}
+			for (int i = Math.max(1,pos); i < n; i++) {
+				if (i == pos) {
+					inc[i] = Math.max(0,nums[i] + (i > 0 ? exc[i - 1] : 0));
+				} 
+				else {
+					inc[i] = Math.max(0,nums[i] + exc[i - 1]);
+				}
+				exc[i] = Math.max(inc[i - 1],exc[i - 1]);
+			}
+			max = Math.max(inc[n - 1],exc[n - 1]);
+			total = (total + max) % MOD;
+		}
+		return (int) total;
+	}
+}

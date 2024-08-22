@@ -1,0 +1,29 @@
+class Solution {
+	int helper(int[] nums, int index, int rem, int k, int[][] dp) {
+		if (dp[index][rem] != -1) {
+			return dp[index][rem];
+		}
+		int ans = 1;
+		for (int i = index + 1; i < nums.length; i++) {
+			if ((nums[i] + nums[index]) % k == rem) {
+				ans += helper(nums,i,rem,k,dp);
+				break;
+			}
+		}
+		return dp[index][rem] = ans;
+	}
+	int maximumLength(int[] nums, int k) {
+		int n = nums.length;
+		int[][] dp = new int[n][k];
+		for (int[] arr: dp) {	
+			Arrays.fill(arr,-1);
+		}
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = i + 1; j < n; j++) {
+				ans = Math.max(1 + helper(nums,j,(nums[i] + nums[j]) % k,k,dp),ans);
+			}
+		}
+		return ans;
+	}
+}

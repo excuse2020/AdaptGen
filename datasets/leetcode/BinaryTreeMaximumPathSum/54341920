@@ -1,0 +1,30 @@
+class Solution {
+	int ans = 0;
+	int find(TreeNode root) {
+		if (root == null) {
+			return Integer.MIN_VALUE;
+		}
+		int leftMaxPath = findMaxPath(root.left);
+		int rightMaxPath = findMaxPath(root.right);
+		int sum = root.val + leftMaxPath;
+		sum = Math.max(sum,find(root.right));
+		sum = Math.max(sum,find(root.left));
+		sum = Math.max(root.val,sum);
+		sum = Math.max(sum,root.val + leftMaxPath);
+		sum = Math.max(sum,root.val + rightMaxPath);
+		return sum;
+	}
+	int findMaxPath(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		int val = Math.max(findMaxPath(root.left),findMaxPath(root.right));
+		if (val < 0) {
+			val = 0;
+		}
+		return root.val + val;
+	}
+	int maxPathSum(TreeNode root) {
+		return find(root);
+	}
+}

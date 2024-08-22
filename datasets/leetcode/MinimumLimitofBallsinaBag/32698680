@@ -1,0 +1,31 @@
+class Solution {
+	int minimumSize(int[] nums, int maxOperations) {
+		int maxBalls = 0;
+		for (var item: nums) {	
+			maxBalls = Math.max(maxBalls,item);
+		}
+		int low = 1;
+		int high = maxBalls;
+		int minBalls = 1;
+		while (low <= high) {
+			int ballsAllowed = low + (high - low) / 2;
+			int operationsRequired = 0;
+			for (int i = 0; i < nums.length; i++) {
+				if (nums[i] > ballsAllowed) {
+					operationsRequired += (nums[i] / ballsAllowed);
+					if (nums[i] % ballsAllowed == 0) {
+						operationsRequired--;
+					}
+				}
+			}
+			if (operationsRequired > maxOperations) {
+				low = ballsAllowed + 1;
+			} 
+			else {
+				minBalls = ballsAllowed;
+				high = ballsAllowed - 1;
+			}
+		}
+		return minBalls;
+	}
+}

@@ -1,0 +1,52 @@
+class Solution {
+	int minimumJumps(int[] forbidden, int a, int b, int x) {
+		if (x == 0) {
+			return 0;
+		}
+		Set<Integer> cannotJump = new HashSet<>();
+		int maxForbid = Integer.MIN_VALUE;
+		for (int i: forbidden) {	
+			cannotJump.add(i);
+		}
+		Set<Pair<Integer, Integer>> visited = new HashSet<>();
+		visited.add(new Pair<>(0, 0));
+		Queue<Pair<Integer, Integer>> queue = new ArrayDeque<>();
+		queue.offer(new Pair<>(0, 0));
+		int steps = 0;
+		int maxBoarder = 6000;
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			steps++;
+			for (int i = 0; i < size; i++) {
+				Pair<Integer, Integer> current = queue.poll();
+				int currentNode = current.getKey();
+				int direction = current.getValue();
+				int nextNode1 = currentNode + a;
+				int nextNode2 = currentNode - b;
+				if (direction == 0) {
+					if (nextNode1 <= maxBoarder && visited.add(new Pair<>(nextNode1, 0)) && !cannotJump.contains(nextNode1)) {
+						if (nextNode1 == x) {
+							return steps;
+						}
+						queue.offer(new Pair<>(nextNode1, 0));
+					}
+					if (nextNode2 >= 0 && visited.add(new Pair<>(nextNode2, 1)) && !cannotJump.contains(nextNode2)) {
+						if (nextNode2 == x) {
+							return steps;
+						}
+						queue.offer(new Pair<>(nextNode2, 1));
+					}
+				}
+				if (direction == 1) {
+					if (nextNode1 <= maxBoarder && visited.add(new Pair<>(nextNode1, 0)) && !cannotJump.contains(nextNode1)) {
+						if (nextNode1 == x) {
+							return steps;
+						}
+						queue.offer(new Pair<>(nextNode1, 0));
+					}
+				}
+			}
+		}
+		return -1;
+	}
+}

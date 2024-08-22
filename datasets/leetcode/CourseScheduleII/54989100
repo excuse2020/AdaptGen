@@ -1,0 +1,32 @@
+class Solution {
+	int[] findOrder(int num, int[][] pre) {
+		List<List<Integer>> list = new ArrayList<>();
+		for (int i = 0; i < num; i++) {
+			list.add(new ArrayList<>());
+		}
+		int[] in = new int[num];
+		for (int i = 0; i < pre.length; i++) {
+			list.get(pre[i][1]).add(pre[i][0]);
+			in[pre[i][0]]++;
+		}
+		int[] res = new int[num];
+		Queue<Integer> que = new LinkedList<>();
+		for (int i = 0; i < num; i++) {
+			if (in[i] == 0) {
+				que.add(i);
+			}
+		}
+		int idx = 0;
+		while (!que.isEmpty()) {
+			int now = que.poll();
+			res[idx++] = now;
+			for (int i: list.get(now)) {	
+				in[i]--;
+				if (in[i] == 0) {
+					que.add(i);
+				}
+			}
+		}
+		return idx == num ? res : new int[0];
+	}
+}

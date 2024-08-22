@@ -1,0 +1,42 @@
+class Solution {
+	int[][] dp;
+	boolean[] vis;
+	int maxCompatibilitySum(int[][] students, int[][] mentors) {
+		int maxScore = 0;
+		int n = mentors.length;
+		int m = mentors[0].length;
+		dp = new int[n][1024];
+		for (int i = 0; i < n; i++) {
+			Arrays.fill(dp[i],-1);
+		}
+		int[][] grid = new int[n][n];
+		for (int p = 0; p < n; p++) {
+			for (int i = 0; i < n; i++) {
+				int score = 0;
+				for (int j = 0; j < m; j++) {
+					if (mentors[i][j] == students[p][j]) {
+						score++;
+					}
+				}
+				grid[p][i] = score;
+			}
+		}
+		return solve(grid,0,0);
+	}
+	int solve(int[][] s, int i, int mask) {
+		if (i >= s.length) {
+			return 0;
+		}
+		if (dp[i][mask] != -1) {
+			return dp[i][mask];
+		}
+		int score = 0;
+		for (int k = 0; k < s.length; k++) {
+			if ((mask & (1 << k)) != 0) {
+				continue;
+			}
+			score = Math.max(score,s[i][k] + solve(s,i + 1,mask | 1 << k));
+		}
+		return dp[i][mask] = score;
+	}
+}

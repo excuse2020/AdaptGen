@@ -1,0 +1,40 @@
+class Solution {
+	TreeNode replaceValueInTree(TreeNode root) {
+		root.val = 0;
+		Queue<TreeNode> que = new LinkedList<>();
+		que.add(root);
+		while (!que.isEmpty()) {
+			int size = que.size();
+			LinkedList<TreeNode> parentnode = new LinkedList<>(que);
+			int sum = 0;
+			while (size > 0) {
+				TreeNode tr = que.remove();
+				if (tr.left != null) {
+					sum += tr.left.val;
+					que.add(tr.left);
+				}
+				if (tr.right != null) {
+					sum += tr.right.val;
+					que.add(tr.right);
+				}
+				size--;
+			}
+			for (TreeNode n: parentnode) {	
+				int tempsum = sum;
+				if (n.left != null) {
+					tempsum -= n.left.val;
+				}
+				if (n.right != null) {
+					tempsum -= n.right.val;
+				}
+				if (n.left != null) {
+					n.left.val = tempsum;
+				}
+				if (n.right != null) {
+					n.right.val = tempsum;
+				}
+			}
+		}
+		return root;
+	}
+}

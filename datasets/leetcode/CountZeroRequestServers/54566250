@@ -1,0 +1,30 @@
+class Solution {
+	int[] countServers(int n, int[][] logs, int x, int[] queries) {
+		Arrays.sort(logs,(a, b) -> {a[1] - b[1]});
+		List<int[]> queriesWithId = new ArrayList<>();
+		for (int i = 0; i < queries.length; i++) {
+			queriesWithId.add(new int{i, queries[i]});
+		}
+		Collections.sort(queriesWithId,(a, b) -> {a[1] - b[1]});
+		int i = 0;
+		int j = 0;
+		int servers = 0;
+		int count = new int[n + 1];
+		for (int[] qi: queriesWithId) {	
+			int queryIndex = qi[0];
+			int query = qi[1];
+			for (; j < logs.length && logs[j][1] <= query; ++j) {
+				if (++count[logs[j][0]] == 1) {
+					++servers;
+				}
+			}
+			for (; i < logs.length && logs[i][1] < query - x; ++i) {
+				if (--count[logs[i][0]] == 0) {
+					--servers;
+				}
+			}
+			queries[queryIndex] = n - servers;
+		}
+		return queries;
+	}
+}

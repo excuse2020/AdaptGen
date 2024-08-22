@@ -1,0 +1,35 @@
+class Solution {
+	PriorityQueue<Integer>[] graph_nodeID_to_nodeValues;
+	void addEdgeEndingWithValueOfNode(int[] nodeValues, int fromNode, int toNode, int maxNumberOfEdges) {
+		if (nodeValues[toNode] > 0 && graph_nodeID_to_nodeValues[fromNode].size() < maxNumberOfEdges) {
+			graph_nodeID_to_nodeValues[fromNode].add(nodeValues[toNode]);
+		} 
+		else if (!graph_nodeID_to_nodeValues[fromNode].isEmpty() && graph_nodeID_to_nodeValues[fromNode].peek() < nodeValues[toNode]) {
+			graph_nodeID_to_nodeValues[fromNode].poll();
+			graph_nodeID_to_nodeValues[fromNode].add(nodeValues[toNode]);
+		}
+	}
+	int calculateMaxStarSum(int[] nodeValues, int totalNodes) {
+		int maxStarSum = Integer.MIN_VALUE;
+		for (int i = 0; i < totalNodes; ++i) {
+			int sum = nodeValues[i];
+			for (int value: graph_nodeID_to_nodeValues[i]) {	
+				sum += value;
+			}
+			maxStarSum = Math.max(maxStarSum,sum);
+		}
+		return maxStarSum;
+	}
+	int maxStarSum(int[] nodeValues, int[][] edges, int maxNumberOfEdges) {
+		int totalNodes = nodeValues.length;
+		graph_nodeID_to_nodeValues = new PriorityQueue[totalNodes];
+		for (int i = 0; i < totalNodes; ++i) {
+			graph_nodeID_to_nodeValues[i] = new PriorityQueue<>();
+		}
+		for (int[] edge: edges) {	
+			addEdgeEndingWithValueOfNode(nodeValues,edge[0],edge[1],maxNumberOfEdges);
+			addEdgeEndingWithValueOfNode(nodeValues,edge[1],edge[0],maxNumberOfEdges);
+		}
+		return calculateMaxStarSum(nodeValues,totalNodes);
+	}
+}

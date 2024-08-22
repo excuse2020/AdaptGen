@@ -1,0 +1,65 @@
+class Solution {
+	int[] par;
+	int[] rank;
+	int find(int node) {
+		if (par[node] == -1) {
+			return node;
+		}
+		return par[node] = find(par[node]);
+	}
+	int[] findRedundantDirectedConnection(int[][] arr) {
+		int n = arr.length;
+		int[] deg = new int[n + 1];
+		par = new int[n + 1];
+		rank = new int[n + 1];
+		Arrays.fill(par,-1);
+		Arrays.fill(deg,-1);
+		int bl1 = -1;
+		int bl2 = -1;
+		for (int i = 0; i < n; i++) {
+			if (deg[arr[i][1]] == -1) {
+				deg[arr[i][1]] = i;
+			} 
+			else {
+				bl1 = i;
+				bl2 = deg[arr[i][1]];
+				break;
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			if (i == bl1) {
+				continue;
+			}
+			int to = arr[i][0];
+			int from = arr[i][1];
+			boolean flag = union(to,from);
+			if (flag) {
+				if (bl1 == -1) {
+					return arr[i];
+				} 
+				else {
+					return arr[bl2];
+				}
+			}
+		}
+		return arr[bl1];
+	}
+	boolean union(int to, int from) {
+		int toP = find(to);
+		int fromP = find(from);
+		if (toP == fromP) {
+			return true;
+		}
+		if (rank[toP] > rank[fromP]) {
+			par[fromP] = toP;
+		} 
+		else if (rank[toP] < rank[fromP]) {
+			par[toP] = fromP;
+		} 
+		else {
+			par[fromP] = toP;
+			rank[toP]++;
+		}
+		return false;
+	}
+}

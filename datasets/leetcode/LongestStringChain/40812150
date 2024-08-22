@@ -1,0 +1,55 @@
+class Solution {
+	boolean isPredecessor(String shorter, String longer) {
+		int shorterSize = shorter.length();
+		int longerSize = longer.length();
+		if (shorterSize + 1 != longerSize) {
+			return false;
+		}
+		int shorterPos = 0;
+		int misses = 0;
+		int i = 0;
+		while (shorterPos < shorter.length() && i < longerSize) {
+			char shorterVal = shorter.charAt(shorterPos);
+			char longerVal = longer.charAt(i);
+			if (shorterVal == longerVal) {
+				shorterPos++;
+			} 
+			else {
+				misses++;
+				if (misses > 1) {
+					return false;
+				}
+			}
+			i++;
+		}
+		return misses <= 1;
+	}
+	int longestStrChain(String[] words) {
+		int maxSolution = 1;
+		Arrays.sort(words,Comparator.comparing());
+		int[] lsc = new int[words.length];
+		Arrays.fill(lsc,1);
+		for (int i = 1; i < words.length; i++) {
+			String right = words[i];
+			for (int j = 0; j < i; j++) {
+				String left = words[j];
+				if (right.length() == left.length()) {
+					break;
+				}
+				boolean is = isPredecessor(left,right);
+				if (is) {
+					int ac = lsc[j];
+					int current = lsc[i];
+					int max = Math.max(current,ac + 1);
+					if (max > current) {
+						lsc[i] = max;
+						if (max > maxSolution) {
+							maxSolution = max;
+						}
+					}
+				}
+			}
+		}
+		return maxSolution;
+	}
+}

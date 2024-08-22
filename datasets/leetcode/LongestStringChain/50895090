@@ -1,0 +1,41 @@
+class Solution {
+	boolean check(String s, String t) {
+		int n = s.length();
+		int m = t.length();
+		if (n != m + 1) {
+			return false;
+		}
+		int i = 0, j = 0;
+		while (i < n) {
+			if (j < m && s.charAt(i) == t.charAt(j)) {
+				i++;
+				j++;
+			} 
+			else {
+				i++;
+			}
+		}
+		if (i == n && j == m) {
+			return true;
+		}
+		return false;
+	}
+	int longestStrChain(String[] words) {
+		Arrays.sort(words,(a, b) -> {Integer.compare(a.length(),b.length())});
+		int dp = new int[words.length];
+		if (words.length == 1) {
+			return 1;
+		}
+		Arrays.fill(dp,1);
+		int max = 0;
+		for (int i = 1; i < words.length; i++) {
+			for (int j = 0; j < i; j++) {
+				if (check(words[i],words[j])) {
+					dp[i] = Math.max(dp[i],dp[j] + 1);
+				}
+			}
+			max = Math.max(dp[i],max);
+		}
+		return max;
+	}
+}

@@ -1,0 +1,43 @@
+class Solution {
+	int nodeVal(int n, int i, int[][] board) {
+		int row = n, col = (i - 1) % n;
+		row -= i / n + ((i % n == 0) ? 0 : 1);
+		col = ((n - row + 1) % 2 == 0) ? col : n - col;
+		return board[row][col];
+	}
+	int snakesAndLadders(int[][] board) {
+		Queue<Integer> queue = new LinkedList<Integer>();
+		int n = board.length;
+		int target = n * n;
+		boolean visited = new boolean[(n * n) + 1];
+		queue.add(1);
+		int level = 0;
+		visited[1] = true;
+		while (queue.size() != 0) {
+			int size = queue.size();
+			while (size != 0) {
+				int node = queue.poll();
+				int end = Math.min(node + 6,n * n);
+				for (int i = node + 1; i <= end; i++) {
+					int val = nodeVal(n,i,board);
+					if (i == target || val == target) {
+						return level + 1;
+					}
+					if (val == -1) {
+						if (!visited[i]) {
+							visited[i] = true;
+							queue.add(i);
+						}
+					} 
+					else if (!visited[val]) {
+						visited[val] = true;
+						queue.add(val);
+					}
+				}
+				size--;
+			}
+			level++;
+		}
+		return -1;
+	}
+}

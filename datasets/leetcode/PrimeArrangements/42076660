@@ -1,0 +1,35 @@
+class Solution {
+	int mod = 1000000007;
+	int getNumberOfPrimes(int n) {
+		boolean[] primes = new boolean[n + 1];
+		primes[0] = true;
+		primes[1] = true;
+		for (int i = 2; i * i <= n; i++) {
+			if (!primes[i]) {
+				for (int j = i * i; j <= n; j += i) {
+					primes[j] = true;
+				}
+			}
+		}
+		int counter = 0;
+		for (boolean b: primes) {	
+			if (!b) {
+				counter++;
+			}
+		}
+		return counter;
+	}
+	long newFact(int n) {
+		long ans = 1;
+		for (int i = 2; i <= n; i++) {
+			ans = (ans % mod * i % mod) % mod;
+		}
+		return (ans % mod);
+	}
+	int numPrimeArrangements(int n) {
+		int numOfPrimes = getNumberOfPrimes(n);
+		long x = newFact(numOfPrimes) % mod;
+		long y = newFact(n - numOfPrimes) % mod;
+		return (int) (((x % mod) * (y % mod)) % mod);
+	}
+}

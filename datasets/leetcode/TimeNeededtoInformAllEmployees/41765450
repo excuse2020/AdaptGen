@@ -1,0 +1,28 @@
+class Solution {
+	void dfs(int m, List<Integer> g, int[] informTime, int curr, int[] res) {
+		if (g[m].isEmpty()) {
+			res[0] = Math.max(curr,res[0]);
+			return;
+		}
+		for (int mem: g[m]) {	
+			curr += informTime[m];
+			dfs(mem,g,informTime,curr,res);
+			curr -= informTime[m];
+		}
+	}
+	int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		int[] res = new int[1];
+		List<Integer> g = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			g[i] = new ArrayList<>();
+		}
+		for (int i = 0; i < manager.length; i++) {
+			if (i == headID) {
+				continue;
+			}
+			g[manager[i]].add(i);
+		}
+		dfs(headID,g,informTime,0,res);
+		return res[0];
+	}
+}

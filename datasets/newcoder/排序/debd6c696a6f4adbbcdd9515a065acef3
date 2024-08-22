@@ -1,0 +1,44 @@
+class Solution {
+	int[] MySort(int[] arr) {
+		if (arr == null || arr.length == 0) {
+			return arr;
+		}
+		heapSort(arr);
+		return arr;
+	}
+	void adjust(int[] arr, int heapSize, int index) {
+		int left = index * 2 + 1;
+		int right = index * 2 + 2;
+		int biggest_index = index;
+		if (left < heapSize && arr[left] > arr[biggest_index]) {
+			biggest_index = left;
+		}
+		if (right < heapSize && arr[right] > arr[biggest_index]) {
+			biggest_index = right;
+		}
+		if (index != biggest_index) {
+			swap(arr,index,biggest_index);
+			adjust(arr,heapSize,biggest_index);
+		}
+	}
+	void heapSort(int[] arr) {
+		maxHeap_init(arr);
+		for (int i = 0; i < arr.length; i++) {
+			swap(arr,0,arr.length - 1);
+			maxHeap(arr,arr.length - 1,0);
+		}
+	}
+	void maxHeap(int[] arr, int size, int begin) {
+		adjust(arr,size,begin);
+	}
+	void maxHeap_init(int arr) {
+		for (int i = arr.length / 2; i >= 0; i--) {
+			adjust(arr,arr.length,i);
+		}
+	}
+	void swap(int[] arr, int i, int j) {
+		int temp = arr[i];
+		arr[i] = arr[j];
+		arr[j] = temp;
+	}
+}

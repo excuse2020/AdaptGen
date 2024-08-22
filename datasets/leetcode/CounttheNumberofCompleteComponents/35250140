@@ -1,0 +1,64 @@
+class Solution {
+	int countCompleteComponents(int n, int[][] edges) {
+		DU du = new DU(n);
+		Map<Integer, Integer> d = new HashMap<>();
+		for (int e: edges) {	
+			if (du.find(e[0]) != du.find(e[1])) {
+				du.union(e[0],e[1]);
+			}
+		}
+		int ans = 0;
+		for (int i = 0; i < n; ++i) {
+			Integer z = du.find(i);
+			int nodes = du.rank(i);
+			if (z == i && ((nodes * (nodes - 1)) / 2) == du.edge(edges,i)) {
+				++ans;
+			}
+		}
+		return ans;
+	}
+	class DU {
+		Map<E, E> map = new HashMap<>();
+		Map<E, Integer> rank = new HashMap<>();
+		int edge(int edges, E parent) {
+			int cnt = 0;
+			for (int e: edges) {	
+				int p = e[0];
+				int p2 = e[1];
+				E x = find(p);
+				if (x == find(p2) && x == parent) {
+					++cnt;
+				}
+			}
+			return cnt;
+		}
+		E find(E x) {
+			E y = map.getOrDefault(x,x);
+			if (y != x) {
+				y = find(y);
+				map.put(x,y);
+			}
+			return y;
+		}
+		int rank(E x) {
+			return rank.getOrDefault(x,1);
+		}
+		String toString() {
+			return map.toString() + " &&& ";
+		}
+		void union(E x, E y) {
+			E p1 = find(x);
+			E p2 = find(y);
+			rank.put(p1,rank.getOrDefault(p1,1));
+			rank.put(p2,rank.getOrDefault(p2,1));
+			if (rank.get(p1) > rank.get(p2)) {
+				map.put(p2,p1);
+				rank.put(p1,rank.get(p2) + rank.get(p1));
+			} 
+			else {
+				map.put(p1,p2);
+				rank.put(p2,rank.get(p2) + rank.get(p1));
+			}
+		}
+	}
+}

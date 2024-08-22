@@ -1,0 +1,37 @@
+class Solution {
+	Stack<Integer> stack = new Stack<>();
+	void find(TreeNode root, boolean add) {
+		if (root.left == null && root.right == null) {
+			if (add == true) {
+				stack.push(root.val);
+			} 
+			else if (add == false && !stack.isEmpty() && stack.peek() == root.val) {
+				stack.pop();
+			} 
+			else {
+				stack.push(root.val);
+			}
+		}
+		if (add) {
+			if (root.left != null) {
+				find(root.left,add);
+			}
+			if (root.right != null) {
+				find(root.right,add);
+			}
+		} 
+		else {
+			if (root.right != null) {
+				find(root.right,add);
+			}
+			if (root.left != null) {
+				find(root.left,add);
+			}
+		}
+	}
+	boolean leafSimilar(TreeNode root1, TreeNode root2) {
+		find(root1,true);
+		find(root2,false);
+		return stack.size() == 0;
+	}
+}

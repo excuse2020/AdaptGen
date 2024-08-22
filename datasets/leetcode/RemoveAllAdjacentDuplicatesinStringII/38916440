@@ -1,0 +1,31 @@
+class Solution {
+	String removeDuplicates(String s, int k) {
+		if (s == null || s.length() < 0) {
+			return "";
+		}
+		Deque<Pair<Character, Integer>> arr = new ArrayDeque();
+		for (char c: s.toCharArray()) {	
+			if (!arr.isEmpty() && arr.peekLast().getKey() == c) {
+				Pair<Character, Integer> temp = arr.peekLast();
+				arr.removeLast();
+				arr.addLast(new Pair<>(temp.getKey(), temp.getValue() + 1));
+			} 
+			else {
+				arr.addLast(new Pair<>(c, 1));
+			}
+			if (arr.peekLast().getValue() == k) {
+				arr.removeLast();
+			}
+		}
+		String result = "";
+		while (!arr.isEmpty()) {
+			Pair<Character, Integer> temp = arr.poll();
+			int i = temp.getValue();
+			while (i > 0) {
+				result += temp.getKey();
+				i--;
+			}
+		}
+		return result;
+	}
+}

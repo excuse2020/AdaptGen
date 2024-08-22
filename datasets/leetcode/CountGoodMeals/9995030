@@ -1,0 +1,47 @@
+class Solution {
+	int countPairs(int[] deliciousness) {
+		int[] tp = new int[22];
+		for (int i = 0, m = 1; i < tp.length; i++) {
+			tp[i] = m;
+			m = (m << 1);
+		}
+		int[] d2 = new int[deliciousness.length];
+		int l2 = 0;
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int one: deliciousness) {	
+			if (map.containsKey(one)) {
+				map.put(one,map.get(one) + 1);
+			} 
+			else {
+				map.put(one,1);
+				d2[l2] = one;
+				l2++;
+			}
+		}
+		long rV = 0;
+		for (int i1 = 0; i1 < l2; i1++) {
+			int num1 = d2[i1];
+			for (int i = 0; i < tp.length; i++) {
+				int num2 = tp[i] - num1;
+				if (num2 >= num1 && map.containsKey(num2)) {
+					int value1 = map.get(num1);
+					if (num1 == num2) {
+						if (value1 > 1) {
+							rV += getC2(value1);
+							rV %= 1000_000_007;
+						}
+					} 
+					else {
+						int value2 = map.get(num2);
+						rV += value1 * value2;
+						rV %= 1000_000_007;
+					}
+				}
+			}
+		}
+		return (int) (rV);
+	}
+	long getC2(long n) {
+		return (n * (n - 1)) / 2;
+	}
+}

@@ -1,0 +1,37 @@
+class Solution {
+	int brickwall(ArrayList<ArrayList<Integer>> wall) {
+		Map<Integer, Integer> map = new HashMap<>();
+		int max = 0;
+		for (ArrayList<Integer> row: wall) {	
+			int tempSum = 0;
+			for (int i = 0; i < row.size() - 1; i++) {
+				tempSum += row.get(i);
+				if (map.containsKey(tempSum)) {
+					map.put(tempSum,map.get(tempSum) + 1);
+				} 
+				else {
+					map.put(tempSum,1);
+				}
+			}
+		}
+		int index = 0;
+		for (Entry<Integer, Integer> entry: map.entrySet()) {	
+			if (entry.getValue() > max) {
+				max = entry.getValue();
+				index = entry.getKey();
+			}
+		}
+		int noNeedCount = 0;
+		for (ArrayList<Integer> row: wall) {	
+			int tempSum = 0;
+			for (int i = 0; i < row.size() - 1; i++) {
+				tempSum += row.get(i);
+				if (tempSum == index) {
+					noNeedCount++;
+					break;
+				}
+			}
+		}
+		return wall.size() - noNeedCount;
+	}
+}

@@ -1,0 +1,47 @@
+class Solution {
+	TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+		if (p.val < root.val && q.val < root.val) {
+			return lowestCommonAncestor(root.left,p,q);
+		} 
+		else if (p.val > root.val && q.val > root.val) {
+			return lowestCommonAncestor(root.right,p,q);
+		} 
+		else {
+			return root;
+		}
+	}
+}
+class Solution {
+	TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+		Map<TreeNode, TreeNode> map = new HashMap<>();
+		TreeNode cur = root;
+		map.put(root,null);
+		while (cur != p) {
+			if (p.val < cur.val) {
+				map.put(cur.left,cur);
+				cur = cur.left;
+			} 
+			else {
+				map.put(cur.right,cur);
+				cur = cur.right;
+			}
+		}
+		cur = root;
+		TreeNode prev = root;
+		while (prev != q) {
+			if (!map.containsKey(cur)) {
+				return prev;
+			} 
+			else {
+				prev = cur;
+			}
+			if (q.val < cur.val) {
+				cur = cur.left;
+			} 
+			else {
+				cur = cur.right;
+			}
+		}
+		return prev;
+	}
+}

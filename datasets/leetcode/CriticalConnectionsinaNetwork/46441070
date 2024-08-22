@@ -1,0 +1,36 @@
+class Solution {
+	List<List<Integer>> b = new ArrayList<>();
+	int timer = 1;
+	List<List<Integer>> criticalConnections(int v, List<List<Integer>> c) {
+		int vis = new int[v];
+		int time = new int[v];
+		int low = new int[v];
+		List<List<Integer>> e = new ArrayList<>();
+		for (int i = 0; i < v; i++) {
+			e.add(new ArrayList<>());
+		}
+		for (int i = 0; i < c.size(); i++) {
+			e.get(c.get(i).get(0)).add(c.get(i).get(1));
+			e.get(c.get(i).get(1)).add(c.get(i).get(0));
+		}
+		dfs(0,-1,vis,time,low,e);
+		return b;
+	}
+	void dfs(int node, int parent, int vis, int time, int low, List<List<Integer>> e) {
+		vis[node] = 1;
+		time[node] = low[node] = timer;
+		timer++;
+		for (int i: e.get(node)) {	
+			if (i == parent) {
+				continue;
+			}
+			if (vis[i] == 0) {
+				dfs(i,node,vis,time,low,e);
+				if (time[node] < low[i]) {
+					b.add(Arrays.asList(node,i));
+				}
+			}
+			low[node] = Math.min(low[i],low[node]);
+		}
+	}
+}

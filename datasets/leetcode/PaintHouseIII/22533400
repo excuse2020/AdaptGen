@@ -1,0 +1,32 @@
+class Solution {
+	int minCost(int[] houses, int[][] cost, int m, int n, int target) {
+		int MAX_COST = 1000001;
+		int[][][] dp = new int[m + 1][n + 1][target + 1];
+		for (int house = 1; house < m + 1; house++) {
+			for (int color = 1; color < n + 1; color++) {
+				Arrays.fill(dp[house][color],MAX_COST);
+				int newCost = cost[house - 1][color - 1];
+				if (houses[house - 1] != 0) {
+					newCost = (houses[house - 1] == color) ? 0 : MAX_COST;
+				}
+				for (int t = 1; t < Math.min(house + 1,target + 1); t++) {
+					for (int prevColor = 1; prevColor < n + 1; prevColor++) {
+						if (color == prevColor) {
+							dp[house][color][t] = Math.min(dp[house][color][t],dp[house - 1][color][t] + newCost);
+						} 
+						else {
+							dp[house][color][t] = Math.min(dp[house][color][t],dp[house - 1][prevColor][t - 1] + newCost);
+						}
+					}
+				}
+			}
+		}
+		int res = 1000001;
+		for (int color = 1; color < n + 1; color++) {
+			if (dp[m][color][target] < res) {
+				res = dp[m][color][target];
+			}
+		}
+		return res >= 1000001 ? -1 : res;
+	}
+}

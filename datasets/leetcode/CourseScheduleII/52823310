@@ -1,0 +1,47 @@
+class Solution {
+	List<Integer> result = new ArrayList<>();
+	int[] findOrder(int numCourses, int[][] prerequisites) {
+		List<List<Integer>> graph = new ArrayList<>();
+		for (int i = 0; i < numCourses; ++i) {
+			graph.add(new ArrayList<>());
+		}
+		for (int i = 0; i < prerequisites.length; ++i) {
+			int from = prerequisites[i][1];
+			int to = prerequisites[i][0];
+			graph.get(from).add(to);
+		}
+		boolean[] visited = new boolean[numCourses];
+		boolean[] currentPath = new boolean[numCourses];
+		Stack<Integer> stack = new Stack<>();
+		for (int i = 0; i < numCourses; ++i) {
+			if (!visited[i] && isCycle(graph,i,visited,currentPath,stack)) {
+				return new int[0];
+			}
+		}
+		int[] ans = new int[stack.size()];
+		int i = 0;
+		while (!stack.isEmpty()) {
+			ans[i++] = stack.pop();
+		}
+		return ans;
+	}
+	boolean isCycle(List<List<Integer>> graph, int node, boolean[] visited, boolean[] currentPath, Stack<Integer> stack) {
+		visited[node] = true;
+		currentPath[node] = true;
+		for (int v: graph.get(node)) {	
+			if (!visited[v]) {
+				if (isCycle(graph,v,visited,currentPath,stack)) {
+					return true;
+				}
+			} 
+			else {
+				if (currentPath[v]) {
+					return true;
+				}
+			}
+		}
+		stack.push(node);
+		currentPath[node] = false;
+		return false;
+	}
+}

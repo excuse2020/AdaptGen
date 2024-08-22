@@ -1,0 +1,33 @@
+class Solution {
+	String mostCommonWord(String paragraph, String[] banned) {
+		String str = preprocess(paragraph);
+		String[] words = str.split("\\\\s+");
+		HashMap<String, Integer> map = new HashMap<>();
+		for (String word: words) {	
+			map.put(word,map.getOrDefault(word,0) + 1);
+		}
+		for (String word: banned) {	
+			if (map.containsKey(word)) {
+				map.remove(word);
+			}
+		}
+		String res = null;
+		for (String word: map.keySet()) {	
+			if (res == null || map.get(word) > map.get(res)) {
+				res = word;
+			}
+		}
+		return res;
+	}
+	String preprocess(String s) {
+		s = s.replace("!"," ");
+		s = s.replace("?"," ");
+		s = s.replace("\'"," ");
+		s = s.replace(","," ");
+		s = s.replace(";"," ");
+		s = s.replace("."," ");
+		s = s.trim();
+		s = s.toLowerCase();
+		return s;
+	}
+}

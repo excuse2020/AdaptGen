@@ -1,0 +1,21 @@
+class Solution {
+	int max = 0;
+	int minProcessingTime(List<Integer> processorTime, List<Integer> tasks) {
+		Collections.sort(tasks);
+		Collections.sort(processorTime);
+		int len = tasks.size() / processorTime.size();
+		minProcessingTime(processorTime,tasks,processorTime.size() - 1,0,len);
+		return max;
+	}
+	void minProcessingTime(List<Integer> processorTime, List<Integer> tasks, int processor, int taskStart, int chunk) {
+		if (taskStart == tasks.size() && processor == 0) {
+			return;
+		}
+		int maxTask = tasks.get(taskStart + chunk - 1);
+		int p_time = processorTime.get(processor);
+		max = Math.max(maxTask + p_time,max);
+		if ((taskStart + chunk - 1) < tasks.size() && processor > 0) {
+			minProcessingTime(processorTime,tasks,processor - 1,(taskStart + chunk),chunk);
+		}
+	}
+}

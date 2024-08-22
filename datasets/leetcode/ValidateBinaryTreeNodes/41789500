@@ -1,0 +1,56 @@
+class Solution {
+	boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+		Map<Integer, List<Integer>> parent_to_children = new HashMap<>();
+		HashMap<Integer, Integer> child_to_parent = new HashMap<>();
+		for (int i = 0; i < n; i++) {
+			if (leftChild[i] != -1) {
+				parent_to_children.computeIfAbsent(i,(k) -> {new ArrayList<>()}).add(leftChild[i]);
+				if (child_to_parent.containsKey(leftChild[i])) {
+					return false;
+				} 
+				else {
+					child_to_parent.put(leftChild[i],i);
+				}
+			}
+			if (rightChild[i] != -1) {
+				parent_to_children.computeIfAbsent(i,(k) -> {new ArrayList<>()}).add(rightChild[i]);
+				if (child_to_parent.containsKey(rightChild[i])) {
+					return false;
+				} 
+				else {
+					child_to_parent.put(rightChild[i],i);
+				}
+			}
+		}
+		int root = -1;
+		for (int i = 0; i < n; i++) {
+			if (!child_to_parent.containsKey(i)) {
+				if (root != -1) {
+					return false;
+				} 
+				else {
+					root = i;
+				}
+			}
+		}
+		if (root == -1) {
+			return false;
+		}
+		boolean[] visited = new boolean[n];
+		Queue<Integer> queue = new LinkedList<>();
+		int count = 1;
+		queue.add(root);
+		visited[root] = true;
+		while (!queue.isEmpty()) {
+			int node = queue.poll();
+			for (int child: parent_to_children.getOrDefault(node,Collections.emptyList())) {	
+				if (!visited[child]) {
+					visited[child] = true;
+					count++;
+					queue.add(child);
+				}
+			}
+		}
+		return count == n;
+	}
+}

@@ -20,6 +20,7 @@ public class EditDistanceCalculator {
                 }
             }
         }
-        return 1 - (2.0 * dp[list1.size()][list2.size()] / (list1.size() + list2.size()));
+//        return 1 - (2.0 * dp[list1.size()][list2.size()] / (list1.size() + list2.size()));
+        return 1 - (1.0 * dp[list1.size()][list2.size()] / Math.max(list1.size(), list2.size()));
     }
 }

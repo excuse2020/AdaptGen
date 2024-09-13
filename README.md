@@ -8,7 +8,7 @@ AdaptGen is a problem-adaptive solution template generation method for online pr
 - **Efficient Encoding Strategy**: A linear hashing sequence encoding strategy is used for solution representation.
 - **Evolutionary Operators**: Selection and crossover operators with de-duplication, random crossover, and stratified selection to maintain diversity.
 - **Custom Fitness Function**: Directs the evolutionary process towards effective solution templates.
-- **Semantic Abstraction and Core Code-Hiding**: Transform evolved solutions into final templates by abstracting semantic elements and hiding core code.
+- **Core Code-Hiding**: Transform evolved solutions into final templates by hiding core code.
 
 ### Datasets
 

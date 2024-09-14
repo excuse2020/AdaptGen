@@ -14,8 +14,8 @@ AdaptGen is a problem-adaptive solution template generation method for online pr
 
 Two datasets were constructed from popular platforms:
 
-- **LeetCode**: 841 programming tasks with a total of 2,730 solutions.
-- **NowCoder**: 156 programming tasks with a total of 489 solutions.
+- **LeetCode**: 841 programming tasks with a total of 2,730 categories.
+- **NowCoder**: 156 programming tasks with a total of 489 categories.
 
 ### Evaluation Results
 

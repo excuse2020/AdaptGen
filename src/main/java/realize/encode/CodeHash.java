@@ -1,8 +1,10 @@
 package realize.encode;
 
+import realize.process.Formatting;
 import realize.process.MatchExp;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,7 +95,6 @@ public class CodeHash {
     public static void insertCode(String code, String oriExp) throws IOException {
 
         String exp = oriExp.replaceAll("SIMPLE_NAME\\$(.*?)\\$", "SIMPLE_NAME").replaceAll("SIMPLE_TYPE\\$(.*?)\\$", "SIMPLE_TYPE");
-
         if (codeToHash.containsKey(code)) return;
 
         int codeHash = 0;
@@ -108,7 +109,7 @@ public class CodeHash {
 
         // exp需要创建
         if (expHash == 0) {
-            for (char c : code.toCharArray()) {
+            for (char c : exp.toCharArray()) {
                 expHash += c;
             }
             while (expToHash.containsValue(expHash)) {

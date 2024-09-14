@@ -50,12 +50,11 @@ To set up the project in IntelliJ IDEA and manage dependencies with Maven:
 
 2. **Import the Project**:
    - Navigate to the root directory of the `AdaptGen` project that you cloned.
-   - Select the `pom.xml` file and click **"Open"**.
-   - When prompted, select **"Open as Project"**.
+   - Select the project directory and click **"Open"**.
 
 3. **Import Project from Maven**:
    - If IntelliJ IDEA detects a Maven project, it will automatically configure it for you. 
-   - If not, go to **"File > Project Structure > Project"**, and set the **Project SDK** to the appropriate version of Java.
+   - If not, go to **"File > Project Structure > Project"**, and set the **Project SDK** to the appropriate version of Java (JDK 17).
 
 4. **Download Dependencies**:
    - IntelliJ IDEA should automatically start downloading the dependencies defined in the `pom.xml` file. If it doesn't, you can manually trigger it:

@@ -1,8 +1,12 @@
 package realize.fitness;
 
 import realize.encode.CodeHash;
+import realize.process.Formatting;
+import realize.process.MatchExp;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -163,27 +167,29 @@ public class ControlStatementFeature {
     }
 
 
-    public static void main(String[] args) {
-        ControlStatementFeature csf1 = new ControlStatementFeature();
-        csf1.csf = List.of(0, 2, 3, 3, 3, 3);
-        csf1.matrix = List.of(
-                new int[]{0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0},
-                new int[]{0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0},
-                new int[]{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
-                new int[]{0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
-                new int[]{0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0},
-                new int[]{0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0});
+    public static void main(String[] args) throws IOException {
+        String code = "class Solution {\n" +
+                "int fun() {\n" +
+                "for (int i = 0; i < 10; i++) {\n" +
+                "if (i % 2 == 0) {\n" +
+                "f1(i);\n" +
+                "} else {\n" +
+                "f2(i);\n" +
+                "}\n" +
+                "}\n" +
+                "return sum;\n" +
+                "}\n" +
+                "}";
+        code = Formatting.formatCode(code);
+        List<String> codes = Arrays.stream(code.split("\n")).toList();
+        List<String> exps = Arrays.stream(MatchExp.getMatchExpByCode(code).split("\n")).toList();
+        CodeHash.init();
+        for (int i = 0; i < codes.size(); i++) {
+            CodeHash.insertCode(codes.get(i), exps.get(i));
+        }
 
-        ControlStatementFeature csf2 = new ControlStatementFeature();
-        csf2.csf = List.of(0, 3, 3, 3, 3, 3);
-        csf2.matrix = List.of(
-                new int[]{1, 0, 3, 4, 0, 0, 0, 0, 1, 0, 0, 0},
-                new int[]{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
-                new int[]{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
-                new int[]{0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0},
-                new int[]{0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0},
-                new int[]{0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0});
-        System.out.println(csf1.calculateSimilarity(csf2));
+        ControlStatementFeature csf1 = new ControlStatementFeature(CodeHash.codesToExpHashs(codes));
+        System.out.println(csf1);
     }
 
 }

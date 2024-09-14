@@ -86,4 +86,4 @@ To set up the project in IntelliJ IDEA and manage dependencies with Maven:
 
 ## Contact
 
-For questions, please contact the project maintainers at [474839426@qq.com].
+For questions, please contact the project maintainers at [zhangguowei@nuaa.edu.cn].

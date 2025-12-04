@@ -1,3 +1,20 @@
+## Quick Navigation
+
+- [AdaptGen](#adaptgen)
+  - [Key Features](#key-features)
+  - [Datasets](#datasets)
+  - [Evaluation Results](#evaluation-results)
+  - [Project Components](#project-components)
+- [Setup](#setup)
+  - [Prerequisites](#prerequisites)
+  - [Environment Setup](#environment-setup)
+- [How to Use AdaptGen](#how-to-use-adaptgen)
+- [Acknowledgements](#acknowledgements)
+- [Contact](#contact)
+- [Appendix](#appendix)
+  - [Detailed Evaluation Methods for RQ2](#detailed-evaluation-methods-for-rq2-how-well-do-the-solution-templates-generated-by-adaptgen-meet-the-various-template-requirements-)
+  - [Sensitivity Analysis](#sensitivity-analysis)
+
 ## AdaptGen
 
 AdaptGen is a problem-adaptive solution template generation method for online programming platforms. It analyzes and extracts problem-solving patterns from various programming problems' solutions and generates solution templates tailored to each problem. The templates contain only the basic algorithm structure and necessary boilerplate code, leaving the core logic for programmers to complete.

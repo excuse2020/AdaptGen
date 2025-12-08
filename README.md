@@ -186,6 +186,6 @@ Based on systematic experiments across LeetCode and NowCoder datasets, we determ
 
 ### **Side-by-Side Fine-Grained Comparison Tables**
 
-![vsLLM](img/LLM Code Generation vs. AdaptGen Template Generation.png)
+![vsLLM](img/vsLLMCG.png)
 
-![vsGP](img/AdaptGen vs. Code Repair in GP.png)
+![vsGP](img/vsGP.png)

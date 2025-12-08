@@ -14,6 +14,7 @@
 - [Appendix](#appendix)
   - [Detailed Evaluation Methods for RQ2](#detailed-evaluation-methods-for-rq2-how-well-do-the-solution-templates-generated-by-adaptgen-meet-the-various-template-requirements-)
   - [Sensitivity Analysis](#sensitivity-analysis)
+  - [Side-by-Side Fine-Grained Comparison Tables](#side-by-side-fine-grained-comparison-tables)
 
 ## AdaptGen
 
@@ -127,23 +128,17 @@ For questions, please contact the project maintainers at [zhangguowei@nuaa.edu.c
 
 ### Sensitivity Analysis
 
-The GA parameter set used in our experiments was initially tuned on a small-scale dataset to balance solution quality and evolutionary efficiency, and was later found to perform satisfactorily on the full dataset. This prompted us to conduct a sensitivity analysis on the complete LeetCode and NowCoder datasets to better understand the influence of individual parameters and to explore potentially better configurations.
+The GA parameter set used in our experiments was initially tuned on a small-scale dataset to balance solution quality and evolutionary efficiency, and was later found to perform well on the full dataset. This prompted us to conduct a sensitivity analysis on the complete LeetCode and NowCoder datasets to better understand the influence of individual parameters and to explore potentially better configurations.
 
-We adopted a control-variate strategy: two parameters were held fixed while the third was varied. This allowed us to isolate and examine the individual effect of each parameter. 
+We adopted a control-variate strategy: two parameters were held fixed while the third was varied. We also ran each parameter setting under the same experimental environment (including re-running the previously used setting of 0.7, 100, 500). This allowed us to isolate and examine the individual effect of each parameter.
 
-**Evaluation Metrics**
-
-- **Convergence Performance**: Assessed using the proportion of converged categories.
-- **Operational Stability**: For categories that did not converge within 10 minutes, the best individual from the final population was still recorded as a **valid result**, together with converged outcomes. Categories failing due to memory exhaustion were considered **invalid**. The ratio of valid results reflects AdaptGen's operational stability.
-- **Solution Quality**: Evaluated based on fitness scores, where invalid results were assigned zero. We report the median, mean, and standard deviation of these scores.
-- **Threshold Performance**: Analyzed the proportion of valid results surpassing fitness thresholds of 0.6, 0.7, 0.8, and 0.9 to gauge the ability to generate solutions at different quality tiers.
-- **Efficiency**: Measured as the median time per valid result across all categories.
-
-These metrics together offer a multi-faceted view of how each parameter affects the behavior of AdaptGen.
+In terms of evaluation metrics, the convergence performance of the genetic algorithm was assessed using the proportion of converged categories. For categories that did not converge within 10 minutes, the best individual from the final population was still recorded as a valid result, together with converged outcomes. Categories failing due to memory exhaustion or stack overflow were considered invalid. The ratio of valid results reflects the operational stability of AdaptGen. We further evaluated overall solution quality based on fitness scores, where invalid results were assigned zero. The median, mean, and standard deviation of these scores were reported. The proportion of valid results surpassing fitness thresholds of 0.6, 0.7, 0.8, and 0.9 was also analyzed to gauge the ability to generate solutions at different quality tiers. Efficiency was measured as the median time per valid result across all categories. These metrics together offer a multi-faceted view of how each parameter affects the behavior of AdaptGen.
 
 #### Mutation Rate
 
-With population size fixed at 100 and termination criterion $n=500$, mutation rates ranging from 0 to 1 (0, 0.1, 0.3, 0.5, 0.7, 0.9, 1) were evaluated (see Table VI, first section for LeetCode, fourth section for  NowCoder).
+With population size fixed at 100 and termination criterion $n=500$, mutation rates ranging from 0 to 1 (0, 0.1, 0.3, 0.5, 0.7, 0.9, 1) were evaluated (see Table IV, first section for LeetCode, fourth section for  NowCoder).
+
+![image-20251202214950644](img/image-20251202214950644.png)
 
 **LeetCode Results**: Without mutation (rate = 0), AdaptGen exhibits severe premature convergence, yielding a low median fitness of 0.237, a mean of 0.358, and only 21.0% and 8.0% of templates exceeding the 0.6 and 0.8 thresholds, respectively. As the mutation rate increases, performance improves consistently. At a rate of 0.7, the median fitness reaches 0.738, with strong threshold performance: 86.1% > 0.6 and 65.0% > 0.7. Both the converged and valid rates remain high (96.7% and 99.8%). Beyond 0.7, improvements become marginal; for instance, at rate 0.9, the median remains at 0.737, and the mean slightly decreases to 0.708. Computation time remains similar within 38-40s for rates 0.7-1.0, indicating no advantage in further increasing the rate. Therefore, on the LeetCode dataset, considering all performance and efficiency metrics, a mutation rate of 0.7 is sufficient and achieves the best overall performance.
 
@@ -157,7 +152,7 @@ With population size fixed at 100 and termination criterion $n=500$, mutation ra
 
 #### Population Size
 
-Fixing the mutation rate at 0.7 and $n=500$, we compared population sizes of 100, 200, and 300 (see TableVI, second section for LeetCode, fifth section for  NowCoder).
+Fixing the mutation rate at 0.7 and $n=500$, we compared population sizes of 100, 200, and 300 (see Table IV, second section for LeetCode, fifth section for  NowCoder).
 
 **LeetCode Results**: Increasing the population size improves fitness, with the median rising from 0.738 (size 100) to 0.747 (size 300), and the proportion of solutions above 0.6 increasing from 86.1% to 88.9%. However, the number of converged solutions decreases from 2,640 to 2,476 as the population grows. This is because larger populations require more computational resources per iteration, increasing the time needed for each evolutionary round, leading to more records failing to converge within the 10-minute time limit. The computation time increases substantially: from 39.3s (size 100) to 1m 39.1s (size 300).
 
@@ -171,7 +166,7 @@ Fixing the mutation rate at 0.7 and $n=500$, we compared population sizes of 100
 
 #### Termination Criterion
 
-With mutation rate = 0.7 and population size = 100, termination criteria of $n=500$, 1000, 1500, and 2000 were tested (see TableVI, third section for LeetCode, sixth section for  NowCoder).
+With mutation rate = 0.7 and population size = 100, termination criteria of $n=500$, 1000, 1500, and 2000 were tested (see Table IV, third section for LeetCode, sixth section for  NowCoder).
 
 **LeetCode Results**: Extending $n$ from 500 to 1500 leads to fitness improvements: the median increases from 0.738 to 0.742, and the proportion of solutions above 0.6 rises from 86.1% to 89.4%. However, runtime more than doubles from 39.3s to 1m18.0s. At $n=2000$, performance degrades significantly: the median fitness drops to 0.713, and the number of valid results decreases to 2,154 (out of 2,730). This decline in valid results consequently lowers the overall fitness values, likely due to insufficient system resources from excessive evolution cycles. Notably, our results indicate that AdaptGen’s performance could improve with more powerful computational resources. The current best mean fitness (0.726) and high-threshold performance (26.2% > 0.8) are achieved at $n = 1500$, even with some unconverged cases due to time constraints. With better hardware and extended time limits, it could search more effectively, potentially yielding even better performance. Furthermore, the $n = 2000$ configuration would likely overcome current resource limitations to produce more valid results with enhanced performance.
 
@@ -187,4 +182,10 @@ With mutation rate = 0.7 and population size = 100, termination criteria of $n=5
 
 Based on systematic experiments across LeetCode and NowCoder datasets, we determine the optimal parameters for AdaptGen: **mutation rate 0.7, population size 100, and termination criterion n=500**, providing the best efficiency-quality trade-off under constrained resources. When more resources are available, increasing population size or extending $n$ can further enhance solution quality, demonstrating AdaptGen's adaptability to diverse computational scenarios.
 
-![image-20251202214950644](img/image-20251202214950644.png)
+------
+
+### **Side-by-Side Fine-Grained Comparison Tables**
+
+![vsLLM](img/LLM Code Generation vs. AdaptGen Template Generation.png)
+
+![vsGP](img/AdaptGen vs. Code Repair in GP.png)

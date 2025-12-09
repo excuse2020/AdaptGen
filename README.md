@@ -72,11 +72,12 @@ To set up the project in IntelliJ IDEA and manage dependencies with Maven:
    - If not, go to **"File > Project Structure > Project"**, and set the **Project SDK** to the appropriate version of Java (JDK 17).
    
 4. **Download Dependencies**:
+   
    - IntelliJ IDEA should automatically start downloading the dependencies defined in the `pom.xml` file. If it doesn't, you can manually trigger it:
      - Open the **"Maven"** tool window from the right sidebar.
      - Click on the **"Reload All Maven Projects"** button (two arrows forming a circle).
-
-5. **Build the Project**:s
+   
+5. **Build the Project**:
    
    - Once the dependencies are downloaded, you can build the project by clicking **"Build > Build Project"** from the top menu or using the shortcut **`Ctrl+F9`**.
    

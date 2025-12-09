@@ -3,9 +3,8 @@ package realize.process;
 import org.eclipse.jdt.core.dom.*;
 import realize.utils.ASTUtils;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -16,9 +15,16 @@ public class MatchExp {
 
     static {
         try {
-            commonClasses = new HashSet<>(Files.readAllLines(Paths.get("files/commonClasses.txt")));
+            InputStream inputStream = MatchExp.class.getClassLoader().getResourceAsStream("files/commonClasses.txt");
+            if (inputStream == null) {
+                throw new IOException("Resource files/commonClasses.txt not found in classpath");
+            }
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+                commonClasses = reader.lines().collect(Collectors.toSet());
+            }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.err.println("Error loading commonClasses.txt: " + e.getMessage());
+            commonClasses = new HashSet<>();
         }
     }
 

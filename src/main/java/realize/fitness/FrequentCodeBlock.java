@@ -1,107 +1,109 @@
 package realize.fitness;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FrequentCodeBlock {
 
-    public List<List<Integer>> dataset;
-    public int min_support;
-    public List<List<Integer>> frequentCodeBlock;
+    private List<List<Integer>> sequences; 
+    private int minSupport; 
+    private int maxStep; 
+    private List<List<Integer>> frequentPatterns = new ArrayList<>(); 
 
-    public FrequentCodeBlock(List<List<Integer>> dataset, int min_support) throws IOException {
-        this.dataset = dataset;
-        this.min_support = min_support;
-        this.frequentCodeBlock = getFrequentCodeBlock();
+    public FrequentCodeBlock(List<List<Integer>> sequences, int minSupport, int maxStep) {
+        this.sequences = sequences;
+        this.minSupport = minSupport;
+        this.maxStep = maxStep;
     }
 
-    public List<List<Integer>> getFrequentCodeBlock() throws IOException {
-        List<List<Integer>> res = new ArrayList<>();
-        List<List<Integer>> len_x_list = new ArrayList<>();
-        len_x_list.add(new ArrayList<>());
+    public void mine() {
+        Map<Integer, List<Integer>> initialProjection = buildInitialProjection(sequences);
+        prefixSpan(new ArrayList<>(), initialProjection);
+    }
 
-        Map<List<Integer>, List<List<Integer>>> postfixs = new HashMap<>();
+    private Map<Integer, List<Integer>> buildInitialProjection(List<List<Integer>> sequences) {
+        Map<Integer, List<Integer>> projection = new HashMap<>();
+        for (int seqIndex = 0; seqIndex < sequences.size(); seqIndex++) {
+            List<Integer> sequence = sequences.get(seqIndex);
+            for (int i = 0; i < sequence.size(); i++) {
+                int item = sequence.get(i);
+                projection.computeIfAbsent(item, k -> new ArrayList<>()).add(seqIndex * 1000 + i);
+            }
+        }
+        return projection;
+    }
 
-        while (true) {
+    private void prefixSpan(List<Integer> prefix, Map<Integer, List<Integer>> projection) {
+        for (Map.Entry<Integer, List<Integer>> entry : projection.entrySet()) {
+            int item = entry.getKey();
+            List<Integer> projectedIndexes = entry.getValue();
 
-            List<List<Integer>> postfix;
-            List<List<Integer>> len_temp = new ArrayList<>();
+            if (projectedIndexes.size() < minSupport) continue;
 
-            boolean flag = false;
+            List<Integer> newPattern = new ArrayList<>(prefix);
+            newPattern.add(item);
+            frequentPatterns.add(newPattern);
 
-            for (List<Integer> s : len_x_list) {
-                Map<Integer, Integer> len_x = new HashMap<>();
-                if (s.isEmpty()) {
-                    postfix = new ArrayList<>(dataset);
-                } else {
-                    postfix = getPostfix(s.subList(s.size() - 1, s.size()), postfixs.get(s.subList(0, s.size() - 1)));
+            Map<Integer, List<Integer>> newProjection = new HashMap<>();
+            for (int index : projectedIndexes) {
+                int seqIndex = index / 1000;
+                int pos = index % 1000;
+                List<Integer> sequence = sequences.get(seqIndex);
+
+                for (int i = pos + 1; i < sequence.size() && i <= pos + maxStep; i++) {
+                    int nextItem = sequence.get(i);
+                    newProjection.computeIfAbsent(nextItem, k -> new ArrayList<>())
+                            .add(seqIndex * 1000 + i);
                 }
-
-                postfixs.put(s, postfix);
-
-                for (List<Integer> t : postfix) {
-                    for (Integer c : t) {
-                        len_x.put(c, len_x.getOrDefault(c, 0) + 1);
-                    }
-                }
-                List<Integer> filter = len_x.entrySet().stream().filter(t -> t.getValue() >= min_support).map(Map.Entry::getKey).toList();
-                if (!filter.isEmpty()) flag = true;
-                len_temp.addAll(filter.stream().map(x -> {List<Integer> t = new ArrayList<>(s); t.add(x); return t;}).toList());
             }
-            len_x_list = len_temp;
-            res.addAll(len_temp);
-            if (!flag) break;
+
+            prefixSpan(newPattern, newProjection);
         }
-        return res;
     }
 
-    public List<List<Integer>> getPostfix(List<Integer> s, List<List<Integer>> list) throws IOException {
-        List<List<Integer>> res = new ArrayList<>();
-        for (List<Integer> t : list) {
-            int i = getSubListIndex(t, s);
-            if (i != t.size()) {
-                res.add(t.subList(i, t.size()));
-            }
-        }
-        return res;
-    }
-
-    public int getSubListIndex(List<Integer> s, List<Integer> subList) {
-        int i = 0, j = 0;
-        while (i < s.size() && j < subList.size()) {
-            if (s.get(i).equals(subList.get(j))) {
-                j++;
-            }
-            i++;
-        }
-        return i;
-    }
-
-    public double getFreCBRatio(List<Integer> codes) {
-        if (frequentCodeBlock.isEmpty()) {
+    public double getFreCBRatio(List<Integer> code) {
+        if (frequentPatterns.isEmpty()) {
             return 1;
         }
+        if (code == null || code.isEmpty()) return 0;
         int cnt = 0;
-        for (List<Integer> cb : frequentCodeBlock) {
-            if (getSubListIndex(codes, cb) != codes.size()) {
+        for (List<Integer> cb : frequentPatterns) {
+            int index = getSubListIndex(code, cb);
+            if (index >= 0 && index < code.size()) {  
                 cnt++;
             }
         }
-        return 1.0 * cnt / frequentCodeBlock.size();
+        return 1.0 * cnt / frequentPatterns.size();
     }
 
-    public static void main(String[] args) throws IOException {
+    public int getSubListIndex(List<Integer> s, List<Integer> subList) {
+        if (s == null || subList == null) {
+            return -1;  
+        }
+        if (subList.isEmpty()) {
+            return 0;  
+        }
+        if (s.isEmpty()) {
+            return -1;  
+        }
 
-        List<Integer> list1 = List.of(1, 2, 3, 5, 4);
-        List<Integer> list2 = List.of(1, 2, 5, 3, 6);
-        List<Integer> list3 = List.of(1, 7, 2, 3, 8);
-        List<Integer> list4 = List.of(1, 2, 9, 10, 3);
-        List<Integer> list5 = List.of(1, 11, 12, 3);
-        List<List<Integer>> t = List.of(list1, list2, list3, list4, list5);
+        for (int start = 0; start < s.size(); start++) {
+            int i = start;
+            int j = 0;
+            while (i < s.size() && j < subList.size()) {
+                if (s.get(i).equals(subList.get(j))) {
+                    j++;
+                }
+                i++;
+            }
+            if (j == subList.size()) {  
+                return start;  
+            }
+        }
+        return s.size();  
+    }
 
-        System.out.println(new FrequentCodeBlock(t, 4).getFrequentCodeBlock());
+    // 获取结果
+    public List<List<Integer>> getFrequentPatterns() {
+        return frequentPatterns;
     }
 }

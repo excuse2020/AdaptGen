@@ -73,8 +73,6 @@ public class ControlStatementFeature {
             return 0;
         }
         dfs(matrix, p.matrix, new ArrayList<>(), 0, csf, p.csf);
-        // return (int) (sims.stream().mapToDouble(Double::doubleValue).average().orElse(0) * 100);
-        //System.out.println(sims);
         return sims.stream().mapToDouble(Double::doubleValue).max().orElse(0);
     }
 
@@ -165,31 +163,4 @@ public class ControlStatementFeature {
         }
         return res;
     }
-
-
-    public static void main(String[] args) throws IOException {
-        String code = "class Solution {\n" +
-                "int fun() {\n" +
-                "for (int i = 0; i < 10; i++) {\n" +
-                "if (i % 2 == 0) {\n" +
-                "f1(i);\n" +
-                "} else {\n" +
-                "f2(i);\n" +
-                "}\n" +
-                "}\n" +
-                "return sum;\n" +
-                "}\n" +
-                "}";
-        code = Formatting.formatCode(code);
-        List<String> codes = Arrays.stream(code.split("\n")).toList();
-        List<String> exps = Arrays.stream(MatchExp.getMatchExpByCode(code).split("\n")).toList();
-        CodeHash.init();
-        for (int i = 0; i < codes.size(); i++) {
-            CodeHash.insertCode(codes.get(i), exps.get(i));
-        }
-
-        ControlStatementFeature csf1 = new ControlStatementFeature(CodeHash.codesToExpHashs(codes));
-        System.out.println(csf1);
-    }
-
 }

@@ -1,6 +1,6 @@
 package realize.fitness;
 
-import realize.encode.CodeHash;
+import realize.encode_cpp.CodeHash;
 
 import java.util.List;
 
@@ -45,13 +45,5 @@ public class ProgramFeatures {
             sum += 1.0 * t / pm[i];
         }
         return sum / matrix.length;
-    }
-
-    public static void main(String[] args) {
-        ProgramFeatures p1 = new ProgramFeatures(new int[]{0, 0, 0, 4, 0, 0, 0, 0, 1, 0, 0, 0});
-        ProgramFeatures p2 = new ProgramFeatures(new int[]{0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0});
-        System.out.println(p1.calculateSimilarity(p2));
-        System.out.println(p1.calculateSimilarity(p1));
-
     }
 }

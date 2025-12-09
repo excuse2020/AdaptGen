@@ -90,36 +90,8 @@ public class Classify {
         }
     }
 
-    public void genFile() throws IOException {
-        for (int i = 0; i < classified.size(); i++) {
-            for (Integer j : classified.get(i)) {
-                String newPath = dir + "/dataset4/" + title+ "/" + "category" + i;
-                File newFile = new File(newPath);
-                if (!newFile.exists()) {
-                    newFile.mkdirs(); // 创建文件夹及其父文件夹
-                }
-
-                FileWriter writer = new FileWriter(newPath + "/" + filenameList.get(j));
-                writer.write(String.join("\n", codeList.get(j)));
-                writer.close();
-            }
-        }
-    }
-
     public void printClassified() {
         classified.forEach(System.out::println);
-    }
-
-    public void printSim() {
-        for (int i = 0; i < sim.length; i++) {
-            for (int j = 0; j < sim[i].length; j++) {
-                System.out.print(sim[i][j] + " ");
-            }
-            System.out.println();
-        }
-        for (ControlStatementFeature controlStatementFeature : csfList) {
-            System.out.println(controlStatementFeature);
-        }
     }
 
     private boolean check(int i, List<Integer> al) {

@@ -18,8 +18,7 @@ public class ASTUtils {
     public static ASTNode getASTNode(String code) {
         ASTParser parser = getParser(ASTParser.K_STATEMENTS);
         parser.setSource(code.toCharArray());
-        ASTNode node = parser.createAST(null);
-        return node;
+        return parser.createAST(null);
     }
 
     private static ASTParser getParser(int kExpression) {

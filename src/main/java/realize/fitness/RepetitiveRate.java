@@ -13,14 +13,12 @@ public class RepetitiveRate {
         Map<Integer, Integer> map2 = new HashMap<>();
         exps1.forEach(exp -> map1.put(exp, map1.getOrDefault(exp, 0) + 1));
         exps2.forEach(exp -> map2.put(exp, map2.getOrDefault(exp, 0) + 1));
-        // 2中的所有代码1中有的 越小越好
         for (Map.Entry<Integer, Integer> e : map2.entrySet()) {
             int k = e.getKey();
             int v = e.getValue();
             int count = map1.getOrDefault(k, 0);
             res += Math.abs(v - count);
         }
-        // 1中代码2中没有的 冗余 越小越好
         for (Map.Entry<Integer, Integer> e : map1.entrySet()) {
             int k = e.getKey();
             int v = e.getValue();
@@ -28,10 +26,9 @@ public class RepetitiveRate {
                 res += v;
             }
         }
-        return 1 - 1.0 * res / exps2.size();
+        return Math.max(1 - 1.0 * res / exps2.size(), 0.0);
     }
 
-    // 计算代码覆盖率，代码1 / 代码2  公共行数 / 代码二行数
     public static double cac2(List<Integer> code1, List<Integer> code2) {
         int cnt = 0;
         Map<Integer, Integer> map1 = new HashMap<>();
@@ -43,11 +40,5 @@ public class RepetitiveRate {
             cnt += Math.min(e.getValue(), count);
         }
         return 1.0 * cnt / code2.size();
-    }
-
-    public static void main(String[] args) {
-        List<Integer> exp1 = Arrays.asList(6, 7, 8, 1, 2, 3, 4, 5);
-        List<Integer> exp2 = Arrays.asList(6, 7, 8, 9);
-        System.out.println(cac(exp1, exp2));
     }
 }

@@ -1,7 +1,7 @@
 package realize.ga;
 
-import realize.encode.CodeEncoding;
-import realize.encode.CodeHash;
+import realize.encode_cpp.CodeEncoding;
+import realize.encode_cpp.CodeHash;
 import realize.fitness.*;
 import realize.utils.RandomUtils;
 
@@ -17,47 +17,12 @@ public class GA {
     public Set<Chromosome> population;
 
     public double fitnessSum = 0;
-    List<List<Integer>> dataset;
 
     public GA(int populationSize, double mutationRate) {
         this.populationSize = populationSize;
         this.random = new Random();
         this.population = new HashSet<>();
         this.mutationRate = mutationRate;
-    }
-
-    public void initPopulation(List<List<Integer>> dataset) {
-        dataset.forEach(x -> {
-            try {
-                population.add(new Chromosome(new CodeEncoding(x)));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        fitnessSum = population.stream().mapToDouble(x -> x.fitness).sum();
-    }
-
-    public void initPopulation2(List<List<Integer>> dataset) {
-
-        int n = dataset.size();
-        this.population = new HashSet<>();
-        this.dataset = dataset;
-        initPopulation(dataset);
-
-        while (population.size() < populationSize) {
-            List<Integer> t = new ArrayList<>();
-            int size = dataset.get(RandomUtils.genRandom(0, n - 1)).size();
-            for (int i = 0; i < size; i++) {
-                int k = RandomUtils.genRandom(0, n - 1);
-                if (i >= dataset.get(k).size()) continue;
-                t.add(dataset.get(k).get(i));
-            }
-            try {
-                population.add(new Chromosome(new CodeEncoding(t)));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
     }
 
     public void initPopulation3() throws IOException {
@@ -99,14 +64,11 @@ public class GA {
     public void mutate(List<Chromosome> p) throws IOException {
         List<Chromosome> t = new ArrayList<>(p);
         for (Chromosome chromosome : t) {
-            if (random.nextDouble() <= mutationRate
-                    || population.contains(chromosome)
-                    || chromosome.fitness < 0.7) {
+            if (random.nextDouble() <= mutationRate) {
                 p.add(chromosome.mutate());
             }
         }
     }
-
 
     public Chromosome getFittest() {
         return Collections.max(population);
@@ -158,44 +120,38 @@ class Chromosome implements Comparable<Chromosome> {
 
     public void calculateFitness() {
         List<Integer> exps = genes.exps;
+        List<Integer> hashs = genes.hashs;
 
-        // 重复代码块的数量
         freCbScore = GAStart.f.getFreCBRatio(exps);
 
-        // 编辑距离
         editDis = 0;
         for (List<Integer> x : GAStart.expHashList) {
             editDis += EditDistanceCalculator.calculateEditDistance(exps, x);
         }
         editDis /= GAStart.expHashList.size();
 
-        // 重复率
         repetition = 0;
         for (List<Integer> x : GAStart.expHashList) {
             repetition += RepetitiveRate.cac(exps, x);
         }
         repetition /= GAStart.expHashList.size();
 
-        // 覆盖率
         coverage = 0;
         for (List<Integer> x : GAStart.codeHashList) {
-            coverage = Math.max(coverage, RepetitiveRate.cac2(genes.codes, x));
+            coverage = Math.max(coverage, RepetitiveRate.cac2(hashs, x));
         }
 
-        // 代码合法
-        validScore = CodeValid.isCodeValid(CodeHash.hashsToCodes(genes.codes)) ? 1 : 0;
+        validScore = CodeValid.isCodeValid(CodeHash.hashsToCodes(hashs)) ? 1 : 0;
 
-        // 控制语句相似度
-        ControlStatementFeature c = new ControlStatementFeature(exps);
+        ControlStatementFeatureCpp c = new ControlStatementFeatureCpp(exps);
         csf = 0;
         if (validScore == 1) {
             for (List<Integer> x : GAStart.expHashList) {
-                csf += c.calculateSimilarity(new ControlStatementFeature(x));
+                csf += c.calculateSimilarity(new ControlStatementFeatureCpp(x));
             }
             csf = csf / GAStart.expHashList.size();
         }
 
-        // 程序相似度
         ProgramFeatures p = new ProgramFeatures(exps);
         pf = 0;
         for (List<Integer> x : GAStart.expHashList) {
@@ -203,7 +159,6 @@ class Chromosome implements Comparable<Chromosome> {
         }
         pf = pf / GAStart.expHashList.size();
 
-        // 加权
         fitness = freCbScore * GAStart.freWeight + editDis * GAStart.editDisWeight
                 + validScore * GAStart.validScoreWeight + csf * GAStart.csfWeight
                 + pf * GAStart.pfWeight + repetition * GAStart.repetitionWeight
@@ -212,11 +167,11 @@ class Chromosome implements Comparable<Chromosome> {
 
     public List<Chromosome> crossover(Chromosome partner) throws IOException {
 
-        int i = RandomUtils.genRandom(0, genes.codes.size() - 1);
-        int j = RandomUtils.genRandom(0, partner.genes.codes.size() - 1);
+        int i = RandomUtils.genRandom(0, genes.hashs.size() - 1);
+        int j = RandomUtils.genRandom(0, partner.genes.hashs.size() - 1);
 
-        List<Integer> codes1 = new ArrayList<>(genes.codes);
-        List<Integer> codes2 = new ArrayList<>(partner.genes.codes);
+        List<Integer> codes1 = new ArrayList<>(genes.hashs);
+        List<Integer> codes2 = new ArrayList<>(partner.genes.hashs);
 
         List<Integer> new1 = codes1.subList(0, i);
         List<Integer> new2 = codes2.subList(0, j);
@@ -228,7 +183,7 @@ class Chromosome implements Comparable<Chromosome> {
     }
 
     public Chromosome mutate() throws IOException {
-        List<Integer> codes = new ArrayList<>(genes.codes);
+        List<Integer> codes = new ArrayList<>(genes.hashs);
         int i = RandomUtils.genRandom(0, codes.size() - 1);
         int op = RandomUtils.genRandom(0, 3);
         List<Integer> list = CodeHash.codeToHash.values().stream().toList();

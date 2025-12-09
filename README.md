@@ -8,7 +8,6 @@
 - [Setup](#setup)
   - [Prerequisites](#prerequisites)
   - [Environment Setup](#environment-setup)
-- [How to Use AdaptGen](#how-to-use-adaptgen)
 - [Acknowledgements](#acknowledgements)
 - [Contact](#contact)
 - [Appendix](#appendix)

@@ -61,36 +61,32 @@ To set up the project in IntelliJ IDEA and manage dependencies with Maven:
    - Start IntelliJ IDEA and select **"Open"** from the Welcome screen or **"File > Open..."** if you already have another project open.
 
 2. **Import the Project**:
-   
+  
    - Navigate to the root directory of the `AdaptGen` project that you cloned.
    - Select the project directory and click **"Open"**.
    
 3. **Import Project from Maven**:
-   
+  
    - If IntelliJ IDEA detects a Maven project, it will automatically configure it for you. 
    - If not, go to **"File > Project Structure > Project"**, and set the **Project SDK** to the appropriate version of Java (JDK 17).
    
 4. **Download Dependencies**:
-   
+  
    - IntelliJ IDEA should automatically start downloading the dependencies defined in the `pom.xml` file. If it doesn't, you can manually trigger it:
      - Open the **"Maven"** tool window from the right sidebar.
      - Click on the **"Reload All Maven Projects"** button (two arrows forming a circle).
    
 5. **Build the Project**:
-   
+  
    - Once the dependencies are downloaded, you can build the project by clicking **"Build > Build Project"** from the top menu or using the shortcut **`Ctrl+F9`**.
    
 6. **Run the Main Class**:
-   
+  
    Locate the main class under `src/main/java/realize/ga/generateTemplateByGA.java` or any other main class you want to execute.
 
 ## Acknowledgements
 
 - **LeetCode and NowCoder**: For providing the programming tasks and solution data.
-
-## Contact
-
-For questions, please contact the project maintainers at [zhangguowei@nuaa.edu.cn].
 
 ## Appendix
 

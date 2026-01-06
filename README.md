@@ -9,7 +9,6 @@
   - [Prerequisites](#prerequisites)
   - [Environment Setup](#environment-setup)
 - [Acknowledgements](#acknowledgements)
-- [Contact](#contact)
 - [Appendix](#appendix)
   - [Detailed Evaluation Methods for RQ2](#detailed-evaluation-methods-for-rq2-how-well-do-the-solution-templates-generated-by-adaptgen-meet-the-various-template-requirements-)
   - [Sensitivity Analysis](#sensitivity-analysis)

@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Formatting {
-    
+
     public static String formatCode(String code) {
         ASTNode ast = ASTUtils.getASTNode(code);
         return formatAST(ast);
@@ -586,9 +586,7 @@ public class Formatting {
             //System.out.println("\nLAMBDA_EXPRESSION:\n" + ast);
             LambdaExpression l = (LambdaExpression) ast;
             String paras = getArgs(l.parameters());
-            System.out.println(ast);
             if (l.getBody() instanceof Expression) {
-                System.out.println("Expression: " + l.getBody());
                 return "(" + paras + ") -> " + formatAST(l.getBody());
             }
             StringBuilder body = new StringBuilder();

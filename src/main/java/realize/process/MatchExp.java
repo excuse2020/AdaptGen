@@ -3,7 +3,10 @@ package realize.process;
 import org.eclipse.jdt.core.dom.*;
 import realize.utils.ASTUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,13 +31,6 @@ public class MatchExp {
         }
     }
 
-    public static void main(String[] args) {
-        String code = "if (nums[mid] > target) {";
-        code = getMatchExpByCode(code);
-        System.out.println(code);
-        System.out.println(type);
-    }
-
     public static Set<Integer> type;
 
     private static String getArgs(List arguments) {
@@ -45,7 +41,6 @@ public class MatchExp {
         type = new HashSet<>();
         return getExp(ASTUtils.getASTNode(code));
     }
-
 
     private static String getExp(ASTNode ast) {
 
@@ -101,7 +96,10 @@ public class MatchExp {
             String sl = getExp(l);
             Expression r = node.getRightHandSide();
             String sr = getExp(r);
-            return sl + " " + node.getOperator() + " " + sr;
+            if (sr.contains("SIMPLE_NAME$")) {
+                sr = "Var";
+            }
+            return l.toString() + " " + node.getOperator() + " " + sr;
         }
 
         if (ast.getNodeType() == ASTNode.BLOCK) {
@@ -209,6 +207,7 @@ public class MatchExp {
         }
 
         if (ast.getNodeType() == ASTNode.FOR_STATEMENT) {
+
             type.add(ASTNode.FOR_STATEMENT);
             ForStatement f = (ForStatement) ast;
             return "\nfor (...) {" + getExp(f.getBody()).replace("\n", "\n\t") + "\n}";
@@ -266,7 +265,7 @@ public class MatchExp {
         if (ast.getNodeType() == ASTNode.METHOD_INVOCATION) {
             type.add(ASTNode.METHOD_INVOCATION);
             MethodInvocation mi = (MethodInvocation) ast;
-            String args = (String) mi.arguments().stream().map(x -> getExp((ASTNode) x)).collect(Collectors.joining(","));
+             String args = (String) mi.arguments().stream().map(x -> getExp((ASTNode) x)).collect(Collectors.joining(","));
             String s = getExp(mi.getExpression());
             if (mi.getExpression() == null) {
                 return getExp(mi.getName()) + "(" + args + ")";
@@ -316,7 +315,8 @@ public class MatchExp {
         if (ast.getNodeType() == ASTNode.QUALIFIED_NAME) {
             type.add(ASTNode.QUALIFIED_NAME);
             QualifiedName q = (QualifiedName) ast;
-            return getExp(q.getQualifier()) + "." + getExp(q.getName());
+            // return getExp(q.getQualifier()) + "." + getExp(q.getName());
+            return "QVar";
         }
 
         if (ast.getNodeType() == ASTNode.RETURN_STATEMENT) {
@@ -619,7 +619,12 @@ public class MatchExp {
             type.add(ASTNode.LAMBDA_EXPRESSION);
             LambdaExpression l = (LambdaExpression) ast;
             String paras = getArgs(l.parameters());
-            return "(" + paras + ") -> {" + getExp(l.getBody()) + "}";
+
+            if (l.getBody() instanceof Expression) {
+                System.out.println("Expression: " + l.getBody());
+                return "(" + paras + ") -> Expression";
+            }
+            return "(" + paras + ") -> { Statements }";
         }
 
         if (ast.getNodeType() == ASTNode.INTERSECTION_TYPE) {

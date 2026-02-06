@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Formatting {
-
+    
     public static String formatCode(String code) {
         ASTNode ast = ASTUtils.getASTNode(code);
         return formatAST(ast);
@@ -169,7 +169,7 @@ public class Formatting {
                 return "\n\t" + formatAST(f.getType()) + " " + f.fragments().stream().map(x -> ((VariableDeclarationFragment) x).getName().getIdentifier()).collect(Collectors.joining(", "));
             }
             return "\n\t" + formatAST(f.getType()) + " " + f.fragments().stream().map(x ->  ((VariableDeclarationFragment) x).getName().getIdentifier() + " = "
-                     + formatAST(((VariableDeclarationFragment) x).getInitializer())).collect(Collectors.joining(", "));
+                    + formatAST(((VariableDeclarationFragment) x).getInitializer())).collect(Collectors.joining(", "));
         }
 
         if (ast.getNodeType() == ASTNode.FOR_STATEMENT) {
@@ -586,7 +586,16 @@ public class Formatting {
             //System.out.println("\nLAMBDA_EXPRESSION:\n" + ast);
             LambdaExpression l = (LambdaExpression) ast;
             String paras = getArgs(l.parameters());
-            return "(" + paras + ") -> {" + formatAST(l.getBody()) + "}";
+            System.out.println(ast);
+            if (l.getBody() instanceof Expression) {
+                System.out.println("Expression: " + l.getBody());
+                return "(" + paras + ") -> " + formatAST(l.getBody());
+            }
+            StringBuilder body = new StringBuilder();
+            for (String s : l.getBody().toString().split("\n")) {
+                body.append(s);
+            }
+            return "(" + paras + ") -> {" + body + "}";
         }
 
         if (ast.getNodeType() == ASTNode.INTERSECTION_TYPE) {

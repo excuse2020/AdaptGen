@@ -621,7 +621,6 @@ public class MatchExp {
             String paras = getArgs(l.parameters());
 
             if (l.getBody() instanceof Expression) {
-                System.out.println("Expression: " + l.getBody());
                 return "(" + paras + ") -> Expression";
             }
             return "(" + paras + ") -> { Statements }";
